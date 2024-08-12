@@ -9,28 +9,19 @@
  */
 package org.eclipse.dirigible.components.data.structures.synchronizer.table;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import org.eclipse.dirigible.components.data.structures.domain.Table;
+import org.eclipse.dirigible.components.data.structures.domain.TableColumn;
+import org.eclipse.dirigible.components.database.DatabaseNameNormalizer;
+import org.eclipse.dirigible.database.sql.*;
+import org.eclipse.dirigible.database.sql.builders.table.AlterTableBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.eclipse.dirigible.commons.config.Configuration;
-import org.eclipse.dirigible.components.data.structures.domain.Table;
-import org.eclipse.dirigible.components.data.structures.domain.TableColumn;
-import org.eclipse.dirigible.components.database.DatabaseNameNormalizer;
-import org.eclipse.dirigible.components.database.DatabaseParameters;
-import org.eclipse.dirigible.database.sql.DataType;
-import org.eclipse.dirigible.database.sql.DataTypeUtils;
-import org.eclipse.dirigible.database.sql.ISqlKeywords;
-import org.eclipse.dirigible.database.sql.SqlException;
-import org.eclipse.dirigible.database.sql.SqlFactory;
-import org.eclipse.dirigible.database.sql.builders.table.AlterTableBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The Table Alter Processor.
@@ -41,7 +32,8 @@ public class TableAlterProcessor {
     private static final Logger logger = LoggerFactory.getLogger(TableAlterProcessor.class);
 
     /** The Constant INCOMPATIBLE_CHANGE_OF_TABLE. */
-    private static final String INCOMPATIBLE_CHANGE_OF_TABLE = "Incompatible change of table [%s] by adding a column [%s] which is [%s]"; //$NON-NLS-1$
+    private static final String INCOMPATIBLE_CHANGE_OF_TABLE = "Incompatible change of table [%s] by adding a column [%s] which is [%s]";
+    // $NON-NLS-1$
 
     /**
      * Execute the corresponding statement.
@@ -51,12 +43,8 @@ public class TableAlterProcessor {
      * @throws SQLException the SQL exception
      */
     public static void execute(Connection connection, Table tableModel) throws SQLException {
-        boolean caseSensitive =
-                Boolean.parseBoolean(Configuration.get(DatabaseParameters.DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE, "false"));
-        String tableName = tableModel.getName();
-        if (caseSensitive) {
-            tableName = "\"" + tableName + "\"";
-        }
+        String tableName = "\"" + tableModel.getName() + "\"";
+
         logger.info("Processing Alter Table: " + tableName);
 
         Map<String, String> columnDefinitions = new HashMap<>();
@@ -80,11 +68,9 @@ public class TableAlterProcessor {
 
         // ADD iteration
         for (TableColumn columnModel : tableModel.getColumns()) {
-            String name = columnModel.getName();
+            String name = "\"" + columnModel.getName() + "\"";
             String nameOriginal = name;
-            if (caseSensitive) {
-                name = "\"" + name + "\"";
-            }
+
             DataType type = DataType.valueOfByName(columnModel.getType());
             String length = columnModel.getLength();
             boolean isNullable = columnModel.isNullable();
@@ -150,9 +136,7 @@ public class TableAlterProcessor {
 
         // DROP iteration
         for (String columnName : columnDefinitions.keySet()) {
-            if (caseSensitive) {
-                columnName = "\"" + columnName + "\"";
-            }
+            columnName = "\"" + columnName + "\"";
             if (!modelColumnNames.contains(columnName.toUpperCase())) {
                 AlterTableBuilder alterTableBuilder = SqlFactory.getNative(connection)
                                                                 .alter()

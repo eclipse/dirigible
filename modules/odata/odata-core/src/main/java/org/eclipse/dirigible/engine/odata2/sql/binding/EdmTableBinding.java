@@ -115,11 +115,11 @@ public class EdmTableBinding extends Mapping {
      * @return the table name
      */
     public String getTableName() {
-        return readMandatoryConfig("sqlTable", String.class);
+        return readMandatoryStringConfig("sqlTable");
     }
 
     public Optional<String> getSchemaName() {
-        return readConfig("sqlSchema", String.class);
+        return readOptionalStringConfig("sqlSchema");
     }
 
     /**
@@ -229,7 +229,7 @@ public class EdmTableBinding extends Mapping {
     public boolean isAggregationTypeExplicit() {
         String key = "aggregationType";
         if (isPropertyMapped(key)) {
-            String aggregationType = readMandatoryConfig(key, String.class);
+            String aggregationType = readMandatoryStringConfig(key);
             return "explicit".equals(aggregationType);
         }
 
@@ -280,6 +280,12 @@ public class EdmTableBinding extends Mapping {
         throw new IllegalArgumentException(format(NO_PROPERTY_FOUND, key, targetFqn));
     }
 
+    private String readMandatoryStringConfig(String key) {
+        String value =
+                readConfig(key, String.class).orElseThrow(() -> new IllegalArgumentException(format(NO_PROPERTY_FOUND, key, targetFqn)));
+        return null == value ? null : value.trim();
+    }
+
     /**
      * Read mandatory config.
      *
@@ -290,6 +296,16 @@ public class EdmTableBinding extends Mapping {
      */
     private <T> T readMandatoryConfig(String key, Class<T> clazz) {
         return readConfig(key, clazz).orElseThrow(() -> new IllegalArgumentException(format(NO_PROPERTY_FOUND, key, targetFqn)));
+    }
+
+    private Optional<String> readOptionalStringConfig(String key) {
+        if (bindingData.containsKey(key)) {
+            Object property = bindingData.get(key);
+            if (property instanceof String value) {
+                return Optional.of(value.trim());
+            }
+        }
+        return Optional.empty();
     }
 
     private <T> Optional<T> readConfig(String key, Class<T> clazz) {
@@ -371,7 +387,7 @@ public class EdmTableBinding extends Mapping {
      * @return the string
      */
     protected String readEdmEntityFqn() {
-        return readMandatoryConfig("edmTypeFqn", String.class);
+        return readMandatoryStringConfig("edmTypeFqn");
     }
 
     /**
@@ -446,10 +462,9 @@ public class EdmTableBinding extends Mapping {
      * Gets the primary key.
      *
      * @return the primary key
-     * @throws EdmException the edm exception
      */
-    public String getPrimaryKey() throws EdmException {
-        return readMandatoryConfig("_pk_", String.class);
+    public String getPrimaryKey() {
+        return readMandatoryStringConfig("_pk_");
     }
 
     /**

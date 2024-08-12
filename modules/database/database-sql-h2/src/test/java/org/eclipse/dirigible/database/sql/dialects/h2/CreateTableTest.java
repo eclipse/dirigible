@@ -9,12 +9,12 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.h2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * The Class CreateTableTest.
@@ -36,7 +36,7 @@ public class CreateTableTest {
 
         assertNotNull(sql);
         assertEquals(
-                "CREATE TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) NOT NULL UNIQUE , LAST_NAME VARCHAR (30) )",
+                "CREATE TABLE \"CUSTOMERS\" ( \"ID\" INTEGER NOT NULL PRIMARY KEY , \"FIRST_NAME\" VARCHAR (20) NOT NULL UNIQUE , \"LAST_NAME\" VARCHAR (30) )",
                 sql);
     }
 
@@ -54,7 +54,8 @@ public class CreateTableTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("CREATE TABLE CUSTOMERS ( ID INTEGER NOT NULL PRIMARY KEY , FIRST_NAME VARCHAR (20) UNIQUE , LAST_NAME VARCHAR (30) )",
+        assertEquals(
+                "CREATE TABLE \"CUSTOMERS\" ( \"ID\" INTEGER NOT NULL PRIMARY KEY , \"FIRST_NAME\" VARCHAR (20) UNIQUE , \"LAST_NAME\" VARCHAR (30) )",
                 sql);
     }
 

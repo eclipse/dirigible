@@ -9,15 +9,15 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.snowflake;
 
-import java.util.Arrays;
-import java.util.stream.Stream;
-
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.builders.table.CreateTableBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
+import java.util.stream.Stream;
 
 /**
  * The Class SnowflakeCreateTableBuilder.
@@ -109,7 +109,7 @@ public class SnowflakeCreateTableBuilder extends CreateTableBuilder<SnowflakeCre
      */
     @Override
     protected void generateTable(StringBuilder sql) {
-        String tableName = (isCaseSensitive()) ? encapsulate(this.getTable(), true) : this.getTable();
+        String tableName = encapsulate(this.getTable(), true);
         String tableType = Configuration.get("SNOWFLAKE_DEFAULT_TABLE_TYPE", KEYWORD_HYBRID);
 
         if (this.tableType.equalsIgnoreCase(KEYWORD_HYBRID)) {

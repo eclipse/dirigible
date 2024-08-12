@@ -206,14 +206,14 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
                         // T1)
                         if (!isOrderByEntityInExpand(orderExpression, uriInfo)) {
                             throw new OData2Exception("Missing $expand of the entity in the OrderBy clause", HttpStatusCodes.BAD_REQUEST); // no
-                                                                                                                                           // expand,
-                                                                                                                                           // but
-                                                                                                                                           // member
-                                                                                                                                           // order
-                                                                                                                                           // by
-                                                                                                                                           // is
-                                                                                                                                           // not
-                                                                                                                                           // allowed
+                            // expand,
+                            // but
+                            // member
+                            // order
+                            // by
+                            // is
+                            // not
+                            // allowed
                         }
                         continue;
                     default:
@@ -298,7 +298,6 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
         }
         return join;
     }
-
 
     /**
      * Join.
@@ -444,7 +443,6 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
         return this;
     }
 
-
     /**
      * Builds the.
      *
@@ -471,4 +469,5 @@ public class SQLSelectBuilder extends AbstractQueryBuilder {
             }
         };
     }
+
 }

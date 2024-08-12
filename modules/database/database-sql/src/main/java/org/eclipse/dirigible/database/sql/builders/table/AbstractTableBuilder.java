@@ -9,19 +9,18 @@
  */
 package org.eclipse.dirigible.database.sql.builders.table;
 
+import org.eclipse.dirigible.database.sql.DataType;
+import org.eclipse.dirigible.database.sql.ISqlDialect;
+import org.eclipse.dirigible.database.sql.builders.AbstractCreateSqlBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import org.eclipse.dirigible.database.sql.DataType;
-import org.eclipse.dirigible.database.sql.ISqlDialect;
-import org.eclipse.dirigible.database.sql.builders.AbstractCreateSqlBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import java.lang.IllegalStateException;
 
 /**
  * The Create Table Builder.
@@ -741,7 +740,6 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     public TABLE_BUILDER columnNvarchar(String name, int length) {
         return columnNvarchar(name, length, false);
     }
-
 
     /**
      * Column char.
@@ -1886,7 +1884,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
      * @param sql the sql
      */
     protected void generateTable(StringBuilder sql) {
-        String tableName = (isCaseSensitive()) ? encapsulate(this.getTable(), true) : this.getTable();
+        String tableName = encapsulate(this.getTable(), true);
         sql.append(SPACE)
            .append(KEYWORD_TABLE)
            .append(SPACE)
@@ -1976,7 +1974,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
     protected String traverseColumnNamesForDrop() {
         StringBuilder snippet = new StringBuilder();
         for (String[] column : this.columns) {
-            String columnName = (isCaseSensitive()) ? encapsulate(column[0]) : column[0];
+            String columnName = encapsulate(column[0]);
             snippet.append(KEYWORD_DROP)
                    .append(SPACE)
                    .append(KEYWORD_COLUMN)
@@ -2003,7 +2001,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
             boolean first = true;
             for (String arg : column) {
                 if (first) {
-                    String columnName = (isCaseSensitive()) ? encapsulate(arg) : arg;
+                    String columnName = encapsulate(arg);
                     snippet.append(columnName)
                            .append(SPACE);
                     first = false;
@@ -2031,7 +2029,7 @@ public abstract class AbstractTableBuilder<TABLE_BUILDER extends AbstractTableBu
         StringBuilder snippet = new StringBuilder();
         snippet.append(SPACE);
         for (String column : names) {
-            String columnName = (isCaseSensitive()) ? encapsulate(column) : column;
+            String columnName = encapsulate(column);
             snippet.append(columnName)
                    .append(SPACE)
                    .append(COMMA)

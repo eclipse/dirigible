@@ -81,7 +81,7 @@ public class SqlDialectFactory {
         return getDialect(databaseSystem);
     }
 
-    public static ISqlDialect getDialect(DatabaseSystem databaseSystem) throws SQLException {
+    public static ISqlDialect getDialect(DatabaseSystem databaseSystem) {
         ISqlDialect dialect = dialectsBySystem.get(databaseSystem);
         if (dialect == null) {
             loadDefaultDialectsBySystem();

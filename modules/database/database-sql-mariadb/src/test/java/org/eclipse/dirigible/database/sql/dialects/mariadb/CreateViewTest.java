@@ -9,12 +9,11 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.mariadb;
 
+import org.eclipse.dirigible.database.sql.SqlFactory;
+import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-
-import org.eclipse.dirigible.database.sql.SqlFactory;
-import org.eclipse.dirigible.database.sql.dialects.mariadb.MariaDBSqlDialect;
-import org.junit.Test;
 
 /**
  * The Class CreateViewTest.
@@ -33,7 +32,7 @@ public class CreateViewTest extends CreateTableTest {
                                .column("ID")
                                .column("FIRST_NAME")
                                .column("LAST_NAME")
-                               .asSelect(SqlFactory.getDefault()
+                               .asSelect(SqlFactory.getNative(new MariaDBSqlDialect())
                                                    .select()
                                                    .column("*")
                                                    .from("CUSTOMERS")
@@ -41,7 +40,7 @@ public class CreateViewTest extends CreateTableTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("CREATE VIEW CUSTOMERS_VIEW ( ID , FIRST_NAME , LAST_NAME ) AS SELECT * FROM CUSTOMERS", sql);
+        assertEquals("CREATE VIEW `CUSTOMERS_VIEW` ( `ID` , `FIRST_NAME` , `LAST_NAME` ) AS SELECT * FROM `CUSTOMERS`", sql);
     }
 
 }

@@ -82,7 +82,7 @@ public class DropSequenceBuilder extends AbstractDropSqlBuilder {
      * @param sql the sql
      */
     protected void generateSequence(StringBuilder sql) {
-        String sequenceName = (isCaseSensitive()) ? encapsulate(this.getSequence(), true) : this.getSequence();
+        String sequenceName = encapsulate(this.getSequence(), true);
         sql.append(SPACE)
            .append(KEYWORD_SEQUENCE)
            .append(SPACE)

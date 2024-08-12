@@ -9,11 +9,11 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.snowflake;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * The Class DropTableTest.
@@ -31,8 +31,7 @@ public class DropTableTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("DROP TABLE CUSTOMERS", sql);
+        assertEquals("DROP TABLE \"CUSTOMERS\"", sql);
     }
-
 
 }

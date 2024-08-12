@@ -118,8 +118,6 @@ spec:
               value: {{ required "Missing database password" .Values.database.password }}
             - name: DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE
               value: "false"
-            - name: DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE
-              value: "true"
             - name: DIRIGIBLE_SCHEDULER_MEMORY_STORE
               value: "true"
             {{- end }}
@@ -149,8 +147,6 @@ spec:
                   key: password
             - name: DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE
               value: "false"
-            - name: DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE
-              value: "true"
             - name: DIRIGIBLE_SCHEDULER_MEMORY_STORE
               value: "true"
             {{- end }}

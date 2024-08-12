@@ -9,6 +9,11 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.mariadb;
 
+import org.eclipse.dirigible.database.sql.ISqlKeywords;
+import org.eclipse.dirigible.database.sql.builders.AlterBranchingBuilder;
+import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
+import org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect;
+
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -17,10 +22,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import org.eclipse.dirigible.database.sql.ISqlKeywords;
-import org.eclipse.dirigible.database.sql.builders.AlterBranchingBuilder;
-import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
-import org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect;
 
 /**
  * The MariaDB SQL Dialect.
@@ -46,7 +47,8 @@ public class MariaDBSqlDialect extends
             "HOUR", "LAST_DAY", "LOCALTIME", "LOCALTIMESTAMP", "MAKEDATE", "MAKETIME", "MICROSECOND", "MINUTE", "MONTH", "MONTHNAME", "NOW",
             "PERIOD_ADD", "PERIOD_DIFF", "QUARTER", "SECOND", "SEC_TO_TIME", "STR_TO_DATE", "SUBDATE", "SUBTIME", "SYSDATE", "TIMEDIFF",
             "TIMESTAMPADD", "TIMESTAMPDIFF", "TIME_FORMAT", "TIME_TO_SEC", "TO_DAYS", "TO_SECONDS", "UNIX_TIMESTAMP", "UTC_DATE",
-            "UTC_TIME", "UTC_TIMESTAMP", "WEEK", "WEEKDAY", "WEEKOFYEAR", "YEAR", "YEARWEEK", "COUNT")));
+            "UTC_TIME", "UTC_TIMESTAMP", "WEEK", "WEEKDAY", "WEEKOFYEAR", "YEAR", "YEARWEEK", "COUNT", "AND", "OR", "BETWEEN", "IS", "NOT",
+            "NULL", "AVG", "MAX", "MIN")));
 
     /**
      * Creates the.
@@ -124,10 +126,7 @@ public class MariaDBSqlDialect extends
         DatabaseMetaData metadata = connection.getMetaData();
         ResultSet resultSet = metadata.getTables(null, null, DefaultSqlDialect.normalizeTableName(table.toUpperCase()),
                 ISqlKeywords.METADATA_TABLE_TYPES.toArray(new String[] {}));
-        if (resultSet.next()) {
-            return true;
-        }
-        return false;
+        return resultSet.next();
     }
 
     /**
@@ -146,8 +145,8 @@ public class MariaDBSqlDialect extends
      * @return the escape symbol
      */
     @Override
-    public String getEscapeSymbol() {
-        return "`";
+    public char getEscapeSymbol() {
+        return '`';
     }
 
     @Override

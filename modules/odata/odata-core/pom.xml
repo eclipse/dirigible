@@ -53,7 +53,11 @@
 			<artifactId>ngdbc</artifactId>
 			<version>${ngdbc.version}</version>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-database-sql</artifactId>
+        </dependency>
+    </dependencies>
 
 	<properties>
 		<!-- Required to enable usage in projects that run on java 1.8 -->

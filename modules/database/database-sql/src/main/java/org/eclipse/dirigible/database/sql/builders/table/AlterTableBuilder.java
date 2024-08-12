@@ -29,10 +29,10 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
     private String action = null;
 
     /** The foreign keys. */
-    private List<CreateTableForeignKeyBuilder> foreignKeys = new ArrayList<CreateTableForeignKeyBuilder>();
+    private final List<CreateTableForeignKeyBuilder> foreignKeys = new ArrayList<CreateTableForeignKeyBuilder>();
 
     /** The unique indices. */
-    private List<CreateTableUniqueIndexBuilder> uniqueIndices = new ArrayList<CreateTableUniqueIndexBuilder>();
+    private final List<CreateTableUniqueIndexBuilder> uniqueIndices = new ArrayList<CreateTableUniqueIndexBuilder>();
 
     /**
      * Instantiates a new creates the table builder.
@@ -53,7 +53,6 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
         this.action = KEYWORD_ADD;
         return this;
     }
-
 
     /**
      * Alter.
@@ -213,7 +212,6 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
             }
         }
 
-
         String generated = sql.append(SEMICOLON)
                               .toString()
                               .trim();
@@ -272,7 +270,7 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
             snippet.append(SPACE)
                    .append(KEYWORD_CONSTRAINT)
                    .append(SPACE)
-                   .append(foreignKey.getName())
+                   .append(encapsulate(foreignKey.getName()))
                    .append(SPACE)
                    .append(KEYWORD_FOREIGN)
                    .append(SPACE)
@@ -284,7 +282,7 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
                    .append(SPACE)
                    .append(KEYWORD_REFERENCES)
                    .append(SPACE)
-                   .append(foreignKey.getReferencedTable())
+                   .append(encapsulate(foreignKey.getReferencedTable()))
                    .append(SPACE)
                    .append(OPEN)
                    .append(traverseNames(foreignKey.getReferencedColumns()))
@@ -316,7 +314,7 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
     protected void generateUniqueIndex(StringBuilder sql, CreateTableUniqueIndexBuilder uniqueIndex) {
         if (uniqueIndex != null) {
             if (uniqueIndex.getName() != null) {
-                String uniqueIndexName = (isCaseSensitive()) ? encapsulate(uniqueIndex.getName()) : uniqueIndex.getName();
+                String uniqueIndexName = encapsulate(uniqueIndex.getName());
                 sql.append(KEYWORD_CONSTRAINT)
                    .append(SPACE)
                    .append(uniqueIndexName)
@@ -329,6 +327,5 @@ public class AlterTableBuilder extends AbstractTableBuilder<AlterTableBuilder> {
                .append(CLOSE);
         }
     }
-
 
 }

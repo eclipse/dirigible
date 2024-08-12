@@ -9,11 +9,11 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.mysql;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * The Class UpdateTest.
@@ -32,7 +32,7 @@ public class UpdateTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John'", sql);
+        assertEquals("UPDATE `CUSTOMERS` SET `FIRST_NAME` = 'John'", sql);
     }
 
     /**
@@ -48,7 +48,7 @@ public class UpdateTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John', LAST_NAME = 'Smith'", sql);
+        assertEquals("UPDATE `CUSTOMERS` SET `FIRST_NAME` = 'John', `LAST_NAME` = 'Smith'", sql);
     }
 
     /**
@@ -66,7 +66,7 @@ public class UpdateTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John', LAST_NAME = 'Smith' WHERE (AGE > ?) AND (COMPANY = 'SAP')", sql);
+        assertEquals("UPDATE `CUSTOMERS` SET `FIRST_NAME` = 'John', `LAST_NAME` = 'Smith' WHERE (`AGE` > ?) AND (`COMPANY` = 'SAP')", sql);
     }
 
     /**
@@ -87,7 +87,9 @@ public class UpdateTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John', SALARY = SELECT MAX(SALARY) FROM BENEFITS WHERE (COMPANY = 'SAP')", sql);
+        assertEquals(
+                "UPDATE `CUSTOMERS` SET `FIRST_NAME` = 'John', `SALARY` = SELECT MAX(`SALARY`) FROM `BENEFITS` WHERE (`COMPANY` = 'SAP')",
+                sql);
     }
 
     /**
@@ -109,7 +111,8 @@ public class UpdateTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("UPDATE CUSTOMERS SET FIRST_NAME = 'John', LAST_NAME = 'Smith' WHERE (PRICE > ? OR AMOUNT < ? AND COMPANY = 'SAP')",
+        assertEquals(
+                "UPDATE `CUSTOMERS` SET `FIRST_NAME` = 'John', `LAST_NAME` = 'Smith' WHERE (`PRICE` > ? OR `AMOUNT` < ? AND `COMPANY` = 'SAP')",
                 sql);
     }
 

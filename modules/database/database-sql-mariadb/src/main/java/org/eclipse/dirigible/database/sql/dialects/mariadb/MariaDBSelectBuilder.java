@@ -20,7 +20,7 @@ public class MariaDBSelectBuilder extends SelectBuilder {
 
     @Override
     protected String encapsulateWhere(String where) {
-        return encapsulateMany(where, '`');
+        return encapsulateMany(where, getEscapeSymbol());
     }
 
 }

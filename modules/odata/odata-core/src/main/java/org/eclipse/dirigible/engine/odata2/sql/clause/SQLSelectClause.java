@@ -15,6 +15,9 @@ import org.apache.olingo.odata2.api.exception.ODataException;
 import org.apache.olingo.odata2.api.uri.KeyPredicate;
 import org.apache.olingo.odata2.api.uri.NavigationPropertySegment;
 import org.apache.olingo.odata2.api.uri.SelectItem;
+import org.eclipse.dirigible.components.database.DatabaseSystem;
+import org.eclipse.dirigible.database.sql.ISqlDialect;
+import org.eclipse.dirigible.database.sql.dialects.SqlDialectFactory;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatementParam;
 import org.eclipse.dirigible.engine.odata2.sql.binding.EdmTableBinding;
@@ -26,7 +29,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.EMPTY_LIST;
-import static org.eclipse.dirigible.commons.config.DirigibleConfig.DATABASE_NAMES_CASE_SENSITIVE;
 import static org.eclipse.dirigible.engine.odata2.sql.builder.EdmUtils.evaluateDateTimeExpressions;
 import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.*;
 
@@ -35,7 +37,6 @@ import static org.eclipse.dirigible.engine.odata2.sql.utils.OData2Utils.*;
  */
 public final class SQLSelectClause {
 
-    public static final String ESCAPE_SYMBOL = "\"";
     /** The Constant NOT_SET. */
     public static final int NOT_SET = -1;
     /** The Constant EMPTY_STRING. */
@@ -550,10 +551,9 @@ public final class SQLSelectClause {
         Iterator<String> it = query.getTablesAliasesForEntitiesInQuery();
         while (it.hasNext()) {
             String tableAlias = it.next();
-            // ideally get the escape symbol from the dialect
-            // hardcoded since, the dialect is not used in this project
-            String escapedTableAlias =
-                    DATABASE_NAMES_CASE_SENSITIVE.getBooleanValue() ? (ESCAPE_SYMBOL + tableAlias + ESCAPE_SYMBOL) : tableAlias;
+            char escapeSymbol = getEscapeSymbol(context);
+
+            String escapedTableAlias = (escapeSymbol + tableAlias + escapeSymbol);
             EdmStructuralType type = query.getEntityInQueryForAlias(tableAlias);
             if (isSelectTarget(type)) {
                 boolean isView = EdmTableBinding.DataStructureType.VIEW == targetDataStructureType;
@@ -562,14 +562,20 @@ public final class SQLSelectClause {
                                                 .isHANA();
                 if ((isView || (isCalculationView && isHanaDatabase)) && !this.parameters.isEmpty()) {
                     addInputParamsAsStatementParams(parameters);
-                    tables.add(query.getSQLTableName(target) + buildTargetParameters() + " AS " + escapedTableAlias);
+                    tables.add(query.getSQLTableName(target, context) + buildTargetParameters() + " AS " + escapedTableAlias);
                 } else {
-                    tables.add(query.getSQLTableName(target) + " AS " + escapedTableAlias);
+                    tables.add(query.getSQLTableName(target, context) + " AS " + escapedTableAlias);
                 }
             }
         }
 
         return SQLUtils.csv(tables);
+    }
+
+    private static char getEscapeSymbol(SQLContext context) {
+        DatabaseSystem databaseSystem = context.getDatabaseSystem();
+        ISqlDialect dialect = SqlDialectFactory.getDialect(databaseSystem);
+        return dialect.getEscapeSymbol();
     }
 
     /**

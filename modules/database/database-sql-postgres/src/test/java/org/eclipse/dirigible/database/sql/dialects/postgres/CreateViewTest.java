@@ -9,11 +9,11 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.postgres;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * The Class CreateViewTest.
@@ -40,7 +40,7 @@ public class CreateViewTest extends CreateTableTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("CREATE VIEW CUSTOMERS_VIEW ( ID , FIRST_NAME , LAST_NAME ) AS SELECT * FROM CUSTOMERS", sql);
+        assertEquals("CREATE VIEW \"CUSTOMERS_VIEW\" ( \"ID\" , \"FIRST_NAME\" , \"LAST_NAME\" ) AS SELECT * FROM \"CUSTOMERS\"", sql);
     }
 
     /**
@@ -56,7 +56,7 @@ public class CreateViewTest extends CreateTableTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("CREATE VIEW STATES ( STATE ) AS VALUES 'STARTED', 'STOPPED', 'FAILED', 'IN PROCESS'", sql);
+        assertEquals("CREATE VIEW \"STATES\" ( \"STATE\" ) AS VALUES 'STARTED', 'STOPPED', 'FAILED', 'IN PROCESS'", sql);
     }
 
 }

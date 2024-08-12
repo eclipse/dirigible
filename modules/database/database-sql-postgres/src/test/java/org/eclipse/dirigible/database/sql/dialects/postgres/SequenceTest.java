@@ -9,12 +9,11 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.postgres;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * The Class SequenceTest.
@@ -32,7 +31,7 @@ public class SequenceTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("CREATE SEQUENCE CUSTOMERS_SEQUENCE", sql);
+        assertEquals("CREATE SEQUENCE \"CUSTOMERS_SEQUENCE\"", sql);
     }
 
     /**
@@ -46,7 +45,7 @@ public class SequenceTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("ALTER SEQUENCE CUSTOMERS_SEQUENCE", sql);
+        assertEquals("ALTER SEQUENCE \"CUSTOMERS_SEQUENCE\"", sql);
     }
 
     /**
@@ -60,7 +59,7 @@ public class SequenceTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("DROP SEQUENCE CUSTOMERS_SEQUENCE", sql);
+        assertEquals("DROP SEQUENCE \"CUSTOMERS_SEQUENCE\"", sql);
     }
 
     /**
@@ -73,7 +72,7 @@ public class SequenceTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("SELECT nextval('CUSTOMERS_SEQUENCE')", sql);
+        assertEquals("SELECT nextval('\"CUSTOMERS_SEQUENCE\"')", sql);
     }
 
 }

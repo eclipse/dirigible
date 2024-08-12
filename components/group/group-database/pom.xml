@@ -76,10 +76,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-database-sql-sybase</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-sql-snowflake</artifactId>
 		</dependency>
 

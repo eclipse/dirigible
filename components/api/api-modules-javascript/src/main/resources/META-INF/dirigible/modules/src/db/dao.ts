@@ -936,12 +936,6 @@ export function create(oDefinition, logCtxName, dataSourceName) {
 		globals.set(dataSourceName, productName);
 	}
 
-	let isCaseSensitive = configurations.get("DIRIGIBLE_DATABASE_NAMES_CASE_SENSITIVE");
-	if (!isCaseSensitive && productName === "PostgreSQL") {
-		orm["properties"].map(function (property) {
-			property.column = property.column.toLowerCase();
-		});
-	}
 	//	}
 	return new DAO(orm, logCtxName, dataSourceName);
 };
