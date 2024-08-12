@@ -24,7 +24,6 @@ public class DatabaseSystemDeterminer {
             DatabaseSystem.MARIADB, "jdbc:mariadb", //
             DatabaseSystem.MYSQL, "jdbc:mysql", //
             DatabaseSystem.MONGODB, "jdbc:mongodb", //
-            DatabaseSystem.SYBASE, "jdbc:sybase", //
             DatabaseSystem.DERBY, "jdbc:derby"//
     );
 
@@ -36,7 +35,6 @@ public class DatabaseSystemDeterminer {
             DatabaseSystem.MARIADB, List.of("org.mariadb.jdbc.Driver"), //
             DatabaseSystem.MYSQL, List.of("com.mysql.cj.jdbc.Driver"), //
             DatabaseSystem.MONGODB, List.of("com.mongodb.jdbc.MongoDriver"), //
-            DatabaseSystem.SYBASE, List.of("com.sybase.jdbc4.jdbc.SybDriver"), //
             DatabaseSystem.DERBY, List.of("org.apache.derby.jdbc.ClientDriver", "org.apache.derby.jdbc.EmbeddedDriver")//
     );
 

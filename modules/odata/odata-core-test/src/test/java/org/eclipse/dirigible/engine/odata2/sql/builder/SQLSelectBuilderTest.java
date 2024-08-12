@@ -343,10 +343,10 @@ public class SQLSelectBuilderTest {
      * @throws ODataException the o data exception
      */
     @Test
-    public void testBuildSelectStatementWithSelectTopSybase() throws ODataException {
+    public void testBuildSelectStatementWithSelectTopH2() throws ODataException {
         String expectedSelectStatement =
                 "SELECT \"T0\".\"MESSAGEGUID\" AS \"MESSAGEGUID_T0\" FROM \"MPLHEADER\" AS \"T0\" ORDER BY \"T0\".\"LOGSTART\" DESC LIMIT 5";
-        testBuildSelectStatementWithSelectTop(DatabaseSystem.SYBASE, 5, expectedSelectStatement);
+        testBuildSelectStatementWithSelectTop(DatabaseSystem.H2, 5, expectedSelectStatement);
     }
 
     /**
@@ -389,10 +389,10 @@ public class SQLSelectBuilderTest {
      * @throws ODataException the o data exception
      */
     @Test
-    public void testBuildSelectStatementWithSelectTopAndSkipSybase() throws ODataException {
+    public void testBuildSelectStatementWithSelectTopAndSkipH2() throws ODataException {
         String expectedSelectStatement =
                 "SELECT \"T0\".\"MESSAGEGUID\" AS \"MESSAGEGUID_T0\" FROM \"MPLHEADER\" AS \"T0\" ORDER BY \"T0\".\"STATUS\" ASC, \"T0\".\"LOGSTART\" DESC LIMIT 10 OFFSET 20";
-        testBuildSelectStatementWithSelectTopAndSkip(DatabaseSystem.SYBASE, 10, 20, expectedSelectStatement);
+        testBuildSelectStatementWithSelectTopAndSkip(DatabaseSystem.H2, 10, 20, expectedSelectStatement);
     }
 
     /**
