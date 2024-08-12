@@ -11,6 +11,8 @@ package org.eclipse.dirigible.engine.odata2.sql.builder;
 
 import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
 import org.apache.olingo.odata2.api.edm.*;
+import org.eclipse.dirigible.database.sql.ISqlDialect;
+import org.eclipse.dirigible.database.sql.dialects.SqlDialectFactory;
 import org.eclipse.dirigible.engine.odata2.sql.api.OData2Exception;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatementBuilder;
 import org.eclipse.dirigible.engine.odata2.sql.api.SQLStatementParam;
@@ -139,6 +141,27 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
      */
     public EdmTableBindingProvider getTableBinding() {
         return tableBinding;
+    }
+
+    public String getSQLTableName(EdmStructuralType target, SQLContext context) {
+        EdmTableBinding mapping = tableBinding.getEdmTableBinding(target);
+
+        ISqlDialect dialect = SqlDialectFactory.getDialect(context.getDatabaseSystem());
+        char escapeSymbol = dialect.getEscapeSymbol();
+
+        Optional<String> schemaName = mapping.getSchemaName();
+
+        return schemaName.isEmpty() ? getTableName(mapping, escapeSymbol)
+                : (escape(schemaName.get(), escapeSymbol) + "." + getTableName(mapping, escapeSymbol));
+    }
+
+    private String getTableName(EdmTableBinding mapping, char escapeSymbol) {
+        String tableName = mapping.getTableName();
+        return escape(tableName, escapeSymbol);
+    }
+
+    private String escape(String str, char escapeSymbol) {
+        return escapeSymbol + str + escapeSymbol;
     }
 
     /**
@@ -556,4 +579,5 @@ public abstract class AbstractQueryBuilder implements SQLStatementBuilder {
                 manyToManyMappingTable);
         return alias;
     }
+
 }
