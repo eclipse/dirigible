@@ -22,7 +22,6 @@
 		<module>database-sql-hana</module>
 		<module>database-sql-mysql</module>
 		<module>database-sql-postgres</module>
-		<module>database-sql-sybase</module>
 		<module>database-sql-mongodb</module>
 		<module>database-mongodb-jdbc</module>
 		<module>database-sql-snowflake</module>

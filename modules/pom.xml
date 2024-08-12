@@ -118,11 +118,6 @@
 			</dependency>
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
-				<artifactId>dirigible-database-sql-sybase</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-database-sql-snowflake</artifactId>
 				<version>${project.version}</version>
 			</dependency>
