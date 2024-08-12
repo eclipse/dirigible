@@ -9,6 +9,14 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.snowflake;
 
+import org.eclipse.dirigible.database.sql.builders.AlterBranchingBuilder;
+import org.eclipse.dirigible.database.sql.builders.DropBranchingBuilder;
+import org.eclipse.dirigible.database.sql.builders.records.DeleteBuilder;
+import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
+import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
+import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
+import org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,15 +26,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.dirigible.database.sql.builders.AlterBranchingBuilder;
-import org.eclipse.dirigible.database.sql.builders.CreateBranchingBuilder;
-import org.eclipse.dirigible.database.sql.builders.DropBranchingBuilder;
-import org.eclipse.dirigible.database.sql.builders.records.DeleteBuilder;
-import org.eclipse.dirigible.database.sql.builders.records.InsertBuilder;
-import org.eclipse.dirigible.database.sql.builders.records.SelectBuilder;
-import org.eclipse.dirigible.database.sql.builders.records.UpdateBuilder;
-import org.eclipse.dirigible.database.sql.dialects.DefaultSqlDialect;
-
 /**
  * The Snowflake SQL Dialect.
  */
@@ -34,8 +33,8 @@ public class SnowflakeSqlDialect extends
         DefaultSqlDialect<SelectBuilder, InsertBuilder, UpdateBuilder, DeleteBuilder, SnowflakeCreateBranchingBuilder, AlterBranchingBuilder, DropBranchingBuilder, SnowflakeNextValueSequenceBuilder, SnowflakeLastValueIdentityBuilder> {
 
     /** The Constant FUNCTIONS. */
-    public static final Set<String> FUNCTIONS = Collections.synchronizedSet(new HashSet<String>(Arrays.asList(new String[] {"ABS", "ACOS",
-            "ACOSH", "ADD_MONTHS", "ALERT_HISTORY", "ALL_USER_NAMES", "ANY_VALUE", "APPROX_COUNT_DISTINCT", "APPROX_PERCENTILE",
+    public static final Set<String> FUNCTIONS = Collections.synchronizedSet(new HashSet<String>(Arrays.asList("ABS", "ACOS", "ACOSH",
+            "ADD_MONTHS", "ALERT_HISTORY", "ALL_USER_NAMES", "ANY_VALUE", "APPROX_COUNT_DISTINCT", "APPROX_PERCENTILE",
             "APPROX_PERCENTILE_ACCUMULATE", "APPROX_PERCENTILE_COMBINE", "APPROX_PERCENTILE_ESTIMATE", "APPROX_TOP_K",
             "APPROX_TOP_K_ACCUMULATE", "APPROX_TOP_K_COMBINE", "APPROX_TOP_K_ESTIMATE", "APPROXIMATE_JACCARD_INDEX",
             "APPROXIMATE_SIMILARITY", "ARRAY_AGG", "ARRAY_APPEND", "ARRAY_CAT", "ARRAY_COMPACT", "ARRAY_CONSTRUCT",
@@ -134,7 +133,7 @@ public class SnowflakeSqlDialect extends
             "TRY_TO_DECIMAL", "TRY_TO_NUMBER", "TRY_TO_NUMERIC", "TRY_TO_DOUBLE", "TRY_TO_GEOGRAPHY", "TRY_TO_GEOMETRY", "TRY_TO_TIME",
             "TRY_TO_TIMESTAMP", "TYPEOF", "UNICODE", "UNIFORM", "UPPER", "UUID_STRING", "VALIDATE", "VALIDATE_PIPE_LOAD", "VAR_POP",
             "VAR_SAMP", "VARIANCE", "VARIANCE_SAMP", "VARIANCE_POP", "WAREHOUSE_LOAD_HISTORY", "WAREHOUSE_METERING_HISTORY", "WIDTH_BUCKET",
-            "XMLGET", "YEAR", "DAY", "WEEK", "MONTH", "QUARTER", "ZEROIFNULL", "ZIPF"})));
+            "XMLGET", "YEAR", "DAY", "WEEK", "MONTH", "QUARTER", "ZEROIFNULL", "ZIPF", "AND", "OR")));
 
     /**
      * Nextval.
@@ -206,10 +205,7 @@ public class SnowflakeSqlDialect extends
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setString(1, schema);
         ResultSet resultSet = statement.executeQuery();
-        if (resultSet.next()) {
-            return true;
-        }
-        return false;
+        return resultSet.next();
     }
 
 }

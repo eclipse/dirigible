@@ -9,11 +9,11 @@
  */
 package org.eclipse.dirigible.database.sql.dialects.postgres;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * The Class InsertTest.
@@ -33,7 +33,7 @@ public class InsertTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("INSERT INTO CUSTOMERS (FIRST_NAME, LAST_NAME) VALUES (?, ?)", sql);
+        assertEquals("INSERT INTO \"CUSTOMERS\" (\"FIRST_NAME\", \"LAST_NAME\") VALUES (?, ?)", sql);
     }
 
     /**
@@ -51,7 +51,7 @@ public class InsertTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("INSERT INTO CUSTOMERS (FIRST_NAME, LAST_NAME) VALUES (?, 'Smith')", sql);
+        assertEquals("INSERT INTO \"CUSTOMERS\" (\"FIRST_NAME\", \"LAST_NAME\") VALUES (?, 'Smith')", sql);
     }
 
     /**
@@ -72,7 +72,7 @@ public class InsertTest {
                                .build();
 
         assertNotNull(sql);
-        assertEquals("INSERT INTO CUSTOMERS (FIRST_NAME, LAST_NAME) SELECT * FROM SUPPLIERS", sql);
+        assertEquals("INSERT INTO \"CUSTOMERS\" (\"FIRST_NAME\", \"LAST_NAME\") SELECT * FROM \"SUPPLIERS\"", sql);
     }
 
 }
