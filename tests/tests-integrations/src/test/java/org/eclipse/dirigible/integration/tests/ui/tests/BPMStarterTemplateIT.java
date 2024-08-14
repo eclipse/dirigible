@@ -11,6 +11,7 @@
 package org.eclipse.dirigible.integration.tests.ui.tests;
 
 import ch.qos.logback.classic.Level;
+import org.eclipse.dirigible.components.api.bpm.BpmFacade;
 import org.eclipse.dirigible.tests.FormView;
 import org.eclipse.dirigible.tests.IDE;
 import org.eclipse.dirigible.tests.WelcomeView;
@@ -82,6 +83,8 @@ class BPMStarterTemplateIT extends UserInterfaceIntegrationTest {
         workbench.clickPublishAll();
         ide.assertPublishedAllProjectsMessage();
 
+        waitUntilProcessIdDeployed();
+
         browser.openPath(TRIGGER_PROCESS_FORM_PATH);
         browser.enterTextInElementById(PARAM_1_ID, PARAM_1_VALUE);
         browser.enterTextInElementById(PARAM_2_ID, PARAM_2_VALUE);
@@ -89,6 +92,16 @@ class BPMStarterTemplateIT extends UserInterfaceIntegrationTest {
 
         await().atMost(30, TimeUnit.SECONDS)
                .until(() -> consoleLogAsserter.containsMessage(EXPECTED_TASK_LOGGED_MESSAGE, Level.INFO));
+    }
+
+    private void waitUntilProcessIdDeployed() {
+        await().atMost(25, TimeUnit.SECONDS)
+               .until(() -> BpmFacade.getEngine()
+                                     .getProcessEngine()
+                                     .getRepositoryService()
+                                     .createDeploymentQuery()
+                                     .deploymentKeyLike("%" + TEST_PROCESS + "%")
+                                     .count() == 1);
     }
 
 }
