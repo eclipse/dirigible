@@ -53,7 +53,7 @@ public class BpmFacade implements InitializingBean {
      *
      * @return the BPM engine object
      */
-    public static final Object getEngine() {
+    public static final BpmProviderFlowable getEngine() {
         return BpmFacade.get()
                         .getBpmProviderFlowable();
     }

@@ -84,7 +84,7 @@ export function getProductName(datasourceName) {
 	return productName;
 };
 
-export function getConnection(datasourceName: string | undefined) : Connection {
+export function getConnection(datasourceName?: string | undefined) : Connection {
 	var native;
 	if (datasourceName) {
 		native = DatabaseFacade.getConnection(datasourceName);

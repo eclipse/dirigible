@@ -66,6 +66,25 @@ public class IntegrationMessage {
         return message.getHeaders();
     }
 
+    public Object getHeader(String headerName) {
+        return message.getHeader(headerName);
+    }
+
+    public void setExchangeProperty(String propertyName, Object propertyValue) {
+        message.getExchange()
+               .setProperty(propertyName, propertyValue);
+    }
+
+    public Object getExchangeProperty(String propertyName) {
+        return message.getExchange()
+                      .getProperty(propertyName);
+    }
+
+    public Map<String, Object> getExchangeProperties() {
+        return message.getExchange()
+                      .getProperties();
+    }
+
     /**
      * Sets the headers.
      *
