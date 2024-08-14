@@ -17,7 +17,7 @@
 const HttpClientFacade = Java.type("org.eclipse.dirigible.components.api.http.HttpClientFacade");
 
 export class HttpClient {
-    get(_url, options) {
+    get(_url, options?) {
         let url = buildUrl(_url, options);
         let opts = '{}';
         if (options) {
