@@ -83,7 +83,7 @@ class BPMStarterTemplateIT extends UserInterfaceIntegrationTest {
         workbench.clickPublishAll();
         ide.assertPublishedAllProjectsMessage();
 
-        waitUntilProcessIdDeployed();
+        waitUntilProcessIsDeployed();
 
         browser.openPath(TRIGGER_PROCESS_FORM_PATH);
         browser.enterTextInElementById(PARAM_1_ID, PARAM_1_VALUE);
@@ -94,7 +94,7 @@ class BPMStarterTemplateIT extends UserInterfaceIntegrationTest {
                .until(() -> consoleLogAsserter.containsMessage(EXPECTED_TASK_LOGGED_MESSAGE, Level.INFO));
     }
 
-    private void waitUntilProcessIdDeployed() {
+    private void waitUntilProcessIsDeployed() {
         await().atMost(25, TimeUnit.SECONDS)
                .until(() -> BpmFacade.getEngine()
                                      .getProcessEngine()
