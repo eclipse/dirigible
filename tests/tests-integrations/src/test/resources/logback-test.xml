@@ -71,5 +71,6 @@
     </root>
 
     <logger name="org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer" level="INFO"/>
+    <logger name="org.eclipse.dirigible.components.base.logging.TenantConverter" level="INFO"/>
 
 </configuration>
