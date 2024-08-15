@@ -125,6 +125,10 @@ function createModel(graph) {
 					if (property.dataScale !== null && property.dataType === 'DECIMAL') {
 						model.push(' dataScale="' + _.escape(property.dataScale) + '"');
 					}
+					if (property.dataPrecision !== null && property.dataScale !== null && property.dataType === 'DECIMAL') {
+						const dataLength = parseInt(property.dataPrecision) + parseInt(property.dataScale);
+						model.push(' dataLength="' + dataLength + '"');
+					}
 					if (property.isRequiredProperty == "true") {
 						model.push(' isRequiredProperty="true"');
 					}
