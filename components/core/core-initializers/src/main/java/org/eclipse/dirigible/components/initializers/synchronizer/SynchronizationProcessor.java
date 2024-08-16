@@ -110,11 +110,13 @@ public class SynchronizationProcessor implements SynchronizationWalkerCallback, 
      * Prepare synchronizers.
      */
     public synchronized void prepareSynchronizers() {
+        logger.info("Preparing synchronizers...");
         this.synchronizers.forEach(s -> s.getService()
                                          .setRunningToAll(false));
         try {
             this.synchronizationWatcher.initialize(getRegistryFolder());
             prepared.set(true);
+            logger.info("Synchronizers have been preapred.");
         } catch (IOException | InterruptedException e) {
             logger.error(e.getMessage(), e);
         }

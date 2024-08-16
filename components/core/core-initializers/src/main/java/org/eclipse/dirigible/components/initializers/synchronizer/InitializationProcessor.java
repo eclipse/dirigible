@@ -45,9 +45,11 @@ public class InitializationProcessor {
     void processInitializers() {
         for (var initializer : initializers) {
             try {
+                LOGGER.info("Executing initializer [{}]", initializer);
                 initializer.initialize();
+                LOGGER.info("Initializer [{}] has completed", initializer);
             } catch (Exception e) {
-                LOGGER.error("Initializer failed", e);
+                LOGGER.error("Initializer [{}] failed", initializer, e);
             }
 
         }
