@@ -200,6 +200,7 @@
 		<module>resources/resources-portal</module>
 		<module>resources/resources-inbox</module>
 		<module>resources/resources-documents</module>
+		<module>resources/resources-karavan-libs</module>
 
 		<!-- Templates -->
 		<module>template/template-application-angular</module>
@@ -1063,6 +1064,11 @@
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-components-resources-documents</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-resources-karavan-libs</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			

@@ -108,6 +108,10 @@ public class ClasspathExpander {
         JarURLConnection jarUrlConnection = (JarURLConnection) urlConnection;
         try (JarFile jar = jarUrlConnection.getJarFile()) {
             Enumeration<JarEntry> entries = jar.entries();
+            JarEntry maybeSkip = jar.getJarEntry("META-INF/dirigible/.skip");
+            if (maybeSkip != null) {
+                return;
+            }
             while (entries.hasMoreElements()) {
                 JarEntry entry = entries.nextElement();
                 if (entry.getName()
