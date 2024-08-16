@@ -59,7 +59,7 @@ public class ClasspathExpander {
      */
     public void expandContent() {
         expandContent("dirigible");
-        expandContent("resources" + File.separator + "webjars");
+        // expandContent("resources" + File.separator + "webjars");
     }
 
     /**
