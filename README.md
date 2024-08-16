@@ -167,9 +167,25 @@ More info about **ttyd** can be found at: [ttyd](https://github.com/tsl0922/ttyd
    > prerequisite: build the project as described in step 4 [here](https://github.com/eclipse/dirigible/blob/master/README.md#steps)
 
 2. Start the container
+```
+docker run --name dirigible --rm -p 8080:8080 -p 8081:8081 dirigiblelabs/dirigible:latest
+```
+If you want to have persistent workspace and databases, mount a host folder
+```
+export WORKSPACE_DIR='/tmp/dirigible'
 
-        docker run --name dirigible --rm -p 8080:8080 -p 8081:8081 dirigiblelabs/dirigible:latest
+docker run --name dirigible --rm -p 8080:8080 -p 8081:8081 \
+    -v "$WORKSPACE_DIR:/target/dirigible" \
+    dirigiblelabs/dirigible:latest
+```
+__Note:__ we have observed performance issues on Windows when mounting a folder. To improve the perfomance, use dedicated volume instead:
+```
+docker volume create dirigible_volume
 
+docker run --name dirigible --rm -p 8080:8080 `
+    -v "dirigible_volume:/target/dirigible" `
+    dirigiblelabs/dirigible:latest
+```
 3. Open a web browser and go to: [http://localhost:8080](http://localhost:8080 "http://localhost:8080")
 
 4. Optionally you can enhance and customize the Dockerfile from [here](https://github.com/eclipse/dirigible/blob/master/build/application/Dockerfile)
