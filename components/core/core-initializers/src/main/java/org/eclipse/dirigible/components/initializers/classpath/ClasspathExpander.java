@@ -35,6 +35,7 @@ import java.util.jar.JarFile;
 @Component
 public class ClasspathExpander {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClasspathExpander.class);
     /**
      * The Constant logger.
      */
@@ -67,6 +68,8 @@ public class ClasspathExpander {
      * @param root the root
      */
     private void expandContent(String root) {
+        long startedAtMillis = System.currentTimeMillis();
+        LOGGER.info("Expanding the content of [{}]...", root);
         try {
             Enumeration<URL> urls = ClasspathExpander.class.getClassLoader()
                                                            .getResources("META-INF");
@@ -86,7 +89,8 @@ public class ClasspathExpander {
                     logDirectoryExpandingError(url.toString(), e);
                 }
             }
-
+            long elapsedMillis = System.currentTimeMillis() - startedAtMillis;
+            LOGGER.info("The content of [{}] has been expanded. It took [{}] millis", root, elapsedMillis);
         } catch (IOException e) {
             throw new RuntimeException("Failed to expand content for " + root, e);
         }
