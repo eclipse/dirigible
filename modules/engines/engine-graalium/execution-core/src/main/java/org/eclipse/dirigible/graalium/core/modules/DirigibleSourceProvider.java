@@ -199,8 +199,8 @@ public class DirigibleSourceProvider implements JavascriptSourceProvider {
                 LOGGER.debug("File [{}] exists and will NOT be created", pathToUnpack);
             }
             if (null == bundled) {
-                LOGGER.warn("Missing resource from path [{}]. File will not be copied.", path);
-                return pathToUnpack;
+                throw new IllegalStateException(
+                        "Failed to load resource from path [" + path + "] and cannot be unpacked to [" + pathToUnpack + "]");
             }
             Files.copy(bundled, pathToUnpack, StandardCopyOption.REPLACE_EXISTING);
             return pathToUnpack;
