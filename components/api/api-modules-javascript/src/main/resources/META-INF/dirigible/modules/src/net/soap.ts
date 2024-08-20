@@ -9,7 +9,6 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-// import * as streams from "@dirigible/io/streams";
 import * as request from "sdk/http/request";
 import * as base64 from "sdk/utils/base64";
 import { createByteArrayOutputStream, InputStream } from "sdk/io/streams";
