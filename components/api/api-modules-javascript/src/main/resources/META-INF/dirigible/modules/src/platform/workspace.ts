@@ -155,7 +155,7 @@ export class Project {
 		this.native.deleteFolder(path);
 	}
 
-	public createFile(path: string, input: any[]): File {
+	public createFile(path: string, input: any[] = []): File {
 		const native = this.native.createFile(path, input);
 		return new File(native);
 	}
@@ -269,7 +269,7 @@ export class Folder {
 		this.native.deleteFolder(path);
 	}
 
-	public createFile(path: string, input: any[]): File {
+	public createFile(path: string, input: any[] = []): File {
 		const native = this.native.createFile(path, input);
 		return new File(native);
 	}
