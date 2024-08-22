@@ -14,7 +14,7 @@
  *
  * Note: This module is supported only with the Mozilla Rhino engine
  */
-import * as repository from "sdk/platform/repository";
+import { Repository } from "sdk/platform/repository";
 
 const REGISTRY_PUBLIC = "/registry/public/";
 const MUSTACHE_FILE_EXTENSION = ".mustache";
@@ -47,7 +47,7 @@ export class TemplateEngines {
     }
 
     public static generateFromFile(location: string, parameters: { [key: string]: any }): string | undefined {
-        const resource = repository.getResource(REGISTRY_PUBLIC + location);
+        const resource = Repository.getResource(REGISTRY_PUBLIC + location);
         if (resource.exists()) {
             const isMustacheTemplate = location.endsWith(MUSTACHE_FILE_EXTENSION);
             const engine = isMustacheTemplate ? this.getMustacheEngine() : this.getDefaultEngine();

@@ -30,10 +30,19 @@ interface CommandOutput {
 	errorOutput: string;
 }
 
-export function execute(command: string, options?: ProcessExecutionOptions, add?: EnvironmentVariables, remove?: string[]): CommandOutput {
-	const processExecutionOptions = new ProcessExecutionOptions();
-	if (options) {
-		processExecutionOptions.setWorkingDirectory(options.workingDirectory);
+export class Command {
+
+	public static execute(command: string, options?: ProcessExecutionOptions, add?: EnvironmentVariables, remove?: string[]): CommandOutput {
+		const processExecutionOptions = new ProcessExecutionOptions();
+		if (options) {
+			processExecutionOptions.setWorkingDirectory(options.workingDirectory);
+		}
+		return JSON.parse(CommandFacade.execute(command, add, remove, processExecutionOptions))
 	}
-	return JSON.parse(CommandFacade.execute(command, add, remove, processExecutionOptions))
-};
+}
+
+// @ts-ignore
+if (typeof module !== 'undefined') {
+	// @ts-ignore
+	module.exports = Command;
+}
