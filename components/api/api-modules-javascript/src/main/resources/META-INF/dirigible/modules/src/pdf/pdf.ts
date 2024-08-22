@@ -11,7 +11,7 @@
  */
 
 import { Registry } from "sdk/platform/registry";
-import * as xml from "sdk/utils/xml";
+import { XML } from "sdk/utils/xml";
 import { TemplateEngines } from "sdk/template";
 const PDFFacade = Java.type("org.eclipse.dirigible.components.api.pdf.PDFFacade");
 
@@ -32,7 +32,7 @@ export function generateTable(data, config) {
     let template = Registry.getText(TEMPLATE_PATH_TABLE);
     let pdfTemplate = TemplateEngines.generate(TEMPLATE_PATH_TABLE, template, templateParameters);
 
-    let xmlData = xml.fromJson({
+    let xmlData = XML.fromJson({
         content: data
     });
     return PDFFacade.generate(pdfTemplate, xmlData);
@@ -41,7 +41,7 @@ export function generateTable(data, config) {
 export function generate(templatePath, data) {
     let template = Registry.getText(templatePath);
 
-    let xmlData = xml.fromJson({
+    let xmlData = XML.fromJson({
         content: data
     });
     return PDFFacade.generate(template, xmlData);

@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 import * as request from "sdk/http/request";
-import * as base64 from "sdk/utils/base64";
+import { Base64 } from "sdk/utils/base64";
 import { createByteArrayOutputStream, InputStream } from "sdk/io/streams";
 
 const MessageFactory = Java.type("javax.xml.soap.MessageFactory");
@@ -133,7 +133,7 @@ class MimeHeaders {
 
 	public addBasicAuthenticationHeader(username: string, password: string): void {
 		const userAndPassword = `${username}:${password}`;
-		const basicAuth = base64.encode(userAndPassword);
+		const basicAuth = Base64.encode(userAndPassword);
 		this.native.addHeader("Authorization", `Basic ${basicAuth}`);
 	}
 }
