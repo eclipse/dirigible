@@ -12,10 +12,6 @@
 
 const ProblemsFacade = Java.type("org.eclipse.dirigible.components.api.platform.ProblemsFacade");
 
-export const ACTIVE = "ACTIVE";
-export const SOLVED = "SOLVED";
-export const IGNORED = "IGNORED";
-
 export interface Problem {
    id: number;
    location: string;
@@ -34,6 +30,10 @@ export interface Problem {
 }
 
 export class Problems {
+
+   public static readonly ACTIVE = "ACTIVE";
+   public static readonly SOLVED = "SOLVED";
+   public static readonly IGNORED = "IGNORED";
 
    public static save(location: string, type: string, line: string, column: string, cause: string, expected: string, category: string, module: string, source: string, program: string): void {
       ProblemsFacade.save(location, type, line, column, cause, expected, category, module, source, program);
