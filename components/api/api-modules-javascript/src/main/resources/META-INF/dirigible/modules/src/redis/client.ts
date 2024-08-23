@@ -69,7 +69,7 @@ export class Client {
         return this.native.lpop(key);
     }
 
-    public lpush(key: string, value: string | string[]) {
+    public lpush(key: string, ...value: string[]) {
         return this.native.lpush(key, value);
     }
 
@@ -81,13 +81,13 @@ export class Client {
         return this.native.rpop(key);
     }
 
-    public rpush(key: string, value: string | string[]): number {
+    public rpush(key: string, ...value: string[]): number {
         return this.native.rpush(key, value);
     }
 }
 
 // @ts-ignore
 if (typeof module !== 'undefined') {
-	// @ts-ignore
-	module.exports = Client;
+    // @ts-ignore
+    module.exports = Client;
 }
