@@ -16,4 +16,3 @@ export * from "./insert";
 export { Insert as insert } from "./insert";
 export * from "./store";
 export { Store as store } from "./store";
-
