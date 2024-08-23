@@ -3,14 +3,6 @@ const Invoker = Java.type('org.eclipse.dirigible.components.engine.camel.invoke.
 const invoker = SpringBeanProvider.getBean(Invoker.class);
 const CamelMessage = Java.type('org.apache.camel.Message');
 
-export function invokeRoute(routeId, payload, headers) {
-    return invoker.invokeRoute(routeId, payload, headers);
-}
-
-export function getInvokingRouteMessage() {
-    return __context.camelMessage;
-}
-
 export interface HeadersMap {
     [key: string]: string | string[];
 }
@@ -34,4 +26,21 @@ export interface IntegrationMessage {
     setHeader(key: string, value: string | string[]): void;
 
     getCamelMessage(): typeof CamelMessage;
+}
+
+export class Integrations {
+
+    public static invokeRoute(routeId: string, payload: any, headers: HeadersMap) {
+        return invoker.invokeRoute(routeId, payload, headers);
+    }
+
+    public static getInvokingRouteMessage(): IntegrationMessage {
+        return __context.camelMessage;
+    }
+}
+
+// @ts-ignore
+if (typeof module !== 'undefined') {
+	// @ts-ignore
+	module.exports = Integrations;
 }

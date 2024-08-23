@@ -12,7 +12,7 @@
 
 const MongoDBFacade = Java.type("org.eclipse.dirigible.components.api.mongodb.MongoDBFacade");
 const TimeUnit = Java.type("java.util.concurrent.TimeUnit");
-import * as uuid from "sdk/utils/uuid";
+import { UUID } from "sdk/utils/uuid";
 
 export function getClient(uri: string, user: string, password: string) {
     var native = MongoDBFacade.getClient(uri, user, password);
@@ -264,7 +264,7 @@ class DBCollection {
     }
 
     generateUUID() {
-        return uuid.random();
+        return UUID.random();
     }
 
 }

@@ -17,7 +17,11 @@ const StreamsFacade = Java.type("org.eclipse.dirigible.components.api.io.Streams
  */
 export class InputStream {
 
-	constructor(private native) {}
+	public native: any;
+
+	constructor(native: any) {
+		this.native = native;
+	}
 
 	read() {
 		return StreamsFacade.read(this.native);

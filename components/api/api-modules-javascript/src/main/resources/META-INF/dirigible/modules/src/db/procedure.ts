@@ -14,7 +14,7 @@
  *
  */
 import { Update } from "./update";
-import * as database from "./database";
+import { Database } from "./database";
 
 export interface ProcedureParameter {
 	readonly type: string;
@@ -37,7 +37,7 @@ export class Procedure {
         try {
             let hasMoreResults = false;
 
-            connection = database.getConnection(datasourceName);
+            connection = Database.getConnection(datasourceName);
             callableStatement = connection.prepareCall(sql);
             let mappedParameters = parameters.map((parameter) => {
                 let mappedParameter: ProcedureParameter = {
