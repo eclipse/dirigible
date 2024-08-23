@@ -194,8 +194,11 @@ function getGenerationEngine(template) {
         generationEngine = templateEngines.getJavascriptEngine();
     } else if (template.engine === "mustache") {
         generationEngine = templateEngines.getMustacheEngine();
+    } else if (template.engine === undefined) {
+		console.debug("Template engine is not explicitly defined, so will be used the default Mustache engine.");
+		generationEngine = templateEngines.getMustacheEngine();
     } else {
-        console.error("Template Engine: " + template.engine + " does not exist, so will be used the default Mustache engine.");
+        console.error("Template engine: " + template.engine + " does not exist, so will be used the default Mustache engine.");
         generationEngine = templateEngines.getMustacheEngine();
     }
 
