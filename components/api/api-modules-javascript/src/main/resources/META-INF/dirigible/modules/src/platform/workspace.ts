@@ -9,8 +9,8 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-import * as bytes from "sdk/io/bytes";
-import { workspace } from ".";
+import { Bytes } from "sdk/io/bytes";
+
 const WorkspaceFacade = Java.type("org.eclipse.dirigible.components.api.platform.WorkspaceFacade");
 
 /**
@@ -332,7 +332,7 @@ export class File {
 
 	public getText(): string {
 		const bytesOutput = this.getContent();
-		return bytes.byteArrayToText(bytesOutput);
+		return Bytes.byteArrayToText(bytesOutput);
 	}
 
 	public setContent(input: any[]): void {
@@ -340,7 +340,7 @@ export class File {
 	}
 
 	public setText(input: string): void {
-		const bytesInput = bytes.textToByteArray(input);
+		const bytesInput = Bytes.textToByteArray(input);
 		this.setContent(bytesInput);
 	}
 

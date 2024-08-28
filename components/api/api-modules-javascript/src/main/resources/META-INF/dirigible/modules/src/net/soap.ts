@@ -11,7 +11,7 @@
  */
 import * as request from "sdk/http/request";
 import { Base64 } from "sdk/utils/base64";
-import { createByteArrayOutputStream, InputStream } from "sdk/io/streams";
+import { Streams, InputStream } from "sdk/io/streams";
 
 const MessageFactory = Java.type("javax.xml.soap.MessageFactory");
 const MimeHeadersInternal = Java.type("javax.xml.soap.MimeHeaders");
@@ -94,7 +94,7 @@ class Message {
 	}
 
 	public getText(): string {
-		const outputStream = createByteArrayOutputStream();
+		const outputStream = Streams.createByteArrayOutputStream();
 		this.native.writeTo(outputStream.native);
 		return outputStream.getText();
 	}

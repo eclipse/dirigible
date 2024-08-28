@@ -14,7 +14,7 @@
  *
  */
 import * as streams from "sdk/io/streams"
-import * as bytes from "sdk/io/bytes"
+import { Bytes } from "sdk/io/bytes"
 const HttpUploadFacade = Java.type("org.eclipse.dirigible.components.api.http.HttpUploadFacade");
 
 export function isMultipartContent() {
@@ -76,7 +76,7 @@ class FileItem {
 
     public getBytes() {
         const data = this.getBytesNative();
-        return bytes.toJavaScriptBytes(data);
+        return Bytes.toJavaScriptBytes(data);
     }
 
     public getBytesNative() {

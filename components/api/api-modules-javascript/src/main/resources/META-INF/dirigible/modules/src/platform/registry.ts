@@ -9,13 +9,13 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-import * as bytes from "sdk/io/bytes";
+import { Bytes } from "sdk/io/bytes";
 const RegistryFacade = Java.type("org.eclipse.dirigible.components.api.platform.RegistryFacade");
 
 export class Registry {
 
 	public static getContent(path: string): any[] {
-		return bytes.toJavaScriptBytes(RegistryFacade.getContent(path));
+		return Bytes.toJavaScriptBytes(RegistryFacade.getContent(path));
 	}
 
 	public static getContentNative(path: string): any[] {

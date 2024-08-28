@@ -1,4 +1,5 @@
-import * as streams from "sdk/io/streams"
+import { Streams } from "sdk/io/streams"
+
 const HttpRequestFacade = Java.type("org.eclipse.dirigible.components.api.http.HttpRequestFacade");
 
 export function isValid() {
@@ -228,5 +229,5 @@ export function getLocalPort() {
 };
 
 export function getInputStream() {
-    return streams.createInputStream(HttpRequestFacade.getInputStream());
+    return Streams.createInputStream(HttpRequestFacade.getInputStream());
 };
