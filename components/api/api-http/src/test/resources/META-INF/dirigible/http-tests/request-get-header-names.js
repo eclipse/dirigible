@@ -1,6 +1,4 @@
+import { Request as request } from 'sdk/http/request';
+import { Assert } from 'test/assert';
 
-var request = require('http/request');
-var assertEquals = require('test/assert').assertEquals;
-
-assertEquals(JSON.stringify(request.getHeaderNames()), '["Authorization","header1","header2"]');
-
+Assert.assertEquals(JSON.stringify(request.getHeaderNames()), '["Authorization","header1","header2"]');

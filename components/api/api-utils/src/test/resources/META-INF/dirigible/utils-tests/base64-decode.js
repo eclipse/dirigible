@@ -1,10 +1,10 @@
 
-var base64 = require('utils/base64');
-var assertTrue = require('test/assert').assertTrue;
+import { Base64 } from 'sdk/utils/base64';
+import { Assert } from 'test/assert';
 
-var input = 'PT4/';
-var result = base64.decode(input);
+const input = 'PT4/';
+const result = Base64.decode(input);
 
 console.log('decoded: ' + result);
 
-assertTrue(result[0] === 61 && result[1] === 62 && result[2] === 63);
+Assert.assertTrue(result[0] === 61 && result[1] === 62 && result[2] === 63);

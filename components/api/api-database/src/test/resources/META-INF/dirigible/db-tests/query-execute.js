@@ -1,7 +1,6 @@
-
-var query = require('db/query');
-var update = require('db/update');
-var assertTrue = require('test/assert').assertTrue;
+import { Query as query } from 'sdk/db/query';
+import { Update as update } from 'sdk/db/update';
+import { Assert } from 'test/assert';
 
 update.execute("CREATE TABLE Q (A INT, B VARCHAR(10))");
 update.execute("INSERT INTO Q VALUES (1, 'ABC')");
@@ -14,4 +13,4 @@ console.log(JSON.stringify(resultset));
 
 update.execute("DROP TABLE Q");
 
-assertTrue((resultset !== null) && (resultset !== undefined));
+Assert.assertTrue((resultset !== null) && (resultset !== undefined));

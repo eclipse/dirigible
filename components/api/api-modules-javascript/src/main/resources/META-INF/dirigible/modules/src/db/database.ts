@@ -1027,7 +1027,7 @@ export class PreparedStatement {
 }
 
 export class CallableStatement {
-	private native: any;
+	private readonly native: any;
 
 	constructor(native: any) {
 		this.native = native;

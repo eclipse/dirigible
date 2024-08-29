@@ -37,7 +37,7 @@ export class OAuthClient {
             }]
         });
         if (oauthResponse.statusCode !== 200) {
-            const errorMessage = `Error occurred while retrieving OAuth token. Status code: [${oauthResponse.status}], text: [${oauthResponse.text}]`;
+            const errorMessage = `Error occurred while retrieving OAuth token. Status code: [${oauthResponse.statusCode}], text: [${oauthResponse.text}]`;
             console.error(errorMessage);
             throw new Error(errorMessage);
         }

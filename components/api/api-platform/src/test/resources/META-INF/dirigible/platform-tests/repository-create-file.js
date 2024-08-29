@@ -1,9 +1,8 @@
-
-var repository = require("platform/repository");
-var assertTrue = require('test/assert').assertTrue;
+import { Repository as repository } from "sdk/platform/repository";
+import { Assert } from 'test/assert';
 
 repository.createResource("/registry/public/test/file.js", "console.log('Hello World');", "application/json");
-var resource = repository.getResource("/registry/public/test/file.js");
-var content = resource.getText();
+const resource = repository.getResource("/registry/public/test/file.js");
+const content = resource.getText();
 
-assertTrue(content !== undefined && content !== null);
+Assert.assertTrue(content !== undefined && content !== null);

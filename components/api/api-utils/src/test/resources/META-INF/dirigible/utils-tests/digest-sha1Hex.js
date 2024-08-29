@@ -1,10 +1,10 @@
 
-var digest = require('utils/digest');
-var assertEquals = require('test/assert').assertEquals;
+import { Digest } from 'sdk/utils/digest';
+import { Assert } from 'test/assert';
 
-var input = [61, 62, 63];
-var result = digest.sha1Hex(input);
+const input = [61, 62, 63];
+const result = Digest.sha1Hex(input);
 
 console.log(result);
 
-assertEquals(result, '3b543c8b5ddc61fe39de1e5a3aece34082b12777');
+Assert.assertEquals(result, '3b543c8b5ddc61fe39de1e5a3aece34082b12777');

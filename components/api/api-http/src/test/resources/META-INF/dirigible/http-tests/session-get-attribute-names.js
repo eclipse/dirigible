@@ -1,8 +1,6 @@
-
-var session = require('http/session');
-var assertEquals = require('test/assert').assertEquals;
+import { Session as session } from 'sdk/http/session';
+import { Assert } from 'test/assert';
 
 session.setAttribute('attr1', 'value1');
 
-assertEquals(JSON.stringify(session.getAttributeNames()), '["invocation.count","attr1"]');
-
+Assert.assertEquals(JSON.stringify(session.getAttributeNames()), '["invocation.count","attr1"]');

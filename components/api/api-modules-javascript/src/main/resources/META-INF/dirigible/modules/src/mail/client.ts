@@ -31,7 +31,7 @@ export interface MailMultipart {
 type MailContentType = "html" | "plain";
 
 export class MailClient {
-    private native: any;
+    private readonly native: any;
 
     public static sendMultipart(from: string, recipients: string | MailRecipients, subject: string, parts: MailMultipart[]): void {
         const mailClient = new MailClient();

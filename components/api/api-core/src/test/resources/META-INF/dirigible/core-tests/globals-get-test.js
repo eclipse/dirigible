@@ -1,8 +1,7 @@
+import { Globals } from 'sdk/core/globals';
+import { Assert } from 'test/assert';
 
-var globals = require('core/globals');
-var assertEquals = require('test/assert').assertEquals;
+Globals.set("name1", "value1");
+const result = Globals.get('name1');
 
-globals.set("name1", "value1");
-var result = globals.get('name1');
-
-assertEquals(result, 'value1');
+Assert.assertEquals(result, 'value1');

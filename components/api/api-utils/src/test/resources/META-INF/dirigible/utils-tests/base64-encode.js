@@ -1,8 +1,8 @@
 
-var base64 = require('utils/base64');
-var assertEquals = require('test/assert').assertEquals;
+import { Base64 } from 'sdk/utils/base64';
+import { Assert } from 'test/assert';
 
-var input = [61, 62, 63];
-var result = base64.encode(input);
+const input = [61, 62, 63];
+const result = Base64.encode(input);
 
-assertEquals(result, 'PT4/');
+Assert.assertEquals(result, 'PT4/');

@@ -1,5 +1,4 @@
+import { Request as request } from 'sdk/http/request';
+import { Assert } from 'test/assert';
 
-var request = require('http/request');
-var assertEquals = require('test/assert').assertEquals;
-
-assertEquals(request.getMethod(), 'GET');
+Assert.assertEquals(request.getMethod(), 'GET');

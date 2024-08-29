@@ -1,5 +1,4 @@
+import { Request as request } from 'sdk/http/request';
+import { Assert } from 'test/assert';
 
-var request = require('http/request');
-var assertTrue = require('test/assert').assertTrue;
-
-assertTrue(request.isValid());
+Assert.assertTrue(request.isValid());

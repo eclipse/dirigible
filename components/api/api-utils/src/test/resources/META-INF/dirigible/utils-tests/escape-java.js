@@ -1,8 +1,8 @@
 
-var escape = require('utils/escape');
-var assertEquals = require('test/assert').assertEquals;
+import { Escape } from 'sdk/utils/escape';
+import { Assert } from 'test/assert';
 
-var input = 'java \t characters \n';
-var result = escape.escapeJava(input);
+const input = 'java \t characters \n';
+const result = Escape.escapeJava(input);
 
-assertEquals(result, 'java \\t characters \\n');
+Assert.assertEquals(result, 'java \\t characters \\n');

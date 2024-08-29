@@ -40,7 +40,7 @@ export class Zip {
 
 export class ZipInputStream {
 
-    private native: any;
+    private readonly native: any;
 
     constructor(native: any) {
         this.native = native;
@@ -72,7 +72,7 @@ export class ZipInputStream {
 
 export class ZipOutputStream {
 
-    private native: any;
+    private readonly native: any;
 
     constructor(native: any) {
         this.native = native;
@@ -90,7 +90,7 @@ export class ZipOutputStream {
         ZipFacade.writeNative(this.native, native);
     }
 
-    writeNative(data: any[]): void {
+    public writeNative(data: any[]): void {
         ZipFacade.writeNative(this.native, data);
     }
 
@@ -114,7 +114,7 @@ export class ZipOutputStream {
  */
 export class ZipEntry {
 
-    private native: any;
+    private readonly native: any;
 
     constructor(native: any) {
         this.native = native;

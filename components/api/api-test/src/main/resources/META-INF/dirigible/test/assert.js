@@ -9,32 +9,42 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.assertTrue = function (condition, message) {
-    if (!condition) {
-        throw(message || "Assertion 'assertTrue' failed");
+
+export class Assert {
+
+    static assertTrue(condition, message) {
+        if (!condition) {
+            throw (message || "Assertion 'assertTrue' failed");
+        }
+    }
+
+
+    static assertFalse(condition, message) {
+        if (condition) {
+            throw (message || "Assertion 'assertFalse' failed");
+        }
+    }
+
+    static assertNull(object, message) {
+        if (object !== undefined && object !== null) {
+            throw (message || "Assertion 'assertNull' failed");
+        }
+    }
+
+    static assertNotNull(object, message) {
+        if (object === undefined || object === null) {
+            throw (message || "Assertion 'assertNotNull' failed");
+        }
+    }
+
+    static assertEquals(actual, expected, message) {
+        if (expected !== actual) {
+            throw (message || "Assertion 'assertEquals' failed - expected: '" + expected + "', but found: '" + actual + "'");
+        }
     }
 }
 
-exports.assertFalse = function (condition, message) {
-    if (condition) {
-        throw(message || "Assertion 'assertFalse' failed");
-    }
-}
 
-exports.assertNull = function (object, message) {
-    if (object !== undefined && object !== null) {
-        throw(message || "Assertion 'assertNull' failed");
-    }
-}
-
-exports.assertNotNull = function (object, message) {
-    if (object === undefined || object === null) {
-        throw(message || "Assertion 'assertNotNull' failed");
-    }
-}
-
-exports.assertEquals = function assertEquals(actual, expected, message) {
-    if (expected !== actual) {
-        throw (message || "Assertion 'assertEquals' failed - expected: '" + expected + "', but found: '" + actual + "'");
-    }
+if (typeof module !== 'undefined') {
+    module.exports = Assert;
 }

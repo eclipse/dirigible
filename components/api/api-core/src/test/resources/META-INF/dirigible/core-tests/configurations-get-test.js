@@ -1,8 +1,7 @@
+import { Configurations } from 'sdk/core/configurations';
+import { Assert } from 'test/assert';
 
-var configurations = require('core/configurations');
-var assertEquals = require('test/assert').assertEquals;
+Configurations.set('name1', 'value1');
+const result = Configurations.get('name1');
 
-configurations.set('name1', 'value1');
-var result = configurations.get('name1');
-
-assertEquals(result, 'value1');
+Assert.assertEquals(result, 'value1');

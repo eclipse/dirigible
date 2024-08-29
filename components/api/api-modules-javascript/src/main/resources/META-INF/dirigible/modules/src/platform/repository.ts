@@ -64,7 +64,7 @@ export class Repository {
 }
 
 export class Resource {
-	private native: any;
+	private readonly native: any;
 
 	constructor(native: any) {
 		this.native = native;
@@ -153,7 +153,7 @@ export class Resource {
 }
 
 export class Collection {
-	private native: any;
+	private readonly native: any;
 
 	constructor(native: any) {
 		this.native = native;
@@ -243,7 +243,7 @@ export class Collection {
 }
 
 export class EntityInformation {
-	private native: any;
+	private readonly native: any;
 
 	constructor(native: any) {
 		this.native = native;

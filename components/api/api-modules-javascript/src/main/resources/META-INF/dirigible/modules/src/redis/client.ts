@@ -13,7 +13,7 @@
 const RedisFacade = Java.type("org.eclipse.dirigible.components.api.redis.RedisFacade");
 
 export class Client {
-    private native: any;
+    private readonly native: any;
 
     constructor() {
         this.native = RedisFacade.getClient();

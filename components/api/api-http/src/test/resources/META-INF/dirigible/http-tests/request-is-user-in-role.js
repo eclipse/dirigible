@@ -1,5 +1,4 @@
+import { Request as request } from 'sdk/http/request';
+import { Assert } from 'test/assert';
 
-var request = require('http/request');
-var assertTrue = require('test/assert').assertTrue;
-
-assertTrue(request.isUserInRole('ROLE'));
+Assert.assertTrue(request.isUserInRole('ROLE'));

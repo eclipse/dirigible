@@ -15,9 +15,9 @@
  * Note: This module is supported only with the Mozilla Rhino engine
  */
 
-import { configurations } from "sdk/core";
-import { client as httpClient } from "sdk/http";
-import { OAuthClient } from "sdk/security";
+import { Configurations } from "sdk/core/configurations";
+import { HttpClient } from "sdk/http/client";
+import { OAuthClient } from "sdk/security/oauth";
 
 const JClass = Java.type("java.lang.Class");
 const DestinationsFacade = Java.type("org.eclipse.dirigible.components.api.core.DestinationsFacade");
@@ -73,7 +73,7 @@ export class Destinations {
             }]
         };
 
-        let response = httpClient.get(destinationUrl, requestOptions);
+        let response = HttpClient.get(destinationUrl, requestOptions);
 
         if (response.statusCode === 404) {
             throw new Error(`Destination with name '${name}' not found`);
@@ -84,15 +84,15 @@ export class Destinations {
     }
 
     private static getDestinationsBasePath() {
-        return `${configurations.get("DIRIGIBLE_DESTINATION_URI")}/destination-configuration/v1/destinations`;
+        return `${Configurations.get("DIRIGIBLE_DESTINATION_URI")}/destination-configuration/v1/destinations`;
     }
 
     private static getInstanceDestinationsBasePath() {
-        return `${configurations.get("DIRIGIBLE_DESTINATION_URI")}/destination-configuration/v1/instanceDestinations`;
+        return `${Configurations.get("DIRIGIBLE_DESTINATION_URI")}/destination-configuration/v1/instanceDestinations`;
     }
 
     private static getSubaccountDestinationsBasePath() {
-        return `${configurations.get("DIRIGIBLE_DESTINATION_URI")}/destination-configuration/v1/subaccountDestinations`;
+        return `${Configurations.get("DIRIGIBLE_DESTINATION_URI")}/destination-configuration/v1/subaccountDestinations`;
     }
 
     private static createOrUpdateCloudDestination(name: string, destination) {
@@ -116,12 +116,12 @@ export class Destinations {
         };
 
         if (isExistingDestination) {
-            let response = httpClient.put(instanceDestinationUrl, requestOptions);
+            let response = HttpClient.put(instanceDestinationUrl, requestOptions);
             if (response.statusCode != 200) {
                 throw new Error(`Error occurred while updating destinaton '${name}': ${response.text}`);
             }
         } else {
-            let response = httpClient.post(instanceDestinationUrl, requestOptions);
+            let response = HttpClient.post(instanceDestinationUrl, requestOptions);
             if (response.statusCode != 201) {
                 throw new Error(`Error occurred while creating destinaton '${name}': ${response.text}`);
             }
@@ -137,17 +137,17 @@ export class Destinations {
             }]
         };
         let url = `${this.getInstanceDestinationsBasePath()}/${name}`;
-        let response = httpClient.del(url, requestOptions);
+        let response = HttpClient.del(url, requestOptions);
         if (response.statusCode != 200) {
             throw new Error(`Error occurred while deleting destinaton '${name}': ${response.text}`);
         }
     }
 
     private static getOAuthToken() {
-        let oauthClientId = configurations.get("DIRIGIBLE_DESTINATION_CLIENT_ID");
-        let oauthClientSecret = configurations.get("DIRIGIBLE_DESTINATION_CLIENT_SECRET");
-        let oauthUrl = configurations.get("DIRIGIBLE_DESTINATION_URL");
-        let uri = configurations.get("DIRIGIBLE_DESTINATION_URI");
+        let oauthClientId = Configurations.get("DIRIGIBLE_DESTINATION_CLIENT_ID");
+        let oauthClientSecret = Configurations.get("DIRIGIBLE_DESTINATION_CLIENT_SECRET");
+        let oauthUrl = Configurations.get("DIRIGIBLE_DESTINATION_URL");
+        let uri = Configurations.get("DIRIGIBLE_DESTINATION_URI");
 
         if (!oauthClientId || !oauthClientSecret || !oauthUrl || !uri) {
             throw new Error("Invalid destination configuration");

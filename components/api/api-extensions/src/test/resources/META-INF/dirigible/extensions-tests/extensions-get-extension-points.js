@@ -1,7 +1,6 @@
-
-var extensions = require('extensions/extensions');
-var assertEquals = require('test/assert').assertEquals;
+import { Extensions as extensions } from 'sdk/extensions/extensions';
+import { Assert } from 'test/assert';
 
 var result = extensions.getExtensionPoints();
 
-assertEquals(result[0], "test_extpoint1");
+Assert.assertEquals(result[0], "test_extpoint1");

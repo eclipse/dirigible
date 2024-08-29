@@ -1,7 +1,7 @@
 
 import { Files } from 'sdk/io/files';
 import { Streams } from 'sdk/io/streams';
-const assertEquals = require('test/assert').assertEquals;
+import { Assert } from 'test/assert';
 
 const tempFile1 = Files.createTempFile("dirigible", ".txt");
 console.log('Temp file 1: ' + tempFile1);
@@ -20,4 +20,4 @@ const result = Files.readText(tempFile2);
 Files.deleteFile(tempFile1);
 Files.deleteFile(tempFile2);
 
-assertEquals(result, "Eclipse Dirigible");
+Assert.assertEquals(result, "Eclipse Dirigible");

@@ -1,9 +1,8 @@
-
-var client = require('http/client');
-var assertTrue = require('test/assert').assertTrue;
+import { HttpClient as client } from 'sdk/http/client';
+import { Assert } from 'test/assert';
 
 var result = client.get('https://raw.githubusercontent.com/eclipse/dirigible/master/NOTICE.txt');
 
 console.log(JSON.stringify(result));
 
-assertTrue((result !== null) && (result !== undefined));
+Assert.assertTrue((result !== null) && (result !== undefined));

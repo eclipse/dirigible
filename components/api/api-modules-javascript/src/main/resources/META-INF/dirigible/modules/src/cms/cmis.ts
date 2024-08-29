@@ -103,7 +103,7 @@ interface AccessDefinition {
  */
 class Session {
 
-	private native: any;
+	private readonly native: any;
 
 	constructor(native: any) {
 		this.native = native;
@@ -182,7 +182,7 @@ class Session {
  */
 class RepositoryInfo {
 
-	private native: any;
+	private readonly native: any;
 
 	constructor(native: any) {
 		this.native = native;
@@ -201,7 +201,7 @@ class RepositoryInfo {
  * Folder object
  */
 export class Folder {
-	private native: any;
+	private readonly native: any;
 	private path: any;
 
 	constructor(native: any, path: any) {
@@ -316,7 +316,7 @@ export class Folder {
  */
 class CmisObject {
 
-	private native: any;
+	private readonly native: any;
 
 	constructor(native: any) {
 		this.native = native;
@@ -364,7 +364,7 @@ class CmisObject {
  */
 class ObjectFactory {
 
-	private native: any;
+	private readonly native: any;
 
 	constructor(native: any) {
 		this.native = native;
@@ -382,7 +382,7 @@ class ObjectFactory {
  */
 class ContentStream {
 
-	private native: any;
+	private readonly native: any;
 
 	constructor(native: any) {
 		this.native = native;
@@ -403,7 +403,7 @@ class ContentStream {
  */
 export class Document {
 
-	private native: any;
+	private readonly native: any;
 	private path: string;
 
 	constructor(native: any, path: string) {
@@ -459,7 +459,7 @@ export class Document {
 
 class TypeDefinition {
 
-	private native: any;
+	private readonly native: any;
 
 	constructor(native: any) {
 		this.native = native;

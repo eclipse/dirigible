@@ -1,7 +1,7 @@
 
-var database = require('db/database');
-var update = require('db/update');
-var assertTrue = require('test/assert').assertTrue;
+import { Database as database } from 'sdk/db/database';
+import { Update as update } from 'sdk/db/update';
+import { Assert } from 'test/assert';
 
 update.execute("CREATE TABLE T (A INT, B VARCHAR(10))");
 update.execute("INSERT INTO T VALUES (1, 'ABC')");
@@ -33,4 +33,4 @@ try {
 
 update.execute("DROP TABLE T");
 
-assertTrue(value == 'DEF');
+Assert.assertTrue(value == 'DEF');

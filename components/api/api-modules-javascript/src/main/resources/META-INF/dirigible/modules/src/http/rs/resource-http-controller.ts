@@ -1,5 +1,5 @@
-import * as response from "../response";
-import * as request from "../request";
+import { Response as response } from "../response";
+import { Request as request } from "../request";
 import { ResourceMappings } from "./resource-mappings";
 import { Logging } from "sdk/log";
 

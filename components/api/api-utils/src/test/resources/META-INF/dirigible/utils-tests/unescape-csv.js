@@ -1,8 +1,8 @@
 
-var escape = require('utils/escape');
-var assertEquals = require('test/assert').assertEquals;
+import { Escape } from 'sdk/utils/escape';
+import { Assert } from 'test/assert';
 
-var input = '"1,2,3,4,5,6"';
-var result = escape.unescapeCsv(input);
+const input = '"1,2,3,4,5,6"';
+const result = Escape.unescapeCsv(input);
 
-assertEquals(result, '1,2,3,4,5,6');
+Assert.assertEquals(result, '1,2,3,4,5,6');

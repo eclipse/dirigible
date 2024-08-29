@@ -1,10 +1,10 @@
 
-var digest = require('utils/digest');
-var assertTrue = require('test/assert').assertTrue;
+import { Digest } from 'sdk/utils/digest';
+import { Assert } from 'test/assert';
 
-var input = [41, 42, 43];
-var result = digest.sha1(input);
+const input = [41, 42, 43];
+const result = Digest.sha1(input);
 
 console.log(JSON.stringify(result));
 
-assertTrue(result.length === 20 && result[0] === 77);
+Assert.assertTrue(result.length === 20 && result[0] === 77);

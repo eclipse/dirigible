@@ -40,7 +40,7 @@ export class Workspace {
 		WorkspaceFacade.deleteWorkspace(name);
 	}
 
-	private native: any;
+	private readonly native: any;
 
 	constructor(native: any) {
 		this.native = native;
@@ -91,7 +91,7 @@ export class Workspace {
  * Projects object
  */
 export class Projects {
-	private native: any;
+	private readonly native: any;
 
 	constructor(native: any) {
 		this.native = native;
@@ -112,7 +112,7 @@ export class Projects {
  * Project object
  */
 export class Project {
-	private native: any;
+	private readonly native: any;
 
 	constructor(native: any) {
 		this.native = native;
@@ -184,7 +184,7 @@ export class Project {
  * Folders object
  */
 export class Folders {
-	private native: any;
+	private readonly native: any;
 
 	constructor(native: any) {
 		this.native = native;
@@ -205,7 +205,7 @@ export class Folders {
  * Files object
  */
 export class Files {
-	private native: any;
+	private readonly native: any;
 
 	constructor(native: any) {
 		this.native = native;
@@ -226,7 +226,7 @@ export class Files {
  * Folder object
  */
 export class Folder {
-	private native: any;
+	private readonly native: any;
 
 	constructor(native: any) {
 		this.native = native;
@@ -298,7 +298,7 @@ export class Folder {
  * File object
  */
 export class File {
-	private native: any;
+	private readonly native: any;
 
 	constructor(native: any) {
 		this.native = native;
