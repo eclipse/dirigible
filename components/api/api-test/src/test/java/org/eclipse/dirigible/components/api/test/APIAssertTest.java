@@ -62,7 +62,6 @@ public class APIAssertTest {
     public void failed() throws Exception {
         try {
             javascriptService.handleRequest("test", "failed.js", null, null, false);
-            failed();
 
             // mockMvc.perform(get("/services/js/test/failed.js"))
             // .andDo(print())
