@@ -61,9 +61,12 @@ public class APIAssertTest {
     @Test
     public void failed() throws Exception {
         try {
-            mockMvc.perform(get("/services/js/test/failed.js"))
-                   .andDo(print())
-                   .andExpect(status().is5xxServerError());
+            javascriptService.handleRequest("test", "failed.js", null, null, false);
+            failed();
+
+            // mockMvc.perform(get("/services/js/test/failed.js"))
+            // .andDo(print())
+            // .andExpect(status().is5xxServerError());
         } catch (Exception e) {
             // successfully failed
             assertTrue(e.getMessage()
