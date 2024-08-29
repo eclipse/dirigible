@@ -1,7 +1,7 @@
-import { HttpClient as client } from 'sdk/http/client';
+import { HttpClient } from 'sdk/http/client';
 import { Assert } from 'test/assert';
 
-var result = client.get('https://raw.githubusercontent.com/eclipse/dirigible/master/NOTICE.txt');
+const result = HttpClient.get('https://raw.githubusercontent.com/eclipse/dirigible/master/NOTICE.txt');
 
 console.log(JSON.stringify(result));
 

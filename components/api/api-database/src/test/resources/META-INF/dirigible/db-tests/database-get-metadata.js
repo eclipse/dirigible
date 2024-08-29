@@ -1,8 +1,7 @@
-
-import { Database as database } from 'sdk/db/database';
+import { Database } from 'sdk/db/database';
 import { Assert } from 'test/assert';
 
-var metadata = database.getMetadata();
+const metadata = Database.getMetadata();
 
 console.log(JSON.stringify(metadata));
 

@@ -1,4 +1,4 @@
-import { Request as request } from 'sdk/http/request';
+import { Request } from 'sdk/http/request';
 import { Assert } from 'test/assert';
 
-Assert.assertEquals(JSON.stringify(request.getHeaderNames()), '["Authorization","header1","header2"]');
+Assert.assertEquals(JSON.stringify(Request.getHeaderNames()), '["Authorization","header1","header2"]');

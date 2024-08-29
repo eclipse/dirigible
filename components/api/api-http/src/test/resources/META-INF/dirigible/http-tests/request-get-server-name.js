@@ -1,4 +1,4 @@
-import { Request as request } from 'sdk/http/request';
+import { Request } from 'sdk/http/request';
 import { Assert } from 'test/assert';
 
-Assert.assertEquals(request.getServerName(), 'server1');
+Assert.assertEquals(Request.getServerName(), 'server1');

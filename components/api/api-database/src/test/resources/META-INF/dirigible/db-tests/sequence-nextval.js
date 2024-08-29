@@ -1,10 +1,12 @@
-import { Sequence as sequence } from 'sdk/db/sequence';
+import { Sequence } from 'sdk/db/sequence';
 import { Assert } from 'test/assert';
 
-sequence.create('mysequence');
-var zero = sequence.nextval('mysequence');
-var one = sequence.nextval('mysequence');
-sequence.drop('mysequence');
+Sequence.create('mysequence');
+
+const zero = Sequence.nextval('mysequence');
+const one = Sequence.nextval('mysequence');
+
+Sequence.drop('mysequence');
 
 Assert.assertEquals(zero, 1);
 Assert.assertEquals(one, 2);

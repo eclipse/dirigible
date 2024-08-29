@@ -1,16 +1,16 @@
-import { Query as query } from 'sdk/db/query';
-import { Update as update } from 'sdk/db/update';
+import { Query } from 'sdk/db/query';
+import { Update } from 'sdk/db/update';
 import { Assert } from 'test/assert';
 
-update.execute("CREATE TABLE U (A INT, B VARCHAR(10))");
-update.execute("INSERT INTO U VALUES (1, 'ABC')");
-update.execute("INSERT INTO U VALUES (2, 'DEF')");
+Update.execute("CREATE TABLE U (A INT, B VARCHAR(10))");
+Update.execute("INSERT INTO U VALUES (1, 'ABC')");
+Update.execute("INSERT INTO U VALUES (2, 'DEF')");
 
-var sql = "SELECT COUNT(*) AS C FROM U";
-var resultset = query.execute(sql);
+const sql = "SELECT COUNT(*) AS C FROM U";
+const resultset = Query.execute(sql);
 
 console.log(JSON.stringify(resultset));
 
-update.execute("DROP TABLE U");
+Update.execute("DROP TABLE U");
 
 Assert.assertTrue(((resultset !== null) && (resultset !== undefined)));

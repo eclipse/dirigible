@@ -1,4 +1,4 @@
-import { Request as request } from 'sdk/http/request';
+import { Request } from 'sdk/http/request';
 import { Assert } from 'test/assert';
 
-Assert.assertEquals(request.getAuthType(), 'Basic');
+Assert.assertEquals(Request.getAuthType(), 'Basic');

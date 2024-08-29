@@ -1,8 +1,7 @@
-
-import { Database as database } from 'sdk/db/database';
+import { Database } from 'sdk/db/database';
 import { Assert } from 'test/assert';
 
-var datasources = database.getDataSources();
+const datasources = Database.getDataSources();
 
 console.log(JSON.stringify(datasources));
 
