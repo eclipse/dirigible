@@ -88,6 +88,7 @@ angular.module('page', ['ideUI', 'ideView', 'entityApi'])
 				return;
 			}
 
+			$scope.modules = response.data.modules.filter(module => (module.name !== 'Reports'));
 			for (let i = 0; i < response.data.referenceData.length; i++) {
 				$scope.referenceData.push(...response.data.referenceData[i].settings);
 			}
