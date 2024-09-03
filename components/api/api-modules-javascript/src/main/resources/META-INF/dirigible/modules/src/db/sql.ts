@@ -59,6 +59,7 @@ export type DataType =
 
 abstract class AbstractSQLBuilder {
 
+	public readonly params: any[] = [];
 	protected readonly connection?: Connection;
 	protected native: any;
 
@@ -70,6 +71,19 @@ abstract class AbstractSQLBuilder {
 
 	protected prepareBuilder(builder: any): any {
 		return builder;
+	}
+
+	public parameters(): any[] {
+		return this.params;
+	}
+
+	protected addParameter(value: any | any[]): void {
+		if (Array.isArray(value)) {
+			this.params.push(...value);
+		} else {
+			this.params.push(value);
+		}
+		this.params
 	}
 
 	public build(): string {
@@ -140,36 +154,67 @@ export class SelectBuilder extends AbstractSQLBuilder {
 
 	public join(table: string, on: string, alias?: string): SelectBuilder {
 		this.native.join(table, on, alias);
+		if (arguments.length > 3) {
+			this.addParameter(arguments[3]);
+		} else {
+			this.addParameter(arguments[2]);
+		}
 		return this;
 	}
 
 	public innerJoin(table: string, on: string, alias?: string): SelectBuilder {
 		this.native.innerJoin(table, on, alias);
+		if (arguments.length > 3) {
+			this.addParameter(arguments[3]);
+		} else {
+			this.addParameter(arguments[2]);
+		}
 		return this;
 	}
 
 	public outerJoin(table: string, on: string, alias?: string): SelectBuilder {
 		this.native.outerJoin(table, on, alias);
+		if (arguments.length > 3) {
+			this.addParameter(arguments[3]);
+		} else {
+			this.addParameter(arguments[2]);
+		}
 		return this;
 	}
 
 	public leftJoin(table: string, on: string, alias?: string): SelectBuilder {
 		this.native.leftJoin(table, on, alias);
+		if (arguments.length > 3) {
+			this.addParameter(arguments[3]);
+		} else {
+			this.addParameter(arguments[2]);
+		}
 		return this;
 	}
 
 	public rightJoin(table: string, on: string, alias?: string): SelectBuilder {
 		this.native.rightJoin(table, on, alias);
+		if (arguments.length > 3) {
+			this.addParameter(arguments[3]);
+		} else {
+			this.addParameter(arguments[2]);
+		}
 		return this;
 	}
 
 	public fullJoin(table: string, on: string, alias?: string): SelectBuilder {
 		this.native.fullJoin(table, on, alias);
+		if (arguments.length > 3) {
+			this.addParameter(arguments[3]);
+		} else {
+			this.addParameter(arguments[2]);
+		}
 		return this;
 	}
 
 	public where(condition: string): SelectBuilder {
 		this.native.where(condition);
+		this.addParameter(arguments[1]);
 		return this;
 	}
 
@@ -222,6 +267,7 @@ export class InsertBuilder extends AbstractSQLBuilder {
 
 	public value(value: string): InsertBuilder {
 		this.native.value(value);
+		this.addParameter(arguments[1]);
 		return this;
 	}
 
@@ -244,11 +290,13 @@ export class UpdateBuilder extends AbstractSQLBuilder {
 
 	public set(column: string, value: string): UpdateBuilder {
 		this.native.set(column, value);
+		this.addParameter(arguments[2]);
 		return this;
 	}
 
 	public where(condition: string): UpdateBuilder {
 		this.native.where(condition);
+		this.addParameter(arguments[1]);
 		return this;
 	}
 }
@@ -266,6 +314,7 @@ export class DeleteBuilder extends AbstractSQLBuilder {
 
 	public where(condition: string): DeleteBuilder {
 		this.native.where(condition);
+		this.addParameter(arguments[1]);
 		return this;
 	}
 }
