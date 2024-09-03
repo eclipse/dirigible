@@ -12,9 +12,10 @@
 "use strict";
 
 import { Logging } from "sdk/log";
-import { SQLBuilder } from "./sql";
+import { CreateTableBuilder, DeleteBuilder, DropTableBuilder, InsertBuilder, SelectBuilder, SQLBuilder, UpdateBuilder } from "./sql";
+import { Connection } from "./database";
 
-export function ORMStatements(orm, dialect) {
+export function ORMStatements(orm, dialect: SQLBuilder) {
 	this.$log = Logging.getLogger('db.dao.ormstatements');
 	this.orm = orm;
 	this.orm.tableName = this.orm.table;
@@ -25,7 +26,7 @@ export function ORMStatements(orm, dialect) {
 };
 ORMStatements.prototype.constructor = ORMStatements;
 
-ORMStatements.prototype.createTable = function () {
+ORMStatements.prototype.createTable = function (): CreateTableBuilder {
 	const builder = this.dialect.create().table(this.orm.table);
 
 	this.orm.properties.forEach(function (property) {
@@ -47,11 +48,11 @@ ORMStatements.prototype.createTable = function () {
 	return builder;
 };
 
-ORMStatements.prototype.dropTable = function () {
+ORMStatements.prototype.dropTable = function (): DropTableBuilder {
 	return this.dialect.drop().table(this.orm.table);
 };
 
-ORMStatements.prototype.insert = function () {
+ORMStatements.prototype.insert = function (): InsertBuilder {
 	const builder = this.dialect.insert().into(this.orm.table);
 	this.orm.properties.forEach(function (property) {
 		builder.column(property.column).value('?', property);
@@ -59,7 +60,7 @@ ORMStatements.prototype.insert = function () {
 	return builder;
 };
 
-ORMStatements.prototype.update = function (entity) {
+ORMStatements.prototype.update = function (entity): UpdateBuilder {
 	if (!entity)
 		throw Error('Illegal argument: entity[' + entity + ']');
 
@@ -74,7 +75,8 @@ ORMStatements.prototype.update = function (entity) {
 	builder.where(pkProperty.column + '=?', [pkProperty]);
 	return builder;
 };
-ORMStatements.prototype["delete"] = ORMStatements.prototype.remove = function () {
+
+ORMStatements.prototype["delete"] = ORMStatements.prototype.remove = function (): DeleteBuilder {
 	const builder = this.dialect.delete().from(this.orm.table);
 	if (arguments[0] !== undefined) {
 		let filterFieldNames = arguments[0];
@@ -89,7 +91,8 @@ ORMStatements.prototype["delete"] = ORMStatements.prototype.remove = function ()
 	}
 	return builder;
 };
-ORMStatements.prototype.find = function (params) {
+
+ORMStatements.prototype.find = function (params): SelectBuilder {
 	let builder = this.dialect.select();
 	if (params !== undefined && params.select !== undefined) {
 		const selectedFields = params.select.constructor === Array ? params.select : [params.select];
@@ -104,12 +107,14 @@ ORMStatements.prototype.find = function (params) {
 		.where(this.orm.getPrimaryKey().column + "=?", [this.orm.getPrimaryKey()]);
 	return builder;
 };
-ORMStatements.prototype.count = function (settings) {
+
+ORMStatements.prototype.count = function (settings): SelectBuilder {
 	const builder = this.dialect.select().column('COUNT(*)').from(this.orm.table);
 	addFilter(this.orm, builder, settings);
 	return builder;
 };
-ORMStatements.prototype.list = function (settings) {
+
+ORMStatements.prototype.list = function (settings): SelectBuilder {
 	let i;
 	settings = settings || {};
 	const sort = settings.$sort || settings.sort;
@@ -184,7 +189,6 @@ ORMStatements.prototype.list = function (settings) {
 	return builder;
 };
 
-
 function addFilter(orm, builder, settings) {
 	//add where clause for any fields
 	if (settings?.$filter) {
@@ -246,7 +250,7 @@ function addOffset(builder, settings) {
 	}
 }
 
-export function create(orm, connection) {
+export function create(orm, connection?: Connection) {
 	let dialect;
 	if (connection) {
 		dialect = SQLBuilder.getDialect(connection);
