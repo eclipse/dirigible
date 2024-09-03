@@ -12,7 +12,7 @@
 "use strict";
 
 import { Logging } from "sdk/log";
-import * as sql from "./sql";
+import { SQLBuilder } from "./sql";
 
 export function ORMStatements(orm, dialect) {
 	this.$log = Logging.getLogger('db.dao.ormstatements');
@@ -21,7 +21,7 @@ export function ORMStatements(orm, dialect) {
 	this.orm.properties.forEach(function (property) {
 		property.columnName = property.column;
 	});
-	this.dialect = dialect || sql.getDialect();
+	this.dialect = dialect || SQLBuilder.getDialect();
 };
 ORMStatements.prototype.constructor = ORMStatements;
 
@@ -249,7 +249,7 @@ function addOffset(builder, settings) {
 export function create(orm, connection) {
 	let dialect;
 	if (connection) {
-		dialect = sql.getDialect(connection);
+		dialect = SQLBuilder.getDialect(connection);
 	}
 
 	const stmnts = new ORMStatements(orm, dialect);

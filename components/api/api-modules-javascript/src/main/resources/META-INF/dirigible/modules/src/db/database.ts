@@ -690,7 +690,7 @@ export class Database {
  */
 export class Connection {
 
-	private readonly native;
+	public readonly native: any;
 
 	constructor(datasourceName?: string) {
 		this.native = DatabaseFacade.getConnection(datasourceName);
