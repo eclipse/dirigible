@@ -14,7 +14,7 @@ const EtcdFacade = Java.type("org.eclipse.dirigible.components.api.etcd.EtcdFaca
 
 export class Client {
 
-    private native: any;
+    private readonly native: any;
 
     constructor() {
         this.native = EtcdFacade.getClient();
@@ -56,7 +56,7 @@ export class Client {
 }
 
 class GetResponse {
-    private native: any;
+    private readonly native: any;
 
     constructor(native: any) {
         this.native = native;
@@ -81,7 +81,7 @@ class GetResponse {
 }
 
 class Header {
-    private native: any;
+    private readonly native: any;
 
     constructor(native: any) {
         this.native = native;

@@ -1,8 +1,8 @@
 
-var hex = require('utils/hex');
-var assertEquals = require('test/assert').assertEquals;
+import { Hex } from 'sdk/utils/hex';
+import { Assert } from 'test/assert';
 
-var input = [65, 66, 67];
-var result = hex.encode(input);
+const input = [65, 66, 67];
+const result = Hex.encode(input);
 
-assertEquals(result, '414243');
+Assert.assertEquals(result, '414243');

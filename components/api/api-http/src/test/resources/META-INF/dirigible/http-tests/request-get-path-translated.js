@@ -1,6 +1,9 @@
+import { Request } from 'sdk/http/request';
+import { Files } from 'sdk/io/files';
+import { Assert } from 'test/assert';
 
-const request = require('http/request');
-const separator = require('io/files').separator;
-const assertTrue = require('test/assert').assertTrue;
+const separator = Files.separator
 
-assertTrue(request.getPathTranslated().endsWith(`${separator}services${separator}js${separator}http-tests${separator}request-get-path-translated.js`));
+const expectedPath = `${separator}services${separator}js${separator}http-tests${separator}request-get-path-translated.js`;
+
+Assert.assertTrue(Request.getPathTranslated().endsWith(expectedPath));

@@ -1,7 +1,6 @@
+import { Globals } from 'sdk/core/globals';
+import { Assert } from 'test/assert';
 
-var globals = require('core/globals');
-var assertTrue = require('test/assert').assertTrue;
+const result = Globals.list();
 
-var result = globals.list();
-
-assertTrue(result !== undefined && result !== null, "Result of globals.list() is undefined or null");
+Assert.assertTrue(result !== undefined && result !== null, "Result of globals.list() is undefined or null");

@@ -1,11 +1,12 @@
+import { Sequence } from 'sdk/db/sequence';
+import { Assert } from 'test/assert';
 
-var sequence = require('db/sequence');
-var assertEquals = require('test/assert').assertEquals;
+Sequence.create('mysequence');
 
-sequence.create('mysequence');
-var zero = sequence.nextval('mysequence');
-var one = sequence.nextval('mysequence');
-sequence.drop('mysequence');
+const zero = Sequence.nextval('mysequence');
+const one = Sequence.nextval('mysequence');
 
-assertEquals(zero, 1);
-assertEquals(one, 2);
+Sequence.drop('mysequence');
+
+Assert.assertEquals(zero, 1);
+Assert.assertEquals(one, 2);

@@ -1,9 +1,8 @@
+import { Database } from 'sdk/db/database';
+import { Assert } from 'test/assert';
 
-var database = require('db/database');
-var assertTrue = require('test/assert').assertTrue;
-
-var datasources = database.getDataSources();
+const datasources = Database.getDataSources();
 
 console.log(JSON.stringify(datasources));
 
-assertTrue(((datasources !== null) && (datasources !== undefined)));
+Assert.assertTrue(((datasources !== null) && (datasources !== undefined)));

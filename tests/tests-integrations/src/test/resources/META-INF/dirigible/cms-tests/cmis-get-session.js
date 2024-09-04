@@ -1,7 +1,6 @@
+import { Cmis as cmis } from 'sdk/cms/cmis';
+import { Assert } from 'test/assert';
 
-var cmis = require('cms/cmis');
-var assertTrue = require('test/assert').assertTrue;
+const result = cmis.getSession();
 
-var result = cmis.getSession();
-
-assertTrue(result !== null && result !== undefined);
+Assert.assertTrue(result !== null && result !== undefined);

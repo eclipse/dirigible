@@ -1,7 +1,6 @@
+import { Engine } from 'sdk/platform/engines';
+import { Assert } from 'test/assert';
 
-var engines = require('platform/engines');
-var assertTrue = require('test/assert').assertTrue;
+const result = Engine.getTypes();
 
-var result = engines.getTypes();
-
-assertTrue(result !== undefined && result !== null);
+Assert.assertTrue(result !== undefined && result !== null);

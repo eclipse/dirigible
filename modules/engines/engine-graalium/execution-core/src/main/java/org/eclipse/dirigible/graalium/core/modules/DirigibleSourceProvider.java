@@ -18,7 +18,7 @@ import org.eclipse.dirigible.repository.api.IResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -171,13 +171,13 @@ public class DirigibleSourceProvider implements JavascriptSourceProvider {
      * @return the string
      */
     protected String createLookupPath(String filePathString) {
-        if (filePathString.startsWith("/webjars")) {
-            return "/META-INF/resources" + filePathString;
+        if (filePathString.startsWith(File.separator + "webjars")) {
+            return File.separator + "META-INF" + File.separator + "resources" + filePathString;
         } else if (filePathString.startsWith("webjars")) {
-            return "/META-INF/resources/" + filePathString;
+            return File.separator + "META-INF" + File.separator + "resources" + File.separator + filePathString;
         }
 
-        return "/META-INF/dirigible/" + filePathString;
+        return File.separator + "META-INF" + File.separator + "dirigible" + File.separator + filePathString;
     }
 
     /**
@@ -188,7 +188,7 @@ public class DirigibleSourceProvider implements JavascriptSourceProvider {
      * @return the path
      */
     public Path unpackedToFileSystem(Path pathToUnpack, Path pathToLookup) {
-        String path = "/META-INF/dirigible/" + pathToLookup.toString();
+        String path = File.separator + "META-INF" + File.separator + "dirigible" + File.separator + pathToLookup.toString();
         try (InputStream bundled = this.getClass()
                                        .getResourceAsStream(path)) {
             Files.createDirectories(pathToUnpack.getParent());

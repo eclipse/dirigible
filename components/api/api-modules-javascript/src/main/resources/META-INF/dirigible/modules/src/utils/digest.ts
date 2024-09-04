@@ -9,8 +9,8 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-import * as streams from "sdk/io/streams";
-import * as bytes from "sdk/io/bytes";
+import { Streams } from "sdk/io/streams";
+import { Bytes } from "sdk/io/bytes";
 const DigestFacade = Java.type("org.eclipse.dirigible.components.api.utils.DigestFacade");
 
 export class Digest {
@@ -19,7 +19,7 @@ export class Digest {
 	 * Calculate MD5 digest from input (text or byte array) and return result as byte array
 	 */
 	public static md5(input: string | any[]): any[] {
-		return bytes.toJavaScriptBytes(Digest.md5AsNativeBytes(input));
+		return Bytes.toJavaScriptBytes(Digest.md5AsNativeBytes(input));
 	}
 
 	/**
@@ -29,11 +29,11 @@ export class Digest {
 		const data = input;
 		let native;
 		if (typeof data === 'string') {
-			var baos = streams.createByteArrayOutputStream();
+			var baos = Streams.createByteArrayOutputStream();
 			baos.writeText(data);
 			native = baos.getBytesNative();
 		} else if (Array.isArray(data)) {
-			native = bytes.toJavaBytes(data);
+			native = Bytes.toJavaBytes(data);
 		}
 
 		return DigestFacade.md5(native);
@@ -46,11 +46,11 @@ export class Digest {
 		const data = input;
 		let native;
 		if (typeof data === 'string') {
-			const baos = streams.createByteArrayOutputStream();
+			const baos = Streams.createByteArrayOutputStream();
 			baos.writeText(data);
 			native = baos.getBytesNative();
 		} else if (Array.isArray(data)) {
-			native = bytes.toJavaBytes(data);
+			native = Bytes.toJavaBytes(data);
 		}
 
 		return DigestFacade.md5Hex(native);
@@ -60,7 +60,7 @@ export class Digest {
 	 * Calculate SHA1 digest from input (text or byte array) and return result as 20 elements byte array
 	 */
 	public static sha1(input: string | any[]): any[] {
-		return bytes.toJavaScriptBytes(Digest.sha1AsNativeBytes(input));
+		return Bytes.toJavaScriptBytes(Digest.sha1AsNativeBytes(input));
 	}
 
 	/**
@@ -70,11 +70,11 @@ export class Digest {
 		const data = input;
 		let native;
 		if (typeof data === 'string') {
-			const baos = streams.createByteArrayOutputStream();
+			const baos = Streams.createByteArrayOutputStream();
 			baos.writeText(data);
 			native = baos.getBytesNative();
 		} else if (Array.isArray(data)) {
-			native = bytes.toJavaBytes(data);
+			native = Bytes.toJavaBytes(data);
 		}
 
 		return DigestFacade.sha1(native);
@@ -84,7 +84,7 @@ export class Digest {
 	 * Calculate SHA256 digest from input (text or byte array) and return result as 32 elements byte array
 	 */
 	public static sha256(input: string | any[]): any[] {
-		return bytes.toJavaScriptBytes(Digest.sha256AsNativeBytes(input));
+		return Bytes.toJavaScriptBytes(Digest.sha256AsNativeBytes(input));
 	}
 
 	/**
@@ -94,11 +94,11 @@ export class Digest {
 		const data = input;
 		let native;
 		if (typeof data === 'string') {
-			const baos = streams.createByteArrayOutputStream();
+			const baos = Streams.createByteArrayOutputStream();
 			baos.writeText(data);
 			native = baos.getBytesNative();
 		} else if (Array.isArray(data)) {
-			native = bytes.toJavaBytes(data);
+			native = Bytes.toJavaBytes(data);
 		}
 
 		return DigestFacade.sha256(native);
@@ -108,7 +108,7 @@ export class Digest {
 	 * Calculate SHA384 digest from input (text or byte array) and return result as 48 elements byte array
 	 */
 	public static sha384(input: string | any[]): any[] {
-		return bytes.toJavaScriptBytes(Digest.sha384AsNativeBytes(input));
+		return Bytes.toJavaScriptBytes(Digest.sha384AsNativeBytes(input));
 	}
 
 	/**
@@ -118,11 +118,11 @@ export class Digest {
 		const data = input;
 		let native;
 		if (typeof data === 'string') {
-			const baos = streams.createByteArrayOutputStream();
+			const baos = Streams.createByteArrayOutputStream();
 			baos.writeText(data);
 			native = baos.getBytesNative();
 		} else if (Array.isArray(data)) {
-			native = bytes.toJavaBytes(data);
+			native = Bytes.toJavaBytes(data);
 		}
 
 		const output = DigestFacade.sha384(native);
@@ -133,7 +133,7 @@ export class Digest {
 	 * Calculate SHA512 digest from input (text or byte array) and return result as 64 elements byte array
 	 */
 	public static sha512(input: string | any[]): any[] {
-		return bytes.toJavaScriptBytes(Digest.sha512AsNativeBytes(input));
+		return Bytes.toJavaScriptBytes(Digest.sha512AsNativeBytes(input));
 	}
 
 	/**
@@ -143,11 +143,11 @@ export class Digest {
 		const data = input;
 		let native;
 		if (typeof data === 'string') {
-			const baos = streams.createByteArrayOutputStream();
+			const baos = Streams.createByteArrayOutputStream();
 			baos.writeText(data);
 			native = baos.getBytesNative();
 		} else if (Array.isArray(data)) {
-			native = bytes.toJavaBytes(data);
+			native = Bytes.toJavaBytes(data);
 		}
 
 		return DigestFacade.sha512(native);
@@ -160,11 +160,11 @@ export class Digest {
 		const data = input;
 		let native;
 		if (typeof data === 'string') {
-			const baos = streams.createByteArrayOutputStream();
+			const baos = Streams.createByteArrayOutputStream();
 			baos.writeText(data);
 			native = baos.getBytesNative();
 		} else if (Array.isArray(data)) {
-			native = bytes.toJavaBytes(data);
+			native = Bytes.toJavaBytes(data);
 		}
 
 		return DigestFacade.sha1Hex(native);

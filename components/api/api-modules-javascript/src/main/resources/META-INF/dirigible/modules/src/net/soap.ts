@@ -9,9 +9,9 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-import * as request from "sdk/http/request";
+import { Request } from "sdk/http/request";
 import { Base64 } from "sdk/utils/base64";
-import { createByteArrayOutputStream, InputStream } from "sdk/io/streams";
+import { Streams, InputStream } from "sdk/io/streams";
 
 const MessageFactory = Java.type("javax.xml.soap.MessageFactory");
 const MimeHeadersInternal = Java.type("javax.xml.soap.MimeHeaders");
@@ -54,11 +54,11 @@ export class SOAP {
 	}
 
 	public static parseRequest(): Message {
-		if (request.getMethod().toUpperCase() !== "POST") {
+		if (Request.getMethod().toUpperCase() !== "POST") {
 			throw new Error("HTTP method used must be POST.");
 		}
 
-		const inputStream = request.getInputStream();
+		const inputStream = Request.getInputStream();
 		const mimeHeaders = this.createMimeHeaders();
 
 		return this.parseMessage(mimeHeaders, inputStream);
@@ -75,7 +75,7 @@ export class SOAP {
  */
 class Message {
 
-	public native: any;
+	public readonly native: any;
 
 	constructor(native: any) {
 		this.native = native;
@@ -94,7 +94,7 @@ class Message {
 	}
 
 	public getText(): string {
-		const outputStream = createByteArrayOutputStream();
+		const outputStream = Streams.createByteArrayOutputStream();
 		this.native.writeTo(outputStream.native);
 		return outputStream.getText();
 	}
@@ -105,7 +105,7 @@ class Message {
  */
 class Part {
 
-	private native: any;
+	private readonly native: any;
 
 	constructor(native: any) {
 		this.native = native;
@@ -121,7 +121,7 @@ class Part {
  */
 class MimeHeaders {
 
-	public native: any;
+	public readonly native: any;
 
 	constructor(native: any) {
 		this.native = native;
@@ -142,7 +142,7 @@ class MimeHeaders {
  * SOAP Envelope
  */
 class Envelope {
-	private native: any;
+	private readonly native: any;
 
 	constructor(native: any) {
 		this.native = native;
@@ -169,7 +169,7 @@ class Envelope {
  * SOAP Body
  */
 class Body {
-	private native: any;
+	private readonly native: any;
 
 	constructor(native: any) {
 		this.native = native;
@@ -193,7 +193,7 @@ class Body {
  * SOAP Header
  */
 class Header {
-	private native: any;
+	private readonly native: any;
 
 	constructor(native: any) {
 		this.native = native;
@@ -208,7 +208,7 @@ class Header {
  * SOAP Name
  */
 class Name {
-	private native: any;
+	private readonly native: any;
 
 	constructor(native: any) {
 		this.native = native;
@@ -235,7 +235,7 @@ class Name {
  * SOAP Element
  */
 class Element {
-	public native: any;
+	public readonly native: any;
 
 	constructor(native: any) {
 		this.native = native;

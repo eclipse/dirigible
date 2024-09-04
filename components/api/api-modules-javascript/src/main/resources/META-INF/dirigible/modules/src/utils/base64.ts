@@ -9,8 +9,9 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-import * as streams from "sdk/io/streams";
-import * as bytes from "sdk/io/bytes";
+import { Streams } from "sdk/io/streams";
+import { Bytes } from "sdk/io/bytes";
+
 const Base64Facade = Java.type("org.eclipse.dirigible.components.api.utils.Base64Facade");
 
 export class Base64 {
@@ -19,14 +20,14 @@ export class Base64 {
 	 * Encode the input (text or byte array) as text
 	 */
 	public static encode(input: string | any[]): string {
-		return bytes.byteArrayToText(Base64.encodeAsNativeBytes(input));
+		return Bytes.byteArrayToText(Base64.encodeAsNativeBytes(input));
 	}
 
 	/**
 	 * Encode the input (text or byte array) as byte array
 	 */
 	public static encodeAsBytes(input: string | any[]): any[] {
-		return bytes.toJavaScriptBytes(Base64.encodeAsNativeBytes(input));
+		return Bytes.toJavaScriptBytes(Base64.encodeAsNativeBytes(input));
 	}
 
 	/**
@@ -36,11 +37,11 @@ export class Base64 {
 		const data = input;
 		let native;
 		if (typeof data === 'string') {
-			const baos = streams.createByteArrayOutputStream();
+			const baos = Streams.createByteArrayOutputStream();
 			baos.writeText(data);
 			native = baos.getBytesNative();
 		} else if (Array.isArray(data)) {
-			native = bytes.toJavaBytes(data);
+			native = Bytes.toJavaBytes(data);
 		}
 
 		return Base64Facade.encodeNative(native);
@@ -52,7 +53,7 @@ export class Base64 {
 	public static decode(input: string | any[]): any[] {
 		const output = Base64.decodeAsNativeBytes(input);
 		if (output) {
-			return bytes.toJavaScriptBytes(output);
+			return Bytes.toJavaScriptBytes(output);
 		}
 		return output;
 	}
@@ -64,11 +65,11 @@ export class Base64 {
 		const data = input;
 		let native;
 		if (typeof data === 'string') {
-			const baos = streams.createByteArrayOutputStream();
+			const baos = Streams.createByteArrayOutputStream();
 			baos.writeText(data);
 			native = baos.getBytesNative();
 		} else if (Array.isArray(data)) {
-			native = bytes.toJavaBytes(data);
+			native = Bytes.toJavaBytes(data);
 		}
 		return Base64Facade.decodeNative(native);
 	}

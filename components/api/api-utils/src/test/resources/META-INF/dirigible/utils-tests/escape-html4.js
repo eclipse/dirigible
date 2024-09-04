@@ -1,8 +1,8 @@
 
-var escape = require('utils/escape');
-var assertEquals = require('test/assert').assertEquals;
+import { Escape } from 'sdk/utils/escape';
+import { Assert } from 'test/assert';
 
-var input = '"<>';
-var result = escape.escapeHtml4(input);
+const input = '"<>';
+const result = Escape.escapeHtml4(input);
 
-assertEquals(result, '&quot;&lt;&gt;');
+Assert.assertEquals(result, '&quot;&lt;&gt;');

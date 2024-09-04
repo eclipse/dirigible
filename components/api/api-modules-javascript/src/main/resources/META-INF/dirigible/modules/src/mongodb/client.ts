@@ -25,7 +25,7 @@ export function createBasicDBObject(): DBObject {
  */
 export class Client {
 
-    private native: any;
+    private readonly native: any;
 
     constructor(uri: string, user: string, password: string) {
         this.native = MongoDBFacade.getClient(uri, user, password)
@@ -49,7 +49,7 @@ export class Client {
  */
 export class DB {
 
-    private native: any;
+    private readonly native: any;
 
     constructor(native: any) {
         this.native = native;
@@ -66,7 +66,7 @@ export class DB {
  */
 export class DBCollection {
 
-    private native: any;
+    private readonly native: any;
 
     constructor(native: any) {
         this.native = native;
@@ -265,7 +265,7 @@ export class DBCollection {
  */
 export class DBCursor {
 
-    private native: any;
+    private readonly native: any;
 
     constructor(native: any) {
         this.native = native;

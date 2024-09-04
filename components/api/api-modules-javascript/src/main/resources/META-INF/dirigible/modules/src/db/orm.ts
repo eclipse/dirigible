@@ -39,9 +39,22 @@
  *
  *
  */
-import { configurations } from "sdk/core";
 
-export function ORM(orm) {
+export interface ORMDefinition {
+    table: string,
+    properties: {
+        name: string,
+        column: string,
+        type: string,
+        id?: boolean,
+        required?: boolean,
+        unique?: boolean,
+        autoIncrement?: boolean,
+        allowedOps?: ('insert' | 'update')[]
+    }[]
+}
+
+export function ORM(orm: ORMDefinition) {
 	this.orm = orm;
 	for (var i in orm) {
 		this[i] = orm[i];
@@ -156,7 +169,6 @@ ORM.prototype.getAssociationNames = function () {
 	}
 	return names;
 };
-
 
 ORM.prototype.getAssociation = function (associationName) {
 	if (this.associations) {
@@ -277,7 +289,7 @@ ORM.prototype.toTable = function () {
 	return table;
 };
 
-export function get(orm) {
+export function get(orm: ORMDefinition) {
 	const _orm = new ORM(orm);
 	_orm.validate();
 	return _orm;

@@ -1,20 +1,19 @@
+import { Workspace } from "sdk/platform/workspace";
+import { Lifecycle } from "sdk/platform/lifecycle";
+import { Bytes } from "sdk/io/bytes";
+import { Assert } from 'test/assert';
 
-var workspace = require("platform/workspace");
-var lifecycle = require("platform/lifecycle");
-var bytes = require("io/bytes");
-var assertTrue = require('test/assert').assertTrue;
+const user = "dirigible";
+const workspaceName = "workspace";
+const projectName = "project";
 
-var user = "dirigible";
-var workspaceName = "workspace";
-var projectName = "project";
+const myWorkspace = Workspace.createWorkspace(workspaceName);
+const myProject = myWorkspace.createProject("project");
+const myFile = myProject.createFile(projectName);
+myFile.setContent(Bytes.textToByteArray("console.log('Hello World!');"));
 
-var myWorkspace = workspace.createWorkspace(workspaceName);
-var myProject = myWorkspace.createProject("project");
-var myFile = myProject.createFile(projectName);
-myFile.setContent(bytes.textToByteArray("console.log('Hello World!');"));
+const publishResult = Lifecycle.publish(user, workspaceName, projectName);
+const unpublishResult = Lifecycle.unpublish(user, workspaceName, projectName);
 
-var publishResult = lifecycle.publish(user, workspaceName, projectName);
-var unpublishResult = lifecycle.unpublish(user, workspaceName, projectName);
-
-assertTrue(publishResult);
-assertTrue(unpublishResult);
+Assert.assertTrue(publishResult);
+Assert.assertTrue(unpublishResult);

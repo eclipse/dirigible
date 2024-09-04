@@ -1,10 +1,12 @@
 
-var files = require('io/files');
-var assertTrue = require('test/assert').assertTrue;
+import { Files } from 'sdk/io/files';
+import { Assert } from 'test/assert';
 
-var tempFile = files.createTempFile("dirigible", ".txt");
+const tempFile = Files.createTempFile("dirigible", ".txt");
+
 console.log('Temp file: ' + tempFile);
-files.writeText(tempFile, "Eclipse Dirigible");
-files.deleteFile(tempFile);
 
-assertTrue((tempFile !== null) && (tempFile !== undefined));
+Files.writeText(tempFile, "Eclipse Dirigible");
+Files.deleteFile(tempFile);
+
+Assert.assertTrue((tempFile !== null) && (tempFile !== undefined));

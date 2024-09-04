@@ -13,7 +13,7 @@
  * API Database
  *
  */
-import * as bytes from "sdk/io/bytes";
+import { Bytes } from "sdk/io/bytes";
 import { InputStream } from "sdk/io/streams";
 
 const DatabaseFacade = Java.type("org.eclipse.dirigible.components.api.db.DatabaseFacade");
@@ -690,7 +690,7 @@ export class Database {
  */
 export class Connection {
 
-	private readonly native;
+	public readonly native: any;
 
 	constructor(datasourceName?: string) {
 		this.native = DatabaseFacade.getConnection(datasourceName);
@@ -899,7 +899,7 @@ export class PreparedStatement {
 
 	public setBytes(index: number, value?: any[] /*byte[]*/): void {
 		if (value !== null && value !== undefined) {
-			var data = bytes.toJavaBytes(value);
+			var data = Bytes.toJavaBytes(value);
 			this.native.setBytes(index, data);
 		} else {
 			this.setNull(index, SQLTypes.VARBINARY);
@@ -1027,7 +1027,7 @@ export class PreparedStatement {
 }
 
 export class CallableStatement {
-	private native: any;
+	private readonly native: any;
 
 	constructor(native: any) {
 		this.native = native;
@@ -1119,7 +1119,7 @@ export class CallableStatement {
 
 	public getBytes(parameterIndex: number): any[] /*: byte[]*/ {
 		const data = this.native.getBytes(parameterIndex);
-		return bytes.toJavaScriptBytes(data);
+		return Bytes.toJavaScriptBytes(data);
 	}
 
 	public getBytesNative(parameterIndex: number): any[] /*: byte[]*/ {
@@ -1128,7 +1128,7 @@ export class CallableStatement {
 
 	public getBlob(parameterIndex: number): any /*: sql.Blob*/ {
 		const data = readBlobValue(this.native.getBlob(parameterIndex));
-		return bytes.toJavaScriptBytes(data);
+		return Bytes.toJavaScriptBytes(data);
 	}
 
 	public getBlobNative(parameterIndex: number): any /*: sql.Blob*/ {
@@ -1417,7 +1417,7 @@ export class ResultSet {
 
 	public getBytes(identifier: number | string): any[] /*: byte[]*/ {
 		const data = this.native.getBytes(identifier);
-		return bytes.toJavaScriptBytes(data);
+		return Bytes.toJavaScriptBytes(data);
 	};
 
 	public getBytesNative(identifier: number | string): any[] /*: byte[]*/ {
@@ -1426,7 +1426,7 @@ export class ResultSet {
 
 	public getBlob(identifier: number | string): any /*: sql.Blob*/ {
 		const data = readBlobValue(this.native.getBlob(identifier));
-		return bytes.toJavaScriptBytes(data);
+		return Bytes.toJavaScriptBytes(data);
 	}
 
 	public getBlobNative(identifier: number | string): any /*: sql.Blob*/ {

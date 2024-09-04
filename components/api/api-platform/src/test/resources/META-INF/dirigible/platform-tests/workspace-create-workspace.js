@@ -1,8 +1,7 @@
+import { Workspace } from 'sdk/platform/workspace';
+import { Assert } from 'test/assert';
 
-var manager = require('platform/workspace');
-var assertTrue = require('test/assert').assertTrue;
+Workspace.createWorkspace('testworkspace');
+const workspace = Workspace.getWorkspace('testworkspace');
 
-manager.createWorkspace('testworkspace');
-var workspace = manager.getWorkspace('testworkspace');
-
-assertTrue(workspace.exists());
+Assert.assertTrue(workspace.exists());

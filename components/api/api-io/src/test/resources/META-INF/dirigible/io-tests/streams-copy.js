@@ -1,10 +1,12 @@
 
-var streams = require('io/streams');
-var assertEquals = require('test/assert').assertEquals;
+import { Streams } from 'sdk/io/streams';
+import { Assert } from 'test/assert';
 
-var bais = streams.createByteArrayInputStream([61, 62, 63]);
-var baos = streams.createByteArrayOutputStream();
-streams.copy(bais, baos);
-var result = baos.getBytes();
+const bais = Streams.createByteArrayInputStream([61, 62, 63]);
+const baos = Streams.createByteArrayOutputStream();
 
-assertEquals(result[1], 62);
+Streams.copy(bais, baos);
+
+const result = baos.getBytes();
+
+Assert.assertEquals(result[1], 62);

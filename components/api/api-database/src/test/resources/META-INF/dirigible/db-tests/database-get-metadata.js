@@ -1,9 +1,8 @@
+import { Database } from 'sdk/db/database';
+import { Assert } from 'test/assert';
 
-var database = require('db/database');
-var assertTrue = require('test/assert').assertTrue;
-
-var metadata = database.getMetadata();
+const metadata = Database.getMetadata();
 
 console.log(JSON.stringify(metadata));
 
-assertTrue((metadata !== null) && (metadata !== undefined));
+Assert.assertTrue((metadata !== null) && (metadata !== undefined));

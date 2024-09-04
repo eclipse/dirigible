@@ -1,5 +1,4 @@
+import { Request } from 'sdk/http/request';
+import { Assert } from 'test/assert';
 
-var request = require('http/request');
-var assertEquals = require('test/assert').assertEquals;
-
-assertEquals(request.getPathInfo(), '/services/js/http-tests/request-get-path-info.js');
+Assert.assertEquals(Request.getPathInfo(), '/services/js/http-tests/request-get-path-info.js');

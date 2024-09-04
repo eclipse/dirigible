@@ -1,8 +1,7 @@
+import { Context } from 'sdk/core/context';
+import { Assert } from 'test/assert';
 
-var context = require('core/context');
-var assertEquals = require('test/assert').assertEquals;
+Context.set('name1', 'value1');
+const result = Context.get('name1');
 
-context.set('name1', 'value1');
-var result = context.get('name1');
-
-assertEquals(result, 'value1');
+Assert.assertEquals(result, 'value1');

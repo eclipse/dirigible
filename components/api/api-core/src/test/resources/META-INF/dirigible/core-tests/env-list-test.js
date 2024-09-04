@@ -1,7 +1,6 @@
+import { Env } from 'sdk/core/env';
+import { Assert } from 'test/assert';
 
-var env = require('core/env');
-var assertTrue = require('test/assert').assertTrue;
+const result = Env.list();
 
-var result = env.list();
-
-assertTrue(result !== undefined && result !== null);
+Assert.assertTrue(result !== undefined && result !== null);

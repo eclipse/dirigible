@@ -1,13 +1,13 @@
 
-var ftp = require("io/ftp");
-var assertTrue = require('test/assert').assertTrue;
+const ftp = require("io/ftp");
+import { Assert } from 'test/assert';
 
-var host = "test.rebex.net";
-var port = 21;
-var userName = "demo";
-var password = "password";
+const host = "test.rebex.net";
+const port = 21;
+const userName = "demo";
+const password = "password";
 
-var ftpClient = ftp.getClient(host, port, userName, password);
-var fileText = ftpClient.getFileText("/", "readme.txt");
+const ftpClient = ftp.getClient(host, port, userName, password);
+const fileText = ftpClient.getFileText("/", "readme.txt");
 
-assertTrue(fileText !== undefined && fileText !== null);
+Assert.assertTrue(fileText !== undefined && fileText !== null);

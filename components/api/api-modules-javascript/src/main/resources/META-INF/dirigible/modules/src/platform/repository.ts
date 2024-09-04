@@ -9,10 +9,9 @@
  * SPDX-FileCopyrightText: 2023 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-import * as bytes from "sdk/io/bytes";
-import { command } from ".";
-const RepositoryFacade = Java.type("org.eclipse.dirigible.components.api.platform.RepositoryFacade");
+import { Bytes } from "sdk/io/bytes";
 
+const RepositoryFacade = Java.type("org.eclipse.dirigible.components.api.platform.RepositoryFacade");
 
 export class Repository {
 
@@ -65,7 +64,7 @@ export class Repository {
 }
 
 export class Resource {
-	private native: any;
+	private readonly native: any;
 
 	constructor(native: any) {
 		this.native = native;
@@ -118,12 +117,12 @@ export class Resource {
 	}
 
 	public getText(): string {
-		return bytes.byteArrayToText(this.getContent());
+		return Bytes.byteArrayToText(this.getContent());
 	}
 
 	public getContent(): any[] {
-		let nativeContent = this.native.getContent();
-		return bytes.toJavaScriptBytes(nativeContent);
+		const nativeContent = this.native.getContent();
+		return Bytes.toJavaScriptBytes(nativeContent);
 	}
 
 	public getContentNative(): any[] {
@@ -131,12 +130,12 @@ export class Resource {
 	}
 
 	public setText(text: string): void {
-		const content = bytes.textToByteArray(text);
+		const content = Bytes.textToByteArray(text);
 		this.setContent(content);
 	}
 
 	public setContent(content: any[]): void {
-		const nativeContent = bytes.toJavaBytes(content);
+		const nativeContent = Bytes.toJavaBytes(content);
 		this.native.setContent(nativeContent);
 	}
 
@@ -154,7 +153,7 @@ export class Resource {
 }
 
 export class Collection {
-	private native: any;
+	private readonly native: any;
 
 	constructor(native: any) {
 		this.native = native;
@@ -244,7 +243,7 @@ export class Collection {
 }
 
 export class EntityInformation {
-	private native: any;
+	private readonly native: any;
 
 	constructor(native: any) {
 		this.native = native;

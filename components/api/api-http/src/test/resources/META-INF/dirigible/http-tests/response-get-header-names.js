@@ -1,6 +1,4 @@
+import { Response } from 'sdk/http/response';
+import { Assert } from 'test/assert';
 
-var response = require('http/response');
-var assertTrue = require('test/assert').assertTrue;
-
-assertTrue(response.getHeaderNames().includes("header1","header2"));
-
+Assert.assertTrue(Response.getHeaderNames().includes("header1","header2"));

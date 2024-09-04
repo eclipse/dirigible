@@ -1,8 +1,8 @@
 
-var escape = require('utils/escape');
-var assertEquals = require('test/assert').assertEquals;
+import { Escape } from 'sdk/utils/escape';
+import { Assert } from 'test/assert';
 
-var input = 'json \t characters \n';
-var result = escape.escapeJavascript(input);
+const input = 'json \t characters \n';
+const result = Escape.escapeJavascript(input);
 
-assertEquals(result, 'json \\t characters \\n');
+Assert.assertEquals(result, 'json \\t characters \\n');

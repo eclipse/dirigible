@@ -11,8 +11,8 @@
  */
 "use strict";
 
-import * as dirigibleOrm from "./orm";
-import * as dirigibleOrmStatements from "./ormstatements";
+import { ORMDefinition, get as getORM } from "./orm";
+import { create as createORMStatements } from "./ormstatements";
 import { Sequence } from "./sequence";
 import { Database } from "./database";
 import { Query } from "sdk/db";
@@ -22,11 +22,11 @@ import { Logging } from "sdk/log";
 import { configurations, globals } from "sdk/core";
 
 
-export function DAO(orm, logCtxName, dataSourceName) {
+export function DAO(orm: ORMDefinition, logCtxName?: string, dataSourceName?: string) {
 	if (orm === undefined)
 		throw Error('Illegal argument: orm[' + orm + ']');
 
-	this.orm = dirigibleOrm.get(orm);
+	this.orm = getORM(orm);
 	this.sequenceName = this.orm.table + '_' + this.orm.getPrimaryKey().name.toUpperCase();
 	this.dropIdGenerator = function () {
 		return Sequence.drop(this.sequenceName, dataSourceName);
@@ -37,7 +37,7 @@ export function DAO(orm, logCtxName, dataSourceName) {
 
 	const conn = Database.getConnection(dataSourceName);
 	try {
-		this.ormstatements = dirigibleOrmStatements.create(this.orm, conn);
+		this.ormstatements = createORMStatements(this.orm, conn);
 	} finally {
 		conn.close();
 	}
@@ -922,7 +922,7 @@ DAO.prototype.dropTable = function (dropIdSequence) {
  * oDefinition can be table definition or standard orm definition object. Or it can be a valid path to
  * a .table file, or any other text file contianing a standard dao orm definition.
  */
-export function create(oDefinition, logCtxName, dataSourceName) {
+export function create(oDefinition, logCtxName?: string, dataSourceName?: string) {
 	let orm;
 	orm = oDefinition;
 
@@ -940,6 +940,6 @@ export function create(oDefinition, logCtxName, dataSourceName) {
 	return new DAO(orm, logCtxName, dataSourceName);
 };
 
-export function dao(oDefinition, logCtxName, dataSourceName) {
+export function dao(oDefinition, logCtxName?: string, dataSourceName?: string) {
 	return create(oDefinition, logCtxName, dataSourceName)
 }
