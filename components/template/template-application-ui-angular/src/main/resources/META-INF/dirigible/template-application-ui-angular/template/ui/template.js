@@ -3,19 +3,19 @@
  *
  * Do not modify the content as it may be re-generated again.
  */
-const listTemplate = require("template-application-ui-angular/template/ui/list");
-const manageTemplate = require("template-application-ui-angular/template/ui/manage");
-const masterDetailsListTemplate = require("template-application-ui-angular/template/ui/masterDetailsList");
-const masterDetailsManageTemplate = require("template-application-ui-angular/template/ui/masterDetailsManage");
-const reportTemplate = require("template-application-ui-angular/template/ui/report");
-const reportChartTemplate = require("template-application-ui-angular/template/ui/reportChart");
-const reportTableTemplate = require("template-application-ui-angular/template/ui/reportTable");
-// const perspective = require("template-application-ui-angular/template/ui/perspective");
-const launchpad = require("template-application-ui-angular/template/ui/launchpad");
-// const tiles = require("template-application-ui-angular/template/ui/tiles");
-// const menu = require("template-application-ui-angular/template/ui/menu");
+import * as listTemplate from "template-application-ui-angular/template/ui/list";
+import * as manageTemplate from "template-application-ui-angular/template/ui/manage";
+import * as masterDetailsListTemplate from "template-application-ui-angular/template/ui/masterDetailsList";
+import * as masterDetailsManageTemplate from "template-application-ui-angular/template/ui/masterDetailsManage";
+import * as reportTemplate from "template-application-ui-angular/template/ui/report";
+import * as reportChartTemplate from "template-application-ui-angular/template/ui/reportChart";
+import * as reportTableTemplate from "template-application-ui-angular/template/ui/reportTable";
+// import * as perspective from "template-application-ui-angular/template/ui/perspective";
+import * as launchpad from "template-application-ui-angular/template/ui/launchpad";
+// import * as tiles from "template-application-ui-angular/template/ui/tiles";
+// import * as menu from "template-application-ui-angular/template/ui/menu";
 
-exports.getSources = function (parameters) {
+export function getSources(parameters) {
     var sources = [];
     sources = sources.concat(launchpad.getSources(parameters));
     sources = sources.concat(listTemplate.getSources(parameters));

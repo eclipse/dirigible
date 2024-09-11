@@ -1,6 +1,15 @@
-import { response, rs } from "sdk/http";
+import { request, response, rs } from "sdk/http";
 import { workspace, lifecycle } from "sdk/platform";
 import { user } from "sdk/security";
+
+let templatePayload = request.getJSON();
+let template;
+try {
+    // Fallback to require()
+    template = dirigibleRequire(templatePayload.template);
+} catch (e) {
+    template = await import(templatePayload.template.replace(".js", ""));
+}
 
 class HttpError extends Error {
 
@@ -56,9 +65,6 @@ function onGenerateModel(context, request, response) {
 
     let model = getModel(workspace, project, path);
 
-    let templatePayload = request.getJSON();
-
-    let template = require(templatePayload.template);
     let parameters = templatePayload.parameters;
     parameters.projectName = project;
     parameters.workspaceName = workspace;

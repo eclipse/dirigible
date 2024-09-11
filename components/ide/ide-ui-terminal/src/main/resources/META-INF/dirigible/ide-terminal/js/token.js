@@ -1,4 +1,5 @@
-let response = require("http/response");
-response.println('{"token": ""}');
-response.flush();
-response.close();
+import { Response } from "sdk/http";
+
+Response.println('{"token": ""}');
+Response.flush();
+Response.close();

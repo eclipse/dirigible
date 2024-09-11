@@ -9,15 +9,15 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-let rs = require('http/rs');
-let configurations = require('core/configurations');
+import { rs } from 'sdk/http';
+import { Configurations } from 'sdk/core';
 
 rs.service()
 	.resource('')
 	.post(function (ctx, request) {
 		let data = request.getJSON();
 		for (let i = 0; i < data.env.length; i++) {
-			configurations.set(data.env[i].key, data.env[i].value);
+			Configurations.set(data.env[i].key, data.env[i].value);
 		}
 	})
 	.execute();

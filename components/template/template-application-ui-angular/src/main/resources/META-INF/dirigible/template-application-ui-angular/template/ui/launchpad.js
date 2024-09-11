@@ -3,7 +3,7 @@
  *
  * Do not modify the content as it may be re-generated again.
  */
-exports.getSources = function (parameters) {
+export function getSources(parameters) {
 	return [
 		// Location: "gen/{{genFolderName}}/index.html"
 		{

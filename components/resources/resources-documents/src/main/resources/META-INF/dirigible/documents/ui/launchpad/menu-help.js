@@ -15,6 +15,8 @@
  * Do not modify the content as it may be re-generated again.
  */
 
+import { Configurations as config } from "sdk/core";
+
 const defaultMenuItems = [
     {
         label: "Help Portal",
@@ -53,9 +55,7 @@ const defaultMenuItems = [
     }
 ];
 
-let config = require("core/configurations");
-
-exports.getMenu = function () {
+export function getMenu() {
     let menu = {
         label: "Help",
         order: 900,

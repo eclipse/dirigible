@@ -3,18 +3,18 @@
  *
  * Do not modify the content as it may be re-generated again.
  */
-const daoTemplateManager = dirigibleRequire("template-application-dao/template/template");
-const generateUtils = dirigibleRequire("ide-generate-service/template/generateUtils");
-const parameterUtils = dirigibleRequire("ide-generate-service/template/parameterUtils");
+import * as daoTemplateManager from "template-application-dao/template/template";
+import * as generateUtils from "ide-generate-service/template/generateUtils";
+import * as parameterUtils from "ide-generate-service/template/parameterUtils";
 
-exports.generate = function (model, parameters) {
+export function generate(model, parameters) {
     model = JSON.parse(model).model;
-    const templateSources = exports.getTemplate(parameters).sources;
+    const templateSources = getTemplate(parameters).sources;
     parameterUtils.process(model, parameters)
     return generateUtils.generateFiles(model, parameters, templateSources);
 };
 
-exports.getTemplate = function (parameters) {
+export function getTemplate(parameters) {
     const daoTemplate = daoTemplateManager.getTemplate(parameters);
 
     let templateSources = [{

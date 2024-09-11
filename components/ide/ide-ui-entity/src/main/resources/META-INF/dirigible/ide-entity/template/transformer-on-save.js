@@ -9,8 +9,9 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const transformer = require("ide-entity/template/transform-edm");
-const workspaceManager = require("platform/workspace");
+import * as transformer from "ide-entity/template/transform-edm";
+import { Workspace as workspaceManager } from "sdk/platform";
+import { Bytes } from "sdk/io";
 
 const workspace = __context.get('workspace');
 const project = __context.get('project');
@@ -21,8 +22,7 @@ if (path && path.endsWith(".edm")) {
     const content = transformer.transform(workspace, project, path);
 
     if (content !== null) {
-        const bytes = require("io/bytes");
-        const input = bytes.textToByteArray(content);
+        const input = Bytes.textToByteArray(content);
 
         if (workspaceManager.getWorkspace(workspace)
             .getProject(project).getFile(path).exists()) {

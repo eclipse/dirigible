@@ -3,18 +3,18 @@
  *
  * Do not modify the content as it may be re-generated again.
  */
-const generateUtils = dirigibleRequire("ide-generate-service/template/generateUtils");
+import * as generateUtils from "ide-generate-service/template/generateUtils";
 
-exports.generate = function (model, parameters) {
+export function generate(model, parameters) {
     const templateModel = JSON.parse(model);
-    const templateSources = exports.getTemplate(parameters).sources;
+    const templateSources = getTemplate(parameters).sources;
     if (templateModel.code) {
         templateModel.code = templateModel.code.split("\n").map(e => `    ${e}`).join('\n');
     }
     return generateUtils.generateGeneric(templateModel, parameters, templateSources);
 };
 
-exports.getTemplate = function (parameters) {
+export function getTemplate(parameters) {
     return {
         name: "AngularJS Generator from Form Model",
         description: "AngularJS Form Model generator template",

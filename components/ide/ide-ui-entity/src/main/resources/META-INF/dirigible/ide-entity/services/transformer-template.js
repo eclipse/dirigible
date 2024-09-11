@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const transformer = require("ide-entity/template/transform-edm");
+import * as transformer from "ide-entity/template/transform-edm";
 
 exports.generate = function (model, parameters) {
     let workspaceName = parameters.workspaceName;

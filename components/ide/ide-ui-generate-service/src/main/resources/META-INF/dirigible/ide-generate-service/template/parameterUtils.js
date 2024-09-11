@@ -9,14 +9,16 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const configurations = dirigibleRequire("core/configurations");
+import { Configurations } from "sdk/core";
+import { Base64 } from "sdk/utils";
+import { Bytes } from "sdk/io";
 
-exports.process = function (model, parameters) {
+export function process(model, parameters) {
     model.entities.forEach(e => {
         if (parameters.dataSource && !e.dataSource) {
             e.dataSource = parameters.dataSource;
         } else {
-            const defaultDataSourceName = configurations.get("DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT", "DefaultDB");
+            const defaultDataSourceName = Configurations.get("DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT", "DefaultDB");
             e.dataSource = defaultDataSourceName;
             parameters.dataSource = defaultDataSourceName;
         }
@@ -44,9 +46,7 @@ exports.process = function (model, parameters) {
             }
         }
         if (e.importsCode && e.importsCode !== "") {
-            let base64 = require("utils/base64");
-            let bytes = require("io/bytes");
-            e.importsCode = bytes.byteArrayToText(base64.decode(e.importsCode));
+            e.importsCode = Bytes.byteArrayToText(Base64.decode(e.importsCode));
         }
 
         e.referencedProjections = [];
@@ -62,7 +62,7 @@ exports.process = function (model, parameters) {
             p.widgetLabel = p.widgetLabel ? p.widgetLabel : p.name;
             p.widgetDropdownUrl = "";
 
-            const parsedDataType = exports.parseDataTypes(p.dataType);
+            const parsedDataType = parseDataTypes(p.dataType);
             p.dataTypeJava = parsedDataType.java;
             p.dataTypeTypescript = parsedDataType.ts;
 
@@ -164,7 +164,7 @@ exports.process = function (model, parameters) {
     });
 }
 
-exports.getUniqueParameters = function (...parameters) {
+export function getUniqueParameters(...parameters) {
     const uniqueTemplateParameters = [];
     const parametersMap = new Map();
 
@@ -180,7 +180,7 @@ exports.getUniqueParameters = function (...parameters) {
     return uniqueTemplateParameters;
 }
 
-exports.parseDataTypes = function (dataType) {
+export function parseDataTypes(dataType) {
     const parsedDataType = {
         java: '',
         ts: ''
