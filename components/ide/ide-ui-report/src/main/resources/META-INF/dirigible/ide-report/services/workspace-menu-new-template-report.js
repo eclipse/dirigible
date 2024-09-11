@@ -9,12 +9,25 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getTemplate = function () {
-	let template = {
-		"name": "report-model",
-		"label": "Report Model",
-		"extension": "report",
-		"data": '{"name":"MYREPORT","alias":"mt","table":"MYTABLE","columns":[{"alias":"Customer","name":"CUSTOMER_NAME","type":"VARCHAR","aggregate": "NONE","table": "mt","select": true}]}'
+export function getTemplate() {
+	return {
+		name: "report-model",
+		label: "Report Model",
+		extension: "report",
+		data: JSON.stringify({
+			name: "MYREPORT",
+			alias: "mt",
+			table: "MYTABLE",
+			columns: [
+				{
+					alias: "Customer",
+					name: "CUSTOMER_NAME",
+					type: "VARCHAR",
+					aggregate: "NONE",
+					table: "mt",
+					select: true
+				}
+			]
+		}, null, 4)
 	};
-	return template;
 };

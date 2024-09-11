@@ -3,32 +3,32 @@
  *
  * Do not modify the content as it may be re-generated again.
  */
-exports.getTemplate = function () {
+export function getTemplate() {
 	return {
-		"name": "React (UI)",
-		"description": "React Template",
-		"sources": [{
-			"location": "/template-react/index.tsx.template",
-			"action": "generate",
-			"rename": "index.tsx"
+		name: "React (UI)",
+		description: "React Template",
+		sources: [{
+			location: "/template-react/index.tsx.template",
+			action: "generate",
+			rename: "index.tsx"
 		}, {
-			"location": "/template-react/index.html.template",
-			"action": "generate",
-			"rename": "index.html"
+			location: "/template-react/index.html.template",
+			action: "generate",
+			rename: "index.html"
 		}, {
-			"location": "/template-react/.gitignore.template",
-			"action": "generate",
-			"rename": ".gitignore"
+			location: "/template-react/.gitignore.template",
+			action: "generate",
+			rename: ".gitignore"
 		}, {
-			"location": "/template-react/project.json.template",
-			"action": "generate",
-			"rename": "project.json"
+			location: "/template-react/project.json.template",
+			action: "generate",
+			rename: "project.json"
 		}, {
-			"location": "/template-react/app.tsx.template",
-			"action": "generate",
-			"rename": "{{fileName}}.tsx"
+			location: "/template-react/app.tsx.template",
+			action: "generate",
+			rename: "{{fileName}}.tsx"
 		}],
-		"parameters": [],
-		"order": 35
+		parameters: [],
+		order: 35
 	};
 };

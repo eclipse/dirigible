@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getMenu = function () {
+export function getMenu() {
 	return {
 		label: "File",
 		order: 1,

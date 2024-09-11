@@ -9,11 +9,16 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getTemplate = function () {
+export function getTemplate() {
 	return {
-		"name": "form",
-		"label": "Form Definition",
-		"extension": "form",
-		"data": '{"feeds":[],"scripts":[],"code":"","form":[]}'
+		name: "form",
+		label: "Form Definition",
+		extension: "form",
+		data: JSON.stringify({
+			feeds: [],
+			scripts: [],
+			code: "",
+			form: []
+		}, null, 4)
 	};
 };

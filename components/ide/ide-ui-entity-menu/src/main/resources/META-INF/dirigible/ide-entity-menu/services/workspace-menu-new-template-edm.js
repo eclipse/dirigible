@@ -9,13 +9,12 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getTemplate = function () {
-	let template = {
-		"name": "edm",
-		"label": "Entity Data Model",
-		"extension": "edm",
-		"data": '<model><entities></entities><mxGraphModel><root></root></mxGraphModel></model>',
-		"order": 10
+export function getTemplate() {
+	return {
+		name: "edm",
+		label: "Entity Data Model",
+		extension: "edm",
+		data: '<model><entities></entities><mxGraphModel><root></root></mxGraphModel></model>',
+		order: 10
 	};
-	return template;
 };

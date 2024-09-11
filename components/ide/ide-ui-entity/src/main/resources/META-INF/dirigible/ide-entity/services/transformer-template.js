@@ -11,7 +11,7 @@
  */
 import * as transformer from "ide-entity/template/transform-edm";
 
-exports.generate = function (model, parameters) {
+export function generate(model, parameters) {
     let workspaceName = parameters.workspaceName;
     let projectName = parameters.projectName;
     let filePath = parameters.filePath;
@@ -22,13 +22,12 @@ exports.generate = function (model, parameters) {
     }]
 };
 
-exports.getTemplate = function () {
-    let template = {
-        "name": "Entity Data to JSON Model Transformer",
-        "description": "Model transformer template",
-        "extension": "edm",
-        "sources": [],
-        "parameters": []
-    };
-    return template;
+export function getTemplate() {
+    return {
+        name: "Entity Data to JSON Model Transformer",
+        description: "Model transformer template",
+        extension: "edm",
+        sources: [],
+        parameters: []
+    }
 }

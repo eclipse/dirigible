@@ -9,10 +9,12 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getTemplate = () => ({
-    "name": "typescript",
-    "label": "TypeScript Service",
-    "extension": "ts",
-    "data": 'import {response} from "sdk/http";\n\nresponse.println("Hello World!");',
-    "order": 2
-});
+export function getTemplate() {
+    return {
+        name: "typescript",
+        label: "TypeScript Service",
+        extension: "ts",
+        data: `import { response } from "sdk/http";\n\nresponse.println("Hello World!");`,
+        order: 2
+    }
+};

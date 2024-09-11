@@ -9,27 +9,21 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getTemplate = function () {
+export function getTemplate() {
 	return {
-		"name": "access",
-		"label": "Access Constraints",
-		"extension": "access",
-		"data": JSON.stringify(
-			{
-				"constraints": [
-					{
-						"path": "/myproject/myfolder/myservice.js",
-						"method": "GET",
-						"scope": "HTTP",
-						"roles": [
-							"administrator",
-							"operator"
-						]
-					}
+		name: "access",
+		label: "Access Constraints",
+		extension: "access",
+		data: JSON.stringify({
+			constraints: [{
+				path: "/myproject/myfolder/myservice.js",
+				method: "GET",
+				scope: "HTTP",
+				roles: [
+					"administrator",
+					"operator"
 				]
-			},
-			null,
-			4
-		)
+			}]
+		}, null, 4)
 	};
 };

@@ -9,12 +9,24 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getTemplate = function () {
-	let template = {
-		"name": "database-table",
-		"label": "Database Table",
-		"extension": "table",
-		"data": '{"name":"MYTABLE","type":"TABLE","columns":[{"name":"ID","type":"INTEGER","length":"0","nullable":"false","primaryKey":"true","defaultValue":""}]}'
+export function getTemplate() {
+	return {
+		name: "database-table",
+		label: "Database Table",
+		extension: "table",
+		data: JSON.stringify({
+			name: "MYTABLE",
+			type: "TABLE",
+			columns: [
+				{
+					name: "ID",
+					type: "INTEGER",
+					length: "0",
+					nullable: "false",
+					primaryKey: "true",
+					defaultValue: ""
+				}
+			]
+		}, null, 4)
 	};
-	return template;
 };

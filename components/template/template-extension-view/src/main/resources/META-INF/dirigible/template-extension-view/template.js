@@ -3,7 +3,7 @@
  *
  * Do not modify the content as it may be re-generated again.
  */
-exports.getTemplate = function () {
+export function getTemplate() {
 	return {
 		name: "View (UI)",
 		description: "Generates a basic view",
@@ -29,6 +29,6 @@ exports.getTemplate = function () {
 			name: "viewName",
 			label: "Name"
 		}],
-		"order": 33
+		order: 33
 	};
 };

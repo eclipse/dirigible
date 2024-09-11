@@ -9,11 +9,16 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getTemplate = function () {
+export function getTemplate() {
 	return {
 		name: "listener",
 		label: "Message Listener",
 		extension: "listener",
-		data: '{"name":"mylistener","kind":"Q","handler":"myproject/myhandler.js","description":"My Listener"}'
+		data: JSON.stringify({
+			name: "mylistener",
+			kind: "Q",
+			handler: "myproject/myhandler.js",
+			description: "My Listener"
+		}, null, 4)
 	};
 };

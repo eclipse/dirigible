@@ -9,11 +9,11 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getTheme = function() {
+export function getTheme() {
 	return {
-		'id': 'default',
-		'module': 'theme-default',
-		'name': 'Dark',
-		'order': 0
+		id: 'default',
+		module: 'theme-default',
+		name: 'Dark',
+		order: 0
 	};
 };

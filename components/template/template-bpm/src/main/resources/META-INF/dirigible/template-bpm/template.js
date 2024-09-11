@@ -3,7 +3,7 @@
  *
  * Do not modify the content as it may be re-generated again.
  */
-exports.getTemplate = function () {
+export function getTemplate() {
 	return {
 		name: "BPM Project Starter",
 		description: "BPM Project Starter Template",

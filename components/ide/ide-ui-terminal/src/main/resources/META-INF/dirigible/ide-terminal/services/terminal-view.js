@@ -9,13 +9,13 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getView = function () {
+export function getView() {
 	return {
-		"id": "terminal",
-		"name": "Terminal",
-		"factory": "frame",
-		"region": "bottom",
-		"label": "Terminal",
-		"link": "../ide-terminal/terminal.html"
+		id: "terminal",
+		name: "Terminal",
+		factory: "frame",
+		region: "bottom",
+		label: "Terminal",
+		link: "../ide-terminal/terminal.html"
 	};
 }

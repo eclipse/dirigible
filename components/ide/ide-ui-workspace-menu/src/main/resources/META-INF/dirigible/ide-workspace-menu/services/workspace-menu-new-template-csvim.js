@@ -9,11 +9,11 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getTemplate = () => ({
+export function getTemplate() {
     return {
-        "name": "cvsim",
-        "label": "CSVIM file",
-        "extension": "csvim",
-        "data": '[]'
+        name: "cvsim",
+        label: "CSVIM file",
+        extension: "csvim",
+        data: "[]"
     };
-});
+};

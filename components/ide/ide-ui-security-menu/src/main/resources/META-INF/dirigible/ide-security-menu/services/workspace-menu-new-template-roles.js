@@ -9,24 +9,18 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getTemplate = function () {
+export function getTemplate() {
 	return {
-		"name": "roles",
-		"label": "Roles Definitions",
-		"extension": "roles",
-		"data": JSON.stringify(
-			[
-				{
-					"name": "administrator",
-					"description": "Administrator Role"
-				},
-				{
-					"name": "operator",
-					"description": "Operator Role"
-				}
-			],
-			null,
-			4
-		)
+		name: "roles",
+		label: "Roles Definitions",
+		extension: "roles",
+		data: JSON.stringify([{
+			name: "administrator",
+			description: "Administrator Role"
+		},
+		{
+			name: "operator",
+			description: "Operator Role"
+		}], null, 4)
 	};
 };

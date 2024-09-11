@@ -1,4 +1,4 @@
-exports.getFileTypes = function () {
+export function getFileTypes() {
     return {
         ".abap": "abap",
         ".js": "javascript",

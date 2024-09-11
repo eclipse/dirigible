@@ -9,9 +9,11 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getTemplate = () => ({
-    "name": "html",
-    "label": "HTML5 Page",
-    "extension": "html",
-    "data": '<!DOCTYPE html>\n<head>\n</head>\n<body>\n</body>\n</html>'
-});
+export function getTemplate() {
+    return {
+        name: "html",
+        label: "HTML5 Page",
+        extension: "html",
+        data: "<!DOCTYPE html>\n<head>\n</head>\n<body>\n</body>\n</html>"
+    }
+}
