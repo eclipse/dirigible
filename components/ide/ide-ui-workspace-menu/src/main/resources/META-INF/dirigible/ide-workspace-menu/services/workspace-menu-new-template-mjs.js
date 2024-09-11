@@ -9,10 +9,12 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getTemplate = () => ({
-    "name": "javascript-esm",
-    "label": "JavaScript Service",
-    "extension": "mjs",
-    "data": 'import {response} from "sdk/http";\n\nresponse.println("Hello World!");',
-    "order": 1
-});
+export function getTemplate() {
+    return {
+        name: "javascript-esm",
+        label: "JavaScript Service",
+        extension: "mjs",
+        data: `import { response } from "sdk/http";\n\nresponse.println("Hello World!");`,
+        order: 1
+    }
+};

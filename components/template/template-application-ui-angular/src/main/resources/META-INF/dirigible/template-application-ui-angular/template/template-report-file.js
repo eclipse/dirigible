@@ -3,13 +3,13 @@
  *
  * Do not modify the content as it may be re-generated again.
  */
-const reportFileTemplate = dirigibleRequire("template-application-ui-angular/template/ui/reportFile");
-const generateUtils = dirigibleRequire("ide-generate-service/template/generateUtils");
-const parameterUtils = dirigibleRequire("ide-generate-service/template/parameterUtils");
+import * as reportFileTemplate from "template-application-ui-angular/template/ui/reportFile";
+import * as generateUtils from "ide-generate-service/template/generateUtils";
+import * as parameterUtils from "ide-generate-service/template/parameterUtils";
 
-exports.generate = function (model, parameters) {
+export function generate(model, parameters) {
     model = JSON.parse(model);
-    let templateSources = exports.getTemplate(parameters).sources;
+    let templateSources = getTemplate(parameters).sources;
     model?.columns?.forEach(e => {
         const parsedDataType = parameterUtils.parseDataTypes(e.type);
         e.typeJava = parsedDataType.java;
@@ -41,7 +41,7 @@ exports.generate = function (model, parameters) {
     return generateUtils.generateGeneric(model, parameters, templateSources);
 };
 
-exports.getTemplate = function (parameters) {
+export function getTemplate(parameters) {
     return {
         name: "Application Report - Table",
         description: "Application Table Report",

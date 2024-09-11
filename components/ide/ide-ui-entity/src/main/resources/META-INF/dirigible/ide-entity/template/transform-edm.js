@@ -9,21 +9,23 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.transform = function (workspaceName, projectName, filePath) {
+
+import { Workspace as workspaceManager } from "sdk/platform";
+import { Bytes } from "sdk/io";
+import { XML } from "sdk/utils";
+
+export function transform(workspaceName, projectName, filePath) {
 
     if (!filePath.endsWith('.edm')) {
         return null;
     }
 
-    let workspaceManager = require("platform/workspace");
     let contents = workspaceManager.getWorkspace(workspaceName)
         .getProject(projectName).getFile(filePath).getContent();
 
-    let bytes = require("io/bytes");
-    contents = bytes.byteArrayToText(contents);
+    contents = Bytes.byteArrayToText(contents);
 
-    let xml = require("utils/xml");
-    let raw = JSON.parse(xml.toJson(contents));
+    let raw = JSON.parse(XML.toJson(contents));
 
     let root = {};
     root.model = {};

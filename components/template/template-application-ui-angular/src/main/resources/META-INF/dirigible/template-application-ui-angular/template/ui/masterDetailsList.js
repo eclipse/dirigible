@@ -3,7 +3,7 @@
  *
  * Do not modify the content as it may be re-generated again.
  */
-exports.getSources = function (parameters) {
+export function getSources(parameters) {
     var sources = [];
     sources = sources.concat(getMaster(parameters));
     sources = sources.concat(getDetails(parameters));

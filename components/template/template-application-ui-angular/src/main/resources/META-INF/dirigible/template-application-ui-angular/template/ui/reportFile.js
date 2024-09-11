@@ -4,7 +4,7 @@
  * Do not modify the content as it may be re-generated again.
  */
 
-exports.getSources = function (parameters) {
+export function getSources(parameters) {
     const sources = [];
 
     sources.push(...getReportPerspectiveSources());

@@ -9,19 +9,19 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.onOpen = function()  {
+export function onOpen() {
   console.log("Connection openned.");
 }
 
-exports.onMessage = function(message, from) {
-  console.log("Message received: " + message + ", from: " + from);
-  return "Hello from WebSocket! [" + message + "]";
+export function onMessage(message, from) {
+  console.log(`Message received: ${message}, from: ${from}`);
+  return `Hello from WebSocket! [${message}]`;
 }
 
-exports.onError = function(error) {
-  console.error("Error: " + error);
+export function onError(error) {
+  console.error(`Error: ${error}`);
 }
 
-exports.onClose = function() {
+export function onClose() {
   console.warn("Connection closed.");
 }

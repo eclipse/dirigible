@@ -59,7 +59,7 @@ async function loadTemplates(forMenu = false) {
 				templates.push(template);
 			} catch (e) {
 				// Fallback for not migrated extensions
-				let templateExtension = require(module);
+				let templateExtension = dirigibleRequire(module);
 				let template = templateExtension.getTemplate();
 				template.id = module;
 				templates.push(template);

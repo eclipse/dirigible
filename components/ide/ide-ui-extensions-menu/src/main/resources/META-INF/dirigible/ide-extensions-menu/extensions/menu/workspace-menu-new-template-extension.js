@@ -9,11 +9,15 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getTemplate = function () {
+export function getTemplate() {
 	return {
-		"name": "extension",
-		"label": "Extension",
-		"extension": "extension",
-		"data": '{"module":"/myproject/my-extension.js","extensionPoint":"my-extension-point","description":"My Extension"}'
+		name: "extension",
+		label: "Extension",
+		extension: "extension",
+		data: JSON.stringify({
+			module: "/myproject/my-extension.js",
+			extensionPoint: "my-extension-point",
+			description: "My Extension"
+		}, null, 4)
 	};
 };

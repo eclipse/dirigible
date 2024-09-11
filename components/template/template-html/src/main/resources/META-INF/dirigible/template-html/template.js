@@ -3,18 +3,18 @@
  *
  * Do not modify the content as it may be re-generated again.
  */
-exports.getTemplate = function() {
+export function getTemplate() {
 	return {
-		"name": "AngularJS (UI)",
-		"description": "HTML5 Template with AngularJS",
-		"sources": [{
-			"location": "/template-html/index.html.template", 
-			"action": "generate",
-			"rename": "{{fileName}}.html",
-			"start" : "[[",
-			"end" : "]]"
+		name: "AngularJS (UI)",
+		description: "HTML5 Template with AngularJS",
+		sources: [{
+			location: "/template-html/index.html.template", 
+			action: "generate",
+			rename: "{{fileName}}.html",
+			start : "[[",
+			end : "]]"
 		}],
-		"parameters": [],
-		"order": 30
+		parameters: [],
+		order: 30
 	};
 };

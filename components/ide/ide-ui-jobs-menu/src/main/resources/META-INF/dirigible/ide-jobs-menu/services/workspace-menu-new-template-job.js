@@ -9,11 +9,16 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getTemplate = function () {
+export function getTemplate() {
 	return {
-		"name": "job",
-		"label": "Scheduled Job",
-		"extension": "job",
-		"data": JSON.stringify(JSON.parse('{"expression":"0/10 * * * * ?","group":"defined","handler":"myproject/myhandler.js","description":"My Job"}'), null, 2)
+		name: "job",
+		label: "Scheduled Job",
+		extension: "job",
+		data: JSON.stringify({
+			expression: "0/10 * * * * ?",
+			group: "defined",
+			handler: "myproject/myhandler.js",
+			description: "My Job"
+		}, null, 4)
 	};
 };

@@ -3,7 +3,7 @@
  *
  * Do not modify the content as it may be re-generated again.
  */
-exports.getSources = function (parameters) {
+export function getSources(parameters) {
 	return [{
 		location: "/template-application-ui-angular/ui/perspectives/index.html.template",
 		action: "generate",

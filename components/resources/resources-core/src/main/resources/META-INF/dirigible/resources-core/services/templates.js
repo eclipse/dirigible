@@ -27,7 +27,7 @@ for (let i = 0; i < templateExtensions?.length; i++) {
 			templates.push(template);
 		} catch (e) {
 			// Fallback for not migrated extensions
-			const templateExtension = require(module);
+			const templateExtension = dirigibleRequire(module);
 			const template = templateExtension.getTemplate();
 			template.id = module;
 			templates.push(template);

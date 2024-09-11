@@ -9,19 +9,15 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getTemplate = function () {
+export function getTemplate() {
 	return {
-		"name": "websocket",
-		"label": "WebSocket",
-		"extension": "websocket",
-		"data": JSON.stringify(
-			{
-				"handler": "myproject/myhandler.js",
-				"endpoint": "myendpoint",
-				"description": "My WebSocket"
-			},
-			null,
-			2
-		)
+		name: "websocket",
+		label: "WebSocket",
+		extension: "websocket",
+		data: JSON.stringify({
+			handler: "myproject/myhandler.js",
+			endpoint: "myendpoint",
+			description: "My WebSocket"
+		}, null, 4)
 	};
 };

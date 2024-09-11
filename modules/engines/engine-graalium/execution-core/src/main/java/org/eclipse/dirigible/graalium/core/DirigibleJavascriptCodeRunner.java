@@ -9,6 +9,13 @@
  */
 package org.eclipse.dirigible.graalium.core;
 
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.ServiceLoader;
+import java.util.function.Consumer;
+import java.util.regex.Pattern;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.config.StaticObjects;
 import org.eclipse.dirigible.components.base.spring.BeanProvider;
@@ -19,21 +26,17 @@ import org.eclipse.dirigible.graalium.core.javascript.GraalJSInterceptor;
 import org.eclipse.dirigible.graalium.core.javascript.modules.Module;
 import org.eclipse.dirigible.graalium.core.javascript.modules.ModuleType;
 import org.eclipse.dirigible.graalium.core.javascript.modules.java.JavaModuleResolver;
-import org.eclipse.dirigible.graalium.core.modules.*;
+import org.eclipse.dirigible.graalium.core.modules.DirigibleEsmModuleResolver;
+import org.eclipse.dirigible.graalium.core.modules.DirigibleGlobalModuleResolver;
+import org.eclipse.dirigible.graalium.core.modules.DirigibleModuleResolver;
+import org.eclipse.dirigible.graalium.core.modules.DirigibleSourceProvider;
+import org.eclipse.dirigible.graalium.core.modules.ExternalModuleResolver;
 import org.eclipse.dirigible.graalium.core.polyfills.RequirePolyfill;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
-
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.ServiceLoader;
-import java.util.function.Consumer;
-import java.util.regex.Pattern;
 
 /**
  * The Class DirigibleJavascriptCodeRunner.
@@ -171,7 +174,9 @@ public class DirigibleJavascriptCodeRunner implements CodeRunner<Source, Value> 
 
     public Module run(Path codeFilePath) {
         var pathAsString = codeFilePath.toString();
-        ModuleType moduleType = pathAsString.endsWith(MJS_EXT) || pathAsString.endsWith((TS_EXT)) ? ModuleType.ESM : ModuleType.CJS;
+        // ModuleType moduleType = pathAsString.endsWith(MJS_EXT) || pathAsString.endsWith((TS_EXT)) ?
+        // ModuleType.ESM : ModuleType.CJS;
+        ModuleType moduleType = ModuleType.ESM;
         if (pathAsString.endsWith(TS_EXT)) {
             pathAsString = transformTypeScriptHandlerPathIfNecessary(pathAsString);
         }

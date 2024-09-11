@@ -9,5 +9,13 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const handler = require(__context.get("handler"));
+let handler;
+
+try {
+    // Fallback to require()
+    handler = dirigibleRequire(__context.get("handler"));
+} catch (e) {
+    handler = await import(__context.get("handler"));
+}
+
 handler.onMessage(__context.get("message"));

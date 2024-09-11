@@ -9,11 +9,11 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-exports.getTemplate = function () {
+export function getTemplate() {
 	return {
-		"name": "schema",
-		"label": "Database Schema Model",
-		"extension": "dsm",
-		"data": '<schema><structures></structures><mxGraphModel><root></root></mxGraphModel></schema>'
+		name: "schema",
+		label: "Database Schema Model",
+		extension: "dsm",
+		data: "<schema><structures></structures><mxGraphModel><root></root></mxGraphModel></schema>"
 	};
 };

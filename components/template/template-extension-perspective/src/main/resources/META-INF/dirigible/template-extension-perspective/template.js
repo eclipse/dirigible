@@ -3,7 +3,7 @@
  *
  * Do not modify the content as it may be re-generated again.
  */
-exports.getTemplate = function () {
+export function getTemplate() {
 	return {
 		name: "Perspective (UI)",
 		description: "Generates a basic perspective",
@@ -49,6 +49,6 @@ exports.getTemplate = function () {
 			rename: "/images/perspective.svg"
 		}],
 		parameters: [],
-		"order": 32
+		order: 32
 	};
 };

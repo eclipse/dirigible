@@ -9,10 +9,10 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const registry = dirigibleRequire("platform/registry");
-const templateEngines = dirigibleRequire("template/engines");
+import { Registry } from "sdk/platform";
+import { TemplateEngines as templateEngines } from "sdk/template";
 
-exports.generateGeneric = function (model, parameters, templateSources) {
+export function generateGeneric(model, parameters, templateSources) {
     const generatedFiles = []
     const templateParameters = {};
     Object.assign(templateParameters, model, parameters);
@@ -22,7 +22,7 @@ exports.generateGeneric = function (model, parameters, templateSources) {
     for (let i = 0; i < templateSources.length; i++) {
         const template = templateSources[i];
         const location = template.location;
-        const content = registry.getText(template.location);
+        const content = Registry.getText(template.location);
         if (content == null) {
             throw new Error(`Template file at location '${templateSources[i].location}' does not exists.`)
         }
@@ -44,7 +44,7 @@ exports.generateGeneric = function (model, parameters, templateSources) {
     return generatedFiles;
 }
 
-exports.generateFiles = function (model, parameters, templateSources) {
+export function generateFiles(model, parameters, templateSources) {
     let generatedFiles = [];
 
     const models = model.entities.filter(e => e.type !== "REPORT" && e.type !== "FILTER");
@@ -84,7 +84,7 @@ exports.generateFiles = function (model, parameters, templateSources) {
     for (let i = 0; i < templateSources.length; i++) {
         const template = templateSources[i];
         const location = template.location;
-        const content = registry.getText(template.location);
+        const content = Registry.getText(template.location);
         if (content == null) {
             throw new Error(`Template file at location '${templateSources[i].location}' does not exists.`)
         }
