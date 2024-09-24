@@ -4,6 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -40,7 +41,12 @@ public class SnowflakeAuthFilter extends OncePerRequestFilter {
 
         if (currentUser == null) {
             LOGGER.warn("Missing user header with name [{}]. Forwarding the request further", SNOWFLAKE_USER_HEADER);
-            SecurityContextHolder.clearContext(); // force logout
+
+            HttpSession session = request.getSession(false);
+            if (null != session) {
+                session.invalidate();
+            }
+            SecurityContextHolder.clearContext();
             filterChain.doFilter(request, response);
             return;
         }
