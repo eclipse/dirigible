@@ -33,6 +33,7 @@
 		<module>security/security-basic</module>
 		<module>security/security-keycloak</module>
 		<module>security/security-oauth2</module>
+		<module>security/security-snowflake</module>
 
 		<!-- Data -->
 		<module>data/data-structures</module>
@@ -380,6 +381,11 @@
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-components-security-keycloak</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-security-snowflake</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

@@ -26,9 +26,9 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class SnowflakeDatabaseConfigurator implements DatabaseConfigurator {
 
+    public static final String TOKEN_FILE_PATH = "/snowflake/session/token";
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(SnowflakeDatabaseConfigurator.class);
-    public static final String TOKEN_FILE_PATH = "/snowflake/session/token";
 
     @Override
     public boolean isApplicable(DatabaseSystem databaseSystem) {
@@ -65,7 +65,7 @@ public class SnowflakeDatabaseConfigurator implements DatabaseConfigurator {
             addDataSourcePropertyIfConfigAvailable("SNOWFLAKE_USERNAME", "user", config);
             addDataSourcePropertyIfConfigAvailable("SNOWFLAKE_PASSWORD", "password", config);
 
-            url = Configuration.get("SNOWFLAKE_URL", config.getJdbcUrl());
+            url = Configuration.get("lll", config.getJdbcUrl());
         }
         logger.info("Built url [{}]", url);
         config.addDataSourceProperty("url", url);

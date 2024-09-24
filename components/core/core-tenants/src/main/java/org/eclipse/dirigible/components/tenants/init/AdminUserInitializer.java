@@ -21,9 +21,9 @@ import org.eclipse.dirigible.components.tenants.domain.UserRoleAssignment;
 import org.eclipse.dirigible.components.tenants.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -35,7 +35,7 @@ import java.util.Optional;
 /**
  * The Class AdminUserInitializer.
  */
-@ConditionalOnProperty(name = "basic.enabled", havingValue = "true")
+@Conditional(AdminUserInitializerCondition.class)
 @Order(ApplicationReadyEventListeners.ADMIN_USER_INITIALIZER)
 @Component
 class AdminUserInitializer implements ApplicationListener<ApplicationReadyEvent> {
