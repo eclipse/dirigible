@@ -53,7 +53,6 @@ public class SnowflakeSecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http, TenantContextInitFilter tenantContextInitFilter) throws Exception {
         http.cors(Customizer.withDefaults())
-            .httpBasic(Customizer.withDefaults())
             .csrf(csrf -> csrf.disable())
             .logout(logout -> logout.deleteCookies("JSESSIONID"))
             .headers(headers -> headers.frameOptions(frameOpts -> frameOpts.disable()))
