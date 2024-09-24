@@ -9,6 +9,7 @@
  */
 package org.eclipse.dirigible.components.security.snowflake;
 
+import org.eclipse.dirigible.components.base.http.access.CorsConfigurationSourceProvider;
 import org.eclipse.dirigible.components.base.http.access.HttpSecurityURIConfigurator;
 import org.eclipse.dirigible.components.tenants.tenant.TenantContextInitFilter;
 import org.springframework.context.annotation.Bean;
@@ -20,12 +21,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Profile("snowflake")
 @Configuration
@@ -68,19 +64,7 @@ public class SnowflakeSecurityConfig {
      */
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(List.of("*"));
-        configuration.setAllowCredentials(true);
-        configuration.setAllowedHeaders(
-                Arrays.asList("Access-Control-Allow-Headers", "Access-Control-Allow-Origin", "Access-Control-Request-Method",
-                        "Access-Control-Request-Headers", "Origin", "Cache-Control", "Content-Type", "Authorization"));
-        configuration.setExposedHeaders(
-                Arrays.asList("Access-Control-Allow-Headers", "Access-Control-Allow-Origin", "Access-Control-Request-Method",
-                        "Access-Control-Request-Headers", "Origin", "Cache-Control", "Content-Type", "Authorization"));
-        configuration.setAllowedMethods(Arrays.asList("HEAD", "DELETE", "GET", "POST", "PATCH", "PUT"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
+        return CorsConfigurationSourceProvider.get();
     }
 
 }
