@@ -14,7 +14,6 @@ import org.eclipse.dirigible.components.tenants.tenant.TenantContextInitFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -31,14 +30,11 @@ import java.util.List;
 @Profile("snowflake")
 @Configuration
 @EnableWebSecurity
-// @ConditionalOnProperty(name = "snowflake.auth", havingValue = "true")
 public class SnowflakeSecurityConfig {
 
-    private final AuthenticationProvider authenticationProvider;
     private final SnowflakeAuthFilter snowflakeAuthFilter;
 
-    SnowflakeSecurityConfig(AuthenticationProvider authenticationProvider, SnowflakeAuthFilter snowflakeAuthFilter) {
-        this.authenticationProvider = authenticationProvider;
+    SnowflakeSecurityConfig(SnowflakeAuthFilter snowflakeAuthFilter) {
         this.snowflakeAuthFilter = snowflakeAuthFilter;
     }
 
@@ -57,7 +53,6 @@ public class SnowflakeSecurityConfig {
             .logout(logout -> logout.deleteCookies("JSESSIONID"))
             .headers(headers -> headers.frameOptions(frameOpts -> frameOpts.disable()))
             .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
-            .authenticationProvider(authenticationProvider)
             .addFilterBefore(tenantContextInitFilter, UsernamePasswordAuthenticationFilter.class)
             .addFilterAt(snowflakeAuthFilter, UsernamePasswordAuthenticationFilter.class);
 

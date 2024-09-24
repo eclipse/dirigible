@@ -26,7 +26,6 @@ import org.springframework.stereotype.Service;
 import java.util.Set;
 
 @Profile("snowflake")
-// @ConditionalOnProperty(name = "snowflake.auth", havingValue = "true")
 @Service
 public class SnowflakeUserDetailsService implements UserDetailsService {
 

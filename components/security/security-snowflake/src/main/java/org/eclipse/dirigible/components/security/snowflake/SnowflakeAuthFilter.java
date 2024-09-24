@@ -13,7 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -28,9 +27,9 @@ public class SnowflakeAuthFilter extends OncePerRequestFilter {
 
     private static final String SNOWFLAKE_USER_HEADER = "Sf-Context-Current-User";
 
-    private final UserDetailsService userDetailsService;
+    private final SnowflakeUserDetailsService userDetailsService;
 
-    public SnowflakeAuthFilter(UserDetailsService userDetailsService) {
+    public SnowflakeAuthFilter(SnowflakeUserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
