@@ -41,6 +41,7 @@ public class SnowflakeAuthFilter extends OncePerRequestFilter {
 
         if (currentUser == null) {
             LOGGER.warn("Missing user header with name [{}]. Forwarding the request further", SNOWFLAKE_USER_HEADER);
+            SecurityContextHolder.clearContext(); // force logout
             filterChain.doFilter(request, response);
             return;
         }
