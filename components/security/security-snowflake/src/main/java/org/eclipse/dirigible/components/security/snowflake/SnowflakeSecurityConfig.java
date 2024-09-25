@@ -29,9 +29,11 @@ import org.springframework.web.cors.CorsConfigurationSource;
 public class SnowflakeSecurityConfig {
 
     private final SnowflakeAuthFilter snowflakeAuthFilter;
+    private final SnowflakeLogoutHandler snowflakeLogoutHandler;
 
-    SnowflakeSecurityConfig(SnowflakeAuthFilter snowflakeAuthFilter) {
+    SnowflakeSecurityConfig(SnowflakeAuthFilter snowflakeAuthFilter, SnowflakeLogoutHandler snowflakeLogoutHandler) {
         this.snowflakeAuthFilter = snowflakeAuthFilter;
+        this.snowflakeLogoutHandler = snowflakeLogoutHandler;
     }
 
     /**
@@ -46,7 +48,9 @@ public class SnowflakeSecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http, TenantContextInitFilter tenantContextInitFilter) throws Exception {
         http.cors(Customizer.withDefaults())
             .csrf(csrf -> csrf.disable())
-            .logout(logout -> logout.deleteCookies("JSESSIONID"))
+            .logout(logout -> logout.deleteCookies("JSESSIONID")
+                                    .addLogoutHandler(snowflakeLogoutHandler)
+                                    .logoutSuccessUrl("/"))
             .headers(headers -> headers.frameOptions(frameOpts -> frameOpts.disable()))
             .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
             .addFilterBefore(tenantContextInitFilter, UsernamePasswordAuthenticationFilter.class)
