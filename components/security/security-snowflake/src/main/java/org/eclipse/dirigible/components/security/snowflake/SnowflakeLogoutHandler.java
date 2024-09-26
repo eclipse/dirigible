@@ -3,8 +3,7 @@ package org.eclipse.dirigible.components.security.snowflake;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Component;
@@ -12,25 +11,48 @@ import org.springframework.stereotype.Component;
 @Component
 class SnowflakeLogoutHandler implements LogoutHandler {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SnowflakeLogoutHandler.class);
-
-    private static final String SNOWFLAKE_AUTH_COOKIE_PREFIX = "sfc-ss-ingress-auth";
+    private static final String SNOWFLAKE_AUTH_COOKIE_PREFIX = "sfc-ss-ingress-auth-v1-";
+    private static final String SNOWFLAKE_CSRF_TOKENCOOKIE_PREFIX = "sfc-ss-csrf-token-v1-";
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        Cookie[] cookies = request.getCookies();
-        LOGGER.info("Invalidating cookies...");
-        for (Cookie cookie : cookies) {
-            if (cookie.getName()
-                      .startsWith(SNOWFLAKE_AUTH_COOKIE_PREFIX)) {
-                // invalidate the cookie
-                LOGGER.info("Invalidating cookie with name [{}]", cookie.getName());
-                cookie.setValue(null);
-                cookie.setMaxAge(0);
-                cookie.setPath("/");
+        String hostHeader = request.getHeader(HttpHeaders.HOST);
+        String subdomain = extractSubdomain(hostHeader);
 
-                response.addCookie(cookie); // Add the invalidated cookie to the response
-            }
-        }
+        Cookie authCookie = createInvalidatedAuthCookie(subdomain);
+        response.addCookie(authCookie);
+
+        Cookie csrfTokenCookie = createInvalidatedCsrfTokenCookie(subdomain);
+        response.addCookie(csrfTokenCookie);
     }
+
+    private String extractSubdomain(String host) {
+        int dotIdx = host.indexOf(".");
+        return dotIdx == -1 ? host : host.substring(0, dotIdx);
+    }
+
+    private Cookie createInvalidatedAuthCookie(String subdomain) {
+        String cookieName = SNOWFLAKE_AUTH_COOKIE_PREFIX + subdomain;
+
+        Cookie cookie = new Cookie(cookieName, null);
+        cookie.setPath("/");
+        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+
+        cookie.setMaxAge(10 * 60);
+        return cookie;
+    }
+
+    private Cookie createInvalidatedCsrfTokenCookie(String subdomain) {
+        String cookieName = SNOWFLAKE_CSRF_TOKENCOOKIE_PREFIX + subdomain;
+
+        Cookie cookie = new Cookie(cookieName, null);
+        cookie.setPath("/");
+        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+
+        cookie.setMaxAge(10 * 60);
+        return cookie;
+    }
+
 }
