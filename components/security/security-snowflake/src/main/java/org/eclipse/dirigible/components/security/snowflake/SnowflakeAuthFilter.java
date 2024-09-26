@@ -12,7 +12,6 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -40,7 +39,7 @@ class SnowflakeAuthFilter extends OncePerRequestFilter {
         String currentUser = request.getHeader(SNOWFLAKE_USER_HEADER);
 
         if (currentUser == null) {
-            LOGGER.warn("Missing user header with name [{}]. Forwarding the request further", SNOWFLAKE_USER_HEADER);
+            LOGGER.debug("Missing user header with name [{}]. Forwarding the request further", SNOWFLAKE_USER_HEADER);
 
             HttpSession session = request.getSession(false);
             if (null != session) {
@@ -53,12 +52,11 @@ class SnowflakeAuthFilter extends OncePerRequestFilter {
 
         Authentication authentication = SecurityContextHolder.getContext()
                                                              .getAuthentication();
-        if (authentication != null) {
-            validateSecurityContext(authentication, currentUser);
-        }
 
         if (authentication == null) {
             loginCurrentUser(request, currentUser);
+        } else {
+            validateSecurityContext(authentication, currentUser);
         }
 
         filterChain.doFilter(request, response);
@@ -66,7 +64,7 @@ class SnowflakeAuthFilter extends OncePerRequestFilter {
 
     private void validateSecurityContext(Authentication authentication, String currentUser) {
         Object principal = authentication.getPrincipal();
-        if (principal instanceof User userDetails) {
+        if (principal instanceof UserDetails userDetails) {
             String loggedInUsername = userDetails.getUsername();
             if (!Objects.equals(currentUser, loggedInUsername)) {
                 String errMessage = "Current user [" + currentUser + "] doesn't match the one in the security context: " + loggedInUsername;
@@ -82,8 +80,8 @@ class SnowflakeAuthFilter extends OncePerRequestFilter {
 
         UsernamePasswordAuthenticationToken authToken =
                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
         SecurityContextHolder.getContext()
                              .setAuthentication(authToken);
     }
