@@ -7,66 +7,42 @@
  *
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.components.tenants.init;
+package org.eclipse.dirigible.components.security.snowflake;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.eclipse.dirigible.components.base.ApplicationListenersOrder.ApplicationReadyEventListeners;
 import org.eclipse.dirigible.components.base.http.roles.Roles;
 import org.eclipse.dirigible.components.base.tenant.DefaultTenant;
 import org.eclipse.dirigible.components.base.tenant.Tenant;
-import org.eclipse.dirigible.components.security.domain.Role;
-import org.eclipse.dirigible.components.security.service.RoleService;
 import org.eclipse.dirigible.components.tenants.domain.User;
 import org.eclipse.dirigible.components.tenants.domain.UserRoleAssignment;
-import org.eclipse.dirigible.components.tenants.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-/**
- * The Class AdminUserInitializer.
- */
-@ConditionalOnProperty(name = "basic.enabled", havingValue = "true")
+@Profile("snowflake")
 @Order(ApplicationReadyEventListeners.ADMIN_USER_INITIALIZER)
 @Component
-class AdminUserInitializer implements ApplicationListener<ApplicationReadyEvent> {
+class SnowflakeAdminUserInitializer implements ApplicationListener<ApplicationReadyEvent> {
 
-    /** The Constant LOGGER. */
-    private static final Logger LOGGER = LoggerFactory.getLogger(AdminUserInitializer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SnowflakeAdminUserInitializer.class);
 
-    /** The user service. */
-    private final UserService userService;
-
-    /** The default tenant. */
     private final Tenant defaultTenant;
 
-    /** The role service. */
-    private final RoleService roleService;
+    private final SnowflakeUserManager snowflakeUserManager;
 
-    /**
-     * Instantiates a new admin user initializer.
-     *
-     * @param userService the user service
-     * @param defaultTenant the default tenant
-     * @param roleService the role service
-     */
-    AdminUserInitializer(UserService userService, @DefaultTenant Tenant defaultTenant, RoleService roleService) {
-        this.userService = userService;
+    SnowflakeAdminUserInitializer(@DefaultTenant Tenant defaultTenant, SnowflakeUserManager snowflakeUserManager) {
         this.defaultTenant = defaultTenant;
-        this.roleService = roleService;
+        this.snowflakeUserManager = snowflakeUserManager;
     }
 
-    /**
-     * On application event.
-     *
-     * @param event the event
-     */
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         LOGGER.info("Executing...");
@@ -75,21 +51,23 @@ class AdminUserInitializer implements ApplicationListener<ApplicationReadyEvent>
 
     }
 
-    /**
-     * Inits the admin user.
-     */
     private void initAdminUser() {
-        String username = DirigibleConfig.BASIC_ADMIN_USERNAME.getFromBase64Value();
-        String password = DirigibleConfig.BASIC_ADMIN_PASS.getFromBase64Value();
+        Optional<String> optionalUsername = getSnowflakeAdminUsername();
+        if (optionalUsername.isEmpty()) {
+            LOGGER.warn("Admin user will not be initialized");
+            return;
+        }
+        String username = optionalUsername.get();
 
-        Optional<User> existingUser = userService.findUserByUsernameAndTenantId(username, defaultTenant.getId());
+        Optional<User> existingUser = snowflakeUserManager.findUserByUsernameAndTenantId(username, defaultTenant.getId());
         if (existingUser.isPresent()) {
-            LOGGER.info("A user with username [{}] for tenant [{}] already exists. Skipping its creation.", username,
+            LOGGER.info("A user with username [{}] for tenant [{}] already exists. Skipping its initialization.", username,
                     defaultTenant.getId());
             return;
         }
-        User adminUser = userService.createNewUser(username, password, defaultTenant.getId());
-        LOGGER.info("Created admin user with username [{}] for tenant with id [{}]", username, defaultTenant.getId());
+        User adminUser = snowflakeUserManager.createNewUser(username, defaultTenant.getId());
+        LOGGER.info("Created admin user with username [{}] for tenant with id [{}]", adminUser.getUsername(), adminUser.getTenant()
+                                                                                                                       .getId());
         for (Roles predefinedRole : Roles.values()) {
             assignRole(adminUser, predefinedRole);
         }
@@ -106,11 +84,19 @@ class AdminUserInitializer implements ApplicationListener<ApplicationReadyEvent>
         assignment.setUser(user);
 
         String roleName = predefinedRole.getRoleName();
-        Role role = roleService.findByName(roleName);
-        userService.assignUserRoles(user, role);
+        snowflakeUserManager.assignUserRoles(user, roleName);
 
         LOGGER.info("Assigned role [{}] to user [{}] in tenant [{}]", roleName, user.getUsername(), user.getTenant()
                                                                                                         .getId());
+    }
+
+    private Optional<String> getSnowflakeAdminUsername() {
+        String username = DirigibleConfig.SNOWFLAKE_ADMIN_USERNAME.getStringValue();
+        if (StringUtils.isBlank(username)) {
+            LOGGER.warn("Missing snowflake admin username in configuration [{}].", DirigibleConfig.SNOWFLAKE_ADMIN_USERNAME.getKey());
+            return Optional.empty();
+        }
+        return Optional.of(username);
     }
 
 }
