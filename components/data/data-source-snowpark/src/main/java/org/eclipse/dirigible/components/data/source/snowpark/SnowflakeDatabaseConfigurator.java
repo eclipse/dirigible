@@ -65,7 +65,7 @@ public class SnowflakeDatabaseConfigurator implements DatabaseConfigurator {
             addDataSourcePropertyIfConfigAvailable("SNOWFLAKE_USERNAME", "user", config);
             addDataSourcePropertyIfConfigAvailable("SNOWFLAKE_PASSWORD", "password", config);
 
-            url = Configuration.get("lll", config.getJdbcUrl());
+            url = Configuration.get("SNOWFLAKE_URL", config.getJdbcUrl());
         }
         logger.info("Built url [{}]", url);
         config.addDataSourceProperty("url", url);
