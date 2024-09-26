@@ -33,12 +33,6 @@ class SnowflakeUserDetailsService implements UserDetailsService {
         this.userManager = userManager;
     }
 
-    /**
-     * Load user by username.
-     *
-     * @param username the username
-     * @return the user details
-     */
     @Override
     public UserDetails loadUserByUsername(String username) {
         LOGGER.debug("Loading user with username [{}]...", username);
