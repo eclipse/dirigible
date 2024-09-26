@@ -26,7 +26,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 @Profile("snowflake")
 @Configuration
 @EnableWebSecurity
-public class SnowflakeSecurityConfig {
+class SnowflakeSecurityConfig {
 
     private final SnowflakeAuthFilter snowflakeAuthFilter;
 
@@ -34,14 +34,6 @@ public class SnowflakeSecurityConfig {
         this.snowflakeAuthFilter = snowflakeAuthFilter;
     }
 
-    /**
-     * Filter chain.
-     *
-     * @param http the http
-     * @param tenantContextInitFilter the tenant context init filter
-     * @return the security filter chain
-     * @throws Exception the exception
-     */
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http, TenantContextInitFilter tenantContextInitFilter) throws Exception {
         http.cors(Customizer.withDefaults())
@@ -58,11 +50,6 @@ public class SnowflakeSecurityConfig {
         return http.build();
     }
 
-    /**
-     * Cors configuration source.
-     *
-     * @return the cors configuration source
-     */
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         return CorsConfigurationSourceProvider.get();

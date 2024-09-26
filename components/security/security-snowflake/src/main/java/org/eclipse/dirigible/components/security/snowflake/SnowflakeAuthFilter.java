@@ -23,7 +23,7 @@ import java.util.Objects;
 
 @Profile("snowflake")
 @Component
-public class SnowflakeAuthFilter extends OncePerRequestFilter {
+class SnowflakeAuthFilter extends OncePerRequestFilter {
     private static final Logger LOGGER = LoggerFactory.getLogger(SnowflakeAuthFilter.class);
 
     private static final String SNOWFLAKE_USER_HEADER = "Sf-Context-Current-User";

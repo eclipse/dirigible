@@ -9,44 +9,28 @@
  */
 package org.eclipse.dirigible.components.security.snowflake;
 
-import org.eclipse.dirigible.components.base.tenant.Tenant;
-import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.base.util.AuthoritiesUtil;
 import org.eclipse.dirigible.components.tenants.domain.User;
-import org.eclipse.dirigible.components.tenants.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
 @Profile("snowflake")
 @Service
-public class SnowflakeUserDetailsService implements UserDetailsService {
+class SnowflakeUserDetailsService implements UserDetailsService {
 
-    /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(SnowflakeUserDetailsService.class);
 
-    /** The user service. */
-    private final UserService userService;
+    private final SnowflakeUserManager userManager;
 
-    /** The tenant context. */
-    private final TenantContext tenantContext;
-
-    /**
-     * Instantiates a new custom user details service.
-     *
-     * @param userService the user service
-     * @param tenantContext the tenant context
-     */
-    public SnowflakeUserDetailsService(UserService userService, TenantContext tenantContext) {
-        this.userService = userService;
-        this.tenantContext = tenantContext;
+    SnowflakeUserDetailsService(SnowflakeUserManager userManager) {
+        this.userManager = userManager;
     }
 
     /**
@@ -54,19 +38,15 @@ public class SnowflakeUserDetailsService implements UserDetailsService {
      *
      * @param username the username
      * @return the user details
-     * @throws UsernameNotFoundException the username not found exception
      */
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Tenant tenant = tenantContext.getCurrentTenant();
+    public UserDetails loadUserByUsername(String username) {
+        LOGGER.debug("Loading user with username [{}]...", username);
+        User user = userManager.findUserByUsername(username)
+                               .orElseGet(() -> userManager.createNewUser(username));
 
-        LOGGER.debug("Loading user with username [{}] in tenant [{}]...", username, tenant);
-        User user = userService.findUserByUsernameAndTenantId(username, tenant.getId())
-                               .orElseThrow(() -> new UsernameNotFoundException(
-                                       "Username [" + username + "] was not found in tenant [" + tenant + "]."));
-
-        LOGGER.debug("Logged in user with username [{}] in tenant [{}]", username, tenant);
-        Set<String> userRoles = userService.getUserRoleNames(user);
+        LOGGER.debug("Logged in user with username [{}] in tenant [{}]", user.getUsername(), user.getTenant());
+        Set<String> userRoles = userManager.getUserRoleNames(user);
         LOGGER.debug("User [{}] has assigned roles [{}]", user, userRoles);
 
         Set<GrantedAuthority> auths = AuthoritiesUtil.toAuthorities(userRoles);

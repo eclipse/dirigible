@@ -1,5 +1,6 @@
 package org.eclipse.dirigible.components.security.snowflake;
 
+import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.security.domain.Role;
 import org.eclipse.dirigible.components.security.service.RoleService;
 import org.eclipse.dirigible.components.tenants.domain.User;
@@ -7,18 +8,26 @@ import org.eclipse.dirigible.components.tenants.service.UserService;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Component
 class SnowflakeUserManager {
 
     private final UserService userService;
-
     private final RoleService roleService;
+    private final TenantContext tenantContext;
 
-    SnowflakeUserManager(UserService userService, RoleService roleService) {
+    SnowflakeUserManager(UserService userService, RoleService roleService, TenantContext tenantContext) {
         this.userService = userService;
         this.roleService = roleService;
+        this.tenantContext = tenantContext;
+    }
+
+    public Optional<User> findUserByUsername(String username) {
+        String currentTenantId = tenantContext.getCurrentTenant()
+                                              .getId();
+        return findUserByUsernameAndTenantId(username, currentTenantId);
     }
 
     public Optional<User> findUserByUsernameAndTenantId(String username, String tenantId) {
@@ -30,6 +39,12 @@ class SnowflakeUserManager {
         return username.toUpperCase();
     }
 
+    public User createNewUser(String username) {
+        String currentTenantId = tenantContext.getCurrentTenant()
+                                              .getId();
+        return createNewUser(username, currentTenantId);
+    }
+
     public User createNewUser(String username, String tenantId) {
         String password = UUID.randomUUID()
                               .toString();// password not used in the Snowflake scenario
@@ -39,5 +54,9 @@ class SnowflakeUserManager {
     public void assignUserRoles(User user, String roleName) {
         Role role = roleService.findByName(roleName);
         userService.assignUserRoles(user, role);
+    }
+
+    public Set<String> getUserRoleNames(User user) {
+        return userService.getUserRoleNames(user);
     }
 }
