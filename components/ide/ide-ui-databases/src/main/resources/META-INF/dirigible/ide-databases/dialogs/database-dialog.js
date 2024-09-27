@@ -32,6 +32,7 @@ dbdialog.controller('DBDialogController', ['$scope', 'messageHub', 'ViewParamete
         "org.h2.Driver": "jdbc:h2:path/name",
         "org.postgresql.Driver": "jdbc:postgresql://host:port/database",
         "com.mysql.cj.jdbc.Driver": "jdbc:mysql://host:port/database",
+        "org.mariadb.jdbc.Driver": "jdbc:mariadb://host:port/database",
         "com.sap.db.jdbc.Driver": "jdbc:sap://host:port/?encrypt=true&validateCertificate=false",
         "net.snowflake.client.jdbc.SnowflakeDriver": "jdbc:snowflake://account_identifier.snowflakecomputing.com/?db=SNOWFLAKE_SAMPLE_DATA&schema=TPCH_SF1000",
         "org.eclipse.dirigible.mongodb.jdbc.Driver": "jdbc:mongodb://host:port/database",
@@ -41,6 +42,7 @@ dbdialog.controller('DBDialogController', ['$scope', 'messageHub', 'ViewParamete
         { text: "H2 - org.h2.Driver", value: "org.h2.Driver" },
         { text: "PostgreSQL - org.postgresql.Driver", value: "org.postgresql.Driver" },
         { text: "MySQL - com.mysql.cj.jdbc.Driver", value: "com.mysql.cj.jdbc.Driver" },
+        { text: "MariaDB - org.mariadb.jdbc.Driver", value: "org.mariadb.jdbc.Driver" },
         { text: "SAP HANA - com.sap.db.jdbc.Driver", value: "com.sap.db.jdbc.Driver" },
         { text: "Snowflake - net.snowflake.client.jdbc.SnowflakeDriver", value: "net.snowflake.client.jdbc.SnowflakeDriver" },
         { text: "MongoDB - org.eclipse.dirigible.mongodb.jdbc.Driver", value: "org.eclipse.dirigible.mongodb.jdbc.Driver" }
