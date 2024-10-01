@@ -2,8 +2,6 @@ package org.eclipse.dirigible.components.security.snowflake;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
@@ -11,8 +9,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 class SnowflakeLogoutHandler implements LogoutHandler {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(SnowflakeLogoutHandler.class);
 
     private static final String SNOWFLAKE_AUTH_COOKIE_PREFIX = "sfc-ss-ingress-auth-v1-";
     private static final String SNOWFLAKE_AUTH_COOKIE_INVALIDATED_VALUE_PATTERN =
@@ -24,10 +20,9 @@ class SnowflakeLogoutHandler implements LogoutHandler {
         String subdomain = extractSubdomain(hostHeader);
 
         String invalidatedAuthCookie = String.format(SNOWFLAKE_AUTH_COOKIE_INVALIDATED_VALUE_PATTERN, subdomain, hostHeader);
-        LOGGER.info("Setting header [{}] with value [{}]", HttpHeaders.SET_COOKIE, invalidatedAuthCookie);
 
         // set the cookie as header since addCookie cannot be used
-        // due to a RFC restriction
+        // due to an RFC restriction
         response.addHeader(HttpHeaders.SET_COOKIE, invalidatedAuthCookie);
     }
 
