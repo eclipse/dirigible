@@ -12,6 +12,8 @@ package org.eclipse.dirigible.components.security.snowflake;
 import org.eclipse.dirigible.components.base.http.access.CorsConfigurationSourceProvider;
 import org.eclipse.dirigible.components.base.http.access.HttpSecurityURIConfigurator;
 import org.eclipse.dirigible.components.tenants.tenant.TenantContextInitFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -28,17 +30,23 @@ import org.springframework.web.cors.CorsConfigurationSource;
 @EnableWebSecurity
 class SnowflakeSecurityConfig {
 
-    private final SnowflakeAuthFilter snowflakeAuthFilter;
+    private static final Logger LOGGER = LoggerFactory.getLogger(SnowflakeSecurityConfig.class);
 
-    SnowflakeSecurityConfig(SnowflakeAuthFilter snowflakeAuthFilter) {
+    private final SnowflakeAuthFilter snowflakeAuthFilter;
+    private final SnowflakeLogoutHandler snowflakeLogoutHandler;
+
+    SnowflakeSecurityConfig(SnowflakeAuthFilter snowflakeAuthFilter, SnowflakeLogoutHandler snowflakeLogoutHandler) {
         this.snowflakeAuthFilter = snowflakeAuthFilter;
+        this.snowflakeLogoutHandler = snowflakeLogoutHandler;
     }
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http, TenantContextInitFilter tenantContextInitFilter) throws Exception {
+        LOGGER.info("Configure snowflake security configurations");
         http.cors(Customizer.withDefaults())
-            .csrf(Customizer.withDefaults())
+            .csrf(csrf -> csrf.disable()) // if enabled, some functionalities will not work - like creating a project
             .logout(logout -> logout.deleteCookies("JSESSIONID")
+                                    .addLogoutHandler(snowflakeLogoutHandler)
                                     .logoutSuccessUrl("/"))
             .headers(headers -> headers.frameOptions(frameOpts -> frameOpts.disable()))
             .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))

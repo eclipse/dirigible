@@ -42,7 +42,7 @@ public class BasicSecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http, TenantContextInitFilter tenantContextInitFilter) throws Exception {
         http.cors(Customizer.withDefaults())
             .httpBasic(Customizer.withDefaults())
-            .csrf(csrf -> csrf.disable())
+            .csrf(csrf -> csrf.disable())// if enabled, some functionalities will not work - like creating a project
             .addFilterBefore(tenantContextInitFilter, UsernamePasswordAuthenticationFilter.class)
             .formLogin(Customizer.withDefaults())
             .logout(logout -> logout.deleteCookies("JSESSIONID"))
