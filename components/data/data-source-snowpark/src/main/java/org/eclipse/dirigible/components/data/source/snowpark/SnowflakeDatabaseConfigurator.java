@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class SnowflakeDatabaseConfigurator implements DatabaseConfigurator {
 
-    public static final String TOKEN_FILE_PATH = "/snowflake/session/token";
+    private static final String TOKEN_FILE_PATH = "/snowflake/session/token";
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(SnowflakeDatabaseConfigurator.class);
 
@@ -40,6 +40,7 @@ public class SnowflakeDatabaseConfigurator implements DatabaseConfigurator {
         config.setConnectionTestQuery("SELECT 1"); // connection validation query
         config.setKeepaliveTime(TimeUnit.MINUTES.toMillis(5)); // validation execution interval, must be bigger than idle timeout
         config.setMaxLifetime(TimeUnit.MINUTES.toMillis(9)); // recreate connections after specified time
+        config.setLeakDetectionThreshold(TimeUnit.MINUTES.toMillis(5));
 
         config.addDataSourceProperty("CLIENT_SESSION_KEEP_ALIVE", true);
         config.addDataSourceProperty("CLIENT_SESSION_KEEP_ALIVE_HEARTBEAT_FREQUENCY", 900);
