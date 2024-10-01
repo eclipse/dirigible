@@ -12,7 +12,7 @@ class SnowflakeLogoutHandler implements LogoutHandler {
 
     private static final String SNOWFLAKE_AUTH_COOKIE_PREFIX = "sfc-ss-ingress-auth-v1-";
     private static final String SNOWFLAKE_AUTH_COOKIE_INVALIDATED_VALUE_PATTERN =
-            SNOWFLAKE_AUTH_COOKIE_PREFIX + "%s=; Expires=0; Path=/; domain=.%s; Secure; HttpOnly";
+            SNOWFLAKE_AUTH_COOKIE_PREFIX + "%s=; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Path=/; domain=.%s; Secure; HttpOnly";
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
