@@ -46,8 +46,10 @@ class SnowflakeSecurityConfig {
         http.cors(Customizer.withDefaults())
             .csrf(csrf -> csrf.disable()) // if enabled, some functionalities will not work - like creating a project
             .logout(logout -> logout.deleteCookies("JSESSIONID")
+                                    // consider redirect to reserved path "/sfc-endpoint/logout" and snowflakeLogoutHandler removal
                                     .addLogoutHandler(snowflakeLogoutHandler)
-                                    .logoutSuccessUrl("/"))
+                                    .logoutSuccessUrl("/")
+                                    .invalidateHttpSession(true))
             .headers(headers -> headers.frameOptions(frameOpts -> frameOpts.disable()))
             .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
             .addFilterBefore(tenantContextInitFilter, UsernamePasswordAuthenticationFilter.class)
