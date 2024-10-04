@@ -141,6 +141,10 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-security-snowflake</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-security-oauth2</artifactId>
 		</dependency>
 
