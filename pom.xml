@@ -191,7 +191,7 @@
 		<logcaptor.version>2.9.3</logcaptor.version>
 
 		<!-- UI -->
-		<jquery-ui.version>1.13.0</jquery-ui.version>
+		<jquery-ui.version>1.14.0</jquery-ui.version>
 		<sap-theming__theming-base-content.version>11.7.0</sap-theming__theming-base-content.version>
 		<chart.js.version>4.4.3</chart.js.version>
 		<sortablejs.version>1.15.2</sortablejs.version>
