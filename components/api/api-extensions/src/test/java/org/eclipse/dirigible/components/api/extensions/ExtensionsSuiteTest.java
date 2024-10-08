@@ -94,7 +94,7 @@ public class ExtensionsSuiteTest {
     }
 
     public static Extension createExtension(String location, String name, String description, String extensionPoint, String module) {
-        Extension extension = new Extension(location, name, description, extensionPoint, module);
+        Extension extension = new Extension(location, name, description, extensionPoint, module, null);
         return extension;
     }
 
