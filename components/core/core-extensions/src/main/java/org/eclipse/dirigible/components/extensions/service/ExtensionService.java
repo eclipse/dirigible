@@ -10,7 +10,10 @@
 package org.eclipse.dirigible.components.extensions.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.eclipse.dirigible.components.base.artefact.BaseArtefactService;
+import org.eclipse.dirigible.components.base.http.access.UserRequestVerifier;
 import org.eclipse.dirigible.components.extensions.domain.Extension;
 import org.eclipse.dirigible.components.extensions.repository.ExtensionRepository;
 import org.springframework.data.domain.Example;
@@ -44,7 +47,15 @@ public class ExtensionService extends BaseArtefactService<Extension, Long> {
         Extension filter = new Extension();
         filter.setExtensionPoint(extensionPoint);
         Example<Extension> example = Example.of(filter);
-        return getRepo().findAll(example);
+        List<Extension> extensions = getRepo().findAll(example);
+        boolean validRequest = UserRequestVerifier.isValid();
+        List<Extension> result = extensions.stream()
+                                           .filter(e -> {
+                                               return e.getRole() != null && validRequest ? UserRequestVerifier.isUserInRole(e.getRole())
+                                                       : true;
+                                           })
+                                           .collect(Collectors.toList());
+        return result;
     }
 
 }

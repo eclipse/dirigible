@@ -46,6 +46,11 @@ public class Extension extends Artefact {
     @Expose
     private String module;
 
+    /** The role. */
+    @Column(name = "EXTENSION_ROLE", columnDefinition = "VARCHAR", nullable = true, length = 255)
+    @Expose
+    private String role;
+
 
     /**
      * Instantiates a new extension.
@@ -55,11 +60,13 @@ public class Extension extends Artefact {
      * @param description the description
      * @param extensionPoint the extension point
      * @param module the module
+     * @param role the role
      */
-    public Extension(String location, String name, String description, String extensionPoint, String module) {
+    public Extension(String location, String name, String description, String extensionPoint, String module, String role) {
         super(location, name, ARTEFACT_TYPE, description, null);
         this.extensionPoint = extensionPoint;
         this.module = module;
+        this.role = role;
     }
 
     /**
@@ -86,8 +93,6 @@ public class Extension extends Artefact {
     public void setId(Long id) {
         this.id = id;
     }
-
-
 
     /**
      * Gets the extension point.
@@ -126,15 +131,34 @@ public class Extension extends Artefact {
     }
 
     /**
+     * Gets the role.
+     *
+     * @return the role
+     */
+    public String getRole() {
+        return role;
+    }
+
+    /**
+     * Sets the role.
+     *
+     * @param role the role to set
+     */
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    /**
      * To string.
      *
      * @return the string
      */
     @Override
     public String toString() {
-        return "Extension [id=" + id + ", extensionPoint=" + extensionPoint + ", module=" + module + ", location=" + location + ", name="
-                + name + ", description=" + description + ", type=" + type + ", key=" + key + ", dependencies=" + dependencies
-                + ", createdBy=" + createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt + "]";
+        return "Extension [id=" + id + ", extensionPoint=" + extensionPoint + ", module=" + module + ", role=" + role + ", location="
+                + location + ", name=" + name + ", description=" + description + ", type=" + type + ", key=" + key + ", dependencies="
+                + dependencies + ", createdBy=" + createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy + ", updatedAt="
+                + updatedAt + "]";
     }
 
 }
