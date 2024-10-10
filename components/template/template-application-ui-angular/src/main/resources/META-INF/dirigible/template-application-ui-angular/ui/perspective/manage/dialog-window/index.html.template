@@ -48,12 +48,13 @@
 	                            dropdown-items="options${property.name}"
 	                            dg-placeholder="Search ${property.widgetLabel} ...">
 	                        </fd-combobox-input>
+	                        <i class="sap-icon--information" role="presentation" onclick="javascript:alert('${property.description}')"></i>
 	                    </div>
                     </fd-form-item>
 #elseif($property.widgetType == "CHECKBOX")
                     <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2"></div>
-	                    <div class="fd-col #if($property.widgetSize)${property.widgetSize}#else fd-col-md--8 #end">
+	                    <div class="fd-col #if($property.widgetSize)${property.widgetSize}#else fd-col-md--7 #end">
 	                        <fd-checkbox id="id${property.name}"
 	                            compact="false"
 	                            ng-required="${property.isRequiredProperty}"
@@ -66,6 +67,10 @@
 	                        </fd-checkbox>
                         	<fd-checkbox-label for="id${property.name}" dg-required="${property.isRequiredProperty}">${property.widgetLabel}</fd-checkbox-label>
                         </div>
+                        <div class="fd-col fd-col-md--1">
+							<i class="sap-icon--information" role="presentation"
+								onclick="javascript:alert('${property.description}')"></i>
+						</div>
                     </fd-form-item>
 #elseif($property.widgetType == "COLOR")
                     <fd-form-item class="fd-row">
@@ -89,6 +94,7 @@
 	                            </fd-input>
 	                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
 	                        </fd-form-input-message-group>
+	                        <i class="sap-icon--information" role="presentation" onclick="javascript:alert('${property.description}')"></i>
 	                    </div>
                     </fd-form-item>
 #elseif($property.widgetType == "NUMBER")
@@ -110,6 +116,7 @@
 								placeholder="Enter ${property.widgetLabel}"
 								>
 							</fd-step-input>
+							<i class="sap-icon--information" role="presentation" onclick="javascript:alert('${property.description}')"></i>
 	                    </div>
                     </fd-form-item>
 #elseif($property.widgetType == "MONTH")
@@ -133,6 +140,7 @@
 	                            </fd-input>
 	                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
 	                        </fd-form-input-message-group>
+	                        <i class="sap-icon--information" role="presentation" onclick="javascript:alert('${property.description}')"></i>
 	                    </div>
                     </fd-form-item>
 #elseif($property.widgetType == "WEEK")
@@ -156,6 +164,7 @@
 	                            </fd-input>
 	                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
 	                        </fd-form-input-message-group>
+	                        <i class="sap-icon--information" role="presentation" onclick="javascript:alert('${property.description}')"></i>
 	                    </div>
                     </fd-form-item>
 #elseif($property.widgetType == "TIME")
@@ -179,6 +188,7 @@
 	                            </fd-input>
 	                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
 	                        </fd-form-input-message-group>
+	                        <i class="sap-icon--information" role="presentation" onclick="javascript:alert('${property.description}')"></i>
 	                    </div>
                     </fd-form-item>
 #elseif($property.widgetType == "DATETIME-LOCAL")
@@ -202,6 +212,7 @@
 	                            </fd-input>
 	                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
 	                        </fd-form-input-message-group>
+	                        <i class="sap-icon--information" role="presentation" onclick="javascript:alert('${property.description}')"></i>
 	                    </div>
                     </fd-form-item>
 #elseif($property.widgetType == "DATE")
@@ -225,6 +236,7 @@
 	                            </fd-input>
 	                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
 	                        </fd-form-input-message-group>
+	                        <i class="sap-icon--information" role="presentation" onclick="javascript:alert('${property.description}')"></i>
 	                    </div>
                     </fd-form-item>
 #elseif($property.widgetType == "TEXTAREA")
@@ -249,6 +261,10 @@
 								placeholder="Enter ${property.widgetLabel}">
 							</fd-textarea>
 							<fd-form-message dg-type="error" ng-show="!forms.details['${property.name}'].$valid">The value doesn't match the required pattern '${property.inputRule}'</fd-form-message>
+						</div>
+						<div class="fd-col fd-col-md--1">
+							<i class="sap-icon--information" role="presentation"
+								onclick="javascript:alert('${property.description}')"></i>
 						</div>
 					</fd-form-item>
 #elseif($property.widgetType == "TEL")
@@ -279,6 +295,7 @@
 	                            </fd-input>
 	                            <fd-form-message dg-type="error">The value doesn't match the required pattern '${property.inputRule}'</fd-form-message>
 	                        </fd-form-input-message-group>
+	                        <i class="sap-icon--information" role="presentation" onclick="javascript:alert('${property.description}')"></i>
 	                    </div>
                     </fd-form-item>
 #elseif($property.widgetType == "URL")
@@ -309,6 +326,7 @@
 	                            </fd-input>
 	                            <fd-form-message dg-type="error">The value doesn't match the required pattern '${property.inputRule}'</fd-form-message>
 	                        </fd-form-input-message-group>
+	                        <i class="sap-icon--information" role="presentation" onclick="javascript:alert('${property.description}')"></i>
 	                    </div>
                     </fd-form-item>
 #elseif($property.widgetType == "EMAIL")
@@ -339,6 +357,7 @@
 	                            </fd-input>
 	                            <fd-form-message dg-type="error">The value doesn't match the required pattern '${property.inputRule}'</fd-form-message>
 	                        </fd-form-input-message-group>
+	                        <i class="sap-icon--information" role="presentation" onclick="javascript:alert('${property.description}')"></i>
 	                    </div>
                     </fd-form-item>
 #else
@@ -366,6 +385,7 @@
 	                            </fd-input>
 	                            <fd-form-message dg-type="error">The value doesn't match the required pattern '${property.inputRule}'</fd-form-message>
 	                        </fd-form-input-message-group>
+	                        <i class="sap-icon--information" role="presentation" onclick="javascript:alert('${property.description}')"></i>
 	                    </div>
                     </fd-form-item>
 #end
