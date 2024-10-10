@@ -24,6 +24,7 @@ function createModel(graph) {
 			child.value.dataCount = child.value.dataCount ? child.value.dataCount : "SELECT COUNT(*) AS COUNT FROM \"${tablePrefix}" + JSON.stringify(child.value.name).replace(/\W/g, '').toUpperCase() + "\"";
 			child.value.title = child.value.title ? child.value.title : child.value.name;
 			child.value.caption = child.value.caption ? child.value.caption : "Manage entity " + child.value.name;
+			child.value.description = child.value.description ? child.value.description : "Manage entity " + child.value.name;
 			child.value.tooltip = child.value.tooltip ? child.value.tooltip : child.value.name;
 			child.value.menuKey = child.value.menuKey ? child.value.menuKey : JSON.stringify(child.value.name).replace(/\W/g, '').toLowerCase();
 			child.value.menuLabel = child.value.menuLabel ? child.value.menuLabel : child.value.name;
@@ -34,6 +35,7 @@ function createModel(graph) {
 				'" type="' + _.escape(child.value.entityType ? child.value.entityType : 'PRIMARY') +
 				'" title="' + _.escape(child.value.title) +
 				'" caption="' + _.escape(child.value.caption) +
+				'" description="' + _.escape(child.value.description) +
 				'" tooltip="' + _.escape(child.value.tooltip) +
 				'" icon="' + _.escape(child.value.icon) +
 				'" menuKey="' + _.escape(child.value.menuKey) +
@@ -94,6 +96,8 @@ function createModel(graph) {
 					property.dataName = property.dataName ? property.dataName : _.escape(child.value.dataName).toUpperCase() + "_" + JSON.stringify(property.name).replace(/\W/g, '').toUpperCase();
 
 					model.push('    <property name="' + _.escape(property.name) +
+						'" description="' + _.escape(property.description) +
+						'" tooltip="' + _.escape(property.tooltip) +
 						'" dataName="' + _.escape(property.dataName) +
 						'" dataType="' + _.escape(property.dataType) + '"');
 					if (property.dataOrderBy) {

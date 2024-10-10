@@ -271,6 +271,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				cell.value.dataQuery = msg.data.dataQuery;
 				cell.value.title = msg.data.title;
 				cell.value.caption = msg.data.caption;
+				cell.value.description = msg.data.description;
 				cell.value.tooltip = msg.data.tooltip;
 				cell.value.icon = msg.data.icon;
 				cell.value.menuKey = msg.data.menuKey;
@@ -318,6 +319,8 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 			function (msg) {
 				let cell = $scope.graph.model.getCell(msg.data.cellId);
 				cell.value.name = msg.data.name;
+				cell.value.description = msg.data.description;
+				cell.value.tooltip = msg.data.tooltip;
 				cell.value.isRequiredProperty = msg.data.isRequiredProperty;
 				cell.value.isCalculatedProperty = msg.data.isCalculatedProperty;
 				cell.value.calculatedPropertyExpressionCreate = msg.data.calculatedPropertyExpressionCreate;
@@ -915,6 +918,8 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 									dialogType: 'property',
 									cellId: cell.id,
 									name: cell.value.name,
+									description: cell.value.description,
+									tooltip: cell.value.tooltip,
 									isRequiredProperty: cell.value.isRequiredProperty,
 									isCalculatedProperty: cell.value.isCalculatedProperty,
 									calculatedPropertyExpressionCreate: cell.value.calculatedPropertyExpressionCreate,
@@ -973,6 +978,7 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 									dataQuery: cell.value.dataQuery,
 									title: cell.value.title,
 									caption: cell.value.caption,
+									description: cell.value.description,
 									tooltip: cell.value.tooltip,
 									icon: cell.value.icon,
 									menuKey: cell.value.menuKey,

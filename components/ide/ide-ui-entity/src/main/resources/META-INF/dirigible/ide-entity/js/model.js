@@ -20,6 +20,7 @@ Entity.prototype.dataQuery = null; // database query in case of a report type of
 Entity.prototype.dataCount = null; // database query for the count of the entities
 Entity.prototype.title = '';
 Entity.prototype.caption = '';
+Entity.prototype.description = '';
 Entity.prototype.tooltip = '';
 Entity.prototype.icon = '/services/web/resources/unicons/file.svg';
 Entity.prototype.menuLabel = ''; // the visible name of the menu
@@ -52,7 +53,8 @@ Entity.prototype.clone = function () {
 function Property(name) {
 	this.name = name;
 }
-
+Property.prototype.description = '';
+Property.prototype.tooltip = '';
 Property.prototype.isRequiredProperty = false;
 Property.prototype.isCalculatedProperty = false;
 Property.prototype.calculatedPropertyExpressionCreate = null;

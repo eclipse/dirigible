@@ -96,6 +96,23 @@
                             </fd-select>
                         </div>
                     </fd-form-item>
+                    <fd-form-item class="fd-row">
+                        <div class="fd-col fd-col-md--2">
+                            <fd-form-label for="generalCaption" dg-colon="true">Caption</fd-form-label>
+                        </div>
+                        <div class="fd-col fd-col-md--6">
+                        	<fd-input id="generalCaption" type="text" ng-required="false" ng-model="dataParameters.caption"
+                                placeholder="Entity caption"></fd-input>
+                        </div>
+                    </fd-form-item>
+                    <fd-form-item class="fd-row">
+                        <div class="fd-col fd-col-md--2">
+                            <fd-form-label for="generalDescription" dg-colon="true">Description</fd-form-label>
+                        </div>
+                        <div class="fd-col fd-col-md--6">
+                            <fd-textarea id="generalDescription" ng-model="dataParameters.description"></fd-textarea>
+                        </div>
+                    </fd-form-item>
                     <fd-form-item class="fd-row fd-margin-top--tiny">
                         <div class="fd-col fd-col-md--2">
                         </div>
@@ -117,6 +134,14 @@
                         <div class="fd-col fd-col-md--4">
                             <input class="fd-input" id="generalName" type="text" ng-required="true"
                                 ng-model="dataParameters.name" placeholder="Property name">
+                        </div>
+                    </fd-form-item>
+                    <fd-form-item class="fd-row">
+                        <div class="fd-col fd-col-md--2">
+                            <fd-form-label for="generalDescription" dg-colon="true">Description</fd-form-label>
+                        </div>
+                        <div class="fd-col fd-col-md--6">
+                            <fd-textarea id="generalDescription" ng-model="dataParameters.description"></fd-textarea>
                         </div>
                     </fd-form-item>
                     <fd-form-item class="fd-row fd-margin-top--tiny">
@@ -329,14 +354,6 @@
                             </fd-input>
                         </div>
                     </fd-form-item>
-                    <fd-form-item class="fd-row">
-                        <div class="fd-col fd-col-md--2">
-                            <fd-form-label for="uic" dg-colon="true">Description</fd-form-label>
-                        </div>
-                        <div class="fd-col fd-col-md--6">
-                            <fd-textarea id="uic" ng-model="dataParameters.caption"></fd-textarea>
-                        </div>
-                    </fd-form-item>
                     <fd-form-item class="fd-row fd-margin-top--tiny">
                         <div class="fd-col fd-col-md--2">
                             <fd-form-label for="uith" dg-required="false" dg-colon="true">Tooltip</fd-form-label>
@@ -455,7 +472,8 @@
                             </fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--2" ng-show="dataParameters.widgetType === 'DROPDOWN'">
-                            <fd-input id="uidvdo" type="text" ng-model="dataParameters.widgetDropDownDependsOn">
+                            <fd-input id="uidvdo" type="text" ng-model="dataParameters.widgetDropDownDependsOn"
+                            	placeholder="Property name of the depending entity">
                             </fd-input>
                         </div>
                     </fd-form-item>
@@ -484,15 +502,16 @@
                             <fd-form-label for="uilab" dg-required="false" dg-colon="true">Label</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--6">
-                            <fd-input id="uilab" type="text" ng-required="false" ng-model="dataParameters.widgetLabel">
+                            <fd-input id="uilab" type="text" ng-required="false" ng-model="dataParameters.widgetLabel"
+                            	placeholder="Label text">
                             </fd-input>
                         </div>
                         <div class="fd-col fd-col-md--2">
                             <fd-form-label for="uislab" dg-required="false" dg-colon="true">Short label</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--2">
-                            <fd-input id="uislab" type="text" ng-required="false"
-                                ng-model="dataParameters.widgetShortLabel">
+                            <fd-input id="uislab" type="text" ng-required="false" ng-model="dataParameters.widgetShortLabel"
+                            	placeholder="Short label text">
                             </fd-input>
                         </div>
                     </fd-form-item>
@@ -501,36 +520,46 @@
                             <fd-form-label for="uipat" dg-required="false" dg-colon="true">Pattern</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--2">
-                            <fd-input id="uipat" type="text" ng-required="false"
-                                ng-model="dataParameters.widgetPattern">
+                            <fd-input id="uipat" type="text" ng-required="false" ng-model="dataParameters.widgetPattern"
+                            	placeholder="Input pattern">
                             </fd-input>
                         </div>
                         <div class="fd-col fd-col-md--2">
                             <fd-form-label for="uif" dg-required="false" dg-colon="true">Format</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--2">
-                            <fd-input id="uif" type="text" ng-required="false" ng-model="dataParameters.widgetFormat">
+                            <fd-input id="uif" type="text" ng-required="false" ng-model="dataParameters.widgetFormat"
+                            	placeholder="Rendering format">
                             </fd-input>
                         </div>
+                        <div class="fd-col fd-col-md--2">
+                            <fd-form-label for="uith" dg-required="false" dg-colon="true">Tooltip</fd-form-label>
+                        </div>
+                        <div class="fd-col fd-col-md--2">
+                            <fd-input id="uith" type="text" ng-required="false" ng-model="dataParameters.tooltip"
+                                placeholder="Tooltip hint"></fd-input>
+                        </div>
                     </fd-form-item>
+                    <!-- 
                     <fd-form-item class="fd-row fd-margin-top--tiny">
                         <div class="fd-col fd-col-md--2">
                             <fd-form-label for="uiser" dg-required="false" dg-colon="true">Service (feed)
                             </fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--10">
-                            <fd-input id="uiser" type="text" ng-required="false"
-                                ng-model="dataParameters.widgetService">
+                            <fd-input id="uiser" type="text" ng-required="false" ng-model="dataParameters.widgetService"
+                            	placeholder="REST service will be used as a feed">
                             </fd-input>
                         </div>
                     </fd-form-item>
+                     -->
                     <fd-form-item class="fd-row fd-margin-top--tiny">
                         <div class="fd-col fd-col-md--2">
                             <fd-form-label for="uisec" dg-required="false" dg-colon="true">Section</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--6">
-                            <fd-input id="uisec" type="text" ng-required="false"
-                                ng-model="dataParameters.widgetSection">
+                            <fd-input id="uisec" type="text" ng-required="false" ng-model="dataParameters.widgetSection"
+                            	placeholder="Section to be placed in">
                             </fd-input>
                         </div>
                     </fd-form-item>

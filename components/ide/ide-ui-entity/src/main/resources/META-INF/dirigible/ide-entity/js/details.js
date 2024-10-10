@@ -144,6 +144,7 @@ angular.module('edmDetails', ['ideUI', 'ideView'])
                         dataQuery: $scope.dataParameters.dataQuery,
                         title: $scope.dataParameters.title,
                         caption: $scope.dataParameters.caption,
+                        description: $scope.dataParameters.description,
                         tooltip: $scope.dataParameters.tooltip,
                         icon: $scope.dataParameters.icon,
                         menuKey: $scope.dataParameters.menuKey,
@@ -167,6 +168,8 @@ angular.module('edmDetails', ['ideUI', 'ideView'])
                     messageHub.postMessage('edm.editor.property', {
                         cellId: $scope.dataParameters.cellId,
                         name: $scope.dataParameters.name,
+                        description: $scope.dataParameters.description,
+                        tooltip: $scope.dataParameters.tooltip,
                         isRequiredProperty: $scope.dataParameters.isRequiredProperty,
                         isCalculatedProperty: $scope.dataParameters.isCalculatedProperty,
                         calculatedPropertyExpressionCreate: $scope.dataParameters.calculatedPropertyExpressionCreate,
