@@ -28,7 +28,8 @@ Dirigible promotes the In-System Programming development model, where you make d
 
 The project started as an internal SAP initiative to address the extension and adoption use-cases related to SOA and Enterprise Services.
 
-- [Try](#trial)
+- [Instant Trial](#instant-trial)
+- [Contact Us](#contact-us)
 - [Get Started](#get-started)
 	- [Download](#download)
 	- [Build](#build)
@@ -39,6 +40,7 @@ The project started as an internal SAP initiative to address the extension and a
 - [Additional Information](#additional-information)
 	- [License](#license)
 	- [Contributors](#contributors)
+        - [Attribution links](#attribution-links)
 	- [References](#references)
 
 ## Instant Trial
