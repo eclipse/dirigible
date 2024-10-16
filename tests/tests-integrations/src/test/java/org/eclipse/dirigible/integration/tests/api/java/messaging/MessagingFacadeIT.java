@@ -9,13 +9,13 @@
  */
 package org.eclipse.dirigible.integration.tests.api.java.messaging;
 
+import org.awaitility.Awaitility;
 import org.eclipse.dirigible.components.api.messaging.MessagingFacade;
 import org.eclipse.dirigible.components.api.messaging.TimeoutException;
 import org.eclipse.dirigible.integration.tests.IntegrationTest;
 import org.eclipse.dirigible.tests.util.SleepUtil;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.shaded.org.awaitility.Awaitility;
 
 import java.util.concurrent.TimeUnit;
 
