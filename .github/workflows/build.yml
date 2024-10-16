@@ -197,3 +197,41 @@ jobs:
           retention-days: 1
           name: ${{ env.ARTIFACT_NAME }}
           path: tests/tests-integrations/build/reports/tests
+
+  scan-image:
+    needs: [build-deploy]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2.1.0
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Docker Scout Quickview and CVEs
+        uses: docker/scout-action@v1
+        with:
+          command: quickview,cves
+          image: dirigiblelabs/dirigible:latest
+          sarif-file: sarif.output.json
+          summary: true
+          only-fixed: true
+
+      - name: Docker Scout SBOM
+        uses: docker/scout-action@v1
+        with:
+          command: sbom
+          image: dirigiblelabs/dirigible:latest
+          output: sbom.json
+
+      - name: Docker Scout Recommendations
+        uses: docker/scout-action@v1
+        with:
+          command: recommendations
+          image: dirigiblelabs/dirigible:latest
+
+      - name: Upload Docker Scout SARIF Report
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: sarif.output.json
