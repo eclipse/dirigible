@@ -34,20 +34,9 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-compress</artifactId>
-			<version>1.27.1</version>
-		</dependency>
-		<dependency>
 			<groupId>io.etcd</groupId>
 			<artifactId>jetcd-test</artifactId>
-			<version>0.7.6</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.apache.commons</groupId>
-					<artifactId>commons-compress</artifactId>
-				</exclusion>
-			</exclusions>
+			<version>0.8.3</version>
 		</dependency>
 		<!-- / Etcd dependencies -->
 	</dependencies>

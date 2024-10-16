@@ -9,11 +9,11 @@
  */
 package org.eclipse.dirigible.componenets.api.etcd;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import java.util.Arrays;
-import java.util.concurrent.ExecutionException;
+import com.google.common.base.Charsets;
+import io.etcd.jetcd.ByteSequence;
+import io.etcd.jetcd.KV;
+import io.etcd.jetcd.kv.GetResponse;
+import io.etcd.jetcd.test.EtcdClusterExtension;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.api.etcd.EtcdFacade;
 import org.junit.Before;
@@ -26,11 +26,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import com.google.common.base.Charsets;
-import io.etcd.jetcd.ByteSequence;
-import io.etcd.jetcd.KV;
-import io.etcd.jetcd.kv.GetResponse;
-import io.etcd.jetcd.test.EtcdClusterExtension;
+
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * The Class EtcdFacadeTest.
@@ -56,7 +56,7 @@ public class EtcdFacadeTest {
      */
     @Before
     public void setUp() {
-        cluster.restart();
+        cluster.restart(-1, TimeUnit.SECONDS);
         Configuration.set("DIRIGIBLE_ETCD_CLIENT_ENDPOINT", cluster.clientEndpoints()
                                                                    .get(0)
                                                                    .toString());
@@ -118,7 +118,7 @@ public class EtcdFacadeTest {
         ByteSequence bs = EtcdFacade.byteArrayToByteSequence(arr);
 
         assertNotNull(bs);
-        assertTrue(Arrays.equals(bs.getBytes(), arr));
+        assertArrayEquals(bs.getBytes(), arr);
     }
 
     /**
