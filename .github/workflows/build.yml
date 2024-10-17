@@ -216,7 +216,7 @@ jobs:
           image: dirigiblelabs/dirigible:latest
           sarif-file: sarif.output.json
           summary: true
-          only-fixed: true
+          only-fixed: false
 
       - name: Docker Scout SBOM
         uses: docker/scout-action@v1
