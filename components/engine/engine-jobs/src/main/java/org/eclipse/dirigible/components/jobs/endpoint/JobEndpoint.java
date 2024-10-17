@@ -148,7 +148,7 @@ public class JobEndpoint extends BaseEndpoint {
      * @param job the job
      * @return the response entity
      */
-    @GetMapping(value = "/clear/{*job}", produces = "application/json")
+    @PostMapping(value = "/clear/{*job}", produces = "application/json")
     public ResponseEntity<?> clearJobLogs(@PathVariable("job") String job) {
         jobLogService.deleteAllByJobName(job);
         return ResponseEntity.noContent()
