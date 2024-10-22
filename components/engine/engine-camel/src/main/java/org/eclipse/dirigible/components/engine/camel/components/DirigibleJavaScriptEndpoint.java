@@ -26,24 +26,22 @@ import org.slf4j.LoggerFactory;
         category = {Category.CORE, Category.SCRIPT})
 public class DirigibleJavaScriptEndpoint extends DefaultEndpoint {
 
-    /**
-     * If changed, file [META-INF/services/org/apache/camel/component/dirigible-java-script] must be
-     * renamed as well
-     */
     static final String SCHEME = "dirigible-java-script";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(DirigibleJavaScriptEndpoint.class);
+
     @UriPath(label = "common", description = "Sets the path of the JavaScript file.")
     @Metadata(required = true)
     private String javaScriptPath;
 
     public DirigibleJavaScriptEndpoint() {
-        LOGGER.info("Creating [{}]", this);
+        LOGGER.debug("Creating [{}] without parameters", this);
         setExchangePattern(ExchangePattern.InOut);
     }
 
     public DirigibleJavaScriptEndpoint(String endpointUri, Component component) {
         super(endpointUri, component);
-        LOGGER.info("Creating [{}]", this);
+        LOGGER.debug("Creating [{}] for URI [{}]", this, endpointUri);
         setExchangePattern(ExchangePattern.InOut);
     }
 
@@ -53,27 +51,18 @@ public class DirigibleJavaScriptEndpoint extends DefaultEndpoint {
     }
 
     @Override
-    public Producer createProducer() throws Exception {
+    public Producer createProducer() {
         return new DirigibleJavaScriptProducer(this, javaScriptPath);
     }
 
     @Override
-    public Consumer createConsumer(Processor processor) throws Exception {
+    public Consumer createConsumer(Processor processor) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("You cannot consume from " + this.getClass());
-    }
-
-    @Override
-    protected void doInit() throws Exception {
-        super.doInit();
     }
 
     @Override
     protected String createEndpointUri() {
         return DirigibleJavaScriptEndpoint.SCHEME + ":" + UnsafeUriCharactersEncoder.encode(getJavaScriptPath());
-        // return DirigibleJavaScriptEndpoint.SCHEME + "?javaScriptPath=" +
-        // UnsafeUriCharactersEncoder.encode(getJavaScriptPath());
-
-        // return "dirigible-java-script?javaScriptPath=camel-custom-component/handler.ts";
     }
 
     public String getJavaScriptPath() {

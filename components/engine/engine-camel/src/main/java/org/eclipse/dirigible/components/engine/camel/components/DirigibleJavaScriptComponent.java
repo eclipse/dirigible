@@ -16,22 +16,15 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
-/**
- * The bean component is for invoking Java beans from Camel.
- *
- * based on org.apache.camel.component.bean.BeanComponent
- */
 @org.apache.camel.spi.annotations.Component(DirigibleJavaScriptEndpoint.SCHEME)
 public class DirigibleJavaScriptComponent extends DefaultComponent {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DirigibleJavaScriptComponent.class);
 
     public DirigibleJavaScriptComponent() {
-        LOGGER.info("Creating [{}]", this);
+        LOGGER.debug("Creating [{}]", this);
     }
 
-    // Implementation methods
-    // -----------------------------------------------------------------------
     @Override
     protected Endpoint createEndpoint(String uri, String remaining, Map<String, Object> parameters) throws Exception {
         DirigibleJavaScriptEndpoint endpoint = new DirigibleJavaScriptEndpoint(uri, this);

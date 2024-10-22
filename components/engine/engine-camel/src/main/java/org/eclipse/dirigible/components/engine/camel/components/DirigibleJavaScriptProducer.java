@@ -19,8 +19,9 @@ class DirigibleJavaScriptProducer extends DefaultAsyncProducer {
 
     private final AsyncProcessor asyncProcessor;
 
-    public DirigibleJavaScriptProducer(DirigibleJavaScriptEndpoint endpoint, String javaScriptPath) {
+    DirigibleJavaScriptProducer(DirigibleJavaScriptEndpoint endpoint, String javaScriptPath) {
         super(endpoint);
+
         DirigibleJavaScriptProcessor dirigibleJavaScriptProcessor = new DirigibleJavaScriptProcessor(javaScriptPath);
         this.asyncProcessor = AsyncProcessorConverterHelper.convert(dirigibleJavaScriptProcessor);
     }

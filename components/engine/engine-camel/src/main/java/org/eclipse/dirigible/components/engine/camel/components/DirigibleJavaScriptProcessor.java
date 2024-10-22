@@ -18,12 +18,12 @@ class DirigibleJavaScriptProcessor implements Processor {
 
     private final String javaScriptPath;
 
-    public DirigibleJavaScriptProcessor(String javaScriptPath) {
+    DirigibleJavaScriptProcessor(String javaScriptPath) {
         this.javaScriptPath = javaScriptPath;
     }
 
     @Override
-    public void process(Exchange exchange) throws Exception {
+    public void process(Exchange exchange) {
         Invoker invoker = BeanProvider.getBean(Invoker.class);
         invoker.invokeWithResourcePath(exchange.getMessage(), javaScriptPath);
     }
