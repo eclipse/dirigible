@@ -35,6 +35,7 @@ public class DirigibleJavaScriptComponent extends DefaultComponent {
     @Override
     protected Endpoint createEndpoint(String uri, String remaining, Map<String, Object> parameters) throws Exception {
         DirigibleJavaScriptEndpoint endpoint = new DirigibleJavaScriptEndpoint(uri, this);
+        endpoint.setJavaScriptPath(remaining);
         setProperties(endpoint, parameters);
 
         return endpoint;

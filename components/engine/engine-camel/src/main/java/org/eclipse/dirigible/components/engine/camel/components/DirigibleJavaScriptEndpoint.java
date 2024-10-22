@@ -12,8 +12,9 @@ package org.eclipse.dirigible.components.engine.camel.components;
 import org.apache.camel.*;
 import org.apache.camel.spi.Metadata;
 import org.apache.camel.spi.UriEndpoint;
-import org.apache.camel.spi.UriParam;
+import org.apache.camel.spi.UriPath;
 import org.apache.camel.support.DefaultEndpoint;
+import org.apache.camel.util.UnsafeUriCharactersEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,15 +22,17 @@ import org.slf4j.LoggerFactory;
  * Invoke JavaScript code.
  */
 @UriEndpoint(firstVersion = "1.0.0", scheme = DirigibleJavaScriptEndpoint.SCHEME, title = "Dirigible JavaScript",
-        syntax = DirigibleJavaScriptEndpoint.SCHEME, producerOnly = true, remote = false, category = {Category.CORE, Category.SCRIPT})
+        syntax = DirigibleJavaScriptEndpoint.SCHEME + ":javaScriptPath", producerOnly = true, remote = false,
+        category = {Category.CORE, Category.SCRIPT})
 public class DirigibleJavaScriptEndpoint extends DefaultEndpoint {
 
     /**
-     * If changed, file [META-INF/services/org/apache/camel/component/dirigible-java-script] must be renamed as well
+     * If changed, file [META-INF/services/org/apache/camel/component/dirigible-java-script] must be
+     * renamed as well
      */
     static final String SCHEME = "dirigible-java-script";
     private static final Logger LOGGER = LoggerFactory.getLogger(DirigibleJavaScriptEndpoint.class);
-    @UriParam(label = "common", description = "Sets the path of the JavaScript file.")
+    @UriPath(label = "common", description = "Sets the path of the JavaScript file.")
     @Metadata(required = true)
     private String javaScriptPath;
 
@@ -56,7 +59,7 @@ public class DirigibleJavaScriptEndpoint extends DefaultEndpoint {
 
     @Override
     public Consumer createConsumer(Processor processor) throws Exception {
-        throw new UnsupportedOperationException("You cannot consume from a bean endpoint");
+        throw new UnsupportedOperationException("You cannot consume from " + this.getClass());
     }
 
     @Override
@@ -66,12 +69,11 @@ public class DirigibleJavaScriptEndpoint extends DefaultEndpoint {
 
     @Override
     protected String createEndpointUri() {
-        // return DirigibleJavaScriptEndpoint.SCHEME + ":" +
-        // UnsafeUriCharactersEncoder.encode(getJavaScriptPath());
+        return DirigibleJavaScriptEndpoint.SCHEME + ":" + UnsafeUriCharactersEncoder.encode(getJavaScriptPath());
         // return DirigibleJavaScriptEndpoint.SCHEME + "?javaScriptPath=" +
         // UnsafeUriCharactersEncoder.encode(getJavaScriptPath());
 
-        return "dirigible-java-script?javaScriptPath=camel-custom-component/handler.ts";
+        // return "dirigible-java-script?javaScriptPath=camel-custom-component/handler.ts";
     }
 
     public String getJavaScriptPath() {

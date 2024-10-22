@@ -25,6 +25,6 @@ class DirigibleJavaScriptProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
         Invoker invoker = BeanProvider.getBean(Invoker.class);
-        invoker.invoke(exchange.getMessage(), javaScriptPath);
+        invoker.invokeWithResourcePath(exchange.getMessage(), javaScriptPath);
     }
 }

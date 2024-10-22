@@ -49,10 +49,10 @@ public class Invoker {
     public void invoke(Message camelMessage) {
         String resourcePath = (String) camelMessage.getExchange()
                                                    .getProperty("resource");
-        invoke(camelMessage, resourcePath);
+        invokeWithResourcePath(camelMessage, resourcePath);
     }
 
-    public void invoke(Message camelMessage, String resourcePath) {
+    public void invokeWithResourcePath(Message camelMessage, String resourcePath) {
         DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner();
 
         var module = runner.run(Path.of(resourcePath));
