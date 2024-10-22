@@ -21,7 +21,7 @@ import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
-class CamelPlatformHttpTest extends IntegrationTest {
+class CamelPlatformHttpIT extends IntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
