@@ -47,9 +47,13 @@ public class Invoker {
      * @param camelMessage the camel message
      */
     public void invoke(Message camelMessage) {
-        DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner();
         String resourcePath = (String) camelMessage.getExchange()
                                                    .getProperty("resource");
+        invoke(camelMessage, resourcePath);
+    }
+
+    public void invoke(Message camelMessage, String resourcePath) {
+        DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner();
 
         var module = runner.run(Path.of(resourcePath));
         var result = runner.runMethod(module, "onMessage", wrapCamelMessage(camelMessage));
