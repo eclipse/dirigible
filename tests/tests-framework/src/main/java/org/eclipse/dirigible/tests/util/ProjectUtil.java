@@ -14,6 +14,8 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -28,6 +30,8 @@ import java.util.Set;
 @Component
 public class ProjectUtil {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProjectUtil.class);
+
     private static final String PROJECT_TEMPLATE_FOLDER = "project-template";
 
     private final IRepository repository;
@@ -39,7 +43,7 @@ public class ProjectUtil {
         this.createdProjects = new HashSet<>();
     }
 
-    public void createProject(String projectName) {
+    public void createRegistryProject(String projectName) {
         String projectTemplatePath = getResourcePath(PROJECT_TEMPLATE_FOLDER);
         String destinationDirPath = createRegistryFolderPath(projectName);
 
@@ -68,17 +72,23 @@ public class ProjectUtil {
                 + IRepositoryStructure.KEYWORD_PUBLIC + File.separator + folder;
     }
 
-    public void copyFolderContentToProject(String resourcesFolder, String targetProjectName, Map<String, String> placeholders) {
+    public void copyFolderContentToRegistryProject(String resourcesFolder, String targetProjectName, Map<String, String> placeholders) {
+        String destinationDirPath = createRegistryFolderPath(targetProjectName);
+
+        copyResourceFolder(resourcesFolder, destinationDirPath, placeholders);
+    }
+
+    private void copyResourceFolder(String resourcesFolder, String destinationDirPath, Map<String, String> placeholders) {
         String sourceDirPath = getResourcePath(resourcesFolder);
         File sourceDir = new File(sourceDirPath);
 
-        String destinationDirPath = createRegistryFolderPath(targetProjectName);
         File destinationDir = new File(destinationDirPath);
 
+        LOGGER.debug("Copy folder [{}] to folder [{}]", sourceDir, destinationDir);
         try {
             FileUtils.copyDirectory(sourceDir, destinationDir);
         } catch (IOException ex) {
-            throw new IllegalStateException("Failed to copy [" + sourceDir + "]test project to " + destinationDir, ex);
+            throw new IllegalStateException("Failed to copy [" + sourceDir + "] to " + destinationDir, ex);
         }
 
         Collection<File> files = FileUtils.listFiles(destinationDir, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
@@ -94,6 +104,8 @@ public class ProjectUtil {
             for (Map.Entry<String, String> entry : placeholders.entrySet()) {
                 String placeholder = entry.getKey();
                 String replacement = entry.getValue();
+
+                LOGGER.debug("Replacing [{}] with [{}] in file [{}]", placeholder, replacement, file);
                 content = StringUtils.replace(content, placeholder, replacement);
             }
 
@@ -105,5 +117,18 @@ public class ProjectUtil {
 
     public Set<String> getCreatedProjects() {
         return createdProjects;
+    }
+
+    public void copyFolderContentToUserWorkspaceProject(String user, String resourcesFolder, String targetProjectName,
+            Map<String, String> placeholders) {
+        String destinationDirPath = createUserWorkspaceFolderPath(user, targetProjectName);
+
+        copyResourceFolder(resourcesFolder, destinationDirPath, placeholders);
+
+    }
+
+    private String createUserWorkspaceFolderPath(String user, String projectName) {
+        return repository.getRepositoryPath() + File.separator + IRepositoryStructure.KEYWORD_USERS + File.separator + user + File.separator
+                + IRepositoryStructure.KEYWORD_WORKSPACE + File.separator + projectName;
     }
 }

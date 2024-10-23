@@ -19,6 +19,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class Workbench {
 
+    public static final String PROJECTS_VIEW_ID = "dgProjects";
+    public static final String PROJECT_NAME_INPUT_ID = "pgfi1";
+    private static final String PROJECTS_CONTEXT_MENU_NEW_PROJECT = "New Project";
+    private static final String CREATE_PROJECT_BUTTON_TEXT = "Create";
     private final Browser browser;
 
     public Workbench(Browser browser) {
@@ -39,7 +43,7 @@ public class Workbench {
     }
 
     public void clickPublishAll() {
-        browser.clickElementByAttributePattern(HtmlElementType.BUTTON, HtmlAttribute.TITLE, "Publish all");
+        browser.clickOnElementByAttributePattern(HtmlElementType.BUTTON, HtmlAttribute.TITLE, "Publish all");
     }
 
     public WelcomeView openWelcomeView() {
@@ -55,4 +59,15 @@ public class Workbench {
     public FormView getFormView() {
         return new FormView(browser);
     }
+
+    public void createNewProject(String projectName) {
+        browser.rightClickOnElementById(PROJECTS_VIEW_ID);
+
+        browser.clickOnElementContainingText(HtmlElementType.SPAN, PROJECTS_CONTEXT_MENU_NEW_PROJECT);
+
+        browser.enterTextInElementById(PROJECT_NAME_INPUT_ID, projectName);
+
+        browser.clickOnElementContainingText(HtmlElementType.BUTTON, CREATE_PROJECT_BUTTON_TEXT);
+    }
+
 }

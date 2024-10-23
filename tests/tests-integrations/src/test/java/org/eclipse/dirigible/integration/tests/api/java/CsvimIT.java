@@ -38,10 +38,10 @@ import static org.awaitility.Awaitility.await;
 
 public class CsvimIT extends IntegrationTest {
 
-    public static final String PROJECT_NAME = "csvim-test-project";
-    public static final String UNDEFINIED_TABLE_NAME = "TEST_TABLE_READERS2";
+    private static final String PROJECT_NAME = "csvim-test-project";
+    private static final String UNDEFINIED_TABLE_NAME = "TEST_TABLE_READERS2";
     private static final Logger LOGGER = LoggerFactory.getLogger(CsvimIT.class);
-    private static final String TEST_FOLDER_CONTENT = "CsvimIT";
+    private static final String TEST_PROJECT_FOLDER_PATH = "CsvimIT";
     private static final List<Reader> CSV_READERS = List.of(new Reader(1, "Ivan", "Ivanov"), new Reader(2, "Maria", "Petrova"));
 
     @Autowired
@@ -89,8 +89,8 @@ public class CsvimIT extends IntegrationTest {
      */
     @Test
     void testImportData() throws SQLException {
-        projectUtil.createProject(PROJECT_NAME);
-        projectUtil.copyFolderContentToProject(TEST_FOLDER_CONTENT, PROJECT_NAME, Map.of("<project_name>", PROJECT_NAME));
+        projectUtil.createRegistryProject(PROJECT_NAME);
+        projectUtil.copyFolderContentToRegistryProject(TEST_PROJECT_FOLDER_PATH, PROJECT_NAME, Map.of("<project_name>", PROJECT_NAME));
 
         verifyDataInTable("TEST_TABLE_READERS", CSV_READERS);
         assertThat(isTableExists(UNDEFINIED_TABLE_NAME)).isFalse();
@@ -142,14 +142,6 @@ public class CsvimIT extends IntegrationTest {
                });
     }
 
-    private boolean isTableExists(String tableName) throws SQLException {
-        DataSource defaultDataSource = dataSourcesManager.getDefaultDataSource();
-        try (Connection connection = defaultDataSource.getConnection()) {
-            return SqlFactory.getNative(connection)
-                             .existsTable(connection, tableName);
-        }
-    }
-
     private List<Reader> getAllData(String tableName) {
         DirigibleDataSource defaultDataSource = dataSourcesManager.getDefaultDataSource();
         try (Connection connection = defaultDataSource.getConnection()) {
@@ -171,6 +163,14 @@ public class CsvimIT extends IntegrationTest {
             }
         } catch (SQLException ex) {
             throw new IllegalStateException("Failed to get all data from " + tableName, ex);
+        }
+    }
+
+    private boolean isTableExists(String tableName) throws SQLException {
+        DataSource defaultDataSource = dataSourcesManager.getDefaultDataSource();
+        try (Connection connection = defaultDataSource.getConnection()) {
+            return SqlFactory.getNative(connection)
+                             .existsTable(connection, tableName);
         }
     }
 

@@ -38,7 +38,6 @@ public class IDE {
 
     private final Browser browser;
     private final RestAssuredExecutor restAssuredExecutor;
-
     private final String username;
     private final String password;
 
@@ -55,12 +54,12 @@ public class IDE {
         this.password = password;
     }
 
-    public void openHomePage() {
-        browser.openPath(ROOT_PATH);
-        login(false);
+    public String getUsername() {
+        return username;
+    }
 
-        SleepUtil.sleepMillis(500);
-        browser.reload();
+    public void login() {
+        login(true);
     }
 
     public void login(boolean forceLogin) {
@@ -71,21 +70,12 @@ public class IDE {
         LOGGER.info("Logging...");
         browser.enterTextInElementByAttributePattern(HtmlElementType.INPUT, HtmlAttribute.ID, USERNAME_FIELD_ID, username);
         browser.enterTextInElementByAttributePattern(HtmlElementType.INPUT, HtmlAttribute.ID, PASSWORD_FIELD_ID, password);
-        browser.clickElementByAttributePatternAndText(HtmlElementType.BUTTON, HtmlAttribute.TYPE, SUBMIT_TYPE, SIGN_IN_BUTTON_TEXT);
+        browser.clickOnElementByAttributePatternAndText(HtmlElementType.BUTTON, HtmlAttribute.TYPE, SUBMIT_TYPE, SIGN_IN_BUTTON_TEXT);
     }
 
     private boolean isLoginPageOpened() {
         String pageTitle = browser.getPageTitle();
         return LOGIN_PAGE_TITLE.equals(pageTitle);
-    }
-
-    public void login() {
-        login(true);
-    }
-
-    public Workbench openWorkbench() {
-        browser.clickElementByAttributeValue(HtmlElementType.ANCHOR, HtmlAttribute.TITLE, "Workbench");
-        return new Workbench(browser);
     }
 
     public void assertPublishingProjectMessage(String projectName) {
@@ -120,5 +110,30 @@ public class IDE {
     public void openPath(String path) {
         browser.openPath(path);
         login(true);
+    }
+
+    public void createNewProject(String projectName) {
+        openHomePage();
+        Workbench workbench = openWorkbench();
+
+        workbench.createNewProject(projectName);
+        assertCreatedProject(projectName);
+    }
+
+    public void openHomePage() {
+        browser.openPath(ROOT_PATH);
+        login(false);
+
+        SleepUtil.sleepMillis(500);
+        browser.reload();
+    }
+
+    public Workbench openWorkbench() {
+        browser.clickOnElementByAttributeValue(HtmlElementType.ANCHOR, HtmlAttribute.TITLE, "Workbench");
+        return new Workbench(browser);
+    }
+
+    public void assertCreatedProject(String projectName) {
+        assertStatusBarMessage("Created project '" + projectName + "'");
     }
 }
