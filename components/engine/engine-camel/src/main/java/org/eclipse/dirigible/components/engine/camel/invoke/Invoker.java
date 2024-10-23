@@ -28,6 +28,8 @@ import java.util.Map;
 @Component
 public class Invoker {
 
+    public static final String RESOURCE_PATH_PROPERTY_NAME = "resource";
+
     /** The processor. */
     private final CamelProcessor processor;
 
@@ -48,11 +50,7 @@ public class Invoker {
      */
     public void invoke(Message camelMessage) {
         String resourcePath = (String) camelMessage.getExchange()
-                                                   .getProperty("resource");
-        invokeWithResourcePath(camelMessage, resourcePath);
-    }
-
-    public void invokeWithResourcePath(Message camelMessage, String resourcePath) {
+                                                   .getProperty(RESOURCE_PATH_PROPERTY_NAME);
         DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner();
 
         var module = runner.run(Path.of(resourcePath));

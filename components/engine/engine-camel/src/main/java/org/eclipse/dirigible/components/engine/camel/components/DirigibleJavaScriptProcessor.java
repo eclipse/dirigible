@@ -10,6 +10,7 @@
 package org.eclipse.dirigible.components.engine.camel.components;
 
 import org.apache.camel.Exchange;
+import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.eclipse.dirigible.components.base.spring.BeanProvider;
 import org.eclipse.dirigible.components.engine.camel.invoke.Invoker;
@@ -25,6 +26,15 @@ class DirigibleJavaScriptProcessor implements Processor {
     @Override
     public void process(Exchange exchange) {
         Invoker invoker = BeanProvider.getBean(Invoker.class);
-        invoker.invokeWithResourcePath(exchange.getMessage(), javaScriptPath);
+
+        String exchangeResourcePath = (String) exchange.getProperty(Invoker.RESOURCE_PATH_PROPERTY_NAME);
+        try {
+            exchange.setProperty(Invoker.RESOURCE_PATH_PROPERTY_NAME, javaScriptPath);
+
+            Message message = exchange.getMessage();
+            invoker.invoke(message);
+        } finally {
+            exchange.setProperty(Invoker.RESOURCE_PATH_PROPERTY_NAME, exchangeResourcePath);
+        }
     }
 }
