@@ -230,7 +230,7 @@ class BrowserImpl implements Browser {
     @Override
     public void rightClickOnElementById(String id) {
         SelenideElement element = getElementById(id);
-        handleElementInAllFrames(element, e -> rightClickElement(e));
+        handleElementInAllFrames(element, this::rightClickElement);
     }
 
     private SelenideElement getElementById(String id) {
