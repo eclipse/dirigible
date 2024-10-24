@@ -9,11 +9,11 @@
  */
 package org.eclipse.dirigible.components.engine.camel.components;
 
+import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
-import org.eclipse.dirigible.components.base.spring.BeanProvider;
-import org.eclipse.dirigible.components.engine.camel.invoke.Invoker;
+import org.apache.camel.support.CamelContextHelper;
 
 class DirigibleJavaScriptProcessor implements Processor {
 
@@ -25,16 +25,27 @@ class DirigibleJavaScriptProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) {
-        Invoker invoker = BeanProvider.getBean(Invoker.class);
+        DirigibleJavaScriptInvoker invoker = getInvoker(exchange.getContext());
+        Message message = exchange.getMessage();
 
-        String exchangeResourcePath = (String) exchange.getProperty(Invoker.RESOURCE_PATH_PROPERTY_NAME);
+        invoker.invoke(message, javaScriptPath);
+    }
+
+    private DirigibleJavaScriptInvoker getInvoker(CamelContext camelContext) {
         try {
-            exchange.setProperty(Invoker.RESOURCE_PATH_PROPERTY_NAME, javaScriptPath);
+            DirigibleJavaScriptInvoker invoker = CamelContextHelper.findSingleByType(camelContext, DirigibleJavaScriptInvoker.class);
+            if (invoker == null) {
+                invoker = camelContext.getInjector()
+                                      .newInstance(DirigibleJavaScriptInvoker.class);
+            }
+            if (invoker == null) {
+                throw new DirigibleJavaScriptException("Cannot get instance of interface " + DirigibleJavaScriptInvoker.class);
+            }
 
-            Message message = exchange.getMessage();
-            invoker.invoke(message);
-        } finally {
-            exchange.setProperty(Invoker.RESOURCE_PATH_PROPERTY_NAME, exchangeResourcePath);
+            return invoker;
+        } catch (RuntimeException ex) {
+            throw new DirigibleJavaScriptException("Cannot get instance of interface " + DirigibleJavaScriptInvoker.class, ex);
         }
     }
+
 }
