@@ -11,25 +11,19 @@ package org.eclipse.dirigible.integration.tests.services.integrations;
 
 import ch.qos.logback.classic.Level;
 import org.eclipse.dirigible.integration.tests.ui.tests.UserInterfaceIntegrationTest;
-import org.eclipse.dirigible.tests.IDE;
 import org.eclipse.dirigible.tests.logging.LogsAsserter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static org.awaitility.Awaitility.await;
 
 class CamelDirigibleTwoStepsJSInvokerIT extends UserInterfaceIntegrationTest {
 
-    private static final String TEST_PROJECT_FOLDER_PATH = "CamelDirigibleTwoStepsJSInvokerIT";
     private static final String TEST_PROJECT_NAME = "call-dirigible-js-two-steps";
-
-    @Autowired
-    private IDE ide;
+    private static final String TEST_PROJECT_FOLDER_PATH = "CamelDirigibleTwoStepsJSInvokerIT/" + TEST_PROJECT_NAME;
 
     private LogsAsserter logsAsserter;
 
@@ -40,7 +34,7 @@ class CamelDirigibleTwoStepsJSInvokerIT extends UserInterfaceIntegrationTest {
 
     @Test
     void testInvokeJSWithCronRoute() {
-        ide.createAndPublishProjectFromResources(TEST_PROJECT_NAME, TEST_PROJECT_FOLDER_PATH, Map.of("<project_name>", TEST_PROJECT_NAME));
+        ide.createAndPublishProjectFromResources(TEST_PROJECT_FOLDER_PATH);
 
         assertBodyIsPassedAndHandledProperlyByJSHandler();
     }

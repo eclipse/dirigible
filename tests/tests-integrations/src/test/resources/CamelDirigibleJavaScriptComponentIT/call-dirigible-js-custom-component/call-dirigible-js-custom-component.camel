@@ -25,7 +25,7 @@
             description: Invoke handler.ts
             uri: dirigible-java-script
             parameters:
-              javaScriptPath: <project_name>/handler.ts
+              javaScriptPath: call-dirigible-js-custom-component/handler.ts
         - log:
             id: log-9803
             description: Log completed

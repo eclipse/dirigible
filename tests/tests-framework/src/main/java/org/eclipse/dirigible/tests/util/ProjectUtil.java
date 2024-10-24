@@ -38,17 +38,26 @@ public class ProjectUtil {
         this.repository = repository;
     }
 
-    public void copyFolderContentToDefaultUserWorkspaceProject(String resourcesFolder, String targetProjectName) {
-        copyFolderContentToDefaultUserWorkspaceProject(resourcesFolder, targetProjectName, Collections.emptyMap());
+    public void copyResourceProjectToDefaultUserWorkspace(String resourcesFolder) {
+        copyResourceProjectToDefaultUserWorkspace(resourcesFolder, Collections.emptyMap());
     }
 
-    public void copyFolderContentToDefaultUserWorkspaceProject(String resourcesFolder, String targetProjectName,
-            Map<String, String> placeholders) {
-        copyFolderContentToUserWorkspaceProject(DirigibleConfig.BASIC_ADMIN_USERNAME.getFromBase64Value(), resourcesFolder,
-                targetProjectName, placeholders);
+    public void copyResourceProjectToDefaultUserWorkspace(String resourcesFolder, Map<String, String> placeholders) {
+        copyResourceProjectToUserWorkspace(getDefaultUser(), resourcesFolder, placeholders);
     }
 
-    public void copyFolderContentToUserWorkspaceProject(String user, String resourcesFolder, String targetProjectName,
+    public void copyResourceProjectToUserWorkspace(String user, String resourcesFolder, Map<String, String> placeholders) {
+        String targetProjectName = extractFolderName(resourcesFolder);
+
+        copyResourceFolderContentToUserWorkspaceProject(user, resourcesFolder, targetProjectName, placeholders);
+    }
+
+    private String extractFolderName(String resourcesFolder) {
+        boolean rootDir = resourcesFolder.lastIndexOf("/") == -1;
+        return rootDir ? resourcesFolder : (resourcesFolder.substring(resourcesFolder.lastIndexOf("/") + 1));
+    }
+
+    public void copyResourceFolderContentToUserWorkspaceProject(String user, String resourcesFolder, String targetProjectName,
             Map<String, String> placeholders) {
         String destinationDirPath = createUserWorkspaceFolderPath(user, targetProjectName);
 
@@ -106,7 +115,8 @@ public class ProjectUtil {
                 + IRepositoryStructure.KEYWORD_WORKSPACE + File.separator + projectName;
     }
 
-    public void copyFolderContentToUserWorkspaceProject(String user, String resourcesFolder, String targetProjectName) {
-        copyFolderContentToUserWorkspaceProject(user, resourcesFolder, targetProjectName, Collections.emptyMap());
+    private String getDefaultUser() {
+        return DirigibleConfig.BASIC_ADMIN_USERNAME.getFromBase64Value();
     }
+
 }

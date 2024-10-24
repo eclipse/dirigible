@@ -15,9 +15,7 @@ import org.eclipse.dirigible.database.sql.DataType;
 import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.dialects.SqlDialectFactory;
-import org.eclipse.dirigible.integration.tests.IntegrationTest;
-import org.eclipse.dirigible.tests.IDE;
-import org.eclipse.dirigible.tests.util.ProjectUtil;
+import org.eclipse.dirigible.integration.tests.ui.tests.UserInterfaceIntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,29 +28,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
-public class CsvimIT extends IntegrationTest {
+public class CsvimIT extends UserInterfaceIntegrationTest {
 
-    private static final String PROJECT_NAME = "csvim-test-project";
-    private static final String UNDEFINIED_TABLE_NAME = "TEST_TABLE_READERS2";
     private static final Logger LOGGER = LoggerFactory.getLogger(CsvimIT.class);
-    private static final String TEST_PROJECT_FOLDER_PATH = "CsvimIT";
+
+    private static final String UNDEFINIED_TABLE_NAME = "TEST_TABLE_READERS2";
+    private static final String TEST_PROJECT_FOLDER_PATH = "CsvimIT/csvim-test-project";
     private static final List<Reader> CSV_READERS = List.of(new Reader(1, "Ivan", "Ivanov"), new Reader(2, "Maria", "Petrova"));
 
     @Autowired
     private DataSourcesManager dataSourcesManager;
-
-    @Autowired
-    private ProjectUtil projectUtil;
-
-    @Autowired
-    private IDE ide;
 
 
     private static class Reader {
@@ -93,7 +84,7 @@ public class CsvimIT extends IntegrationTest {
      */
     @Test
     void testImportData() throws SQLException {
-        ide.createAndPublishProjectFromResources(PROJECT_NAME, TEST_PROJECT_FOLDER_PATH, Map.of("<project_name>", PROJECT_NAME));
+        ide.createAndPublishProjectFromResources(TEST_PROJECT_FOLDER_PATH);
 
         verifyDataInTable("TEST_TABLE_READERS", CSV_READERS);
         assertThat(isTableExists(UNDEFINIED_TABLE_NAME)).isFalse();
@@ -118,7 +109,7 @@ public class CsvimIT extends IntegrationTest {
                                 .column("READER_LAST_NAME", DataType.VARCHAR)
                                 .build();
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-                LOGGER.info("Will create table using " + sql);
+                LOGGER.info("Will create table using [{}]", sql);
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {
                 throw new IllegalStateException("Failed to create table using sql: " + sql, e);

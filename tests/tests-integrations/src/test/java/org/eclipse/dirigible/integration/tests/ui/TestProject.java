@@ -12,7 +12,6 @@ package org.eclipse.dirigible.integration.tests.ui;
 import ch.qos.logback.classic.Level;
 import io.restassured.http.ContentType;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
-import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.tests.*;
 import org.eclipse.dirigible.tests.awaitility.AwaitilityExecutor;
 import org.eclipse.dirigible.tests.framework.Browser;
@@ -50,24 +49,22 @@ public class TestProject {
     private static final String DOCUMENTS_SERVICE_PATH = "/services/ts/dirigible-test-project/cmis/DocumentService.ts/documents";
 
     private static final String PROJECT_RESOURCES_PATH = "dirigible-test-project";
-    private static final String PROJECT_NAME = "dirigible-test-project";
     private static final String UI_PROJECT_TITLE = "Dirigible Test Project";
 
-    private final IRepository dirigibleRepo;
     private final BrowserFactory browserFactory;
-    private final IDE dirigible;
+    private final IDE ide;
     private final EdmView edmView;
     private final RestAssuredExecutor restAssuredExecutor;
     private final IDEFactory ideFactory;
     private final ProjectUtil projectUtil;
+
     private final LogsAsserter testJobLogsAsserter;
     private final LogsAsserter eventListenerLogsAsserter;
 
-    public TestProject(IRepository dirigibleRepo, BrowserFactory browserFactory, IDE dirigible, EdmView edmView,
-            RestAssuredExecutor restAssuredExecutor, IDEFactory ideFactory, ProjectUtil projectUtil) {
-        this.dirigibleRepo = dirigibleRepo;
+    public TestProject(BrowserFactory browserFactory, IDE ide, EdmView edmView, RestAssuredExecutor restAssuredExecutor,
+            IDEFactory ideFactory, ProjectUtil projectUtil) {
         this.browserFactory = browserFactory;
-        this.dirigible = dirigible;
+        this.ide = ide;
         this.edmView = edmView;
         this.restAssuredExecutor = restAssuredExecutor;
         this.ideFactory = ideFactory;
@@ -78,11 +75,9 @@ public class TestProject {
     }
 
     public void publish() {
-        projectUtil.copyFolderContentToDefaultUserWorkspaceProject(PROJECT_RESOURCES_PATH, PROJECT_NAME);
+        projectUtil.copyResourceProjectToDefaultUserWorkspace(PROJECT_RESOURCES_PATH);
 
-        dirigible.openHomePage();
-
-        Workbench workbench = dirigible.openWorkbench();
+        Workbench workbench = ide.openWorkbench();
         workbench.expandProject(PROJECT_ROOT_FOLDER);
         workbench.openFile(EDM_FILE_NAME);
 
@@ -109,9 +104,9 @@ public class TestProject {
         Browser browser = browserFactory.createByHost(tenant.getHost());
         browser.openPath(UI_HOME_PATH);
 
-        IDE dirigible = ideFactory.create(browser, tenant.getUsername(), tenant.getPassword());
+        IDE ide = ideFactory.create(browser, tenant.getUsername(), tenant.getPassword());
         boolean forceLogin = !tenant.isDefaultTenant();
-        dirigible.login(forceLogin);
+        ide.login(forceLogin);
 
         browser.assertElementExistsByTypeAndText(HtmlElementType.HEADER3, UI_PROJECT_TITLE);
     }

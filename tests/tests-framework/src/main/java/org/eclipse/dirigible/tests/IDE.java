@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
@@ -113,21 +114,21 @@ public class IDE {
         login(true);
     }
 
-    public void createAndPublishProjectFromResources(String projectName, String resourcesFolderPath, Map<String, String> placeholders) {
-        createNewBlankProject(projectName);
+    public void createAndPublishProjectFromResources(String resourcesFolderPath) {
+        createAndPublishProjectFromResources(resourcesFolderPath, Collections.emptyMap());
+    }
 
-        projectUtil.copyFolderContentToUserWorkspaceProject(username, resourcesFolderPath, projectName, placeholders);
+    public void createAndPublishProjectFromResources(String resourcesFolderPath, Map<String, String> placeholders) {
+        projectUtil.copyResourceProjectToUserWorkspace(username, resourcesFolderPath, placeholders);
 
         Workbench workbench = openWorkbench();
         workbench.publishAll();
     }
 
-    public void createNewBlankProject(String projectName) {
+    public Workbench openWorkbench() {
         openHomePage();
-        Workbench workbench = openWorkbench();
-
-        workbench.createNewProject(projectName);
-        assertCreatedProject(projectName);
+        browser.clickOnElementByAttributeValue(HtmlElementType.ANCHOR, HtmlAttribute.TITLE, "Workbench");
+        return new Workbench(browser);
     }
 
     public void openHomePage() {
@@ -138,9 +139,12 @@ public class IDE {
         browser.reload();
     }
 
-    public Workbench openWorkbench() {
-        browser.clickOnElementByAttributeValue(HtmlElementType.ANCHOR, HtmlAttribute.TITLE, "Workbench");
-        return new Workbench(browser);
+    public void createNewBlankProject(String projectName) {
+        Workbench workbench = openWorkbench();
+
+        workbench.createNewProject(projectName);
+
+        assertCreatedProject(projectName);
     }
 
     public void assertCreatedProject(String projectName) {
