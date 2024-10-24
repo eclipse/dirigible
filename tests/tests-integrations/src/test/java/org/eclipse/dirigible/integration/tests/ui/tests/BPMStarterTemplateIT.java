@@ -13,15 +13,12 @@ package org.eclipse.dirigible.integration.tests.ui.tests;
 import ch.qos.logback.classic.Level;
 import org.eclipse.dirigible.components.api.bpm.BpmFacade;
 import org.eclipse.dirigible.tests.FormView;
-import org.eclipse.dirigible.tests.IDE;
 import org.eclipse.dirigible.tests.WelcomeView;
 import org.eclipse.dirigible.tests.Workbench;
 import org.eclipse.dirigible.tests.framework.HtmlElementType;
 import org.eclipse.dirigible.tests.logging.LogsAsserter;
-import org.eclipse.dirigible.tests.restassured.RestAssuredExecutor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.concurrent.TimeUnit;
 
@@ -46,12 +43,6 @@ class BPMStarterTemplateIT extends UserInterfaceIntegrationTest {
             "Hello World! Process variables: {param1=" + PARAM_1_VALUE + ", param2=" + PARAM_2_VALUE + ".0}";
     private static final String TRIGGER_BUTTON_TEXT = "Trigger";
 
-    @Autowired
-    private IDE ide;
-
-    @Autowired
-    private RestAssuredExecutor restAssuredExecutor;
-
     private LogsAsserter consoleLogAsserter;
 
     @BeforeEach
@@ -61,7 +52,6 @@ class BPMStarterTemplateIT extends UserInterfaceIntegrationTest {
 
     @Test
     void testCreateProjectFromTemplate() {
-        ide.openHomePage();
         Workbench workbench = ide.openWorkbench();
 
         WelcomeView welcomeView = workbench.openWelcomeView();

@@ -14,12 +14,16 @@ import org.eclipse.dirigible.tests.framework.Browser;
 import org.eclipse.dirigible.tests.framework.HtmlAttribute;
 import org.eclipse.dirigible.tests.framework.HtmlElementType;
 import org.eclipse.dirigible.tests.restassured.RestAssuredExecutor;
+import org.eclipse.dirigible.tests.util.ProjectUtil;
 import org.eclipse.dirigible.tests.util.SleepUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+
+import java.util.Collections;
+import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -38,29 +42,26 @@ public class IDE {
 
     private final Browser browser;
     private final RestAssuredExecutor restAssuredExecutor;
-
     private final String username;
     private final String password;
+    private final ProjectUtil projectUtil;
 
     @Autowired
-    public IDE(Browser browser, RestAssuredExecutor restAssuredExecutor) {
+    public IDE(Browser browser, RestAssuredExecutor restAssuredExecutor, ProjectUtil projectUtil) {
         this(browser, restAssuredExecutor, DirigibleConfig.BASIC_ADMIN_USERNAME.getFromBase64Value(),
-                DirigibleConfig.BASIC_ADMIN_PASS.getFromBase64Value());
+                DirigibleConfig.BASIC_ADMIN_PASS.getFromBase64Value(), projectUtil);
     }
 
-    public IDE(Browser browser, RestAssuredExecutor restAssuredExecutor, String username, String password) {
+    public IDE(Browser browser, RestAssuredExecutor restAssuredExecutor, String username, String password, ProjectUtil projectUtil) {
         this.browser = browser;
         this.restAssuredExecutor = restAssuredExecutor;
         this.username = username;
         this.password = password;
+        this.projectUtil = projectUtil;
     }
 
-    public void openHomePage() {
-        browser.openPath(ROOT_PATH);
-        login(false);
-
-        SleepUtil.sleepMillis(500);
-        browser.reload();
+    public void login() {
+        login(true);
     }
 
     public void login(boolean forceLogin) {
@@ -71,21 +72,12 @@ public class IDE {
         LOGGER.info("Logging...");
         browser.enterTextInElementByAttributePattern(HtmlElementType.INPUT, HtmlAttribute.ID, USERNAME_FIELD_ID, username);
         browser.enterTextInElementByAttributePattern(HtmlElementType.INPUT, HtmlAttribute.ID, PASSWORD_FIELD_ID, password);
-        browser.clickElementByAttributePatternAndText(HtmlElementType.BUTTON, HtmlAttribute.TYPE, SUBMIT_TYPE, SIGN_IN_BUTTON_TEXT);
+        browser.clickOnElementByAttributePatternAndText(HtmlElementType.BUTTON, HtmlAttribute.TYPE, SUBMIT_TYPE, SIGN_IN_BUTTON_TEXT);
     }
 
     private boolean isLoginPageOpened() {
         String pageTitle = browser.getPageTitle();
         return LOGIN_PAGE_TITLE.equals(pageTitle);
-    }
-
-    public void login() {
-        login(true);
-    }
-
-    public Workbench openWorkbench() {
-        browser.clickElementByAttributeValue(HtmlElementType.ANCHOR, HtmlAttribute.TITLE, "Workbench");
-        return new Workbench(browser);
     }
 
     public void assertPublishingProjectMessage(String projectName) {
@@ -120,5 +112,42 @@ public class IDE {
     public void openPath(String path) {
         browser.openPath(path);
         login(true);
+    }
+
+    public void createAndPublishProjectFromResources(String resourcesFolderPath) {
+        createAndPublishProjectFromResources(resourcesFolderPath, Collections.emptyMap());
+    }
+
+    public void createAndPublishProjectFromResources(String resourcesFolderPath, Map<String, String> placeholders) {
+        projectUtil.copyResourceProjectToUserWorkspace(username, resourcesFolderPath, placeholders);
+
+        Workbench workbench = openWorkbench();
+        workbench.publishAll();
+    }
+
+    public Workbench openWorkbench() {
+        openHomePage();
+        browser.clickOnElementByAttributeValue(HtmlElementType.ANCHOR, HtmlAttribute.TITLE, "Workbench");
+        return new Workbench(browser);
+    }
+
+    public void openHomePage() {
+        browser.openPath(ROOT_PATH);
+        login(false);
+
+        SleepUtil.sleepMillis(500);
+        browser.reload();
+    }
+
+    public void createNewBlankProject(String projectName) {
+        Workbench workbench = openWorkbench();
+
+        workbench.createNewProject(projectName);
+
+        assertCreatedProject(projectName);
+    }
+
+    public void assertCreatedProject(String projectName) {
+        assertStatusBarMessage("Created project '" + projectName + "'");
     }
 }

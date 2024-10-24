@@ -135,17 +135,17 @@ class BrowserImpl implements Browser {
             do {
                 boolean handled = tryToHandleElementInAllFrames(element, elementHandler);
                 if (handled) {
-                    LOGGER.info("Element [{}] was NOT found. Will try again.");
+                    LOGGER.info("Element [{}] was NOT found. Will try again.", element);
                     return;
                 }
             } while (System.currentTimeMillis() < maxWaitTime);
 
-            LOGGER.info("Element [{}] was NOT found. Will try last time to reload the page and find it.");
+            LOGGER.info("Element [{}] was NOT found. Will try last time to reload the page and find it.", element);
             reload();
             SleepUtil.sleepSeconds(3);
             boolean handled = tryToHandleElementInAllFrames(element, elementHandler);
             if (handled) {
-                LOGGER.info("Element [{}] was FOUND and HANDLED after page reload.");
+                LOGGER.info("Element [{}] was FOUND and HANDLED after page reload.", element);
                 return;
             }
 
@@ -227,14 +227,32 @@ class BrowserImpl implements Browser {
         Selenide.clearBrowserCookies();
     }
 
-    private boolean elementExists(SelenideElement element, int checkSeconds) {
-        return elementExists(element, 1000L * checkSeconds);
+    @Override
+    public void rightClickOnElementById(String id) {
+        SelenideElement element = getElementById(id);
+        handleElementInAllFrames(element, this::rightClickElement);
+    }
+
+    private SelenideElement getElementById(String id) {
+        return Selenide.$("#" + id);
+    }
+
+    private void rightClickElement(SelenideElement element) {
+        element.shouldBe(Condition.visible, Condition.enabled)
+               .scrollIntoView(false)
+               .contextClick();
     }
 
     @Override
-    public void clickElementByAttributePatternAndText(HtmlElementType elementType, HtmlAttribute attribute, String pattern, String text) {
+    public void clickOnElementByAttributePatternAndText(HtmlElementType elementType, HtmlAttribute attribute, String pattern, String text) {
         SelenideElement element = getElementByAttributePatternAndText(elementType, attribute, pattern, text);
-        handleElementInAllFrames(element, e -> clickElement(e));
+        handleElementInAllFrames(element, this::clickElement);
+    }
+
+    private void clickElement(SelenideElement element) {
+        element.shouldBe(Condition.visible, Condition.enabled)
+               .scrollIntoView(false)
+               .click();
     }
 
     private SelenideElement getElementByAttributePatternAndText(HtmlElementType elementType, HtmlAttribute attribute, String pattern,
@@ -245,36 +263,30 @@ class BrowserImpl implements Browser {
         return options.findBy(Condition.text(text));
     }
 
-    private void clickElement(SelenideElement element) {
-        element.shouldBe(Condition.visible, Condition.enabled)
-               .scrollIntoView(false)
-               .click();
-    }
-
     @Override
-    public void clickElementByAttributeValue(HtmlElementType htmlElementType, HtmlAttribute htmlAttribute, String attributeValue) {
+    public void clickOnElementByAttributeValue(HtmlElementType htmlElementType, HtmlAttribute htmlAttribute, String attributeValue) {
         SelenideElement element = getElementByAttributePattern(htmlElementType, htmlAttribute, attributeValue);
-        handleElementInAllFrames(element, e -> clickElement(e));
+        handleElementInAllFrames(element, this::clickElement);
     }
 
     @Override
     public void doubleClickOnElementContainingText(HtmlElementType elementType, String text) {
         String textPattern = Pattern.quote(text);
         SelenideElement element = getElementByAttributeAndTextPattern(elementType, textPattern);
-        handleElementInAllFrames(element, e -> e.doubleClick());
+        handleElementInAllFrames(element, SelenideElement::doubleClick);
     }
 
     @Override
     public void clickOnElementContainingText(HtmlElementType elementType, String text) {
         String textPattern = Pattern.quote(text);
         SelenideElement element = getElementByAttributeAndTextPattern(elementType, textPattern);
-        handleElementInAllFrames(element, e -> e.click());
+        handleElementInAllFrames(element, SelenideElement::click);
     }
 
     @Override
-    public void clickElementByAttributePattern(HtmlElementType elementType, HtmlAttribute attribute, String pattern) {
+    public void clickOnElementByAttributePattern(HtmlElementType elementType, HtmlAttribute attribute, String pattern) {
         SelenideElement element = getElementByAttributePattern(elementType, attribute, pattern);
-        handleElementInAllFrames(element, e -> e.click());
+        handleElementInAllFrames(element, SelenideElement::click);
     }
 
     @Override

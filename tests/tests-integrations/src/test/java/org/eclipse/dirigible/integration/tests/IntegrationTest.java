@@ -11,6 +11,7 @@ package org.eclipse.dirigible.integration.tests;
 
 import org.awaitility.Awaitility;
 import org.eclipse.dirigible.DirigibleApplication;
+import org.eclipse.dirigible.tests.DirigibleCleaner;
 import org.eclipse.dirigible.tests.DirigibleTestTenant;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.runner.RunWith;
@@ -52,8 +53,7 @@ public abstract class IntegrationTest {
     }
 
     protected void waitForTenantsProvisioning(List<DirigibleTestTenant> tenants) {
-        tenants.stream()
-               .forEach(this::waitForTenantProvisioning);
+        tenants.forEach(this::waitForTenantProvisioning);
     }
 
     protected void waitForTenantProvisioning(DirigibleTestTenant tenant) {

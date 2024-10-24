@@ -9,36 +9,29 @@
  */
 package org.eclipse.dirigible.components.engine.camel.invoke;
 
-import org.apache.camel.Exchange;
 import org.apache.camel.Message;
-import org.apache.camel.spi.Synchronization;
+import org.eclipse.dirigible.components.engine.camel.components.DirigibleJavaScriptInvoker;
 import org.eclipse.dirigible.components.engine.camel.processor.CamelProcessor;
-import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
 import org.eclipse.dirigible.graalium.core.javascript.CalledFromJS;
-import org.graalvm.polyglot.Value;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.nio.file.Path;
 import java.util.Map;
 
 /**
- * The Class Invoker.
+ * Do NOT rename the class name or the package. Otherwise, you will introduce backwards incompatible
+ * change.
  */
 @Component
 public class Invoker {
 
-    /** The processor. */
+    private static final String RESOURCE_PATH_PROPERTY_NAME = "resource";
+
+    private final DirigibleJavaScriptInvoker javaScriptInvoker;
     private final CamelProcessor processor;
 
-    /**
-     * Instantiates a new invoker.
-     *
-     * @param processor the processor
-     */
-    @Autowired
-    public Invoker(CamelProcessor processor) {
+    public Invoker(DirigibleJavaScriptInvoker javaScriptInvoker, CamelProcessor processor) {
         this.processor = processor;
+        this.javaScriptInvoker = javaScriptInvoker;
     }
 
     /**
@@ -47,66 +40,10 @@ public class Invoker {
      * @param camelMessage the camel message
      */
     public void invoke(Message camelMessage) {
-        DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner();
         String resourcePath = (String) camelMessage.getExchange()
-                                                   .getProperty("resource");
+                                                   .getProperty(RESOURCE_PATH_PROPERTY_NAME);
 
-        var module = runner.run(Path.of(resourcePath));
-        var result = runner.runMethod(module, "onMessage", wrapCamelMessage(camelMessage));
-
-        if (result != null) {
-            camelMessage.getExchange()
-                        .setMessage(unwrapCamelMessage(result));
-            camelMessage.getExchange()
-                        .getExchangeExtension()
-                        .addOnCompletion(new Synchronization() {
-                            @Override
-                            public void onComplete(Exchange exchange) {
-                                runner.close();
-                            }
-
-                            @Override
-                            public void onFailure(Exchange exchange) {
-                                runner.close();
-                            }
-                        });
-        } else {
-            runner.close();
-        }
-    }
-
-    /**
-     * Wrap camel message.
-     *
-     * @param camelMessage the camel message
-     * @return the integration message
-     */
-    private IntegrationMessage wrapCamelMessage(Message camelMessage) {
-        return new IntegrationMessage(camelMessage);
-    }
-
-    /**
-     * Unwrap camel message.
-     *
-     * @param value the value
-     * @return the message
-     */
-    private Message unwrapCamelMessage(Value value) {
-        validateIntegrationMessage(value);
-        IntegrationMessage message = value.asHostObject();
-        return message.getCamelMessage();
-    }
-
-    /**
-     * Validate integration message.
-     *
-     * @param value the value
-     */
-    private void validateIntegrationMessage(Value value) {
-        if (!value.isHostObject() || !(value.asHostObject() instanceof IntegrationMessage)) {
-            throw new IllegalArgumentException(
-                    "Unexpected return received from sdk/integrations::onMessage(). Expected return type: IntegrationMessage.");
-        }
+        javaScriptInvoker.invoke(camelMessage, resourcePath);
     }
 
     /**
