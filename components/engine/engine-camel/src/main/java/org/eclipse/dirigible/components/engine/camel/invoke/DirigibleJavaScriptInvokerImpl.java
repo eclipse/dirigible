@@ -20,9 +20,6 @@ import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
 
-/**
- * The Class Invoker.
- */
 @Component
 class DirigibleJavaScriptInvokerImpl implements DirigibleJavaScriptInvoker {
 
