@@ -39,12 +39,12 @@ class DirigibleJavaScriptProcessor implements Processor {
                                       .newInstance(DirigibleJavaScriptInvoker.class);
             }
             if (invoker == null) {
-                throw new DirigibleJavaScriptException("Cannot get instance of interface " + DirigibleJavaScriptInvoker.class);
+                throw new DirigibleJavaScriptException("Cannot get instance of " + DirigibleJavaScriptInvoker.class);
             }
 
             return invoker;
         } catch (RuntimeException ex) {
-            throw new DirigibleJavaScriptException("Cannot get instance of interface " + DirigibleJavaScriptInvoker.class, ex);
+            throw new DirigibleJavaScriptException("Cannot get instance of " + DirigibleJavaScriptInvoker.class, ex);
         }
     }
 
