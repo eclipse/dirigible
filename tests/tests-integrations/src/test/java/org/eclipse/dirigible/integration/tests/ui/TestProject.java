@@ -11,8 +11,6 @@ package org.eclipse.dirigible.integration.tests.ui;
 
 import ch.qos.logback.classic.Level;
 import io.restassured.http.ContentType;
-import org.apache.commons.io.FileUtils;
-import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.tests.*;
@@ -22,6 +20,7 @@ import org.eclipse.dirigible.tests.framework.BrowserFactory;
 import org.eclipse.dirigible.tests.framework.HtmlElementType;
 import org.eclipse.dirigible.tests.logging.LogsAsserter;
 import org.eclipse.dirigible.tests.restassured.RestAssuredExecutor;
+import org.eclipse.dirigible.tests.util.ProjectUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
@@ -29,9 +28,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 import static io.restassured.RestAssured.given;
@@ -51,9 +47,10 @@ public class TestProject {
     private static final String READERS_ODATA_ENTITY_PATH = "/odata/v2/Readers";
     private static final String READERS_VIEW_SERVICE_PATH = "/services/ts/dirigible-test-project/views/ReaderViewService.ts";
     private static final String PROJECT_ROOT_FOLDER = "dirigible-test-project";
-    private static final String DOCUMENTS_SERVIE_PATH = "/services/ts/dirigible-test-project/cmis/DocumentService.ts/documents";
+    private static final String DOCUMENTS_SERVICE_PATH = "/services/ts/dirigible-test-project/cmis/DocumentService.ts/documents";
 
     private static final String PROJECT_RESOURCES_PATH = "dirigible-test-project";
+    private static final String PROJECT_NAME = "dirigible-test-project";
     private static final String UI_PROJECT_TITLE = "Dirigible Test Project";
 
     private final IRepository dirigibleRepo;
@@ -62,24 +59,26 @@ public class TestProject {
     private final EdmView edmView;
     private final RestAssuredExecutor restAssuredExecutor;
     private final IDEFactory ideFactory;
+    private final ProjectUtil projectUtil;
     private final LogsAsserter testJobLogsAsserter;
     private final LogsAsserter eventListenerLogsAsserter;
 
     public TestProject(IRepository dirigibleRepo, BrowserFactory browserFactory, IDE dirigible, EdmView edmView,
-            RestAssuredExecutor restAssuredExecutor, IDEFactory ideFactory) {
+            RestAssuredExecutor restAssuredExecutor, IDEFactory ideFactory, ProjectUtil projectUtil) {
         this.dirigibleRepo = dirigibleRepo;
         this.browserFactory = browserFactory;
         this.dirigible = dirigible;
         this.edmView = edmView;
         this.restAssuredExecutor = restAssuredExecutor;
         this.ideFactory = ideFactory;
+        this.projectUtil = projectUtil;
 
         this.testJobLogsAsserter = new LogsAsserter("app.test-job-handler.ts", Level.DEBUG);
         this.eventListenerLogsAsserter = new LogsAsserter("app.book-entity-events-handler.ts", Level.DEBUG);
     }
 
     public void publish() {
-        copyToRepository();
+        projectUtil.copyFolderContentToDefaultUserWorkspaceProject(PROJECT_RESOURCES_PATH, PROJECT_NAME);
 
         dirigible.openHomePage();
 
@@ -90,28 +89,6 @@ public class TestProject {
         edmView.regenerate();
 
         workbench.publishAll();
-    }
-
-    public void copyToRepository() {
-        String repoBasePath = dirigibleRepo.getRepositoryPath();
-        String userWorkspace = repoBasePath + File.separator + "users" + File.separator
-                + DirigibleConfig.BASIC_ADMIN_USERNAME.getFromBase64Value() + File.separator + "workspace";
-
-        URL projectResource = TestProject.class.getClassLoader()
-                                               .getResource(PROJECT_RESOURCES_PATH);
-        if (null == projectResource) {
-            throw new IllegalStateException("Missing test project resource folder with path " + PROJECT_RESOURCES_PATH);
-        }
-        String destinationDir = userWorkspace + File.separator + PROJECT_RESOURCES_PATH;
-
-        File sourceDirectory = new File(projectResource.getPath());
-        File destinationDirectory = new File(destinationDir);
-
-        try {
-            FileUtils.copyDirectory(sourceDirectory, destinationDirectory);
-        } catch (IOException ex) {
-            throw new IllegalStateException("Failed to copy test project to Dirigible repository", ex);
-        }
     }
 
     public void verify(DirigibleTestTenant tenant) {
@@ -282,7 +259,7 @@ public class TestProject {
     private void verifyDocumentsAPI(DirigibleTestTenant tenant) {
         restAssuredExecutor.execute(tenant, () -> {
             given().when()
-                   .get(DOCUMENTS_SERVIE_PATH)
+                   .get(DOCUMENTS_SERVICE_PATH)
                    .then()
                    .statusCode(200)
                    .body("$", hasSize(0));
@@ -299,12 +276,12 @@ public class TestProject {
             given().contentType(ContentType.JSON)
                    .body(jsonPayload)
                    .when()
-                   .post(DOCUMENTS_SERVIE_PATH)
+                   .post(DOCUMENTS_SERVICE_PATH)
                    .then()
                    .statusCode(200);
 
             given().when()
-                   .get(DOCUMENTS_SERVIE_PATH + "/" + documentName)
+                   .get(DOCUMENTS_SERVICE_PATH + "/" + documentName)
                    .then()
                    .statusCode(200)
                    .body(equalTo(JsonHelper.toJson(documentContent)));

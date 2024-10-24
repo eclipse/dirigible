@@ -12,6 +12,7 @@ package org.eclipse.dirigible.tests.util;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.slf4j.Logger;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 @Component
@@ -34,6 +36,16 @@ public class ProjectUtil {
 
     ProjectUtil(IRepository repository) {
         this.repository = repository;
+    }
+
+    public void copyFolderContentToDefaultUserWorkspaceProject(String resourcesFolder, String targetProjectName) {
+        copyFolderContentToDefaultUserWorkspaceProject(resourcesFolder, targetProjectName, Collections.emptyMap());
+    }
+
+    public void copyFolderContentToDefaultUserWorkspaceProject(String resourcesFolder, String targetProjectName,
+            Map<String, String> placeholders) {
+        copyFolderContentToUserWorkspaceProject(DirigibleConfig.BASIC_ADMIN_USERNAME.getFromBase64Value(), resourcesFolder,
+                targetProjectName, placeholders);
     }
 
     public void copyFolderContentToUserWorkspaceProject(String user, String resourcesFolder, String targetProjectName,
@@ -92,5 +104,9 @@ public class ProjectUtil {
     private String createUserWorkspaceFolderPath(String user, String projectName) {
         return repository.getRepositoryPath() + File.separator + IRepositoryStructure.KEYWORD_USERS + File.separator + user + File.separator
                 + IRepositoryStructure.KEYWORD_WORKSPACE + File.separator + projectName;
+    }
+
+    public void copyFolderContentToUserWorkspaceProject(String user, String resourcesFolder, String targetProjectName) {
+        copyFolderContentToUserWorkspaceProject(user, resourcesFolder, targetProjectName, Collections.emptyMap());
     }
 }
