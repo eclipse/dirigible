@@ -1,0 +1,269 @@
+<!--
+
+    Copyright (c) 2010-2024 Eclipse Dirigible contributors
+
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v2.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v20.html
+
+    SPDX-FileCopyrightText: Eclipse Dirigible contributors
+    SPDX-License-Identifier: EPL-2.0
+
+-->
+<!DOCTYPE html>
+<html lang="en" ng-app="shell" ng-controller="ShellController" xmlns="http://www.w3.org/1999/xhtml">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="data:;base64,iVBORw0KGgo=" brand-icon />
+        <title brand-title></title>
+        <!-- Shell config. Place this before the shell services -->
+        <script type="text/javascript" src="configs/shell.js"></script>
+        <!-- Shell services and styles -->
+        <script type="text/javascript" src="/services/js/platform-core/services/loader.js?id=shell-js">
+        </script>
+        <link type="text/css" rel="stylesheet" href="/services/js/platform-core/services/loader.js?id=shell-css" />
+    </head>
+
+    <body>
+        <shell-header></shell-header>
+        <perspective-container condensed="false"></perspective-container>
+        <!-- <perspective-container condensed="false" config="sidebarConfig"></perspective-container> -->
+        <status-bar></status-bar>
+
+        <dialogs></dialogs>
+        <context-menu></context-menu>
+
+        <script type="text/javascript">
+            angular.module('shell', ['platformShell', 'blimpKit'])
+                .controller('ShellController', function ($scope) {
+                    $scope.sidebarConfig = {
+                        perspectives: [
+                            {
+                                id: "exampleViewCenter",
+                                label: "Custom View",
+                                link: "/services/web/ide-example/views/view-center.html",
+                                icon: "/services/web/ide-example/images/sample.svg",
+                                headerLabel: 'Perspective header',
+                            },
+                            {
+                                id: "examplePerspectiveGroup",
+                                label: "Examples",
+                                expanded: true,
+                                icon: "/services/web/ide-example/images/sample.svg",
+                                items: [
+                                    {
+                                        id: "examplePerspective",
+                                        label: "Example",
+                                        link: "/services/web/ide-example/perspective.html",
+                                        icon: "/services/web/ide-example/images/sample.svg"
+                                    }
+                                ],
+                                headerLabel: "Group header"
+                            },
+                            {
+                                id: "singleViewPerspective",
+                                label: "Single View",
+                                link: "/services/web/ide-example/singleViewPerspective.html",
+                                icon: "/services/web/ide-example/images/sample.svg"
+                            },
+                            {
+                                "id": "i0",
+                                "label": "Single View",
+                                "icon": "/services/web/ide-example/images/sample.svg",
+                                link: "/services/web/ide-example/perspective.html",
+                            },
+                            {
+                                "id": "i1",
+                                "label": "Single View",
+                                "icon": "/services/web/ide-example/images/sample.svg",
+                                link: "/services/web/ide-example/perspective.html",
+                            },
+                            {
+                                "id": "i2",
+                                "label": "Single View",
+                                "icon": "/services/web/ide-example/images/sample.svg",
+                                link: "/services/web/ide-example/perspective.html",
+                            },
+                            {
+                                "id": "i3",
+                                "label": "Single View",
+                                "icon": "/services/web/ide-example/images/sample.svg",
+                                link: "/services/web/ide-example/perspective.html",
+                            },
+                            {
+                                "id": "i4",
+                                "label": "Single View",
+                                "icon": "/services/web/ide-example/images/sample.svg",
+                                link: "/services/web/ide-example/perspective.html",
+                            },
+                            {
+                                "id": "i5",
+                                "label": "Single View",
+                                "icon": "/services/web/ide-example/images/sample.svg",
+                                link: "/services/web/ide-example/perspective.html",
+                            },
+                            {
+                                "id": "i6",
+                                "label": "Single View",
+                                "icon": "/services/web/ide-example/images/sample.svg",
+                                link: "/services/web/ide-example/perspective.html",
+                            },
+                            {
+                                "id": "i7",
+                                "label": "Single View",
+                                "icon": "/services/web/ide-example/images/sample.svg",
+                                link: "/services/web/ide-example/perspective.html",
+                            },
+                            {
+                                "id": "i8",
+                                "label": "Single View",
+                                "icon": "/services/web/ide-example/images/sample.svg",
+                                link: "/services/web/ide-example/perspective.html",
+                            },
+                            {
+                                "id": "i9",
+                                "label": "Single View",
+                                "icon": "/services/web/ide-example/images/sample.svg",
+                                link: "/services/web/ide-example/perspective.html",
+                            },
+                            {
+                                "id": "i10",
+                                "label": "Single View",
+                                "icon": "/services/web/ide-example/images/sample.svg",
+                                link: "/services/web/ide-example/perspective.html",
+                            },
+                            {
+                                "id": "i11",
+                                "label": "Single View",
+                                "icon": "/services/web/ide-example/images/sample.svg",
+                                link: "/services/web/ide-example/perspective.html",
+                            },
+                            {
+                                "id": "i12",
+                                "label": "Single View",
+                                "icon": "/services/web/ide-example/images/sample.svg",
+                                link: "/services/web/ide-example/perspective.html",
+                            },
+                            {
+                                "id": "i13",
+                                "label": "Single View",
+                                "icon": "/services/web/ide-example/images/sample.svg",
+                                link: "/services/web/ide-example/perspective.html",
+                            },
+                            {
+                                "id": "i14",
+                                "label": "Single View",
+                                "icon": "/services/web/ide-example/images/sample.svg",
+                                link: "/services/web/ide-example/perspective.html",
+                            },
+                            {
+                                "id": "i15",
+                                "label": "Single View",
+                                "icon": "/services/web/ide-example/images/sample.svg",
+                                link: "/services/web/ide-example/perspective.html",
+                            },
+                            {
+                                "id": "i16",
+                                "label": "Single View",
+                                "icon": "/services/web/ide-example/images/sample.svg",
+                                link: "/services/web/ide-example/perspective.html",
+                            },
+                            {
+                                "id": "i17",
+                                "label": "Single View",
+                                "icon": "/services/web/ide-example/images/sample.svg",
+                                link: "/services/web/ide-example/perspective.html",
+                            },
+                            {
+                                "id": "i18",
+                                "label": "Single View",
+                                "icon": "/services/web/ide-example/images/sample.svg",
+                                link: "/services/web/ide-example/perspective.html",
+                            },
+                            {
+                                "id": "i19",
+                                "label": "Single View",
+                                "icon": "/services/web/ide-example/images/sample.svg",
+                                link: "/services/web/ide-example/perspective.html",
+                            },
+                            {
+                                "id": "i20",
+                                "label": "Single View",
+                                "icon": "/services/web/ide-example/images/sample.svg",
+                                link: "/services/web/ide-example/perspective.html",
+                            },
+                            {
+                                "id": "i21",
+                                "label": "Single View",
+                                "icon": "/services/web/ide-example/images/sample.svg",
+                                link: "/services/web/ide-example/perspective.html",
+                            },
+                            {
+                                "id": "i22",
+                                "label": "Single View",
+                                "icon": "/services/web/ide-example/images/sample.svg",
+                                link: "/services/web/ide-example/perspective.html",
+                            },
+                            {
+                                "id": "i23",
+                                "label": "Single View",
+                                "icon": "/services/web/ide-example/images/sample.svg",
+                                link: "/services/web/ide-example/perspective.html",
+                            },
+                            {
+                                "id": "i24",
+                                "label": "Single View",
+                                "icon": "/services/web/ide-example/images/sample.svg",
+                                link: "/services/web/ide-example/perspective.html",
+                            },
+                            {
+                                "id": "i25",
+                                "label": "Single View",
+                                "icon": "/services/web/ide-example/images/sample.svg",
+                                link: "/services/web/ide-example/perspective.html",
+                            },
+                            {
+                                "id": "i26",
+                                "label": "Single View",
+                                "icon": "/services/web/ide-example/images/sample.svg",
+                                link: "/services/web/ide-example/perspective.html",
+                            },
+                            {
+                                "id": "i27",
+                                "label": "Single View",
+                                "icon": "/services/web/ide-example/images/sample.svg",
+                                link: "/services/web/ide-example/perspective.html",
+                            },
+                            {
+                                "id": "i28",
+                                "label": "Single View",
+                                "icon": "/services/web/ide-example/images/sample.svg",
+                                link: "/services/web/ide-example/perspective.html",
+                            },
+                            {
+                                "id": "i29",
+                                "label": "Single End",
+                                "icon": "/services/web/ide-example/images/sample.svg",
+                                link: "/services/web/ide-example/perspective.html",
+                            }
+                        ],
+                        utilities: [
+                            {
+                                id: "exampleUtilityPerspective",
+                                label: "Settings",
+                                link: "/services/web/ide-example/views/view-bottom.html",
+                                icon: "/services/web/ide-example/images/perspective-utility.svg",
+                                isUtility: true
+                            }
+                        ]
+                    };
+                });
+        </script>
+
+        <theme></theme>
+    </body>
+
+</html>

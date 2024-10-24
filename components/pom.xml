@@ -153,6 +153,7 @@
 		<module>ide/ide-ui-workbench</module>
 		<module>ide/ide-ui-workspace-menu</module>
 		<module>ide/ide-ui-workspace-service</module>
+		<module>ide/ide-ui-shell</module>
 
         <!-- API -->
         <module>api/api-modules-javascript</module>
@@ -188,13 +189,19 @@
         <module>api/api-pdf</module>
         <module>api/api-junit</module>
 
+		<!-- Platform -->
+		<module>platform/platform-core</module>
+		<module>platform/platform-branding</module>
+		<module>platform/platform-about</module>
+
 		<!-- Resources -->
 		<module>resources/resources-core</module>
 		<module>resources/resources-dev-tools</module>
 		<module>resources/resources-flowable-libs</module>
 		<module>resources/resources-mxgraph</module>
 		<module>resources/resources-resources</module>
-		<module>resources/resources-theme-default</module>
+		<module>resources/resources-theme-blimpkit-dark</module>
+		<module>resources/resources-theme-blimpkit-light</module>
 		<module>resources/resources-theme-quartz-dark</module>
 		<module>resources/resources-theme-quartz-light</module>
 		<module>resources/resources-themes</module>
@@ -242,6 +249,7 @@
 		<module>group/group-ide</module>
 		<module>group/group-resources-core</module>
 		<module>group/group-resources</module>
+		<module>group/group-platform</module>
 		<module>group/group-templates</module>
 
 		<!-- Test -->
@@ -400,6 +408,12 @@
 				<type>pom</type>
 			</dependency>
 
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-group-platform</artifactId>
+				<version>${project.version}</version>
+				<type>pom</type>
+			</dependency>
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-components-group-ide</artifactId>
@@ -1040,6 +1054,11 @@
 				<artifactId>dirigible-components-ide-ui-report</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-ide-ui-shell</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 			
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
@@ -1152,7 +1171,12 @@
 			</dependency>
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
-				<artifactId>dirigible-components-resources-theme-default</artifactId>
+				<artifactId>dirigible-components-resources-theme-blimpkit-dark</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-resources-theme-blimpkit-light</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
@@ -1170,6 +1194,22 @@
 				<artifactId>dirigible-components-resources-themes</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-platform-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-platform-about</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-platform-branding</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-components-template-application-angular</artifactId>

@@ -1,0 +1,5 @@
+{
+    "module": "ide-shell/configs/shell.js",
+    "extensionPoint": "platform-shells",
+    "description": "IDE Shell"
+}
