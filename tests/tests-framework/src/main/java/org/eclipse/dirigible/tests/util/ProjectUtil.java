@@ -23,57 +23,22 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 @Component
 public class ProjectUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProjectUtil.class);
 
-    private static final String PROJECT_TEMPLATE_FOLDER = "project-template";
-
     private final IRepository repository;
-
-    private final Set<String> createdProjects;
 
     ProjectUtil(IRepository repository) {
         this.repository = repository;
-        this.createdProjects = new HashSet<>();
     }
 
-    public void createRegistryProject(String projectName) {
-        String projectTemplatePath = getResourcePath(PROJECT_TEMPLATE_FOLDER);
-        String destinationDirPath = createRegistryFolderPath(projectName);
-
-        File sourceDir = new File(projectTemplatePath);
-        File destinationDir = new File(destinationDirPath);
-
-        try {
-            FileUtils.copyDirectory(sourceDir, destinationDir);
-            createdProjects.add(projectName);
-        } catch (IOException ex) {
-            throw new IllegalStateException("Failed to copy [" + sourceDir + "] to " + destinationDir, ex);
-        }
-    }
-
-    private String getResourcePath(String path) {
-        URL resourceURL = ProjectUtil.class.getClassLoader()
-                                           .getResource(path);
-        if (null == resourceURL) {
-            throw new IllegalStateException("Missing resource with path " + path);
-        }
-        return resourceURL.getPath();
-    }
-
-    private String createRegistryFolderPath(String folder) {
-        return repository.getRepositoryPath() + File.separator + IRepositoryStructure.KEYWORD_REGISTRY + File.separator
-                + IRepositoryStructure.KEYWORD_PUBLIC + File.separator + folder;
-    }
-
-    public void copyFolderContentToRegistryProject(String resourcesFolder, String targetProjectName, Map<String, String> placeholders) {
-        String destinationDirPath = createRegistryFolderPath(targetProjectName);
+    public void copyFolderContentToUserWorkspaceProject(String user, String resourcesFolder, String targetProjectName,
+            Map<String, String> placeholders) {
+        String destinationDirPath = createUserWorkspaceFolderPath(user, targetProjectName);
 
         copyResourceFolder(resourcesFolder, destinationDirPath, placeholders);
     }
@@ -97,6 +62,15 @@ public class ProjectUtil {
         }
     }
 
+    private String getResourcePath(String path) {
+        URL resourceURL = ProjectUtil.class.getClassLoader()
+                                           .getResource(path);
+        if (null == resourceURL) {
+            throw new IllegalStateException("Missing resource with path " + path);
+        }
+        return resourceURL.getPath();
+    }
+
     private void replacePlaceholderInFile(File file, Map<String, String> placeholders) {
         try {
             String content = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
@@ -113,18 +87,6 @@ public class ProjectUtil {
         } catch (IOException ex) {
             throw new IllegalStateException("Failed to replace placeholders [" + placeholders + "] in file " + file, ex);
         }
-    }
-
-    public Set<String> getCreatedProjects() {
-        return createdProjects;
-    }
-
-    public void copyFolderContentToUserWorkspaceProject(String user, String resourcesFolder, String targetProjectName,
-            Map<String, String> placeholders) {
-        String destinationDirPath = createUserWorkspaceFolderPath(user, targetProjectName);
-
-        copyResourceFolder(resourcesFolder, destinationDirPath, placeholders);
-
     }
 
     private String createUserWorkspaceFolderPath(String user, String projectName) {

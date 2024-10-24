@@ -12,9 +12,7 @@ package org.eclipse.dirigible.integration.tests.services.integrations;
 import ch.qos.logback.classic.Level;
 import org.eclipse.dirigible.integration.tests.ui.tests.UserInterfaceIntegrationTest;
 import org.eclipse.dirigible.tests.IDE;
-import org.eclipse.dirigible.tests.Workbench;
 import org.eclipse.dirigible.tests.logging.LogsAsserter;
-import org.eclipse.dirigible.tests.util.ProjectUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -33,9 +31,6 @@ class CamelDirigibleJavaScriptComponentIT extends UserInterfaceIntegrationTest {
     @Autowired
     private IDE ide;
 
-    @Autowired
-    private ProjectUtil projectUtil;
-
     private LogsAsserter logsAsserter;
 
     @BeforeEach
@@ -45,14 +40,7 @@ class CamelDirigibleJavaScriptComponentIT extends UserInterfaceIntegrationTest {
 
     @Test
     void testInvokeJSWithCronRoute() {
-        ide.createNewProject(TEST_PROJECT_NAME);
-
-        String currentUser = ide.getUsername();
-        projectUtil.copyFolderContentToUserWorkspaceProject(currentUser, TEST_PROJECT_FOLDER_PATH, TEST_PROJECT_NAME,
-                Map.of("<project_name>", TEST_PROJECT_NAME));
-
-        Workbench workbench = ide.openWorkbench();
-        workbench.publishAll();
+        ide.createAndPublishProjectFromResources(TEST_PROJECT_NAME, TEST_PROJECT_FOLDER_PATH, Map.of("<project_name>", TEST_PROJECT_NAME));
 
         assertBodyIsPassedAndHandledProperlyByJSHandler();
     }

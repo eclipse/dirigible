@@ -262,11 +262,7 @@ class DirigibleCleaner {
     }
 
     private Set<String> getUserProjects() throws IOException {
-        Set<String> projects = new HashSet<>(getUserProjectsFromWorkingDir());
-
-        projects.addAll(projectUtil.getCreatedProjects());
-
-        return projects;
+        return new HashSet<>(getUserProjectsFromWorkingDir());
     }
 
     private List<String> getUserProjectsFromWorkingDir() throws IOException {

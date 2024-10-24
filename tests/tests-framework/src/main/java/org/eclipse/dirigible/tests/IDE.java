@@ -14,12 +14,15 @@ import org.eclipse.dirigible.tests.framework.Browser;
 import org.eclipse.dirigible.tests.framework.HtmlAttribute;
 import org.eclipse.dirigible.tests.framework.HtmlElementType;
 import org.eclipse.dirigible.tests.restassured.RestAssuredExecutor;
+import org.eclipse.dirigible.tests.util.ProjectUtil;
 import org.eclipse.dirigible.tests.util.SleepUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -40,22 +43,20 @@ public class IDE {
     private final RestAssuredExecutor restAssuredExecutor;
     private final String username;
     private final String password;
+    private final ProjectUtil projectUtil;
 
     @Autowired
-    public IDE(Browser browser, RestAssuredExecutor restAssuredExecutor) {
+    public IDE(Browser browser, RestAssuredExecutor restAssuredExecutor, ProjectUtil projectUtil) {
         this(browser, restAssuredExecutor, DirigibleConfig.BASIC_ADMIN_USERNAME.getFromBase64Value(),
-                DirigibleConfig.BASIC_ADMIN_PASS.getFromBase64Value());
+                DirigibleConfig.BASIC_ADMIN_PASS.getFromBase64Value(), projectUtil);
     }
 
-    public IDE(Browser browser, RestAssuredExecutor restAssuredExecutor, String username, String password) {
+    public IDE(Browser browser, RestAssuredExecutor restAssuredExecutor, String username, String password, ProjectUtil projectUtil) {
         this.browser = browser;
         this.restAssuredExecutor = restAssuredExecutor;
         this.username = username;
         this.password = password;
-    }
-
-    public String getUsername() {
-        return username;
+        this.projectUtil = projectUtil;
     }
 
     public void login() {
@@ -112,7 +113,16 @@ public class IDE {
         login(true);
     }
 
-    public void createNewProject(String projectName) {
+    public void createAndPublishProjectFromResources(String projectName, String resourcesFolderPath, Map<String, String> placeholders) {
+        createNewBlankProject(projectName);
+
+        projectUtil.copyFolderContentToUserWorkspaceProject(username, resourcesFolderPath, projectName, placeholders);
+
+        Workbench workbench = openWorkbench();
+        workbench.publishAll();
+    }
+
+    public void createNewBlankProject(String projectName) {
         openHomePage();
         Workbench workbench = openWorkbench();
 

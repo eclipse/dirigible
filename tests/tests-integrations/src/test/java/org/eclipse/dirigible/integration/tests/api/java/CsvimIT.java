@@ -16,6 +16,7 @@ import org.eclipse.dirigible.database.sql.ISqlDialect;
 import org.eclipse.dirigible.database.sql.SqlFactory;
 import org.eclipse.dirigible.database.sql.dialects.SqlDialectFactory;
 import org.eclipse.dirigible.integration.tests.IntegrationTest;
+import org.eclipse.dirigible.tests.IDE;
 import org.eclipse.dirigible.tests.util.ProjectUtil;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -49,6 +50,9 @@ public class CsvimIT extends IntegrationTest {
 
     @Autowired
     private ProjectUtil projectUtil;
+
+    @Autowired
+    private IDE ide;
 
 
     private static class Reader {
@@ -89,14 +93,13 @@ public class CsvimIT extends IntegrationTest {
      */
     @Test
     void testImportData() throws SQLException {
-        projectUtil.createRegistryProject(PROJECT_NAME);
-        projectUtil.copyFolderContentToRegistryProject(TEST_PROJECT_FOLDER_PATH, PROJECT_NAME, Map.of("<project_name>", PROJECT_NAME));
+        ide.createAndPublishProjectFromResources(PROJECT_NAME, TEST_PROJECT_FOLDER_PATH, Map.of("<project_name>", PROJECT_NAME));
 
         verifyDataInTable("TEST_TABLE_READERS", CSV_READERS);
         assertThat(isTableExists(UNDEFINIED_TABLE_NAME)).isFalse();
         verifyDataInTable("TEST_TABLE_READERS3", CSV_READERS);
 
-        createUndefiniedTable();
+        createUndefinedTable();
 
         verifyDataInTable("TEST_TABLE_READERS", CSV_READERS);
         verifyDataInTable(UNDEFINIED_TABLE_NAME, CSV_READERS);
@@ -104,7 +107,7 @@ public class CsvimIT extends IntegrationTest {
 
     }
 
-    private void createUndefiniedTable() {
+    private void createUndefinedTable() {
         DirigibleDataSource defaultDataSource = dataSourcesManager.getDefaultDataSource();
         try (Connection connection = defaultDataSource.getConnection()) {
             ISqlDialect dialect = SqlDialectFactory.getDialect(defaultDataSource);

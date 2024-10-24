@@ -15,10 +15,7 @@ import org.apache.commons.io.FileUtils;
 import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.tests.DirigibleTestTenant;
-import org.eclipse.dirigible.tests.EdmView;
-import org.eclipse.dirigible.tests.IDE;
-import org.eclipse.dirigible.tests.Workbench;
+import org.eclipse.dirigible.tests.*;
 import org.eclipse.dirigible.tests.awaitility.AwaitilityExecutor;
 import org.eclipse.dirigible.tests.framework.Browser;
 import org.eclipse.dirigible.tests.framework.BrowserFactory;
@@ -64,16 +61,18 @@ public class TestProject {
     private final IDE dirigible;
     private final EdmView edmView;
     private final RestAssuredExecutor restAssuredExecutor;
+    private final IDEFactory ideFactory;
     private final LogsAsserter testJobLogsAsserter;
     private final LogsAsserter eventListenerLogsAsserter;
 
     public TestProject(IRepository dirigibleRepo, BrowserFactory browserFactory, IDE dirigible, EdmView edmView,
-            RestAssuredExecutor restAssuredExecutor) {
+            RestAssuredExecutor restAssuredExecutor, IDEFactory ideFactory) {
         this.dirigibleRepo = dirigibleRepo;
         this.browserFactory = browserFactory;
         this.dirigible = dirigible;
         this.edmView = edmView;
         this.restAssuredExecutor = restAssuredExecutor;
+        this.ideFactory = ideFactory;
 
         this.testJobLogsAsserter = new LogsAsserter("app.test-job-handler.ts", Level.DEBUG);
         this.eventListenerLogsAsserter = new LogsAsserter("app.book-entity-events-handler.ts", Level.DEBUG);
@@ -133,7 +132,7 @@ public class TestProject {
         Browser browser = browserFactory.createByHost(tenant.getHost());
         browser.openPath(UI_HOME_PATH);
 
-        IDE dirigible = new IDE(browser, restAssuredExecutor, tenant.getUsername(), tenant.getPassword());
+        IDE dirigible = ideFactory.create(browser, tenant.getUsername(), tenant.getPassword());
         boolean forceLogin = !tenant.isDefaultTenant();
         dirigible.login(forceLogin);
 

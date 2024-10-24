@@ -9,8 +9,10 @@
  */
 package org.eclipse.dirigible.tests;
 
+import org.eclipse.dirigible.tests.framework.Browser;
 import org.eclipse.dirigible.tests.framework.BrowserFactory;
 import org.eclipse.dirigible.tests.restassured.RestAssuredExecutor;
+import org.eclipse.dirigible.tests.util.ProjectUtil;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -20,14 +22,20 @@ public class IDEFactory {
 
     private final BrowserFactory browserFactory;
     private final RestAssuredExecutor restAssuredExecutor;
+    private final ProjectUtil projectUtil;
 
-    IDEFactory(BrowserFactory browserFactory, RestAssuredExecutor restAssuredExecutor) {
+    IDEFactory(BrowserFactory browserFactory, RestAssuredExecutor restAssuredExecutor, ProjectUtil projectUtil) {
         this.browserFactory = browserFactory;
         this.restAssuredExecutor = restAssuredExecutor;
+        this.projectUtil = projectUtil;
     }
 
     public IDE create(String username, String password) {
-        return new IDE(browserFactory.create(), restAssuredExecutor, username, password);
+        return create(browserFactory.create(), username, password);
+    }
+
+    public IDE create(Browser browser, String username, String password) {
+        return new IDE(browser, restAssuredExecutor, username, password, projectUtil);
     }
 
 }
