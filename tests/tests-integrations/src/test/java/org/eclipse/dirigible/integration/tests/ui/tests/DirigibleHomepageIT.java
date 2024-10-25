@@ -9,21 +9,16 @@
  */
 package org.eclipse.dirigible.integration.tests.ui.tests;
 
-import org.eclipse.dirigible.tests.IDE;
 import org.eclipse.dirigible.tests.framework.HtmlElementType;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 class DirigibleHomepageIT extends UserInterfaceIntegrationTest {
 
     private static final String ECLIPSE_DIRIGIBLE_HEADER = "Eclipse Dirigible";
 
-    @Autowired
-    private IDE dirigible;
-
     @Test
     void testOpenHomepage() {
-        dirigible.openHomePage();
+        ide.openHomePage();
 
         browser.assertElementExistsByTypeAndText(HtmlElementType.HEADER5, ECLIPSE_DIRIGIBLE_HEADER);
     }

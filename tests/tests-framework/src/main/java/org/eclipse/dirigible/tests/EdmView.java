@@ -26,7 +26,7 @@ public class EdmView {
     }
 
     public void regenerate() {
-        browser.clickElementByAttributePattern(HtmlElementType.BUTTON, HtmlAttribute.TITLE, "Regenerate");
+        browser.clickOnElementByAttributePattern(HtmlElementType.BUTTON, HtmlAttribute.TITLE, "Regenerate");
         browser.assertElementExistsByTypeAndTextPattern(HtmlElementType.SPAN, "Generated from model");
     }
 }
