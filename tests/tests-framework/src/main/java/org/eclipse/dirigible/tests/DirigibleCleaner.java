@@ -7,7 +7,7 @@
  *
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.integration.tests;
+package org.eclipse.dirigible.tests;
 
 import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
@@ -17,7 +17,6 @@ import org.eclipse.dirigible.database.sql.dialects.SqlDialectFactory;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.tests.util.FileUtil;
-import org.eclipse.dirigible.tests.util.ProjectUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -33,21 +32,19 @@ import java.sql.SQLException;
 import java.util.*;
 
 @Component
-class DirigibleCleaner {
+public class DirigibleCleaner {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DirigibleCleaner.class);
 
     private final DataSourcesManager dataSourcesManager;
     private final IRepository dirigibleRepo;
-    private final ProjectUtil projectUtil;
 
-    DirigibleCleaner(DataSourcesManager dataSourcesManager, IRepository dirigibleRepo, ProjectUtil projectUtil) {
+    DirigibleCleaner(DataSourcesManager dataSourcesManager, IRepository dirigibleRepo) {
         this.dataSourcesManager = dataSourcesManager;
         this.dirigibleRepo = dirigibleRepo;
-        this.projectUtil = projectUtil;
     }
 
-    void clean() {
+    public void clean() {
         try {
             deleteDatabases();
             deleteCMSFolderFiles();
@@ -119,7 +116,7 @@ class DirigibleCleaner {
                                                   .sequence(sequence)
                                                   .build();
                     try (PreparedStatement prepareStatement = connection.prepareStatement(sql)) {
-                        int rowsAffected = prepareStatement.executeUpdate();
+                        prepareStatement.executeUpdate();
                         LOGGER.info("Dropped sequence [{}]", sequence);
                         iterator.remove();
                     }
@@ -160,7 +157,7 @@ class DirigibleCleaner {
                                                   .cascade(true)
                                                   .build();
                     try (PreparedStatement prepareStatement = connection.prepareStatement(sql)) {
-                        int rowsAffected = prepareStatement.executeUpdate();
+                        prepareStatement.executeUpdate();
                         LOGGER.info("Dropped table [{}]", tableName);
                         iterator.remove();
                     }
@@ -262,11 +259,7 @@ class DirigibleCleaner {
     }
 
     private Set<String> getUserProjects() throws IOException {
-        Set<String> projects = new HashSet<>(getUserProjectsFromWorkingDir());
-
-        projects.addAll(projectUtil.getCreatedProjects());
-
-        return projects;
+        return new HashSet<>(getUserProjectsFromWorkingDir());
     }
 
     private List<String> getUserProjectsFromWorkingDir() throws IOException {

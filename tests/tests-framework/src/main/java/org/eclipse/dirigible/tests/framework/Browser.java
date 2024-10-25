@@ -17,19 +17,19 @@ public interface Browser {
 
     void enterTextInElementById(String elementId, String text);
 
-    void clickElementByAttributePatternAndText(HtmlElementType elementType, HtmlAttribute attribute, String pattern, String text);
+    void clickOnElementByAttributePatternAndText(HtmlElementType elementType, HtmlAttribute attribute, String pattern, String text);
 
     void assertElementExistsByTypeAndText(HtmlElementType elementType, String text);
 
     String getPageTitle();
 
-    void clickElementByAttributeValue(HtmlElementType htmlElementType, HtmlAttribute htmlAttribute, String attributeValue);
+    void clickOnElementByAttributeValue(HtmlElementType htmlElementType, HtmlAttribute htmlAttribute, String attributeValue);
 
     void doubleClickOnElementContainingText(HtmlElementType htmlElementType, String text);
 
     void clickOnElementContainingText(HtmlElementType htmlElementType, String text);
 
-    void clickElementByAttributePattern(HtmlElementType htmlElementType, HtmlAttribute htmlAttribute, String pattern);
+    void clickOnElementByAttributePattern(HtmlElementType htmlElementType, HtmlAttribute htmlAttribute, String pattern);
 
     void assertElementExistsByTypeAndTextPattern(HtmlElementType htmlElementType, String textPattern);
 
@@ -38,4 +38,6 @@ public interface Browser {
     String createScreenshot();
 
     void clearCookies();
+
+    void rightClickOnElementById(String id);
 }
