@@ -288,14 +288,14 @@ angular.module('platformShell', ['ngCookies', 'platformUser', 'platformBrand', '
                                 <bk-list-navigation-item-indicator ng-if="navItem.id === activeGroupId"></bk-list-navigation-item-indicator>
                             </bk-list-navigation-item>
                             <bk-list-navigation-group-header ng-if="!navItem.items && navItem.headerLabel">{{::navItem.headerLabel}}</bk-list-navigation-group-header>
-                            <bk-list-navigation-item ng-repeat-end ng-if="!navItem.items" ng-click="switchPerspective(navItem.id, navItem.label)" title="{{::navItem.label}}">
+                            <bk-list-navigation-item ng-repeat-end ng-if="!navItem.items" indicated="navItem.id === activeId" ng-click="switchPerspective(navItem.id, navItem.label)" title="{{::navItem.label}}">
                                 <bk-list-navigation-item-icon icon-size="lg" svg-path="{{getIcon(navItem.icon)}}"></bk-list-navigation-item-icon>
                                 <span bk-list-navigation-item-text>{{::navItem.label}}</span>
                                 <bk-list-navigation-item-indicator ng-if="navItem.id === activeId"></bk-list-navigation-item-indicator>
                             </bk-list-navigation-item>
                         </bk-list>
                         <bk-list aria-label="Perspective list" ng-if="condensed">
-                            <bk-list-navigation-item ng-repeat="navItem in config.perspectives track by navItem.id" ng-click="switchPerspective(navItem.id, navItem.label)" title="{{::navItem.label}}">
+                            <bk-list-navigation-item ng-repeat="navItem in config.perspectives track by navItem.id" indicated="navItem.id === activeId" ng-click="switchPerspective(navItem.id, navItem.label)" title="{{::navItem.label}}">
                                 <bk-list-navigation-item-icon icon-size="lg" svg-path="{{getIcon(navItem.icon)}}"></bk-list-navigation-item-icon>
                                 <span bk-list-navigation-item-text>{{::navItem.label}}</span>
                                 <bk-list-navigation-item-indicator ng-if="navItem.id === activeId"></bk-list-navigation-item-indicator>

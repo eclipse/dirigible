@@ -1,5 +1,5 @@
 {
-    "module": "platform-workbench/configs/perspective.js",
+    "module": "perspective-workbench/configs/perspective.js",
     "extensionPoint": "platform-perspectives",
     "description": "Workbench perspective"
 }

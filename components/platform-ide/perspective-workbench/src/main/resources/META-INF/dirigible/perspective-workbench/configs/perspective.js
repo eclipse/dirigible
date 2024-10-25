@@ -12,9 +12,9 @@
 const perspectiveData = {
 	id: 'workbench',
 	label: 'Workbench',
-	path: '/services/web/platform-workbench/index.html',
+	path: '/services/web/perspective-workbench/index.html',
 	order: 1,
-	icon: '/services/web/platform-workbench/images/workbench.svg',
+	icon: '/services/web/perspective-workbench/images/workbench.svg',
 };
 if (typeof exports !== 'undefined') {
 	exports.getPerspective = () => perspectiveData;

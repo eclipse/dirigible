@@ -1610,3 +1610,7 @@ input {
 .fd-link>[class*=sap-icon] {
     font-size: var(--sapFontSize);
 }
+
+.fd-notification--banner {
+    border-width: 0;
+}

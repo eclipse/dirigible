@@ -1611,6 +1611,10 @@ input {
     font-size: var(--sapFontSize);
 }
 
+.fd-notification--banner {
+    border-width: 0;
+}
+
 .fd-popover__body {
     background-color: var(--sapTile_Background);
 }
