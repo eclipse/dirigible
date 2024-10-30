@@ -57,7 +57,8 @@ public class DataSourceSystemConfig {
         String systemDataSourceName = DirigibleConfig.SYSTEM_DATA_SOURCE_NAME.getStringValue();
         dataSourceProperties.setName(systemDataSourceName);
         dataSourceProperties.setDriverClassName(Configuration.get("DIRIGIBLE_DATABASE_SYSTEM_DRIVER", "org.h2.Driver"));
-        dataSourceProperties.setUrl(Configuration.get("DIRIGIBLE_DATABASE_SYSTEM_URL", "jdbc:h2:file:./target/dirigible/h2/SystemDB;LOCK_TIMEOUT=10000"));
+        dataSourceProperties.setUrl(
+                Configuration.get("DIRIGIBLE_DATABASE_SYSTEM_URL", "jdbc:h2:file:./target/dirigible/h2/SystemDB;LOCK_TIMEOUT=10000"));
         dataSourceProperties.setUsername(Configuration.get("DIRIGIBLE_DATABASE_SYSTEM_USERNAME", "sa"));
         dataSourceProperties.setPassword(Configuration.get("DIRIGIBLE_DATABASE_SYSTEM_PASSWORD", ""));
         return dataSourceProperties.initializeDataSourceBuilder()
