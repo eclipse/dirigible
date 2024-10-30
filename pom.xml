@@ -101,17 +101,17 @@
 
 		<!-- Maven -->
 		<maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
-		<maven-javadoc-plugin.version>3.10.0</maven-javadoc-plugin.version>
+		<maven-javadoc-plugin.version>3.10.1</maven-javadoc-plugin.version>
 		<maven-surefire-plugin.version>3.5.1</maven-surefire-plugin.version>
 		<maven-failsafe-plugin.version>3.5.0</maven-failsafe-plugin.version>
 		<maven-source-plugin.version>3.3.1</maven-source-plugin.version>
 		<maven-gpg-plugin.version>3.1.0</maven-gpg-plugin.version>
 		<maven-jacoco-plugin.version>0.8.12</maven-jacoco-plugin.version>
-		<maven-spotbugs-plugin.version>4.8.5.0</maven-spotbugs-plugin.version>
+		<maven-spotbugs-plugin.version>4.8.6.5</maven-spotbugs-plugin.version>
 		<maven-formatter-plugin.version>2.23.0</maven-formatter-plugin.version>
 		<maven-exec-plugin.version>3.3.0</maven-exec-plugin.version>
 		<maven-git-commit-id-plugin.version>4.9.10</maven-git-commit-id-plugin.version>
-		<maven-license-plugin.version>4.5</maven-license-plugin.version>
+		<maven-license-plugin.version>4.6</maven-license-plugin.version>
 
 		<!-- Spring -->
 		<spring.boot.version>3.3.4</spring.boot.version>
@@ -173,12 +173,12 @@
 		<!-- JDBC -->
 		<mongodb.version>3.12.14</mongodb.version>
 		<ngdbc.version>2.22.12</ngdbc.version>
-		<snowflake.version>3.19.0</snowflake.version>
+		<snowflake.version>3.19.1</snowflake.version>
 		<mysql.version>8.4.0</mysql.version>
 		
 		<!-- QLDB -->
 		<qldb.driver.version>2.3.1</qldb.driver.version>
-		<qldb.sdk.version>1.12.773</qldb.sdk.version>
+		<qldb.sdk.version>1.12.777</qldb.sdk.version>
 		
 		<!-- jETCD -->
 		<jetcd.core.version>0.8.3</jetcd.core.version>
@@ -186,7 +186,7 @@
 		<!-- Various -->
 		<c3p0.version>0.10.1</c3p0.version>
 		<guava.version>33.3.1-jre</guava.version>
-		<icu4j.version>75.1</icu4j.version>
+		<icu4j.version>76.1</icu4j.version>
 		<classgraph.version>4.8.177</classgraph.version>
 		<logcaptor.version>2.9.3</logcaptor.version>
 
@@ -210,7 +210,7 @@
 		<fontawesome.version>4.7.0</fontawesome.version>
 
 		<!-- Tests -->
-		<testcontainers.version>1.20.2</testcontainers.version>
+		<testcontainers.version>1.20.3</testcontainers.version>
 
 		<profile.content.phase>none</profile.content.phase>
 
@@ -762,7 +762,7 @@
 			<dependency>
 				<groupId>org.junit.vintage</groupId>
 				<artifactId>junit-vintage-engine</artifactId>
-				<version>5.11.2</version>
+				<version>5.11.3</version>
 				<scope>test</scope>
 			</dependency>
 

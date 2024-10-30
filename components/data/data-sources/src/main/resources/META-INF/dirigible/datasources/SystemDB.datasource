@@ -2,7 +2,7 @@
   "location":"/datasources/SystemDB.datasource",
   "name":"SystemDB",
   "driver":"${DIRIGIBLE_DATABASE_SYSTEM_DRIVER}.{org.h2.Driver}",
-  "url":"${DIRIGIBLE_DATABASE_SYSTEM_URL}.{jdbc:h2:file:./target/dirigible/h2/SystemDB}",
+  "url":"${DIRIGIBLE_DATABASE_SYSTEM_URL}.{jdbc:h2:file:./target/dirigible/h2/SystemDB;LOCK_TIMEOUT=10000}",
   "username":"${DIRIGIBLE_DATABASE_SYSTEM_USERNAME}.{sa}",
   "password":"${DIRIGIBLE_DATABASE_SYSTEM_PASSWORD}.{}",
   "properties":[
