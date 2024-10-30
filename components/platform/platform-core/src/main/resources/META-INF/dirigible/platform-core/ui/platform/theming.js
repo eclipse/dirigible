@@ -20,7 +20,7 @@ angular.module('platformTheming', ['platformExtensions'])
             Extensions.getThemes().then((response) => {
                 themes = response.data;
                 if (!theme.version) {
-                    setTheme('blimpkit-light');
+                    setTheme('blimpkit-auto');
                 } else {
                     for (let i = 0; i < themes.length; i++) {
                         if (themes[i].id === theme.id) {
@@ -62,12 +62,12 @@ angular.module('platformTheming', ['platformExtensions'])
                     'name': item['name']
                 })),
                 getCurrentTheme: () => ({
-                    id: theme['id'] || 'blimpkit-light',
-                    name: theme['name'] || 'BlimpKit Light',
+                    id: theme['id'] || 'blimpkit-auto',
+                    name: theme['name'] || 'BlimpKit',
                 }),
                 reset: () => {
                     // setting sendEvent to false because the application will reload anyway
-                    setTheme('blimpkit-light', false);
+                    setTheme('blimpkit-auto', false);
                 }
             }
         }];
@@ -82,26 +82,16 @@ angular.module('platformTheming', ['platformExtensions'])
                 return theme.links || [];
             },
             getType: () => {
-                return theme.type || 'light';
+                return theme.type || 'auto';
             }
         }
-    }]).directive('theme', (Theme, ThemingApi, $document) => ({
+    }]).directive('theme', (Theme, ThemingApi) => ({
         restrict: 'E',
         replace: true,
         transclude: false,
         link: (scope) => {
             scope.links = Theme.getLinks();
-            if (Theme.getType() === 'dark') {
-                $document[0].body.classList.add('bk-dark');
-            } else $document[0].body.classList.add('bk-light');
             const themeChangeListener = ThemingApi.onThemeChange((themeData) => {
-                if (themeData.type === 'dark') {
-                    $document[0].body.classList.add('bk-dark');
-                    $document[0].body.classList.remove('bk-light');
-                } else {
-                    $document[0].body.classList.add('bk-light');
-                    $document[0].body.classList.remove('bk-dark');
-                }
                 scope.$applyAsync(() => {
                     scope.links = themeData.links;
                 });

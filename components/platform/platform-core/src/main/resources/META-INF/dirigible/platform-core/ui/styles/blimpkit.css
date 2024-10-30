@@ -36,14 +36,11 @@ body {
   overflow: auto;
 }
 
-body.bk-dark {
-  background: var(--sapBackgroundColor, #1d1d1d);
-  color: var(--sapTextColor, #fff);
-}
-
-body.bk-light {
-  background: var(--sapBackgroundColor, #f7f7f7);
-  color: var(--sapTextColor, #303030);
+@media (prefers-color-scheme: dark) {
+  body {
+    background: var(--sapBackgroundColor, #1d1d1d);
+    color: var(--sapTextColor, #fff);
+  }
 }
 
 a:link:not([class]) {
@@ -916,4 +913,10 @@ ng-transclude:empty {
 /* Tokenizer fixes */
 .fd-tokenizer .fd-tokenizer__indicator {
   margin-right: .3125rem;
+}
+
+/* Vertical nav fixes */
+.fd-vertical-nav__main-navigation .fd-list__navigation-item--condensed:first-child,
+.fd-vertical-nav__main-navigation .fd-list__navigation-item:first-child {
+  border-top: none;
 }

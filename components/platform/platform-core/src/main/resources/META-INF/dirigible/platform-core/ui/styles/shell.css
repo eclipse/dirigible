@@ -51,11 +51,6 @@ body {
     display: none;
 }
 
-.sidebar .fd-vertical-nav__main-navigation .fd-list__navigation-item--condensed:first-child,
-.sidebar .fd-vertical-nav__main-navigation .fd-list__navigation-item:first-child {
-    border-top: none;
-}
-
 /* Main container */
 .main-container {
     display: flex;
