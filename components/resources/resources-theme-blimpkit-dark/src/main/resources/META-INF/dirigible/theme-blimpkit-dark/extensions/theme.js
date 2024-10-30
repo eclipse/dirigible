@@ -11,7 +11,6 @@
  */
 exports.getTheme = () => ({
 	id: 'blimpkit-dark',
-	module: 'theme-blimpkit-dark',
 	name: 'BlimpKit Dark',
 	type: 'dark',
 	version: 1,

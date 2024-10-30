@@ -30,25 +30,24 @@ blimpkit.directive('bkNotification', (classNames) => ({
 })).directive('bkNotificationHeader', () => ({
     restrict: 'A',
     link: (_scope, element) => { element.addClass('fd-notification__header') },
-})).directive('bkNotificationIconPositive', () => ({
+})).directive('bkNotificationIcon', () => ({
     restrict: 'A',
-    link: (_scope, element) => {
-        element.addClass(['sap-icon', 'sap-icon--color-positive', 'sap-icon--sys-enter-2']);
-    },
-})).directive('bkNotificationIconNegative', () => ({
-    restrict: 'A',
-    link: (_scope, element) => {
-        element.addClass(['sap-icon', 'sap-icon--color-negative', 'sap-icon--error']);
-    },
-})).directive('bkNotificationIconWarning', () => ({
-    restrict: 'A',
-    link: (_scope, element) => {
-        element.addClass(['sap-icon', 'sap-icon--color-critical', 'sap-icon--warning']);
-    },
-})).directive('bkNotificationIconInformation', () => ({
-    restrict: 'A',
-    link: (_scope, element) => {
-        element.addClass(['sap-icon', 'sap-icon--color-information', 'sap-icon--information']);
+    link: (_scope, element, attrs) => {
+        attrs.$observe('bkNotificationIcon', (newValue) => {
+            if (newValue === 'warning') {
+                element.removeClass();
+                element.addClass(['sap-icon', 'sap-icon--color-critical', 'sap-icon--warning']);
+            } else if (newValue === 'negative') {
+                element.removeClass();
+                element.addClass(['sap-icon', 'sap-icon--color-negative', 'sap-icon--error']);
+            } else if (newValue === 'positive') {
+                element.removeClass();
+                element.addClass(['sap-icon', 'sap-icon--color-positive', 'sap-icon--sys-enter-2']);
+            } else {
+                element.removeClass();
+                element.addClass(['sap-icon', 'sap-icon--color-information', 'sap-icon--information']);
+            }
+        });
     },
 })).directive('bkNotificationTitle', () => ({
     restrict: 'A',

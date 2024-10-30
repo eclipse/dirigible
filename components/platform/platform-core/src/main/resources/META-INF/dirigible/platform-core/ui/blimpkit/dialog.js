@@ -65,24 +65,15 @@ blimpkit.directive('bkDialog', (classNames, uuid) => ({
     },
     template: `<div><header ng-class="getHeaderClasses()">
         <div class="fd-bar__left">
+            <div ng-if="header" class="fd-bar__element">{{header}}</div>
             <div class="fd-bar__element">
-                {{header}}
-            </div>
-            <div class="fd-bar__element">
-                <h2 class="fd-title fd-title--h5" id="{{dialogId}}">
-                    {{title}}
-                </h2>
+                <h2 class="fd-title fd-title--h5" id="{{dialogId}}">{{title}}</h2>
             </div>
         </div>
-        <div class="fd-bar__right" ng-transclude>
-        </div>
+        <div class="fd-bar__right" ng-transclude></div>
     </header>
     <div ng-if="subheader" class="fd-dialog__subheader fd-bar fd-bar--subheader">
-        <div class="fd-bar__left">
-            <div class="fd-bar__element">
-                {{subheader}}
-            </div>
-        </div>
+        <div class="fd-bar__left"><div class="fd-bar__element">{{subheader}}</div></div>
     </div></div>`
 })).directive('bkDialogBody', () => ({
     restrict: 'E',

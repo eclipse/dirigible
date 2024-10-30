@@ -9,34 +9,34 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-/** Accordion View **/
-
-.bk-accordion-panel {
+.pf-accordion-panel {
   flex-grow: 1;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
 }
 
-.bk-accordion-panel[shrink="true"] {
+.pf-accordion-panel[shrink="true"] {
   flex-shrink: 1;
   flex-grow: 0;
 }
 
-.bk-accordion-panel h4 {
+.pf-accordion-panel h4 {
   font-size: var(--sapFontSize);
 }
 
-.bk-accordion-panel:last-child>.fd-panel__content.fd-padding--none {
+.pf-accordion-panel:last-child>.fd-panel__content.fd-padding--none {
   border-bottom: none;
 }
 
-.bk-accordion-panel.fd-panel.fd-panel--compact {
+.pf-accordion-panel.fd-panel.fd-panel--compact {
   --fdPanel_Header_Height: var(--bkIconTabBarCompactHeight, 2.375rem);
-  background: var(--sapObjectHeader_Background);
+  --sapGroup_TitleBackground: var(--sapObjectHeader_Background);
 }
 
-/** Layout styles **/
+.pf-accordion-panel .fd-panel__content {
+  padding: 0;
+}
 
 .bk-split-pane.pane-left,
 .bk-split-pane.pane-right {

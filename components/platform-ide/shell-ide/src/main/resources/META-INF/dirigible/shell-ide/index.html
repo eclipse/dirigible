@@ -14,31 +14,32 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="shell" ng-controller="ShellController" xmlns="http://www.w3.org/1999/xhtml">
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="data:;base64,iVBORw0KGgo=" brand-icon />
-    <title brand-title></title>
-    <script type="text/javascript" src="configs/shell.js"></script>
-    <script type="text/javascript" src="/services/js/platform-core/services/loader.js?id=shell-js">
-    </script>
-    <link type="text/css" rel="stylesheet" href="/services/js/platform-core/services/loader.js?id=shell-css" />
-</head>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="data:;base64,iVBORw0KGgo=" brand-icon />
+        <title brand-title></title>
+        <script type="text/javascript" src="configs/shell.js"></script>
+        <script type="text/javascript" src="/services/js/platform-core/services/loader.js?id=shell-js">
+        </script>
+        <link type="text/css" rel="stylesheet" href="/services/js/platform-core/services/loader.js?id=shell-css" />
+    </head>
 
-<body>
-    <shell-header></shell-header>
-    <perspective-container condensed="true"></perspective-container>
-    <status-bar></status-bar>
+    <body>
+        <shell-header></shell-header>
+        <perspective-container condensed="true"></perspective-container>
+        <status-bar></status-bar>
 
-    <dialogs></dialogs>
-    <context-menu></context-menu>
+        <dialogs></dialogs>
+        <context-menu></context-menu>
+        <notifications></notifications>
 
-    <script type="text/javascript">
-        angular.module('shell', ['platformShell', 'blimpKit'])
+        <script type="text/javascript">
+            angular.module('shell', ['platformShell', 'blimpKit'])
             .controller('ShellController', ($scope) => { });
-    </script>
+        </script>
 
-    <theme></theme>
-</body>
+        <theme></theme>
+    </body>
 
 </html>

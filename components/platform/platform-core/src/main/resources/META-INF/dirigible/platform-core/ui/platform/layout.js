@@ -23,7 +23,7 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
             scope: {
                 config: '<',
             },
-            controller: ['$scope', '$element', function ($scope) {
+            controller: ['$scope', function ($scope) {
                 if (!perspective.id || !perspective.label)
                     console.error('layout requires perspective service data');
 
@@ -1144,112 +1144,106 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
             templateUrl: '/services/web/platform-core/ui/templates/layout.html'
         };
     }])
-    .directive('accordion', function (perspective) {
-        return {
-            restrict: 'E',
-            replace: true,
-            transclude: true,
-            scope: { views: '=' },
-            link: function (scope) {
-                scope.getParams = (view) => JSON.stringify({
-                    ...view.params,
-                    container: 'layout',
-                    perspectiveId: perspective.id,
-                });
-            },
-            template: `<div class="bk-vbox bk-full-height">
-                <bk-panel class="bk-accordion-panel" ng-attr-shrink="{{!view.expanded}}" compact="::true" expanded="view.expanded" ng-repeat="view in views track by view.id">
-                    <bk-panel-header>
-                        <bk-panel-expand hint="{{view.expanded ? 'Collapse' : 'Expand' }} '{{::view.label}}' view"></bk-panel-expand>
-                        <h4 bk-panel-title>{{::view.label}}</h4>
-                    </bk-panel-header>
-                    <iframe bk-panel-content title="{{::view.label}}" loading="{{::view.lazyLoad ? 'lazy' : 'eager'}}" ng-src="{{::view.path}}" data-parameters="{{::getParams(view)}}" class="fd-padding--none" aria-label="{{::view.label}} content"></iframe>
-                </bk-panel>
-            </div>`
-        };
-    })
-    .directive('layoutTabContent', function (perspective) {
-        return {
-            restrict: 'E',
-            replace: true,
-            scope: { tab: '=' },
-            link: function (scope) {
-                scope.getParams = () => JSON.stringify({
-                    ...scope.tab.params,
-                    container: 'layout',
-                    perspectiveId: perspective.id,
-                });
-            },
-            template: `<iframe loading="{{::tab.lazyLoad ? 'lazy' : 'eager'}}" ng-src="{{::tab.path}}" data-parameters="{{::getParams()}}"></iframe>`
-        }
-    })
-    .directive('splittedTabs', function (MessageHub) {
-        return {
-            restrict: 'E',
-            transclude: true,
-            replace: true,
-            scope: {
-                direction: '=',
-                panes: '=',
-                focusedPane: '<',
-                removeTab: '&',
-                moveTab: '&',
-                splitTabs: '&',
-                hideTabs: '<',
-                editorTabs: '<?',
-            },
-            link: function (scope) {
-                scope.onRemoveTab = function (pane) {
-                    scope.removeTab({ pane: pane });
-                };
+    .directive('accordion', (perspective) => ({
+        restrict: 'E',
+        replace: true,
+        transclude: true,
+        scope: { views: '=' },
+        link: (scope) => {
+            scope.getParams = (view) => JSON.stringify({
+                ...view.params,
+                container: 'layout',
+                perspectiveId: perspective.id,
+            });
+        },
+        template: `<div class="bk-vbox bk-full-height">
+            <bk-panel class="pf-accordion-panel" ng-attr-shrink="{{!view.expanded}}" compact="::true" expanded="view.expanded" ng-repeat="view in views track by view.id">
+                <bk-panel-header>
+                    <bk-panel-expand hint="{{view.expanded ? 'Collapse' : 'Expand' }} '{{::view.label}}' view"></bk-panel-expand>
+                    <h4 bk-panel-title>{{::view.label}}</h4>
+                </bk-panel-header>
+                <iframe bk-panel-content title="{{::view.label}}" loading="{{::view.lazyLoad ? 'lazy' : 'eager'}}" ng-src="{{::view.path}}" data-parameters="{{::getParams(view)}}" class="fd-padding--none" aria-label="{{::view.label}} content"></iframe>
+            </bk-panel>
+        </div>`,
+    }))
+    .directive('layoutTabContent', (perspective) => ({
+        restrict: 'E',
+        replace: true,
+        scope: { tab: '=' },
+        link: (scope) => {
+            scope.getParams = () => JSON.stringify({
+                ...scope.tab.params,
+                container: 'layout',
+                perspectiveId: perspective.id,
+            });
+        },
+        template: `<iframe loading="{{::tab.lazyLoad ? 'lazy' : 'eager'}}" ng-src="{{::tab.path}}" data-parameters="{{::getParams()}}"></iframe>`,
+    }))
+    .directive('splittedTabs', (MessageHub) => ({
+        restrict: 'E',
+        transclude: true,
+        replace: true,
+        scope: {
+            direction: '=',
+            panes: '=',
+            focusedPane: '<',
+            removeTab: '&',
+            moveTab: '&',
+            splitTabs: '&',
+            hideTabs: '<',
+            editorTabs: '<?',
+        },
+        link: (scope) => {
+            scope.onRemoveTab = (pane) => {
+                scope.removeTab({ pane: pane });
+            };
 
-                scope.onSplitTabs = function (direction, pane) {
-                    scope.splitTabs({ direction, pane });
-                };
+            scope.onSplitTabs = (direction, pane) => {
+                scope.splitTabs({ direction, pane });
+            };
 
-                scope.splitHorizontally = function (pane) {
-                    scope.splitTabs({ direction: 'horizontal', pane });
-                };
+            scope.splitHorizontally = (pane) => {
+                scope.splitTabs({ direction: 'horizontal', pane });
+            };
 
-                scope.splitVertically = function (pane) {
-                    scope.splitTabs({ direction: 'vertical', pane });
-                };
+            scope.splitVertically = (pane) => {
+                scope.splitTabs({ direction: 'vertical', pane });
+            };
 
-                scope.canSplit = function (pane) {
-                    if (pane.tabs.length < 2)
-                        return false;
+            scope.canSplit = (pane) => {
+                if (pane.tabs.length < 2)
+                    return false;
 
-                    const tab = pane.tabs.find(x => x.id === pane.selectedTab);
-                    return tab && !tab.dirty;
-                };
+                const tab = pane.tabs.find(x => x.id === pane.selectedTab);
+                return tab && !tab.dirty;
+            };
 
-                scope.isFocused = function (pane) {
-                    return pane === scope.focusedPane;
-                };
+            scope.isFocused = (pane) => {
+                return pane === scope.focusedPane;
+            };
 
-                scope.isMoreTabsButtonVisible = function (pane) {
-                    return pane.tabs.some(x => x.isHidden);
-                };
+            scope.isMoreTabsButtonVisible = (pane) => {
+                return pane.tabs.some(x => x.isHidden);
+            };
 
-                scope.isEditorTab = function () {
-                    return scope.editorTabs;
-                };
+            scope.isEditorTab = () => {
+                return scope.editorTabs;
+            };
 
-                scope.onTabClick = function (pane, tabId, file) {
-                    pane.selectedTab = tabId;
-                    // MessageHub.setTabFocus(tabId);
+            scope.onTabClick = (pane, tabId, file) => {
+                pane.selectedTab = tabId;
+                // MessageHub.setTabFocus(tabId);
 
-                    const autoRevealEnabled = window.localStorage.getItem('DIRIGIBLE.autoRevealActionEnabled');
-                    if (file && (autoRevealEnabled === null || autoRevealEnabled === 'true')) {
-                        setTimeout(() => {
-                            MessageHub.postMessage({
-                                topic: 'projects.tree.select',
-                                data: { filePath: file }
-                            });
-                        }, 100);
-                    }
-                };
-            },
-            templateUrl: '/services/web/platform-core/ui/templates/splitted-tabs.html'
-        };
-    });
+                const autoRevealEnabled = window.localStorage.getItem('DIRIGIBLE.autoRevealActionEnabled');
+                if (file && (autoRevealEnabled === null || autoRevealEnabled === 'true')) {
+                    setTimeout(() => {
+                        MessageHub.postMessage({
+                            topic: 'projects.tree.select',
+                            data: { filePath: file }
+                        });
+                    }, 100);
+                }
+            };
+        },
+        templateUrl: '/services/web/platform-core/ui/templates/splitted-tabs.html',
+    }));

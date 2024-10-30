@@ -1,51 +1,60 @@
 @font-face {
     font-family: "72";
-    src: url("/webjars/sap-theming__theming-base-content/11.18.2/content/Base/baseLib/baseTheme/fonts/72-Regular-full.woff2") format("woff2");
-    font-weight: normal;
+    src: url("/webjars/sap-theming__theming-base-content/11.18.2/content/Base/baseLib/baseTheme/fonts/72-Regular-full.woff") format("woff");
+    font-weight: 400;
     font-style: normal;
     font-display: swap;
 }
 
 @font-face {
-    font-family: "72-Semibold";
-    src: url("/webjars/sap-theming__theming-base-content/11.18.2/content/Base/baseLib/baseTheme/fonts/72-Semibold-full.woff2") format("woff2");
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "72-Bold";
-    src: url("/webjars/sap-theming__theming-base-content/11.18.2/content/Base/baseLib/baseTheme/fonts/72-Bold-full.woff2") format("woff2");
-    font-weight: 700;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "72-Light";
-    src: url("/webjars/sap-theming__theming-base-content/11.18.2/content/Base/baseLib/baseTheme/fonts/72-Light-full.woff2") format("woff2");
+    font-family: "72";
+    src: url("/webjars/sap-theming__theming-base-content/11.18.2/content/Base/baseLib/baseTheme/fonts/72-Light-full.woff") format("woff");
     font-weight: 300;
     font-style: normal;
     font-display: swap;
 }
 
 @font-face {
+    font-family: "72-Light";
+    src: url("/webjars/sap-theming__theming-base-content/11.18.2/content/Base/baseLib/baseTheme/fonts/72-Light-full.woff") format("woff");
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "72";
+    src: url("/webjars/sap-theming__theming-base-content/11.18.2/content/Base/baseLib/baseTheme/fonts/72-Bold-full.woff") format("woff");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "72-Bold";
+    src: url("/webjars/sap-theming__theming-base-content/11.18.2/content/Base/baseLib/baseTheme/fonts/72-Bold-full.woff") format("woff");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
     font-family: "72Mono-Regular";
-    src: url("/webjars/sap-theming__theming-base-content/11.18.2/content/Base/baseLib/baseTheme/fonts/72Mono-Regular-full.woff2") format("woff2");
+    src: url("/webjars/sap-theming__theming-base-content/11.18.2/content/Base/baseLib/baseTheme/fonts/72Mono-Regular-full.woff") format("woff");
     font-style: normal;
     font-display: swap;
 }
 
 @font-face {
     font-family: "72Mono-Bold";
-    src: url("/webjars/sap-theming__theming-base-content/11.18.2/content/Base/baseLib/baseTheme/fonts/72Mono-Bold-full.woff2") format("woff2");
+    src: url("/webjars/sap-theming__theming-base-content/11.18.2/content/Base/baseLib/baseTheme/fonts/72Mono-Bold-full.woff") format("woff");
     font-style: normal;
     font-display: swap;
 }
 
 @font-face {
     font-family: "SAP-icons";
-    src: url("/webjars/sap-theming__theming-base-content/11.18.2/content/Base/baseLib/sap_horizon/fonts/SAP-icons.woff2") format("woff2");
+    src: url("/webjars/sap-theming__theming-base-content/11.18.2/content/Base/baseLib/sap_horizon/fonts/SAP-icons.woff") format("woff");
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -53,7 +62,7 @@
 
 @font-face {
     font-family: "BusinessSuiteInAppSymbols";
-    src: url("/webjars/sap-theming__theming-base-content/11.18.2/content/Base/baseLib/sap_horizon/fonts/BusinessSuiteInAppSymbols.woff2") format("woff2");
+    src: url("/webjars/sap-theming__theming-base-content/11.18.2/content/Base/baseLib/sap_horizon/fonts/BusinessSuiteInAppSymbols.woff") format("woff");
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -61,7 +70,7 @@
 
 @font-face {
     font-family: "SAP-icons-TNT";
-    src: url("/webjars/sap-theming__theming-base-content/11.18.2/content/Base/baseLib/sap_horizon/fonts/SAP-icons-TNT.woff2") format("woff2");
+    src: url("/webjars/sap-theming__theming-base-content/11.18.2/content/Base/baseLib/sap_horizon/fonts/SAP-icons-TNT.woff") format("woff");
     font-weight: normal;
     font-style: normal;
     font-display: swap;

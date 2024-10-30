@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 :root {
-    --bk-status-bar-height: 1.625rem;
+    --status-bar-height: 1.625rem;
 }
 
 html {
@@ -19,217 +19,204 @@ html {
 
 body {
     height: 100%;
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
     flex-direction: column;
     overflow: hidden;
 }
 
 /* header */
-.bk-main-header {
+.main-header {
     width: 100%;
     height: auto;
 }
 
-.bk-header--brand-link {
-    text-decoration: none;
+.main-header>.fd-shellbar {
+    -webkit-app-region: drag;
+}
+
+.main-header>.fd-shellbar>* {
+    -webkit-app-region: no-drag;
 }
 
 /* Sidebar */
-.bk-sidebar {
-    -webkit-box-sizing: border-box;
+.sidebar {
     box-sizing: border-box;
-    -webkit-box-shadow: none;
     box-shadow: none;
     border-right: .0625rem solid var(--sapGroup_TitleBorderColor, #d9d9d9);
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
 
-.bk-sidebar::-webkit-scrollbar {
+.sidebar::-webkit-scrollbar {
     display: none;
 }
 
-/* Main container */
-.bk-main-container {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: row;
-    flex-direction: row;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    height: 100%;
-    max-height: calc(100% - var(--sapToolHeader_Min_Height_Cozy) - var(--bk-status-bar-height));
+.sidebar .fd-vertical-nav__main-navigation .fd-list__navigation-item--condensed:first-child,
+.sidebar .fd-vertical-nav__main-navigation .fd-list__navigation-item:first-child {
+    border-top: none;
 }
 
-.bk-main-container[no-statusbar="true"] {
-    max-height: calc(100% - var(--sapToolHeader_Min_Height_Cozy));
+/* Main container */
+.main-container {
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+    height: 100%;
+    max-height: calc(100% - var(--fdShellbar_Height) - var(--status-bar-height));
+}
+
+.main-container[no-statusbar="true"] {
+    max-height: calc(100% - var(--fdShellbar_Height));
 }
 
 /* Perspective view */
-.bk-main-container>iframe {
+.main-container>iframe {
     display: block;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
     height: 100%;
-    -webkit-box-flex: 1;
-    -ms-flex-positive: 1;
     flex-grow: 1;
     width: 0;
 }
 
 /* Statusbar */
-.bk-statusbar {
-    background-color: var(--sapButton_Information_Background, #0a6ed1);
+.statusbar {
+    background-color: var(--sapInfobar_NonInteractive_Background, #fff);
     width: 100%;
-    min-height: var(--bk-status-bar-height);
-    border-radius: 0 !important;
-    border-width: 0 !important;
-    -webkit-box-sizing: border-box;
+    height: 100%;
+    max-height: var(--status-bar-height);
     box-sizing: border-box;
-    padding: 0 8px 0 8px;
     font-size: var(--sapFontSmallSize, .75rem);
     font-weight: normal;
-    color: var(--sapButton_Information_TextColor, #fff);
-    margin: 0;
-    border: 0;
-    font-family: var(--sapFontFamily, "72", "72full", Arial, Helvetica, sans-serif);
-    text-shadow: none;
+    color: var(--fdToolbar_Info_Color, #303030);
+    font-family: var(--sapFontBoldFamily);
     word-break: break-word;
-    display: -webkit-inline-box;
-    display: -ms-inline-flexbox;
     display: inline-flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
     align-items: center;
-    line-height: 1;
+    border-top: 0.0625rem solid var(--sapPageFooter_BorderColor);
+    overflow: hidden;
 }
 
-.bk-statusbar>* {
-    -webkit-box-sizing: border-box;
+.statusbar>* {
     box-sizing: border-box;
 }
 
-.bk-statusbar-busy,
-.bk-statusbar-message,
-.bk-statusbar-error {
-    display: -webkit-box;
-    display: -ms-flexbox;
+.statusbar-busy,
+.statusbar-message,
+.statusbar-error {
     display: flex;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: row;
     flex-direction: row;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
     align-items: center;
     height: 100%;
-    padding: 0 4px 0 4px;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
 }
 
-.bk-statusbar-message,
-.bk-statusbar-error {
+.statusbar-message,
+.statusbar-error {
     flex: 2;
     max-width: 40%;
 }
 
-.bk-statusbar-busy>*,
-.bk-statusbar-message>*,
-.bk-statusbar-error>* {
-    padding: 0 4px 0 4px;
-    -webkit-box-sizing: border-box;
+.statusbar-busy>*,
+.statusbar-message>*,
+.statusbar-error>* {
     box-sizing: border-box;
 }
 
-.bk-statusbar .bk-statusbar__text {
+.statusbar .statusbar--text {
     white-space: nowrap;
     overflow: hidden;
-    -o-text-overflow: ellipsis;
     text-overflow: ellipsis;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    padding: 0;
-    margin: 0;
-    border: 0;
-    font-size: inherit;
-    font-weight: inherit;
-    word-break: inherit;
-    color: inherit;
-    font-family: inherit;
-    line-height: 1;
 }
 
-.bk-statusbar .bk-statusbar__icon,
+.statusbar .statusbar--icon,
 .fd-busy-indicator {
     background: inherit;
     border-radius: inherit;
     line-height: 1;
     display: flex;
-    display: -webkit-box;
     display: -ms-flexbox;
-    -webkit-box-pack: center;
     justify-content: center;
     -webkit-box-align: center;
     -ms-flex-pack: center;
     align-items: center;
-    font-size: .75rem;
-    font-family: var(--sapFontFamily);
-    font-weight: 400;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    padding: 0 .375rem;
-    margin: 0;
-    border: 0;
-    font-style: normal;
-    color: var(--sapButton_Information_TextColor);
+    padding-inline: 0.5rem 0.5rem;
 }
 
-.bk-statusbar .bk-statusbar--link {
+.statusbar .statusbar--link {
     cursor: pointer;
-    margin-left: .375rem;
+    margin-left: 0.5rem;
 }
 
-.bk-statusbar .bk-statusbar--link {
-    width: var(--bk-status-bar-height);
-    height: var(--bk-status-bar-height);
+.statusbar .statusbar--link {
+    width: var(--status-bar-height);
+    height: var(--status-bar-height);
 }
 
-.bk-statusbar>.bk-statusbar-message .bk-statusbar--link:hover {
-    background-color: var(--sapIndicationColor_5_Hover_Background, #0961b9);
+.statusbar-message {
+    color: var(--sapButton_Information_TextColor, #fff);
+    background-color: var(--sapButton_Information_Background, #3584e4);
 }
 
-.bk-statusbar>.bk-statusbar-error .bk-statusbar--link:hover {
-    background-color: var(--sapIndicationColor_1_Hover_Background, #6f0000);
+.statusbar-message .statusbar--icon {
+    color: var(--sapButton_Information_TextColor, #fff);
 }
 
-.bk-statusbar-busy {
+.statusbar-message .statusbar--link:hover {
+    color: var(--sapButton_Information_Hover_TextColor, #fff);
+    background-color: var(--sapButton_Information_Hover_Background, #4990e7);
+}
+
+.statusbar-error {
+    color: var(--sapButton_Reject_TextColor, #fff);
+    background-color: var(--sapButton_Reject_Background, #e01b24);
+}
+
+.statusbar-error .statusbar--icon {
+    color: var(--sapButton_Reject_TextColor, #fff);
+}
+
+.statusbar-error .statusbar--link:hover {
+    color: var(--sapButton_Reject_Hover_TextColor, #fff);
+    background-color: var(--sapButton_Reject_Hover_Background, #e3323a);
+}
+
+.statusbar-busy {
     flex: 1;
-    color: var(--sapButton_Critical_TextColor, #fff);
-    background-color: var(--sapButton_Critical_Background, #df6e0c);
+    color: var(--sapButton_Attention_TextColor, #fff);
+    background-color: var(--sapButton_Attention_Background, #e97119);
 }
 
-.bk-statusbar-error {
-    color: var(--sapButton_Negative_TextColor, #fff);
-    background-color: var(--sapButton_Negative_Background, #bb0000);
-}
-
-.bk-statusbar-label {
-    -webkit-box-sizing: border-box;
+.statusbar-label {
     box-sizing: border-box;
     padding: 0 6px 0 6px;
     flex: 1;
     white-space: nowrap;
     overflow: hidden;
-    -o-text-overflow: ellipsis;
     text-overflow: ellipsis;
     text-align: end;
+}
+
+/* Notification overlay */
+.notification-overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    right: 0;
+    pointer-events: none;
+    z-index: 300;
+}
+
+.notification-overlay>* {
+    pointer-events: auto;
+}
+
+.notification-popover {
+    --bkPopoverBody_BackgroundColor: var(--sapGroup_TitleBackground);
+    width: 35rem;
+    height: auto;
+    max-width: 35rem;
+    max-height: 42.75rem;
 }

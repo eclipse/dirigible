@@ -28,11 +28,11 @@ class DialogApi extends MessageHubApi {
      * @param {string} title - The title for the alert.
      * @param {string} message - The message that will be displayed inside the alert.
      * @param {string} [type] - The type of the alert. See 'AlertTypes'.
-     * @param {boolean} [preformatted=true] - Do not auto-format the message. Defaults to true.
+     * @param {boolean} [preformatted] - Newline formatting of the message. If set to true, text will be displayed as-is without formatting it. Defaults to false.
      * @param {Object[]} [buttons] - List of objects, describing a button. The object must contain an 'id', 'label' and optionally 'state' (See ButtonStates).
      * @return {Promise} - Returns a promise if the alert has user-defined buttons and gives the button id as a parameter.
      */ // @ts-ignore
-    showAlert({ title, message, type, preformatted = true, buttons } = {}) {
+    showAlert({ title, message, type, preformatted, buttons } = {}) {
         const callbackTopic = buttons ? `platform.alert.${new Date().valueOf()}` : undefined;
         this.postMessage({
             topic: 'platform.alert',
@@ -62,16 +62,26 @@ class DialogApi extends MessageHubApi {
     }
 
     /**
+     * Triggered when an alert should be shown.
+     * @param handler - Callback function.
+     * @returns - A reference to the listener. In order to remove/disable the listener, you need to use this reference and pass it to the 'removeMessageListener' function.
+     */
+    onAlert(handler) {
+        return this.addMessageListener({ topic: 'platform.alert', handler: handler });
+    }
+
+    /**
      * Shows a dialog.
      * @param {string} [header] - The header of the dialog.
      * @param {string} title - The title for the dialog.
      * @param {string} [subheader] - The subheader of the dialog.
      * @param {string} message - The message that will be displayed inside the dialog.
+     * @param {boolean} [preformatted] - Newline formatting of the message. If set to true, text will be displayed as-is without formatting it. Defaults to false.
      * @param {Object[]} [buttons] - List of objects, describing a button. The object must contain an 'id', 'label' and optionally 'state' (See ButtonStates).
      * @param {boolean} [closeButton=true] - Should the dialog have a close button in the title bar. Defaults to true.
      * @return {Promise} - Returns a promise if the dialog has user-defined buttons and gives the button id as a parameter.
      */ // @ts-ignore
-    showDialog({ header, title, subheader, message, buttons, closeButton = true } = {}) {
+    showDialog({ header, title, subheader, message, preformatted, buttons, closeButton = true } = {}) {
         const callbackTopic = buttons ? `platform.dialog.${new Date().valueOf()}` : undefined;
         this.postMessage({
             topic: 'platform.dialog',
@@ -80,6 +90,7 @@ class DialogApi extends MessageHubApi {
                 title: title,
                 subheader: subheader,
                 message: message,
+                preformatted: preformatted,
                 buttons: buttons || [{ id: 'close', label: 'Close', type: undefined }],
                 closeButton: closeButton,
                 topic: callbackTopic,
@@ -102,11 +113,29 @@ class DialogApi extends MessageHubApi {
     }
 
     /**
+     * Triggered when a dialog should be shown.
+     * @param handler - Callback function.
+     * @returns - A reference to the listener. In order to remove/disable the listener, you need to use this reference and pass it to the 'removeMessageListener' function.
+     */
+    onDialog(handler) {
+        return this.addMessageListener({ topic: 'platform.dialog', handler: handler });
+    }
+
+    /**
      * Shows a busy dialog. Can also be used to update an existing busy dialog.
      * @param {string} message - The message that will be displayed inside the dialog.
      */ // @ts-ignore
     showBusyDialog(message) {
         this.postMessage({ topic: 'platform.dialog.busy', data: { id: this.viewId, message: message } });
+    }
+
+    /**
+     * Triggered when a busy dialog should be shown.
+     * @param handler - Callback function.
+     * @returns - A reference to the listener. In order to remove/disable the listener, you need to use this reference and pass it to the 'removeMessageListener' function.
+     */
+    onBusyDialog(handler) {
+        return this.addMessageListener({ topic: 'platform.dialog.busy', handler: handler });
     }
 
     /**
@@ -184,6 +213,15 @@ class DialogApi extends MessageHubApi {
     }
 
     /**
+     * Triggered when a form dialog should be shown.
+     * @param handler - Callback function.
+     * @returns - A reference to the listener. In order to remove/disable the listener, you need to use this reference and pass it to the 'removeMessageListener' function.
+     */
+    onFormDialog(handler) {
+        return this.addMessageListener({ topic: 'platform.dialog.form', handler: handler });
+    }
+
+    /**
      * Shows a window.
      * @param {boolean} [hasHeader=true] - If the dialog should have a header.
      * @param {string} [header] - The header of the dialog.
@@ -225,5 +263,14 @@ class DialogApi extends MessageHubApi {
                 callbackTopic: callbackTopic,
             }
         });
+    }
+
+    /**
+     * Triggered when a window should be shown.
+     * @param handler - Callback function.
+     * @returns - A reference to the listener. In order to remove/disable the listener, you need to use this reference and pass it to the 'removeMessageListener' function.
+     */
+    onWindow(handler) {
+        return this.addMessageListener({ topic: 'platform.dialog.window', handler: handler });
     }
 }

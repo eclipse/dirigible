@@ -21,7 +21,6 @@ class ContextMenuApi extends MessageHubApi {
      * @property {string} [rightIconPath] - Icon url path. Icon will be shown after the label.
      * @property {string} [shortcut] - Secondary text. Most often used as a shotcut hint.
      * @property {boolean} [separator] - Set a menu item separator after this item.
-     * @property {string} [href] - URL string. Maps to href. Note that if you provide this, you will be redirected immediately on click.
      * @property {boolean} [disabled] - Disable the menu item.
      */
 
@@ -46,7 +45,7 @@ class ContextMenuApi extends MessageHubApi {
      * @param {Array.<MenuItem|MenuSublist>} items - List of menu items and/or sublists.
      * @return {Promise} - Returns a promise and gives the menu item id as a parameter. If the user has closed the menu without selecting an item, you will receive undefined.
      */ // @ts-ignore
-    showContextmenu({ ariaLabel, posX, posY, icons, items } = {}) {
+    showContextMenu({ ariaLabel, posX, posY, icons, items } = {}) {
         let absoluteX = posX;
         let absoluteY = posY;
         if (window.frameElement) {
@@ -62,6 +61,7 @@ class ContextMenuApi extends MessageHubApi {
         this.postMessage({
             topic: 'platform.contextmenu',
             data: {
+                ariaLabel: ariaLabel,
                 posX: absoluteX,
                 posY: absoluteY,
                 icons: icons ?? false,
@@ -78,5 +78,14 @@ class ContextMenuApi extends MessageHubApi {
                 }
             });
         });
+    }
+
+    /**
+     * Triggered when a context menu should be shown.
+     * @param handler - Callback function.
+     * @returns - A reference to the listener. In order to remove/disable the listener, you need to use this reference and pass it to the 'removeMessageListener' function.
+     */
+    onContextMenu(handler) {
+        return this.addMessageListener({ topic: 'platform.contextmenu', handler: handler });
     }
 }

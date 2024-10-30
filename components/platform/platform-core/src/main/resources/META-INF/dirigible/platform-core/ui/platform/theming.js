@@ -10,10 +10,11 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 angular.module('platformTheming', ['platformExtensions'])
-    .constant('MessageHub', new MessageHubApi())
+    .constant('ThemingApi', new ThemingApi())
+    .constant('themeStateKey', `${brandingInfo.keyPrefix}.platform.theme`)
     .provider('theming', function ThemingProvider() {
-        this.$get = ['MessageHub', 'Extensions', function editorsFactory(MessageHub, Extensions) {
-            let theme = JSON.parse(localStorage.getItem('platform.theme') || '{}');
+        this.$get = ['ThemingApi', 'Extensions', 'themeStateKey', function editorsFactory(ThemingApi, Extensions, themeStateKey) {
+            let theme = JSON.parse(localStorage.getItem(themeStateKey) || '{}');
             let themes = [];
 
             Extensions.getThemes().then((response) => {
@@ -30,7 +31,7 @@ angular.module('platformTheming', ['platformExtensions'])
                         }
                     }
                 }
-                MessageHub.triggerEvent('platform.shell.themes.loaded');
+                ThemingApi.themesLoaded();
             });
 
             function setTheme(themeId, sendEvent = true) {
@@ -43,11 +44,15 @@ angular.module('platformTheming', ['platformExtensions'])
 
             function setThemeObject(themeObj, sendEvent = true) {
                 localStorage.setItem(
-                    'platform.theme',
+                    themeStateKey,
                     JSON.stringify(themeObj),
                 )
                 theme = themeObj;
-                if (sendEvent) MessageHub.triggerEvent('platform.shell.themes.change');
+                if (sendEvent) ThemingApi.themeChanged({
+                    id: themeObj.id,
+                    type: themeObj.type,
+                    links: themeObj.links
+                });
             }
 
             return {
@@ -61,55 +66,49 @@ angular.module('platformTheming', ['platformExtensions'])
                     name: theme['name'] || 'BlimpKit Light',
                 }),
                 reset: () => {
-                    // setting sendEvent to false because of the reload caused by Golden Layout
-                    setTheme('quartz-light', false);
+                    // setting sendEvent to false because the application will reload anyway
+                    setTheme('blimpkit-light', false);
                 }
             }
         }];
     })
-    .factory('Theme', ['theming', function (_theming) { // Must be injected to set defaults
-        let theme = JSON.parse(localStorage.getItem('platform.theme') || '{}');
+    .factory('Theme', ['theming', 'themeStateKey', function (_theming, themeStateKey) { // theming must be injected to set defaults
+        let theme = JSON.parse(localStorage.getItem(themeStateKey) || '{}');
         return {
-            reload: function () {
-                theme = JSON.parse(localStorage.getItem('platform.theme') || '{}');
+            reload: () => {
+                theme = JSON.parse(localStorage.getItem(themeStateKey) || '{}');
             },
-            getLinks: function () {
+            getLinks: () => {
                 return theme.links || [];
             },
-            getType: function () {
+            getType: () => {
                 return theme.type || 'light';
             }
         }
-    }]).directive('theme', ['Theme', 'MessageHub', '$document', function (Theme, MessageHub, $document) {
-        return {
-            restrict: 'E',
-            replace: true,
-            transclude: false,
-            link: function (scope) {
-                scope.links = Theme.getLinks();
-                if (Theme.getType() === 'dark') {
+    }]).directive('theme', (Theme, ThemingApi, $document) => ({
+        restrict: 'E',
+        replace: true,
+        transclude: false,
+        link: (scope) => {
+            scope.links = Theme.getLinks();
+            if (Theme.getType() === 'dark') {
+                $document[0].body.classList.add('bk-dark');
+            } else $document[0].body.classList.add('bk-light');
+            const themeChangeListener = ThemingApi.onThemeChange((themeData) => {
+                if (themeData.type === 'dark') {
                     $document[0].body.classList.add('bk-dark');
-                } else $document[0].body.classList.add('bk-light');
-                const themeChangeListener = MessageHub.addMessageListener({
-                    topic: 'platform.shell.themes.change',
-                    handler: () => {
-                        scope.$apply(function () {
-                            Theme.reload();
-                            scope.links = Theme.getLinks();
-                            if (Theme.getType() === 'dark') {
-                                $document[0].body.classList.add('bk-dark');
-                                $document[0].body.classList.remove('bk-light');
-                            } else {
-                                $document[0].body.classList.add('bk-light');
-                                $document[0].body.classList.remove('bk-dark');
-                            }
-                        });
-                    }
+                    $document[0].body.classList.remove('bk-light');
+                } else {
+                    $document[0].body.classList.add('bk-light');
+                    $document[0].body.classList.remove('bk-dark');
+                }
+                scope.$applyAsync(() => {
+                    scope.links = themeData.links;
                 });
-                scope.$on('$destroy', function () {
-                    MessageHub.removeMessageListener(themeChangeListener);
-                });
-            },
-            template: '<link type="text/css" rel="stylesheet" ng-repeat="link in links" ng-href="{{ link }}">'
-        };
-    }]);
+            });
+            scope.$on('$destroy', () => {
+                ThemingApi.removeMessageListener(themeChangeListener);
+            });
+        },
+        template: '<link type="text/css" rel="stylesheet" ng-repeat="link in links" ng-href="{{ link }}">'
+    }));

@@ -130,10 +130,10 @@ blimpkit.constant('ButtonStates', {
         transclude: true,
         replace: true,
         scope: {
-            mainAction: '@?',
-            mainGlyph: '@?',
-            compact: '<?',
+            label: '@?',
             glyph: '@?',
+            compact: '<?',
+            arrowGlyph: '@?',
             isDisabled: '<?',
             disabledFocusable: '<?',
             instructions: '@?',
@@ -161,6 +161,7 @@ blimpkit.constant('ButtonStates', {
                 'fd-button--positive': $scope.state === ButtonStates.Positive,
                 'fd-button--negative': $scope.state === ButtonStates.Negative,
                 'fd-button--attention': $scope.state === ButtonStates.Attention,
+                'bk-button-split--compact': $scope.compact === true,
             });
 
             let isHidden = true;
@@ -216,8 +217,8 @@ blimpkit.constant('ButtonStates', {
             $scope.$on('$destroy', cleanUp);
         }],
         template: `<div class="fd-popover"><div ng-class="getSplitClasses()" role="group">
-        <bk-button glyph="{{ mainGlyph }}" label="{{ mainAction }}" ng-disabled="isDisabled" disabled-focusable="disabledFocusable" instructions="instructions" type="{{ type }}" is-split="true" compact="compact || false" ng-click="mainActionClicked()"></bk-button>
-        <bk-button glyph="{{ glyph || 'sap-icon--slim-arrow-down' }}" ng-disabled="isDisabled || disabledFocusable" type="{{ type }}" compact="compact || false" aria-label="arrow down" aria-controls="{{ popoverId }}" aria-haspopup="true" aria-expanded="{{ popupExpanded }}" ng-click="togglePopover()"></bk-button>
+        <bk-button glyph="{{ glyph }}" label="{{ label }}" ng-disabled="isDisabled" disabled-focusable="disabledFocusable" instructions="instructions" type="{{ type }}" is-split="true" compact="compact || false" ng-click="mainActionClicked()"></bk-button>
+        <bk-button glyph="{{ arrowGlyph || 'sap-icon--slim-arrow-down' }}" ng-disabled="isDisabled || disabledFocusable" type="{{ type }}" compact="compact || false" aria-label="open dropdown button" aria-controls="{{ popoverId }}" aria-haspopup="true" aria-expanded="{{ popupExpanded }}" ng-click="togglePopover()"></bk-button>
         </div><bk-popover-body no-arrow="true"><ng-transclude></ng-transclude></bk-popover-body></div>`,
     }
 });

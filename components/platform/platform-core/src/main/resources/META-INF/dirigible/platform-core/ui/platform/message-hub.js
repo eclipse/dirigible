@@ -33,8 +33,7 @@ class MessageHubApi {
     /**
      * @param topic - The topic to listen to.
      * @param data - This is the actual message/data that will be transmitted.
-     */
-    // @ts-ignore
+     */ // @ts-ignore
     postMessage({ topic = undefined, data } = {}) {
         if (data) {
             this.hubWindow.postMessage({ topic: topic, data: data }, this.targetOrigin);
@@ -43,10 +42,9 @@ class MessageHubApi {
 
     /**
      * @param topic - The topic to listen to.
-     * @callback handler - Callback function that will handle the incomming message/data.
+     * @param handler - Callback function that will handle the incomming message/data.
      * @returns - A reference to the listener. In order to remove/disable the listener, you need to use this reference and pass it to the 'removeMessageListener' function.
-     */
-    // @ts-ignore
+     */ // @ts-ignore
     addMessageListener({ topic, handler } = {}) {
         if (!topic)
             throw new Error('MessageHub: addMessageListener - topic parameter is required');

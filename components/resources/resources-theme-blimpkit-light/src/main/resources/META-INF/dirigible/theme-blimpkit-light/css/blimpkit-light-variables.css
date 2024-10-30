@@ -51,7 +51,7 @@
     --sapWarningBackground: #f1ece1;
     --sapSuccessBackground: #e4eee9;
     --sapInformationBackground: #cce2fc;
-    --sapNeutralBackground: #eff1f2;
+    --sapNeutralBackground: #e8eaeb;
     --sapErrorBorderColor: #e01b24;
     --sapWarningBorderColor: #e66000;
     --sapSuccessBorderColor: #26a264;
@@ -281,8 +281,8 @@
     --sapAssistant_Question_Background: #eae5ff;
     --sapAssistant_Question_BorderColor: #eae5ff;
     --sapAssistant_Question_TextColor: #303030;
-    --sapAssistant_Answer_Background: #eff1f2;
-    --sapAssistant_Answer_BorderColor: #eff1f2;
+    --sapAssistant_Answer_Background: #e8eaeb;
+    --sapAssistant_Answer_BorderColor: #e8eaeb;
     --sapAssistant_Answer_TextColor: #303030;
 
     --sapAvatar_1_Background: #ffeb9b;
@@ -437,15 +437,15 @@
     --sapButton_Information_Active_BorderColor: #3077cd;
     --sapButton_Information_Active_TextColor: #fff;
 
-    --sapButton_Neutral_Background: #e8f3ff;
-    --sapButton_Neutral_BorderColor: #b5d8ff;
-    --sapButton_Neutral_TextColor: #fecc04;
-    --sapButton_Neutral_Hover_Background: #b5d8ff;
-    --sapButton_Neutral_Hover_BorderColor: #b5d8ff;
-    --sapButton_Neutral_Hover_TextColor: #fecc04;
+    --sapButton_Neutral_Background: #e8eaeb;
+    --sapButton_Neutral_BorderColor: #d4d4d4;
+    --sapButton_Neutral_TextColor: #303030;
+    --sapButton_Neutral_Hover_Background: #dcdedf;
+    --sapButton_Neutral_Hover_BorderColor: #d4d4d4;
+    --sapButton_Neutral_Hover_TextColor: #303030;
     --sapButton_Neutral_Active_Background: #fff;
     --sapButton_Neutral_Active_BorderColor: #fecc04;
-    --sapButton_Neutral_Active_TextColor: #fecc04;
+    --sapButton_Neutral_Active_TextColor: #303030;
 
     --sapButton_Track_Background: #e6e6e6;
     --sapButton_Track_BorderColor: #d4d4d4;

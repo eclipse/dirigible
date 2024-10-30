@@ -11,7 +11,6 @@
  */
 exports.getTheme = () => ({
 	id: 'blimpkit-light',
-	module: 'theme-blimpkit-light',
 	name: 'BlimpKit Light',
 	type: 'light',
 	version: 1,

@@ -207,9 +207,9 @@
     --fdSwitch_Semantic_Success_Handle_Hover_Background_Color: var(--sapButton_Handle_Positive_Hover_Background);
     --fdSwitch_Semantic_Error_Handle_Background_Color: var(--sapButton_Handle_Negative_Background);
     --fdSwitch_Semantic_Error_Handle_Hover_Background_Color: var(--sapButton_Handle_Negative_Hover_Background);
-    --fdSwitch_Semantic_Success_Handle_Border_Color: var(--sapButton_Handle_Positive_BorderColor);
+    --fdSwitch_Semantic_Success_Handle_Border_Color: var(--sapButton_Track_Positive_Background);
     --fdSwitch_Semantic_Success_Handle_Hover_Border_Color: var(--sapButton_Handle_Positive_Hover_BorderColor);
-    --fdSwitch_Semantic_Error_Handle_Border_Color: var(--sapButton_Handle_Negative_BorderColor);
+    --fdSwitch_Semantic_Error_Handle_Border_Color: var(--sapButton_Track_Negative_Background);
     --fdSwitch_Semantic_Error_Handle_Hover_Border_Color: var(--sapButton_Handle_Negative_Hover_BorderColor);
     --fdSwitch_Semantic_Icon_Position: absolute;
     --fdSwitch_Icon_Size: var(--sapFontLargeSize);
@@ -232,8 +232,6 @@
     --fdSwitch_Compact_Text_Handle_Width: 1.75rem;
     --fdSwitch_Compact_Text_Handle_Offset: -0.5625rem;
     --fdSwitch_Compact_Text_Handle_Active_Offset: 0.1875rem;
-    --fdSwitch_Semantic_Error_Handle_Border_Color: var(--sapButton_Track_Negative_Background);
-    --fdSwitch_Semantic_Success_Handle_Border_Color: var(--sapButton_Track_Positive_Background);
 
     --fdButton_Height: var(--sapElement_Height);
     --fdButton_Compact_Height: var(--sapElement_Compact_Height);
@@ -885,7 +883,7 @@
     --fdVariantManagementHeadingActiveColor: var(--sapLink_Active_Color);
 
     --fdShellbar_Height: 3rem;
-    --fdShellbar_Shadow: var(--sapContent_HeaderShadow);
+    --fdShellbar_Shadow: none;
     --fdShellbar_Button_Hover_Border_Color: var(--sapButton_Lite_Hover_BorderColor);
     --fdShellbar_Button_Active_Border_Color: var(--sapButton_Lite_Active_BorderColor);
     --fdShellbar_Button_Outline_Color: var(--sapContent_FocusColor);
@@ -1357,10 +1355,10 @@
     --sapToolHeader_Second_Title_Color: var(--sapContent_LabelColor);
     --sapToolHeader_Second_Title_Font_Size: var(--sapFontSize);
     --sapToolHeader_Second_Title_Offset: 0.125rem;
-    --sapToolHeader_Min_Height_Compact: 3.25rem;
-    --sapToolHeader_Min_Height_Cozy: 3.75rem;
+    --sapToolHeader_Min_Height_Compact: 2.5rem;
+    --sapToolHeader_Min_Height_Cozy: 3rem;
     --sapToolHeader_Border_Radius: 0;
-    --sapToolHeader_Paddings_Y: 0.5625rem;
+    --sapToolHeader_Paddings_Y: 0.188rem;
     --sapToolHeader_Shadow1: 0 0.125rem 0.125rem 0 rgba(0, 0, 0, 0.16);
 
     --fdTextarea_Line_Height: 1.5;
@@ -1385,7 +1383,7 @@
 
     --fdPopover_Border_Radius: var(--sapPopover_BorderCornerRadius);
     --fdPopover_Border_Width: 0.0625rem;
-    --fdPopover_Border_Color: var(--sapList_BorderColor);
+    --fdPopover_Border_Color: rgba(160, 160, 160, 0.3);
 
     --fdProductSwitch_Text_Shadow: none;
     --fdProductSwitch_Shadow: none;
@@ -1469,6 +1467,8 @@
     --sapSplitPane_Shadow1: 0 0 0.125rem 0 rgba(0, 0, 0, .16), 0 0.5rem 1rem 0 rgba(0, 0, 0, .32);
 
     --fdModal_BackgroundColor: rgba(0, 0, 0, .2);
+
+    --bkPopoverBody_BackgroundColor: var(--sapTile_Background);
 }
 
 /* Fixes */
@@ -1615,28 +1615,65 @@ input {
     border-width: 0;
 }
 
+.fd-object-status--inverted.fd-object-status--link.fd-object-status--negative.is-active,
+.fd-object-status--inverted.fd-object-status--link.fd-object-status--negative:active {
+    --fdObjectStatus_Background_Color: var(--sapButton_Reject_Selected_Background);
+    --fdObjectStatus_Border_Color: var(--sapButton_Reject_Selected_BorderColor);
+}
+
+.fd-object-status--inverted.fd-object-status--link.fd-object-status--critical.is-active,
+.fd-object-status--inverted.fd-object-status--link.fd-object-status--critical:active {
+    --fdObjectStatus_Background_Color: var(--sapButton_Attention_Selected_Background);
+    --fdObjectStatus_Border_Color: var(--sapButton_Attention_Selected_BorderColor);
+}
+
+.fd-object-status--inverted.fd-object-status--link.fd-object-status--positive {
+    --fdObjectStatus_Text_Color: var(--sapButton_Success_TextColor);
+    --fdObjectStatus_Icon_Color: var(--sapButton_Success_TextColor);
+    --fdObjectStatus_Background_Color: var(--sapButton_Success_Background);
+    --fdObjectStatus_Border_Color: var(--sapButton_Success_BorderColor);
+}
+
+.fd-object-status--inverted.fd-object-status--link.fd-object-status--positive.is-active,
+.fd-object-status--inverted.fd-object-status--link.fd-object-status--positive:active {
+    --fdObjectStatus_Background_Color: var(--sapButton_Accept_Selected_Background);
+    --fdObjectStatus_Border_Color: var(--sapButton_Accept_Selected_BorderColor);
+}
+
+.fd-object-status--inverted.fd-object-status--link.fd-object-status--informative.is-active,
+.fd-object-status--inverted.fd-object-status--link.fd-object-status--informative:active {
+    --fdObjectStatus_Text_Color: var(--sapButton_Emphasized_Background);
+    --fdObjectStatus_Icon_Color: var(--sapButton_Emphasized_Background);
+    --fdObjectStatus_Background_Color: var(--sapBaseColor);
+    --fdObjectStatus_Border_Color: var(--sapButton_Emphasized_BorderColor);
+}
+
 .fd-popover__body {
-    background-color: var(--sapTile_Background);
+    background-color: var(--bkPopoverBody_BackgroundColor);
 }
 
 .fd-popover__body::before {
-    border-bottom-color: var(--sapTile_Background);
+    border-bottom-color: var(--bkPopoverBody_BackgroundColor);
 }
 
 .fd-popover__body--arrow-left::before {
-    border-right-color: var(--sapTile_Background);
+    border-right-color: var(--bkPopoverBody_BackgroundColor);
     border-bottom-color: transparent;
     border-top-color: transparent;
 }
 
 .fd-popover__body--arrow-right::before {
-    border-left-color: var(--sapTile_Background);
+    border-left-color: var(--bkPopoverBody_BackgroundColor);
     border-bottom-color: transparent;
     border-top-color: transparent;
 }
 
 .fd-popover__body--arrow-bottom::before {
-    border-top-color: var(--sapTile_Background);
+    border-top-color: var(--bkPopoverBody_BackgroundColor);
     border-left-color: transparent;
     border-right-color: transparent;
+}
+
+.fd-shellbar {
+    border-bottom: 0.0625rem solid #2f2f2f;
 }
