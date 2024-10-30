@@ -1,0 +1,5 @@
+{
+    "description": "Platform Theme - Evening Horizon",
+    "extensionPoint": "platform-themes",
+    "module": "theme-horizon/extensions/theme-dark.js"
+}

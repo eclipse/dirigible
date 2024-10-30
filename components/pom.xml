@@ -204,8 +204,9 @@
 		<module>resources/resources-flowable-libs</module>
 		<module>resources/resources-mxgraph</module>
 		<module>resources/resources-resources</module>
-		<module>resources/resources-theme-blimpkit-dark</module>
-		<module>resources/resources-theme-blimpkit-light</module>
+		<module>resources/resources-theme-blimpkit</module>
+		<module>resources/resources-theme-horizon</module>
+		<module>resources/resources-theme-high-contrast</module>
 		<module>resources/resources-theme-quartz-dark</module>
 		<module>resources/resources-theme-quartz-light</module>
 		<module>resources/resources-themes</module>
@@ -1193,12 +1194,17 @@
 			</dependency>
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
-				<artifactId>dirigible-components-resources-theme-blimpkit-dark</artifactId>
+				<artifactId>dirigible-components-resources-theme-blimpkit</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
-				<artifactId>dirigible-components-resources-theme-blimpkit-light</artifactId>
+				<artifactId>dirigible-components-resources-theme-horizon</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-resources-theme-high-contrast</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

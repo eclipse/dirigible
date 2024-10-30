@@ -1,5 +1,0 @@
-{
-    "description": "Platform Theme - Blimpkit Dark",
-    "extensionPoint": "platform-themes",
-    "module": "theme-blimpkit-dark/extensions/theme.js"
-}

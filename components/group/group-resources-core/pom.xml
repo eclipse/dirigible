@@ -29,11 +29,15 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-resources-theme-blimpkit-dark</artifactId>
+			<artifactId>dirigible-components-resources-theme-blimpkit</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-resources-theme-blimpkit-light</artifactId>
+			<artifactId>dirigible-components-resources-theme-horizon</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-resources-theme-high-contrast</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
