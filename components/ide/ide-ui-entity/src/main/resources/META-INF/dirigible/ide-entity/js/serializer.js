@@ -201,8 +201,17 @@ function createModel(graph) {
 					if (property.widgetDropDownValue !== null) {
 						model.push(' widgetDropDownValue="' + _.escape(property.widgetDropDownValue) + '"');
 					}
-					if (property.widgetDropDownDependsOn !== null) {
-						model.push(' widgetDropDownDependsOn="' + _.escape(property.widgetDropDownDependsOn) + '"');
+					if (property.widgetDependsOnProperty !== null) {
+						model.push(' widgetDependsOnProperty="' + _.escape(property.widgetDependsOnProperty) + '"');
+					}
+					if (property.widgetDependsOnEntity !== null) {
+						model.push(' widgetDependsOnEntity="' + _.escape(property.widgetDependsOnEntity) + '"');
+					}
+					if (property.widgetDependsOnValueFrom !== null) {
+						model.push(' widgetDependsOnValueFrom="' + _.escape(property.widgetDependsOnValueFrom) + '"');
+					}
+					if (property.widgetDependsOnFilterBy !== null) {
+						model.push(' widgetDependsOnFilterBy="' + _.escape(property.widgetDependsOnFilterBy) + '"');
 					}
 					if (property.relationshipEntityPerspectiveName !== null) {
 						model.push(' relationshipEntityPerspectiveName="' + _.escape(property.relationshipEntityPerspectiveName) + '"');
