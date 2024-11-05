@@ -17,7 +17,7 @@
 
 	<body class="dg-vbox">
 		<fd-toolbar has-title="true">
-			<fd-toolbar-title>Items ({{dataCount}})</fd-toolbar-title>
+			<fd-toolbar-title>Items <span fd-object-status text="{{dataCount}}" inverted="true"></fd-toolbar-title>
 			<fd-toolbar-spacer></fd-toolbar-spacer>
 			<fd-button compact="true" dg-type="transparent" glyph="sap-icon--add-document"
 				state="{{action == 'update'? 'disabled' : ''}}" ng-click="createEntity()"></fd-button>

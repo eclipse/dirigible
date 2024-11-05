@@ -17,7 +17,7 @@
 
 	<body class="dg-vbox">
 		<fd-toolbar has-title="true">
-			<fd-toolbar-title>Items ({{dataCount}})</fd-toolbar-title>
+			<fd-toolbar-title>Items <span fd-object-status text="{{dataCount}}" inverted="true"></fd-toolbar-title>
 			<fd-button compact="true" dg-type="transparent" dg-label="Filter" ng-click="openFilter()"></fd-button>
 			<fd-button ng-repeat="action in pageActions" compact="true" dg-type="transparent" dg-label="{{action.label}}" ng-click="triggerPageAction(action)"></fd-button>
 			<fd-toolbar-spacer></fd-toolbar-spacer>
