@@ -80,11 +80,15 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 #end
 
 #foreach ($property in $properties)
-#if($property.widgetType == "DROPDOWN" && $property.widgetDependsOnProperty)
+#if($property.widgetDependsOnProperty)
 		${dollar}scope.${dollar}watch('entity.${property.widgetDependsOnProperty}', function (newValue, oldValue) {
 			if (newValue !== undefined && newValue !== null) {
 				entityApi.${dollar}http.get(${dollar}scope.service${property.widgetDependsOnProperty} + '/' + newValue).then(function (response) {
-					let valueFrom = response.data.${property.widgetDependsOnValueFrom};			
+					let valueFrom = response.data.${property.widgetDependsOnValueFrom};
+#if($property.widgetType != "DROPDOWN")
+					$scope.entity.${property.name} = valueFrom;
+#end
+#if($property.widgetType == "DROPDOWN")
 					entityApi.${dollar}http.post("${property.widgetDropdownUrl}/search", {
 						$filter: {
 							equals: {
@@ -106,6 +110,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 							}
 						}
 					});
+#end
 				});
 			}
 		});
