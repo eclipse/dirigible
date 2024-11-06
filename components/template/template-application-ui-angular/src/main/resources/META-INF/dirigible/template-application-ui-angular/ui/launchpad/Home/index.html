@@ -89,7 +89,7 @@
 						<fd-popover-body dg-align="bottom-right" max-height="306">
 							<fd-menu aria-label="Reference Data items">
 								<fd-menu-item title="{{::setting.name}}"
-									ng-repeat="setting in referenceData track by $index"></fd-menu-item>
+									ng-repeat="setting in referenceData track by $index" ng-click="openView(setting.location)></fd-menu-item>
 							</fd-menu>
 						</fd-popover-body>
 					</fd-popover>

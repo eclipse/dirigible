@@ -65,7 +65,7 @@
                 <fd-toolbar ng-show="hasFavorites" has-title="false" dg-type="transparent">
                     <h5 fd-title header-size="5"><b>Favorites</b></h5>
                     <fd-toolbar-spacer></fd-toolbar-spacer>
-                    <fd-button dg-label="Edit" glyph="sap-icon--edit" dg-type="transparent" ng-click="toggleEditMode()"
+                    <fd-button glyph="sap-icon--edit" dg-type="transparent" ng-click="toggleEditMode()"
                         dg-toggled="editMode">
                     </fd-button>
                 </fd-toolbar>
@@ -95,7 +95,7 @@
                         <fd-popover-body dg-align="bottom-right" max-height="306">
                             <fd-menu aria-label="Reference Data items">
                                 <fd-menu-item title="{{::setting.name}}"
-                                    ng-repeat="setting in referenceData track by $index"></fd-menu-item>
+                                    ng-repeat="setting in referenceData track by $index" ng-click="openView(setting.location)"></fd-menu-item>
                             </fd-menu>
                         </fd-popover-body>
                     </fd-popover>
