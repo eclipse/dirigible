@@ -161,11 +161,9 @@ public class CloneCommand {
 
             String workspacePath = String.format(GitFileUtils.PATTERN_USERS_WORKSPACE, user, workspace.getName());
 
-            logger.debug("Start importing projects for repository directory %s ...", gitDirectory.getCanonicalPath());
+            logger.debug("Start importing projects for repository directory [{}] ...", gitDirectory.getCanonicalPath());
             List<String> importedProjects = GitFileUtils.importProject(gitDirectory, workspacePath, user, workspace.getName());
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Importing projects for repository directory %s finished", gitDirectory.getCanonicalPath()));
-            }
+            logger.debug("Importing projects for repository directory [{}] finished", gitDirectory.getCanonicalPath());
 
             for (String importedProject : importedProjects) {
                 logger.info("Project [{}] was cloned", importedProject);
