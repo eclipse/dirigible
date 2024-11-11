@@ -108,10 +108,8 @@ public class CloneCommand {
             if (repositoryUri != null && !repositoryUri.endsWith(GitFileUtils.DOT_GIT)) {
                 repositoryUri += GitFileUtils.DOT_GIT;
             }
-            Set<String> clonedProjects = new HashSet<String>();
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Start cloning repository [%s] ...", repositoryUri));
-            }
+            Set<String> clonedProjects = new HashSet<>();
+            logger.debug("Start cloning repository [{}] ...", repositoryUri);
             String user = UserFacade.getName();
             File gitDirectory = GitFileUtils.createGitDirectory(user, workspace.getName(), repositoryUri);
             try {
@@ -121,16 +119,11 @@ public class CloneCommand {
                 GitFileUtils.deleteGitDirectory(user, workspace.getName(), repositoryUri);
                 throw e;
             }
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Cloning repository [%s] into folder [%s] finished successfully.", repositoryUri,
-                        gitDirectory.getCanonicalPath()));
-            }
+            logger.debug("Cloning repository [{}] into folder [{}] finished successfully.", repositoryUri, gitDirectory.getCanonicalPath());
             if (model.isPublish()) {
                 publishProjects(workspace, clonedProjects);
             }
-            if (logger.isInfoEnabled()) {
-                logger.info(String.format("Project(s) has been cloned successfully from repository: [%s]", repositoryUri));
-            }
+            logger.info("Project(s) has been cloned successfully from repository: [{}]", repositoryUri);
         } catch (IOException e) {
             throw new GitConnectorException(String.format("An error occurred while cloning repository: [%s]", repositoryUri), e);
         }
@@ -155,9 +148,7 @@ public class CloneCommand {
             logger.debug("Cloning repository [{}], with username [{}] for branch [{}] in the directory [{}] ...", repositoryURI, username,
                     repositoryBranch, gitDirectory.getCanonicalPath());
             GitConnectorFactory.cloneRepository(gitDirectory.getCanonicalPath(), repositoryURI, username, password, repositoryBranch);
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Cloning repository %s finished.", repositoryURI));
-            }
+            logger.debug("Cloning repository [{}] finished.", repositoryURI);
 
             String workspacePath = String.format(GitFileUtils.PATTERN_USERS_WORKSPACE, user, workspace.getName());
 
@@ -297,7 +288,7 @@ public class CloneCommand {
      * @param clonedProjects the cloned projects
      */
     protected void publishProjects(Workspace workspace, Set<String> clonedProjects) {
-        if (clonedProjects.size() > 0) {
+        if (!clonedProjects.isEmpty()) {
             for (String projectName : clonedProjects) {
                 List<Project> projects = workspace.getProjects();
                 for (Project project : projects) {
