@@ -39,8 +39,6 @@ public class HttpSecurityURIConfigurator {
             "/services/js/resources-core/**", //
             "/services/js/resources-core/**", //
             "/services/integrations/**", //
-            "/actuator/health/liveness", //
-            "/actuator/health/readiness", //
             "/actuator/health"};
 
     /** The Constant AUTHENTICATED_PATTERNS. */
