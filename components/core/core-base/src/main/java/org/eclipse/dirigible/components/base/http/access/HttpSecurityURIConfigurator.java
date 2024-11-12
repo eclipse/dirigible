@@ -39,7 +39,9 @@ public class HttpSecurityURIConfigurator {
             "/services/js/resources-core/**", //
             "/services/js/resources-core/**", //
             "/services/integrations/**", //
-            "/actuator/**"};
+            "/actuator/health/liveness", //
+            "/actuator/health/readiness", //
+            "/actuator/health"};
 
     /** The Constant AUTHENTICATED_PATTERNS. */
     private static final String[] AUTHENTICATED_PATTERNS = {//
@@ -55,6 +57,10 @@ public class HttpSecurityURIConfigurator {
             "/services/bpm/**", //
             "/services/ide/**", //
             "/websockets/ide/**"};
+
+    private static final String[] OPERATOR_PATTERNS = {//
+            "/spring-admin/**", //
+            "/actuator/**"};
 
     /**
      * Configure.
@@ -78,7 +84,11 @@ public class HttpSecurityURIConfigurator {
 
              // "DEVELOPER" role required
              .requestMatchers(DEVELOPER_PATTERNS)
-             .hasRole(Roles.DEVELOPER.name())
+             .hasRole(Roles.DEVELOPER.getRoleName())
+
+             // "OPERATOR" role required
+             .requestMatchers(OPERATOR_PATTERNS)
+             .hasRole(Roles.OPERATOR.getRoleName())
 
              // Authenticated
              .requestMatchers(AUTHENTICATED_PATTERNS)
