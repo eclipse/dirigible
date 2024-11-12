@@ -31,6 +31,8 @@ class SecurityIT extends IntegrationTest {
     private static Stream<Arguments> providePublicEndpointsParams() {
         return Stream.of(//
                 Arguments.of("/actuator/health", HttpStatus.OK), //
+                Arguments.of("/actuator/health/liveness", HttpStatus.OK), //
+                Arguments.of("/actuator/health/readiness", HttpStatus.OK), //
                 Arguments.of("/login", HttpStatus.OK), //
                 Arguments.of("/error.html", HttpStatus.OK));
     }
