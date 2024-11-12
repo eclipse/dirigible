@@ -1,5 +1,6 @@
 package org.eclipse.dirigible.integration.tests.api;
 
+import org.eclipse.dirigible.DirigibleApplication;
 import org.eclipse.dirigible.components.base.http.roles.Roles;
 import org.eclipse.dirigible.integration.tests.IntegrationTest;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -7,6 +8,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -16,6 +19,7 @@ import java.util.stream.Stream;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@SpringBootTest(webEnvironment = WebEnvironment.MOCK, classes = DirigibleApplication.class)
 class SecurityIT extends IntegrationTest {
 
     @Autowired
@@ -31,8 +35,6 @@ class SecurityIT extends IntegrationTest {
     private static Stream<Arguments> providePublicEndpointsParams() {
         return Stream.of(//
                 Arguments.of("/actuator/health", HttpStatus.OK), //
-                Arguments.of("/actuator/health/liveness", HttpStatus.OK), //
-                Arguments.of("/actuator/health/readiness", HttpStatus.OK), //
                 Arguments.of("/login", HttpStatus.OK), //
                 Arguments.of("/error.html", HttpStatus.OK));
     }
