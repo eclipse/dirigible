@@ -14,6 +14,12 @@
 	<artifactId>dirigible-application</artifactId>
 	<packaging>jar</packaging>
 
+
+	<properties>
+		<license.header.location>../../licensing-header.txt</license.header.location>
+		<parent.pom.folder>../../</parent.pom.folder>
+	</properties>
+
 	<dependencies>
 		<!-- Platform -->
 		<dependency>
@@ -206,6 +212,17 @@
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>de.codecentric</groupId>
+			<artifactId>spring-boot-admin-starter-server</artifactId>
+			<version>${spring.admin.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>de.codecentric</groupId>
+			<artifactId>spring-boot-admin-starter-client</artifactId>
+			<version>${spring.admin.version}</version>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
@@ -262,10 +279,4 @@
 			</resource>
 		</resources>
 	</build>
-
-	<properties>
-		<license.header.location>../../licensing-header.txt</license.header.location>
-		<parent.pom.folder>../../</parent.pom.folder>
-	</properties>
-
 </project>
