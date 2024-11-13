@@ -21,6 +21,7 @@ public class HttpSecurityURIConfigurator {
     /** The Constant PUBLIC_PATTERNS. */
     private static final String[] PUBLIC_PATTERNS = {//
             "/", //
+            "/test", //
             "/home", //
             "/index.html", //
             "/logout", //
