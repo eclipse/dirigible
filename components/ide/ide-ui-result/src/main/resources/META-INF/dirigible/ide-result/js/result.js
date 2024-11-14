@@ -61,7 +61,16 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
         $scope.$apply();
     };
 
+    messageHub.onDidReceiveMessage("database.sql.showContent", function (event) {
+        debugger
+        let sqlCommand = "SELECT * FROM \"" + event.schemaName + "\"" + "." + "\"" + event.tableName + "\";\n";
+        messageHub.postMessage('database.sql.execute', sqlCommand);
+
+
+    })
+
     messageHub.onDidReceiveMessage("database.sql.execute", function (command) {
+
         $scope.state.error = false;
         $scope.showProgress();
         let url = "/services/data/" + $scope.datasource;
@@ -309,7 +318,7 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
 
     messageHub.onDidReceiveMessage("database.metadata.project.export.model", function (command) {
         let schema = command.data;
-        let url = "/services/data/project/model/" + $scope.datasource + "/" +    schema;
+        let url = "/services/data/project/model/" + $scope.datasource + "/" + schema;
         $http({
             method: 'PUT',
             url: url,
@@ -404,7 +413,7 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
         $scope.hasMultipleProcedureResults = false;
         $scope.procedureResults.length = 0;
     }
-    
+
     messageHub.onDidReceiveMessage("database.sql.error", function (error) {
         $scope.state.error = true;
         $scope.errorMessage = error.data;

@@ -170,8 +170,13 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							let topLevelSchemaNode = node.parents.find(parentId => tree.get_node(parentId).original.kind === 'schema');
 							let topLevelSchemaName = tree.get_text(topLevelSchemaNode);
 
-							let sqlCommand = "SELECT * FROM \"" + topLevelSchemaName + "\"" + "." + "\"" + node.original.text + "\";\n";
-							messageHub.postMessage('database.sql.execute', sqlCommand);
+							debugger
+							//let sqlCommand = "SELECT * FROM \"" + topLevelSchemaName + "\"" + "." + "\"" + node.original.text + "\";\n";
+
+							messageHub.postMessage('database.sql.showContent', {
+								schemaName: topLevelSchemaName,
+								tableName: node.original.text
+							});
 						}.bind(this)
 					};
 
@@ -635,16 +640,18 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 		}
 	};
 
-	let anonymizeMenu = function(node, data, type) {
+	let anonymizeMenu = function (node, data, type) {
 		let tree = $.jstree.reference(data.reference);
 		let columnNode = tree.get_node(data.reference);
 		let tableNode = findParentTableOfColumn(tree, node); //tree.get_node(tree.get_node(node.parent).parent);
 		let schemaNode = findParentSchemaOfColumn(tree, node); //tree.get_node(tree.get_node(tree.get_node(node.parent).parent).parent);
 
 		let primaryKeyName = tree.get_node(tree.get_node(node.parent).children[0]).original.name;
-		tree.get_node(node.parent).children.forEach(c => {if (tree.get_node(c).original.key) {
-			primaryKeyName = tree.get_node(c).original.name;
-		}});
+		tree.get_node(node.parent).children.forEach(c => {
+			if (tree.get_node(c).original.key) {
+				primaryKeyName = tree.get_node(c).original.name;
+			}
+		});
 
 		let parameters = {};
 		parameters.datasource = $scope.selectedDatasource;
@@ -657,7 +664,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 		messageHub.postMessage('database.data.anonymize.column', parameters);
 	}
 
-	let findParentTableOfColumn = function(tree, node) {
+	let findParentTableOfColumn = function (tree, node) {
 		let maybe = tree.get_node(node.parent);
 		if (!maybe.original.type && "Columns" === maybe.text) {
 			maybe = tree.get_node(maybe.parent);
@@ -668,7 +675,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 		return findParentTableOfColumn(tree, maybe);
 	}
 
-	let findParentSchemaOfColumn = function(tree, node) {
+	let findParentSchemaOfColumn = function (tree, node) {
 		let maybe = tree.get_node(node.parent);
 		if (!maybe.original.type && "Columns" === maybe.text) {
 			maybe = tree.get_node(maybe.parent);
@@ -749,7 +756,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 			});
 	}
 
-	let expandColumn = function(parent, column) {
+	let expandColumn = function (parent, column) {
 		let position = 'last';
 		let icon = "sap-icon--grid";
 		if (column.key) {
@@ -1007,12 +1014,12 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 		},
 		true
 	);
-	
+
 	$scope.refresh = function () {
 		$scope.invalidateCache();
 		$scope.getDatabases();
 	}
-	
+
 	$scope.invalidateCache = function () {
 		$http.get(databasesInvalidateSvcUrl);
 	}
