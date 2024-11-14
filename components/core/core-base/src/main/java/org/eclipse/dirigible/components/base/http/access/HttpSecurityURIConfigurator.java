@@ -71,33 +71,33 @@ public class HttpSecurityURIConfigurator {
      */
     public static void configure(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((authz) -> //
-                authz.requestMatchers(PUBLIC_PATTERNS)
-                     .permitAll()
+        authz.requestMatchers(PUBLIC_PATTERNS)
+             .permitAll()
 
-                     // NOTE!: the order is important - role checks should be before just authenticated paths
+             // NOTE!: the order is important - role checks should be before just authenticated paths
 
-                     // Fine grained configurations
-                     .requestMatchers(HttpMethod.GET, "/services/bpm/bpm-processes/tasks")
-                     .authenticated()
+             // Fine grained configurations
+             .requestMatchers(HttpMethod.GET, "/services/bpm/bpm-processes/tasks")
+             .authenticated()
 
-                     .requestMatchers(HttpMethod.POST, "/services/bpm/bpm-processes/tasks/*")
-                     .authenticated()
+             .requestMatchers(HttpMethod.POST, "/services/bpm/bpm-processes/tasks/*")
+             .authenticated()
 
-                     // "DEVELOPER" role required
-                     .requestMatchers(DEVELOPER_PATTERNS)
-                     .hasRole(Roles.DEVELOPER.getRoleName())
+             // "DEVELOPER" role required
+             .requestMatchers(DEVELOPER_PATTERNS)
+             .hasRole(Roles.DEVELOPER.getRoleName())
 
-                     // "OPERATOR" role required
-                     .requestMatchers(OPERATOR_PATTERNS)
-                     .hasRole(Roles.OPERATOR.getRoleName())
+             // "OPERATOR" role required
+             .requestMatchers(OPERATOR_PATTERNS)
+             .hasRole(Roles.OPERATOR.getRoleName())
 
-                     // Authenticated
-                     .requestMatchers(AUTHENTICATED_PATTERNS)
-                     .authenticated()
+             // Authenticated
+             .requestMatchers(AUTHENTICATED_PATTERNS)
+             .authenticated()
 
-                     // Deny all other requests
-                     .anyRequest()
-                     .denyAll());
+             // Deny all other requests
+             .anyRequest()
+             .denyAll());
     }
 
 }
