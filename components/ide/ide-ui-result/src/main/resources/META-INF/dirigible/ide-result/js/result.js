@@ -65,9 +65,9 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
         debugger
         let sqlCommand = "SELECT * FROM \"" + event.schemaName + "\"" + "." + "\"" + event.tableName + "\";\n";
         messageHub.postMessage('database.sql.execute', sqlCommand);
-
-
-    })
+    },
+        true
+    );
 
     messageHub.onDidReceiveMessage("database.sql.execute", function (command) {
 
