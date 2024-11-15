@@ -39,6 +39,7 @@
                 <thead fd-table-header sticky="true">
                     <tr fd-table-row>
                         <th fd-table-header-cell ng-repeat="column in columns">{{column}}</th>
+                        <th fd-table-header-cell>Actions</th> <!-- Add an 'Actions' column for buttons -->
                     </tr>
                 </thead>
                 <tbody fd-table-body>
@@ -47,6 +48,10 @@
                             <div class="tdSingleLine">
                                 {{cell}}
                             </div>
+                        </td>
+                        <!-- Add a cell for the Edit button -->
+                        <td fd-table-cell>
+                            <button fd-button label="Edit" ng-click="editRow(row)">Edit</button>
                         </td>
                     </tr>
                 </tbody>
