@@ -32,12 +32,13 @@ public class TelemetryController {
 
     @GetMapping("/logs")
     ResponseEntity<String> logs() {
-        LOGGER.info("Some test log in telemetry endpoint");
+        LOGGER.info("Executing /logs");
         return ResponseEntity.ok("/logs: done");
     }
 
     @GetMapping("/otel-metric")
     ResponseEntity<String> meter() {
+        LOGGER.info("Executing /otel-metric");
         AttributeKey<String> attributeKey = AttributeKey.stringKey("my.custom.attribute");
         Attributes attributes = Attributes.of(attributeKey, "Some value");
         otelMetricCouter.add(1, attributes);
