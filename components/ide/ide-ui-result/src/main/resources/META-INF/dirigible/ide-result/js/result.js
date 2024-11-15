@@ -69,6 +69,41 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
         true
     );
 
+    $scope.editRow = function (row) {
+        const updatedValues = {};
+        for (let i = 0; i < $scope.columns.length; i++) {
+            const column = $scope.columns[i];
+            updatedValues[column] = row[i];
+        }
+
+        const editEvent = {
+            schemaName: "MY_SCHEMA",
+            tableName: "MY_TABLE",
+            primaryKey: "ID", // Replace with your primary key column name.
+            primaryKeyValue: row[0], // Assuming the first column is the primary key value.
+            updatedValues: updatedValues
+        };
+
+        messageHub.postMessage("database.sql.editRow", editEvent);
+    };
+
+    messageHub.onDidReceiveMessage("database.sql.editRow", function (event) {
+        const tableName = `"${event.schemaName}"."${event.tableName}"`;
+        const primaryKey = event.primaryKey; // Assume primary key column is provided in the event.
+        const primaryKeyValue = event.primaryKeyValue; // Value of the primary key for the row being edited.
+        const updatedValues = event.updatedValues; // Object with column names as keys and new values as values.
+
+        let setClauses = [];
+        for (let [column, value] of Object.entries(updatedValues)) {
+            setClauses.push(`"${column}" = '${value}'`);
+        }
+
+        const sqlCommand = `UPDATE ${tableName} SET ${setClauses.join(", ")} WHERE "${primaryKey}" = '${primaryKeyValue}';`;
+
+        // Send the constructed SQL query to execute
+        messageHub.postMessage("database.sql.execute", sqlCommand);
+    }, true);
+
     messageHub.onDidReceiveMessage("database.sql.execute", function (command) {
 
         $scope.state.error = false;
