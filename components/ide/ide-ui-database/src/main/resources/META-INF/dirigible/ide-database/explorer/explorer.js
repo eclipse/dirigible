@@ -171,7 +171,7 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							let topLevelSchemaName = tree.get_text(topLevelSchemaNode);
 
 							debugger
-							messageHub.postMessage('database.sql.showContent', {
+							messageHub.postMessage('result-view.database.sql.showContent', {
 								schemaName: topLevelSchemaName,
 								tableName: node.original.text
 							});
