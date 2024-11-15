@@ -6,11 +6,13 @@ import io.opentelemetry.api.common.AttributeKey;
 import io.opentelemetry.api.common.Attributes;
 import io.opentelemetry.api.metrics.LongCounter;
 import io.opentelemetry.api.metrics.Meter;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/telemetry")
@@ -21,9 +23,11 @@ public class TelemetryController {
 
     private final LongCounter otelMetricCouter;
     private final MeterRegistry micrometerMeterRegistry;
+    private final APIClient apiClient;
 
-    TelemetryController(OpenTelemetry openTelemetry, MeterRegistry micrometerMeterRegistry) {
+    TelemetryController(OpenTelemetry openTelemetry, MeterRegistry micrometerMeterRegistry, APIClient apiClient) {
         this.micrometerMeterRegistry = micrometerMeterRegistry;
+        this.apiClient = apiClient;
 
         Meter meter = openTelemetry.meterBuilder("dirigible")
                                    .setInstrumentationVersion("1.0.0")
@@ -57,6 +61,16 @@ public class TelemetryController {
                                .increment();
 
         return ResponseEntity.ok("/micrometer-counter: done");
+    }
+
+    @WithSpan("my_custom_span")
+    @GetMapping("/otel-span")
+    ResponseEntity<String> span(@RequestParam("data") String data) {
+        LOGGER.info("Executing /otel-span");
+
+        apiClient.makeCall("param1");
+
+        return ResponseEntity.ok("/otel-span: done");
     }
 
 }
