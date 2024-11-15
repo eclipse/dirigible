@@ -6,6 +6,7 @@ import io.opentelemetry.api.common.AttributeKey;
 import io.opentelemetry.api.common.Attributes;
 import io.opentelemetry.api.metrics.LongCounter;
 import io.opentelemetry.api.metrics.Meter;
+import io.opentelemetry.instrumentation.annotations.SpanAttribute;
 import io.opentelemetry.instrumentation.annotations.WithSpan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +66,7 @@ public class TelemetryController {
 
     @WithSpan("my_custom_span")
     @GetMapping("/otel-span")
-    ResponseEntity<String> span(@RequestParam("data") String data) throws InterruptedException {
+    ResponseEntity<String> span(@SpanAttribute("data_value") @RequestParam("data") String data) throws InterruptedException {
         LOGGER.info("Executing /otel-span");
 
         apiClient.makeCall("param1");
