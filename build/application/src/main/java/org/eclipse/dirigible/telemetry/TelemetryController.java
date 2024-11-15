@@ -1,5 +1,6 @@
 package org.eclipse.dirigible.telemetry;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import io.opentelemetry.api.OpenTelemetry;
 import io.opentelemetry.api.common.AttributeKey;
 import io.opentelemetry.api.common.Attributes;
@@ -19,13 +20,16 @@ public class TelemetryController {
     private static final Logger LOGGER = LoggerFactory.getLogger(TelemetryController.class);
 
     private final LongCounter otelMetricCouter;
+    private final MeterRegistry micrometerMeterRegistry;
 
-    TelemetryController(OpenTelemetry openTelemetry) {
-        Meter meter = openTelemetry.meterBuilder("my-custom-metrics")
+    TelemetryController(OpenTelemetry openTelemetry, MeterRegistry micrometerMeterRegistry) {
+        this.micrometerMeterRegistry = micrometerMeterRegistry;
+
+        Meter meter = openTelemetry.meterBuilder("dirigible")
                                    .setInstrumentationVersion("1.0.0")
                                    .build();
-        otelMetricCouter = meter.counterBuilder("otel-metric-counter")
-                                .setDescription("Custom otel counter")
+        otelMetricCouter = meter.counterBuilder("otel_calls_counter")
+                                .setDescription("Custom otel counter meter")
                                 .setUnit("1")
                                 .build();
     }
@@ -36,13 +40,23 @@ public class TelemetryController {
         return ResponseEntity.ok("/logs: done");
     }
 
-    @GetMapping("/otel-metric")
+    @GetMapping("/otel-metric-counter")
     ResponseEntity<String> meter() {
-        LOGGER.info("Executing /otel-metric");
+        LOGGER.info("Executing /otel-metric-counter");
         AttributeKey<String> attributeKey = AttributeKey.stringKey("my.custom.attribute");
         Attributes attributes = Attributes.of(attributeKey, "Some value");
         otelMetricCouter.add(1, attributes);
 
-        return ResponseEntity.ok("/otel-metric: done");
+        return ResponseEntity.ok("/otel-metric-counter: done");
     }
+
+    @GetMapping("/micrometer-counter")
+    ResponseEntity<String> micrometerCounter() {
+        LOGGER.info("Executing /micrometer-counter");
+        micrometerMeterRegistry.counter("micrometer_calls_counter")
+                               .increment();
+
+        return ResponseEntity.ok("/micrometer-counter: done");
+    }
+
 }
