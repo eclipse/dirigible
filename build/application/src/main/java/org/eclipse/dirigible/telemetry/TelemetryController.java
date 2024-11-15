@@ -65,7 +65,7 @@ public class TelemetryController {
 
     @WithSpan("my_custom_span")
     @GetMapping("/otel-span")
-    ResponseEntity<String> span(@RequestParam("data") String data) {
+    ResponseEntity<String> span(@RequestParam("data") String data) throws InterruptedException {
         LOGGER.info("Executing /otel-span");
 
         apiClient.makeCall("param1");
