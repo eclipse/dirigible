@@ -74,4 +74,12 @@ public class TelemetryController {
         return ResponseEntity.ok("/otel-span: done");
     }
 
+    @WithSpan("my_custom_span_with_failure")
+    @GetMapping("/otel-span-failure")
+    ResponseEntity<String> spanWithFailure() {
+        LOGGER.info("Executing /otel-span-failure");
+
+        throw new IllegalStateException("Some failure");
+    }
+
 }
