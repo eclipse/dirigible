@@ -40,40 +40,37 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
     $scope.selectedRowOriginal = null;
 
     $scope.editRow = function (row) {
-        console.log("Row object:", row);  // Log the entire row object to check its structure
-        $scope.selectedRow = angular.copy(row); // Copy the row data for editing
+        console.log("Row object:", row);
+        $scope.selectedRow = angular.copy(row);
         $scope.selectedRowOriginal = angular.copy(row);
 
-        console.log("Selected Row:", $scope.selectedRow); // Check if selectedRow is populated
+        console.log("Selected Row:", $scope.selectedRow);
 
         $scope.isEditDialogOpen = true;
     };
 
 
     $scope.saveRow = function () {
-        // Check that selectedRow is defined before proceeding
         if (!$scope.selectedRow) {
             console.error("No row selected for editing.");
             return;
         }
 
-        // Now, you can construct the SQL command
         const updatedData = $scope.selectedRow;
         const setClauses = Object.keys(updatedData)
-            .filter(key => updatedData[key] !== $scope.selectedRowOriginal.data[key]) // Compare with original data
-            .map(key => `"${key}" = '${updatedData[key]}'`) // Format: "columnName" = 'newValue'
+            .filter(key => updatedData[key] !== $scope.selectedRowOriginal[key])
+            .map(key => `"${key}" = '${updatedData[key]}'`)
             .join(", ");
 
-        // Ensure there's data to update
         if (!setClauses) {
             console.log("No changes to update.");
             return;
         }
 
-        // Construct the WHERE clause (use primary key or unique identifier)
-        const condition = `"id" = '${updatedData.id}'`; // Replace "id" with your primary key column
+        debugger
+        const primaryKeyColumn = findIdKey(updatedData);
+        const condition = `"${primaryKeyColumn}" = '${updatedData[primaryKeyColumn]}'`;
 
-        // Construct the final SQL command
         const sqlCommand =
             `UPDATE "${$scope.schemaName}"."${$scope.tableName}"\n` +
             `SET ${setClauses}\n` +
@@ -81,9 +78,8 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
 
         executeQuery({ data: sqlCommand });
 
-        $scope.isEditDialogOpen = false; // Close the dialog after saving
+        $scope.isEditDialogOpen = false;
     };
-
 
     $scope.closeEditDialog = function () {
         $scope.isEditDialogOpen = false;
@@ -92,19 +88,15 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
     $scope.deleteRow = function (row) {
         $scope.isDeleteDialogOpen = true;
         $scope.selectedRow = angular.copy(row);
-        const rowData = row.data;
+        const rowData = row;
 
-        // Construct the WHERE clause (use primary key or unique identifier)
-        const condition = `"id" = '${rowData.id}'`; // Replace "id" with your primary key column
+        const primaryKeyColumn = findIdKey(rowData);
+        const condition = `"${primaryKeyColumn}" = '${rowData[primaryKeyColumn]}'`;
 
-        // Construct the DELETE query
         const sqlCommand =
             `DELETE FROM "${$scope.schemaName}"."${$scope.tableName}"\n` +
             `WHERE ${condition};`;
 
-        console.log("Generated SQL Command:", sqlCommand);
-
-        // Execute the query
         executeQuery({ data: sqlCommand });
     };
 
@@ -120,6 +112,11 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
         $scope.isDeleteDialogOpen = false;
         $scope.selectedRow = null;
     };
+
+    function findIdKey(dataObject) {
+        const idKey = Object.keys(dataObject).find(key => key.toUpperCase().includes('ID'));
+        return idKey;
+    }
 
     $http.get("", { headers: { "X-CSRF-Token": "Fetch" } }).then(function (response) {
         csrfToken = response.headers()["x-csrf-token"];
