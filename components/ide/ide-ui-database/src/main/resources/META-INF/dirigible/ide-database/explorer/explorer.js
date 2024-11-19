@@ -170,7 +170,6 @@ database.controller('DatabaseController', function ($scope, $http, messageHub) {
 							let topLevelSchemaNode = node.parents.find(parentId => tree.get_node(parentId).original.kind === 'schema');
 							let topLevelSchemaName = tree.get_text(topLevelSchemaNode);
 
-							debugger
 							messageHub.postMessage('result-view.database.sql.showContent', {
 								schemaName: topLevelSchemaName,
 								tableName: node.original.text

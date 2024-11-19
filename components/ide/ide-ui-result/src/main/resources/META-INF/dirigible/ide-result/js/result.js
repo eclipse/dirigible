@@ -31,6 +31,95 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
 
     $scope.procedureResults = [];
     $scope.hasMultipleProcedureResults = false;
+    $scope.isEditDialogOpen = false;
+    $scope.isDeleteDialogOpen = false;
+    // $scope.isShowContent = false;
+    $scope.schemaName = null;
+    $scope.tableName = null;
+    $scope.selectedRow = null;
+    $scope.selectedRowOriginal = null;
+
+    $scope.editRow = function (row) {
+        console.log("Row object:", row);  // Log the entire row object to check its structure
+        $scope.selectedRow = angular.copy(row); // Copy the row data for editing
+        $scope.selectedRowOriginal = angular.copy(row);
+
+        console.log("Selected Row:", $scope.selectedRow); // Check if selectedRow is populated
+
+        $scope.isEditDialogOpen = true;
+    };
+
+
+    $scope.saveRow = function () {
+        // Check that selectedRow is defined before proceeding
+        if (!$scope.selectedRow) {
+            console.error("No row selected for editing.");
+            return;
+        }
+
+        // Now, you can construct the SQL command
+        const updatedData = $scope.selectedRow;
+        const setClauses = Object.keys(updatedData)
+            .filter(key => updatedData[key] !== $scope.selectedRowOriginal.data[key]) // Compare with original data
+            .map(key => `"${key}" = '${updatedData[key]}'`) // Format: "columnName" = 'newValue'
+            .join(", ");
+
+        // Ensure there's data to update
+        if (!setClauses) {
+            console.log("No changes to update.");
+            return;
+        }
+
+        // Construct the WHERE clause (use primary key or unique identifier)
+        const condition = `"id" = '${updatedData.id}'`; // Replace "id" with your primary key column
+
+        // Construct the final SQL command
+        const sqlCommand =
+            `UPDATE "${$scope.schemaName}"."${$scope.tableName}"\n` +
+            `SET ${setClauses}\n` +
+            `WHERE ${condition};`;
+
+        executeQuery({ data: sqlCommand });
+
+        $scope.isEditDialogOpen = false; // Close the dialog after saving
+    };
+
+
+    $scope.closeEditDialog = function () {
+        $scope.isEditDialogOpen = false;
+    };
+
+    $scope.deleteRow = function (row) {
+        $scope.isDeleteDialogOpen = true;
+        $scope.selectedRow = angular.copy(row);
+        const rowData = row.data;
+
+        // Construct the WHERE clause (use primary key or unique identifier)
+        const condition = `"id" = '${rowData.id}'`; // Replace "id" with your primary key column
+
+        // Construct the DELETE query
+        const sqlCommand =
+            `DELETE FROM "${$scope.schemaName}"."${$scope.tableName}"\n` +
+            `WHERE ${condition};`;
+
+        console.log("Generated SQL Command:", sqlCommand);
+
+        // Execute the query
+        executeQuery({ data: sqlCommand });
+    };
+
+    $scope.confirmDelete = function () {
+        const index = $scope.rows.indexOf($scope.selectedRow);
+        if (index > -1) {
+            $scope.rows.splice(index, 1);
+        }
+        $scope.closeDeleteDialog();
+    };
+
+    $scope.closeDeleteDialog = function () {
+        $scope.isDeleteDialogOpen = false;
+        $scope.selectedRow = null;
+    };
 
     $http.get("", { headers: { "X-CSRF-Token": "Fetch" } }).then(function (response) {
         csrfToken = response.headers()["x-csrf-token"];
@@ -62,7 +151,7 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
     };
 
     function executeQuery(command) {
-        debugger
+
         $scope.state.error = false;
         $scope.showProgress();
         let url = "/services/data/" + $scope.datasource;
@@ -262,9 +351,10 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
     }
 
     messageHub.onDidReceiveMessage("database.sql.showContent", function (event) {
-        debugger
-        console.log("Event Data:", event.data);
+
         let data = event.data;
+        $scope.schemaName = data.schemaName;
+        $scope.tableName = data.tableName;
         let sqlCommand = "SELECT * FROM \"" + data.schemaName + "\"" + "." + "\"" + data.tableName + "\";\n";
         //messageHub.postMessage('database.sql.execute', sqlCommand, true);
         executeQuery({ data: sqlCommand });
