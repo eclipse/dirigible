@@ -8,6 +8,8 @@ import io.opentelemetry.api.metrics.LongCounter;
 import io.opentelemetry.api.metrics.Meter;
 import io.opentelemetry.instrumentation.annotations.SpanAttribute;
 import io.opentelemetry.instrumentation.annotations.WithSpan;
+import org.eclipse.dirigible.components.tenants.service.TenantService;
+import org.eclipse.dirigible.components.tenants.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -25,10 +27,15 @@ public class TelemetryController {
     private final LongCounter otelMetricCouter;
     private final MeterRegistry micrometerMeterRegistry;
     private final APIClient apiClient;
+    private final TenantService tenantService;
+    private final UserService userService;
 
-    TelemetryController(OpenTelemetry openTelemetry, MeterRegistry micrometerMeterRegistry, APIClient apiClient) {
+    TelemetryController(OpenTelemetry openTelemetry, MeterRegistry micrometerMeterRegistry, APIClient apiClient,
+            TenantService tenantService, UserService userService) {
         this.micrometerMeterRegistry = micrometerMeterRegistry;
         this.apiClient = apiClient;
+        this.tenantService = tenantService;
+        this.userService = userService;
 
         Meter meter = openTelemetry.meterBuilder("dirigible")
                                    .setInstrumentationVersion("1.0.0")
@@ -68,6 +75,9 @@ public class TelemetryController {
     @GetMapping("/otel-span")
     ResponseEntity<String> span(@SpanAttribute("data_value") @RequestParam("data") String data) throws Exception {
         LOGGER.info("Executing /otel-span");
+
+        userService.getAll();
+        tenantService.getAll();
 
         apiClient.makeCall("param1");
 
