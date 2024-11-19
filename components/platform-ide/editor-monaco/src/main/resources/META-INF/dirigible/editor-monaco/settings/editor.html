@@ -1,0 +1,156 @@
+<!--
+
+    Copyright (c) 2010-2024 Eclipse Dirigible contributors
+
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v2.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v20.html
+
+    SPDX-FileCopyrightText: Eclipse Dirigible contributors
+    SPDX-License-Identifier: EPL-2.0
+
+-->
+<!DOCTYPE HTML>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="settings" ng-controller="SettingsController">
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
+		<title config-title></title>
+		<script type="text/javascript" src="/services/web/editor-monaco/configs/editor-settings.js"></script>
+		<script type="text/javascript" src="/services/js/platform-core/services/loader.js?ids=view-js,cookies"></script>
+		<link type="text/css" rel="stylesheet" href="/services/js/platform-core/services/loader.js?id=view-css" />
+	</head>
+
+	<body class="bk-vbox">
+		<bk-toolbar has-title="true">
+			<bk-toolbar-title>Code Editor</bk-toolbar-title>
+			<bk-toolbar-spacer></bk-toolbar-spacer>
+			<bk-button label="Reset all" state="negative" title="Reset all"
+				aria-label="reset all code editor settings button" ng-click="resetAll()">
+			</bk-button>
+		</bk-toolbar>
+		<bk-scrollbar class="bk-center--horizontal bk-padding bk-box--items-start">
+			<div class="bk-vbox bk-box--gap-xl bk-full-width bk-restrict-width--sm">
+				<bk-card card-type="list" aria-roledescription="code editor setting section">
+					<bk-card-content aria-roledescription="Card content">
+						<bk-list>
+							<bk-list-item interactive="::true">
+								<bk-list-title id="afl">Auto-Formatting</bk-list-title>
+								<bk-switch class="bk-margin-inline--none" switch-id="afsw" switch-labelledby="afl"
+									ng-model="switches.autoFormat" ng-change="autoFormatChange()">
+								</bk-switch>
+							</bk-list-item>
+							<bk-list-item interactive="::true" class="bk-no-border--bottom">
+								<bk-list-title id="arl">Auto-Reveal Active File</bk-list-title>
+								<bk-switch class="bk-margin-inline--none" switch-id="arsw" switch-labelledby="arl"
+									ng-model="switches.autoReveal" ng-change="autoRevealChange()">
+								</bk-switch>
+							</bk-list-item>
+						</bk-list>
+					</bk-card-content>
+				</bk-card>
+
+				<div class="bk-vbox bk-box--gap">
+					<div class="bk-hbox bk-box--space-between bk-box--items-center">
+						<span class="fd-text"><b>Auto-format excluded files</b></span>
+						<bk-button glyph="sap-icon--delete" label="Clear all" title="Clear all"
+							ng-disabled="!autoFormatExcluded.length" ng-click="clearExcluded()">
+						</bk-button>
+					</div>
+					<bk-card card-type="list" aria-roledescription="auto format exluded files section">
+						<bk-card-content aria-roledescription="Card content">
+							<div class="bk-padding" style="text-align: center;" ng-if="!autoFormatExcluded.length">
+								No exluded files
+							</div>
+							<bk-list byline="true" ng-if="autoFormatExcluded.length">
+								<bk-list-item interactive="::true"
+									ng-repeat="file in autoFormatExcluded track by $index"
+									class="{{$last ? 'bk-no-border--bottom' : ''}}">
+									<bk-list-content
+										item-title="{{file.substring(file.lastIndexOf('/') + 1, file.length)}}">{{file}}
+									</bk-list-content>
+									<bk-button bk-list-button state="transparent" glyph="sap-icon--delete"
+										aria-label="remove" ng-click="clearExcluded(file)">
+									</bk-button>
+								</bk-list-item>
+							</bk-list>
+						</bk-card-content>
+					</bk-card>
+				</div>
+			</div>
+		</bk-scrollbar>
+		<script>
+			const settings = angular.module('settings', ['blimpKit', 'platformView']);
+			settings.controller('SettingsController', ($scope, $window) => {
+				const messageHub = new MessageHubApi();
+				const autoFormatKey = `${brandingInfo.keyPrefix}.code-editor.autoFormat`;
+				const autoFormatExcludedKey = `${brandingInfo.keyPrefix}.code-editor.autoFormat.excluded`;
+				const autoRevealKey = `${brandingInfo.keyPrefix}.code-editor.autoReveal`;
+
+				$scope.autoFormatExcluded = JSON.parse($window.localStorage.getItem(autoFormatExcludedKey) || '[]');
+
+				function getAutoFormat() {
+					let autoFormat = $window.localStorage.getItem(autoFormatKey);
+					if (autoFormat === null) {
+						autoFormat = true;
+						$window.localStorage.setItem(autoFormatKey, 'true');
+					} else autoFormat = JSON.parse(autoFormat);
+					return autoFormat;
+				}
+
+				function getAutoReveal() {
+					let autoReveal = $window.localStorage.getItem(autoRevealKey);
+					if (autoReveal === null) {
+						autoReveal = true;
+						$window.localStorage.setItem(autoRevealKey, 'true');
+					} else autoReveal = JSON.parse(autoReveal);
+					return autoReveal;
+				}
+
+				$scope.switches = {
+					autoFormat: getAutoFormat(),
+					autoReveal: getAutoReveal(),
+				};
+
+				$scope.autoFormatChange = () => {
+					$window.localStorage.setItem(autoFormatKey, `${$scope.switches.autoFormat}`);
+				};
+				$scope.autoRevealChange = () => {
+					$window.localStorage.setItem(autoRevealKey, `${$scope.switches.autoReveal}`);
+				};
+
+				$scope.clearExcluded = (file) => {
+					if (file) $scope.autoFormatExcluded.splice($scope.autoFormatExcluded.indexOf(file), 1);
+					else $scope.autoFormatExcluded.length = 0;
+					$window.localStorage.setItem(autoFormatExcludedKey, JSON.stringify($scope.autoFormatExcluded));
+					messageHub.postMessage({
+						topic: 'code-editor.settings.update',
+						data: { fromSettings: true, fileName: file }
+					});
+				};
+
+				$scope.resetAll = () => {
+					$window.localStorage.setItem(autoFormatKey, 'true');
+					$window.localStorage.setItem(autoRevealKey, 'true');
+				};
+
+				const updateListener = messageHub.addMessageListener({ topic: 'code-editor.settings.update', handler: (data) => {
+					if (!data.fromSettings) {
+						$scope.$evalAsync(() => {
+							$scope.autoFormatExcluded = JSON.parse($window.localStorage.getItem(autoFormatExcludedKey) || '[]');
+						});
+					}
+				} });
+
+				$scope.$on('$destroy', () => {
+					messageHub.removeMessageListener(updateListener);
+				});
+			});
+		</script>
+		<theme></theme>
+	</body>
+
+</html>

@@ -192,11 +192,25 @@
 		<module>platform/platform-core</module>
 		<module>platform/platform-branding</module>
 		<module>platform/platform-about</module>
+		<module>platform/perspective-settings</module>
 
 		<!-- Platform IDE -->
 		<module>platform-ide/shell-ide</module>
 		<module>platform-ide/perspective-workbench</module>
 		<module>platform-ide/view-welcome</module>
+		<module>platform-ide/view-search</module>
+		<module>platform-ide/view-projects</module>
+		<module>platform-ide/view-import</module>
+		<module>platform-ide/service-workspace</module>
+		<module>platform-ide/service-transport</module>
+		<module>platform-ide/service-template</module>
+		<module>platform-ide/service-repository</module>
+		<module>platform-ide/service-registry</module>
+		<module>platform-ide/service-publisher</module>
+		<module>platform-ide/service-generate</module>
+		<module>platform-ide/service-actions</module>
+		<module>platform-ide/editor-monaco</module>
+		<module>platform-ide/editor-monaco-extensions</module>
 
 		<!-- Resources -->
 		<module>resources/resources-core</module>
@@ -1072,6 +1086,7 @@
 				<artifactId>dirigible-components-shell-ide</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-components-perspective-workbench</artifactId>
@@ -1079,7 +1094,80 @@
 			</dependency>
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-perspective-settings</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-components-view-welcome</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-view-search</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-view-projects</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-view-import</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-service-workspace</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-service-transport</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-service-template</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-service-repository</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-service-registry</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-service-publisher</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-service-generate</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-service-actions</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-editor-monaco</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-editor-monaco-extensions</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			

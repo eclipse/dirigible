@@ -427,6 +427,8 @@
 									**/src/main/resources/META-INF/dirigible/ide-bpm/**</exclude>
 								<exclude>
 									**/src/main/resources/META-INF/dirigible/ide-monaco/**</exclude>
+									<exclude>
+									**/src/main/resources/META-INF/dirigible/editor-monaco/**</exclude>
 								<exclude>
 									**/src/main/resources/META-INF/dirigible/ide-swagger/**</exclude>
 								<exclude>
