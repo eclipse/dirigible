@@ -1,4 +1,4 @@
-package org.eclipse.dirigible.telemetry;
+package org.eclipse.dirigible.open.telemetry;
 
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.OpenTelemetry;
@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Profile;
 
 @Profile("!open-telemetry")
 @Configuration
-public class TelemetryConfiguration {
+public class OpenTelemetryConfiguration {
 
     @Bean
     OpenTelemetry provideOpenTelemetry() {

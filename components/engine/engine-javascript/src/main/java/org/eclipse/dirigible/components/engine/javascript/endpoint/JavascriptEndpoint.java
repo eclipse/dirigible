@@ -9,15 +9,8 @@
  */
 package org.eclipse.dirigible.components.engine.javascript.endpoint;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import io.opentelemetry.instrumentation.annotations.SpanAttribute;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
 import org.eclipse.dirigible.graalium.core.JavascriptSourceProvider;
@@ -33,17 +26,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
 
 /**
  * The Class JavascriptEndpoint.
@@ -57,14 +49,16 @@ public class JavascriptEndpoint extends BaseEndpoint {
 
     /** The Constant HTTP_PATH_MATCHER. */
     private static final String HTTP_PATH_MATCHER = "/{projectName}/{*projectFilePath}";
-
-
+    /** The Constant CJS. */
+    private static final String CJS = ".cjs/";
+    /** The Constant MJS. */
+    private static final String MJS = ".mjs/";
+    /** The Constant JS. */
+    private static final String JS = ".js/";
     /** The javascript service. */
     private final JavascriptService javascriptService;
-
     /** The repository. */
     private final IRepository repository;
-
     /** The source provider. */
     private final JavascriptSourceProvider sourceProvider = new DirigibleSourceProvider();
 
@@ -78,6 +72,43 @@ public class JavascriptEndpoint extends BaseEndpoint {
     public JavascriptEndpoint(JavascriptService javascriptService, IRepository repository) {
         this.javascriptService = javascriptService;
         this.repository = repository;
+    }
+
+    /**
+     * The Dts.
+     */
+    record Dts(String content, String moduleName, String filePath) {
+
+        /**
+         * From dts path.
+         *
+         * @param dtsDirRoot the dts dir root
+         * @param dtsPath the dts path
+         * @return the dts
+         */
+        static Dts fromDtsPath(Path dtsDirRoot, Path dtsPath) {
+            String content = readAllText(dtsPath);
+            Path relativePath = dtsDirRoot.relativize(dtsPath);
+            String filePath = "file:///node_modules/sdk/" + relativePath;
+            String moduleName = ("sdk/" + relativePath).replace("index.d.ts", "")
+                                                       .replace(".d.ts", "");
+            return new Dts(content, moduleName, filePath);
+        }
+
+        /**
+         * Read all text.
+         *
+         * @param path the path
+         * @return the string
+         */
+        private static String readAllText(Path path) {
+            try {
+                byte[] bytes = Files.readAllBytes(path);
+                return new String(bytes, StandardCharsets.UTF_8);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     /**
@@ -114,10 +145,153 @@ public class JavascriptEndpoint extends BaseEndpoint {
      * @param params the params
      * @return the response
      */
+    @WithSpan("java_script_endpoint")
     @GetMapping(HTTP_PATH_MATCHER)
-    public ResponseEntity<?> get(@PathVariable("projectName") String projectName, @PathVariable("projectFilePath") String projectFilePath,
+    public ResponseEntity<?> get(@SpanAttribute("projectName") @PathVariable("projectName") String projectName,
+            @SpanAttribute("projectFilePath") @PathVariable("projectFilePath") String projectFilePath,
             @Nullable @RequestParam(required = false) MultiValueMap<String, String> params) {
         return executeJavaScript(projectName, projectFilePath, params, null);
+    }
+
+    /**
+     * Execute java script.
+     *
+     * @param projectName the project name
+     * @param projectFilePath the project file path
+     * @param params the params
+     * @param files the files
+     * @return the response
+     */
+    private ResponseEntity<?> executeJavaScript(String projectName, String projectFilePath, MultiValueMap<String, String> params,
+            MultipartFile[] files) {
+        String projectFilePathParam = extractPathParam(projectFilePath);
+        projectFilePath = extractProjectFilePath(projectFilePath);
+        return executeJavaScript(projectName, projectFilePath, projectFilePathParam, params, files);
+    }
+
+    /**
+     * Extract project file path.
+     *
+     * @param projectFilePath the project file path
+     * @return the string
+     */
+    protected String extractProjectFilePath(String projectFilePath) {
+        if (projectFilePath.indexOf(JS) > 0) {
+            projectFilePath = projectFilePath.substring(0, projectFilePath.indexOf(JS) + 3);
+        } else if (projectFilePath.indexOf(MJS) > 0) {
+            projectFilePath = projectFilePath.substring(0, projectFilePath.indexOf(MJS) + 4);
+        } else if (projectFilePath.indexOf(CJS) > 0) {
+            projectFilePath = projectFilePath.substring(0, projectFilePath.indexOf(CJS) + 4);
+        }
+        return projectFilePath;
+    }
+
+    /**
+     * Extract path param.
+     *
+     * @param projectFilePath the project file path
+     * @return the string
+     */
+    protected String extractPathParam(String projectFilePath) {
+        String projectFilePathParam = "";
+        if (projectFilePath.indexOf(JS) > 0) {
+            projectFilePathParam = projectFilePath.substring(projectFilePath.indexOf(JS) + 3);
+        } else if (projectFilePath.indexOf(MJS) > 0) {
+            projectFilePathParam = projectFilePath.substring(projectFilePath.indexOf(MJS) + 4);
+        } else if (projectFilePath.indexOf(CJS) > 0) {
+            projectFilePathParam = projectFilePath.substring(projectFilePath.indexOf(CJS) + 4);
+        }
+        return projectFilePathParam;
+    }
+
+    /**
+     * Execute java script.
+     *
+     * @param projectName the project name
+     * @param projectFilePath the project file path
+     * @param projectFilePathParam the project file path param
+     * @param params the params
+     * @param files the files
+     * @return the response
+     */
+    protected ResponseEntity<?> executeJavaScript(String projectName, String projectFilePath, String projectFilePathParam,
+            MultiValueMap<String, String> params, MultipartFile[] files) {
+        try {
+            if (!isValid(projectName) || !isValid(projectFilePath)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+            Map<Object, Object> context = new HashMap<Object, Object>();
+            if (params != null) {
+                context.put("params", params);
+            }
+            List<MultipartFile> filesList = new ArrayList<MultipartFile>();
+            if (files != null) {
+                Collections.addAll(filesList, files);
+                context.put("files", filesList);
+            }
+
+            Object result =
+                    getJavascriptHandler().handleRequest(projectName, normalizePath(projectFilePath), normalizePath(projectFilePathParam),
+                            context, ((MultiValueMap<String, String>) context.get("params")).get("debug") != null);
+            return ResponseEntity.ok(result);
+        } catch (RepositoryNotFoundException e) {
+            String message = e.getMessage() + ". Try to publish the service before execution.";
+            throw new RepositoryNotFoundException(message, e);
+        }
+    }
+
+    /**
+     * Gets the javascript handler.
+     *
+     * @return the javascript handler
+     */
+    protected JavascriptService getJavascriptHandler() {
+        return javascriptService;
+    }
+
+    /**
+     * Checks if is valid.
+     *
+     * @param inputPath the input path
+     * @return true, if is valid
+     */
+    public boolean isValid(String inputPath) {
+        String registryPath = getDirigibleWorkingDirectory().toString();
+        String normalizedInputPath = java.nio.file.Path.of(inputPath)
+                                                       .normalize()
+                                                       .toString();
+        File file = new File(registryPath, normalizedInputPath);
+        try {
+            return file.getCanonicalPath()
+                       .startsWith(registryPath);
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Gets the dirigible working directory.
+     *
+     * @return the dirigible working directory
+     */
+    protected java.nio.file.Path getDirigibleWorkingDirectory() {
+        String publicRegistryPath = repository.getInternalResourcePath(IRepositoryStructure.PATH_REGISTRY_PUBLIC);
+        return java.nio.file.Path.of(publicRegistryPath);
+    }
+
+    /**
+     * Normalize path.
+     *
+     * @param path the path
+     * @return the string
+     */
+    protected String normalizePath(String path) {
+        if (path != null) {
+            if (path.startsWith(IRepository.SEPARATOR)) {
+                return path.substring(1);
+            }
+        }
+        return path;
     }
 
     /**
@@ -209,195 +383,5 @@ public class JavascriptEndpoint extends BaseEndpoint {
             @PathVariable("projectFilePath") String projectFilePath,
             @Nullable @RequestParam(required = false) MultiValueMap<String, String> params) {
         return executeJavaScript(projectName, projectFilePath, params, null);
-    }
-
-    /**
-     * Execute java script.
-     *
-     * @param projectName the project name
-     * @param projectFilePath the project file path
-     * @param params the params
-     * @param files the files
-     * @return the response
-     */
-    private ResponseEntity<?> executeJavaScript(String projectName, String projectFilePath, MultiValueMap<String, String> params,
-            MultipartFile[] files) {
-        String projectFilePathParam = extractPathParam(projectFilePath);
-        projectFilePath = extractProjectFilePath(projectFilePath);
-        return executeJavaScript(projectName, projectFilePath, projectFilePathParam, params, files);
-    }
-
-
-    /** The Constant CJS. */
-    private static final String CJS = ".cjs/";
-
-    /** The Constant MJS. */
-    private static final String MJS = ".mjs/";
-
-    /** The Constant JS. */
-    private static final String JS = ".js/";
-
-    /**
-     * Extract project file path.
-     *
-     * @param projectFilePath the project file path
-     * @return the string
-     */
-    protected String extractProjectFilePath(String projectFilePath) {
-        if (projectFilePath.indexOf(JS) > 0) {
-            projectFilePath = projectFilePath.substring(0, projectFilePath.indexOf(JS) + 3);
-        } else if (projectFilePath.indexOf(MJS) > 0) {
-            projectFilePath = projectFilePath.substring(0, projectFilePath.indexOf(MJS) + 4);
-        } else if (projectFilePath.indexOf(CJS) > 0) {
-            projectFilePath = projectFilePath.substring(0, projectFilePath.indexOf(CJS) + 4);
-        }
-        return projectFilePath;
-    }
-
-    /**
-     * Extract path param.
-     *
-     * @param projectFilePath the project file path
-     * @return the string
-     */
-    protected String extractPathParam(String projectFilePath) {
-        String projectFilePathParam = "";
-        if (projectFilePath.indexOf(JS) > 0) {
-            projectFilePathParam = projectFilePath.substring(projectFilePath.indexOf(JS) + 3);
-        } else if (projectFilePath.indexOf(MJS) > 0) {
-            projectFilePathParam = projectFilePath.substring(projectFilePath.indexOf(MJS) + 4);
-        } else if (projectFilePath.indexOf(CJS) > 0) {
-            projectFilePathParam = projectFilePath.substring(projectFilePath.indexOf(CJS) + 4);
-        }
-        return projectFilePathParam;
-    }
-
-    /**
-     * Execute java script.
-     *
-     * @param projectName the project name
-     * @param projectFilePath the project file path
-     * @param projectFilePathParam the project file path param
-     * @param params the params
-     * @param files the files
-     * @return the response
-     */
-    protected ResponseEntity<?> executeJavaScript(String projectName, String projectFilePath, String projectFilePathParam,
-            MultiValueMap<String, String> params, MultipartFile[] files) {
-        try {
-            if (!isValid(projectName) || !isValid(projectFilePath)) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-            }
-            Map<Object, Object> context = new HashMap<Object, Object>();
-            if (params != null) {
-                context.put("params", params);
-            }
-            List<MultipartFile> filesList = new ArrayList<MultipartFile>();
-            if (files != null) {
-                for (MultipartFile file : files) {
-                    filesList.add(file);
-                }
-                context.put("files", filesList);
-            }
-
-            Object result =
-                    getJavascriptHandler().handleRequest(projectName, normalizePath(projectFilePath), normalizePath(projectFilePathParam),
-                            context, ((MultiValueMap<String, String>) context.get("params")).get("debug") != null);
-            return ResponseEntity.ok(result);
-        } catch (RepositoryNotFoundException e) {
-            String message = e.getMessage() + ". Try to publish the service before execution.";
-            throw new RepositoryNotFoundException(message, e);
-        }
-    }
-
-    /**
-     * Gets the javascript handler.
-     *
-     * @return the javascript handler
-     */
-    protected JavascriptService getJavascriptHandler() {
-        return javascriptService;
-    }
-
-    /**
-     * Gets the dirigible working directory.
-     *
-     * @return the dirigible working directory
-     */
-    protected java.nio.file.Path getDirigibleWorkingDirectory() {
-        String publicRegistryPath = repository.getInternalResourcePath(IRepositoryStructure.PATH_REGISTRY_PUBLIC);
-        return java.nio.file.Path.of(publicRegistryPath);
-    }
-
-    /**
-     * Checks if is valid.
-     *
-     * @param inputPath the input path
-     * @return true, if is valid
-     */
-    public boolean isValid(String inputPath) {
-        String registryPath = getDirigibleWorkingDirectory().toString();
-        String normalizedInputPath = java.nio.file.Path.of(inputPath)
-                                                       .normalize()
-                                                       .toString();
-        File file = new File(registryPath, normalizedInputPath);
-        try {
-            return file.getCanonicalPath()
-                       .startsWith(registryPath);
-        } catch (IOException e) {
-            return false;
-        }
-    }
-
-    /**
-     * Normalize path.
-     *
-     * @param path the path
-     * @return the string
-     */
-    protected String normalizePath(String path) {
-        if (path != null) {
-            if (path.startsWith(IRepository.SEPARATOR)) {
-                return path.substring(1);
-            }
-        }
-        return path;
-    }
-
-    /**
-     * The Dts.
-     */
-    record Dts(String content, String moduleName, String filePath) {
-
-        /**
-         * From dts path.
-         *
-         * @param dtsDirRoot the dts dir root
-         * @param dtsPath the dts path
-         * @return the dts
-         */
-        static Dts fromDtsPath(Path dtsDirRoot, Path dtsPath) {
-            String content = readAllText(dtsPath);
-            Path relativePath = dtsDirRoot.relativize(dtsPath);
-            String filePath = "file:///node_modules/sdk/" + relativePath;
-            String moduleName = ("sdk/" + relativePath).replace("index.d.ts", "")
-                                                       .replace(".d.ts", "");
-            return new Dts(content, moduleName, filePath);
-        }
-
-        /**
-         * Read all text.
-         *
-         * @param path the path
-         * @return the string
-         */
-        private static String readAllText(Path path) {
-            try {
-                byte[] bytes = Files.readAllBytes(path);
-                return new String(bytes, StandardCharsets.UTF_8);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
     }
 }

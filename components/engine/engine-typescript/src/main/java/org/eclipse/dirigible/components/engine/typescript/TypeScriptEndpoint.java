@@ -9,6 +9,8 @@
  */
 package org.eclipse.dirigible.components.engine.typescript;
 
+import io.opentelemetry.instrumentation.annotations.SpanAttribute;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.engine.javascript.endpoint.JavascriptEndpoint;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,15 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -58,10 +52,30 @@ public class TypeScriptEndpoint extends BaseEndpoint {
      * @param params the params
      * @return the response entity
      */
+    @WithSpan("type_script_endpoint")
     @GetMapping(HTTP_PATH_MATCHER)
-    public ResponseEntity<?> get(@PathVariable("projectName") String projectName, @PathVariable("projectFilePath") String projectFilePath,
+    public ResponseEntity<?> get(@SpanAttribute("projectName") @PathVariable("projectName") String projectName,
+            @SpanAttribute("projectFilePath") @PathVariable("projectFilePath") String projectFilePath,
             @Nullable @RequestParam(required = false) MultiValueMap<String, String> params) {
         return javascriptEndpoint.get(projectName, replaceTSWithJSExtension(projectFilePath), params);
+    }
+
+    /**
+     * Replace TS with MJS extension.
+     *
+     * @param projectFilePath the project file path
+     * @return the string
+     */
+    private String replaceTSWithJSExtension(String projectFilePath) {
+        int indexOfExtensionStart = projectFilePath.lastIndexOf(".ts");
+        if (indexOfExtensionStart == -1) {
+            throw new RuntimeException("Could not find .ts extension");
+        }
+
+        String projectFilePathWithoutExtension = projectFilePath.substring(0, indexOfExtensionStart);
+        String maybePathParameters = projectFilePath.substring(indexOfExtensionStart)
+                                                    .replace(".ts", ""); // for decorators and rs api
+        return projectFilePathWithoutExtension + ".js" + maybePathParameters;
     }
 
     /**
@@ -153,23 +167,5 @@ public class TypeScriptEndpoint extends BaseEndpoint {
             @PathVariable("projectFilePath") String projectFilePath,
             @Nullable @RequestParam(required = false) MultiValueMap<String, String> params) {
         return javascriptEndpoint.delete(projectName, replaceTSWithJSExtension(projectFilePath), params);
-    }
-
-    /**
-     * Replace TS with MJS extension.
-     *
-     * @param projectFilePath the project file path
-     * @return the string
-     */
-    private String replaceTSWithJSExtension(String projectFilePath) {
-        int indexOfExtensionStart = projectFilePath.lastIndexOf(".ts");
-        if (indexOfExtensionStart == -1) {
-            throw new RuntimeException("Could not find .ts extension");
-        }
-
-        String projectFilePathWithoutExtension = projectFilePath.substring(0, indexOfExtensionStart);
-        String maybePathParameters = projectFilePath.substring(indexOfExtensionStart)
-                                                    .replace(".ts", ""); // for decorators and rs api
-        return projectFilePathWithoutExtension + ".js" + maybePathParameters;
     }
 }
