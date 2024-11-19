@@ -127,8 +127,7 @@
             <div class="dialog">
                 <h3>Edit Row</h3>
                 <form>
-                    <!-- Loop through the fields of selectedRow -->
-                    <div ng-repeat="(key, value) in selectedRow">
+                    <div ng-repeat="(key, value) in selectedRow" ng-if="!key.toUpperCase().includes('ID')">
                         <label>{{key}}</label>
                         <input type="text" ng-model="selectedRow[key]" />
                     </div>
