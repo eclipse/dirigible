@@ -62,20 +62,49 @@ angular.module('platformDialogs', ['blimpKit', 'platformView']).directive('dialo
         const formDialogListener = dialogApi.onFormDialog((data) => {
             scope.$apply(() => scope.formDialogs.push(data));
         });
-        scope.visibleOn = (visibleOn) => {
-            if (!visibleOn) return true;
-            else if (visibleOn.value) {
-                return scope.formDialogs[0].form[visibleOn.key].value === visibleOn.value;
-            } else {
-                return scope.formDialog.form[`n${visibleOn.key}`].$valid;
-            }
-        };
-        scope.enabledOn = (enabledOn) => {
-            if (enabledOn.value) {
+        const isEnabled = (enabledOn) => {
+            if (Object.prototype.hasOwnProperty.call(enabledOn, 'value')) {
                 return scope.formDialogs[0].form[enabledOn.key].value === enabledOn.value;
-            } else {
+            } else if (scope.formDialog.form[`n${enabledOn.key}`]) {
                 return scope.formDialog.form[`n${enabledOn.key}`].$valid;
             }
+            return true;
+        };
+        const isDisabled = (disabledOn) => {
+            if (Object.prototype.hasOwnProperty.call(disabledOn, 'value')) {
+                return scope.formDialogs[0].form[disabledOn.key].value === disabledOn.value;
+            } else if (scope.formDialog.form[`n${disabledOn.key}`]) {
+                return !scope.formDialog.form[`n${disabledOn.key}`].$valid;
+            }
+            return false;
+        };
+        scope.formItemDisabled = (enabledOn, disabledOn) => {
+            let disabled = false;
+            if (enabledOn) disabled = !isEnabled(enabledOn);
+            if (disabledOn) disabled = isDisabled(disabledOn);
+            return disabled;
+        };
+        const isVisible = (visibleOn) => {
+            if (Object.prototype.hasOwnProperty.call(visibleOn, 'value')) {
+                return scope.formDialogs[0].form[visibleOn.key].value === visibleOn.value;
+            } else if (scope.formDialog.form[`n${visibleOn.key}`]) {
+                return scope.formDialog.form[`n${visibleOn.key}`].$valid;
+            }
+            return true;
+        };
+        const isHidden = (hiddenOn) => {
+            if (Object.prototype.hasOwnProperty.call(hiddenOn, 'value')) {
+                return scope.formDialogs[0].form[hiddenOn.key].value === hiddenOn.value;
+            } else if (scope.formDialog.form[`n${hiddenOn.key}`]) {
+                return !scope.formDialog.form[`n${hiddenOn.key}`].$valid;
+            }
+            return true;
+        };
+        scope.formItemVisible = (visibleOn, hiddenOn) => {
+            let visible = true;
+            if (visibleOn) visible = isVisible(visibleOn);
+            if (hiddenOn) visible = !isHidden(hiddenOn);
+            return visible;
         };
         scope.closeFormDialog = (submit) => {
             if (submit) {

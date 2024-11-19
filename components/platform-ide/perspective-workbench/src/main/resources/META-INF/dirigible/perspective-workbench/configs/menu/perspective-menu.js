@@ -29,12 +29,6 @@ exports.getMenu = () => ({
 							event: 'projects.create.project',
 							data: { isMenu: true },
 						},
-						// {
-						// 	label: 'Linked Project',
-						// 	order: 2,
-						// 	event: 'projects.link.project',
-						// 	data: { isMenu: true },
-						// },
 					],
 				},
 				{

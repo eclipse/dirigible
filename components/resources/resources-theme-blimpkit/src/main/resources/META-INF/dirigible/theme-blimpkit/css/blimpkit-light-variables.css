@@ -89,7 +89,7 @@
     --sapContent_ContrastFocusColor: #fff;
     --sapContent_ShadowColor: #303030;
     --sapContent_ContrastShadowColor: #fff;
-    --sapContent_Shadow0: 0 0 0.125rem 0 rgba(0, 0, 0, 0.2), 0 0.125rem 0.25rem 0 rgba(0, 0, 0, 0.2);
+    --sapContent_Shadow0: 0 0 0 0.0625rem rgba(0, 0, 0, 0.1), 0 0.125rem 0.25rem 0.0625rem rgba(0, 0, 0, 0.1);
     --sapContent_Shadow1: 0 0 0 0.0625rem rgba(0, 0, 0, 0.1), 0 0.125rem 0.5rem 0 rgba(0, 0, 0, 0.2);
     --sapContent_Shadow2: 0 0 0 0.0625rem rgba(0, 0, 0, 0.1), 0 0.25rem .875rem 0 rgba(0, 0, 0, 0.2);
     --sapContent_Shadow3: 0 0 0 0.0625rem rgba(0, 0, 0, 0.48), 0 1.25rem 5rem 0 rgba(0, 0, 0, 0.25);

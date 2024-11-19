@@ -230,6 +230,42 @@ ng-transclude:empty {
   padding-block: 3rem;
 }
 
+.bk-padding-bottom--tiny {
+  padding-bottom: 0.5rem;
+}
+
+.bk-padding-bottom--sm {
+  padding-bottom: 1rem;
+}
+
+.bk-padding-bottom--md {
+  padding-bottom: 2rem;
+}
+
+.bk-padding-bottom--lg {
+  padding-bottom: 3rem;
+}
+
+.bk-padding-top--tiny {
+  padding-top: 0.5rem;
+}
+
+.bk-padding-top--sm {
+  padding-top: 1rem;
+}
+
+.bk-padding-top--md {
+  padding-top: 2rem;
+}
+
+.bk-padding-top--lg {
+  padding-top: 3rem;
+}
+
+.bk-margin-inline--none {
+  margin-inline: 0;
+}
+
 .bk-border-box {
   box-sizing: border-box;
 }

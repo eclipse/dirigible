@@ -10,19 +10,17 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 angular.module('platformView', ['platformExtensions', 'platformTheming'])
-    .constant('view', (typeof viewData != 'undefined') ? viewData : (typeof editorData != 'undefined' ? editorData : {}))
-    .constant('perspective', (typeof perspectiveData != 'undefined') ? perspectiveData : {})
-    .constant('shell', (typeof shellData != 'undefined') ? shellData : {})
-    .factory('baseHttpInterceptor', function () {
+    .constant('clientOS', { isMac: () => navigator.userAgent.includes('Mac') })
+    .factory('baseHttpInterceptor', () => {
         let csrfToken = null;
         return {
-            request: function (config) {
+            request: (config) => {
                 if (config.disableInterceptors) return config;
                 config.headers['X-Requested-With'] = 'Fetch';
                 config.headers['X-CSRF-Token'] = csrfToken ? csrfToken : 'Fetch';
                 return config;
             },
-            response: function (response) {
+            response: (response) => {
                 if (response.config.disableInterceptors) return response;
                 const token = response.headers()['x-csrf-token'];
                 if (token) {
@@ -32,16 +30,16 @@ angular.module('platformView', ['platformExtensions', 'platformTheming'])
                 return response;
             }
         };
-    }).config(['$httpProvider', function ($httpProvider) {
+    }).config(['$httpProvider', ($httpProvider) => {
         $httpProvider.interceptors.push('baseHttpInterceptor');
-    }]).factory('Views', function (Extensions) {
+    }]).factory('Views', (Extensions) => {
         let cachedViews;
         let cachedSubviews;
         const errorHandler = (error) => {
             console.error(error);
             reject(error);
         };
-        const getViews = function (id) {
+        const getViews = (id) => {
             if (cachedViews) {
                 return new Promise((resolve) => {
                     if (id) {
@@ -49,20 +47,20 @@ angular.module('platformView', ['platformExtensions', 'platformTheming'])
                     } else resolve(cachedViews);
                 });
             } else {
-                return Extensions.getViews().then(function (response) {
+                return Extensions.getViews().then((response) => {
                     cachedViews = response.data;
                     if (id) return cachedViews.find(v => v.id === id);
                     return cachedViews;
                 }, errorHandler);
             }
         };
-        const getSubviews = function (id) {
+        const getSubviews = (id) => {
             if (cachedSubviews) {
                 return new Promise((resolve) => {
                     resolve(cachedSubviews);
                 });
             } else {
-                return Extensions.getSubviews().then(function (response) {
+                return Extensions.getSubviews().then((response) => {
                     cachedSubviews = response.data;
                     if (id) return cachedSubviews.find(v => v.id === id);
                     return cachedSubviews;
@@ -73,16 +71,14 @@ angular.module('platformView', ['platformExtensions', 'platformTheming'])
             getViews: getViews,
             getSubviews: getSubviews,
         };
-    }).factory('ViewParameters', function ($window) {
-        return {
-            get: function () {
-                if ($window.frameElement && $window.frameElement.hasAttribute("data-parameters")) {
-                    return JSON.parse($window.frameElement.getAttribute("data-parameters"));
-                }
-                return {};
+    }).factory('ViewParameters', ($window) => ({
+        get: () => {
+            if ($window.frameElement && $window.frameElement.hasAttribute('data-parameters')) {
+                return JSON.parse($window.frameElement.getAttribute('data-parameters'));
             }
-        };
-    }).directive('embeddedView', function (Views, perspective, shell) {
+            return {};
+        }
+    })).directive('embeddedView', function (Views) {
         /**
          * viewId: String - ID of the view you want to show.
          * params: JSON - JSON object containing extra parameters/data.
@@ -104,6 +100,20 @@ angular.module('platformView', ['platformExtensions', 'platformTheming'])
                 if (scope.type !== undefined && !types.includes(scope.type))
                     throw Error(`embeddedView: wrong view type. Available options - ${types.join(', ')}`);
 
+                function getStandardParams() {
+                    if (typeof perspectiveData !== 'undefined') return {
+                        container: 'perspective',
+                        perspectiveId: perspectiveData.id,
+                    }
+                    if (typeof shellData !== 'undefined') return {
+                        container: 'shell',
+                        shellId: shellData.id,
+                    }
+                    return {
+                        container: 'view',
+                    };
+                }
+
                 function setView(viewConfig) {
                     if (viewConfig) {
                         scope.$evalAsync(() => {
@@ -111,9 +121,7 @@ angular.module('platformView', ['platformExtensions', 'platformTheming'])
                             scope.view.params = JSON.stringify({
                                 ...viewConfig.params,
                                 ...scope.params,
-                                container: shell.id ? 'shell' : perspective.id ? 'perspective' : 'view',
-                                perspectiveId: perspective.id,
-                                shellId: shell.id
+                                ...getStandardParams(),
                             });
                             scope.viewLabel = scope.view.label;
                         });
@@ -127,14 +135,46 @@ angular.module('platformView', ['platformExtensions', 'platformTheming'])
             },
             template: `<iframe title={{::view.label}} loading="{{::view.lazyLoad ? 'lazy' : 'eager'}}" ng-src="{{::view.path}}" data-parameters="{{::view.params}}"></iframe>`
         }
-    }).directive('configTitle', (perspective, view) => ({
+    }).directive('brandIcon', () => {
+        if (!brandingInfo) throw Error("brandIcon: missing brandingInfo");
+        return {
+            restrict: 'A',
+            transclude: false,
+            replace: true,
+            link: (scope) => { scope.icon = brandingInfo.icons.faviconIco },
+            template: `<link rel="icon" type="image/x-icon" ng-href="{{::icon}}">`
+        }
+    }).directive('brandTitle', (shellState) => ({
         restrict: 'A',
         transclude: false,
         replace: false,
         link: (scope) => {
-            if (perspective.label) scope.label = perspective.label;
-            else if (view.label) scope.label = view.label;
-            else throw Error("configTitle: missing data");
+            scope.perspective = shellState.perspective.label;
+            shellState.registerStateListener((data) => {
+                scope.perspective = data.label;
+            });
+            scope.name = brandingInfo.name;
+        },
+        template: '{{perspective || "Loading..."}} | {{::name}}'
+    })).directive('configTitle', ($window) => ({
+        restrict: 'A',
+        transclude: false,
+        replace: false,
+        link: (scope) => {
+            if (typeof viewData !== 'undefined') {
+                scope.label = viewData.label;
+                if (viewData.autoFocusTab !== false) {
+                    const layoutApi = new LayoutApi();
+                    const onFocus = () => layoutApi.focusView({ id: viewData.id });
+                    angular.element($window).on('focus', onFocus);
+                    scope.$on('$destroy', () => {
+                        angular.element($window).off('focus', onFocus);
+                    });
+                }
+            }
+            else if (typeof perspectiveData !== 'undefined') scope.label = perspectiveData.label;
+            else if (typeof editorData !== 'undefined') scope.label = editorData.label;
+            else throw Error("configTitle: missing view data");
         },
         template: '{{::label}}'
     }));

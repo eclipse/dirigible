@@ -108,7 +108,6 @@ body {
 .statusbar-message,
 .statusbar-error {
     flex: 2;
-    max-width: 40%;
 }
 
 .statusbar-busy>*,

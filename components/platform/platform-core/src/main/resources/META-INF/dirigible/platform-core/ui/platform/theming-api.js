@@ -11,6 +11,14 @@
  */
 class ThemingApi extends MessageHubApi {
 
+    getSavedTheme() {
+        return JSON.parse(localStorage.getItem(`${brandingInfo.keyPrefix}.platform.theme`) || '{}');
+    }
+
+    setSavedTheme(theme) {
+        localStorage.setItem(`${brandingInfo.keyPrefix}.platform.theme`, JSON.stringify(theme));
+    }
+
     /**
      * Triggered when the theme list is loaded.
      * @param handler - Callback function.

@@ -1,3 +1,5 @@
 {
-    "guid": "platform-branding"
+    "guid": "platform-branding",
+    "dependencies": [],
+    "actions": []
 }

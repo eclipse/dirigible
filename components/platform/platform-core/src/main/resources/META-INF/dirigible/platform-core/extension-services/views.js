@@ -67,6 +67,21 @@ viewLoop: for (let i = 0; i < viewExtensions?.length; i++) {
 	}
 }
 
+function sortViews(a, b) {
+	if (a.order !== undefined && b.order !== undefined) {
+		return (parseInt(a.order) - parseInt(b.order));
+	} else if (a.order === undefined && b.order === undefined) {
+		return a.label < b.label ? -1 : 1
+	} else if (a.order === undefined) {
+		return 1;
+	} else if (b.order === undefined) {
+		return -1;
+	}
+	return 0;
+}
+
+views.sort(sortViews);
+
 response.setContentType("application/json");
 setETag();
 response.println(JSON.stringify(views));

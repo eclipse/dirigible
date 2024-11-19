@@ -10,11 +10,10 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 angular.module('platformTheming', ['platformExtensions'])
-    .constant('ThemingApi', new ThemingApi())
-    .constant('themeStateKey', `${brandingInfo.keyPrefix}.platform.theme`)
+    .constant('themingApi', new ThemingApi())
     .provider('theming', function ThemingProvider() {
-        this.$get = ['ThemingApi', 'Extensions', 'themeStateKey', function editorsFactory(ThemingApi, Extensions, themeStateKey) {
-            let theme = JSON.parse(localStorage.getItem(themeStateKey) || '{}');
+        this.$get = ['themingApi', 'Extensions', function editorsFactory(themingApi, Extensions) {
+            let theme = themingApi.getSavedTheme();
             let themes = [];
 
             Extensions.getThemes().then((response) => {
@@ -31,7 +30,7 @@ angular.module('platformTheming', ['platformExtensions'])
                         }
                     }
                 }
-                ThemingApi.themesLoaded();
+                themingApi.themesLoaded();
             });
 
             function setTheme(themeId, sendEvent = true) {
@@ -43,12 +42,9 @@ angular.module('platformTheming', ['platformExtensions'])
             }
 
             function setThemeObject(themeObj, sendEvent = true) {
-                localStorage.setItem(
-                    themeStateKey,
-                    JSON.stringify(themeObj),
-                )
+                themingApi.setSavedTheme(themeObj);
                 theme = themeObj;
-                if (sendEvent) ThemingApi.themeChanged({
+                if (sendEvent) themingApi.themeChanged({
                     id: themeObj.id,
                     type: themeObj.type,
                     links: themeObj.links
@@ -72,32 +68,35 @@ angular.module('platformTheming', ['platformExtensions'])
             }
         }];
     })
-    .factory('Theme', ['theming', 'themeStateKey', function (_theming, themeStateKey) { // theming must be injected to set defaults
-        let theme = JSON.parse(localStorage.getItem(themeStateKey) || '{}');
+    .factory('Theme', ['theming', 'themingApi', function (_theming, themingApi) { // theming must be injected to set defaults
+        let theme = themingApi.getSavedTheme();
         return {
             reload: () => {
-                theme = JSON.parse(localStorage.getItem(themeStateKey) || '{}');
+                theme = themingApi.getSavedTheme();
             },
             getLinks: () => {
                 return theme.links || [];
             },
             getType: () => {
                 return theme.type || 'auto';
-            }
+            },
+            getTheme: () => {
+                return theme;
+            },
         }
-    }]).directive('theme', (Theme, ThemingApi) => ({
+    }]).directive('theme', (Theme, themingApi) => ({
         restrict: 'E',
         replace: true,
         transclude: false,
         link: (scope) => {
             scope.links = Theme.getLinks();
-            const themeChangeListener = ThemingApi.onThemeChange((themeData) => {
+            const themeChangeListener = themingApi.onThemeChange((themeData) => {
                 scope.$applyAsync(() => {
                     scope.links = themeData.links;
                 });
             });
             scope.$on('$destroy', () => {
-                ThemingApi.removeMessageListener(themeChangeListener);
+                themingApi.removeMessageListener(themeChangeListener);
             });
         },
         template: '<link type="text/css" rel="stylesheet" ng-repeat="link in links" ng-href="{{ link }}">'

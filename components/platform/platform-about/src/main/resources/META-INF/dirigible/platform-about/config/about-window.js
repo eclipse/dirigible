@@ -12,10 +12,9 @@
 const viewData = {
     id: 'about',
     label: 'About',
-    path: '../platform-about/about.html'
+    path: '../platform-about/about.html',
+    autoFocusTab: false,
 };
 if (typeof exports !== 'undefined') {
-    exports.getView = function () {
-        return viewData;
-    }
+    exports.getView = () => viewData;
 }

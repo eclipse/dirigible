@@ -10,13 +10,15 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSplit'])
-    .constant('branding', brandingInfo)
-    .constant('layoutConstants', {
-        version: 3.0,
-        stateKey: 'platform.layout.state'
-    })
-    .constant('MessageHub', new MessageHubApi())
-    .directive('layout', ['Views', 'Editors', 'SplitPaneState', 'MessageHub', 'perspective', 'layoutConstants', 'branding', 'uuid', function (Views, Editors, SplitPaneState, MessageHub, perspective, layoutConstants, branding, uuid) {
+    .constant('layoutConstants', { version: 3.0, stateKey: 'platform.layout.state' })
+    .constant('Layout', new LayoutApi())
+    .constant('Workspace', new WorkspaceApi())
+    .constant('Dialog', new DialogApi())
+    .directive('layout', function (Views, Editors, SplitPaneState, layoutConstants, uuid, Layout, Workspace, Dialog, ButtonStates) {
+        if (typeof perspectiveData === 'undefined' && (!perspectiveData.id || !perspectiveData.label)) {
+            console.error('Layout requires perspectiveData config');
+            return {};
+        }
         return {
             restrict: 'E',
             replace: true,
@@ -24,13 +26,10 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                 config: '<',
             },
             controller: ['$scope', function ($scope) {
-                if (!perspective.id || !perspective.label)
-                    console.error('layout requires perspective service data');
-
                 const VIEW = 'view';
                 const EDITOR = 'editor';
 
-                const layoutStateKey = `${branding.keyPrefix}.${layoutConstants.stateKey}.${perspective.id}`;
+                const layoutStateKey = `${brandingInfo.keyPrefix}.${layoutConstants.stateKey}.${perspectiveData.id}`;
 
                 $scope.perspectiveName = '';
                 $scope.perspectiveStyle = {
@@ -83,149 +82,157 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                 let reloadingFileArgs;
                 let viewSettings = $scope.config.viewSettings || {};
 
-                if (perspective.id && perspective.label) {
-                    $scope.perspectiveName = perspective.label;
-                    Views.getViews().then(function (views) {
-                        $scope.views = views;
+                $scope.perspectiveName = perspectiveData.label;
+                Views.getViews().then(function (views) {
+                    $scope.views = views;
 
-                        const viewExists = (v) => views.some(x => x.id === v.id);
-                        const viewById = (ret, viewId) => {
-                            const v = $scope.views.find(v => v.id === viewId);
-                            if (v) ret.push(v);
-                            return ret;
+                    for (let v = 0; v < $scope.views.length; v++) {
+                        if ($scope.views[v].params) {
+                            $scope.views[v].params['container'] = 'layout';
+                            $scope.views[v].params['perspectiveId'] = perspectiveData.id;
+                        } else $scope.views[v].params = {
+                            container: 'layout',
+                            perspectiveId: perspectiveData.id,
                         };
-                        const mapViewToTabById = (v) => {
-                            if (v.type !== VIEW) return v;
-                            let view = views.find(x => x.id === v.id);
-                            return view ? { ...v, ...mapViewToTab(view) } : v;
-                        }
-                        const byLeftRegion = view => view.region.startsWith('left');
-                        const byRightRegion = view => view.region.startsWith('right');
-                        const byBottomRegion = view => view.region === 'center-bottom' || view.region === 'bottom';
-                        const byCenterRegion = view => view.region === 'center-top' || view.region === 'center-middle' || view.region === 'center';
+                    }
 
-                        const savedState = loadLayoutState();
-                        if (savedState && !hasMajorVersionChanged(savedState)) {
-                            const restoreCenterSplittedTabViews = function (state, removedViewsIds) {
-                                if (state.panes) {
-                                    state.panes.forEach(pane => restoreCenterSplittedTabViews(pane, removedViewsIds));
-                                } else {
-                                    state.tabs = state.tabs
-                                        .filter(v => v.type === EDITOR || (viewExists(v) && (!removedViewsIds || !removedViewsIds.includes(v.id))))
-                                        .map(mapViewToTabById);
+                    const viewExists = (v) => views.some(x => x.id === v.id);
+                    const viewById = (ret, viewId) => {
+                        const v = $scope.views.find(v => v.id === viewId);
+                        if (v) ret.push(v);
+                        return ret;
+                    };
+                    const mapViewToTabById = (v) => {
+                        if (v.type !== VIEW) return v;
+                        let view = views.find(x => x.id === v.id);
+                        return view ? { ...v, ...mapViewToTab(view) } : v;
+                    }
+                    const byLeftRegion = view => view.region.startsWith('left');
+                    const byRightRegion = view => view.region.startsWith('right');
+                    const byBottomRegion = view => view.region === 'center-bottom' || view.region === 'bottom';
+                    const byCenterRegion = view => view.region === 'center-top' || view.region === 'center-middle' || view.region === 'center';
 
-                                    if (!state.tabs.some(x => x.id === state.selectedTab)) {
-                                        state.selectedTab = null;
-                                    }
+                    const savedState = loadLayoutState();
+                    if (savedState && !hasMajorVersionChanged(savedState)) {
+                        const restoreCenterSplittedTabViews = function (state, removedViewsIds) {
+                            if (state.panes) {
+                                state.panes.forEach(pane => restoreCenterSplittedTabViews(pane, removedViewsIds));
+                            } else {
+                                state.tabs = state.tabs
+                                    .filter(v => v.type === EDITOR || (viewExists(v) && (!removedViewsIds || !removedViewsIds.includes(v.id))))
+                                    .map(mapViewToTabById);
+
+                                if (!state.tabs.some(x => x.id === state.selectedTab)) {
+                                    state.selectedTab = null;
                                 }
-
-                                return state;
                             }
 
-                            $scope.leftTabs = savedState.left.tabs.filter(viewExists).map(mapViewToTabById);
-                            $scope.bottomTabs = savedState.bottom.tabs.filter(viewExists).map(mapViewToTabById);
-                            $scope.rightTabs = (savedState.right || { tabs: [] }).tabs.filter(viewExists).map(mapViewToTabById);
-
-                            let newlyAddedViews, removedViewsIds;
-                            let initialOpenViewsChanged = !angular.equals(savedState.initialOpenViews, $scope.initialOpenViews);
-                            if (initialOpenViewsChanged) {
-                                newlyAddedViews = $scope.initialOpenViews.filter(x => savedState.initialOpenViews.every(y => x !== y)).reduce(viewById, []);
-                                removedViewsIds = savedState.initialOpenViews.filter(x => $scope.initialOpenViews.every(y => x !== y));
-
-                                $scope.leftTabs = $scope.leftTabs
-                                    .filter(x => !removedViewsIds.includes(x.id))
-                                    .concat(newlyAddedViews.filter(byLeftRegion).map(mapViewToTab));
-
-                                $scope.rightTabs = $scope.rightTabs
-                                    .filter(x => !removedViewsIds.includes(x.id))
-                                    .concat(newlyAddedViews.filter(byRightRegion).map(mapViewToTab));
-
-                                $scope.bottomTabs = $scope.bottomTabs
-                                    .filter(x => !removedViewsIds.includes(x.id))
-                                    .concat(newlyAddedViews.filter(byBottomRegion).map(mapViewToTab));
-                            }
-
-                            $scope.centerSplittedTabViews = restoreCenterSplittedTabViews(savedState.center, removedViewsIds);
-
-                            if (newlyAddedViews) {
-                                $scope.centerSplittedTabViews.panes[0].tabs.push(...newlyAddedViews.filter(byCenterRegion).map(mapViewToTab));
-                            }
-
-                            forEachCenterSplittedTabView(pane => {
-                                pane.tabs = pane.tabs.map(applyCenterViewSettings);
-                            });
-
-                            $scope.leftTabs = $scope.leftTabs.map(applySideViewSettings);
-                            $scope.rightTabs = $scope.rightTabs.map(applySideViewSettings);
-
-                            if ($scope.bottomTabs.some(x => x.id === savedState.bottom.selected))
-                                $scope.selection.selectedBottomTab = savedState.bottom.selected;
-
-                            if (initialOpenViewsChanged) {
-                                saveLayoutState();
-                            }
-
-                            shortenCenterTabsLabels();
-
-                        } else {
-                            let openViews = $scope.initialOpenViews.reduce(viewById, []);
-
-                            $scope.leftTabs = openViews
-                                .filter(byLeftRegion)
-                                .map(mapViewToTab)
-                                .map(applySideViewSettings);
-
-                            $scope.rightTabs = openViews
-                                .filter(byRightRegion)
-                                .map(mapViewToTab)
-                                .map(applySideViewSettings);
-
-                            $scope.bottomTabs = openViews
-                                .filter(byBottomRegion)
-                                .map(mapViewToTab);
-
-                            $scope.centerSplittedTabViews.panes[0].tabs = openViews
-                                .filter(byCenterRegion)
-                                .map(mapViewToTab)
-                                .map(applyCenterViewSettings);
+                            return state;
                         }
 
-                        $scope.focusedTabView = getFirstCenterSplittedTabViewPane($scope.centerSplittedTabViews);
+                        $scope.leftTabs = savedState.left.tabs.filter(viewExists).map(mapViewToTabById);
+                        $scope.bottomTabs = savedState.bottom.tabs.filter(viewExists).map(mapViewToTabById);
+                        $scope.rightTabs = (savedState.right || { tabs: [] }).tabs.filter(viewExists).map(mapViewToTabById);
 
-                        $scope.$watch('selection', function (newSelection, oldSelection) {
-                            if (!angular.equals(newSelection, oldSelection)) {
-                                saveLayoutState();
-                            }
-                        }, true);
+                        let newlyAddedViews, removedViewsIds;
+                        let initialOpenViewsChanged = !angular.equals(savedState.initialOpenViews, $scope.initialOpenViews);
+                        if (initialOpenViewsChanged) {
+                            newlyAddedViews = $scope.initialOpenViews.filter(x => savedState.initialOpenViews.every(y => x !== y)).reduce(viewById, []);
+                            removedViewsIds = savedState.initialOpenViews.filter(x => $scope.initialOpenViews.every(y => x !== y));
 
-                        $scope.$watch('centerSplittedTabViews', function (newValue, oldValue) {
-                            if (!angular.equals(newValue, oldValue)) {
-                                saveLayoutState();
-                            }
-                        }, true);
+                            $scope.leftTabs = $scope.leftTabs
+                                .filter(x => !removedViewsIds.includes(x.id))
+                                .concat(newlyAddedViews.filter(byLeftRegion).map(mapViewToTab));
 
-                        $scope.$watch('leftTabs', function (newValue, oldValue) {
-                            const collectionsEqual = (a, b, ...props) => {
-                                if (a && !b || !a && b) return false;
-                                if (!a && !b) return true;
-                                if (a.length !== b.length) return false;
-                                for (let i = 0; i < a.length; i++) {
-                                    const x = a[i];
-                                    const y = b[i];
-                                    for (let p of props) {
-                                        if (!angular.equals(x[p], y[p]))
-                                            return false;
-                                    }
+                            $scope.rightTabs = $scope.rightTabs
+                                .filter(x => !removedViewsIds.includes(x.id))
+                                .concat(newlyAddedViews.filter(byRightRegion).map(mapViewToTab));
+
+                            $scope.bottomTabs = $scope.bottomTabs
+                                .filter(x => !removedViewsIds.includes(x.id))
+                                .concat(newlyAddedViews.filter(byBottomRegion).map(mapViewToTab));
+                        }
+
+                        $scope.centerSplittedTabViews = restoreCenterSplittedTabViews(savedState.center, removedViewsIds);
+
+                        if (newlyAddedViews) {
+                            $scope.centerSplittedTabViews.panes[0].tabs.push(...newlyAddedViews.filter(byCenterRegion).map(mapViewToTab));
+                        }
+
+                        forEachCenterSplittedTabView(pane => {
+                            pane.tabs = pane.tabs.map(applyCenterViewSettings);
+                        });
+
+                        $scope.leftTabs = $scope.leftTabs.map(applySideViewSettings);
+                        $scope.rightTabs = $scope.rightTabs.map(applySideViewSettings);
+
+                        if ($scope.bottomTabs.some(x => x.id === savedState.bottom.selected))
+                            $scope.selection.selectedBottomTab = savedState.bottom.selected;
+
+                        if (initialOpenViewsChanged) {
+                            saveLayoutState();
+                        }
+
+                        shortenCenterTabsLabels();
+
+                    } else {
+                        let openViews = $scope.initialOpenViews.reduce(viewById, []);
+
+                        $scope.leftTabs = openViews
+                            .filter(byLeftRegion)
+                            .map(mapViewToTab)
+                            .map(applySideViewSettings);
+
+                        $scope.rightTabs = openViews
+                            .filter(byRightRegion)
+                            .map(mapViewToTab)
+                            .map(applySideViewSettings);
+
+                        $scope.bottomTabs = openViews
+                            .filter(byBottomRegion)
+                            .map(mapViewToTab);
+
+                        $scope.centerSplittedTabViews.panes[0].tabs = openViews
+                            .filter(byCenterRegion)
+                            .map(mapViewToTab)
+                            .map(applyCenterViewSettings);
+                    }
+
+                    $scope.focusedTabView = getFirstCenterSplittedTabViewPane($scope.centerSplittedTabViews);
+
+                    $scope.$watch('selection', function (newSelection, oldSelection) {
+                        if (!angular.equals(newSelection, oldSelection)) {
+                            saveLayoutState();
+                        }
+                    }, true);
+
+                    $scope.$watch('centerSplittedTabViews', function (newValue, oldValue) {
+                        if (!angular.equals(newValue, oldValue)) {
+                            saveLayoutState();
+                        }
+                    }, true);
+
+                    $scope.$watch('leftTabs', function (newValue, oldValue) {
+                        const collectionsEqual = (a, b, ...props) => {
+                            if (a && !b || !a && b) return false;
+                            if (!a && !b) return true;
+                            if (a.length !== b.length) return false;
+                            for (let i = 0; i < a.length; i++) {
+                                const x = a[i];
+                                const y = b[i];
+                                for (let p of props) {
+                                    if (!angular.equals(x[p], y[p]))
+                                        return false;
                                 }
-                                return true;
                             }
+                            return true;
+                        }
 
-                            if (!collectionsEqual(newValue, oldValue, 'expanded')) {
-                                saveLayoutState();
-                            }
-                        }, true);
-                    });
-                }
+                        if (!collectionsEqual(newValue, oldValue, 'expanded')) {
+                            saveLayoutState();
+                        }
+                    }, true);
+                });
 
                 $scope.closeCenterTab = function (tab) {
                     tryCloseCenterTabs([tab]);
@@ -282,17 +289,6 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
 
                 function loadLayoutState() {
                     let savedState = localStorage.getItem(layoutStateKey);
-
-                    if (savedState === null) {
-                        //fall back on the obosolete key
-                        //TODO: code to be removed at some point
-                        const obosoleteKey = `DIRIGIBLE.IDE.LAYOUT.state.${perspective.id}`;
-                        savedState = localStorage.getItem(obosoleteKey);
-                        if (savedState !== null) {
-                            localStorage.setItem(layoutStateKey, savedState);
-                            localStorage.removeItem(obosoleteKey);
-                        }
-                    }
 
                     let state = null;
 
@@ -595,35 +591,31 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
 
                 function showFileSaveDialog(fileName, filePath, args = {}) {
                     return new Promise((resolve, reject) => {
-                        MessageHub.showDialogAsync(
-                            'You have unsaved changes',
-                            `Do you want to save the changes you made to ${fileName}?`,
-                            [{
-                                id: { id: 'save', file: filePath, ...args },
-                                type: 'emphasized',
-                                label: 'Save',
-                            }, {
-                                id: { id: 'ignore', file: filePath, ...args },
-                                type: 'normal',
-                                label: 'Don\'t Save',
-                            }, {
-                                id: { id: 'cancel' },
-                                type: 'transparent',
-                                label: 'Cancel',
-                            }]
-                        ).then(({ data }) => {
-                            const { id, file } = data;
-                            switch (id) {
-                                case 'save':
-                                    MessageHub.postMessage({ topic: 'editor.file.save', data: { file } });
-                                    break;
-                                case 'ignore':
-                                    $scope.setEditorDirty(file, false);
-                                    break;
+                        Dialog.showAlert({
+                            title: 'You have unsaved changes',
+                            message: `Do you want to save the changes you made to ${fileName}?`,
+                            type: AlertTypes.Warning,
+                            preformatted: false,
+                            buttons: [
+                                { id: JSON.stringify({ id: 'save', file: filePath, params: args }), label: 'Save', state: ButtonStates.Emphasized },
+                                { id: JSON.stringify({ id: 'ignore', file: filePath, params: args }), label: 'Don\'t Save' },
+                                { id: JSON.stringify({ id: 'cancel' }), label: 'Cancel', state: ButtonStates.Transparent },
+                            ]
+                        }).then((buttonData) => {
+                            const data = JSON.parse(buttonData);
+                            if (data.id === 'save') {
+                                Workspace.saveFile({
+                                    path: data.file.substring(data.file.indexOf('/', data.file.indexOf('/') + 1), data.file.length),
+                                    workspace: data.file.substring(1, data.file.indexOf('/', data.file.indexOf('/') + 1)),
+                                    params: data.params
+                                });
+                            } else if (data.id === 'ignore') {
+                                $scope.setEditorDirty(data.file, false);
                             }
                             resolve(data);
-
-                        }).catch(reject);
+                        }, (error) => {
+                            reject(error);
+                        });
                     });
                 }
 
@@ -636,8 +628,9 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                                         reloadingFileArgs = args;
                                         break;
                                     case 'ignore':
-                                        reloadCenterTab(args.editorPath, args.params);
-                                        $scope.$digest();
+                                        $scope.$evalAsync(() => {
+                                            reloadCenterTab(args.params.editorPath, args.params.params);
+                                        });
                                         break;
                                 }
                             });
@@ -665,7 +658,7 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                                     case 'ignore':
                                         closeCenterTab(args.file)
 
-                                        let rest = args.tabs.filter(x => x.params.file !== args.file);
+                                        let rest = args.params.tabs.filter(x => x.params.file !== args.file);
                                         if (rest.length > 0)
                                             if (tryCloseCenterTabs(rest)) {
                                                 $scope.$digest();
@@ -731,152 +724,133 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                     }
                 }
 
-                // const openEditorListener = MessageHub.addMessageListener({
-                //     topic: 'platform.editor.open',
-                //     handler: (data) => {
-                //         $scope.$apply(
-                //             $scope.openEditor(
-                //                 data.resourcePath,
-                //                 data.resourceLabel,
-                //                 data.contentType,
-                //                 data.editorId,
-                //                 data.extraArgs
-                //             )
-                //         );
-                //     }
-                // });
+                const viewSetDirtyListener = Workspace.onSetFileDirty((data) => {
+                    $scope.$apply($scope.setEditorDirty(`/${data.workspace}${data.path}`, data.dirty));
+                });
 
-                // const editorSetDirtyListener = MessageHub.addMessageListener({
-                //     topic: 'platform.editor.set.dirty',
-                //     handler: (data) => {
-                //         $scope.$apply($scope.setEditorDirty(data.resourcePath, data.isDirty));
-                //     }
-                // });
+                const editorCloseListener = Workspace.onCloseFile((data) => {
+                    if (data.params && data.params.closeOthers) $scope.$apply($scope.closeOtherEditors(`/${data.workspace}${data.path}`));
+                    else $scope.$apply($scope.closeEditor(`/${data.workspace}${data.path}`));
+                });
 
-                // const editorCloseListener = MessageHub.addMessageListener({
-                //     topic: 'platform.editor.close',
-                //     handler: (data) => {
-                //         $scope.$apply($scope.closeEditor(data.resourcePath));
-                //     }
-                // });
+                const editorCloseAllListener = Workspace.onCloseAllFiles(() => {
+                    $scope.$apply($scope.closeAllEditors());
+                });
 
-                // const editorCloseOthersListener = MessageHub.addMessageListener({
-                //     topic: 'platform.editor.close.others',
-                //     handler: (data) => {
-                //         $scope.$apply($scope.closeOtherEditors(data.resourcePath));
-                //     }
-                // });
+                const viewOpenListener = Layout.onOpenView((data) => {
+                    const result = findCenterSplittedTabViewById(data.id);
+                    if (result) {
+                        $scope.$evalAsync(() => {
+                            $scope.focusedTabView = result.tabsView;
+                        });
+                    } else $scope.$evalAsync($scope.openView(data.id, data.params));
+                });
 
-                // const editorCloseAllListener = MessageHub.addMessageListener({
-                //     topic: 'platform.editor.close.all',
-                //     handler: () => {
-                //         $scope.$apply($scope.closeAllEditors());
-                //     }
-                // });
+                const onOpenEditorListener = Workspace.onOpenFile((data) => {
+                    $scope.$evalAsync(() => {
+                        $scope.openEditor(
+                            `/${data.workspace}${data.path}`,
+                            data.name,
+                            data.contentType,
+                            data.editorId,
+                            data.params
+                        );
+                    });
+                });
 
-                const viewOpenListener = MessageHub.addMessageListener({
-                    topic: 'platform.layout.view.open',
-                    handler: (data) => {
-                        $scope.$apply($scope.openView(data.id, data.params));
+                const onFileSavedListener = Workspace.onFileSaved(function (fileDescriptor) {
+                    if (closingFileArgs) {
+                        let fileName = `/${fileDescriptor.workspace}${fileDescriptor.path}`;
+                        if (fileName === closingFileArgs.file) {
+                            closeCenterTab(fileName);
+
+                            let rest = closingFileArgs.tabs.filter(x => x.params.file !== closingFileArgs.file);
+                            if (rest.length > 0) {
+                                if (tryCloseCenterTabs(rest)) {
+                                    $scope.$digest();
+                                }
+                            }
+
+                            closingFileArgs = null;
+                        }
+                    }
+
+                    if (reloadingFileArgs) {
+                        const fileName = msg.data;
+                        const { file, editorPath, params } = reloadingFileArgs;
+
+                        if (fileName === file) {
+                            reloadCenterTab(editorPath, params);
+                            $scope.$digest();
+                            reloadingFileArgs = null;
+                        }
                     }
                 });
 
-                // MessageHub.onFileSaved(function (fileDescriptor) {
-                //     if (closingFileArgs) {
-                //         let fileName = `/${fileDescriptor.workspace}${fileDescriptor.path}`;
-                //         if (fileName === closingFileArgs.file) {
-                //             closeCenterTab(fileName);
+                const onFileMovedListener = Workspace.onFileMoved(
+                    function (fileDescriptor) {
+                        updateEditor(
+                            fileDescriptor.workspace,
+                            fileDescriptor.oldPath,
+                            fileDescriptor.newPath,
+                            fileDescriptor.newName,
+                        );
+                    }
+                );
 
-                //             let rest = closingFileArgs.tabs.filter(x => x.params.file !== closingFileArgs.file);
-                //             if (rest.length > 0) {
-                //                 if (tryCloseCenterTabs(rest)) {
-                //                     $scope.$digest();
-                //                 }
-                //             }
+                const onFileRenamedListener = Workspace.onFileRenamed(
+                    function (fileDescriptor) {
+                        updateEditor(
+                            fileDescriptor.workspace,
+                            fileDescriptor.oldPath,
+                            fileDescriptor.newPath,
+                            fileDescriptor.newName,
+                        );
+                    }
+                );
 
-                //             closingFileArgs = null;
-                //         }
-                //     }
+                const onFileDeletedListener = Workspace.onFileDeleted(
+                    function (fileDescriptor) {
+                        $scope.$evalAsync(() => {
+                            $scope.closeEditor(`/${fileDescriptor.workspace}${fileDescriptor.path}`)
+                        });
+                    }
+                );
 
-                //     if (reloadingFileArgs) {
-                //         const fileName = msg.data;
-                //         const { file, editorPath, params } = reloadingFileArgs;
+                const onGetOpenedViewsListener = Workspace.onGetCurrentlyOpenedFiles((data) => {
+                    Workspace.postMessage({ topic: data.topic, data: getCurrentlyOpenedFiles(data.basePath) });
+                });
 
-                //         if (fileName === file) {
-                //             reloadCenterTab(editorPath, params);
-                //             $scope.$digest();
-                //             reloadingFileArgs = null;
-                //         }
-                //     }
-                // });
+                const onIsViewOpenListener = Layout.onIsViewOpen((data) => {
+                    const result = findCenterSplittedTabViewById(data.id);
+                    if (result) {
+                        Layout.postMessage({
+                            topic: data.topic, data: {
+                                isOpen: true,
+                                isDirty: result.tabsView.tabs[result.index].dirty || false,
+                            }
+                        });
+                    } else Layout.postMessage({ topic: data.topic, data: { isOpen: false } });
+                });
 
-                // MessageHub.onFileMoved(
-                //     function (fileDescriptor) {
-                //         $scope.$apply(
-                //             $scope.updateEditor(
-                //                 `/${fileDescriptor.workspace}${fileDescriptor.oldPath}`,
-                //                 `/${fileDescriptor.workspace}${fileDescriptor.path}`,
-                //                 fileDescriptor.name
-                //             )
-                //         );
-                //     }
-                // );
+                const onIsEditorOpenListener = Workspace.onIsFileOpen((data) => {
+                    const result = findCenterSplittedTabViewByPath(`/${data.workspace}${data.path}`);
+                    if (result) {
+                        Workspace.postMessage({
+                            topic: data.topic, data: {
+                                isOpen: true,
+                                isDirty: result.tabsView.tabs[result.index].dirty || false,
+                            }
+                        });
+                    } else Workspace.postMessage({ topic: data.topic, data: { isOpen: false } });
+                });
 
-                // MessageHub.onFileRenamed(
-                //     function (fileDescriptor) {
-                //         $scope.$apply(
-                //             $scope.updateEditor(
-                //                 `/${fileDescriptor.workspace}${fileDescriptor.oldPath}`,
-                //                 `/${fileDescriptor.workspace}${fileDescriptor.path}`,
-                //                 fileDescriptor.name
-                //             )
-                //         );
-                //     }
-                // );
-
-                // MessageHub.onFileDeleted(
-                //     function (fileDescriptor) {
-                //         $scope.$apply(
-                //             $scope.closeEditor(`/${fileDescriptor.workspace}${fileDescriptor.path}`)
-                //         );
-                //     }
-                // );
-
-                // MessageHub.onDidReceiveMessage('ide-core.setFocusedEditor', function (msg) {
-                //     const result = findCenterSplittedTabViewByPath(msg.resourcePath);
-                //     if (result) {
-                //         $scope.$apply(() => {
-                //             $scope.focusedTabView = result.tabsView;
-                //         });
-                //     } else {
-                //         console.warn(`Tabview for file '${msg.resourcePath}' not found`);
-                //     }
-                // }, true);
-
-                // MessageHub.onSetTabFocus(
-                //     function (msg) {
-                //         const result = findCenterSplittedTabViewById(msg.tabId);
-                //         $scope.$apply(() => {
-                //             $scope.focusedTabView = result.tabsView;
-                //         });
-                //     }
-                // );
-
-                // MessageHub.onDidReceiveMessage('core.editors.isOpen', function (msg) {
-                //     const result = findCenterSplittedTabViewByPath(msg.resourcePath);
-                //     if (result) {
-                //         MessageHub.postMessage(msg.callbackTopic, {
-                //             isOpen: true,
-                //             isDirty: result.tabsView.tabs[result.index].dirty || false,
-                //         }, true);
-                //     } else {
-                //         MessageHub.postMessage(msg.callbackTopic, { isOpen: false }, true);
-                //     }
-                // }, true);
-
-                // MessageHub.onDidReceiveMessage('core.editors.openedFiles', function (msg) {
-                //     MessageHub.postMessage(msg.callbackTopic, { files: getCurrentlyOpenedFiles(msg.basePath) }, true);
-                // }, true);
+                Layout.onFocusView((data) => {
+                    const result = findCenterSplittedTabViewById(data.id);
+                    if (result) $scope.$evalAsync(() => {
+                        $scope.focusedTabView = result.tabsView;
+                    });
+                });
 
                 function shortenCenterTabsLabels() {
 
@@ -1022,27 +996,30 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                         }
 
                         shortenCenterTabsLabels();
-
-                        $scope.$digest();
                     } else {
                         console.error('openEditor: resourcePath is undefined');
                     }
                 };
-                $scope.updateEditor = function (resourcePath, newResourcePath, resourceLabel) {
-                    if (resourcePath === undefined && resourcePath === null && resourcePath.trim() === '')
-                        console.error('updateEditor: resourcePath is undefined');
-                    else if (newResourcePath === undefined && newResourcePath === null && newResourcePath.trim() === '')
-                        console.error('updateEditor: newResourcePath is undefined');
+                function updateEditor(workspace, oldPath, newPath, resourceLabel) {
+                    if (workspace === undefined && workspace === null && workspace.trim() === '')
+                        console.error('updateEditor: workspace is undefined');
+                    else if (oldPath === undefined && oldPath === null && oldPath.trim() === '')
+                        console.error('updateEditor: oldPath is undefined');
+                    else if (newPath === undefined && newPath === null && newPath.trim() === '')
+                        console.error('updateEditor: newPath is undefined');
                     else if (resourceLabel === undefined && resourceLabel === null && resourceLabel.trim() === '')
                         console.error('updateEditor: resourceLabel is undefined');
                     else {
-                        let result = findCenterSplittedTabViewByPath(resourcePath);
+                        const resourcePath = `/${workspace}${oldPath}`;
+                        const newResourcePath = `/${workspace}${newPath}`;
+                        const result = findCenterSplittedTabViewByPath(resourcePath);
                         if (result) {
-                            result.tabsView.tabs[result.index].label = resourceLabel;
-                            result.tabsView.tabs[result.index].params.file = newResourcePath;
-                            // MessageHub.editorReloadParameters(resourcePath);
-                            shortenCenterTabsLabels();
-                            $scope.$digest();
+                            $scope.$evalAsync(() => {
+                                result.tabsView.tabs[result.index].label = resourceLabel;
+                                result.tabsView.tabs[result.index].params.file = newResourcePath;
+                                Workspace.reloadEditorParams({ workspace: workspace, path: oldPath });
+                                shortenCenterTabsLabels();
+                            })
                         }
                     }
                 };
@@ -1051,7 +1028,7 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                     if (result) {
                         let tab = result.tabsView.tabs[result.index];
                         if (tryCloseCenterTabs([tab])) {
-                            $scope.$digest();
+                            $scope.$evalAsync();
                         }
                     }
                 };
@@ -1107,7 +1084,7 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                                 $scope.rightTabs.push(rightViewTab);
                             }
 
-                        } else if (view.region === 'center-middle' || view.region === 'center-top' || view.region === 'center') {
+                        } else if (view.region === 'center') {
                             let result = findCenterSplittedTabViewById(view.id);
                             let currentTabsView = result ? result.tabsView : getCurrentCenterSplittedTabViewPane();
                             if (result) {
@@ -1132,19 +1109,26 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                         }
                     }
                 };
-                $scope.$on('$destroy', function () {
-                    MessageHub.removeMessageListener(openEditorListener);
-                    MessageHub.removeMessageListener(editorSetDirtyListener);
-                    MessageHub.removeMessageListener(editorCloseListener);
-                    MessageHub.removeMessageListener(editorCloseOthersListener);
-                    MessageHub.removeMessageListener(editorCloseAllListener);
-                    MessageHub.removeMessageListener(viewOpenListener);
+                $scope.$on('$destroy', () => {
+                    Layout.removeMessageListener(viewOpenListener);
+                    Workspace.removeMessageListener(viewSetDirtyListener);
+                    Workspace.removeMessageListener(editorCloseListener);
+                    Workspace.removeMessageListener(editorCloseAllListener);
+                    Layout.removeMessageListener(viewOpenListener);
+                    Layout.removeMessageListener(onGetOpenedViewsListener);
+                    Layout.removeMessageListener(onIsViewOpenListener);
+                    Workspace.removeMessageListener(onIsEditorOpenListener);
+                    Workspace.removeMessageListener(onOpenEditorListener);
+                    Workspace.removeMessageListener(onFileSavedListener);
+                    Workspace.removeMessageListener(onFileMovedListener);
+                    Workspace.removeMessageListener(onFileRenamedListener);
+                    Workspace.removeMessageListener(onFileDeletedListener);
                 });
             }],
             templateUrl: '/services/web/platform-core/ui/templates/layout.html'
         };
-    }])
-    .directive('accordion', (perspective) => ({
+    })
+    .directive('accordion', () => ({
         restrict: 'E',
         replace: true,
         transclude: true,
@@ -1153,20 +1137,22 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
             scope.getParams = (view) => JSON.stringify({
                 ...view.params,
                 container: 'layout',
-                perspectiveId: perspective.id,
+                perspectiveId: perspectiveData.id,
             });
         },
-        template: `<div class="bk-vbox bk-full-height">
+        template: `<div class="bk-vbox bk-full-height pf-accordion">
             <bk-panel class="pf-accordion-panel" ng-attr-shrink="{{!view.expanded}}" compact="::true" expanded="view.expanded" ng-repeat="view in views track by view.id">
                 <bk-panel-header>
                     <bk-panel-expand hint="{{view.expanded ? 'Collapse' : 'Expand' }} '{{::view.label}}' view"></bk-panel-expand>
                     <h4 bk-panel-title>{{::view.label}}</h4>
                 </bk-panel-header>
-                <iframe bk-panel-content title="{{::view.label}}" loading="{{::view.lazyLoad ? 'lazy' : 'eager'}}" ng-src="{{::view.path}}" data-parameters="{{::getParams(view)}}" class="fd-padding--none" aria-label="{{::view.label}} content"></iframe>
+                <bk-panel-content class="bk-full-height" aria-label="{{::view.label}} content">
+                    <iframe title="{{::view.label}}" loading="{{::view.lazyLoad ? 'lazy' : 'eager'}}" ng-src="{{::view.path}}" data-parameters="{{::getParams(view)}}"></iframe>
+                </bk-panel-content>
             </bk-panel>
         </div>`,
     }))
-    .directive('layoutTabContent', (perspective) => ({
+    .directive('layoutTabContent', () => ({
         restrict: 'E',
         replace: true,
         scope: { tab: '=' },
@@ -1174,12 +1160,12 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
             scope.getParams = () => JSON.stringify({
                 ...scope.tab.params,
                 container: 'layout',
-                perspectiveId: perspective.id,
+                perspectiveId: perspectiveData.id,
             });
         },
-        template: `<iframe loading="{{::tab.lazyLoad ? 'lazy' : 'eager'}}" ng-src="{{::tab.path}}" data-parameters="{{::getParams()}}"></iframe>`,
+        template: `<iframe title="{{::tab.label}}" loading="{{::tab.lazyLoad ? 'lazy' : 'eager'}}" ng-src="{{::tab.path}}" data-parameters="{{getParams()}}"></iframe>`,
     }))
-    .directive('splittedTabs', (MessageHub) => ({
+    .directive('splittedTabs', (Layout) => ({
         restrict: 'E',
         transclude: true,
         replace: true,
@@ -1211,8 +1197,7 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
             };
 
             scope.canSplit = (pane) => {
-                if (pane.tabs.length < 2)
-                    return false;
+                if (pane.tabs.length < 2) return false;
 
                 const tab = pane.tabs.find(x => x.id === pane.selectedTab);
                 return tab && !tab.dirty;
@@ -1222,27 +1207,13 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                 return pane === scope.focusedPane;
             };
 
-            scope.isMoreTabsButtonVisible = (pane) => {
-                return pane.tabs.some(x => x.isHidden);
-            };
+            scope.isMoreTabsButtonVisible = (pane) => pane.tabs.some(x => x.isHidden);
 
-            scope.isEditorTab = () => {
-                return scope.editorTabs;
-            };
+            scope.isEditorTab = () => scope.editorTabs;
 
             scope.onTabClick = (pane, tabId, file) => {
                 pane.selectedTab = tabId;
-                // MessageHub.setTabFocus(tabId);
-
-                const autoRevealEnabled = window.localStorage.getItem('DIRIGIBLE.autoRevealActionEnabled');
-                if (file && (autoRevealEnabled === null || autoRevealEnabled === 'true')) {
-                    setTimeout(() => {
-                        MessageHub.postMessage({
-                            topic: 'projects.tree.select',
-                            data: { filePath: file }
-                        });
-                    }, 100);
-                }
+                Layout.focusView({ id: tabId, params: { file: file } });
             };
         },
         templateUrl: '/services/web/platform-core/ui/templates/splitted-tabs.html',

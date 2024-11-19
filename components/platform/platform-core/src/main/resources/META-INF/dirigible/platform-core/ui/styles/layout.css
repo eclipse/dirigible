@@ -14,6 +14,8 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  -webkit-margin-after: 0 !important;
+  margin-block-end: 0 !important;
 }
 
 .pf-accordion-panel[shrink="true"] {
@@ -25,8 +27,16 @@
   font-size: var(--sapFontSize);
 }
 
-.pf-accordion-panel:last-child>.fd-panel__content.fd-padding--none {
-  border-bottom: none;
+.pf-accordion-panel:not(:last-child) {
+  --fdPanel_Content_Border_Bottom_Color: var(--sapGroup_TitleBorderColor);
+}
+
+.pf-accordion-panel[shrink="true"]:last-child .fd-panel__header {
+  border-bottom: none
+}
+
+.pf-accordion:not(:has(.pf-accordion-panel[shrink="false"]))>.pf-accordion-panel:last-child .fd-panel__header {
+  border-bottom: .0625rem solid var(--sapGroup_TitleBorderColor);
 }
 
 .pf-accordion-panel.fd-panel.fd-panel--compact {

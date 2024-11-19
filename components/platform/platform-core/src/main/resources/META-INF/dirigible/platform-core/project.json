@@ -1,3 +1,5 @@
 {
-    "guid": "platform-core"
+    "guid": "platform-core",
+    "dependencies": [],
+    "actions": []
 }

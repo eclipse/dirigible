@@ -12,14 +12,33 @@
 angular.module('platformContextMenu', []).directive('contextMenu', () => ({
     restrict: 'E',
     replace: true,
-    controller: ['$scope', '$element', function ($scope, $element) {
+    controller: ['$scope', '$element', '$timeout', function ($scope, $element, $timeout) {
         const contextMenuApi = new ContextMenuApi();
         $scope.menuConfig = {
             items: []
         };
+        $scope.menuPos = {
+            position: 'absolute',
+            top: `0px`,
+            left: `0px`,
+        };
         const contextmenuListener = contextMenuApi.onContextMenu((config) => {
-            if (!$scope.menuConfig.items.length) $scope.$apply(() => {
+            if (!$scope.menuConfig.items.length) $scope.$evalAsync(() => {
                 $scope.menuConfig = config;
+                $scope.menuPos.top = `${$scope.menuConfig.posY}px`;
+                $scope.menuPos.left = `${$scope.menuConfig.posX}px`;
+                $timeout(() => {
+                    const top = ($element[0].firstElementChild.offsetTop + $element[0].firstElementChild.offsetHeight) - $element[0].offsetHeight;
+                    const left = ($element[0].firstElementChild.offsetLeft + $element[0].firstElementChild.offsetWidth) - $element[0].offsetWidth;
+                    if (top > 0) {
+                        $scope.menuConfig.posY -= top;
+                        $scope.menuPos.top = `${$scope.menuConfig.posY}px`;
+                    }
+                    if (left > 0) {
+                        $scope.menuConfig.posX -= left;
+                        $scope.menuPos.left = `${$scope.menuConfig.posX}px`;
+                    }
+                }, 0);
             });
         });
 
@@ -31,13 +50,7 @@ angular.module('platformContextMenu', []).directive('contextMenu', () => ({
             height: '100%',
             top: 0,
             left: 0,
-            'z-index': 220, //Just below the dialogs, just above the backdrop elements
-        });
-
-        $scope.getStyle = () => ({
-            position: 'fixed',
-            top: `${$scope.menuConfig.posY}px`,
-            left: `${$scope.menuConfig.posX}px`
+            'z-index': 220, // Just below the dialogs, just above the backdrop elements
         });
 
         $scope.canScroll = () => {
@@ -65,7 +78,7 @@ angular.module('platformContextMenu', []).directive('contextMenu', () => ({
         });
     }],
     template: `<div ng-style="backdropStyle()" ng-click="itemClick(undefined, $event)" ng-on-contextmenu="itemClick(undefined, $event)">
-    <bk-menu ng-if="menuConfig.items.length" ng-style="getStyle()" aria-label="{{menuConfig.ariaLabel || 'system contextmenu'}}" no-backdrop="true" can-scroll="canScroll()" has-icons="menuConfig.icons">
+    <bk-menu show="::true" ng-style="menuPos" aria-label="{{menuConfig.ariaLabel || 'system contextmenu'}}" no-backdrop="true" can-scroll="canScroll()" has-icons="menuConfig.icons">
         <context-menu-submenu items="menuConfig.items"></context-menu-submenu>
     </bk-menu><div>`,
 })).directive('contextMenuSubmenu', () => ({

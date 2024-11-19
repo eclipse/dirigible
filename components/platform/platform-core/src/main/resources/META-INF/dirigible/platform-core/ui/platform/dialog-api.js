@@ -154,15 +154,21 @@ class DialogApi extends MessageHubApi {
      * @property {('text'|'password'|'number'|'date'|'color'|'email'|'tel'|'time'|'url'|'datetime-local')} type - Type for the input. Specific to the 'input' control type.
      * @property {string} placeholder - Placeholder text for the 'input', 'textarea' and 'dropdown' control types.
      * @property {boolean} required - Sets the input as required. Common for all control types except 'checkbox'.
+     * @property {boolean} disabled - Sets the input as disabled. Common for all control types. On 'radio', it disables all options.
+     * @property {boolean} focus - Sets the input as focus, once the dialog appears. Common for all control types except 'checkbox', 'radio' and 'dropdown'.
      * @property {number} maxlength - Maximum character length for the input. Common for the 'input' and 'textarea' control types.
      * @property {number} minlength - Minimum character length for the input. Common for the 'input' and 'textarea' control types.
      * @property {number|string} max - Maximum value for the input. Only for the 'input' control of the 'number', 'date', 'time' and 'datetime-local' types.
      * @property {number|string} min - Minimum value for the input. Only for the 'input' control of the 'number', 'date', 'time' and 'datetime-local' types.
      * @property {number} step - Value step for the input. Only for the 'input' control of the 'number' type.
      * @property {{excluded: string[], patterns: string[]}} inputRules - Validation rules for the input. The 'excluded' array can contain strings that the input should not match. The 'patterns' array can contain regex expressions for validating the input. Common for the 'input' and 'textarea' control types.
+     * @property {boolean} submitOnEnter - If the user hits the enter key, while this input is focused, the form will get submitted. Valid only for the 'input' control type.
      * @property {Array.<{label: string, value: string|number}>} options - Options for the control type 'dropdown'.
+     * @property {string} [errorMsg] - The error hint that will be displayed, when the selected value is invalid. Common for all control types except 'checkbox' and 'radio'.
      * @property {{key: string, value: string|number|boolean}} enabledOn - Enables a control based on the state of another control. The 'key' property is the id of the target control. The 'value' is the value of the target control. If you only provide the key, it will get enabled when the target control has any valid value. If you also provide the value, it will get enabled when the target control's value matches.
+     * @property {{key: string, value: string|number|boolean}} disabledOn - Same as 'enabledOn' but with an opposite effect.
      * @property {{key: string, value: string|number|boolean}} visibleOn - Same as 'enabledOn' but instead of disabling/enabling the control, it will show/hide it.
+     * @property {{key: string, value: string|number|boolean}} hiddenOn - Same as 'visibleOn' but with an opposite effect.
      */
 
     /**
@@ -171,8 +177,8 @@ class DialogApi extends MessageHubApi {
      * @param {string} title - The title for the dialog.
      * @param {string} [subheader] - The subheader of the dialog.
      * @param {Object.<string, FormItem>} form - Object containing form item definitions. The key for each definition is used as id.
-     * @param {string} submitLabel - Label for the submit button.
-     * @param {string} cancelLabel - Label for the cancel button.
+     * @param {string} [submitLabel] - Label for the submit button.
+     * @param {string} [cancelLabel] - Label for the cancel button.
      * @param {string} [width] - Custom width for the window. This maps to the CSS width propery.
      * @param {string} [height] - Custom height for the window. This maps to the CSS height propery.
      * @param {string} [maxWidth] - Custom max width for the window. This maps to the CSS max-width propery.

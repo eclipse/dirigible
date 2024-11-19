@@ -19,7 +19,7 @@ angular.module('platformEditors', ['platformExtensions'])
 
             Extensions.getEditors().then(function (response) {
                 for (let i = 0; i < response.data.length; i++) {
-                    editorProviders[response.data[i].id] = response.data[i].link;
+                    editorProviders[response.data[i].id] = response.data[i].path;
                     if (response.data[i].defaultEditor) {
                         if (defaultEditor.id) console.error(`platform-editors: more then one editor is set as default - ${response.data[i].id}`);
                         else {

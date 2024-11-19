@@ -1675,5 +1675,5 @@ input {
 }
 
 .fd-shellbar {
-    border-bottom: 0.0625rem solid #2f2f2f;
+    border-bottom: 0.0625rem solid var(--sapPageHeader_BorderColor);
 }

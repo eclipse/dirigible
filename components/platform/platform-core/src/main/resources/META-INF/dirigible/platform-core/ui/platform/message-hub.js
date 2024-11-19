@@ -23,7 +23,7 @@ class MessageHubApi {
     }
 
     /**
-     * @param topic - The topic that will receive the message/data.
+     * @param {string} topic - Sends an empty message to a topic.
      */
     triggerEvent(topic) {
         if (topic) this.hubWindow.postMessage({ topic: topic }, this.targetOrigin);
@@ -31,7 +31,7 @@ class MessageHubApi {
     }
 
     /**
-     * @param topic - The topic to listen to.
+     * @param {string} topic - The topic to listen to.
      * @param data - This is the actual message/data that will be transmitted.
      */ // @ts-ignore
     postMessage({ topic = undefined, data } = {}) {
@@ -41,7 +41,7 @@ class MessageHubApi {
     }
 
     /**
-     * @param topic - The topic to listen to.
+     * @param {string} topic - The topic to listen to.
      * @param handler - Callback function that will handle the incomming message/data.
      * @returns - A reference to the listener. In order to remove/disable the listener, you need to use this reference and pass it to the 'removeMessageListener' function.
      */ // @ts-ignore

@@ -171,33 +171,31 @@ angular.module('platformSplit', []).constant('SplitPaneState', { EXPANDED: 0, CO
         }],
         template: '<div class="bk-split" ng-transclude></div>'
     };
-}]).directive('splitPane', function () {
-    return {
-        restrict: 'E',
-        require: '^split',
-        replace: true,
-        transclude: true,
-        scope: {
-            size: '@',
-            minSize: '<?',
-            maxSize: '<?',
-            snapOffset: '<?',
-        },
-        link: function (scope, element, _attrs, bgSplitCtrl) {
-            const paneData = scope.paneData = {
-                element: element,
-                size: scope.size,
-                minSize: scope.minSize,
-                maxSize: scope.maxSize,
-                snapOffset: Number(scope.snapOffset || 0)
-            };
+}]).directive('splitPane', () => ({
+    restrict: 'E',
+    require: '^split',
+    replace: true,
+    transclude: true,
+    scope: {
+        size: '@',
+        minSize: '<?',
+        maxSize: '<?',
+        snapOffset: '<?',
+    },
+    link: (scope, element, _attrs, bgSplitCtrl) => {
+        const paneData = scope.paneData = {
+            element: element,
+            size: scope.size,
+            minSize: scope.minSize,
+            maxSize: scope.maxSize,
+            snapOffset: Number(scope.snapOffset || 0)
+        };
 
-            bgSplitCtrl.addPane(paneData);
+        bgSplitCtrl.addPane(paneData);
 
-            scope.$on('$destroy', function () {
-                bgSplitCtrl.removePane(paneData);
-            });
-        },
-        template: '<div class="bk-split-pane" ng-transclude></div>'
-    }
-});
+        scope.$on('$destroy', () => {
+            bgSplitCtrl.removePane(paneData);
+        });
+    },
+    template: '<div class="bk-split-pane" ng-transclude></div>'
+}));

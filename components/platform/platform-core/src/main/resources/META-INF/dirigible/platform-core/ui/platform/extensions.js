@@ -20,32 +20,34 @@ angular.module('platformExtensions', [])
      *     editors: ["example-editors"],
      *     menus: ["example-menus"],
      *     windows: ["example-windows"],
-     *     themes: ["example-themes"]
+     *     themes: ["example-themes"],
+     *     settings: ["example-settings"],
      * })
      */
     .constant('extensionPoints', {})
-    .factory('Extensions', ['$http', 'extensionPoints', function ($http, extensionPoints) {
-        return {
-            getViews: function (exPoints = extensionPoints.views) {
-                return $http.get('/services/js/platform-core/extension-services/views.js', { params: { extensionPoints: exPoints }, cache: true });
-            },
-            getSubviews: function (exPoints = extensionPoints.subviews) {
-                return $http.get('/services/js/platform-core/extension-services/views.js', { params: { extensionPoints: exPoints ?? ['platform-subviews'] }, cache: true });
-            },
-            getWindows: function (exPoints = extensionPoints.windows) {
-                return $http.get('/services/js/platform-core/extension-services/views.js', { params: { extensionPoints: exPoints ?? ['platform-windows'] }, cache: true });
-            },
-            getEditors: function (exPoints = extensionPoints.editors) {
-                return $http.get('/services/js/platform-core/extension-services/editors.js', { params: { extensionPoints: exPoints }, cache: true });
-            },
-            getPerspectives: function (exPoints = extensionPoints.perspectives) {
-                return $http.get('/services/js/platform-core/extension-services/perspectives.js', { params: { extensionPoints: exPoints }, cache: true });
-            },
-            getMenus: function (exPoints = extensionPoints.menus) {
-                return $http.get('/services/js/platform-core/extension-services/menus.js', { params: { extensionPoints: exPoints }, cache: true });
-            },
-            getThemes: function (exPoints = extensionPoints.themes) {
-                return $http.get('/services/js/platform-core/extension-services/themes.js', { params: { extensionPoints: exPoints }, cache: true });
-            },
-        };
-    }]);
+    .factory('Extensions', ['$http', 'extensionPoints', ($http, extensionPoints) => ({
+        getViews: (exPoints = extensionPoints.views) => {
+            return $http.get('/services/js/platform-core/extension-services/views.js', { params: { extensionPoints: exPoints }, cache: true });
+        },
+        getSubviews: (exPoints = extensionPoints.subviews) => {
+            return $http.get('/services/js/platform-core/extension-services/views.js', { params: { extensionPoints: exPoints ?? ['platform-subviews'] }, cache: true });
+        },
+        getWindows: (exPoints = extensionPoints.windows) => {
+            return $http.get('/services/js/platform-core/extension-services/views.js', { params: { extensionPoints: exPoints ?? ['platform-windows'] }, cache: true });
+        },
+        getSettings: (exPoints = extensionPoints.settings) => {
+            return $http.get('/services/js/platform-core/extension-services/views.js', { params: { extensionPoints: exPoints ?? ['platform-settings'] }, cache: true });
+        },
+        getEditors: (exPoints = extensionPoints.editors) => {
+            return $http.get('/services/js/platform-core/extension-services/editors.js', { params: { extensionPoints: exPoints }, cache: true });
+        },
+        getPerspectives: (exPoints = extensionPoints.perspectives) => {
+            return $http.get('/services/js/platform-core/extension-services/perspectives.js', { params: { extensionPoints: exPoints }, cache: true });
+        },
+        getMenus: (exPoints = extensionPoints.menus) => {
+            return $http.get('/services/js/platform-core/extension-services/menus.js', { params: { extensionPoints: exPoints }, cache: true });
+        },
+        getThemes: (exPoints = extensionPoints.themes) => {
+            return $http.get('/services/js/platform-core/extension-services/themes.js', { params: { extensionPoints: exPoints }, cache: true });
+        },
+    })]);

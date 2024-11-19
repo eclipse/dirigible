@@ -53,7 +53,7 @@ editorLoop: for (let i = 0; i < editorExtensions?.length; i++) {
 		}
 	} else if (editor.role && user.isInRole(editor.role)) {
 		editors.push(editor);
-	} else if (view.role === undefined) {
+	} else if (editor.role === undefined) {
 		editors.push(editor);
 	}
 }

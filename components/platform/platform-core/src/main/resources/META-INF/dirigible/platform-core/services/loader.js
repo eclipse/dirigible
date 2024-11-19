@@ -15,12 +15,12 @@ import { uuid } from 'sdk/utils';
 
 const COOKIE_PREFIX = 'DIRIGIBLE.platform-core.loader.';
 
-const scriptId = request.getParameter('id');
-if (scriptId) {
-    if (isCached(scriptId)) {
+const scriptIds = request.getParameter('ids') ?? request.getParameter('id');
+if (scriptIds) {
+    if (isCached(scriptIds)) {
         responseNotModified();
     } else {
-        processScriptRequest(scriptId);
+        processScriptRequest(scriptIds);
     }
 } else {
     responseBadRequest('Provide the \'id\' parameter of the script');
@@ -59,23 +59,27 @@ function isCached(scriptId) {
     return false;
 }
 
-function processScriptRequest(scriptId) {
-    let locations = getLocations(scriptId);
-    if (locations) {
-        let contentType = scriptId.endsWith('-js') ? 'text/javascript;charset=UTF-8' : 'text/css';
-        response.setContentType(contentType);
-
-        setETag(scriptId);
-        locations.forEach(function (scriptLocation) {
-            let text = registry.getText(scriptLocation);
-            if (text.includes('//# sourceMappingURL=')) {
-                text = text.replace('//# sourceMappingURL=', `//# sourceMappingURL=/webjars${scriptLocation.slice(0, scriptLocation.lastIndexOf('/') + 1)}`)
-            }
-            response.println(text);
-        });
-    } else {
-        responseBadRequest(`Script with id '${scriptId}' is not known.`);
+function processScriptRequest(scriptIds) {
+    const ids = scriptIds.split(',');
+    let contentType = ids[0].endsWith('-js') ? 'text/javascript;charset=UTF-8' : 'text/css';
+    let responseContent = '';
+    for (let i = 0; i < ids.length; i++) {
+        let locations = getLocations(ids[i]);
+        if (locations) {
+            locations.forEach(function (scriptLocation) {
+                let text = registry.getText(scriptLocation);
+                if (text.includes('//# sourceMappingURL=')) {
+                    text = text.replace('//# sourceMappingURL=', `//# sourceMappingURL=/webjars${scriptLocation.slice(0, scriptLocation.lastIndexOf('/') + 1)}`)
+                }
+                responseContent += text;
+            });
+        } else {
+            responseBadRequest(`Loader: '${ids[i]}' is not a valid id.`);
+        }
     }
+    response.setContentType(contentType);
+    setETag(scriptIds);
+    response.println(responseContent);
 }
 
 function getLocations(scriptId) {
@@ -89,6 +93,7 @@ function getLocations(scriptId) {
         '/platform-core/utilities/uri-builder.js',
         '/platform-core/ui/platform/user.js',
         '/platform-core/ui/platform/message-hub.js',
+        '/platform-core/ui/platform/layout-api.js',
         '/platform-core/ui/platform/status-bar-api.js',
         '/platform-core/ui/platform/extensions.js',
         '/platform-core/ui/platform/theming-api.js',
@@ -99,6 +104,7 @@ function getLocations(scriptId) {
         '/platform-core/ui/platform/notification-api.js',
         '/platform-core/ui/platform/contextmenu-api.js',
         '/platform-core/ui/platform/contextmenu.js',
+        '/platform-core/ui/platform/shortcuts.js',
         '/platform-core/ui/blimpkit/blimpkit.js',
         '/platform-core/ui/blimpkit/avatar.js',
         '/platform-core/ui/blimpkit/badge.js',
@@ -139,8 +145,9 @@ function getLocations(scriptId) {
         '/platform-core/ui/blimpkit/toolbar.js',
         '/platform-core/ui/blimpkit/upload-collection.js',
         '/platform-core/ui/blimpkit/vertical-navigation.js',
-        '/platform-core/ui/blimpkit/wizard.js'
+        '/platform-core/ui/blimpkit/wizard.js',
     ];
+    const cookies = '/angularjs/1.8.2/angular-cookies.min.js';
     const viewCss = [
         '/fundamental-styles/0.38.0/dist/fundamental-styles.css',
         '/platform-core/ui/styles/blimpkit.css',
@@ -152,8 +159,8 @@ function getLocations(scriptId) {
         case 'perspective-js':
             return [
                 ...baseJs,
-                '/angularjs/1.8.2/angular-cookies.min.js',
                 '/split.js/1.6.5/dist/split.min.js',
+                '/service-workspace/workspace-api.js',
                 '/platform-core/ui/platform/split.js',
                 '/platform-core/ui/platform/editors.js',
                 '/platform-core/ui/platform/layout.js',
@@ -161,8 +168,7 @@ function getLocations(scriptId) {
         case 'shell-js':
             return [
                 ...baseJs,
-                '/angularjs/1.8.2/angular-cookies.min.js',
-                '/platform-core/ui/platform/brand.js',
+                cookies,
                 '/platform-core/ui/platform/shell.js',
             ];
         case 'file-upload-js':
@@ -184,6 +190,8 @@ function getLocations(scriptId) {
             return ['/ide-monaco/embeddable/editor.js', '/monaco-editor/0.40.0/min/vs/loader.js', '/monaco-editor/0.40.0/min/vs/editor/editor.main.nls.js', '/monaco-editor/0.40.0/min/vs/editor/editor.main.js'];
         case 'code-editor-css':
             return ['/ide-monaco/css/embeddable.css', '/monaco-editor/0.40.0/min/vs/editor/editor.main.css'];
+        case 'cookies':
+            return [cookies];
     }
 }
 

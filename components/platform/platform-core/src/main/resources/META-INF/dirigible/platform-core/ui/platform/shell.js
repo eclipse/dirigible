@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-angular.module('platformShell', ['ngCookies', 'platformUser', 'platformBrand', 'platformExtensions', 'platformTheming', 'platformDialogs', 'platformContextMenu'])
+angular.module('platformShell', ['ngCookies', 'platformUser', 'platformExtensions', 'platformDialogs', 'platformContextMenu'])
     .value('shellState', {
         perspectiveInternal: {
             id: '',
@@ -56,14 +56,13 @@ angular.module('platformShell', ['ngCookies', 'platformUser', 'platformBrand', '
         $compileProvider.debugInfoEnabled(false);
         $compileProvider.commentDirectivesEnabled(false);
         $compileProvider.cssClassDirectivesEnabled(false);
-    }).directive('shellHeader', ($cookies, $http, $window, branding, theming, User, Extensions, shellState, notifications, MessageHub, ButtonStates) => ({
+    }).directive('shellHeader', ($window, User, Extensions, shellState, notifications, MessageHub) => ({
         restrict: 'E',
         replace: true,
         link: (scope, element) => {
-            const notificationStateKey = `${branding.keyPrefix}.notifications`;
+            const notificationStateKey = `${brandingInfo.keyPrefix}.notifications`;
             const dialogApi = new DialogApi();
-            const themingApi = new ThemingApi();
-            scope.themes = [];
+            const layoutApi = new LayoutApi();
             scope.perspectiveId = shellState.perspective.id;
             shellState.registerStateListener((data) => {
                 scope.perspectiveId = data.id;
@@ -79,8 +78,7 @@ angular.module('platformShell', ['ngCookies', 'platformUser', 'platformBrand', '
                 localStorage.setItem(notificationStateKey, JSON.stringify(scope.notifications));
             };
             scope.selectedNotification = '';
-            scope.branding = branding;
-            scope.currentTheme = theming.getCurrentTheme();
+            scope.branding = brandingInfo;
             scope.username = undefined;
             User.getName().then((data) => {
                 scope.username = data.data;
@@ -121,17 +119,14 @@ angular.module('platformShell', ['ngCookies', 'platformUser', 'platformBrand', '
             });
             resizeObserver.observe(element.find('#spacer')[0]);
 
-            const themesLoadedListener = themingApi.onThemesLoaded(() => scope.themes = theming.getThemes());
-
-            scope.getLocalTime = (timestamp) => {
-                return new Date(timestamp).toLocaleDateString(navigator.languages, {
-                    hour: 'numeric',
-                    minute: 'numeric',
-                    day: 'numeric',
-                    month: 'numeric',
-                    year: '2-digit'
-                })
-            };
+            scope.getLocalTime = (timestamp) => new Date(timestamp).toLocaleDateString(
+                navigator.languages, {
+                hour: 'numeric',
+                minute: 'numeric',
+                day: 'numeric',
+                month: 'numeric',
+                year: '2-digit'
+            });
 
             scope.notificationSelect = (id) => {
                 scope.selectedNotification = id;
@@ -158,10 +153,7 @@ angular.module('platformShell', ['ngCookies', 'platformUser', 'platformBrand', '
 
             scope.menuClick = (item) => {
                 if (item.action === 'openView') {
-                    MessageHub.postMessage({
-                        topic: 'platform.layout.view.open',
-                        data: { id: item.id, params: item.data }
-                    });
+                    layoutApi.openView({ id: item.id, params: item.data });
                 } else if (item.action === 'showPerspective') {
                     shellState.perspective = {
                         id: item.id,
@@ -179,12 +171,6 @@ angular.module('platformShell', ['ngCookies', 'platformUser', 'platformBrand', '
                 }
             };
 
-            scope.setTheme = (themeId, name) => {
-                scope.currentTheme.id = themeId;
-                scope.currentTheme.name = name;
-                theming.setTheme(themeId);
-            };
-
             scope.isScrollable = (items) => {
                 if (items) {
                     for (let i = 0; i < items.length; i++)
@@ -193,46 +179,9 @@ angular.module('platformShell', ['ngCookies', 'platformUser', 'platformBrand', '
                 return true;
             };
 
-            scope.resetAll = () => {
-                dialogApi.showDialog({
-                    title: `Reset ${scope.branding.brand}`,
-                    message: `This will clear all settings, open tabs and cache.\n${scope.branding.brand} will then reload.\nDo you wish to continue?`,
-                    buttons: [
-                        { id: 'yes', label: 'Yes', state: ButtonStates.Emphasized },
-                        { id: 'no', label: 'No' }
-                    ],
-                    closeButton: false
-                }).then((buttonId) => {
-                    if (buttonId === "yes") {
-                        dialogApi.showBusyDialog('Resetting...');
-                        localStorage.clear();
-                        theming.reset();
-                        $http.get('/services/js/platform-core/services/clear-cache.js').then(() => {
-                            for (let cookie in $cookies.getAll()) {
-                                if (cookie.startsWith('DIRIGIBLE')) {
-                                    $cookies.remove(cookie, { path: '/' });
-                                }
-                            }
-                            location.reload();
-                        }, (error) => {
-                            console.error(error);
-                            dialogApi.closeBusyDialog();
-                            dialogApi.showAlert({
-                                title: 'Failed to reset',
-                                message: 'There was an error during the reset process. Please refresh manually.',
-                                type: AlertTypes.Error,
-                                preformatted: false,
-                            });
-                        });
-                    }
-                });
-            };
-
             scope.logout = () => {
                 location.replace('/logout');
             };
-
-            scope.$on('$destroy', () => themingApi.removeMessageListener(themesLoadedListener));
         },
         templateUrl: '/services/web/platform-core/ui/templates/header.html',
     })).directive('submenu', () => ({
@@ -271,6 +220,9 @@ angular.module('platformShell', ['ngCookies', 'platformUser', 'platformBrand', '
                 }
             },
             post: (scope) => {
+                shellState.registerStateListener((data) => {
+                    scope.activeId = data.id;
+                });
                 function setDefaultPerspective() {
                     if (scope.config.perspectives.length) {
                         if (scope.config.perspectives[0].items) {
@@ -300,13 +252,12 @@ angular.module('platformShell', ['ngCookies', 'platformUser', 'platformBrand', '
                         return true;
                     }
                     return false;
-                }
+                };
                 scope.getIcon = (icon) => {
                     if (icon) return icon;
                     return '/services/web/platform-core/ui/images/unknown.svg';
                 };
                 scope.switchPerspective = (id, label) => {
-                    scope.activeId = id;
                     shellState.perspective = {
                         id: id,
                         label: label
@@ -448,6 +399,6 @@ angular.module('platformShell', ['ngCookies', 'platformUser', 'platformBrand', '
                 <span class="statusbar--text">{{ error }}</span>
                 <i class="statusbar--icon statusbar--link sap-icon--delete" ng-click="error = ''"></i>
             </div>
-            <div class="statusbar-label">{{ label }}</div>
+            <div class="statusbar-label" ng-if="label">{{ label }}</div>
         </div>`,
     }));

@@ -10,12 +10,12 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 const viewData = {
-	id: 'welcome',
-	label: 'Welcome',
-	lazyLoad: true,
-	region: 'center',
-	path: '/services/web/view-welcome/welcome.html'
-}
+    id: 'generalSettings',
+    label: 'General',
+    order: 1,
+    glyph: 'sap-icon--customize',
+    path: '/services/web/shell-ide/settings/general.html',
+};
 if (typeof exports !== 'undefined') {
-	exports.getView = () => viewData;
+    exports.getView = () => viewData;
 }

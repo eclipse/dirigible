@@ -16,10 +16,9 @@
         <bk-shellbar-group position="left" style="flex:0">
             <span ng-if="!collapseMenu" bk-shellbar-logo><img ng-src="{{ ::branding.logo }}"
                     alt="{{ ::branding.brand }}" width="32" height="32"></span>
-            <bk-popover bk-tool-header-element ng-if="collapseMenu">
+            <bk-popover ng-if="collapseMenu">
                 <bk-popover-control>
-                    <bk-button bk-tool-header-button compact="true" glyph="sap-icon--menu2"
-                        aria-label="main menu button">
+                    <bk-button bk-shellbar-button glyph="sap-icon--menu2" aria-label="main menu button">
                     </bk-button>
                 </bk-popover-control>
                 <bk-popover-body no-arrow="true" can-scroll="false">
@@ -41,9 +40,9 @@
             </bk-popover>
             <span bk-shellbar-title>{{ ::branding.brand }}</span>
             <div class="bk-hbox" ng-if="!collapseMenu">
-                <bk-popover bk-tool-header-element ng-repeat="menuItem in menus[perspectiveId].items track by $index">
+                <bk-popover ng-repeat="menuItem in menus[perspectiveId].items track by $index">
                     <bk-popover-control>
-                        <bk-button bk-tool-header-button compact="true" label="{{ menuItem.label }}" is-menu="true"
+                        <bk-button bk-shellbar-button label="{{ menuItem.label }}" is-menu="true"
                             aria-label="menu button {{ menuItem.label }}">
                         </bk-button>
                     </bk-popover-control>
@@ -59,10 +58,10 @@
                         </bk-menu>
                     </bk-popover-body>
                 </bk-popover>
-                <bk-popover bk-tool-header-element ng-show="menus[perspectiveId].include.window">
+                <bk-popover ng-show="menus[perspectiveId].include.window">
                     <bk-popover-control>
-                        <bk-button bk-tool-header-button compact="true" label="{{ systemMenus.window.label }}"
-                            is-menu="true" aria-label="menu button {{ systemMenus.window.label }}">
+                        <bk-button bk-shellbar-button label="{{ systemMenus.window.label }}" is-menu="true"
+                            aria-label="menu button {{ systemMenus.window.label }}">
                         </bk-button>
                     </bk-popover-control>
                     <bk-popover-body no-arrow="true" can-scroll="isScrollable(systemMenus.window.items)">
@@ -78,10 +77,10 @@
                         </bk-menu>
                     </bk-popover-body>
                 </bk-popover>
-                <bk-popover bk-tool-header-element ng-show="menus[perspectiveId].include.help || !menus[perspectiveId]">
+                <bk-popover ng-show="menus[perspectiveId].include.help || !menus[perspectiveId]">
                     <bk-popover-control>
-                        <bk-button bk-tool-header-button compact="true" label="{{ ::systemMenus.help.label }}"
-                            is-menu="true" aria-label="menu button {{ ::systemMenus.help.label }}">
+                        <bk-button bk-shellbar-button label="{{ ::systemMenus.help.label }}" is-menu="true"
+                            aria-label="menu button {{ ::systemMenus.help.label }}">
                         </bk-button>
                     </bk-popover-control>
                     <bk-popover-body no-arrow="true" can-scroll="::isScrollable(systemMenus.help.items)">
@@ -102,28 +101,10 @@
         <div style="flex:2;order:2;" id="spacer"></div>
         <bk-shellbar-group position="right" style="flex:0">
             <bk-shellbar-action>
-                <bk-popover close-innerclick="true" bk-tool-header-element class="bk-backdrop-element">
-                    <bk-popover-control>
-                        <bk-button bk-tool-header-button compact="true" label="Theme" title="Theme" is-menu="true"
-                            aria-label="theme menu button">
-                        </bk-button>
-                    </bk-popover-control>
-                    <bk-popover-body no-arrow="true" align="bottom-right">
-                        <bk-menu aria-label="theme menu">
-                            <bk-menu-item title="{{ ::theme.name }}" ng-repeat="theme in themes track by theme.id"
-                                has-separator="$last ? true : false"
-                                icon-before="{{ theme.id === currentTheme.id ? 'sap-icon--accept' : 'none' }}"
-                                ng-click="setTheme(theme.id, theme.name)"></bk-menu-item>
-                            <bk-menu-item title="Reset" icon-before="sap-icon--reset" ng-click="resetAll()">
-                            </bk-menu-item>
-                        </bk-menu>
-                    </bk-popover-body>
-                </bk-popover>
-            </bk-shellbar-action>
-            <bk-shellbar-action>
                 <bk-popover close-innerclick="false">
                     <bk-popover-control>
-                        <bk-button bk-tool-header-button compact="true" glyph="sap-icon--bell"
+                        <bk-button bk-shellbar-button glyph="sap-icon--bell"
+                            badge="{{notifications.length ? notifications.length : ''}}"
                             aria-label="notification list button" ng-click="notificationsPanelOpen()">
                         </bk-button>
                     </bk-popover-control>
@@ -171,8 +152,8 @@
                     </bk-popover-control>
                     <bk-popover-body align="bottom-right" can-scroll="false">
                         <div class="bk-padding--tiny bk-vbox bk-box--gap bk-list-border--bottom">
-                            <bk-form-label class="bk-font--small" for="usrn" colon="false">Username:</bk-form-label>
-                            <p id="usrn" class="fd-text">{{::username}}</p>
+                            <bk-form-label class="bk-font--small" colon="false">Username:</bk-form-label>
+                            <p class="fd-text">{{::username}}</p>
                         </div>
                         <bk-menu class="bk-full-width" has-icons="true" aria-label="user menu">
                             <bk-menu-item title="Logout" left-icon-class="sap-icon--log" ng-click="logout()">

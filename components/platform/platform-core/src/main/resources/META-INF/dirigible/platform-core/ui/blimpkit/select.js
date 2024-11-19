@@ -84,7 +84,7 @@ blimpkit.directive('bkSelect', (uuid, $window, $timeout, ScreenEdgeMargin, class
             if ($scope.dropdownFill) {
                 classList.push('fd-popover__body--dropdown-fill');
             }
-            if ($scope.placement && $scope.dropdownFixed !== 'true') {
+            if ($scope.placement && $scope.dropdownFixed !== true) {
                 switch ($scope.placement) {
                     case 'bottom':
                         classList.push('fd-popover__body--center');
@@ -180,6 +180,10 @@ blimpkit.directive('bkSelect', (uuid, $window, $timeout, ScreenEdgeMargin, class
             return selectedItem ? selectedItem.optionId : '';
         };
 
+        $scope.setMessageVisibility = (visible) => {
+            $scope.messageVisibile = visible;
+        };
+
         this.addItem = function (item) {
             $scope.items.push(item);
         }
@@ -200,7 +204,8 @@ blimpkit.directive('bkSelect', (uuid, $window, $timeout, ScreenEdgeMargin, class
         }
 
         $scope.getStyle = function () {
-            if ($scope.dropdownFixed === 'true' && rect !== undefined) {
+            if ($scope.dropdownFixed === true && rect !== undefined) {
+                rect = control.getBoundingClientRect();
                 if ($scope.defaultHeight < ScreenEdgeMargin.QUADRUPLE) {
                     return {
                         transition: 'none',
@@ -244,7 +249,7 @@ blimpkit.directive('bkSelect', (uuid, $window, $timeout, ScreenEdgeMargin, class
         });
     }],
     template: `<div class="fd-popover">
-        <div class="fd-popover__control" aria-disabled="{{ !!isDisabled }}">
+        <div class="fd-popover__control" aria-disabled="{{ !!isDisabled }}" ng-mouseover="setMessageVisibility(true)" ng-mouseleave="setMessageVisibility(false)">
             <div ng-class="getClasses()">
                 <button id="{{ buttonId }}" ng-class="getControlClasses()" ng-click="onControlClick($event)" aria-labelledby="{{ [labelId, textId].join(' ') }}" aria-expanded="{{ bodyExpanded }}" aria-haspopup="listbox" aria-disabled="{{ !!isDisabled }}" tabindex="0">
                     <span id="{{ textId }}" class="fd-select__text-content">{{ getSelectedItemText() }}</span>
@@ -256,7 +261,7 @@ blimpkit.directive('bkSelect', (uuid, $window, $timeout, ScreenEdgeMargin, class
             <div ng-if="message" aria-live="assertive" ng-class="getListMessageClasses()" role="alert">{{ message }}</div>
             <ul ng-class="getListClasses()" aria-activedescendant="{{ getSelectedItemId() }}" aria-labelledby="{{ labelId }}" role="listbox" ng-transclude></ul>
         </div>
-        <div ng-if="message && state" class="fd-popover__body fd-popover__body--no-arrow" aria-hidden="{{ bodyExpanded }}" ng-style="getStyle()">
+        <div ng-if="message && state && messageVisibile" class="fd-popover__body fd-popover__body--no-arrow" aria-hidden="{{ bodyExpanded }}" ng-style="getStyle()">
             <span ng-class="getFormMessageClasses()">{{ message }}</span>
         </div>
     </div>`

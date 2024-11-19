@@ -20,8 +20,7 @@
         <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
         <title config-title></title>
         <script type="text/javascript" src="config/about-window.js"></script>
-        <script type="text/javascript" src="/services/js/platform-core/services/loader.js?id=view-js">
-        </script>
+        <script type="text/javascript" src="/services/js/platform-core/services/loader.js?id=view-js"></script>
         <link type="text/css" rel="stylesheet" href="/services/js/platform-core/services/loader.js?id=view-css" />
         <script type="text/javascript" src="js/about.js"></script>
     </head>
@@ -30,37 +29,54 @@
         <bk-panel expanded="true" ng-if="version">
             <bk-panel-header>
                 <bk-panel-expand hint="expand panel version content"></bk-panel-expand>
-                <h4 bk-panel-title>{{version.productName}}</h4>
+                <h4 bk-panel-title>{{::version.productName}}</h4>
             </bk-panel-header>
             <bk-panel-content aria-label="Panel Content">
-                <table bk-table display-mode="compact" class="bk-list-border-top">
+                <table bk-table fixed="true" display-mode="compact" class="bk-list-border--top">
                     <tbody bk-table-body>
                         <tr bk-table-row>
                             <td bk-table-cell><strong>Version</strong></td>
-                            <td bk-table-cell>{{version.productVersion}}</td>
+                            <td bk-table-cell>{{::version.productVersion}}</td>
                         </tr>
                         <tr bk-table-row>
                             <td bk-table-cell><strong>Commit Id</strong></td>
                             <td bk-table-cell><a style="color:inherit"
                                     href="{{version.productRepository}}/commit/{{version.productCommitId}}"
-                                    target="_blank" rel="noopener noreferrer">{{version.productCommitId}}</a>
+                                    target="_blank" rel="noopener noreferrer">{{::version.productCommitId}}</a>
                             </td>
                         </tr>
                         <tr bk-table-row>
                             <td bk-table-cell><strong>Type</strong></td>
-                            <td bk-table-cell>{{version.productType}}</td>
+                            <td bk-table-cell>{{::version.productType}}</td>
                         </tr>
                         <tr bk-table-row>
                             <td bk-table-cell><strong>Instance</strong></td>
-                            <td bk-table-cell>{{version.instanceName}}</td>
+                            <td bk-table-cell>{{::version.instanceName}}</td>
                         </tr>
                         <tr bk-table-row>
                             <td bk-table-cell><strong>Repository</strong></td>
-                            <td bk-table-cell>{{version.repositoryProvider}}</td>
+                            <td bk-table-cell>{{::version.repositoryProvider}}</td>
                         </tr>
                         <tr bk-table-row>
                             <td bk-table-cell><strong>Database</strong></td>
-                            <td bk-table-cell>{{version.databaseProvider}}</td>
+                            <td bk-table-cell>{{::version.databaseProvider}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </bk-panel-content>
+        </bk-panel>
+
+        <bk-panel expanded="true">
+            <bk-panel-header>
+                <bk-panel-expand hint="expand panel version content"></bk-panel-expand>
+                <h4 bk-panel-title>BlimpKit</h4>
+            </bk-panel-header>
+            <bk-panel-content aria-label="Panel Content">
+                <table bk-table fixed="true" display-mode="compact" class="bk-list-border--top">
+                    <tbody bk-table-body>
+                        <tr bk-table-row>
+                            <td bk-table-cell><strong>Version</strong></td>
+                            <td bk-table-cell>{{::blimpKitVersion}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -73,7 +89,7 @@
                 <h4 bk-panel-title>Engines</h4>
             </bk-panel-header>
             <bk-panel-content aria-label="Panel Content">
-                <table bk-table display-mode="compact" class="bk-list-border-top">
+                <table bk-table fixed="true" display-mode="compact" class="bk-list-border--top">
                     <tbody bk-table-body>
                         <tr bk-table-row ng-repeat="engine in version.engines">
                             <td bk-table-cell>{{engine}}</td>
@@ -89,7 +105,7 @@
                 <h4 bk-panel-title>Synchronizers</h4>
             </bk-panel-header>
             <bk-panel-content aria-label="Panel Content">
-                <table bk-table display-mode="compact">
+                <table bk-table fixed="true" display-mode="compact">
                     <thead bk-table-header>
                         <tr bk-table-row>
                             <th bk-table-header-cell>Synchronizer</th>

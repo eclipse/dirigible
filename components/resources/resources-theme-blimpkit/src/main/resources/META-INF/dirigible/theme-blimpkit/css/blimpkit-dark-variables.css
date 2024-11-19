@@ -71,17 +71,17 @@
     --sapContent_IconHeight: 1rem;
     --sapContent_IconColor: #fff;
     --sapContent_ContrastIconColor: #1d1d1d;
-    --sapContent_NonInteractiveIconColor: #a6a6a6;
+    --sapContent_NonInteractiveIconColor: #afafaf;
     --sapContent_MarkerIconColor: #d3b6ff;
     --sapContent_MarkerTextColor: #64edd2;
-    --sapContent_MeasureIndicatorColor: #a6a6a6;
+    --sapContent_MeasureIndicatorColor: #afafaf;
     --sapContent_Selected_MeasureIndicatorColor: #fecc04;
     --sapContent_Placeholderloading_Background: #475566;
     --sapContent_Placeholderloading_Gradient: linear-gradient(to right, #475566 0%, #475566 20%, #74879f 50%, #475566 80%, #475566 100%);
     --sapContent_ImagePlaceholderBackground: #45617c;
     --sapContent_ImagePlaceholderForegroundColor: #d5dadd;
     --sapContent_RatedColor: #ffdf72;
-    --sapContent_UnratedColor: #a6a6a6;
+    --sapContent_UnratedColor: #afafaf;
     --sapContent_BusyColor: #fecc04;
     --sapContent_FocusColor: #e6e6e6;
     --sapContent_FocusStyle: dotted;
@@ -89,13 +89,13 @@
     --sapContent_ContrastFocusColor: #000;
     --sapContent_ShadowColor: #000;
     --sapContent_ContrastShadowColor: #fff;
-    --sapContent_Shadow0: 0 0 0.125rem 0 rgba(160, 160, 160, 0.6), 0 0.125rem 0.25rem 0 rgba(0, 0, 0, 0.2);
+    --sapContent_Shadow0: 0 0 0 0.0625rem rgba(160, 160, 160, 0.25), 0 0.125rem 0.25rem 0.0625rem rgba(0, 0, 0, 0.4);
     --sapContent_Shadow1: 0 0 0 0.0625rem rgba(160, 160, 160, 0.3), 0 0.125rem 0.5rem 0 rgba(0, 0, 0, 0.6);
     --sapContent_Shadow2: 0 0 0 0.0625rem rgba(160, 160, 160, 0.3), 0 0.25rem .875rem 0 rgba(0, 0, 0, 0.6);
     --sapContent_Shadow3: 0 0 0 0.0625rem rgba(160, 160, 160, 0.3), 0 1.25rem 5rem 0 rgba(0, 0, 0, 0.6);
     --sapContent_TextShadow: 0 0 0.125rem #000;
     --sapContent_ContrastTextShadow: none;
-    --sapContent_HeaderShadow: 0 0.125rem 0.125rem 0 rgba(0, 0, 0, 0.2), inset 0 -0.0625rem 0 0 #2f2f2f;
+    --sapContent_HeaderShadow: 0 0.125rem 0.125rem 0 rgba(0, 0, 0, 0.2), inset 0 -0.0625rem 0 0 #393939;
     --sapContent_Interaction_Shadow: inset 0 0 0 0.0625rem rgba(169, 180, 190, 0.25);
     --sapContent_Selected_Shadow: inset 0 0 0 0.0625rem rgba(77, 177, 255, 0.3);
     --sapContent_Negative_Shadow: inset 0 0 0 0.0625rem rgba(248, 38, 38, 0.3);
@@ -105,7 +105,7 @@
     --sapContent_Neutral_Shadow: inset 0 0 0 0.0625rem rgba(169, 180, 190, 0.3);
     --sapContent_SearchHighlightColor: #046c7a;
     --sapContent_HelpColor: #27975f;
-    --sapContent_LabelColor: #a6a6a6;
+    --sapContent_LabelColor: #afafaf;
     --sapContent_MonospaceFontFamily: "72Mono", "72Monofull", lucida console, monospace;
     --sapContent_MonospaceBoldFontFamily: "72Mono-Bold", "72Mono-Boldfull", lucida console, monospace;
     --sapContent_IconFontFamily: "SAP-icons";
@@ -448,10 +448,10 @@
     --sapButton_Neutral_Active_TextColor: #fff;
 
     --sapButton_Track_Background: #313131;
-    --sapButton_Track_BorderColor: #444444;
+    --sapButton_Track_BorderColor: #575757;
     --sapButton_Track_TextColor: #fff;
     --sapButton_Track_Hover_Background: #3e3e3e;
-    --sapButton_Track_Hover_BorderColor: #484848;
+    --sapButton_Track_Hover_BorderColor: #575757;
     --sapButton_Track_Selected_Background: #fecc04;
     --sapButton_Track_Selected_BorderColor: #fecc04;
     --sapButton_Track_Selected_TextColor: #fff;
@@ -493,7 +493,7 @@
     --sapField_Background: #242424;
     --sapField_BackgroundStyle: none;
     --sapField_TextColor: #fff;
-    --sapField_PlaceholderTextColor: #a6a6a6;
+    --sapField_PlaceholderTextColor: #afafaf;
     --sapField_BorderColor: #4e4e4e;
     --sapField_HelpBackground: #242424;
     --sapField_BorderWidth: .0625rem;
@@ -545,11 +545,11 @@
     --sapField_InformationShadow: none;
 
     --sapGroup_TitleBackground: #1d1d1d;
-    --sapGroup_TitleBorderColor: #313131;
+    --sapGroup_TitleBorderColor: #393939;
     --sapGroup_TitleTextColor: #fff;
     --sapGroup_Title_FontSize: 1rem;
     --sapGroup_ContentBackground: #1d1d1d;
-    --sapGroup_ContentBorderColor: #313131;
+    --sapGroup_ContentBorderColor: #393939;
     --sapGroup_BorderWidth: .0625rem;
     --sapGroup_BorderCornerRadius: .5rem;
     --sapGroup_FooterBackground: transparent;
@@ -572,7 +572,7 @@
     --sapList_Hover_Background: #2f2f2f;
     --sapList_AlternatingBackground: #1d1d1d;
     --sapList_GroupHeaderBackground: #1d1d1d;
-    --sapList_GroupHeaderBorderColor: #3d3d3d;
+    --sapList_GroupHeaderBorderColor: #787878;
     --sapList_GroupHeaderTextColor: #fff;
     --sapList_TableGroupHeaderBackground: #212121;
     --sapList_TableGroupHeaderBorderColor: #3d3d3d;
@@ -643,10 +643,10 @@
     --sapSlider_Active_RangeHandleBackground: transparent;
 
     --sapPageHeader_Background: #242424;
-    --sapPageHeader_BorderColor: #2f2f2f;
+    --sapPageHeader_BorderColor: #393939;
     --sapPageHeader_TextColor: #fff;
     --sapPageFooter_Background: #242424;
-    --sapPageFooter_BorderColor: #2f2f2f;
+    --sapPageFooter_BorderColor: #393939;
     --sapPageFooter_TextColor: #fff;
 
     --sapInfobar_Background: #3481df;
@@ -657,12 +657,12 @@
 
     --sapObjectHeader_Background: #242424;
     --sapObjectHeader_Hover_Background: #2a2a2a;
-    --sapObjectHeader_BorderColor: #2f2f2f;
+    --sapObjectHeader_BorderColor: #393939;
     --sapObjectHeader_Title_TextColor: #fff;
     --sapObjectHeader_Title_FontSize: 1.5rem;
     --sapObjectHeader_Title_SnappedFontSize: 1.25rem;
     --sapObjectHeader_Title_FontFamily: "72Black", "72Blackfull", "72", "72full", Arial, Helvetica, sans-serif;
-    --sapObjectHeader_Subtitle_TextColor: #a6a6a6;
+    --sapObjectHeader_Subtitle_TextColor: #afafaf;
 
     --sapBlockLayer_Background: #000;
 
@@ -672,9 +672,9 @@
     --sapTile_BorderColor: transparent;
     --sapTile_BorderCornerRadius: .75rem;
     --sapTile_TitleTextColor: #fff;
-    --sapTile_TextColor: #a6a6a6;
-    --sapTile_IconColor: #a6a6a6;
-    --sapTile_SeparatorColor: #2f2f2f;
+    --sapTile_TextColor: #afafaf;
+    --sapTile_IconColor: #afafaf;
+    --sapTile_SeparatorColor: #393939;
     --sapTile_Interactive_BorderColor: #4e4e4e;
     --sapTile_OverlayBackground: #1d1d1d;
     --sapTile_OverlayForegroundColor: #fff;

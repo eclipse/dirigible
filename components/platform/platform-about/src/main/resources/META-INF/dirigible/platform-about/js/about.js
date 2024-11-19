@@ -10,14 +10,15 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 angular.module('about', ['blimpKit', 'platformView'])
-    .controller('AboutController', function ($scope, $http) {
+    .controller('AboutController', ($scope, $http) => {
+        $scope.blimpKitVersion = angular.module('blimpKit').info().version;
         $scope.jobs = [];
 
         function getHealthStatus() {
             $http({
                 method: 'GET',
                 url: '/services/core/healthcheck'
-            }).then(function (healthStatus) {
+            }).then((healthStatus) => {
                 $scope.jobs.length = 0;
                 for (const [key, value] of Object.entries(healthStatus.data.jobs.statuses)) {
                     $scope.jobs.push({
@@ -25,16 +26,16 @@ angular.module('about', ['blimpKit', 'platformView'])
                         status: value,
                     });
                 }
-            }, function (e) {
-                console.error("Error retreiving the health status", e);
+            }, (e) => {
+                console.error('Error retreiving the health status', e);
             });
         };
 
-        setInterval(function () {
+        setInterval(() => {
             getHealthStatus();
         }, 10000);
 
-        $http.get('/services/core/version').then(function (response) {
+        $http.get('/services/core/version').then((response) => {
             $scope.version = response.data;
         });
 
