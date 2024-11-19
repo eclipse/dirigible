@@ -37,6 +37,15 @@
 				</h5>
 				<div class="wrap-list dg-hbox dg-box--gap">
 					<fd-card>
+						<fd-card-header ng-click="openView('/services/web/portal/')">
+							<fd-avatar glyph="sap-icon--home" dg-size="s" aria-label="applications portal icon">
+							</fd-avatar>
+							<fd-card-title>Applications Portal</fd-card-title>
+							<fd-card-subtitle>Central entry point to installed applications
+							</fd-card-subtitle>
+						</fd-card-header>
+					</fd-card>
+					<fd-card>
 						<fd-card-header ng-click="openView('/services/web/inbox/')">
 							<fd-avatar glyph="sap-icon--letter" dg-size="s" aria-label="process inbox icon">
 							</fd-avatar>
@@ -89,7 +98,7 @@
 						<fd-popover-body dg-align="bottom-right" max-height="306">
 							<fd-menu aria-label="Reference Data items">
 								<fd-menu-item title="{{::setting.name}}"
-									ng-repeat="setting in referenceData track by $index"></fd-menu-item>
+									ng-repeat="setting in referenceData track by $index" ng-click="openView(setting.location)"></fd-menu-item>
 							</fd-menu>
 						</fd-popover-body>
 					</fd-popover>

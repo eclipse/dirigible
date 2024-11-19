@@ -113,8 +113,7 @@ public class DataStore {
         if (this.dataSource == null) {
             this.dataSource = datasourcesManager.getDefaultDataSource();
         }
-        Configuration configuration = new Configuration().setProperty(Environment.DIALECT, "org.hibernate.dialect.H2Dialect")
-                                                         .setProperty(Environment.SHOW_SQL, "true")
+        Configuration configuration = new Configuration().setProperty(Environment.SHOW_SQL, "true")
                                                          .setProperty("hibernate.hbm2ddl.auto", "update")
                                                          .setProperty("hibernate.current_session_context_class",
                                                                  "org.hibernate.context.internal.ThreadLocalSessionContext");

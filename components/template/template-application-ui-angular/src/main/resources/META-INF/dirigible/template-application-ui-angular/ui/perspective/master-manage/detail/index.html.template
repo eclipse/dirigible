@@ -21,11 +21,11 @@
 		</fd-message-page>
 
 		<fd-toolbar has-title="true" ng-hide="data == null">
-			<fd-toolbar-title>Items ({{dataCount}})</fd-toolbar-title>
+			<fd-toolbar-title>Items <span fd-object-status text="{{dataCount}}" inverted="true"></fd-toolbar-title>
 			<fd-button compact="true" dg-type="transparent" dg-label="Filter" ng-click="openFilter()"></fd-button>
 			<fd-button ng-repeat="action in pageActions" compact="true" dg-type="transparent" dg-label="{{action.label}}" ng-click="triggerPageAction(action)"></fd-button>
 			<fd-toolbar-spacer></fd-toolbar-spacer>
-			<fd-button compact="true" dg-type="transparent" dg-label="Create" ng-click="createEntity()"
+			<fd-button compact="true" dg-type="emphasized" dg-label="Create" ng-click="createEntity()"
 				state="{{selectedMainEntityId == null ? 'disabled' : ''}}"></fd-button>
 		</fd-toolbar>
 		<fd-scrollbar class="dg-full-height" ng-hide="data == null">

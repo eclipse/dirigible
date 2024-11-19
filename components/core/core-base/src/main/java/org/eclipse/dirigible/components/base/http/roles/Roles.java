@@ -15,11 +15,11 @@ package org.eclipse.dirigible.components.base.http.roles;
 public enum Roles {
 
     /** The administrator. */
-    ADMINISTRATOR("ADMINISTRATOR"),
+    ADMINISTRATOR(RoleNames.ADMINISTRATOR),
     /** The developer. */
-    DEVELOPER("DEVELOPER"),
+    DEVELOPER(RoleNames.DEVELOPER),
     /** The operator. */
-    OPERATOR("OPERATOR");
+    OPERATOR(RoleNames.OPERATOR);
 
     /** The role name. */
     private final String roleName;
@@ -33,6 +33,14 @@ public enum Roles {
         this.roleName = roleName;
     }
 
+
+    public static class RoleNames {
+        public static final String OPERATOR = "OPERATOR";
+        public static final String DEVELOPER = "DEVELOPER";
+        public static final String ADMINISTRATOR = "ADMINISTRATOR";
+
+    }
+
     /**
      * Gets the role name.
      *
@@ -41,5 +49,4 @@ public enum Roles {
     public String getRoleName() {
         return roleName;
     }
-
 }

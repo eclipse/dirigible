@@ -150,7 +150,7 @@ public class H2Database {
                     config.setDataSourceClassName("org.h2.jdbcx.JdbcDataSource");
                     config.setPoolName("H2DBHikariPool");
                     config.setConnectionTestQuery("VALUES 1");
-                    config.addDataSourceProperty("URL", databaseUrl + "/" + name);
+                    config.addDataSourceProperty("URL", databaseUrl + "/" + name + ";LOCK_TIMEOUT=10000");
                     config.addDataSourceProperty("user", databaseUsername);
                     config.addDataSourceProperty("password", databasePassword);
                     config.setMinimumIdle(5);

@@ -348,7 +348,10 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 				cell.value.widgetIsMajor = msg.data.widgetIsMajor;
 				cell.value.widgetDropDownKey = msg.data.widgetDropDownKey;
 				cell.value.widgetDropDownValue = msg.data.widgetDropDownValue;
-				cell.value.widgetDropDownDependsOn = msg.data.widgetDropDownDependsOn;
+				cell.value.widgetDependsOnProperty = msg.data.widgetDependsOnProperty;
+				cell.value.widgetDependsOnEntity = msg.data.widgetDependsOnEntity;
+				cell.value.widgetDependsOnValueFrom = msg.data.widgetDependsOnValueFrom;
+				cell.value.widgetDependsOnFilterBy = msg.data.widgetDependsOnFilterBy;
 				cell.value.feedPropertyName = msg.data.feedPropertyName;
 				cell.value.roleRead = msg.data.roleRead;
 				cell.value.roleWrite = msg.data.roleWrite;
@@ -947,7 +950,10 @@ angular.module('ui.entity-data.modeler', ["ideUI", "ideView", "ideWorkspace", "i
 									widgetIsMajor: cell.value.widgetIsMajor,
 									widgetDropDownKey: cell.value.widgetDropDownKey,
 									widgetDropDownValue: cell.value.widgetDropDownValue,
-									widgetDropDownDependsOn: cell.value.widgetDropDownDependsOn,
+									widgetDependsOnProperty: cell.value.widgetDependsOnProperty,
+									widgetDependsOnEntity: cell.value.widgetDependsOnEntity,
+									widgetDependsOnValueFrom: cell.value.widgetDependsOnValueFrom,
+									widgetDependsOnFilterBy: cell.value.widgetDependsOnFilterBy,
 									feedPropertyName: cell.value.feedPropertyName,
 									roleRead: cell.value.roleRead,
 									roleWrite: cell.value.roleWrite,

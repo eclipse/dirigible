@@ -393,14 +393,14 @@
 					<fd-button dg-label="{{action === 'create' ? 'Create' : 'Update'}}" dg-type="emphasized" ng-click="action === 'create' ? create() : update()" state="{{ forms.details.$valid ? '' : 'disabled' }}"></fd-button>
 				</fd-bar-element>
 				<fd-bar-element>
-					<fd-button dg-label="Cancel" dg-type="transparent" ng-click="cancel()"></fd-button>
+					<fd-button dg-label="Cancel" ng-click="cancel()"></fd-button>
 				</fd-bar-element>
 			</fd-bar-right>
 		</fd-bar>
 		<fd-bar bar-design="footer" ng-show="action === 'select' && entityActions.length && entity.${primaryKeysString}">
 			<fd-bar-right>
 				<fd-bar-element ng-repeat="action in entityActions">
-					<fd-button dg-label="{{action.label}}" dg-type="emphasized" ng-click="triggerEntityAction(action)"></fd-button>
+					<fd-button dg-label="{{action.label}}" compact="true" ng-click="triggerEntityAction(action)"></fd-button>
 				</fd-bar-element>
 			</fd-bar-right>
 		</fd-bar>

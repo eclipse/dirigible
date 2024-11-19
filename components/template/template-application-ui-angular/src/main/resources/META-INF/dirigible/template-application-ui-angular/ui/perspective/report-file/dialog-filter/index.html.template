@@ -135,10 +135,10 @@
 					<fd-button dg-label="Filter" dg-type="emphasized" ng-click="filter()"></fd-button>
 				</fd-bar-element>
 				<fd-bar-element>
-					<fd-button dg-label="Reset" dg-type="transparent" ng-click="resetFilter()"></fd-button>
+					<fd-button dg-label="Reset" ng-click="resetFilter()"></fd-button>
 				</fd-bar-element>
 				<fd-bar-element>
-					<fd-button dg-label="Cancel" dg-type="transparent" ng-click="cancel()"></fd-button>
+					<fd-button dg-label="Cancel" ng-click="cancel()"></fd-button>
 				</fd-bar-element>
 			</fd-bar-right>
 		</fd-bar>

@@ -60,26 +60,6 @@ public class IDE {
         this.projectUtil = projectUtil;
     }
 
-    public void login() {
-        login(true);
-    }
-
-    public void login(boolean forceLogin) {
-        if (!forceLogin && !isLoginPageOpened()) {
-            LOGGER.info("Already logged in");
-            return;
-        }
-        LOGGER.info("Logging...");
-        browser.enterTextInElementByAttributePattern(HtmlElementType.INPUT, HtmlAttribute.ID, USERNAME_FIELD_ID, username);
-        browser.enterTextInElementByAttributePattern(HtmlElementType.INPUT, HtmlAttribute.ID, PASSWORD_FIELD_ID, password);
-        browser.clickOnElementByAttributePatternAndText(HtmlElementType.BUTTON, HtmlAttribute.TYPE, SUBMIT_TYPE, SIGN_IN_BUTTON_TEXT);
-    }
-
-    private boolean isLoginPageOpened() {
-        String pageTitle = browser.getPageTitle();
-        return LOGIN_PAGE_TITLE.equals(pageTitle);
-    }
-
     public void assertPublishingProjectMessage(String projectName) {
         String publishingMessage = "Publishing '/" + projectName + "'...";
         assertStatusBarMessage(publishingMessage);
@@ -112,6 +92,22 @@ public class IDE {
     public void openPath(String path) {
         browser.openPath(path);
         login(true);
+    }
+
+    public void login(boolean forceLogin) {
+        if (!forceLogin && !isLoginPageOpened()) {
+            LOGGER.info("Already logged in");
+            return;
+        }
+        LOGGER.info("Logging...");
+        browser.enterTextInElementByAttributePattern(HtmlElementType.INPUT, HtmlAttribute.ID, USERNAME_FIELD_ID, username);
+        browser.enterTextInElementByAttributePattern(HtmlElementType.INPUT, HtmlAttribute.ID, PASSWORD_FIELD_ID, password);
+        browser.clickOnElementByAttributePatternAndText(HtmlElementType.BUTTON, HtmlAttribute.TYPE, SUBMIT_TYPE, SIGN_IN_BUTTON_TEXT);
+    }
+
+    private boolean isLoginPageOpened() {
+        String pageTitle = browser.getPageTitle();
+        return LOGIN_PAGE_TITLE.equals(pageTitle);
     }
 
     public void createAndPublishProjectFromResources(String resourcesFolderPath) {
@@ -149,5 +145,14 @@ public class IDE {
 
     public void assertCreatedProject(String projectName) {
         assertStatusBarMessage("Created project '" + projectName + "'");
+    }
+
+    public void openSpringBootAdmin() {
+        browser.openPath("/spring-admin");
+        login();
+    }
+
+    public void login() {
+        login(true);
     }
 }

@@ -467,16 +467,50 @@
                                 ng-model="dataParameters.widgetDropDownValue">
                             </fd-input>
                         </div>
-                        <div class="fd-col fd-col-md--2" ng-show="dataParameters.widgetType === 'DROPDOWN'">
-                            <fd-form-label for="uidvdo" dg-colon="true">Dropdown depends on
+                    </fd-form-item>
+                    
+                    
+                    <fd-form-item class="fd-row fd-margin-top--tiny">
+                        <div class="fd-col fd-col-md--2">
+                            <fd-form-label for="dependsonproperty" dg-colon="true">Depends on Property
                             </fd-form-label>
                         </div>
-                        <div class="fd-col fd-col-md--2" ng-show="dataParameters.widgetType === 'DROPDOWN'">
-                            <fd-input id="uidvdo" type="text" ng-model="dataParameters.widgetDropDownDependsOn"
-                            	placeholder="Property name of the depending entity">
+                        <div class="fd-col fd-col-md--4">
+                            <fd-input id="dependsonproperty" type="text" ng-model="dataParameters.widgetDependsOnProperty"
+                            	placeholder="Property depending on">
+                            </fd-input>
+                        </div>
+                        <div class="fd-col fd-col-md--2">
+                            <fd-form-label for="dependsonentity" dg-colon="true">Depends on Entity
+                            </fd-form-label>
+                        </div>
+                        <div class="fd-col fd-col-md--4">
+                            <fd-input id="dependsonentity" type="text" ng-model="dataParameters.widgetDependsOnEntity"
+                            	placeholder="Entity depending on">
+                            </fd-input>
+                        </div>
+                        <div class="fd-col fd-col-md--2">
+                            <fd-form-label for="dependsonvaluefrom" dg-colon="true">Value From
+                            </fd-form-label>
+                        </div>
+                        <div class="fd-col fd-col-md--4">
+                            <fd-input id="dependsonvaluefrom" type="text" ng-model="dataParameters.widgetDependsOnValueFrom"
+                            	placeholder="Property used to get value from">
+                            </fd-input>
+                        </div>
+                        <div class="fd-col fd-col-md--2">
+                            <fd-form-label for="dependsonfilterby" dg-colon="true">Filter By
+                            </fd-form-label>
+                        </div>
+                        <div class="fd-col fd-col-md--4">
+                            <fd-input id="dependsonfilterby" type="text" ng-model="dataParameters.widgetDependsOnFilterBy"
+                            	placeholder="Property to set value to or filter by">
                             </fd-input>
                         </div>
                     </fd-form-item>
+                    
+                    
+                    
                     <fd-form-item class="fd-row fd-margin-top--tiny">
                         <div class="fd-col fd-col-md--2">
                             <fd-form-label for="uiws" dg-required="false" dg-colon="true">Widget size</fd-form-label>
