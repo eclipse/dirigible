@@ -1,0 +1,560 @@
+{
+  "data": [
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.DIRIGIBLE_MARKDOWN",
+      "spanKind": "client"
+    },
+    {
+      "name": "CREATE TABLE ./target/dirigible/h2/systemdb.QRTZ_JOB_DETAILS",
+      "spanKind": "client"
+    },
+    {
+      "name": "ALTER TABLE ./target/dirigible/h2/systemdb.QRTZ_SIMPLE_TRIGGERS",
+      "spanKind": "client"
+    },
+    {
+      "name": "GET /services/ide/workspaces",
+      "spanKind": "server"
+    },
+    {
+      "name": "INSERT ./target/dirigible/h2/systemdb.QRTZ_SCHEDULER_STATE",
+      "spanKind": "client"
+    },
+    {
+      "name": "INSERT ./target/dirigible/h2/systemdb.DIRIGIBLE_EXTENSION_POINTS",
+      "spanKind": "client"
+    },
+    {
+      "name": "GET /telemetry/logs",
+      "spanKind": "server"
+    },
+    {
+      "name": "UPDATE ./target/dirigible/h2/systemdb.DIRIGIBLE_JOBS",
+      "spanKind": "client"
+    },
+    {
+      "name": "GET",
+      "spanKind": "client"
+    },
+    {
+      "name": "UPDATE ./target/dirigible/h2/systemdb.DIRIGIBLE_DEFINITIONS",
+      "spanKind": "client"
+    },
+    {
+      "name": "CREATE INDEX ./target/dirigible/h2/systemdb",
+      "spanKind": "client"
+    },
+    {
+      "name": "ALTER TABLE ./target/dirigible/h2/systemdb.ACTIVEMQ_MSGS",
+      "spanKind": "client"
+    },
+    {
+      "name": "UPDATE ./target/dirigible/h2/systemdb.DIRIGIBLE_DATA_TABLES",
+      "spanKind": "client"
+    },
+    {
+      "name": "my-custom-get-ip-span-http-client",
+      "spanKind": "internal"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.QRTZ_PAUSED_TRIGGER_GRPS",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.DIRIGIBLE_DATA_SCHEMAS",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.DIRIGIBLE_CAMEL",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.DIRIGIBLE_ODATA",
+      "spanKind": "client"
+    },
+    {
+      "name": "ALTER TABLE ./target/dirigible/h2/systemdb.QRTZ_LOCKS",
+      "spanKind": "client"
+    },
+    {
+      "name": "INSERT ./target/dirigible/h2/systemdb.ACTIVEMQ_LOCK",
+      "spanKind": "client"
+    },
+    {
+      "name": "GET /services/web/{*path}",
+      "spanKind": "server"
+    },
+    {
+      "name": "my_api_client_span",
+      "spanKind": "internal"
+    },
+    {
+      "name": "INSERT ./target/dirigible/h2/systemdb.DIRIGIBLE_DATA_SOURCES",
+      "spanKind": "client"
+    },
+    {
+      "name": "CREATE TABLE ./target/dirigible/h2/systemdb.QRTZ_CALENDARS",
+      "spanKind": "client"
+    },
+    {
+      "name": "INSERT ./target/dirigible/h2/systemdb.DIRIGIBLE_TENANTS",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.ACTIVEMQ_MSGS",
+      "spanKind": "client"
+    },
+    {
+      "name": "INSERT ./target/dirigible/h2/systemdb.QRTZ_LOCKS",
+      "spanKind": "client"
+    },
+    {
+      "name": "INSERT ./target/dirigible/h2/systemdb.DIRIGIBLE_WEBSOCKETS",
+      "spanKind": "client"
+    },
+    {
+      "name": "CREATE TABLE ./target/dirigible/h2/systemdb.QRTZ_LOCKS",
+      "spanKind": "client"
+    },
+    {
+      "name": "CREATE table ./target/dirigible/h2/systemdb",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.QRTZ_SCHEDULER_STATE",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.DIRIGIBLE_JOB_PARAMETERS",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.DIRIGIBLE_CONFLUENCE",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.DIRIGIBLE_JOB_EMAILS",
+      "spanKind": "client"
+    },
+    {
+      "name": "ALTER TABLE ./target/dirigible/h2/systemdb.QRTZ_SIMPROP_TRIGGERS",
+      "spanKind": "client"
+    },
+    {
+      "name": "CREATE TABLE ./target/dirigible/h2/systemdb.ACTIVEMQ_MSGS",
+      "spanKind": "client"
+    },
+    {
+      "name": "ALTER table ./target/dirigible/h2/systemdb",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb",
+      "spanKind": "client"
+    },
+    {
+      "name": "INSERT ./target/dirigible/h2/systemdb.QRTZ_SIMPLE_TRIGGERS",
+      "spanKind": "client"
+    },
+    {
+      "name": "GET /public/js/{projectName}/{*projectFilePath}",
+      "spanKind": "server"
+    },
+    {
+      "name": "CREATE TABLE ./target/dirigible/h2/systemdb.QRTZ_SCHEDULER_STATE",
+      "spanKind": "client"
+    },
+    {
+      "name": "CREATE TABLE ./target/dirigible/h2/systemdb.QRTZ_TRIGGERS",
+      "spanKind": "client"
+    },
+    {
+      "name": "GET /telemetry/micrometer-counter",
+      "spanKind": "server"
+    },
+    {
+      "name": "INSERT ./target/dirigible/h2/systemdb.QRTZ_CRON_TRIGGERS",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.QRTZ_CRON_TRIGGERS",
+      "spanKind": "client"
+    },
+    {
+      "name": "ALTER TABLE ./target/dirigible/h2/systemdb.QRTZ_FIRED_TRIGGERS",
+      "spanKind": "client"
+    },
+    {
+      "name": "UPDATE ./target/dirigible/h2/systemdb.DIRIGIBLE_OPENAPI",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.QRTZ_FIRED_TRIGGERS",
+      "spanKind": "client"
+    },
+    {
+      "name": "INSERT ./target/dirigible/h2/systemdb.DIRIGIBLE_SECURITY_ROLES",
+      "spanKind": "client"
+    },
+    {
+      "name": "UPDATE ./target/dirigible/h2/systemdb.DIRIGIBLE_CSVIM",
+      "spanKind": "client"
+    },
+    {
+      "name": "INSERT ./target/dirigible/h2/systemdb.QRTZ_JOB_DETAILS",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.DIRIGIBLE_DATA_TABLES",
+      "spanKind": "client"
+    },
+    {
+      "name": "INSERT ./target/dirigible/h2/systemdb.QRTZ_FIRED_TRIGGERS",
+      "spanKind": "client"
+    },
+    {
+      "name": "ALTER TABLE ./target/dirigible/h2/systemdb.QRTZ_TRIGGERS",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.QRTZ_TRIGGERS",
+      "spanKind": "client"
+    },
+    {
+      "name": "INSERT ./target/dirigible/h2/systemdb.DIRIGIBLE_EXTENSIONS",
+      "spanKind": "client"
+    },
+    {
+      "name": "DELETE ./target/dirigible/h2/systemdb.QRTZ_FIRED_TRIGGERS",
+      "spanKind": "client"
+    },
+    {
+      "name": "CREATE TABLE ./target/dirigible/h2/systemdb.QRTZ_SIMPROP_TRIGGERS",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.ACTIVEMQ_ACKS",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.DIRIGIBLE_WEBSOCKETS",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.DIRIGIBLE_DATA_VIEWS",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.DIRIGIBLE_USER_ROLE_ASSIGNMENTS",
+      "spanKind": "client"
+    },
+    {
+      "name": "INSERT ./target/dirigible/h2/systemdb.DIRIGIBLE_SECURITY_ACCESS",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.DIRIGIBLE_LISTENERS",
+      "spanKind": "client"
+    },
+    {
+      "name": "UPDATE ./target/dirigible/h2/systemdb.QRTZ_FIRED_TRIGGERS",
+      "spanKind": "client"
+    },
+    {
+      "name": "INSERT ./target/dirigible/h2/systemdb.DIRIGIBLE_JOB_LOGS",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.DIRIGIBLE_PROBLEMS",
+      "spanKind": "client"
+    },
+    {
+      "name": "ALTER TABLE ./target/dirigible/h2/systemdb.QRTZ_PAUSED_TRIGGER_GRPS",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.DIRIGIBLE_SECURITY_ROLES",
+      "spanKind": "client"
+    },
+    {
+      "name": "INSERT ./target/dirigible/h2/systemdb.QRTZ_TRIGGERS",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.DIRIGIBLE_CSVIM",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.DIRIGIBLE_TENANTS",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.DIRIGIBLE_DATA_SOURCES",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.DIRIGIBLE_BPMN",
+      "spanKind": "client"
+    },
+    {
+      "name": "UPDATE ./target/dirigible/h2/systemdb.DIRIGIBLE_WEBSOCKETS",
+      "spanKind": "client"
+    },
+    {
+      "name": "UPDATE ./target/dirigible/h2/systemdb.DIRIGIBLE_ENTITIES",
+      "spanKind": "client"
+    },
+    {
+      "name": "my_custom_span",
+      "spanKind": "internal"
+    },
+    {
+      "name": "INSERT ./target/dirigible/h2/systemdb.DIRIGIBLE_JOBS",
+      "spanKind": "client"
+    },
+    {
+      "name": "CREATE TABLE ./target/dirigible/h2/systemdb.QRTZ_FIRED_TRIGGERS",
+      "spanKind": "client"
+    },
+    {
+      "name": "UPDATE ./target/dirigible/h2/systemdb.DIRIGIBLE_EXTENSIONS",
+      "spanKind": "client"
+    },
+    {
+      "name": "UPDATE ./target/dirigible/h2/systemdb.ACTIVEMQ_LOCK",
+      "spanKind": "client"
+    },
+    {
+      "name": "UPDATE ./target/dirigible/h2/systemdb.DIRIGIBLE_ODATA",
+      "spanKind": "client"
+    },
+    {
+      "name": "UPDATE ./target/dirigible/h2/systemdb.DIRIGIBLE_CAMEL",
+      "spanKind": "client"
+    },
+    {
+      "name": "UPDATE ./target/dirigible/h2/systemdb.DIRIGIBLE_SECURITY_ROLES",
+      "spanKind": "client"
+    },
+    {
+      "name": "UPDATE ./target/dirigible/h2/systemdb.DIRIGIBLE_BPMN",
+      "spanKind": "client"
+    },
+    {
+      "name": "ALTER TABLE ./target/dirigible/h2/systemdb.QRTZ_SCHEDULER_STATE",
+      "spanKind": "client"
+    },
+    {
+      "name": "UPDATE ./target/dirigible/h2/systemdb.DIRIGIBLE_EXTENSION_POINTS",
+      "spanKind": "client"
+    },
+    {
+      "name": "UPDATE ./target/dirigible/h2/systemdb.DIRIGIBLE_DATA_SOURCES",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.QRTZ_SIMPLE_TRIGGERS",
+      "spanKind": "client"
+    },
+    {
+      "name": "GET /services/ide/problems/search",
+      "spanKind": "server"
+    },
+    {
+      "name": "ALTER TABLE ./target/dirigible/h2/systemdb.QRTZ_CALENDARS",
+      "spanKind": "client"
+    },
+    {
+      "name": "./target/dirigible/h2/systemdb",
+      "spanKind": "client"
+    },
+    {
+      "name": "my-custom-get-ip-span-rest-template",
+      "spanKind": "internal"
+    },
+    {
+      "name": "GET",
+      "spanKind": "server"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.ACTIVEMQ_LOCK",
+      "spanKind": "client"
+    },
+    {
+      "name": "INSERT ./target/dirigible/h2/systemdb.DIRIGIBLE_USERS",
+      "spanKind": "client"
+    },
+    {
+      "name": "UPDATE ./target/dirigible/h2/systemdb.QRTZ_CRON_TRIGGERS",
+      "spanKind": "client"
+    },
+    {
+      "name": "DELETE ./target/dirigible/h2/systemdb.ACTIVEMQ_MSGS",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.DIRIGIBLE_SECURITY_ACCESS",
+      "spanKind": "client"
+    },
+    {
+      "name": "INSERT ./target/dirigible/h2/systemdb.DIRIGIBLE_OPENAPI",
+      "spanKind": "client"
+    },
+    {
+      "name": "HikariDataSource.getConnection",
+      "spanKind": "internal"
+    },
+    {
+      "name": "CREATE TABLE ./target/dirigible/h2/systemdb.ACTIVEMQ_ACKS",
+      "spanKind": "client"
+    },
+    {
+      "name": "UPDATE ./target/dirigible/h2/systemdb.QRTZ_SCHEDULER_STATE",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.QRTZ_JOB_DETAILS",
+      "spanKind": "client"
+    },
+    {
+      "name": "UPDATE ./target/dirigible/h2/systemdb.QRTZ_SIMPLE_TRIGGERS",
+      "spanKind": "client"
+    },
+    {
+      "name": "GET /services/js/{projectName}/{*projectFilePath}",
+      "spanKind": "server"
+    },
+    {
+      "name": "ALTER TABLE ./target/dirigible/h2/systemdb.ACTIVEMQ_ACKS",
+      "spanKind": "client"
+    },
+    {
+      "name": "INSERT ./target/dirigible/h2/systemdb.DIRIGIBLE_DEFINITIONS",
+      "spanKind": "client"
+    },
+    {
+      "name": "GET /telemetry/otel-span",
+      "spanKind": "server"
+    },
+    {
+      "name": "UPDATE ./target/dirigible/h2/systemdb.QRTZ_TRIGGERS",
+      "spanKind": "client"
+    },
+    {
+      "name": "UPDATE ./target/dirigible/h2/systemdb.DIRIGIBLE_DATA_SCHEMAS",
+      "spanKind": "client"
+    },
+    {
+      "name": "POST",
+      "spanKind": "server"
+    },
+    {
+      "name": "CREATE TABLE ./target/dirigible/h2/systemdb.QRTZ_SIMPLE_TRIGGERS",
+      "spanKind": "client"
+    },
+    {
+      "name": "CREATE TABLE ./target/dirigible/h2/systemdb.QRTZ_CRON_TRIGGERS",
+      "spanKind": "client"
+    },
+    {
+      "name": "INSERT ./target/dirigible/h2/systemdb.DIRIGIBLE_ENTITIES",
+      "spanKind": "client"
+    },
+    {
+      "name": "GET /services/ide/workspaces/{workspace}",
+      "spanKind": "server"
+    },
+    {
+      "name": "UPDATE ./target/dirigible/h2/systemdb.DIRIGIBLE_SECURITY_ACCESS",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.DIRIGIBLE_DEFINITIONS",
+      "spanKind": "client"
+    },
+    {
+      "name": "CREATE TABLE ./target/dirigible/h2/systemdb.QRTZ_PAUSED_TRIGGER_GRPS",
+      "spanKind": "client"
+    },
+    {
+      "name": "CREATE TABLE ./target/dirigible/h2/systemdb.ACTIVEMQ_LOCK",
+      "spanKind": "client"
+    },
+    {
+      "name": "ALTER TABLE ./target/dirigible/h2/systemdb.QRTZ_JOB_DETAILS",
+      "spanKind": "client"
+    },
+    {
+      "name": "UPDATE ./target/dirigible/h2/systemdb.DIRIGIBLE_DATA_VIEWS",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.DIRIGIBLE_OPENAPI",
+      "spanKind": "client"
+    },
+    {
+      "name": "CREATE TABLE ./target/dirigible/h2/systemdb.QRTZ_BLOB_TRIGGERS",
+      "spanKind": "client"
+    },
+    {
+      "name": "ALTER TABLE ./target/dirigible/h2/systemdb.QRTZ_CRON_TRIGGERS",
+      "spanKind": "client"
+    },
+    {
+      "name": "GET /telemetry/otel-metric-counter",
+      "spanKind": "server"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.DIRIGIBLE_DATA_SOURCE_PROPERTIES",
+      "spanKind": "client"
+    },
+    {
+      "name": "UPDATE ./target/dirigible/h2/systemdb.DIRIGIBLE_LISTENERS",
+      "spanKind": "client"
+    },
+    {
+      "name": "UPDATE ./target/dirigible/h2/systemdb.DIRIGIBLE_CONFLUENCE",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.DIRIGIBLE_EXTENSION_POINTS",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.DIRIGIBLE_JOBS",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT INFORMATION_SCHEMA.SEQUENCES",
+      "spanKind": "client"
+    },
+    {
+      "name": "UPDATE ./target/dirigible/h2/systemdb.DIRIGIBLE_MARKDOWN",
+      "spanKind": "client"
+    },
+    {
+      "name": "INSERT ./target/dirigible/h2/systemdb.DIRIGIBLE_USER_ROLE_ASSIGNMENTS",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.DIRIGIBLE_EXTENSIONS",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.DIRIGIBLE_ENTITIES",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.QRTZ_LOCKS",
+      "spanKind": "client"
+    },
+    {
+      "name": "SELECT ./target/dirigible/h2/systemdb.DIRIGIBLE_USERS",
+      "spanKind": "client"
+    }
+  ],
+  "total": 138,
+  "limit": 0,
+  "offset": 0,
+  "errors": null
+}
