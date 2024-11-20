@@ -33,7 +33,6 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
     $scope.hasMultipleProcedureResults = false;
     $scope.isEditDialogOpen = false;
     $scope.isDeleteDialogOpen = false;
-    // $scope.isShowContent = false;
     $scope.schemaName = null;
     $scope.tableName = null;
     $scope.selectedRow = null;
@@ -86,8 +85,8 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
     };
 
     $scope.openDeleteDialog = function (row) {
-        $scope.selectedRow = angular.copy(row); // Store the selected row for deletion
-        $scope.isDeleteDialogOpen = true; // Show the delete dialog
+        $scope.selectedRow = angular.copy(row);
+        $scope.isDeleteDialogOpen = true;
     };
 
     $scope.confirmDelete = function () {
@@ -108,8 +107,8 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
     };
 
     $scope.closeDeleteDialog = function () {
-        $scope.selectedRow = null; // Clear the selected row
-        $scope.isDeleteDialogOpen = false; // Hide the dialog
+        $scope.selectedRow = null;
+        $scope.isDeleteDialogOpen = false;
     };
 
     function findIdKey(dataObject) {
@@ -352,7 +351,6 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
         $scope.schemaName = data.schemaName;
         $scope.tableName = data.tableName;
         let sqlCommand = "SELECT * FROM \"" + data.schemaName + "\"" + "." + "\"" + data.tableName + "\";\n";
-        //messageHub.postMessage('database.sql.execute', sqlCommand, true);
         executeQuery({ data: sqlCommand });
     });
 
