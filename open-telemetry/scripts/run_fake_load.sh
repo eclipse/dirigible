@@ -7,8 +7,8 @@ URLS=(
     "http://localhost:8080/telemetry/otel-span?data=some-client-data"
     "http://localhost:8080/telemetry/otel-span_failure"
     "http://localhost:8080/telemetry/logs"
-    "http://localhost:8080/services/ts/open-telemetry-sample-project/sample-api-request.ts"
-    "http://localhost:8080/services/ts/open-telemetry-sample-project/sample-api-request-with-failure.ts"
+    "http://localhost:8080/services/ts/open-telemetry-sample-project/api/test-api.ts/data"
+    "http://localhost:8080/services/ts/open-telemetry-sample-project/api/test-api.ts/failure"
 )
 
 # Infinite loop
