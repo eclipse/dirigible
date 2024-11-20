@@ -15,8 +15,6 @@ services:
     depends_on:
       jaeger:
         condition: service_started
-      opensearch:
-        condition: service_healthy
 
   jaeger:
     image: jaegertracing/all-in-one:1.63.0
@@ -51,6 +49,8 @@ services:
       - "3000:3000"
 
   opensearch:
+    profiles:
+      - opensearch
     image: opensearchproject/opensearch:2.18.0
     container_name: opensearch
     deploy:
@@ -83,6 +83,8 @@ services:
       retries: 10
 
   opensearch-dashboards:
+    profiles:
+      - opensearch
     image: opensearch-dashboards-no-security:latest
     container_name: opensearch-dashboards
     build:
@@ -104,8 +106,6 @@ services:
     ports:
       - 3100:3100
     command: -config.file=/etc/loki/local-config.yaml
-#    volumes:
-#      - ./loki-config.yml:/etc/loki/loki-config.yaml
 
   dirigible-latest-image-with-agent:
     profiles:

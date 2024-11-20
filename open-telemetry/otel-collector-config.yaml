@@ -1,3 +1,5 @@
+#https://opentelemetry.io/docs/collector/configuration/
+
 receivers:
   otlp:
     protocols:
@@ -7,9 +9,9 @@ receivers:
         endpoint: 0.0.0.0:4318
 
 processors:
-#  batch:
-#    timeout: 5s
-#    send_batch_size: 10000
+  batch:
+    timeout: 5s
+    send_batch_size: 10000
 
 extensions:
   health_check: {}
@@ -38,13 +40,13 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-#      processors: [ batch ]
+      processors: [ batch ]
       exporters: [otlp/jaeger]
     metrics:
       receivers: [otlp]
-#      processors: [ batch ]
+      processors: [ batch ]
       exporters: [prometheus, debug]
     logs:
       receivers: [otlp]
-#      processors: [ batch ]
-      exporters: [opensearch, otlphttp/loki, debug]
+      processors: [ batch ]
+      exporters: [otlphttp/loki, debug]

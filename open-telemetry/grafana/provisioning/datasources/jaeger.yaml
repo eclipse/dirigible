@@ -14,6 +14,7 @@ datasources:
         query: '{service_name=~".+"}'
         spanEndTimeShift: 10s
         spanStartTimeShift: "-10s"
+#      Open search config
 #      tracesToLogsV2:
 #        customQuery: false
 #        datasourceUid: logs-opensearch

@@ -14,7 +14,7 @@ cd /Users/iliyan/work/git/dirigible-fork
 - Delete OpenTelemetry stack
     ```shell
     cd open-telemetry
-    COMPOSE_PROFILES=dirigible-local-agent,dirigible-local-spring-starter,dirigible-latest-image-with-agent docker compose down
+    COMPOSE_PROFILES=dirigible-local-agent,dirigible-local-spring-starter,dirigible-latest-image-with-agent,opensearch docker compose down
     ```
 - Start OpenTelemetry stack **without Dirigible**
     ```shell
