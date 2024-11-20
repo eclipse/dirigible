@@ -1,4 +1,4 @@
-#https://opentelemetry.io/docs/collector/configuration/
+# https://opentelemetry.io/docs/collector/configuration/
 
 receivers:
   otlp:
@@ -41,7 +41,7 @@ service:
     traces:
       receivers: [otlp]
       processors: [ batch ]
-      exporters: [otlp/jaeger]
+      exporters: [otlp/jaeger, debug]
     metrics:
       receivers: [otlp]
       processors: [ batch ]
