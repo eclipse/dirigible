@@ -12,6 +12,9 @@ package org.eclipse.dirigible.components.engine.bpm.flowable.config;
 import org.eclipse.dirigible.components.engine.bpm.BpmProvider;
 import org.eclipse.dirigible.components.engine.bpm.flowable.provider.BpmProviderFlowable;
 import org.eclipse.dirigible.repository.api.IRepository;
+import org.flowable.engine.ProcessEngine;
+import org.flowable.spring.boot.actuate.endpoint.ProcessEngineEndpoint;
+import org.flowable.spring.boot.actuate.info.FlowableInfoContributor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration;
@@ -45,6 +48,20 @@ public class BpmFlowableConfig {
     @Bean
     DataSourceTransactionManager provideTransactionManager(@Qualifier("SystemDB") DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
+    }
+
+    /**
+     * Enable actuator flowable endpoint
+     */
+    @Bean
+    ProcessEngineEndpoint processEngineEndpoint(BpmProviderFlowable bpmProviderFlowable) {
+        ProcessEngine engine = bpmProviderFlowable.getProcessEngine();
+        return new ProcessEngineEndpoint(engine);
+    }
+
+    @Bean
+    FlowableInfoContributor flowableInfoContributor() {
+        return new FlowableInfoContributor();
     }
 
 }
