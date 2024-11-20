@@ -11,37 +11,39 @@ let csrfToken;
 let lineDecorations = [];
 
 let monacoTheme = 'vs-light';
+let themeId = 'vs-light';
 let headElement = document.getElementsByTagName('head')[0];
 
 let autoThemeListener = false;
 
 function setTheme(theme, monaco) {
     if (!theme) theme = themingApi.getSavedTheme();
-    if (theme.links) {
-        let themeLinks = headElement.querySelectorAll("link[data-type='theme']");
-        for (let i = 0; i < themeLinks.length; i++) {
-            headElement.removeChild(themeLinks[i]);
-        }
-        for (let i = 0; i < theme.links.length; i++) {
-            const link = document.createElement('link');
-            link.type = 'text/css';
-            link.href = theme.links[i];
-            link.rel = 'stylesheet';
-            link.setAttribute("data-type", "theme");
-            headElement.appendChild(link);
-        }
+    themeId = theme.id;
+    let themeLinks = headElement.querySelectorAll("link[data-type='theme']");
+    for (let i = 0; i < themeLinks.length; i++) {
+        headElement.removeChild(themeLinks[i]);
+    }
+    for (let i = 0; i < theme.links.length; i++) {
+        const link = document.createElement('link');
+        link.type = 'text/css';
+        link.href = theme.links[i];
+        link.rel = 'stylesheet';
+        link.setAttribute("data-type", "theme");
+        headElement.appendChild(link);
     }
     if (theme.type === 'light') {
         monacoTheme = 'vs-light';
         if (monaco) monaco.editor.setTheme(monacoTheme);
         autoThemeListener = false;
     } else if (theme.type === 'dark') {
-        monacoTheme = 'blimpkit-dark';
+        if (themeId === 'classic-dark') monacoTheme = 'classic-dark';
+        else monacoTheme = 'blimpkit-dark';
         if (monaco) monaco.editor.setTheme(monacoTheme);
         autoThemeListener = false;
     } else {
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            monacoTheme = 'blimpkit-dark';
+            if (themeId.startsWith('classic')) monacoTheme = 'classic-dark';
+            else monacoTheme = 'blimpkit-dark';
         } else monacoTheme = 'vs-light';
         if (monaco) monaco.editor.setTheme(monacoTheme);
         autoThemeListener = true;
@@ -832,11 +834,32 @@ class DirigibleEditor {
             }
         });
 
+        this.monaco.editor.defineTheme('classic-dark', {
+            base: 'vs-dark',
+            inherit: true,
+            rules: [{ background: '1c2228' }],
+            colors: {
+                'editor.background': '#1c2228',
+                'breadcrumb.background': '#1c2228',
+                'minimap.background': '#1c2228',
+                'editorGutter.background': '#1c2228',
+                'editorMarkerNavigation.background': '#1c2228',
+                'input.background': '#29313a',
+                'input.border': '#8696a9',
+                'editorWidget.background': '#1c2228',
+                'editorWidget.border': '#495767',
+                'editorSuggestWidget.background': '#29313a',
+                'dropdown.background': '#29313a',
+            }
+        });
+
         this.monaco.editor.setTheme(monacoTheme);
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
             if (autoThemeListener) {
-                if (event.matches) monacoTheme = 'blimpkit-dark';
-                else monacoTheme = 'vs-light';
+                if (event.matches) {
+                    if (themeId.startsWith('classic')) monacoTheme = 'classic-dark';
+                    else monacoTheme = 'blimpkit-dark';
+                } else monacoTheme = 'vs-light';
                 this.monaco.editor.setTheme(monacoTheme);
             }
         });

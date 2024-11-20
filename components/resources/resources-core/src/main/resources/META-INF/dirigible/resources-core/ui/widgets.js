@@ -4021,9 +4021,9 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
                 'avatar': '?fdAvatar'
             },
             scope: {
-                interactive: '<'
+                interactive: '<?'
             },
-            link: function (scope, element, attributes, controller, $transclude) {
+            link: function (scope, element, _attributes, _controller, $transclude) {
                 if (scope.interactive === undefined)
                     scope.interactive = true;
 
@@ -4038,7 +4038,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
             },
             template: `<div ng-class="getClasses()" role="group">
                 <div class="fd-card__header-main">
-                    <div ng-class="getContainerClasses()" ng-attr-role="{{ interactive === true ? 'button' : undefined}}" ng-attr-tabindex="{{ interactive === true ? 0 : undefined}}" aria-description="{{description}}">
+                    <div class="fd-card__header-main-container" ng-attr-role="{{ interactive === true ? 'button' : undefined}}" ng-attr-tabindex="{{ interactive === true ? 0 : undefined}}" aria-description="{{description}}">
                         <ng-transclude ng-if="isAvatarFilled()" ng-transclude-slot="avatar"></ng-transclude>
                         <div class="fd-card__header-text">
                             <div class="fd-card__title-area"><ng-transclude ng-transclude-slot="title"></ng-transclude></div>
@@ -4055,7 +4055,7 @@ angular.module('ideUI', ['ngAria', 'ideMessageHub'])
     }]).directive('fdCardTitle', [function () {
         return {
             restrict: 'EA',
-            replace: false,
+            replace: true,
             transclude: true,
             template: `<div class="fd-card__title" role="heading" aria-level="3" ng-transclude></div>`
         }

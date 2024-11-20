@@ -392,7 +392,7 @@
     --fdTable_Header_Cell_Hover_Active_Color: var(--sapList_HeaderTextColor);
     --fdTable_Header_Horizontal_Border: var(--sapList_BorderWidth) solid var(--sapList_HeaderBorderColor);
     --fdTable_Group_Header_Background: var(--sapList_TableGroupHeaderBackground);
-    --fdTable_Border_Radius: 0.5rem;
+    --fdTable_Border_Radius: 0;
     --fdTable_Condensed_Focus_Outline_Offset: -0.0625rem;
     --fdTable_Hover_Down_Color: inherit;
 

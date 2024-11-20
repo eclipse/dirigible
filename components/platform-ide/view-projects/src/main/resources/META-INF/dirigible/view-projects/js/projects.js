@@ -1993,31 +1993,20 @@ projectsView.controller('ProjectsViewController', function (
             if (msg.filePath.startsWith(`/${$scope.selectedWorkspace.name}/`)) {
                 let filePath = msg.filePath.slice($scope.selectedWorkspace.name.length + 1);
                 const instance = $scope.jstreeWidget.jstree(true);
-                for (let item in instance._model.data) { // Uses the unofficial '_model' property but this is A LOT faster then using 'get_json()'
-                    if (item !== '#' && instance._model.data[item].data.path === filePath) {
-                        instance.deselect_all();
-                        instance._open_to(item).focus();
-                        instance.select_node(item);
-                        const objNode = instance.get_node(item, true);
-                        objNode[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        break;
+                if (typeof instance._model !== 'undefined')
+                    for (let item in instance._model.data) { // Uses the unofficial '_model' property but this is A LOT faster then using 'get_json()'
+                        if (item !== '#' && instance._model.data[item].data.path === filePath) {
+                            instance.deselect_all();
+                            instance._open_to(item).focus();
+                            instance.select_node(item);
+                            const objNode = instance.get_node(item, true);
+                            objNode[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            break;
+                        }
                     }
-                }
             }
         },
     });
-
-    // MessageHub.addMessageListener({
-    //     topic: 'projects.tree.contextmenu',
-    //     handler: (msg) => {
-    //         if (msg.data.itemId === 'open') {
-    //             if (msg.data.data) openFile(msg.data.data);
-    //             else openSelected();
-    //         } else if (msg.data.itemId === 'openWith') {
-    //             openFile(msg.data.data.node, msg.data.data.editorId);
-    //         }
-    //     },
-    // });
 
     angular.element($document[0]).ready(() => {
         $scope.reloadWorkspaceList();
