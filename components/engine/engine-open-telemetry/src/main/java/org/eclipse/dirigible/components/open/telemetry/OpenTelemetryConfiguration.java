@@ -1,4 +1,4 @@
-package org.eclipse.dirigible.open.telemetry;
+package org.eclipse.dirigible.components.open.telemetry;
 
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.OpenTelemetry;

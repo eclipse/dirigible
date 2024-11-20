@@ -7,7 +7,7 @@
  *
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors SPDX-License-Identifier: EPL-2.0
  */
-package org.eclipse.dirigible.open.telemetry;
+package org.eclipse.dirigible.components.open.telemetry;
 
 import io.opentelemetry.api.OpenTelemetry;
 import org.slf4j.Logger;
