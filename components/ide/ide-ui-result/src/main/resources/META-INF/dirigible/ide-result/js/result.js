@@ -78,39 +78,38 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
 
         executeQuery({ data: sqlCommand });
 
-        $scope.isEditDialogOpen = false;
+        $scope.closeEditDialog;
     };
 
     $scope.closeEditDialog = function () {
         $scope.isEditDialogOpen = false;
     };
 
-    $scope.deleteRow = function (row) {
-        $scope.isDeleteDialogOpen = true;
-        $scope.selectedRow = angular.copy(row);
-        const rowData = row;
-
-        const primaryKeyColumn = findIdKey(rowData);
-        const condition = `"${primaryKeyColumn}" = '${rowData[primaryKeyColumn]}'`;
-
-        const sqlCommand =
-            `DELETE FROM "${$scope.schemaName}"."${$scope.tableName}"\n` +
-            `WHERE ${condition};`;
-
-        executeQuery({ data: sqlCommand });
+    $scope.openDeleteDialog = function (row) {
+        $scope.selectedRow = angular.copy(row); // Store the selected row for deletion
+        $scope.isDeleteDialogOpen = true; // Show the delete dialog
     };
 
     $scope.confirmDelete = function () {
-        const index = $scope.rows.indexOf($scope.selectedRow);
-        if (index > -1) {
-            $scope.rows.splice(index, 1);
+        if (!$scope.selectedRow) {
+            console.error("No row selected for editing.");
+            return;
         }
+
+        const primaryKeyColumn = findIdKey($scope.selectedRow);
+        const condition = `"${primaryKeyColumn}" = '${$scope.selectedRow[primaryKeyColumn]}'`;
+
+        const sqlCommand =
+            `DELETE FROM "${$scope.schemaName}"."${$scope.tableName}" WHERE ${condition};`;
+
+        executeQuery({ data: sqlCommand });
+
         $scope.closeDeleteDialog();
     };
 
     $scope.closeDeleteDialog = function () {
-        $scope.isDeleteDialogOpen = false;
-        $scope.selectedRow = null;
+        $scope.selectedRow = null; // Clear the selected row
+        $scope.isDeleteDialogOpen = false; // Hide the dialog
     };
 
     function findIdKey(dataObject) {

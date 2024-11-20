@@ -80,7 +80,7 @@
                             <fd-button compact="true" glyph="sap-icon--edit" dg-type="transparent" aria-label="Edit"
                                 ng-click="editRow(row)">Edit</fd-button>
                             <fd-button compact="true" glyph="sap-icon--delete" dg-type="transparent" aria-label="Delete"
-                                ng-click="deleteRow(row)">Delete</fd-button>
+                                ng-click="openDeleteDialog(row)">Delete</fd-button>
                         </td>
                     </tr>
                 </tbody>
@@ -139,7 +139,18 @@
                 </form>
             </div>
         </div>
+        <div class="dialog-overlay" ng-show="isDeleteDialogOpen">
+            <div class="dialog">
+                <h3>Delete Row</h3>
+                <p>Are you sure you want to delete this row?</p>
+                <p><strong>{{selectedRow | json}}</strong></p> <!-- Display row details for confirmation -->
 
+                <div class="dialog-actions">
+                    <fd-button dg-label="Delete" dg-type="negative" ng-click="confirmDelete()">Delete</fd-button>
+                    <fd-button dg-label="Cancel" dg-type="transparent" ng-click="closeDeleteDialog()">Cancel</fd-button>
+                </div>
+            </div>
+        </div>
     </body>
 
 </html>
