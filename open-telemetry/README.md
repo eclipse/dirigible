@@ -1,34 +1,34 @@
 ## Setup
-This setup instruments OTEL Collector, Jaeger, Prometheus, Loki, OpenSearch and Grafana
-
+This setup instruments OTEL Collector, Jaeger, Prometheus, Loki, OpenSearch and Grafana.
 
 ### Profiles
+Depending on  the different scenarios you want to install, you can use different Docker profiles.
 __Prerequisites__
 ```shell
 export MAVEN_OPTS="-Xms1024m -Xmx4096m"
 cd <path_to_dirigible_git_repo>
-
-cd /Users/iliyan/work/git/dirigible-fork
-
 ```
+
 - Delete OpenTelemetry stack
     ```shell
     cd open-telemetry
     COMPOSE_PROFILES=dirigible-local-agent,dirigible-local-spring-starter,dirigible-latest-image-with-agent,opensearch docker compose down
     ```
+
 - Start OpenTelemetry stack **without Dirigible**
     ```shell
     cd open-telemetry
     docker compose up --detach
     ```
-- Start OpenTelemetry stack **with latest Dirigible image**
+
+- Start OpenTelemetry stack with **latest Dirigible image and OpenTelemetry agent**
     ```shell
     cd open-telemetry
     docker compose stop
     docker compose --profile dirigible-latest-image-with-agent up --detach --build
     ```
   
-- Start OpenTelemetry stack **with Dirigible from local sources and OpenTelemetry agent**
+- Start OpenTelemetry stack with **Dirigible from local sources and OpenTelemetry agent**
     ```shell
     cd <path_to_dirigible_git_repo>
   
@@ -39,7 +39,7 @@ cd /Users/iliyan/work/git/dirigible-fork
     docker compose --profile dirigible-local-agent up --detach --build
     ```
 
-- Start OpenTelemetry stack **with Dirigible from local sources and OpenTelemetry Spring Starter**
+- Start OpenTelemetry stack with **Dirigible from local sources and OpenTelemetry Spring Starter**
     ```shell
     cd <path_to_dirigible_git_repo>
   
@@ -49,18 +49,20 @@ cd /Users/iliyan/work/git/dirigible-fork
     docker compose stop
     docker compose --profile dirigible-local-spring-starter up --detach --build
     ```
+  
 ### Tool URLs
 
-| Tool                  |URL| Use for                    |
-|-----------------------|--|----------------------------|
-| Prometheus            |http://localhost:16686| Traces                     |
-| Jaeger Web UI         |http://localhost:9090| Metrics                    |
-| OpenSearch            |http://localhost:9200| Search and analytics suite |
-| OpenSearch Dashboards |http://localhost:5601| OpenSearch UI              |
-| Loki                  |http://localhost:3100| Log aggregation system     |
-| Grafana               |http://localhost:3000/grafana| Visualize all in one       | 
+| Tool                  | URL                           | Use for                    |
+|-----------------------|-------------------------------|----------------------------|
+| Prometheus            | http://localhost:16686        | Traces                     |
+| Jaeger Web UI         | http://localhost:9090         | Metrics                    |
+| OpenSearch            | http://localhost:9200         | Search and analytics suite |
+| OpenSearch Dashboards | http://localhost:5601         | OpenSearch UI              |
+| Loki                  | http://localhost:3100         | Log aggregation system     |
+| Grafana               | http://localhost:3000/grafana | Visualize all in one       | 
 
 #### Make telemetry load
+To generate random telemetry load using the testing APIs, execute the following script
 ```
 cd <path_to_dirigible_git_repo>
 

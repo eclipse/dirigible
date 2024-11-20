@@ -107,6 +107,9 @@ services:
       - 3100:3100
     command: -config.file=/etc/loki/local-config.yaml
 
+  ########################
+  #  Dirigible profiles
+  ########################
   dirigible-latest-image-with-agent:
     profiles:
       - dirigible-latest-image-with-agent
