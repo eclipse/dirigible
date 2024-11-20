@@ -7,6 +7,8 @@ URLS=(
     "http://localhost:8080/telemetry/otel-span?data=some-client-data"
     "http://localhost:8080/telemetry/otel-span_failure"
     "http://localhost:8080/telemetry/logs"
+    "http://localhost:8080/services/ts/open-telemetry-sample-project/sample-api-request.ts"
+    "http://localhost:8080/services/ts/open-telemetry-sample-project/sample-api-request-with-failure.ts"
 )
 
 # Infinite loop
@@ -22,7 +24,7 @@ while true; do
 
         # Make the HTTP GET request
         echo "Calling $URL"
-        curl -s -o /dev/null -w "%{http_code}\n" "$URL"
+        curl -s -o /dev/null -u admin:admin -w "%{http_code}\n" "$URL"
 
         # Random sleep time in milliseconds (0 to 1000 ms)
         SLEEP_MS=$((RANDOM % 1001))
