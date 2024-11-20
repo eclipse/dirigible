@@ -26,8 +26,8 @@ while true; do
         echo "Calling $URL"
         curl -s -o /dev/null -u admin:admin -w "%{http_code}\n" "$URL"
 
-        # Random sleep time in milliseconds (0 to 1000 ms)
-        SLEEP_MS=$((RANDOM % 1001))
+        # Random sleep time in milliseconds (0 to 2000 ms)
+        SLEEP_MS=$((RANDOM % 2001))
         echo "Sleeping for $SLEEP_MS milliseconds"
 
         # Convert to seconds and sleep

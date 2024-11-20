@@ -375,7 +375,7 @@ public class GraalJSCodeRunner implements CodeRunner<Source, Value> {
     public Value run(Source codeSource) {
         Tracer tracer = OpenTelemetryProvider.get()
                                              .getTracer("eclipse-dirigible-source-tracer");
-        Span span = tracer.spanBuilder("script-execution")
+        Span span = tracer.spanBuilder("script_execution")
                           .startSpan();
         try (Scope scope = span.makeCurrent()) {
             span.addEvent("Executing [" + codeSource.getPath() + "]");

@@ -15,10 +15,21 @@ cd <path_to_dirigible_git_repo>
     COMPOSE_PROFILES=dirigible-local-agent,dirigible-local-spring-starter,dirigible-latest-image-with-agent,opensearch docker compose down
     ```
 
-- Start OpenTelemetry stack **without Dirigible**
+- Start OpenTelemetry **default stack without Dirigible**
     ```shell
     cd open-telemetry
     docker compose up --detach
+    ```
+
+- Start OpenTelemetry **default stack + OpenSearch**
+    - You may want to
+      - add opensearch exporter for the logs in `otel-collector-config.yaml`
+      - change the jaeger trace to opensearch logs in `grafana/provisioning/datasources/jaeger.yaml`
+    - Start using 
+    ```shell
+    cd open-telemetry
+    docker compose stop
+    docker compose --profile opensearch up --detach
     ```
 
 - Start OpenTelemetry stack with **latest Dirigible image and OpenTelemetry agent**
