@@ -17,14 +17,15 @@ extensions:
   health_check: {}
 
 exporters:
+  debug:
+    # supported: basic, normal and detailed
+    verbosity: normal
   otlp/jaeger:
     endpoint: jaeger:4317
     tls:
       insecure: true
   prometheus:
     endpoint: "0.0.0.0:9090"
-  debug:
-    verbosity: detailed
   opensearch:
     logs_index: otel
     http:
