@@ -49,6 +49,10 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-view-problems</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-view-properties</artifactId>
 		</dependency>
 

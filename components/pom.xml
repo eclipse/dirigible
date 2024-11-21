@@ -203,6 +203,7 @@
 		<module>platform-ide/view-import</module>
 		<module>platform-ide/view-console</module>
 		<module>platform-ide/view-preview</module>
+		<module>platform-ide/view-problems</module>
 		<module>platform-ide/view-properties</module>
 		<module>platform-ide/service-workspace</module>
 		<module>platform-ide/service-transport</module>
@@ -1129,6 +1130,11 @@
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-components-view-preview</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-view-problems</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
