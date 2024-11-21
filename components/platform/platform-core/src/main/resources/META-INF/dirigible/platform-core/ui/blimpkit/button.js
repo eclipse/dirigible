@@ -38,7 +38,6 @@ blimpkit.constant('ButtonStates', {
                     arrowDirection: '@?',
                     isOverflow: '<?',
                     isSplit: '<?',
-                    inGroup: '<?',
                     inMsgStrip: '<?',
                     nested: '<?',
                     decisive: '<?',

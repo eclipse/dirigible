@@ -246,7 +246,7 @@ class DialogApi extends MessageHubApi {
      * @param {string} [callbackTopic] - Callback topic for when the window has been closed.
      * @param {boolean} [closeButton=true] - Should the dialog have a close button in the title bar.
      */ // @ts-ignore
-    showWindow({ hasHeader = true, header, title, subheader, message, id, path, params, width = '95%', height = '90%', maxWidth = '1280px', maxHeight = '768px', minWidth, minHeight, callbackTopic, closeButton = true } = {}) {
+    showWindow({ hasHeader = true, header, title, subheader, id, path, params, width = '95%', height = '90%', maxWidth = '1280px', maxHeight = '768px', minWidth, minHeight, callbackTopic, closeButton = true } = {}) {
         this.postMessage({
             topic: 'platform.dialog.window',
             data: {

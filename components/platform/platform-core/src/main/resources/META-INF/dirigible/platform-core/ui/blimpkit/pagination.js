@@ -19,6 +19,7 @@ blimpkit.directive('bkPagination', (uuid, classNames, $injector) => {
         replace: true,
         scope: {
             totalItems: '<',
+            totalItemsLabel: '@?',
             itemsPerPage: '=?',
             currentPage: '=?',
             compact: '<?',
@@ -27,8 +28,9 @@ blimpkit.directive('bkPagination', (uuid, classNames, $injector) => {
             pageChange: '&',
             itemsPerPageChange: '&',
             itemsPerPagePlacement: '@',
+            itemsPerPageLabel: '@?',
         },
-        link: function (scope) {
+        link: (scope) => {
             const maxButtonsInShortMode = 9; // must be an odd number (min 5)
             const maxInnerButtonsInShortMode = maxButtonsInShortMode - 4; //excluding left and right arrow buttons and first and last number buttons
 
@@ -41,30 +43,26 @@ blimpkit.directive('bkPagination', (uuid, classNames, $injector) => {
             scope.currentPageLabelId = `pag-page-label-${uuid.generate()}`;
             scope.currentPageOfLabelId = `pag-of-label-${uuid.generate()}`;
 
-            scope.isShortMode = function () {
-                return scope.getPageCount() <= maxButtonsInShortMode;
-            };
+            scope.isShortMode = () => scope.getPageCount() <= maxButtonsInShortMode;
 
-            scope.isCurrentPageValid = function (pageNumber) {
-                return pageNumber >= 1 && pageNumber <= scope.getPageCount();
-            };
+            scope.isCurrentPageValid = (pageNumber) => pageNumber >= 1 && pageNumber <= scope.getPageCount();
 
-            scope.changePage = function () {
+            scope.changePage = () => {
                 scope.gotoPage(scope.currentPageInput);
             };
 
-            scope.onCurrentPageInputChange = function () {
+            scope.onCurrentPageInputChange = () => {
                 scope.currentPageInputState = scope.isCurrentPageValid(scope.currentPageInput) ? null : 'error';
             };
 
-            scope.onCurrentPageInputBlur = function () {
+            scope.onCurrentPageInputBlur = () => {
                 if (scope.currentPageInput != scope.currentPage) {
                     scope.currentPageInput = scope.currentPage;
                     scope.currentPageInputState = null;
                 }
             };
 
-            scope.gotoPage = function (pageNumber) {
+            scope.gotoPage = (pageNumber) => {
                 if (scope.isCurrentPageValid(pageNumber)) {
                     scope.currentPage = pageNumber;
                     scope.currentPageInput = pageNumber;
@@ -73,47 +71,35 @@ blimpkit.directive('bkPagination', (uuid, classNames, $injector) => {
                 }
             };
 
-            scope.gotoFirstPage = function () {
+            scope.gotoFirstPage = () => {
                 scope.gotoPage(1);
             };
 
-            scope.gotoLastPage = function () {
+            scope.gotoLastPage = () => {
                 scope.gotoPage(scope.getPageCount());
             };
 
-            scope.gotoPrevPage = function () {
+            scope.gotoPrevPage = () => {
                 scope.gotoPage(scope.currentPage - 1);
             };
 
-            scope.gotoNextPage = function () {
+            scope.gotoNextPage = () => {
                 scope.gotoPage(scope.currentPage + 1);
             };
 
-            scope.getPageCount = function () {
-                return Math.ceil(scope.totalItems / scope.itemsPerPage);
-            };
+            scope.getPageCount = () => Math.ceil(scope.totalItems / scope.itemsPerPage);
 
-            scope.isPrevButtonEnabled = function () {
-                return scope.currentPage > 1;
-            };
+            scope.isPrevButtonEnabled = () => scope.currentPage > 1;
 
-            scope.isNextButtonEnabled = function () {
-                return scope.currentPage < scope.getPageCount();
-            };
+            scope.isNextButtonEnabled = () => scope.currentPage < scope.getPageCount();
 
-            scope.hasStartEllipsys = function () {
-                return scope.getPageCount() > maxButtonsInShortMode && scope.currentPage > Math.ceil(maxButtonsInShortMode / 2);
-            };
+            scope.hasStartEllipsys = () => scope.getPageCount() > maxButtonsInShortMode && scope.currentPage > Math.ceil(maxButtonsInShortMode / 2);
 
-            scope.hasEndEllipsys = function () {
-                return scope.getPageCount() > maxButtonsInShortMode && scope.currentPage <= scope.getPageCount() - Math.ceil(maxButtonsInShortMode / 2);
-            };
+            scope.hasEndEllipsys = () => scope.getPageCount() > maxButtonsInShortMode && scope.currentPage <= scope.getPageCount() - Math.ceil(maxButtonsInShortMode / 2);
 
-            scope.showEllipsys = function (index, length) {
-                return (index === 0 && scope.hasStartEllipsys()) || (index === length - 2 && scope.hasEndEllipsys());
-            };
+            scope.showEllipsys = (index, length) => (index === 0 && scope.hasStartEllipsys()) || (index === length - 2 && scope.hasEndEllipsys());
 
-            scope.getPageNumbers = function () {
+            scope.getPageNumbers = () => {
                 let count = scope.getPageCount();
                 const numbers = [1];
                 if (count > 2) {
@@ -161,19 +147,13 @@ blimpkit.directive('bkPagination', (uuid, classNames, $injector) => {
                 'fd-button--compact': scope.compact === true,
             });
 
-            scope.getNumberButtonAriaLabel = function (pageNumber) {
-                return pageNumber === scope.currentPage ? `Current Page, Page ${pageNumber}` : `Goto page ${pageNumber}`;
-            };
+            scope.getNumberButtonAriaLabel = (pageNumber) => pageNumber === scope.currentPage ? `Current Page, Page ${pageNumber}` : `Goto page ${pageNumber}`;
 
-            scope.getCurrentPageInputAriaLabelledBy = function () {
-                return [scope.currentPageLabelId, scope.currentPageOfLabelId].join(' ');
-            };
+            scope.getCurrentPageInputAriaLabelledBy = () => [scope.currentPageLabelId, scope.currentPageOfLabelId].join(' ');
 
-            scope.getTotal = function () {
-                return `${scope.totalItems} Results`;
-            };
+            scope.getTotal = () => `${scope.totalItems} ${scope.totalItemsLabel ?? 'Results'}`;
 
-            const itemsWatch = scope.$watch('itemsPerPage', function (newVal, oldVal) {
+            const itemsWatch = scope.$watch('itemsPerPage', (newVal, oldVal) => {
                 if (newVal !== oldVal) {
                     if (scope.itemsPerPageChange)
                         scope.itemsPerPageChange({ itemsPerPage: scope.itemsPerPage });
@@ -185,15 +165,13 @@ blimpkit.directive('bkPagination', (uuid, classNames, $injector) => {
                 }
             });
 
-            scope.$on('$destroy', function () {
-                itemsWatch();
-            });
+            scope.$on('$destroy', () => { itemsWatch() });
         },
         template: `<div ng-class="getClasses()">
             <div ng-if="itemsPerPageOptions" class="fd-pagination__per-page">
-                <label class="fd-form-label fd-pagination__per-page-label" id="{{ itemsPerPageLabelId }}">Results per page: </label>
-                <bk-select selected-value="$parent.itemsPerPage" compact="compact" label-id="{{ itemsPerPageLabelId }}" placement="{{ itemsPerPagePlacement }}">
-                    <bk-option ng-repeat="option in itemsPerPageOptions" text="{{ option }}" value="option"></bk-option>
+                <label class="fd-form-label fd-pagination__per-page-label" id="{{::itemsPerPageLabelId}}">{{itemsPerPageLabel || 'Results per page:'}}</label>
+                <bk-select selected-value="$parent.itemsPerPage" compact="compact" label-id="{{::itemsPerPageLabelId}}" placement="{{ itemsPerPagePlacement }}">
+                    <bk-option ng-repeat="option in itemsPerPageOptions track by option" text="{{ option }}" value="option"></bk-option>
                 </bk-select>
             </div>
             <nav class="fd-pagination__nav" role="navigation">
