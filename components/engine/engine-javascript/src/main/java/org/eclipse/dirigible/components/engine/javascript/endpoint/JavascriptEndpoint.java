@@ -145,7 +145,7 @@ public class JavascriptEndpoint extends BaseEndpoint {
      * @param params the params
      * @return the response
      */
-    @WithSpan("java_script_endpoint_get")
+    @WithSpan
     @GetMapping(HTTP_PATH_MATCHER)
     public ResponseEntity<?> get(@SpanAttribute("projectName") @PathVariable("projectName") String projectName,
             @SpanAttribute("projectFilePath") @PathVariable("projectFilePath") String projectFilePath,
@@ -302,7 +302,7 @@ public class JavascriptEndpoint extends BaseEndpoint {
      * @param params the params
      * @return the response
      */
-    @WithSpan("java_script_endpoint_post")
+    @WithSpan
     @PostMapping(HTTP_PATH_MATCHER)
     public ResponseEntity<?> post(@SpanAttribute("projectName") @PathVariable("projectName") String projectName,
             @SpanAttribute("projectFilePath") @PathVariable("projectFilePath") String projectFilePath,
@@ -319,7 +319,7 @@ public class JavascriptEndpoint extends BaseEndpoint {
      * @param file the file
      * @return the response
      */
-    @WithSpan("java_script_endpoint_post_file")
+    @WithSpan
     @PostMapping(value = HTTP_PATH_MATCHER, consumes = "multipart/form-data")
     public ResponseEntity<?> postFile(@SpanAttribute("projectName") @PathVariable("projectName") String projectName,
             @SpanAttribute("projectFilePath") @PathVariable("projectFilePath") String projectFilePath,
@@ -336,7 +336,7 @@ public class JavascriptEndpoint extends BaseEndpoint {
      * @param params the params
      * @return the response
      */
-    @WithSpan("java_script_endpoint_put")
+    @WithSpan
     @PutMapping(HTTP_PATH_MATCHER)
     public ResponseEntity<?> put(@SpanAttribute("projectName") @PathVariable("projectName") String projectName,
             @SpanAttribute("projectFilePath") @PathVariable("projectFilePath") String projectFilePath,
@@ -353,7 +353,7 @@ public class JavascriptEndpoint extends BaseEndpoint {
      * @param file the file
      * @return the response
      */
-    @WithSpan("java_script_endpoint_put_file")
+    @WithSpan
     @PutMapping(value = HTTP_PATH_MATCHER, consumes = "multipart/form-data")
     public ResponseEntity<?> putFile(@SpanAttribute("projectName") @PathVariable("projectName") String projectName,
             @SpanAttribute("projectFilePath") @PathVariable("projectFilePath") String projectFilePath,
@@ -386,7 +386,7 @@ public class JavascriptEndpoint extends BaseEndpoint {
      * @param params the params
      * @return the response
      */
-    @WithSpan("java_script_endpoint_delete")
+    @WithSpan
     @DeleteMapping(HTTP_PATH_MATCHER)
     public ResponseEntity<?> delete(@SpanAttribute("projectName") @PathVariable("projectName") String projectName,
             @SpanAttribute("projectFilePath") @PathVariable("projectFilePath") String projectFilePath,
