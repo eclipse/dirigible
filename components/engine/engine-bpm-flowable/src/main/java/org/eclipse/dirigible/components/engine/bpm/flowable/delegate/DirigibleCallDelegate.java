@@ -225,7 +225,6 @@ public class DirigibleCallDelegate implements JavaDelegate {
         } finally {
             span.end();
         }
-
     }
 
     private void addSpanAttributes(DelegateExecution execution, Span span) {

@@ -9,6 +9,9 @@
  */
 package org.eclipse.dirigible.components.base.synchronizer;
 
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.Tracer;
+import io.opentelemetry.context.Scope;
 import org.eclipse.dirigible.components.base.artefact.Artefact;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
@@ -16,6 +19,7 @@ import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.spring.BeanProvider;
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.base.tenant.TenantResult;
+import org.eclipse.dirigible.components.open.telemetry.OpenTelemetryProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +29,6 @@ import java.util.List;
 
 /**
  * The Class BaseSynchronizer.
- *
  */
 public abstract class BaseSynchronizer<A extends Artefact, ID> implements Synchronizer<A, ID> {
 
@@ -41,6 +44,41 @@ public abstract class BaseSynchronizer<A extends Artefact, ID> implements Synchr
      */
     @Override
     public final boolean complete(TopologyWrapper<A> wrapper, ArtefactPhase flow) {
+        Tracer tracer = OpenTelemetryProvider.get()
+                                             .getTracer("eclipse-dirigible");
+
+        String synchronizerClassName = this.getClass()
+                                           .getSimpleName();
+        Span span = tracer.spanBuilder("synchronizer_" + synchronizerClassName + "_complete_execution")
+                          .startSpan();
+
+        try (Scope scope = span.makeCurrent()) {
+            addSpanAttributes(span, wrapper, flow);
+            return completeInternal(wrapper, flow);
+
+        } catch (RuntimeException e) {
+            span.recordException(e);
+            span.setStatus(io.opentelemetry.api.trace.StatusCode.ERROR, "Exception occurred during synchronization");
+
+            throw e;
+        } finally {
+            span.end();
+        }
+    }
+
+    private void addSpanAttributes(Span span, TopologyWrapper<A> wrapper, ArtefactPhase phase) {
+        addSpanAttributes(wrapper.getArtefact(), span);
+
+        span.setAttribute("phase", phase.getValue());
+    }
+
+    private void addSpanAttributes(A artefact, Span span) {
+        span.setAttribute("synchronizer", this.getClass()
+                                              .getName());
+        span.setAttribute("artefactKey", artefact.getKey());
+    }
+
+    private boolean completeInternal(TopologyWrapper<A> wrapper, ArtefactPhase flow) {
         A artefact = wrapper.getArtefact();
         ArtefactLifecycle lifecycle = artefact.getLifecycle();
 
@@ -98,6 +136,30 @@ public abstract class BaseSynchronizer<A extends Artefact, ID> implements Synchr
      * @param artefact the artefact
      */
     public final void cleanup(A artefact) {
+        Tracer tracer = OpenTelemetryProvider.get()
+                                             .getTracer("eclipse-dirigible");
+
+        String synchronizerClassName = this.getClass()
+                                           .getSimpleName();
+        Span span = tracer.spanBuilder("synchronizer_" + synchronizerClassName + "_cleanup_execution")
+                          .startSpan();
+
+        try (Scope scope = span.makeCurrent()) {
+            addSpanAttributes(artefact, span);
+
+            cleanupInternal(artefact);
+
+        } catch (RuntimeException e) {
+            span.recordException(e);
+            span.setStatus(io.opentelemetry.api.trace.StatusCode.ERROR, "Exception occurred during synchronization");
+
+            throw e;
+        } finally {
+            span.end();
+        }
+    }
+
+    private void cleanupInternal(A artefact) {
         if (!multitenantExecution() || !isMultitenantArtefact(artefact)) {
             logger.debug("[{} will cleanup artefact [{}]", this, artefact);
             cleanupImpl(artefact);
