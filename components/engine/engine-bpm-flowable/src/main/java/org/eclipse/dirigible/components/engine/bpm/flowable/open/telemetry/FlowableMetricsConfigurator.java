@@ -29,7 +29,8 @@ class FlowableMetricsConfigurator implements ApplicationListener<ApplicationRead
     }
 
     /**
-     * Create meters based on the logic in the Flowable actuator endpoint in {@link ProcessEngineEndpoint} class
+     * Create meters based on the logic in the Flowable actuator endpoint in
+     * {@link ProcessEngineEndpoint} class
      *
      * @param event app ready event
      */
@@ -87,9 +88,8 @@ class FlowableMetricsConfigurator implements ApplicationListener<ApplicationRead
                                                                                      .getHistoryService()
                                                                                      .createHistoricTaskInstanceQuery()
                                                                                      .finished()
-                                                                                     .taskCompletedAfter(new Date(
-                                                                                             System.currentTimeMillis() - secondsForDays(
-                                                                                                     1)))
+                                                                                     .taskCompletedAfter(new Date(System.currentTimeMillis()
+                                                                                             - secondsForDays(1)))
                                                                                      .count()));
 
         meter.gaugeBuilder(METRIC_PREFIX + "completedActivities")

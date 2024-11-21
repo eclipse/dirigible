@@ -374,12 +374,13 @@ public class GraalJSCodeRunner implements CodeRunner<Source, Value> {
     @Override
     public Value run(Source codeSource) {
         Tracer tracer = OpenTelemetryProvider.get()
-                                             .getTracer("eclipse-dirigible-source-tracer");
+                                             .getTracer("eclipse-dirigible");
         Span span = tracer.spanBuilder("script_execution")
                           .startSpan();
         try (Scope scope = span.makeCurrent()) {
             span.addEvent("Executing [" + codeSource.getPath() + "]");
             span.setAttribute("source", codeSource.toString());
+            span.setAttribute("source.name", codeSource.getName());
 
             Value result = graalContext.eval(codeSource);
 
@@ -397,7 +398,6 @@ public class GraalJSCodeRunner implements CodeRunner<Source, Value> {
             span.setStatus(io.opentelemetry.api.trace.StatusCode.ERROR, "Exception occurred");
             throw e;
         } finally {
-            // End the span
             span.end();
         }
     }

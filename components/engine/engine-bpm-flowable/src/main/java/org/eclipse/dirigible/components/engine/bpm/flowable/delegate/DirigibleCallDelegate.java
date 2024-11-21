@@ -9,9 +9,13 @@
  */
 package org.eclipse.dirigible.components.engine.bpm.flowable.delegate;
 
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.Tracer;
+import io.opentelemetry.context.Scope;
 import jakarta.annotation.Nullable;
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.components.engine.bpm.flowable.dto.ExecutionData;
+import org.eclipse.dirigible.components.open.telemetry.OpenTelemetryProvider;
 import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.flowable.engine.delegate.BpmnError;
@@ -205,7 +209,40 @@ public class DirigibleCallDelegate implements JavaDelegate {
      */
     @Override
     public void execute(DelegateExecution execution) {
+        Tracer tracer = OpenTelemetryProvider.get()
+                                             .getTracer("eclipse-dirigible");
+        Span span = tracer.spanBuilder("flowable_task_execution")
+                          .startSpan();
+        try (Scope scope = span.makeCurrent()) {
+            addSpanAttributes(execution, span);
 
+            extractedInternal(execution);
+        } catch (RuntimeException e) {
+            span.recordException(e);
+            span.setStatus(io.opentelemetry.api.trace.StatusCode.ERROR, "Exception occurred during task execution");
+
+            throw e;
+        } finally {
+            span.end();
+        }
+
+    }
+
+    private void addSpanAttributes(DelegateExecution execution, Span span) {
+        String executionId = execution.getId();
+        span.setAttribute("executionId", executionId);
+
+        String processInstanceId = execution.getProcessInstanceId();
+        span.setAttribute("processInstanceId", processInstanceId);
+
+        String processInstanceBusinessKey = execution.getProcessInstanceBusinessKey();
+        span.setAttribute("processInstanceBusinessKey", processInstanceBusinessKey);
+
+        String processDefinitionId = execution.getProcessDefinitionId();
+        span.setAttribute("processDefinitionId", processDefinitionId);
+    }
+
+    private void extractedInternal(DelegateExecution execution) {
         String action = (String) execution.getVariable(DIRIGIBLE_BPM_INTERNAL_SKIP_STEP);
         if (SKIP.getActionName()
                 .equals(action)) {
@@ -234,6 +271,9 @@ public class DirigibleCallDelegate implements JavaDelegate {
     private void executeJSHandler(Map<Object, Object> context) {
         RepositoryPath path = new RepositoryPath(handler.getExpressionText());
         JSTask task = JSTask.fromRepositoryPath(path);
+
+        Span.current()
+            .setAttribute("handler", path.toString());
 
         try (DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner(context, false)) {
             Source source = runner.prepareSource(task.getSourceFilePath());
