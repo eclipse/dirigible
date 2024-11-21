@@ -27,13 +27,11 @@
 
     <body class="bk-vbox">
         <bk-toolbar type="solid">
-            <!-- <span ng-if="hasSelected()">Selected {{getSelectedCount()}} of {{problemsList.length}}</span> -->
             <bk-input-group compact="true">
                 <bk-input-group-addon>
                     <span class="sap-icon--search" role="presentation"></span>
                 </bk-input-group-addon>
-                <bk-input type="search" ng-model="models.search" ng-keyup="inputSearchKeyUp($event)" bk-focus="true" placeholder="Search">
-                </bk-input>
+                <bk-input type="search" ng-model="models.search" ng-keyup="inputSearchKeyUp($event)" placeholder="Search..."></bk-input>
                 <bk-input-group-addon ng-show="models.search !== ''">
                     <bk-button glyph="sap-icon--decline" state="transparent" ng-click="clearSearch()" title="Clear filter" aria-label="Clear filter">
                     </bk-button>

@@ -67,7 +67,13 @@
                 </bk-popover-body>
             </bk-popover>
             <bk-toolbar-spacer></bk-toolbar-spacer>
-            <bk-input type="search" placeholder="Search..." ng-model="search.text" ng-change="selectLogLevel()" style="max-width:30%;"></bk-input>
+            <bk-input-group compact="true" style="max-width:30%;">
+                <bk-input-group-addon>
+                    <span class="sap-icon--search" role="presentation"></span>
+                </bk-input-group-addon>
+                <bk-input type="search" ng-model="search.text" ng-change="selectLogLevel()" placeholder="Search...">
+                </bk-input>
+            </bk-input-group>
             <bk-toolbar-separator></bk-toolbar-separator>
             <bk-button state="transparent" label="Clear" ng-click="clearLog()"></bk-button>
         </bk-toolbar>
