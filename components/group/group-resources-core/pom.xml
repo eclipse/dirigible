@@ -33,7 +33,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-resources-theme-horizon</artifactId>
+			<artifactId>dirigible-components-resources-theme-classic</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>

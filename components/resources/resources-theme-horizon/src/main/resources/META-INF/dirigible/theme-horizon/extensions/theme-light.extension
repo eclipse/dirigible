@@ -1,5 +1,0 @@
-{
-    "description": "Platform Theme - Morning Horizon",
-    "extensionPoint": "platform-themes",
-    "module": "theme-horizon/extensions/theme-light.js"
-}
