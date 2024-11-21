@@ -78,7 +78,7 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
         executeQuery({ data: sqlCommand });
 
         debugger
-        $scope.closeEditDialog;
+        $scope.isEditDialogOpen = false;
         messageHub.postMessage('database.sql.showContent', {
             schemaName: $scope.schemaName,
             tableName: $scope.tableName
@@ -110,7 +110,7 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
 
         executeQuery({ data: sqlCommand });
 
-        $scope.closeDeleteDialog();
+        $scope.isDeleteDialogOpen = false;
         messageHub.postMessage('database.sql.showContent', {
             schemaName: $scope.schemaName,
             tableName: $scope.tableName
