@@ -77,11 +77,18 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
 
         executeQuery({ data: sqlCommand });
 
+        debugger
         $scope.closeEditDialog;
+        messageHub.postMessage('database.sql.showContent', {
+            schemaName: $scope.schemaName,
+            tableName: $scope.tableName
+        });
+
     };
 
     $scope.closeEditDialog = function () {
         $scope.isEditDialogOpen = false;
+
     };
 
     $scope.openDeleteDialog = function (row) {
@@ -104,11 +111,16 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
         executeQuery({ data: sqlCommand });
 
         $scope.closeDeleteDialog();
+        messageHub.postMessage('database.sql.showContent', {
+            schemaName: $scope.schemaName,
+            tableName: $scope.tableName
+        });
     };
 
     $scope.closeDeleteDialog = function () {
         $scope.selectedRow = null;
         $scope.isDeleteDialogOpen = false;
+
     };
 
     function findIdKey(dataObject) {
