@@ -66,7 +66,6 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
             return;
         }
 
-        debugger
         const primaryKeyColumn = findIdKey(updatedData);
         const condition = `"${primaryKeyColumn}" = '${updatedData[primaryKeyColumn]}'`;
 
@@ -77,7 +76,6 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
 
         executeQuery({ data: sqlCommand });
 
-        debugger
         $scope.isEditDialogOpen = false;
         messageHub.postMessage('database.sql.showContent', {
             schemaName: $scope.schemaName,
