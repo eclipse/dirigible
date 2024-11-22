@@ -17,7 +17,7 @@ class WorkspaceApi extends MessageHubApi {
      */ // @ts-ignore
     announceWorkspaceChanged({ workspace, params } = {}) {
         this.postMessage({
-            topic: 'platform.workspace.chnaged',
+            topic: 'platform.workspace.changed',
             data: {
                 workspace: workspace,
                 params: params,
@@ -31,7 +31,7 @@ class WorkspaceApi extends MessageHubApi {
      * @returns - A reference to the listener. In order to remove/disable the listener, you need to use this reference and pass it to the 'removeMessageListener' function.
      */
     onWorkspaceChanged(handler) {
-        return this.addMessageListener({ topic: 'platform.workspace.chnaged', handler: handler });
+        return this.addMessageListener({ topic: 'platform.workspace.changed', handler: handler });
     }
 
     /**
@@ -39,10 +39,9 @@ class WorkspaceApi extends MessageHubApi {
      * @param {string} path - Full file path, including file name.
      * @param {string} contentType - The file content type.
      * @param {string} [editorId] - The ID of the preffered editor.
-     * @param {string} workspace - The workspace that the file belonges to.
      * @param {Object.<any, any>} [params] - Extra parameters that will be passed to the view parameters of the editor.
      */ // @ts-ignore
-    openFile({ path, contentType, editorId, workspace, params } = {}) {
+    openFile({ path, contentType, editorId, params } = {}) {
         this.postMessage({
             topic: 'platform.files.open',
             data: {
@@ -50,7 +49,6 @@ class WorkspaceApi extends MessageHubApi {
                 path: path,
                 contentType: contentType,
                 editorId: editorId,
-                workspace: workspace,
                 params: params,
             }
         });
@@ -68,15 +66,13 @@ class WorkspaceApi extends MessageHubApi {
     /**
      * Sends a message containing information on which file has to be closed.
      * @param {string} path - Full file path, including file name.
-     * @param {string} workspace - The workspace that the file belonges to.
      * @param {Object.<any, any>} [params] - Extra parameters.
      */ // @ts-ignore
-    closeFile({ path, workspace, params } = {}) {
+    closeFile({ path, params } = {}) {
         this.postMessage({
             topic: 'platform.files.close',
             data: {
                 path: path,
-                workspace: workspace,
                 params: params,
             }
         });
@@ -116,16 +112,14 @@ class WorkspaceApi extends MessageHubApi {
     /**
      * Sends a message containing information on which file has to be set to dirty.
      * @param {string} path - Full file path, including file name.
-     * @param {string} workspace - The workspace that the file belonges to.
      * @param {boolean} dirty - File dirty state.
      * @param {Object.<any, any>} [params] - Extra parameters.
      */ // @ts-ignore
-    setFileDirty({ path, workspace, dirty, params } = {}) {
+    setFileDirty({ path, dirty, params } = {}) {
         this.postMessage({
             topic: 'platform.files.set-dirty',
             data: {
                 path: path,
-                workspace: workspace,
                 dirty: dirty,
                 params: params,
             }
@@ -144,17 +138,15 @@ class WorkspaceApi extends MessageHubApi {
     /**
      * Gets the dirty state of a file.
      * @param {string} path - Full file path, including file name.
-     * @param {string} workspace - The workspace that the file belonges to.
      * @param {Object.<any, any>} [params] - Extra parameters.
      */ // @ts-ignore
-    isFileDirty({ path, workspace, params } = {}) {
+    isFileDirty({ path, params } = {}) {
         const callbackTopic = `platform.files.is-dirty.${new Date().valueOf()}`;
         this.postMessage({
             topic: 'platform.files.is-dirty',
             data: {
                 topic: callbackTopic,
                 path: path,
-                workspace: workspace,
                 params: params,
             },
         });
@@ -181,17 +173,15 @@ class WorkspaceApi extends MessageHubApi {
     /**
      * Checks if a file is open.
      * @param {string} path - Full file path, including file name.
-     * @param {string} workspace - The workspace that the file belonges to.
      * @param {Object.<any, any>} [params] - Extra parameters.
      */ // @ts-ignore
-    isFileOpen({ path, workspace, params } = {}) {
+    isFileOpen({ path, params } = {}) {
         const callbackTopic = `platform.files.is-open.${new Date().valueOf()}`;
         this.postMessage({
             topic: 'platform.files.is-open',
             data: {
                 topic: callbackTopic,
                 path: path,
-                workspace: workspace,
                 params: params,
             },
         });
@@ -218,17 +208,15 @@ class WorkspaceApi extends MessageHubApi {
     /**
      * Sends a message containing information on which file has been saved.
      * @param {string} path - Full file path, including file name.
-     * @param {string} workspace - The workspace that the file belonges to.
      * @param {string} [status] - Git status of the file.
      * @param {string} [contentType] - File content type.
      */ // @ts-ignore
-    announceFileSaved({ path, workspace, status, contentType } = {}) {
+    announceFileSaved({ path, status, contentType } = {}) {
         this.postMessage({
             topic: 'platform.files.saved',
             data: {
                 name: path.substring(path.lastIndexOf('/') + 1, path.length),
                 path: path,
-                workspace: workspace,
                 status: status,
                 contentType: contentType,
             }
@@ -247,15 +235,13 @@ class WorkspaceApi extends MessageHubApi {
     /**
      * Sends a message containing information on which file should be saved.
      * @param {string} path - Full file path, including file name.
-     * @param {string} workspace - The workspace that the file belonges to.
      * @param {string} [params] - Extra parameters.
      */ // @ts-ignore
-    saveFile({ path, workspace, params } = {}) {
+    saveFile({ path, params } = {}) {
         this.postMessage({
             topic: 'platform.file.save',
             data: {
                 path: path,
-                workspace: workspace,
                 params: params,
             }
         });
@@ -287,15 +273,13 @@ class WorkspaceApi extends MessageHubApi {
     /**
      * Sends a message containing information on which file, folder or project has been published.
      * @param {string} [path] - Full file, folder or project path, including name.
-     * @param {string} workspace - The workspace that the file, folder or project belonges to.
      * @param {Object.<any, any>} [params] - Extra parameters that will be passed the listener.
      */ // @ts-ignore
-    announcePublished({ path, workspace, params } = {}) {
+    announcePublished({ path, params } = {}) {
         this.postMessage({
             topic: 'platform.publisher.published',
             data: {
                 path: path,
-                workspace: workspace,
                 params: params,
             }
         });
@@ -313,15 +297,13 @@ class WorkspaceApi extends MessageHubApi {
     /**
      * Sends a message containing information on which file, folder or project has been unpublished.
      * @param {string} [path] - Full file, folder or project path, including name.
-     * @param {string} workspace - The workspace that the file, folder or project belonges to.
      * @param {Object.<any, any>} [params] - Extra parameters that will be passed the listener.
      */ // @ts-ignore
-    announceUnpublished({ path, workspace, params } = {}) {
+    announceUnpublished({ path, params } = {}) {
         this.postMessage({
             topic: 'platform.publisher.unpublished',
             data: {
                 path: path,
-                workspace: workspace,
                 params: params,
             }
         });
@@ -340,16 +322,16 @@ class WorkspaceApi extends MessageHubApi {
      * Sends a message containing information on which file has been selected.
      * @param {string} path - Full file path, including file name.
      * @param {string} contentType - The file content type.
-     * @param {string} workspace - The workspace that the file belonges to.
+     * @param {Object.<any, any>} [params] - Extra parameters that will be passed the listener.
      */ // @ts-ignore
-    announceFileSelected({ path, contentType, workspace } = {}) {
+    announceFileSelected({ path, contentType, params } = {}) {
         this.postMessage({
             topic: 'platform.files.selected',
             data: {
                 name: path.substring(path.lastIndexOf('/') + 1, path.length),
                 path: path,
                 contentType: contentType,
-                workspace: workspace,
+                params: params
             }
         });
     }
@@ -366,15 +348,15 @@ class WorkspaceApi extends MessageHubApi {
     /**
      * Sends a message containing information on which file has been deleted.
      * @param {string} path - Full file path, including file name.
-     * @param {string} workspace - The workspace that the file belonges to.
+     * @param {Object.<any, any>} [params] - Extra parameters that will be passed the listener.
      */ // @ts-ignore
-    announceFileDeleted({ path, workspace } = {}) {
+    announceFileDeleted({ path, params } = {}) {
         this.postMessage({
             topic: 'platform.files.deleted',
             data: {
                 // name: path.substring(path.lastIndexOf('/') + 1, path.length),
                 path: path,
-                workspace: workspace,
+                params: params
             }
         });
     }
@@ -393,9 +375,8 @@ class WorkspaceApi extends MessageHubApi {
      * @param {string} oldPath - Old file path, including file name.
      * @param {string} newPath - New file path, including file name.
      * @param {string} contentType - The file content type.
-     * @param {string} workspace - The workspace that the file belonges to.
      */ // @ts-ignore
-    announceFileRenamed({ oldPath, newPath, contentType, workspace } = {}) {
+    announceFileRenamed({ oldPath, newPath, contentType } = {}) {
         this.postMessage({
             topic: 'platform.files.renamed',
             data: {
@@ -404,7 +385,6 @@ class WorkspaceApi extends MessageHubApi {
                 oldPath: oldPath,
                 newPath: newPath,
                 contentType: contentType,
-                workspace: workspace,
             }
         });
     }
@@ -422,9 +402,8 @@ class WorkspaceApi extends MessageHubApi {
      * Sends a message containing information on which file has been moved.
      * @param {string} oldPath - Old file path, including file name.
      * @param {string} newPath - New file path, including file name.
-     * @param {string} workspace - The workspace that the file belonges to.
      */ // @ts-ignore
-    announceFileMoved({ oldPath, newPath, workspace } = {}) {
+    announceFileMoved({ oldPath, newPath } = {}) {
         this.postMessage({
             topic: 'platform.files.moved',
             data: {
@@ -432,7 +411,6 @@ class WorkspaceApi extends MessageHubApi {
                 newName: newPath.substring(newPath.lastIndexOf('/') + 1, newPath.length),
                 oldPath: oldPath,
                 newPath: newPath,
-                workspace: workspace,
             }
         });
     }
@@ -450,15 +428,13 @@ class WorkspaceApi extends MessageHubApi {
     /**
      * Tells an editor that it should reload its view parameters.
      * @param {string} path - Full file path, including file name.
-     * @param {string} workspace - The workspace that the file belonges to.
      * @param {object} [params] - Custom parameters.
      */ // @ts-ignore
-    reloadEditorParams({ path, workspace, params } = {}) {
+    reloadEditorParams({ path, params } = {}) {
         this.postMessage({
             topic: 'platform.files.reload-params',
             data: {
                 path: path,
-                workspace: workspace,
                 params: params,
             }
         });
@@ -476,15 +452,13 @@ class WorkspaceApi extends MessageHubApi {
     /**
      * Sends a message containing information on which folder has been deleted.
      * @param {string} path - Full folder path, including folder name.
-     * @param {string} workspace - The workspace that the folder belonges to.
      */ // @ts-ignore
-    announceFolderDeleted({ path, workspace } = {}) {
+    announceFolderDeleted({ path } = {}) {
         this.postMessage({
             topic: 'platform.folders.deleted',
             data: {
                 // name: path.substring(path.lastIndexOf('/') + 1, path.length),
                 path: path,
-                workspace: workspace,
             }
         });
     }
@@ -503,9 +477,8 @@ class WorkspaceApi extends MessageHubApi {
      * @param {string} oldPath - Old folder path, including folder name.
      * @param {string} newPath - New folder path, including folder name.
      * @param {string} contentType - The folder content type.
-     * @param {string} workspace - The workspace that the folder belonges to.
      */ // @ts-ignore
-    announceFolderRenamed({ oldPath, newPath, contentType, workspace } = {}) {
+    announceFolderRenamed({ oldPath, newPath, contentType } = {}) {
         this.postMessage({
             topic: 'platform.folders.renamed',
             data: {
@@ -514,7 +487,6 @@ class WorkspaceApi extends MessageHubApi {
                 oldPath: oldPath,
                 newPath: newPath,
                 contentType: contentType,
-                workspace: workspace,
             }
         });
     }
@@ -532,9 +504,8 @@ class WorkspaceApi extends MessageHubApi {
      * Sends a message containing information on which folder has been moved.
      * @param {string} oldPath - Old folder path, including folder name.
      * @param {string} newPath - New folder path, including folder name.
-     * @param {string} workspace - The workspace that the folder belonges to.
      */ // @ts-ignore
-    announceFolderMoved({ oldPath, newPath, workspace } = {}) {
+    announceFolderMoved({ oldPath, newPath } = {}) {
         this.postMessage({
             topic: 'platform.folders.moved',
             data: {
@@ -542,7 +513,6 @@ class WorkspaceApi extends MessageHubApi {
                 // newName: newPath.substring(newPath.lastIndexOf('/') + 1, newPath.length),
                 oldPath: oldPath,
                 newPath: newPath,
-                workspace: workspace,
             }
         });
     }
@@ -559,7 +529,7 @@ class WorkspaceApi extends MessageHubApi {
     /**
      * Sends a message containing information on which project has been deleted.
      * @param {string} project - Project name.
-     * @param {string} workspace - The workspace that the project belonges to.
+     * @param {string} workspace - Workspace name.
      */ // @ts-ignore
     announceProjectDeleted({ project, workspace } = {}) {
         this.postMessage({

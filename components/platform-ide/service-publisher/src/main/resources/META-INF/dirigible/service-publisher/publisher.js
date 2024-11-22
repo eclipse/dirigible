@@ -12,15 +12,14 @@
 angular.module('PublisherService', []).provider('PublisherService', function PublisherServiceProvider() {
     this.publisherServiceUrl = '/services/ide/publisher';
     this.$get = ['$http', function publisherApiFactory($http) {
-        const publish = function (resourcePath, workspace) {
-            let url;
-            if (workspace) {
-                url = new UriBuilder().path(this.publisherServiceUrl.split('/')).path(workspace).path(resourcePath.split('/')).build();
-            } else url = new UriBuilder().path(this.publisherServiceUrl.split('/')).path(resourcePath.split('/')).build();
+        /**
+         * Publishes a resource.
+         * @param {string} resourcePath - Full resource path, including workspace name.
+         */
+        const publish = function (resourcePath) {
+            const url = new UriBuilder().path(this.publisherServiceUrl.split('/')).path(resourcePath.split('/')).build();
             return $http.post(url, {}, {
-                headers: {
-                    "Dirigible-Editor": "Publish"
-                }
+                headers: { 'Dirigible-Editor': 'Publish' }
             }).then(function successCallback(response) {
                 return { status: response.status, data: response.data };
             }, function errorCallback(response) {
@@ -29,15 +28,14 @@ angular.module('PublisherService', []).provider('PublisherService', function Pub
             });
         }.bind(this);
 
-        const unpublish = function (resourcePath, workspace) {
-            let url;
-            if (workspace) {
-                url = new UriBuilder().path(this.publisherServiceUrl.split('/')).path(workspace).path(resourcePath.split('/')).build();
-            } else url = new UriBuilder().path(this.publisherServiceUrl.split('/')).path(resourcePath.split('/')).build();
+        /**
+         * Unpublishes a resource.
+         * @param {string} resourcePath - Full resource path, including workspace name.
+         */
+        const unpublish = function (resourcePath) {
+            const url = new UriBuilder().path(this.publisherServiceUrl.split('/')).path(resourcePath.split('/')).build();
             return $http.delete(url, {
-                headers: {
-                    "Dirigible-Editor": "Publish"
-                }
+                headers: { 'Dirigible-Editor': 'Publish' }
             }).then(function successCallback(response) {
                 return { status: response.status, data: response.data };
             }, function errorCallback(response) {

@@ -9,14 +9,12 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const UriBuilder = function UriBuilder() {
+function UriBuilder() {
     let pathSegments = [];
-    this.path = function (_pathSegments) {
-        if (!Array.isArray(_pathSegments))
-            _pathSegments = [_pathSegments];
-        _pathSegments = _pathSegments.filter(function (segment) {
-            return segment;
-        }).map(function (segment) {
+    this.path = function (paths) {
+        if (!Array.isArray(paths))
+            paths = [paths];
+        paths = paths.filter((segment) => segment).map((segment) => {
             if (segment.length) {
                 if (segment.charAt(segment.length - 1) === '/')
                     segment = segment.substring(0, segment.length - 2);
@@ -24,12 +22,19 @@ const UriBuilder = function UriBuilder() {
             }
             return segment;
         });
-        pathSegments = pathSegments.concat(_pathSegments);
-        return this;
+        pathSegments = pathSegments.concat(paths);
+        return {
+            path: this.path,
+            build: this.build
+        };
     };
     this.build = function (isBasePath = true) {
-        if (isBasePath) return '/' + pathSegments.join('/');
-        return pathSegments.join('/');
+        let path;
+        if (isBasePath) {
+            path = '/' + pathSegments.join('/');
+        } else path = pathSegments.join('/');
+        pathSegments.length = 0;
+        return path;
     };
     return this;
 };

@@ -53,7 +53,7 @@ importView.controller('ImportViewController',
                     $scope.dropAreaSubtitle = 'Drop snaphot here, or use the "+" button.';
                 } else {
                     $scope.uploadPath = params.uploadPath;
-                    $scope.selectedWorkspace.name = params.workspace;
+                    if (params.workspace) $scope.selectedWorkspace.name = params.workspace;
                     if (params.importType === 'file') {
                         $scope.inputAccept = '';
                         $scope.importType = params.importType;
@@ -70,7 +70,7 @@ importView.controller('ImportViewController',
                         $scope.dropAreaTitle = 'Import files from zip';
                         $scope.dropAreaMore = `Files will be extracted in "${params.uploadPath}"`;
                         let pathSegments = params.uploadPath.split('/');
-                        $scope.uploader.url = new UriBuilder().path(TransportService.getZipImportUrl().split('/')).path(params.workspace).path(pathSegments).build();
+                        $scope.uploader.url = UriBuilder().path(TransportService.getZipImportUrl().split('/')).path(pathSegments).build();
                         if (pathSegments.length <= 2) $scope.uploader.url += '/%252F';
                     }
                 }
@@ -93,19 +93,17 @@ importView.controller('ImportViewController',
         $scope.uploader.onBeforeUploadItem = (item) => {
             if (!$scope.importRepository) {
                 if (!$scope.inDialog) {
-                    item.url = new UriBuilder().path(projectImportUrl.split('/')).path($scope.selectedWorkspace.name).build();
+                    item.url = UriBuilder().path(projectImportUrl.split('/')).path($scope.selectedWorkspace.name).build();
                 } else if ($scope.inDialog && $scope.importType === 'file') {
                     item.headers = {
                         'Dirigible-Editor': 'Editor'
                     };
-                    item.url = new UriBuilder().path(TransportService.getFileImportUrl().split('/')).path($scope.selectedWorkspace.name).path($scope.uploadPath.split('/')).path(item.name).build();
+                    item.url = UriBuilder().path(TransportService.getFileImportUrl().split('/')).path($scope.uploadPath.split('/')).path(item.name).build();
                 } else if ($scope.inDialog && $scope.importType === 'data') {
-                    item.headers = {
-                        'Dirigible-Editor': 'Editor'
-                    };
-                    item.url = new UriBuilder().path($scope.selectedWorkspace.name).path($scope.uploadPath.split('/')).path(item.name).build();
+                    item.headers = { 'Dirigible-Editor': 'Editor' };
+                    item.url = UriBuilder().path($scope.uploadPath.split('/')).path(item.name).build();
                 } else {
-                    item.url = new UriBuilder().path(TransportService.getZipImportUrl().split('/')).path($scope.selectedWorkspace.name).path($scope.uploadPath.split('/')).build();
+                    item.url = UriBuilder().path(TransportService.getZipImportUrl().split('/')).path($scope.uploadPath.split('/')).build();
                 }
             }
         };

@@ -22,12 +22,18 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
             return workspace;
         };
 
+        /**
+         * Returns the currently selected workspace.
+         */
         const getCurrentWorkspace = function () {
             let storedWorkspace = JSON.parse(localStorage.getItem(workspaceStorageKey) || '{}');
             if (!('name' in storedWorkspace)) storedWorkspace = setWorkspace('workspace');
             return storedWorkspace;
         };
 
+        /**
+         * Lists all available workspaces.
+         */
         const listWorkspaceNames = function () {
             return $http.get(this.workspacesServiceUrl)
                 .then(function successCallback(response) {
@@ -38,8 +44,12 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
                 });
         }.bind(this);
 
-        const load = function (resourcePath) {
-            const url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(resourcePath.split('/')).build();
+        /**
+         * List the contents of a path.
+         * @param {string} resourcePath - Full resource path, including workspace name.
+         */
+        const list = function (resourcePath) {
+            const url = UriBuilder().path(this.workspacesServiceUrl.split('/')).path(resourcePath.split('/')).build();
             return $http.get(url, { headers: { 'describe': 'application/json' } })
                 .then(function successCallback(response) {
                     return { status: response.status, data: response.data };
@@ -49,8 +59,12 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
                 });
         }.bind(this);
 
+        /**
+         * Checkes if a resource exists.
+         * @param {string} resourcePath - Full resource path, including workspace name.
+         */
         const resourceExists = function (resourcePath) {
-            const url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(resourcePath.split('/')).build();
+            const url = UriBuilder().path(this.workspacesServiceUrl.split('/')).path(resourcePath.split('/')).build();
             return $http.head(url)
                 .then(function successCallback(response) {
                     return { status: response.status };
@@ -61,8 +75,12 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
                 });
         }.bind(this);
 
-        const loadContent = async function (workspace, filePath) {
-            const url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspace).path(filePath.split('/')).build();
+        /**
+         * Loades file content.
+         * @param {string} resourcePath - Full resource path, including workspace name.
+         */
+        const loadContent = async function (resourcePath) {
+            const url = UriBuilder().path(this.workspacesServiceUrl.split('/')).path(resourcePath.split('/')).build();
             return $http.get(url)
                 .then(function successCallback(response) {
                     return { status: response.status, data: response.data };
@@ -72,8 +90,13 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
                 });
         }.bind(this);
 
-        const saveContent = async function (workspace, filePath, content) {
-            const url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspace).path(filePath.split('/')).build();
+        /**
+         * Saves content to a file
+         * @param {string} resourcePath - Full resource path, including workspace name.
+         * @param {string} content - File content.
+         */
+        const saveContent = async function (resourcePath, content) {
+            const url = UriBuilder().path(this.workspacesServiceUrl.split('/')).path(resourcePath.split('/')).build();
             return $http.put(url, content, { headers: { 'Content-Type': 'text/plain;charset=UTF-8' } })
                 .then(function successCallback(response) {
                     return { status: response.status, data: response.data };
@@ -83,8 +106,12 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
                 });
         }.bind(this);
 
-        const getMetadata = function (resourceUrl) {
-            return $http.get(resourceUrl, { headers: { 'describe': 'application/json' } })
+        /**
+         * Get metadata, from a full URL path.
+         * @param {string} resourceUrl - URL of the resource.
+         */
+        const getMetadataByUrl = function (resourceUrl) {
+            return $http.get(UriBuilder().path(resourceUrl.split('/')).build(), { headers: { 'describe': 'application/json' } })
                 .then(function successCallback(response) {
                     return { status: response.status, data: response.data };
                 }, function errorCallback(response) {
@@ -93,22 +120,42 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
                 });
         }
 
-        const getMetadataByPath = function (workspace, path) {
-            const resourceUrl = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspace).path(path.split('/')).build();
-            return getMetadata(resourceUrl);
+        /**
+         * Gets metadata, from full resource path.
+         * @param {string} resourcePath - Full resource path, including workspace name.
+         */
+        const getMetadata = function (resourcePath) {
+            const resourceUrl = UriBuilder().path(this.workspacesServiceUrl.split('/')).path(resourcePath.split('/')).build();
+            return $http.get(resourceUrl, { headers: { 'describe': 'application/json' } })
+                .then(function successCallback(response) {
+                    return { status: response.status, data: response.data };
+                }, function errorCallback(response) {
+                    console.error('Workspace service:', response);
+                    return { status: response.status };
+                });
         }.bind(this);
 
-        const rename = function (oldName, newName, path, workspaceName) {
-            let pathSegments = path.split('/');
-            pathSegments = pathSegments.slice(1);
+        /**
+         * Renames a file/folder.
+         * @param {string} oldName - Old name of the resource.
+         * @param {string} newName - New name of the resource.
+         * @param {string} resourcePath - Resource path, including workspace name.
+         */
+        const rename = function (oldName, newName, resourcePath) { // TODO: back-end should return full path.
+            const pathSegments = resourcePath.split('/').slice(1);
+            const workspace = pathSegments.shift();
             if (pathSegments.length >= 1) {
-                const url = new UriBuilder().path(this.workspaceManagerServiceUrl.split('/')).path(workspaceName).path('rename').build();
+                const url = UriBuilder().path(this.workspaceManagerServiceUrl.split('/')).path(workspace).path('rename').build();
                 return $http.post(url, {
-                    sources: [new UriBuilder().path(pathSegments).path(oldName).build()],
-                    target: new UriBuilder().path(pathSegments).path(newName).build(),
-                    sourceWorkspace: workspaceName,
-                    targetWorkspace: workspaceName
+                    sources: [UriBuilder().path(pathSegments).path(oldName).build()],
+                    target: UriBuilder().path(pathSegments).path(newName).build(),
+                    sourceWorkspace: workspace,
+                    targetWorkspace: workspace
                 }).then(function successCallback(response) {
+                    for (let i = 0; i < response.data.length; i++) {
+                        response.data[i].from = `/${workspace}/${response.data[i].from}`;
+                        response.data[i].to = `/${workspace}/${response.data[i].to}`;
+                    }
                     return { status: response.status, data: response.data };
                 }, function errorCallback(response) {
                     console.error('Workspace service:', response);
@@ -117,8 +164,12 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
             }
         }.bind(this);
 
-        const remove = function (filepath) {
-            const url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(filepath.split('/')).build();
+        /**
+         * Deletes a file/folder.
+         * @param {string} resourcePath - Full resource path, including workspace name.
+         */
+        const remove = function (resourcePath) {
+            const url = UriBuilder().path(this.workspacesServiceUrl.split('/')).path(resourcePath.split('/')).build();
             return $http.delete(url, { headers: { 'Dirigible-Editor': 'Workspace' } })
                 .then(function successCallback(response) {
                     return { status: response.status, data: response.data };
@@ -128,13 +179,33 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
                 });
         }.bind(this);
 
-        const copy = function (sourcePath, targetPath, sourceWorkspace, targetWorkspace) {
-            const url = new UriBuilder().path(this.workspaceManagerServiceUrl.split('/')).path(targetWorkspace).path('copy').build();
+        /**
+         * Copies a file/folder.
+         * @param {string|Array.<string>} sourcePath - Folder name.
+         * @param {string} targetPath - Full target path, including workspace name.
+         */
+        const copy = function (sourcePath, targetPath) {
+            const sources = [];
+            let sourceWorkspace;
+            if (Array.isArray(sourcePath)) {
+                for (let i = 0; i < sourcePath.length; i++) {
+                    const source = sourcePath[i].split('/');
+                    sourceWorkspace = source.splice(1, 1)[0];
+                    sources.push(source.join('/'));
+                }
+            } else {
+                const source = sourcePath.split('/');
+                sourceWorkspace = source.splice(1, 1)[0];
+                sources.push(source.join('/'));
+            }
+            const targetSegments = targetPath.split('/');
+            const targetWorkspace = targetSegments.splice(1, 1)[0];
+            const url = UriBuilder().path(this.workspaceManagerServiceUrl.split('/')).path(targetWorkspace).path('copy').build();
             return $http.post(url, {
                 sourceWorkspace: sourceWorkspace,
-                sources: Array.isArray(sourcePath) ? sourcePath : [sourcePath],
-                targetWorkspace: targetWorkspace,
-                target: (targetPath.endsWith('/') ? targetPath : targetPath + '/'),
+                sources: sources,
+                targetWorkspace: targetWorkspace, // TODO: Remove the target workspace from the body as we already have it it the URL
+                target: targetSegments.join('/'),
             }).then(function successCallback(response) {
                 return { status: response.status, data: response.data };
             }, function errorCallback(response) {
@@ -143,15 +214,39 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
             });
         }.bind(this);
 
-        const move = function (sourcePath, targetPath, sourceWorkspace, targetWorkspace) {
+        /**
+         * Moves a file/folder.
+         * @param {string|Array.<string>} sourcePath - Folder name.
+         * @param {string} targetPath - Full target path, including workspace name.
+         */
+        const move = function (sourcePath, targetPath) { // TODO: back-end should return full path.
             // TODO: Move to another workspace
-            const url = new UriBuilder().path(this.workspaceManagerServiceUrl.split('/')).path(sourceWorkspace).path('move').build();
+            const sources = [];
+            let sourceWorkspace;
+            if (Array.isArray(sourcePath)) {
+                for (let i = 0; i < sourcePath.length; i++) {
+                    const source = sourcePath[i].split('/');
+                    sourceWorkspace = source.splice(1, 1)[0];
+                    sources.push(source.join('/'));
+                }
+            } else {
+                const source = sourcePath.split('/');
+                sourceWorkspace = source.splice(1, 1)[0];
+                sources.push(source.join('/'));
+            }
+            const targetSegments = targetPath.split('/');
+            const targetWorkspace = targetSegments.splice(1, 1)[0];
+            const url = UriBuilder().path(this.workspaceManagerServiceUrl.split('/')).path(sourceWorkspace).path('move').build();
             return $http.post(url, {
-                sources: Array.isArray(sourcePath) ? sourcePath : [sourcePath],
-                target: targetPath,
-                sourceWorkspace: sourceWorkspace,
+                sources: sources,
+                target: targetSegments.join('/'),
+                sourceWorkspace: sourceWorkspace, // TODO: Remove the source workspace from the body as we already have it it the URL
                 targetWorkspace: targetWorkspace
             }).then(function successCallback(response) {
+                for (let i = 0; i < response.data.length; i++) {
+                    response.data[i].from = `/${sourceWorkspace}/${response.data[i].from}`;
+                    response.data[i].to = `/${targetWorkspace}/${response.data[i].to}`;
+                }
                 return { status: response.status, data: response.data };
             }, function errorCallback(response) {
                 console.error('Workspace service:', response);
@@ -159,10 +254,14 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
             });
         }.bind(this);
 
-        const createNode = function (name, targetPath, isDirectory, content = '') {
-            let url = new UriBuilder().path((this.workspacesServiceUrl + targetPath).split('/')).path(name).build();
-            if (isDirectory)
-                url += "/";
+        /**
+         * Creates a new file.
+         * @param {string} name - File name.
+         * @param {string} targetPath - Full target path, including workspace name.
+         * @param {string} [contnet] - File contents.
+         */
+        const createFile = function (name, targetPath, content = '') {
+            const url = UriBuilder().path(this.workspacesServiceUrl.split('/')).path(targetPath.split('/')).path(name).build();
             return $http.post(url, content, { headers: { 'Dirigible-Editor': 'Workspace', 'Content-Type': 'text/plain' } })
                 .then(function successCallback(response) {
                     return {
@@ -175,8 +274,31 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
                 });
         }.bind(this);
 
+        /**
+         * Creates a new folder.
+         * @param {string} name - Folder name.
+         * @param {string} targetPath - Full target path, including workspace name.
+         */
+        const createFolder = function (name, targetPath) {
+            const url = UriBuilder().path(this.workspacesServiceUrl.split('/')).path(targetPath.split('/')).path(name).path('/').build();
+            return $http.post(url, content = '', { headers: { 'Dirigible-Editor': 'Workspace', 'Content-Type': 'text/plain' } })
+                .then(function successCallback(response) {
+                    return {
+                        status: response.status,
+                        data: response.config.url,
+                    };
+                }, function errorCallback(response) {
+                    console.error('Workspace service:', response);
+                    return { status: response.status };
+                });
+        }.bind(this);
+
+        /**
+         * Creates a workspace.
+         * @param {string} workspace - Workspace name.
+         */
         const createWorkspace = function (workspace) {
-            const url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspace).build();
+            const url = UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspace).build();
             return $http.post(url, {})
                 .then(function successCallback(response) {
                     return { status: response.status, data: response.data };
@@ -186,8 +308,12 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
                 });
         }.bind(this);
 
+        /**
+         * Deletes a workspace.
+         * @param {string} workspace - Workspace name.
+         */
         const deleteWorkspace = function (workspace) {
-            const url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspace).build();
+            const url = UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspace).build();
             return $http.delete(url, { headers: { 'Dirigible-Editor': 'Workspace' } })
                 .then(function successCallback(response) {
                     return { status: response.status, data: response.data };
@@ -197,8 +323,13 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
                 });
         }.bind(this);
 
+        /**
+         * Creates a project inside a workspace.
+         * @param {string} workspace - Workspace name.
+         * @param {string} projectName - Project name.
+         */
         const createProject = function (workspace, projectName) {
-            const url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspace).path(projectName).build();
+            const url = UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspace).path(projectName).build();
             return $http.post(url, {})
                 .then(function successCallback(response) {
                     return { status: response.status, data: response.data };
@@ -208,21 +339,27 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
                 });
         }.bind(this);
 
-        const linkProject = function (workspace, projectName, path) {
-            const url = new UriBuilder().path(this.workspaceManagerServiceUrl.split('/')).path(workspace).path('linkProject').build();
-            return $http.post(url, {
-                sources: Array.isArray(sourcePath) ? projectName : [projectName],
-                target: path
-            }).then(function successCallback(response) {
-                return { status: response.status, data: response.data };
-            }, function errorCallback(response) {
-                console.error('Workspace service:', response);
-                return { status: response.status };
-            });
-        }.bind(this);
+        // TODO: Check if this API works
+        // const linkProject = function (workspace, projectName, path) {
+        //     const url = UriBuilder().path(this.workspaceManagerServiceUrl.split('/')).path(workspace).path('linkProject').build();
+        //     return $http.post(url, {
+        //         sources: Array.isArray(projectName) ? projectName : [projectName],
+        //         target: path
+        //     }).then(function successCallback(response) {
+        //         return { status: response.status, data: response.data };
+        //     }, function errorCallback(response) {
+        //         console.error('Workspace service:', response);
+        //         return { status: response.status };
+        //     });
+        // }.bind(this);
 
+        /**
+         * Deletes a project inside a workspace.
+         * @param {string} workspace - Workspace name.
+         * @param {string} projectName - Project name.
+         */
         const deleteProject = function (workspace, projectName) {
-            const url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspace).path(projectName).build();
+            const url = UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspace).path(projectName).build();
             return $http.delete(url, { headers: { 'Dirigible-Editor': 'Workspace' } })
                 .then(function successCallback(response) {
                     return { status: response.status, data: response.data };
@@ -232,8 +369,13 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
                 });
         }.bind(this);
 
-        const search = function (workspace, resourcePath, searchTerm) {
-            const url = new UriBuilder().path(this.workspaceSearchServiceUrl.split('/')).path(workspace).path(resourcePath.split('/')).build();
+        /**
+         * Performs a search.
+         * @param {string} searchPath - Full path, including the workspace, where the search should be performed.
+         * @returns - List of matching results.
+         */
+        const search = function (searchPath, searchTerm) {
+            const url = UriBuilder().path(this.workspaceSearchServiceUrl.split('/')).path(searchPath.split('/')).build();
             return $http.post(url, searchTerm)
                 .then(function successCallback(response) {
                     return { status: response.status, data: response.data };
@@ -243,29 +385,35 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
                 });
         }.bind(this);
 
-        const getFullURL = function (workspace, resourcePath) {
-            return new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspace).path(resourcePath ? resourcePath.split('/') : '').build();
+        /**
+         * Creates a direct web path to a resource.
+         * @param {string} resourcePath - Full resource path, including the workspace.
+         * @returns - URL encoded web path without the domain.
+         */
+        const getFullURL = function (resourcePath) {
+            return UriBuilder().path(this.workspacesServiceUrl.split('/')).path(resourcePath ? resourcePath.split('/') : '').build();
         }.bind(this);
 
         return {
             setWorkspace: setWorkspace,
             getCurrentWorkspace: getCurrentWorkspace,
             listWorkspaceNames: listWorkspaceNames,
-            load: load,
+            list: list,
             resourceExists: resourceExists,
             loadContent: loadContent,
             saveContent: saveContent,
             getMetadata: getMetadata,
-            getMetadataByPath: getMetadataByPath,
+            getMetadataByUrl: getMetadataByUrl,
             rename: rename,
             remove: remove,
             copy: copy,
             move: move,
-            createNode: createNode,
+            createFile: createFile,
+            createFolder: createFolder,
             createWorkspace: createWorkspace,
             deleteWorkspace: deleteWorkspace,
             createProject: createProject,
-            linkProject: linkProject,
+            // linkProject: linkProject,
             deleteProject: deleteProject,
             search: search,
             getFullURL: getFullURL,

@@ -264,25 +264,31 @@ previewView.controller('PreviewController', ($scope, ViewParameters, ButtonState
 
     workspaceApi.onFileSelected((fileDescriptor) => {
         if ($scope.urlLocked) return;
-        const url = $scope.makeUrlFromPath(fileDescriptor.path);
-        if (url) $scope.$evalAsync(() => { $scope.gotoUrl(url, false) });
+        const pathSegments = fileDescriptor.path.split('/');
+        pathSegments.splice(1, 1);
+        const url = $scope.makeUrlFromPath(pathSegments.join('/'));
+        if (url) $scope.$apply($scope.gotoUrl(url, false));
     });
 
     workspaceApi.onPublished((fileDescriptor) => {
         if ($scope.urlLocked) return;
 
         if (fileDescriptor.path) {
-            const url = $scope.makeUrlFromPath(fileDescriptor.path);
-            if (url) $scope.$evalAsync(() => { $scope.gotoUrl(url) });
-        } else $scope.$evalAsync(() => { $scope.reload() });
+            const pathSegments = fileDescriptor.path.split('/');
+            pathSegments.splice(1, 1);
+            const url = $scope.makeUrlFromPath(pathSegments.join('/'));
+            if (url) $scope.$apply($scope.gotoUrl(url));
+        } else $scope.$apply($scope.reload());
     });
 
     workspaceApi.onUnpublished((fileDescriptor) => {
         if ($scope.urlLocked) return;
 
         if (fileDescriptor.path) {
-            const url = $scope.makeUrlFromPath(fileDescriptor.path);
-            if (url) $scope.$evalAsync(() => { $scope.gotoUrl(url) });
-        } else $scope.$evalAsync(() => { $scope.reload() });
+            const pathSegments = fileDescriptor.path.split('/');
+            pathSegments.splice(1, 1);
+            const url = $scope.makeUrlFromPath(pathSegments.join('/'));
+            if (url) $scope.$apply($scope.gotoUrl(url));
+        } else $scope.$apply($scope.reload());
     });
 });

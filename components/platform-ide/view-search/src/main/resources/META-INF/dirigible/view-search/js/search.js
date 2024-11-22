@@ -48,9 +48,8 @@ searchView.controller('SearchController', ($scope, WorkspaceService, StatusBarAP
     $scope.itemClick = (index) => $scope.selectedItemIndex = index;
 
     $scope.openFile = (index, editor = undefined) => WorkspaceAPI.openFile({
-        path: $scope.search.results[index].path.replace(`/${$scope.selectedWorkspace.name}`, ''),
+        path: $scope.search.results[index].path,
         contentType: $scope.search.results[index].contentType,
-        workspace: $scope.selectedWorkspace.name,
         editorId: editor,
     });
 
@@ -64,7 +63,7 @@ searchView.controller('SearchController', ($scope, WorkspaceService, StatusBarAP
         $scope.search.results.length = 0;
         $scope.search.searching = true;
         if ($scope.search.text) {
-            WorkspaceService.search($scope.selectedWorkspace.name, '', $scope.search.text).then((response) => {
+            WorkspaceService.search($scope.selectedWorkspace.name, $scope.search.text).then((response) => {
                 $scope.$evalAsync(() => {
                     $scope.search.searching = false;
                     if (response.status === 200) {

@@ -52,7 +52,6 @@ projectsView.controller('ProjectsViewController', function (
     };
     $scope.newNodeData = {
         parent: '',
-        workspace: '',
         path: '',
         content: '',
     };
@@ -88,7 +87,7 @@ projectsView.controller('ProjectsViewController', function (
             },
             data: (node, cb) => {
                 if (node.id === '#') cb($scope.projects);
-                else WorkspaceService.loadContent($scope.selectedWorkspace.name, node.data.path).then((response) => {
+                else WorkspaceService.loadContent(node.data.path).then((response) => {
                     if (response.status === 200) {
                         let children;
                         if (response.data.folders && response.data.files) {
@@ -209,7 +208,7 @@ projectsView.controller('ProjectsViewController', function (
             WorkspaceAPI.announceFileSelected({
                 path: data.node.data.path,
                 contentType: data.node.data.contentType,
-                workspace: data.node.data.workspace,
+                params: { workspace: $scope.selectedWorkspace.name },
             });
         }
     });
@@ -222,8 +221,6 @@ projectsView.controller('ProjectsViewController', function (
     $scope.jstreeWidget.on('paste.jstree', (_event, pasteObj) => {
         const parent = $scope.jstreeWidget.jstree(true).get_node(pasteObj.parent);
         const spinnerId = showSpinner(parent);
-        const targetWorkspace = parent.data.workspace;
-        const sourceWorkspace = pasteObj.node[0].data.workspace;
         const targetPath = (parent.data.path.endsWith('/') ? parent.data.path : parent.data.path + '/');
         let pasteArray = [];
         for (let i = 0; i < pasteObj.node.length; i++) {
@@ -235,11 +232,10 @@ projectsView.controller('ProjectsViewController', function (
                 WorkspaceAPI.getCurrentlyOpenedFiles().then((result) => {
                     for (let r = 0; r < response.data.length; r++) {
                         for (let f = 0; f < result.length; f++) {
-                            if (result[f].startsWith(`/${sourceWorkspace}/${response.data[r].from}`)) {
+                            if (result[f].startsWith(response.data[r].from)) {
                                 WorkspaceAPI.announceFileMoved({
-                                    newPath: result[f].replace(`/${sourceWorkspace}`, '').replace(response.data[r].from, response.data[r].to),
-                                    oldPath: result[f].replace(`/${sourceWorkspace}`, ''),
-                                    workspace: targetWorkspace,
+                                    newPath: result[f].replace(response.data[r].from, response.data[r].to),
+                                    oldPath: result[f],
                                 });
                             }
                         }
@@ -263,12 +259,7 @@ projectsView.controller('ProjectsViewController', function (
             hideSpinner(spinnerId);
         }
         if (pasteObj.mode === 'copy_node') {
-            WorkspaceService.copy(
-                pasteArray,
-                targetPath,
-                sourceWorkspace,
-                targetWorkspace,
-            ).then(onResponse);
+            WorkspaceService.copy(pasteArray, targetPath).then(onResponse);
         } else {
             for (let pIndex = 0; pIndex < pasteObj.node.length; pIndex++) { // Temp solution
                 for (let i = 0; i < parent.children.length; i++) {
@@ -287,8 +278,6 @@ projectsView.controller('ProjectsViewController', function (
             WorkspaceService.move(
                 pasteArray,
                 pasteArray.length === 1 ? targetPath + pasteObj.node[0].text : targetPath,
-                sourceWorkspace,
-                targetWorkspace,
             ).then(onResponse);
         }
     });
@@ -633,13 +622,11 @@ projectsView.controller('ProjectsViewController', function (
                         openFile(contextMenuNodes[0], editorId);
                     } else if (id === 'file') {
                         $scope.newNodeData.parent = contextMenuNodes[0].id;
-                        $scope.newNodeData.workspace = contextMenuNodes[0].data.workspace;
                         $scope.newNodeData.path = contextMenuNodes[0].data.path;
                         $scope.newNodeData.content = '';
                         openNewFileDialog();
                     } else if (id === 'folder') {
                         $scope.newNodeData.parent = contextMenuNodes[0].id;
-                        $scope.newNodeData.workspace = contextMenuNodes[0].data.workspace;
                         $scope.newNodeData.path = contextMenuNodes[0].data.path;
                         openNewFolderDialog();
                     } else if (id === 'cut') {
@@ -657,22 +644,20 @@ projectsView.controller('ProjectsViewController', function (
                         openDeleteDialog(contextMenuNodes);
                     } else if (id === 'publish') {
                         for (let i = 0; i < contextMenuNodes.length; i++) {
-                            publish(contextMenuNodes[i].data.path, contextMenuNodes[i].data.workspace, {
+                            publish(contextMenuNodes[i].data.path, {
                                 name: contextMenuNodes[i].text,
                                 path: contextMenuNodes[i].data.path,
                                 type: contextMenuNodes[i].type,
-                                workspace: contextMenuNodes[i].data.workspace
                             });
                         }
                     } else if (id === 'publishAll') {
                         $scope.publishAll();
                     } else if (id === 'unpublish') {
                         for (let i = 0; i < contextMenuNodes.length; i++) {
-                            unpublish(contextMenuNodes[i].data.path, contextMenuNodes[i].data.workspace, {
+                            unpublish(contextMenuNodes[i].data.path, {
                                 name: contextMenuNodes[i].text,
                                 path: contextMenuNodes[i].data.path,
                                 type: contextMenuNodes[i].type,
-                                workspace: contextMenuNodes[i].data.workspace
                             });
                         }
                     } else if (id === 'unpublishAll') {
@@ -684,17 +669,17 @@ projectsView.controller('ProjectsViewController', function (
                             params: {
                                 importType: id !== 'importZip' ? 'file' : 'zip',
                                 uploadPath: contextMenuNodes[0].data.path,
-                                workspace: contextMenuNodes[0].data.workspace,
-                                projectsViewId: contextMenuNodes[0].id
+                                projectsViewId: contextMenuNodes[0].id,
+                                workspace: $scope.selectedWorkspace.name,
                             }
                         });
                     } else if (id === 'exportProjects') {
                         $scope.exportProjects();
                     } else if (id === 'exportProject') {
-                        TransportService.exportProject(contextMenuNodes[0].data.workspace, contextMenuNodes[0].text);
+                        TransportService.exportProject($scope.selectedWorkspace.name, contextMenuNodes[0].text);
                     } else if (id === 'actionsProject') {
-                        $scope.actionData.workspace = contextMenuNodes[0].data.workspace;
                         $scope.actionData.project = contextMenuNodes[0].text;
+                        $scope.actionData.workspace = $scope.selectedWorkspace.name;
                         DialogAPI.showFormDialog({
                             title: 'Enter the action to execute',
                             form: {
@@ -718,7 +703,7 @@ projectsView.controller('ProjectsViewController', function (
                         });
                     } else if (id === 'regenerateModel') {
                         DialogAPI.showBusyDialog('Regenerating...');
-                        WorkspaceService.loadContent(contextMenuNodes[0].data.workspace, contextMenuNodes[0].data.path).then((response) => {
+                        WorkspaceService.loadContent(contextMenuNodes[0].data.path).then((response) => {
                             if (response.status === 200) {
                                 $scope.gmodel.nodeParents = contextMenuNodes[0].parents;
                                 $scope.gmodel.project = response.data.projectName;
@@ -920,7 +905,6 @@ projectsView.controller('ProjectsViewController', function (
                             createFile(
                                 contextMenuNodes[0].id,
                                 `.${extension}`,
-                                contextMenuNodes[0].data.workspace,
                                 contextMenuNodes[0].data.path,
                                 content
                             );
@@ -941,13 +925,11 @@ projectsView.controller('ProjectsViewController', function (
                                 createFile(
                                     contextMenuNodes[0].id,
                                     name,
-                                    contextMenuNodes[0].data.workspace,
                                     contextMenuNodes[0].data.path,
                                     content
                                 );
                             } else {
                                 $scope.newNodeData.parent = contextMenuNodes[0].id;
-                                $scope.newNodeData.workspace = contextMenuNodes[0].data.workspace;
                                 $scope.newNodeData.path = contextMenuNodes[0].data.path;
                                 $scope.newNodeData.content = content;
                                 openNewFileDialog(excludedNames, name);
@@ -1059,7 +1041,7 @@ projectsView.controller('ProjectsViewController', function (
     $scope.reloadWorkspace = (setConfig = false) => {
         $scope.projects.length = 0;
         $scope.state.isBusy = true;
-        WorkspaceService.load($scope.selectedWorkspace.name).then((response) => {
+        WorkspaceService.list($scope.selectedWorkspace.name).then((response) => {
             if (response.status === 200) {
                 for (let i = 0; i < response.data.projects.length; i++) {
                     let project = {
@@ -1068,8 +1050,7 @@ projectsView.controller('ProjectsViewController', function (
                         data: {
                             git: response.data.projects[i].git,
                             gitName: response.data.projects[i].gitName,
-                            path: response.data.projects[i].path.substring(response.data.path.length, response.data.projects[i].path.length), // Back-end should not include workspase name in path
-                            workspace: response.data.name,
+                            path: response.data.projects[i].path,
                         },
                         li_attr: { git: response.data.projects[i].git },
                     };
@@ -1133,7 +1114,7 @@ projectsView.controller('ProjectsViewController', function (
             else StatusBarAPI.showMessage(`Published all projects in '${$scope.selectedWorkspace.name}'`);
             StatusBarAPI.hideBusy();
             WorkspaceAPI.announcePublished({
-                workspace: $scope.selectedWorkspace.name
+                path: `/${$scope.selectedWorkspace.name}`
             });
         });
     };
@@ -1146,14 +1127,14 @@ projectsView.controller('ProjectsViewController', function (
             else StatusBarAPI.showMessage(`Unpublished all projects in '${$scope.selectedWorkspace.name}'`);
             StatusBarAPI.hideBusy();
             WorkspaceAPI.announceUnpublished({
-                workspace: $scope.selectedWorkspace.name
+                path: `/${$scope.selectedWorkspace.name}`
             });
         });
     };
 
-    function publish(path, workspace, fileDescriptor, callback) {
+    function publish(path, fileDescriptor, callback) {
         StatusBarAPI.showBusy(`Publishing '${path}'...`);
-        PublisherService.publish(path, workspace).then((response) => {
+        PublisherService.publish(path).then((response) => {
             if (response.status !== 200) {
                 StatusBarAPI.showError(`Unable to publish '${path}'`);
             } else {
@@ -1165,9 +1146,9 @@ projectsView.controller('ProjectsViewController', function (
         });
     };
 
-    function unpublish(path, workspace, fileDescriptor, callback) {
+    function unpublish(path, fileDescriptor, callback) {
         StatusBarAPI.showBusy(`Unpublishing '${path}'...`);
-        PublisherService.unpublish(path, workspace).then((response) => {
+        PublisherService.unpublish(path).then((response) => {
             if (response.status !== 200) {
                 StatusBarAPI.showError(`Unable to unpublish '${path}'`);
             } else {
@@ -1191,19 +1172,17 @@ projectsView.controller('ProjectsViewController', function (
 
     $scope.saveAll = () => WorkspaceAPI.saveAll();
 
-    function deleteFileFolder(workspace, path, nodeId, type) {
-        WorkspaceService.remove(workspace + path).then((response) => {
+    function deleteFileFolder(path, nodeId, type) {
+        WorkspaceService.remove(path).then((response) => {
             if (response.status !== 204) {
                 StatusBarAPI.showMessage(`Unable to delete '${path}'.`);
             } else {
                 StatusBarAPI.showMessage(`Deleted '${path}'.`);
                 if (type === 'file') WorkspaceAPI.announceFileDeleted({
                     path: path,
-                    workspace: workspace
                 });
                 else WorkspaceAPI.announceFolderDeleted({
                     path: path,
-                    workspace: workspace
                 });
                 $scope.jstreeWidget.jstree(true).delete_node(nodeId);
             }
@@ -1216,10 +1195,7 @@ projectsView.controller('ProjectsViewController', function (
                 StatusBarAPI.showError(`Unable to delete '${project}'.`);
             } else {
                 StatusBarAPI.showMessage(`Deleted '${project}'.`);
-                WorkspaceAPI.announceProjectDeleted({
-                    project: project,
-                    workspace: workspace
-                });
+                WorkspaceAPI.announceProjectDeleted({ project: project, workspace: workspace });
                 $scope.jstreeWidget.jstree(true).delete_node(nodeId);
             }
         });
@@ -1318,7 +1294,6 @@ projectsView.controller('ProjectsViewController', function (
         } else {
             projectName = `${node.text} 2`;
             $scope.duplicateProjectData.originalPath = node.data.path;
-            $scope.duplicateProjectData.originalWorkspace = node.data.workspace;
             title = `Duplicate project '${node.text}'`;
         }
         formItems['pgfi1'] = {
@@ -1343,34 +1318,24 @@ projectsView.controller('ProjectsViewController', function (
             if (form) {
                 DialogAPI.showBusyDialog('Duplicating...');
                 let originalPath;
-                let originalWorkspace;
-                let duplicatePath;
+                let duplicatePath = `/${form['pgfd1']}/${form['pgfi1']}`;
                 if (Object.prototype.hasOwnProperty.call(form, 'pgfd2')) {
                     let root = $scope.jstreeWidget.jstree(true).get_node('#');
                     for (let i = 0; i < root.children.length; i++) {
-                        let child = $scope.jstreeWidget.jstree(true).get_node(root.children[i]);
+                        const child = $scope.jstreeWidget.jstree(true).get_node(root.children[i]);
                         if (child.text === form['pgfd2']) {
                             originalPath = child.data.path;
-                            originalWorkspace = child.data.workspace;
                             break;
                         }
                     }
-                    duplicatePath = `/${form['pgfi1']}`;
                 } else {
-                    originalWorkspace = $scope.duplicateProjectData.originalWorkspace
                     originalPath = $scope.duplicateProjectData.originalPath;
-                    duplicatePath = `/${form['pgfi1']}`;
                 }
-                WorkspaceService.copy(
-                    originalPath,
-                    duplicatePath,
-                    originalWorkspace,
-                    form['pgfd1'],
-                ).then((response) => {
+                WorkspaceService.copy(originalPath, duplicatePath).then((response) => {
                     DialogAPI.closeBusyDialog();
                     if (response.status === 201) {
                         if (form['pgfd1'] === $scope.selectedWorkspace.name)
-                            $scope.reloadWorkspace(); // Temp
+                            $scope.reloadWorkspace(); // Temporary solution
                         StatusBarAPI.showMessage(`Duplicated '${originalPath}'`);
                     } else {
                         StatusBarAPI.showError(`Unable to duplicate '${originalPath}'`);
@@ -1497,8 +1462,7 @@ projectsView.controller('ProjectsViewController', function (
                     status: children[i].status
                 },
                 data: {
-                    path: children[i].path.substring($scope.selectedWorkspace.name.length + 1, children[i].path.length), // Back-end should not include workspase name in path
-                    workspace: $scope.selectedWorkspace.name,
+                    path: children[i].path,
                 }
             };
             if (children[i].type === 'file') {
@@ -1593,22 +1557,21 @@ projectsView.controller('ProjectsViewController', function (
         WorkspaceAPI.openFile({
             path: node.data.path,
             contentType: node.data.contentType,
-            workspace: node.data.workspace,
             editorId: editor,
             params: extraArgs,
         });
     }
 
-    function createFile(parent, name, workspace, path, content = '') {
+    function createFile(parent, name, path, content = '') {
         const alertBody = {
             title: 'Could not create a file',
             message: `There was an error while creating '${name}'`,
             type: AlertTypes.Error,
             preformatted: false,
         };
-        WorkspaceService.createNode(name, `/${workspace}${path}`, false, content).then((response) => {
+        WorkspaceService.createFile(name, path, content).then((response) => {
             if (response.status === 201) {
-                WorkspaceService.getMetadata(response.data).then((metadata) => {
+                WorkspaceService.getMetadataByUrl(response.data).then((metadata) => {
                     if (metadata.status === 200) {
                         $scope.jstreeWidget.jstree(true).deselect_all(true);
                         $scope.jstreeWidget.jstree(true).select_node(
@@ -1620,8 +1583,7 @@ projectsView.controller('ProjectsViewController', function (
                                 },
                                 icon: getFileIcon(metadata.data.name),
                                 data: {
-                                    path: metadata.data.path.substring($scope.selectedWorkspace.name.length + 1, metadata.data.path.length),
-                                    workspace: $scope.selectedWorkspace.name,
+                                    path: metadata.data.path,
                                     contentType: metadata.data.contentType,
                                 }
                             })
@@ -1632,8 +1594,8 @@ projectsView.controller('ProjectsViewController', function (
         });
     }
 
-    function createFolder(parent, name, workspace, path) {
-        WorkspaceService.createNode(name, `/${workspace}${path}`, true).then((response) => {
+    function createFolder(parent, name, path) {
+        WorkspaceService.createFolder(name, path).then((response) => {
             if (response.status === 201) {
                 $scope.jstreeWidget.jstree(true).deselect_all(true);
                 $scope.jstreeWidget.jstree(true).select_node(
@@ -1644,7 +1606,6 @@ projectsView.controller('ProjectsViewController', function (
                             type: 'folder',
                             data: {
                                 path: (path.endsWith('/') ? path : path + '/') + name,
-                                workspace: workspace,
                             }
                         },
                     )
@@ -1698,7 +1659,7 @@ projectsView.controller('ProjectsViewController', function (
             cancelLabel: 'Cancel'
         }).then((form) => {
             if (form) {
-                createFile($scope.newNodeData.parent, form['fdti1'], $scope.newNodeData.workspace, $scope.newNodeData.path, $scope.newNodeData.content);
+                createFile($scope.newNodeData.parent, form['fdti1'], $scope.newNodeData.path, $scope.newNodeData.content);
                 $scope.newNodeData.content = '';
             }
         }, (error) => {
@@ -1733,7 +1694,7 @@ projectsView.controller('ProjectsViewController', function (
             cancelLabel: 'Cancel'
         }).then((form) => {
             if (form) {
-                createFolder($scope.newNodeData.parent, form['fdti1'], $scope.newNodeData.workspace, $scope.newNodeData.path);
+                createFolder($scope.newNodeData.parent, form['fdti1'], $scope.newNodeData.path);
             }
         }, (error) => {
             console.error(error);
@@ -1766,16 +1727,15 @@ projectsView.controller('ProjectsViewController', function (
                     renameNode.text,
                     form['fdti1'],
                     renameNode.data.path.substring(renameNode.data.path.length - renameNode.text.length, 0),
-                    renameNode.data.workspace
                 ).then((response) => {
                     if (response.status === 200) {
-                        const newPath = `/${response.data[0].to}`;
                         const node = $scope.jstreeWidget.jstree(true).get_node(renameNode);
+                        const newPath = response.data[0].to;
                         if (renameNode.type === 'file') {
-                            WorkspaceService.getMetadataByPath(renameNode.data.workspace, newPath).then((metadata) => {
+                            WorkspaceService.getMetadata(newPath).then((metadata) => {
                                 if (metadata.status === 200) {
                                     node.text = metadata.data.name;
-                                    node.data.path = metadata.data.path.substring($scope.selectedWorkspace.name.length + 1, metadata.data.path.length);
+                                    node.data.path = metadata.data.path;
                                     node.data.contentType = metadata.data.contentType;
                                     node.state.status = metadata.data.status;
                                     node.icon = getFileIcon(metadata.data.name);
@@ -1783,7 +1743,6 @@ projectsView.controller('ProjectsViewController', function (
                                         oldPath: renameNode.data.path,
                                         newPath: node.data.path,
                                         contentType: node.data.contentType,
-                                        workspace: node.data.workspace,
                                     });
                                     $scope.jstreeWidget.jstree(true).redraw_node(node);
                                 } else {
@@ -1796,13 +1755,14 @@ projectsView.controller('ProjectsViewController', function (
                                 }
                             });
                         } else {
-                            WorkspaceAPI.getCurrentlyOpenedFiles(`/${renameNode.data.workspace}${renameNode.data.path}`).then((result) => {
+                            WorkspaceAPI.getCurrentlyOpenedFiles(renameNode.data.path).then((result) => {
                                 for (let i = 0; i < result.length; i++) {
-                                    WorkspaceAPI.announceFileMoved({
-                                        newPath: result[i].replace(`/${renameNode.data.workspace}`, '').replace(renameNode.data.path, newPath),
-                                        oldPath: result[i].replace(`/${renameNode.data.workspace}`, ''),
-                                        workspace: renameNode.data.workspace,
-                                    });
+                                    const updatedPath = result[i].replace(renameNode.data.path, newPath);
+                                    if (updatedPath !== result[i])
+                                        WorkspaceAPI.announceFileMoved({
+                                            newPath: result[i].replace(renameNode.data.path, newPath),
+                                            oldPath: result[i],
+                                        });
                                 }
                             });
                             for (let i = 0; i < renameNode.children_d.length; i++) {
@@ -1844,9 +1804,9 @@ projectsView.controller('ProjectsViewController', function (
         }).then((buttonId) => {
             function deleteNode(node) {
                 if (node.type === 'project') {
-                    deleteProject(node.data.workspace, node.text, node.id);
+                    deleteProject($scope.selectedWorkspace.name, node.text, node.id);
                 } else {
-                    deleteFileFolder(node.data.workspace, node.data.path, node.id, node.type);
+                    deleteFileFolder(node.data.path, node.id, node.type);
                 }
             };
             if (buttonId === 'b1') {
@@ -1855,7 +1815,7 @@ projectsView.controller('ProjectsViewController', function (
                 }
             } else if (buttonId === 'b2') {
                 for (let i = 0; i < selected.length; i++) {
-                    unpublish(selected[i].data.path, selected[i].data.workspace, selected[i], () => {
+                    unpublish(selected[i].data.path, selected[i], () => {
                         deleteNode(selected[i]);
                     });
                 }
@@ -1925,7 +1885,7 @@ projectsView.controller('ProjectsViewController', function (
     }
 
     WorkspaceAPI.onFileSaved((fileData) => {
-        publish(fileData.path, fileData.workspace, fileData);
+        publish(fileData.path, fileData);
         if (fileData.status) {
             const instance = $scope.jstreeWidget.jstree(true);
             for (let item in instance._model.data) { // Uses the unofficial '_model' property but this is A LOT faster then using 'get_json()'
@@ -1991,11 +1951,10 @@ projectsView.controller('ProjectsViewController', function (
         topic: 'projects.tree.select',
         handler: (msg) => {
             if (msg.filePath.startsWith(`/${$scope.selectedWorkspace.name}/`)) {
-                let filePath = msg.filePath.slice($scope.selectedWorkspace.name.length + 1);
                 const instance = $scope.jstreeWidget.jstree(true);
                 if (typeof instance._model !== 'undefined')
                     for (let item in instance._model.data) { // Uses the unofficial '_model' property but this is A LOT faster then using 'get_json()'
-                        if (item !== '#' && instance._model.data[item].data.path === filePath) {
+                        if (item !== '#' && instance._model.data[item].data.path === msg.filePath) {
                             instance.deselect_all();
                             instance._open_to(item).focus();
                             instance.select_node(item);

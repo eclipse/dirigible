@@ -52,6 +52,24 @@ function setTheme(theme, monaco) {
 
 setTheme();
 
+function getViewParameters() {
+    const dataParameters = window.frameElement?.getAttribute("data-parameters");
+    if (dataParameters) {
+        const params = JSON.parse(dataParameters);
+        const resourcePath = params["filePath"] || "";
+        return {
+            resourceType: params["params"] && params["params"]["resourceType"] || "/services/ide/workspaces",
+            contentType: params["contentType"] || "",
+            readOnly: params["readOnly"] || false,
+            gitName: params["gitName"] || "",
+            resourcePath: resourcePath,
+        }
+    }
+    return {};
+}
+
+let editorParameters = getViewParameters();
+
 // @ts-ignore
 require.config({
     paths: {
@@ -64,7 +82,7 @@ require.config({
 require(['vs/editor/editor.main', 'parser/acorn-loose'], async function (monaco, acornLoose) {
     try {
         const fileIO = new FileIO();
-        const fileName = fileIO.resolvePath();
+        const fileName = fileIO.resolveResourcePath();
         const readOnly = fileIO.isReadOnly();
         const fileType = await fileIO.getFileType(fileName);
         const isTemplate = fileIO.isFileTemplate(editorParameters.resourcePath);
@@ -93,33 +111,11 @@ class Utils {
 
     static setEditorDirty(dirty) {
         workspaceApi.setFileDirty({
-            path: editorParameters.path,
-            workspace: editorParameters.workspace,
+            path: editorParameters.resourcePath,
             dirty: dirty,
         });
     }
 }
-
-function getViewParameters() {
-    const dataParameters = window.frameElement?.getAttribute("data-parameters");
-    if (dataParameters) {
-        const params = JSON.parse(dataParameters);
-        const resourcePath = params["file"] || "";
-        const path = resourcePath.substring(resourcePath.indexOf('/', resourcePath.indexOf('/') + 1), resourcePath.length)
-        return {
-            resourceType: params["resourceType"] || "/services/ide/workspaces",
-            contentType: params["contentType"] || "",
-            readOnly: params["readOnly"] || false,
-            gitName: params["gitName"] || "",
-            resourcePath: resourcePath,
-            workspace: resourcePath.substring(1, resourcePath.length - path.length),
-            path: path,
-        }
-    }
-    return {};
-}
-
-let editorParameters = getViewParameters();
 
 class FileIO {
 
@@ -131,14 +127,6 @@ class FileIO {
 
     resolveResourcePath() {
         return editorParameters.resourcePath;
-    }
-
-    resolvePath() {
-        return editorParameters.path;
-    }
-
-    resolveWorkspace() {
-        return editorParameters.workspace;
     }
 
     resolveProjectName(filePath) {
@@ -230,11 +218,9 @@ class FileIO {
             if (!path) {
                 throw new Error(`Unable to load file [${path}], file query parameter is not present in the URL`);
             }
-            const workspace = this.resolveWorkspace();
             const projectName = this.resolveProjectName(path);
-            const filePath = this.resolveFilePath(path);
 
-            const requestMetadata = this.#buildFileRequestMetadata(path, workspace, filePath, loadGitMetadata);
+            const requestMetadata = this.#buildFileRequestMetadata(path, loadGitMetadata);
             let response;
 
             try {
@@ -250,7 +236,7 @@ class FileIO {
                 }
             } catch (e) {
                 // Fallback to file in Registry
-                response = await fetch(this.#buildRegistryUrl(filePath), {
+                response = await fetch(this.#buildRegistryUrl(path), {
                     method: 'GET',
                     headers: {
                         'X-Requested-With': 'Fetch',
@@ -266,9 +252,8 @@ class FileIO {
             csrfToken = response.headers.get("x-csrf-token");
 
             const fileMetadata = {
-                workspace: workspace,
                 project: projectName,
-                filePath: filePath,
+                filePath: path,
                 isGit: requestMetadata.isGitProject,
                 git: '',
                 modified: '',
@@ -324,8 +309,7 @@ class FileIO {
             Utils.setEditorDirty(false);
 
             workspaceApi.announceFileSaved({
-                path: editorParameters.path,
-                workspace: editorParameters.workspace,
+                path: editorParameters.resourcePath,
                 contentType: editorParameters.contentType,
                 status: editorParameters.gitName && lineDecorations.length ? 'modified' : 'unmodified'
             });
@@ -357,18 +341,18 @@ class FileIO {
     }
 
     #buildRegistryUrl(filePath) {
-        return `${REGISTRY_API}${filePath.startsWith('/') ? '' : '/'}${filePath}`;
+        return UriBuilder().path(REGISTRY_API.split('/')).path(filePath.split('/')).build();
     }
 
     #buildRepositoryUrl(path) {
-        return `${REPOSITORY_API}${path.startsWith('/') ? '' : '/'}${path}`;
+        return UriBuilder().path(REPOSITORY_API.split('/')).path(path.split('/')).build();
     }
 
-    #buildWorkspaceUrl(workspace, filePath) {
-        return `${WORKSPACE_API}/${workspace}/${filePath}`;
+    #buildWorkspaceUrl(filePath) {
+        return UriBuilder().path(WORKSPACE_API.split('/')).path(filePath.split('/')).build();
     }
 
-    #buildFileRequestMetadata(path, workspace, filePath, loadGitMetadata) {
+    #buildFileRequestMetadata(filePath, loadGitMetadata) {
         let url;
         let isGitProject = false;
 
@@ -377,25 +361,26 @@ class FileIO {
                 url = this.#buildRegistryUrl(filePath);
                 break;
             case "repository":
-                url = this.#buildRepositoryUrl(path);
+                url = this.#buildRepositoryUrl(filePath);
                 break;
             default:
-                url = this.#buildWorkspaceUrl(workspace, filePath);
+                url = this.#buildWorkspaceUrl(filePath);
         }
 
         const gitProject = this.#resolveGitProjectName();
         if (loadGitMetadata && gitProject) {
+            const workspace = filePath.split('/')[1];
             const gitFolder = "/.git/";
-            const isGitFolderLocation = path.indexOf(gitFolder) > 0;
+            const isGitFolderLocation = filePath.indexOf(gitFolder) > 0;
             if (isGitFolderLocation) {
-                path = path.substring(path.indexOf(gitFolder) + gitFolder.length);
+                filePath = filePath.substring(path.indexOf(gitFolder) + gitFolder.length);
             }
 
             let diffPath;
             if (isGitFolderLocation) {
-                diffPath = path.substring(path.indexOf(gitProject) + gitProject.length + 1);
+                diffPath = filePath.substring(filePath.indexOf(gitProject) + gitProject.length + 1);
             } else {
-                diffPath = path.substring(path.indexOf(`/${workspace}/`) + `/${workspace}/`.length);
+                diffPath = filePath.substring(filePath.indexOf(`/${workspace}/`) + `/${workspace}/`.length);
             }
             url = `/services/ide/git/${workspace}/${gitProject}/diff?path=${diffPath}`;
             isGitProject = true;
@@ -533,8 +518,7 @@ class DirigibleEditor {
 
     static closeEditor() {
         workspaceApi.closeFile({
-            path: editorParameters.path,
-            workspace: editorParameters.workspace,
+            path: editorParameters.resourcePath,
         });
     }
 
@@ -545,7 +529,7 @@ class DirigibleEditor {
             DirigibleEditor.dirty = false;
         });
         if (DirigibleEditor.loadingOverview) {
-            DirigibleEditor.loadingOverview.classList.add("dg-hidden")
+            DirigibleEditor.loadingOverview.classList.add("bk-hidden")
         };
     }
 
@@ -683,8 +667,7 @@ class DirigibleEditor {
 
         editor.onDidFocusEditorText(function () {
             workspaceApi.openFile({
-                path: editorParameters.path,
-                workspace: editorParameters.workspace,
+                path: editorParameters.resourcePath,
             });
             if (EditorActionsProvider.isAutoRevealEnabled()) {
                 setTimeout(() => {
@@ -884,7 +867,6 @@ class DirigibleEditor {
                 if (filePath) {
                     workspaceApi.openFile({
                         path: filePath,
-                        workspace: new FileIO().resolveWorkspace(),
                         contentType: "typescript",
                     });
                 }
@@ -932,7 +914,7 @@ class DirigibleEditor {
         });
 
         workspaceApi.onReloadEditorParams((data) => {
-            if (data.workspace === editorParameters.workspace && data.path === editorParameters.path) {
+            if (data.path === editorParameters.resourcePath) {
                 editorParameters = getViewParameters();
             }
         });
@@ -1010,7 +992,7 @@ class TypeScriptUtils {
                     continue;
                 }
                 const importedFileMetadata = await fileIO.loadText(importedFile);
-                let uriPath = `/${importedFileMetadata.workspace}/${importedFileMetadata.filePath}`;
+                let uriPath = importedFileMetadata.filePath;
                 if (TypeScriptUtils.isGlobalImport(importedFile)) {
                     monaco.languages.typescript.typescriptDefaults.addExtraLib(
                         importedFileMetadata.sourceCode,

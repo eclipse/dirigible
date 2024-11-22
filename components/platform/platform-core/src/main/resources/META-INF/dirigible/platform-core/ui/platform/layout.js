@@ -200,19 +200,19 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
 
                     $scope.focusedTabView = getFirstCenterSplittedTabViewPane($scope.centerSplittedTabViews);
 
-                    $scope.$watch('selection', function (newSelection, oldSelection) {
+                    $scope.$watch('selection', (newSelection, oldSelection) => {
                         if (!angular.equals(newSelection, oldSelection)) {
                             saveLayoutState();
                         }
                     }, true);
 
-                    $scope.$watch('centerSplittedTabViews', function (newValue, oldValue) {
+                    $scope.$watch('centerSplittedTabViews', (newValue, oldValue) => {
                         if (!angular.equals(newValue, oldValue)) {
                             saveLayoutState();
                         }
                     }, true);
 
-                    $scope.$watch('leftTabs', function (newValue, oldValue) {
+                    $scope.$watch('leftTabs', (newValue, oldValue) => {
                         const collectionsEqual = (a, b, ...props) => {
                             if (a && !b || !a && b) return false;
                             if (!a && !b) return true;
@@ -234,30 +234,26 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                     }, true);
                 });
 
-                $scope.closeCenterTab = function (tab) {
-                    tryCloseCenterTabs([tab]);
-                };
+                $scope.closeCenterTab = (tab) => tryCloseCenterTabs([tab]);
 
-                $scope.splitCenterTabs = function (direction, pane) {
-                    splitTabs(direction, pane);
-                };
+                $scope.splitCenterTabs = (direction, pane) => splitTabs(direction, pane);
 
-                $scope.collapseBottomPane = function () {
+                $scope.collapseBottomPane = () => {
                     updateSplitPanesState({
                         editorsPaneState: SplitPaneState.EXPANDED,
-                        bottomPanesState: SplitPaneState.COLLAPSED
+                        bottomPanesState: SplitPaneState.COLLAPSED,
                     });
                 };
 
-                $scope.expandBottomPane = function () {
+                $scope.expandBottomPane = () => {
                     updateSplitPanesState({
                         editorsPaneState: SplitPaneState.EXPANDED,
-                        bottomPanesState: SplitPaneState.EXPANDED
+                        bottomPanesState: SplitPaneState.EXPANDED,
                     });
                 };
 
-                $scope.toggleCenterPane = function () {
-                    let editorsPaneCollapsed = $scope.isCenterPaneCollapsed();
+                $scope.toggleCenterPane = () => {
+                    const editorsPaneCollapsed = $scope.isCenterPaneCollapsed();
 
                     updateSplitPanesState({
                         editorsPaneState: editorsPaneCollapsed ? SplitPaneState.EXPANDED : SplitPaneState.COLLAPSED,
@@ -265,21 +261,15 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                     });
                 };
 
-                $scope.isCenterPaneCollapsed = function () {
-                    return $scope.splitPanesState.main[0] == SplitPaneState.COLLAPSED;
-                };
+                $scope.isCenterPaneCollapsed = () => $scope.splitPanesState.main[0] == SplitPaneState.COLLAPSED;
 
-                $scope.isBottomPaneCollapsed = function () {
+                $scope.isBottomPaneCollapsed = () => {
                     return $scope.splitPanesState.main.length < 2 || $scope.splitPanesState.main[1] == SplitPaneState.COLLAPSED;
                 };
 
-                $scope.isMoreTabsButtonVisible = function (tabs) {
-                    return tabs.some(x => x.isHidden);
-                }
+                $scope.isMoreTabsButtonVisible = (tabs) => tabs.some(x => x.isHidden);
 
-                $scope.sideViewStateChanged = function () {
-                    saveLayoutState();
-                };
+                $scope.sideViewStateChanged = () => saveLayoutState();
 
                 function hasMajorVersionChanged(savedState) {
                     const newVersion = parseInt(layoutConstants.version);
@@ -427,7 +417,7 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                     let currentPane = pane || $scope.centerSplittedTabViews;
 
                     if (currentPane.tabs) {
-                        const index = currentPane.tabs.findIndex(f => f.params.file === resourcePath);
+                        const index = currentPane.tabs.findIndex(f => f.params.filePath === resourcePath);
                         if (index >= 0)
                             return { tabsView: currentPane, parent, index };
 
@@ -452,8 +442,8 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                     for (let childIndex = 0; childIndex < $scope.centerSplittedTabViews.panes.length; childIndex++) {
                         let childPane = $scope.centerSplittedTabViews.panes[childIndex];
                         for (let tabIndex = 0; tabIndex < childPane.tabs.length; tabIndex++) {
-                            if (childPane.tabs[tabIndex].type === EDITOR && childPane.tabs[tabIndex].params.file.startsWith(basePath)) {
-                                fileList.push(childPane.tabs[tabIndex].params.file);
+                            if (childPane.tabs[tabIndex].type === EDITOR && childPane.tabs[tabIndex].params.filePath.startsWith(basePath)) {
+                                fileList.push(childPane.tabs[tabIndex].params.filePath);
                             }
                         }
                     }
@@ -597,20 +587,19 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                             type: AlertTypes.Warning,
                             preformatted: false,
                             buttons: [
-                                { id: JSON.stringify({ id: 'save', file: filePath, params: args }), label: 'Save', state: ButtonStates.Emphasized },
-                                { id: JSON.stringify({ id: 'ignore', file: filePath, params: args }), label: 'Don\'t Save' },
+                                { id: JSON.stringify({ id: 'save', filePath: filePath, params: args }), label: 'Save', state: ButtonStates.Emphasized },
+                                { id: JSON.stringify({ id: 'ignore', filePath: filePath, params: args }), label: 'Don\'t Save' },
                                 { id: JSON.stringify({ id: 'cancel' }), label: 'Cancel', state: ButtonStates.Transparent },
                             ]
                         }).then((buttonData) => {
                             const data = JSON.parse(buttonData);
                             if (data.id === 'save') {
                                 Workspace.saveFile({
-                                    path: data.file.substring(data.file.indexOf('/', data.file.indexOf('/') + 1), data.file.length),
-                                    workspace: data.file.substring(1, data.file.indexOf('/', data.file.indexOf('/') + 1)),
+                                    path: data.filePath,
                                     params: data.params
                                 });
                             } else if (data.id === 'ignore') {
-                                $scope.setEditorDirty(data.file, false);
+                                $scope.setEditorDirty(data.filePath, false);
                             }
                             resolve(data);
                         }, (error) => {
@@ -621,7 +610,7 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
 
                 function tryReloadCenterTab(tab, editorPath, params) {
                     if (tab.dirty) {
-                        showFileSaveDialog(tab.label, tab.params.file, { editorPath, params })
+                        showFileSaveDialog(tab.label, tab.params.filePath, { editorPath, params })
                             .then(args => {
                                 switch (args.id) {
                                     case 'save':
@@ -649,16 +638,16 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                             result.tabsView.selectedTab = tab.id;
                         }
 
-                        showFileSaveDialog(tab.label, tab.params.file, { tabs })
+                        showFileSaveDialog(tab.label, tab.params.filePath, { tabs })
                             .then(args => {
                                 switch (args.id) {
                                     case 'save':
                                         closingFileArgs = args;
                                         break;
                                     case 'ignore':
-                                        closeCenterTab(args.file)
+                                        closeCenterTab(args.filePath)
 
-                                        let rest = args.params.tabs.filter(x => x.params.file !== args.file);
+                                        let rest = args.params.tabs.filter(x => x.params.filePath !== args.filePath);
                                         if (rest.length > 0)
                                             if (tryCloseCenterTabs(rest)) {
                                                 $scope.$digest();
@@ -678,7 +667,7 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                     return false;
                 }
 
-                window.onbeforeunload = function myFunction() {
+                window.onbeforeunload = () => {
                     for (let childIndex = 0; childIndex < $scope.centerSplittedTabViews.panes.length; childIndex++) {
                         let childPane = $scope.centerSplittedTabViews.panes[childIndex];
                         for (let tabIndex = 0; tabIndex < childPane.tabs.length; tabIndex++) {
@@ -716,7 +705,7 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                 }
 
                 function reloadCenterTab(editorPath, params) {
-                    let result = findCenterSplittedTabViewByPath(params.file);
+                    let result = findCenterSplittedTabViewByPath(params.filePath);
                     if (result) {
                         const tab = result.tabsView.tabs[result.index];
                         tab.path = editorPath;
@@ -725,12 +714,14 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                 }
 
                 const viewSetDirtyListener = Workspace.onSetFileDirty((data) => {
-                    $scope.$apply($scope.setEditorDirty(`/${data.workspace}${data.path}`, data.dirty));
+                    $scope.$apply($scope.setEditorDirty(data.path, data.dirty));
                 });
 
                 const editorCloseListener = Workspace.onCloseFile((data) => {
-                    if (data.params && data.params.closeOthers) $scope.$apply($scope.closeOtherEditors(`/${data.workspace}${data.path}`));
-                    else $scope.$apply($scope.closeEditor(`/${data.workspace}${data.path}`));
+                    $scope.$apply(() => {
+                        if (data.params && data.params.closeOthers) $scope.closeOtherEditors(data.path);
+                        else $scope.closeEditor(data.path);
+                    });
                 });
 
                 const editorCloseAllListener = Workspace.onCloseAllFiles(() => {
@@ -738,18 +729,13 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                 });
 
                 const viewOpenListener = Layout.onOpenView((data) => {
-                    const result = findCenterSplittedTabViewById(data.id);
-                    if (result) {
-                        $scope.$evalAsync(() => {
-                            $scope.focusedTabView = result.tabsView;
-                        });
-                    } else $scope.$evalAsync($scope.openView(data.id, data.params));
+                    $scope.$apply($scope.openView(data.id, data.params));
                 });
 
                 const onOpenEditorListener = Workspace.onOpenFile((data) => {
-                    $scope.$evalAsync(() => {
+                    $scope.$apply(() => {
                         $scope.openEditor(
-                            `/${data.workspace}${data.path}`,
+                            data.path,
                             data.name,
                             data.contentType,
                             data.editorId,
@@ -758,13 +744,12 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                     });
                 });
 
-                const onFileSavedListener = Workspace.onFileSaved(function (fileDescriptor) {
+                const onFileSavedListener = Workspace.onFileSaved((fileDescriptor) => {
                     if (closingFileArgs) {
-                        let fileName = `/${fileDescriptor.workspace}${fileDescriptor.path}`;
-                        if (fileName === closingFileArgs.file) {
-                            closeCenterTab(fileName);
+                        if (fileDescriptor.path === closingFileArgs.filePath) {
+                            closeCenterTab(fileDescriptor.path);
 
-                            let rest = closingFileArgs.tabs.filter(x => x.params.file !== closingFileArgs.file);
+                            let rest = closingFileArgs.tabs.filter(x => x.params.filePath !== closingFileArgs.filePath);
                             if (rest.length > 0) {
                                 if (tryCloseCenterTabs(rest)) {
                                     $scope.$digest();
@@ -777,45 +762,36 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
 
                     if (reloadingFileArgs) {
                         const fileName = msg.data;
-                        const { file, editorPath, params } = reloadingFileArgs;
+                        const { filePath, editorPath, params } = reloadingFileArgs;
 
-                        if (fileName === file) {
-                            reloadCenterTab(editorPath, params);
-                            $scope.$digest();
-                            reloadingFileArgs = null;
+                        if (fileName === filePath) {
+                            $scope.$apply(() => {
+                                reloadCenterTab(editorPath, params);
+                                reloadingFileArgs = null;
+                            });
                         }
                     }
                 });
 
-                const onFileMovedListener = Workspace.onFileMoved(
-                    function (fileDescriptor) {
-                        updateEditor(
-                            fileDescriptor.workspace,
-                            fileDescriptor.oldPath,
-                            fileDescriptor.newPath,
-                            fileDescriptor.newName,
-                        );
-                    }
-                );
+                const onFileMovedListener = Workspace.onFileMoved((fileDescriptor) => {
+                    updateEditor(
+                        fileDescriptor.oldPath,
+                        fileDescriptor.newPath,
+                        fileDescriptor.newName,
+                    );
+                });
 
-                const onFileRenamedListener = Workspace.onFileRenamed(
-                    function (fileDescriptor) {
-                        updateEditor(
-                            fileDescriptor.workspace,
-                            fileDescriptor.oldPath,
-                            fileDescriptor.newPath,
-                            fileDescriptor.newName,
-                        );
-                    }
-                );
+                const onFileRenamedListener = Workspace.onFileRenamed((fileDescriptor) => {
+                    updateEditor(
+                        fileDescriptor.oldPath,
+                        fileDescriptor.newPath,
+                        fileDescriptor.newName,
+                    );
+                });
 
-                const onFileDeletedListener = Workspace.onFileDeleted(
-                    function (fileDescriptor) {
-                        $scope.$evalAsync(() => {
-                            $scope.closeEditor(`/${fileDescriptor.workspace}${fileDescriptor.path}`)
-                        });
-                    }
-                );
+                const onFileDeletedListener = Workspace.onFileDeleted((fileDescriptor) => {
+                    $scope.$apply($scope.closeEditor(fileDescriptor.path));
+                });
 
                 const onGetOpenedViewsListener = Workspace.onGetCurrentlyOpenedFiles((data) => {
                     Workspace.postMessage({ topic: data.topic, data: getCurrentlyOpenedFiles(data.basePath) });
@@ -834,7 +810,7 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                 });
 
                 const onIsEditorOpenListener = Workspace.onIsFileOpen((data) => {
-                    const result = findCenterSplittedTabViewByPath(`/${data.workspace}${data.path}`);
+                    const result = findCenterSplittedTabViewByPath(data.path);
                     if (result) {
                         Workspace.postMessage({
                             topic: data.topic, data: {
@@ -847,7 +823,7 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
 
                 Layout.onFocusView((data) => {
                     const result = findCenterSplittedTabViewById(data.id);
-                    if (result) $scope.$evalAsync(() => {
+                    if (result) $scope.$apply(() => {
                         $scope.focusedTabView = result.tabsView;
                     });
                 });
@@ -855,8 +831,8 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                 function shortenCenterTabsLabels() {
 
                     const getTabPath = tab => {
-                        const index = tab.params.file.lastIndexOf('/');
-                        return tab.params.file.substring(0, index > 0 ? index : tab.params.file.length);
+                        const index = tab.params.filePath.lastIndexOf('/');
+                        return tab.params.filePath.substring(0, index > 0 ? index : tab.params.filePath.length);
                     }
 
                     const allTabs = [];
@@ -948,7 +924,7 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                     return shortenedPaths;
                 }
 
-                $scope.openEditor = function (resourcePath, resourceLabel, contentType, editorId, extraArgs = null) {
+                $scope.openEditor = (resourcePath, resourceLabel, contentType, editorId, extraArgs = null) => {
                     if (resourcePath) {
                         let editorPath = Editors.editorProviders[editorId];
                         let eId = editorId;
@@ -969,7 +945,7 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                         }
 
                         let params = Object.assign({
-                            file: resourcePath,
+                            filePath: resourcePath,
                             contentType: contentType
                         }, extraArgs || {});
 
@@ -1000,42 +976,38 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                         console.error('openEditor: resourcePath is undefined');
                     }
                 };
-                function updateEditor(workspace, oldPath, newPath, resourceLabel) {
-                    if (workspace === undefined && workspace === null && workspace.trim() === '')
-                        console.error('updateEditor: workspace is undefined');
-                    else if (oldPath === undefined && oldPath === null && oldPath.trim() === '')
+                function updateEditor(oldPath, newPath, resourceLabel) {
+                    if (oldPath === undefined && oldPath === null && oldPath.trim() === '')
                         console.error('updateEditor: oldPath is undefined');
                     else if (newPath === undefined && newPath === null && newPath.trim() === '')
                         console.error('updateEditor: newPath is undefined');
                     else if (resourceLabel === undefined && resourceLabel === null && resourceLabel.trim() === '')
                         console.error('updateEditor: resourceLabel is undefined');
                     else {
-                        const resourcePath = `/${workspace}${oldPath}`;
-                        const newResourcePath = `/${workspace}${newPath}`;
-                        const result = findCenterSplittedTabViewByPath(resourcePath);
+                        const result = findCenterSplittedTabViewByPath(oldPath);
                         if (result) {
-                            $scope.$evalAsync(() => {
+                            $scope.$apply(() => {
                                 result.tabsView.tabs[result.index].label = resourceLabel;
-                                result.tabsView.tabs[result.index].params.file = newResourcePath;
-                                Workspace.reloadEditorParams({ workspace: workspace, path: oldPath });
+                                result.tabsView.tabs[result.index].params.filePath = newPath;
+                                Workspace.reloadEditorParams({ path: oldPath });
                                 shortenCenterTabsLabels();
                             })
                         }
                     }
                 };
-                $scope.closeEditor = function (resourcePath) {
+                $scope.closeEditor = (resourcePath) => {
                     let result = findCenterSplittedTabViewByPath(resourcePath);
                     if (result) {
                         let tab = result.tabsView.tabs[result.index];
                         if (tryCloseCenterTabs([tab])) {
-                            $scope.$evalAsync();
+                            $scope.$digest();
                         }
                     }
                 };
-                $scope.closeOtherEditors = function (resourcePath) {
+                $scope.closeOtherEditors = (resourcePath) => {
                     let result = findCenterSplittedTabViewByPath(resourcePath);
                     if (result) {
-                        let rest = result.tabsView.tabs.filter(x => x.type === EDITOR && x.params.file !== resourcePath);
+                        let rest = result.tabsView.tabs.filter(x => x.type === EDITOR && x.params.filePath !== resourcePath);
                         if (rest.length > 0) {
                             if (tryCloseCenterTabs(rest)) {
                                 $scope.$digest();
@@ -1043,22 +1015,23 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                         }
                     }
                 };
-                $scope.closeAllEditors = function () {
+                $scope.closeAllEditors = () => {
                     forEachCenterSplittedTabView(pane => {
                         if (tryCloseCenterTabs(pane.tabs.filter(x => x.type === EDITOR))) {
                             $scope.$digest();
                         }
                     }, $scope.centerSplittedTabViews);
                 };
-                $scope.setEditorDirty = function (resourcePath, dirty) {
+                $scope.setEditorDirty = (resourcePath, dirty) => {
                     let result = findCenterSplittedTabViewByPath(resourcePath);
                     if (result) {
-                        let fileTab = result.tabsView.tabs[result.index];
-                        fileTab.dirty = dirty;
-                        $scope.$digest();
+                        $scope.$apply(() => {
+                            const fileTab = result.tabsView.tabs[result.index];
+                            fileTab.dirty = dirty;
+                        });
                     }
                 };
-                $scope.openView = function (viewId, params = {}) {
+                $scope.openView = (viewId, params = {}) => {
                     if (params !== undefined && !(typeof params === 'object' && !Array.isArray(params) && params !== null))
                         throw Error("openView: params must be an object");
                     let view = $scope.views.find(v => v.id === viewId);
@@ -1177,7 +1150,6 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
             moveTab: '&',
             splitTabs: '&',
             hideTabs: '<',
-            editorTabs: '<?',
         },
         link: (scope) => {
             scope.onRemoveTab = (pane) => {
@@ -1209,11 +1181,9 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
 
             scope.isMoreTabsButtonVisible = (pane) => pane.tabs.some(x => x.isHidden);
 
-            scope.isEditorTab = () => scope.editorTabs;
-
-            scope.onTabClick = (pane, tabId, file) => {
+            scope.onTabClick = (pane, tabId, resourcePath) => {
                 pane.selectedTab = tabId;
-                Layout.focusView({ id: tabId, params: { file: file } });
+                Layout.focusView({ id: tabId, params: { resourcePath: resourcePath } });
             };
         },
         templateUrl: '/services/web/platform-core/ui/templates/splitted-tabs.html',
