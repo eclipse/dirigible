@@ -36,7 +36,6 @@
         <!-- <link rel="stylesheet" href="editor-app/css/style.css?v=2" type="text/css" /> -->
         <link rel="stylesheet" href="editor-app/theme/style.css?v=2" type="text/css" />
         <link rel="stylesheet" href="editor-app/theme/stencils.css" type="text/css" />
-        <script src="editor-app/theme/theme.js"></script>
 
         <!-- build:css styles/style.css -->
         <link href="styles/common/style.css" rel="stylesheet">
@@ -244,13 +243,15 @@
 
         <!-- Integration extensions -->
         <script src="scripts/resource-loader.js?v=2" app="editor"></script>
-        <!-- Theming and MessageHub -->
+
+        <script src="/services/web/platform-branding/branding.js"></script>
         <script src="/services/web/platform-core/ui/platform/message-hub.js"></script>
         <script src="/services/web/platform-core/ui/platform/theming-api.js"></script>
         <script src="/services/web/platform-core/ui/platform/status-bar-api.js"></script>
         <script src="/services/web/service-workspace/workspace-api.js"></script>
 
         <script>
+            const themingApi = new ThemingApi();
             const workspaceApi = new WorkspaceApi();
             const statusBarApi = new StatusBarApi();
             var editorParams;
@@ -258,6 +259,31 @@
             if (window.frameElement && window.frameElement.hasAttribute("data-parameters")) {
                 editorParams = JSON.parse(window.frameElement.getAttribute("data-parameters") || '');
             }
+            let headElement = document.getElementsByTagName('head')[0];
+            let themeId = 'vs-light';
+
+            function setTheme(theme) {
+                if (!theme) theme = themingApi.getSavedTheme();
+                themeId = theme.id;
+                let themeLinks = headElement.querySelectorAll('link[data-type=\'theme\']');
+                for (let i = 0; i < themeLinks.length; i++) {
+                    headElement.removeChild(themeLinks[i]);
+                }
+                for (let i = 0; i < theme.links.length; i++) {
+                    const link = document.createElement('link');
+                    link.type = 'text/css';
+                    link.href = theme.links[i];
+                    link.rel = 'stylesheet';
+                    link.setAttribute('data-type', 'theme');
+                    headElement.appendChild(link);
+                }
+            }
+
+            setTheme();
+
+            themingApi.onThemeChange((theme) => {
+                setTheme(theme);
+            });
         </script>
 
     </body>

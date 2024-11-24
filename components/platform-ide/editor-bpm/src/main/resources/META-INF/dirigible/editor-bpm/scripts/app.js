@@ -116,7 +116,7 @@ flowableModeler
                 controller: 'AppDefinitionCtrl'
             })
             .when('/editor/', {
-                redirectTo: `/editor/${editorParams.filePath}`,
+                redirectTo: `/editor${editorParams.filePath}`,
             })
             .when('/editor/:workspace/:project/:path*', {
                 templateUrl: appResourceRoot + 'editor-app/editor.html',
