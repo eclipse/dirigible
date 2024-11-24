@@ -47,8 +47,8 @@ function getTemplates(forMenu = false) {
 async function loadTemplates(forMenu = false) {
 	let templates = [];
 	let templateExtensions;
-	if (forMenu) templateExtensions = extensions.getExtensions('ide-workspace-menu-new-template');
-	else templateExtensions = extensions.getExtensions('ide-template');
+	if (forMenu) templateExtensions = extensions.getExtensions('platform-templates-menu');
+	else templateExtensions = extensions.getExtensions('platform-templates');
 	for (let i = 0; i < templateExtensions?.length; i++) {
 		let module = templateExtensions[i];
 		try {

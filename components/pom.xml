@@ -215,6 +215,8 @@
 		<module>platform-ide/service-actions</module>
 		<module>platform-ide/editor-monaco</module>
 		<module>platform-ide/editor-monaco-extensions</module>
+		<module>platform-ide/editor-bpm</module>
+		<module>platform-ide/menu-bpm</module>
 
 		<!-- Resources -->
 		<module>resources/resources-core</module>
@@ -1192,6 +1194,17 @@
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-components-editor-monaco-extensions</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-editor-bpm</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-menu-bpm</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			

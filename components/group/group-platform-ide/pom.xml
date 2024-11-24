@@ -97,6 +97,15 @@
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-editor-monaco-extensions</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-editor-bpm</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-menu-bpm</artifactId>
+		</dependency>
 
     </dependencies>
 

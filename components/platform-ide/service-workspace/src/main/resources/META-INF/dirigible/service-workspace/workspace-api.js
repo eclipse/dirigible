@@ -215,7 +215,7 @@ class WorkspaceApi extends MessageHubApi {
         this.postMessage({
             topic: 'platform.files.saved',
             data: {
-                name: path.substring(path.lastIndexOf('/') + 1, path.length),
+                name: path.substring(path.lastIndexOf('/') + 1),
                 path: path,
                 status: status,
                 contentType: contentType,
