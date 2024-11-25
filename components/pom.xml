@@ -262,6 +262,8 @@
 		<module>template/template-listener</module>
 		<module>template/template-websocket</module>
 		<module>template/template-typescript</module>
+		<module>template/template-view</module>
+		<module>template/template-perspective</module>
 
 		<!-- Groups -->
 		<module>group/group-api-core</module>
@@ -1486,6 +1488,16 @@
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-components-template-typescript</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-template-view</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-template-perspective</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			
