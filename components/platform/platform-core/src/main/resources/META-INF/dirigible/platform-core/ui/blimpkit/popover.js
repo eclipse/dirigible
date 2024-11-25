@@ -159,7 +159,7 @@ blimpkit.directive('bkPopover', (uuid, $window, $injector, backdrop) => {
                 if (scope.maxHeight && scope.defaultHeight > scope.maxHeight) scope.defaultHeight = scope.maxHeight;
             }
             if (ctrlIndex === 1) scope.hidden = !show;
-            else scope.$apply(() => { scope.hidden = !show; });
+            else scope.$evalAsync(() => { scope.hidden = !show; });
         }
 
         scope.popoverId = popoverCtrls[ctrlIndex].getPopoverId();

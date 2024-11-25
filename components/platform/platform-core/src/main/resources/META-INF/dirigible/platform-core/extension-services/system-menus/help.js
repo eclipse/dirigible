@@ -17,31 +17,31 @@ const defaultMenuItems = [
 		label: 'Help Portal',
 		action: 'open',
 		data: 'https://www.dirigible.io/help/',
-		divider: false
+		separator: false
 	},
 	{
 		label: 'Contact Support',
 		action: 'open',
 		data: 'https://github.com/eclipse/dirigible/issues',
-		divider: false
+		separator: false
 	},
 	{
 		label: 'Suggest a Feature',
 		action: 'open',
 		data: 'https://github.com/eclipse/dirigible/issues/new?assignees=&labels=&template=feature_request.md&title=[New%20Feature]',
-		divider: false
+		separator: false
 	},
 	{
 		label: 'What\'s New',
 		action: 'open',
 		data: 'https://twitter.com/dirigible_io',
-		divider: false
+		separator: false
 	},
 	{
 		label: 'Check for Updates',
 		action: 'open',
 		data: 'http://download.dirigible.io/',
-		divider: true
+		separator: true
 	}
 ];
 
@@ -61,7 +61,7 @@ export const getMenu = () => {
 				order: parseInt(config.get(`DIRIGIBLE_BRANDING_HELP_ITEM_${item}_ORDER`, '0')),
 				action: 'open',
 				data: config.get(`DIRIGIBLE_BRANDING_HELP_ITEM_${item}_URL`, '#'),
-				divider: config.get(`DIRIGIBLE_BRANDING_HELP_ITEM_${item}_DIVIDER`, 'false').toLowerCase() === 'true'
+				separator: config.get(`DIRIGIBLE_BRANDING_HELP_ITEM_${item}_DIVIDER`, 'false').toLowerCase() === 'true'
 			});
 		});
 		menu.items.sort((a, b) => a.order - b.order);
@@ -72,7 +72,7 @@ export const getMenu = () => {
 		label: 'About',
 		action: 'openWindow',
 		windowId: 'about',
-		divider: false
+		separator: false
 	});
 	return {
 		systemMenu: true,

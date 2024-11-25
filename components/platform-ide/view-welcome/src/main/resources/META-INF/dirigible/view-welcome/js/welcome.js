@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const welcome = angular.module('welcome', ['blimpKit', 'platformView', 'PublisherService', 'WorkspaceService', 'TemplatesService']);
+const welcome = angular.module('welcome', ['blimpKit', 'platformView', 'WorkspaceService', 'TemplatesService']);
 welcome.filter('startFrom', () => {
     return (input, start) => {
         start = +start;
@@ -17,7 +17,7 @@ welcome.filter('startFrom', () => {
         return 0;
     };
 });
-welcome.controller('WelcomeController', ($scope, $http, PublisherService, WorkspaceService, TemplatesService) => {
+welcome.controller('WelcomeController', ($scope, $http, WorkspaceService, TemplatesService) => {
     const dialogApi = new DialogApi();
     const statusBarApi = new StatusBarApi();
     const workspaceApi = new WorkspaceApi();
@@ -55,18 +55,18 @@ welcome.controller('WelcomeController', ($scope, $http, PublisherService, Worksp
             'fileName': {
                 controlType: 'input',
                 type: 'text',
-                label: 'File',
-                placeholder: 'file name',
+                label: 'File name',
+                placeholder: 'fileName',
                 required: true,
             },
         };
-        for (let i = 0; i < template.length; i++) {
-            form[`param_${p.name}`] = {
+        for (let i = 0; i < template.parameters.length; i++) {
+            form[`param_${template.parameters[i].name}`] = {
                 controlType: 'input',
                 type: 'text',
-                label: template[i].label,
+                label: template.parameters[i].label,
                 require: true,
-            }
+            };
         }
         return form;
     };
@@ -109,7 +109,7 @@ welcome.controller('WelcomeController', ($scope, $http, PublisherService, Worksp
                     console.error(ex);
                     dialogApi.showAlert({
                         title: 'Failed to create project',
-                        message: ex.message,
+                        message: ex.message || 'There was an error while trying to create a new project from template.',
                         type: AlertTypes.Error,
                     });
                     statusBarApi.showError('Failed to create project');
@@ -130,12 +130,10 @@ welcome.controller('WelcomeController', ($scope, $http, PublisherService, Worksp
         const projectName = formData.projectName;
         const workspace = formData.workspace;
         const fileName = formData.fileName;
-        const parameters = [];
+        const parameters = {};
         for (const [key, value] of Object.entries(formData)) {
-            let param;
             if (key.startsWith('param_')) {
-                param[key.substring(6)] = value;
-                parameters.push(param);
+                parameters[key.substring(6)] = value;
             }
         }
 
@@ -144,14 +142,7 @@ welcome.controller('WelcomeController', ($scope, $http, PublisherService, Worksp
         return new Promise((resolve, reject) => {
             $http.post(url, { template: $scope.selectedTemplate.id, parameters })
                 .then(response => {
-                    workspaceApi.announceWorkspaceChanged({ workspace: workspace, params: { publish: { path: `/${projectName}` } } });
-                    if (PublisherService.isEnabled()) {
-                        PublisherService.publish(`/${workspace}/${projectName}`).then((response) => {
-                            if (response.status !== 200)
-                                statusBarApi.showError(`Unable to publish project '${projectName}'`);
-                            workspaceApi.announcePublished({ path: `/${projectName}`, workspace: workspace });
-                        });
-                    }
+                    workspaceApi.announceWorkspaceChanged({ workspace: workspace, params: { publish: { path: `/${workspace}/${projectName}` } } });
                     resolve(response.data);
                 }).catch(ex => {
                     reject(ex);

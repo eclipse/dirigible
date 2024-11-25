@@ -167,7 +167,7 @@ angular.module('platformShell', ['ngCookies', 'platformUser', 'platformExtension
                 } else if (item.action === 'open') {
                     $window.open(item.data, '_blank');
                 } else if (item.event) {
-                    MessageHub.postMessage({ topic: item.event, data: item.data });
+                    MessageHub.postMessage({ topic: item.event, data: item.data || {} });
                 }
             };
 

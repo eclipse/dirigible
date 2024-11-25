@@ -1916,8 +1916,8 @@ projectsView.controller('ProjectsViewController', function (
             } else $scope.reloadWorkspace();
         }
         if (changed.params.publish) {
-            if (changed.workspace && changed.params.publish.path) {
-                publish(changed.params.publish.path, changed.workspace);
+            if (changed.params.publish.path) {
+                publish(changed.params.publish.path);
             } else if (changed.workspace) {
                 publish(`/${changed.workspace}/*`);
             }
@@ -1937,6 +1937,34 @@ projectsView.controller('ProjectsViewController', function (
                     }
                 } else $scope.reloadWorkspace();
             }
+        },
+    });
+
+    WorkspaceAPI.addMessageListener({
+        topic: 'projects.create.project',
+        handler: () => {
+            $scope.createProject();
+        },
+    });
+
+    WorkspaceAPI.addMessageListener({
+        topic: 'projects.files.save.all',
+        handler: () => {
+            WorkspaceAPI.saveAll();
+        },
+    });
+
+    WorkspaceAPI.addMessageListener({
+        topic: 'projects.publish.all',
+        handler: () => {
+            $scope.publishAll();
+        },
+    });
+
+    WorkspaceAPI.addMessageListener({
+        topic: 'projects.unpublish.all',
+        handler: () => {
+            unpublishAll();
         },
     });
 

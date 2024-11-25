@@ -509,8 +509,6 @@ class WorkspaceApi extends MessageHubApi {
         this.postMessage({
             topic: 'platform.folders.moved',
             data: {
-                // oldName: oldPath.substring(oldPath.lastIndexOf('/') + 1, oldPath.length),
-                // newName: newPath.substring(newPath.lastIndexOf('/') + 1, newPath.length),
                 oldPath: oldPath,
                 newPath: newPath,
             }
@@ -533,7 +531,7 @@ class WorkspaceApi extends MessageHubApi {
      */ // @ts-ignore
     announceProjectDeleted({ project, workspace } = {}) {
         this.postMessage({
-            topic: 'platform.files.deleted',
+            topic: 'platform.projects.deleted',
             data: {
                 project: project,
                 workspace: workspace,
@@ -547,7 +545,7 @@ class WorkspaceApi extends MessageHubApi {
      * @returns - A reference to the listener. In order to remove/disable the listener, you need to use this reference and pass it to the 'removeMessageListener' function.
      */
     onProjectDeleted(handler) {
-        return this.addMessageListener({ topic: 'platform.shell.notification', handler: handler });
+        return this.addMessageListener({ topic: 'platform.projects.deleted', handler: handler });
     }
 
     /**
