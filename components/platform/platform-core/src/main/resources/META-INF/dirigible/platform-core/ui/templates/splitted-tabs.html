@@ -20,7 +20,7 @@
             <bk-icon-tab-bar ng-if="!!pane.tabs" compact="true" side-padding="sm" unfocused="!isFocused(pane)" selected-tab-id="pane.selectedTab">
                 <bk-icon-tab-bar-tablist ng-show="!hideTabs" bk-tabs-overflowable>
                     <bk-icon-tab-bar-tab ng-repeat="tab in pane.tabs track by tab.id" label="{{tab.label}}" tab-hint="{{tab.hint}}" title="{{tab.label}}" tab-id="{{::tab.id}}" ng-click="onTabClick(pane, tab.id, tab.params.filePath)"
-                        on-close="onRemoveTab(tab)" closable="::tab.closable" has-badge="tab.dirty" is-hidden="tab.isHidden" ng-attr-data-file-path="{{tab.type === 'editor' ? tab.params.file : undefined}}">
+                        on-close="onRemoveTab(tab)" closable="::tab.closable" has-badge="tab.dirty" is-hidden="tab.isHidden" ng-attr-data-file-path="{{tab.type === 'editor' ? tab.params.filePath : undefined}}">
                     </bk-icon-tab-bar-tab>
                     <bk-icon-tab-bar-overflow label="More" ng-class="isMoreTabsButtonVisible(pane) ? '' : 'bk-invisible'">
                         <bk-icon-tab-bar-overflow-item ng-if="tab.isHidden" ng-repeat="tab in pane.tabs track by tab.id" label="{{tab.label}}" title="{{tab.label}}" tab-hint="{{tab.hint}}" tab-id="{{::tab.id}}-overflow"

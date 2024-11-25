@@ -61,19 +61,15 @@ workbench.controller('WorkbenchController', ($scope) => {
                 }
             ]
         }).then((id) => {
-            const path = rightClickTabId.substring(rightClickTabId.indexOf('/', rightClickTabId.indexOf('/') + 1), rightClickTabId.length);
-            const workspace = rightClickTabId.substring(1, rightClickTabId.length - path.length);
             if (id === 'reveal') {
                 contextMenuApi.postMessage({ topic: 'projects.tree.select', data: { filePath: rightClickTabId } });
             } else if (id === 'close') {
                 workspaceApi.closeFile({
-                    path: path,
-                    workspace: workspace,
+                    path: rightClickTabId,
                 });
             } else if (id === 'closeOthers') {
                 workspaceApi.closeFile({
-                    path: path,
-                    workspace: workspace,
+                    path: rightClickTabId,
                     params: { closeOthers: true }
                 });
             } else if (id === 'closeAll') {

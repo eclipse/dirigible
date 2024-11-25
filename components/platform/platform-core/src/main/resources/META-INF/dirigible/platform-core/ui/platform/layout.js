@@ -650,7 +650,7 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                                         let rest = args.params.tabs.filter(x => x.params.filePath !== args.filePath);
                                         if (rest.length > 0)
                                             if (tryCloseCenterTabs(rest)) {
-                                                $scope.$digest();
+                                                $scope.$evalAsync();
                                             }
 
                                         break;
@@ -700,7 +700,7 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
 
                 function closeCenterTab(filePath) {
                     if (removeCenterTab(undefined, filePath)) {
-                        $scope.$digest();
+                        $scope.$evalAsync();
                     }
                 }
 
@@ -714,11 +714,11 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                 }
 
                 const viewSetDirtyListener = Workspace.onSetFileDirty((data) => {
-                    $scope.$apply($scope.setEditorDirty(data.path, data.dirty));
+                    $scope.$evalAsync($scope.setEditorDirty(data.path, data.dirty));
                 });
 
                 const editorCloseListener = Workspace.onCloseFile((data) => {
-                    $scope.$apply(() => {
+                    $scope.$evalAsync(() => {
                         if (data.params && data.params.closeOthers) $scope.closeOtherEditors(data.path);
                         else $scope.closeEditor(data.path);
                     });
@@ -752,7 +752,7 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                             let rest = closingFileArgs.tabs.filter(x => x.params.filePath !== closingFileArgs.filePath);
                             if (rest.length > 0) {
                                 if (tryCloseCenterTabs(rest)) {
-                                    $scope.$digest();
+                                    $scope.$evalAsync();
                                 }
                             }
 
@@ -1000,7 +1000,7 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                     if (result) {
                         let tab = result.tabsView.tabs[result.index];
                         if (tryCloseCenterTabs([tab])) {
-                            $scope.$digest();
+                            $scope.$evalAsync();
                         }
                     }
                 };
@@ -1010,7 +1010,7 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                         let rest = result.tabsView.tabs.filter(x => x.type === EDITOR && x.params.filePath !== resourcePath);
                         if (rest.length > 0) {
                             if (tryCloseCenterTabs(rest)) {
-                                $scope.$digest();
+                                $scope.$evalAsync();
                             }
                         }
                     }
@@ -1018,7 +1018,7 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                 $scope.closeAllEditors = () => {
                     forEachCenterSplittedTabView(pane => {
                         if (tryCloseCenterTabs(pane.tabs.filter(x => x.type === EDITOR))) {
-                            $scope.$digest();
+                            $scope.$evalAsync();
                         }
                     }, $scope.centerSplittedTabViews);
                 };
