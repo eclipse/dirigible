@@ -1,5 +1,5 @@
 {
-    "extensionPoint": "platform-templates",
+    "extensionPoint": "ide-template",
     "module": "template-database-access/template.js",
     "description": "Database Access Template"
 }

@@ -1,5 +1,5 @@
 {
-    "extensionPoint": "platform-templates",
+    "extensionPoint": "ide-template",
     "module": "template-websocket/template.js",
     "description": "WebSocket Template"
 }

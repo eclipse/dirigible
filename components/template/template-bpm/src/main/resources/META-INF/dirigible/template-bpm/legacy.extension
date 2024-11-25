@@ -1,5 +1,5 @@
 {
-	"extensionPoint": "platform-templates",
+	"extensionPoint": "ide-template",
 	"module": "template-bpm/template.js",
 	"description": "BPM Project Template"
 }

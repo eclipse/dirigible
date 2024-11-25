@@ -34,7 +34,7 @@ welcome.controller('WelcomeController', ($scope, $http, WorkspaceService, Templa
         }
     };
     $scope.currentPage = 1;
-    $scope.pageSize = 6;
+    $scope.pageSize = 12;
 
     const getTemplateFormItems = (template) => {
         let form = {

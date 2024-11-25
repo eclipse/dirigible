@@ -1,5 +1,5 @@
 {
-    "extensionPoint": "platform-templates",
+    "extensionPoint": "ide-template",
     "module": "template-job/template.js",
     "description": "Job Template"
 }
