@@ -73,33 +73,9 @@ public class DirigibleCleaner {
         dropAllSequencesInSchema(defaultDataSource);
 
         DirigibleDataSource systemDataSource = dataSourcesManager.getSystemDataSource();
-        deleteAllTablesDataInSchema(systemDataSource);
+        dropAllTablesInSchema(systemDataSource);
 
         deleteSchemas(defaultDataSource);
-    }
-
-    private void deleteAllTablesDataInSchema(DirigibleDataSource dataSource) {
-        Set<String> tables = getAllTables(dataSource);
-
-        for (int idx = 0; idx < 4; idx++) { // execute it a few times due to constraint violations
-            Iterator<String> iterator = tables.iterator();
-            while (iterator.hasNext()) {
-                String table = iterator.next();
-                try (Connection connection = dataSource.getConnection()) {
-                    String sql = SqlDialectFactory.getDialect(dataSource)
-                                                  .delete()
-                                                  .from(table)
-                                                  .build();
-                    try (PreparedStatement prepareStatement = connection.prepareStatement(sql)) {
-                        int rowsAffected = prepareStatement.executeUpdate();
-                        LOGGER.info("Deleted [{}] from table [{}]", rowsAffected, table);
-                        iterator.remove();
-                    }
-                } catch (SQLException ex) {
-                    LOGGER.warn("Failed to delete data from table [{}] in data source [{}]", table, dataSource, ex);
-                }
-            }
-        }
     }
 
     private void dropAllSequencesInSchema(DirigibleDataSource dataSource) {
@@ -303,5 +279,29 @@ public class DirigibleCleaner {
                 .stream()
                 .map(Path::toFile)
                 .forEach(File::delete);
+    }
+
+    private void deleteAllTablesDataInSchema(DirigibleDataSource dataSource) {
+        Set<String> tables = getAllTables(dataSource);
+
+        for (int idx = 0; idx < 4; idx++) { // execute it a few times due to constraint violations
+            Iterator<String> iterator = tables.iterator();
+            while (iterator.hasNext()) {
+                String table = iterator.next();
+                try (Connection connection = dataSource.getConnection()) {
+                    String sql = SqlDialectFactory.getDialect(dataSource)
+                                                  .delete()
+                                                  .from(table)
+                                                  .build();
+                    try (PreparedStatement prepareStatement = connection.prepareStatement(sql)) {
+                        int rowsAffected = prepareStatement.executeUpdate();
+                        LOGGER.info("Deleted [{}] from table [{}]", rowsAffected, table);
+                        iterator.remove();
+                    }
+                } catch (SQLException ex) {
+                    LOGGER.warn("Failed to delete data from table [{}] in data source [{}]", table, dataSource, ex);
+                }
+            }
+        }
     }
 }
