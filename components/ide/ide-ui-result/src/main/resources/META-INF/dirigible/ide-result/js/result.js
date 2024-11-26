@@ -57,14 +57,8 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
 
         const updatedData = $scope.selectedRow;
         const setClauses = Object.keys(updatedData)
-            .filter(key => updatedData[key] !== $scope.selectedRowOriginal[key])
             .map(key => `"${key}" = '${updatedData[key]}'`)
             .join(", ");
-
-        if (!setClauses) {
-            console.log("No changes to update.");
-            return;
-        }
 
         const primaryKeyColumn = findIdKey(updatedData);
         const condition = `"${primaryKeyColumn}" = '${updatedData[primaryKeyColumn]}'`;
@@ -77,11 +71,11 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
         executeQuery({ data: sqlCommand });
 
         $scope.isEditDialogOpen = false;
+
         messageHub.postMessage('database.sql.showContent', {
             schemaName: $scope.schemaName,
             tableName: $scope.tableName
         });
-
     };
 
     $scope.closeEditDialog = function () {
@@ -362,6 +356,7 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
         $scope.tableName = data.tableName;
         let sqlCommand = "SELECT * FROM \"" + data.schemaName + "\"" + "." + "\"" + data.tableName + "\";\n";
         executeQuery({ data: sqlCommand });
+        // $scope.initializeMetadata();
     });
 
     messageHub.onDidReceiveMessage("database.sql.execute", executeQuery, true);
