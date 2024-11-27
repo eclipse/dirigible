@@ -15,32 +15,17 @@ angular.module('TemplatesService', []).provider('TemplatesService', function Tem
 
         const listTemplates = function () {
             const url = new UriBuilder().path(this.templatesServiceUrl.split('/')).build();
-            return $http.get(url).then(function successCallback(response) {
-                return { status: response.status, data: response.data };
-            }, function errorCallback(response) {
-                console.error('Template service:', response);
-                return { status: response.status };
-            });
+            return $http.get(url);
         }.bind(this);
 
         const fileExtensions = function () {
             const url = new UriBuilder().path(this.templatesServiceUrl.split('/')).path('extensions').build();
-            return $http.get(url).then(function successCallback(response) {
-                return { status: response.status, data: response.data };
-            }, function errorCallback(response) {
-                console.error('Template service:', response);
-                return { status: response.status };
-            });
+            return $http.get(url);
         }.bind(this);
 
         const menuTemplates = function () {
             const url = new UriBuilder().path(this.templatesServiceUrl.split('/')).path('menu').build();
-            return $http.get(url).then(function successCallback(response) {
-                return { status: response.status, data: response.data };
-            }, function errorCallback(response) {
-                console.error('Template service:', response);
-                return { status: response.status };
-            });
+            return $http.get(url);
         }.bind(this);
 
         return {

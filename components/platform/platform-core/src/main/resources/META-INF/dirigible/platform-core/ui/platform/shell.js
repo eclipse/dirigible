@@ -52,17 +52,17 @@ angular.module('platformShell', ['ngCookies', 'platformUser', 'platformExtension
         }
     })
     .constant('MessageHub', new MessageHubApi())
+    .constant('Layout', new LayoutApi())
     .config(function config($compileProvider) {
         $compileProvider.debugInfoEnabled(false);
         $compileProvider.commentDirectivesEnabled(false);
         $compileProvider.cssClassDirectivesEnabled(false);
-    }).directive('shellHeader', ($window, User, Extensions, shellState, notifications, MessageHub) => ({
+    }).directive('shellHeader', ($window, User, Extensions, shellState, notifications, MessageHub, Layout) => ({
         restrict: 'E',
         replace: true,
         link: (scope, element) => {
             const notificationStateKey = `${brandingInfo.keyPrefix}.notifications`;
             const dialogApi = new DialogApi();
-            const layoutApi = new LayoutApi();
             scope.perspectiveId = shellState.perspective.id;
             shellState.registerStateListener((data) => {
                 scope.perspectiveId = data.id;
@@ -114,7 +114,7 @@ angular.module('platformShell', ['ngCookies', 'platformUser', 'platformExtension
                     return scope.$apply(() => scope.collapseMenu = false);
                 } else if (entries[0].contentRect.width === 0) {
                     thresholdWidth = element[0].offsetWidth;
-                    scope.$apply(() => scope.collapseMenu = true);
+                    scope.$evalAsync(() => scope.collapseMenu = true);
                 }
             });
             resizeObserver.observe(element.find('#spacer')[0]);
@@ -153,21 +153,18 @@ angular.module('platformShell', ['ngCookies', 'platformUser', 'platformExtension
 
             scope.menuClick = (item) => {
                 if (item.action === 'openView') {
-                    layoutApi.openView({ id: item.id, params: item.data });
+                    Layout.openView({ id: item.id, params: item.data });
                 } else if (item.action === 'showPerspective') {
-                    shellState.perspective = {
-                        id: item.id,
-                        label: item.label
-                    };
+                    Layout.showPerspective({ id: item.id });
                 } else if (item.action === 'openWindow') {
                     dialogApi.showWindow({
                         hasHeader: item.hasHeader,
-                        id: item.windowId
+                        id: item.id
                     });
                 } else if (item.action === 'open') {
-                    $window.open(item.data, '_blank');
-                } else if (item.event) {
-                    MessageHub.postMessage({ topic: item.event, data: item.data || {} });
+                    $window.open(item.link, '_blank');
+                } else if (item.action === 'event') {
+                    MessageHub.postMessage({ topic: item.data.topic, data: item.data.message || '' });
                 }
             };
 
@@ -201,7 +198,7 @@ angular.module('platformShell', ['ngCookies', 'platformUser', 'platformExtension
         },
         template: `<bk-menu-item ng-repeat-start="item in sublist track by $index" ng-if="!item.items" has-separator="::item.divider" title="{{ ::item.label }}" ng-click="::menuHandler(item)"></bk-menu-item>
         <bk-menu-sublist ng-if="item.items" has-separator="::item.divider" title="{{ ::item.label }}" can-scroll="::isScrollable($index)" ng-repeat-end><submenu sublist="::item.items" menu-handler="::menuHandler"></submenu></bk-menu-sublist>`,
-    })).directive('perspectiveContainer', (Extensions, shellState) => ({
+    })).directive('perspectiveContainer', (Extensions, shellState, Layout) => ({
         restrict: 'E',
         transclude: true,
         replace: true,
@@ -264,9 +261,39 @@ angular.module('platformShell', ['ngCookies', 'platformUser', 'platformExtension
                     };
                 };
 
+                function getPerspectiveLabel(pId, plist) {
+                    let label;
+                    for (let i = 0; i < plist.length; i++) {
+                        if (plist[i].path && plist[i].id === pId) {
+                            label = plist[i].label;
+                            break;
+                        } else if (plist[i].items) {
+                            label = getPerspectiveLabel(pId, plist[i].items);
+                            if (label !== undefined) break;
+                        }
+                    }
+                    return label;
+                }
+
+                const showPerspectiveListener = Layout.onShowPerspective((data) => {
+                    const label = getPerspectiveLabel(data.id, scope.config.perspectives);
+                    if (label) {
+                        scope.$evalAsync(() => {
+                            shellState.perspective = {
+                                id: data.id,
+                                label: label
+                            };
+                        });
+                    }
+                });
+
                 scope.getDataParams = (params = {}) => JSON.stringify({
                     container: 'shell',
                     ...params
+                });
+
+                scope.$on('$destroy', () => {
+                    Layout.removeMessageListener(showPerspectiveListener);
                 });
             },
         },

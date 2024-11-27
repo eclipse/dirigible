@@ -72,10 +72,13 @@ welcome.controller('WelcomeController', ($scope, $http, WorkspaceService, Templa
     };
 
     TemplatesService.listTemplates().then((response) => {
-        if (response.status === 200) {
+        $scope.$evalAsync(() => {
             $scope.templates.push(...response.data.filter(value => !value.extension));
             $scope.search.applyFilter();
-        } else dialogApi.showAlert({
+        });
+    }, (response) => {
+        console.error(response);
+        dialogApi.showAlert({
             title: 'Template API error',
             message: 'Unable to load template list',
             type: AlertTypes.Error,
@@ -83,9 +86,12 @@ welcome.controller('WelcomeController', ($scope, $http, WorkspaceService, Templa
     });
 
     WorkspaceService.listWorkspaceNames().then((response) => {
-        if (response.status === 200) {
+        $scope.$evalAsync(() => {
             workspaces.push(...response.data.map(x => ({ label: x, value: x })));
-        } else dialogApi.showAlert({
+        });
+    }, (response) => {
+        console.error(response);
+        dialogApi.showAlert({
             title: 'Workspace API error',
             message: 'Unable to load workspace list',
             type: AlertTypes.Error,

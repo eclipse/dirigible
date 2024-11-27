@@ -14,13 +14,7 @@ angular.module('RegistryService', []).provider('RegistryService', function regis
     this.$get = ['$http', function registryApiFactory($http) {
         const loadRegistry = function (resourcePath = '/') {
             const url = new UriBuilder().path(this.registryServiceUrl.split('/')).path(resourcePath.split('/')).build();
-            return $http.get(url, { headers: { 'describe': 'application/json' } })
-                .then(function successCallback(response) {
-                    return { status: response.status, data: response.data };
-                }, function errorCallback(response) {
-                    console.error('Registry service:', response);
-                    return { status: response.status };
-                });
+            return $http.get(url, { headers: { 'describe': 'application/json' } });
         }.bind(this);
 
         return {

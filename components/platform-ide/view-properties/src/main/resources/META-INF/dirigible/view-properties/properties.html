@@ -41,8 +41,7 @@
           <td bk-table-cell no-data="true">No file selected.</td>
         </tr>
         <tr bk-table-row ng-if="!noFileSelected" ng-repeat="(key, value) in properties track by key">
-          <td bk-table-cell fit-content="true" ng-hide="value === ''"><strong
-              class="fd-margin-end--tiny">{{ key }}</strong></td>
+          <td bk-table-cell fit-content="true" ng-hide="value === ''"><strong class="fd-margin-end--tiny">{{ key }}</strong></td>
           <td bk-table-cell>{{ value }}</td>
         </tr>
       </tbody>

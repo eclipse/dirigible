@@ -95,7 +95,7 @@
     --sapContent_Shadow3: 0 0 0 0.0625rem rgba(0, 0, 0, 0.48), 0 1.25rem 5rem 0 rgba(0, 0, 0, 0.25);
     --sapContent_TextShadow: 0 0 0.125rem #fff;
     --sapContent_ContrastTextShadow: 0 0 0.0625rem rgba(0, 0, 0, 0.7);
-    --sapContent_HeaderShadow: 0 0.0625rem 0.0625rem 0 rgba(0, 0, 0, 0.05), inset 0 -0.0625rem 0 0 #e6e6e6;
+    --sapContent_HeaderShadow: 0 0.0625rem 0.0625rem 0 rgba(0, 0, 0, 0.05), inset 0 -0.0625rem 0 0 var(--sapPageHeader_BorderColor);
     --sapContent_Interaction_Shadow: inset 0 0 0 0.0625rem rgba(85, 107, 129, 0.25);
     --sapContent_Selected_Shadow: inset 0 0 0 0.0625rem rgba(79, 160, 255, 0.5);
     --sapContent_Negative_Shadow: inset 0 0 0 0.0625rem rgba(255, 142, 196, 0.45);
@@ -194,7 +194,7 @@
     --sapShell_Navigation_TextColor: #303030;
     --sapShell_Navigation_Active_TextColor: #303030;
     --sapShell_Navigation_Active_Background: #fff;
-    --sapShell_Shadow: 0 0.125rem 0.125rem 0 rgba(0, 0, 0, 0.15), inset 0 -0.0625rem 0 0 rgba(0, 0, 0, 0.2);
+    --sapShell_Shadow: 0 0.125rem 0.125rem 0 rgba(0, 0, 0, 0.08), inset 0 -0.0625rem 0 0 var(--sapPageHeader_BorderColor);
     --sapShell_NegativeColor: #e01b24;
     --sapShell_CriticalColor: #b44f00;
     --sapShell_PositiveColor: #26a264;

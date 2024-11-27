@@ -107,10 +107,10 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                         let view = views.find(x => x.id === v.id);
                         return view ? { ...v, ...mapViewToTab(view) } : v;
                     }
-                    const byLeftRegion = view => view.region.startsWith('left');
-                    const byRightRegion = view => view.region.startsWith('right');
-                    const byBottomRegion = view => view.region === 'center-bottom' || view.region === 'bottom';
-                    const byCenterRegion = view => view.region === 'center-top' || view.region === 'center-middle' || view.region === 'center';
+                    const byLeftRegion = view => !view.region || view.region === 'left';
+                    const byRightRegion = view => view.region === 'right';
+                    const byBottomRegion = view => view.region === 'bottom';
+                    const byCenterRegion = view => view.region === 'center';
 
                     const savedState = loadLayoutState();
                     if (savedState && !hasMajorVersionChanged(savedState)) {
@@ -1037,7 +1037,7 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                     let view = $scope.views.find(v => v.id === viewId);
                     if (view) {
                         view.params = params;
-                        if (view.region.startsWith('left')) {
+                        if (view.region === 'left') {
                             let leftViewTab = findView($scope.leftTabs, view);
                             if (leftViewTab) {
                                 leftViewTab.expanded = true;
@@ -1047,7 +1047,7 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                                 $scope.leftTabs.push(leftViewTab);
                             }
 
-                        } else if (view.region.startsWith('right')) {
+                        } else if (view.region === 'right') {
                             let rightViewTab = findView($scope.rightTabs, view);
                             if (rightViewTab) {
                                 rightViewTab.expanded = true;
@@ -1136,7 +1136,7 @@ angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSp
                 perspectiveId: perspectiveData.id,
             });
         },
-        template: `<iframe title="{{::tab.label}}" loading="{{::tab.lazyLoad ? 'lazy' : 'eager'}}" ng-src="{{::tab.path}}" data-parameters="{{getParams()}}"></iframe>`,
+        template: `<iframe title="{{::tab.label}}" tab-id={{::tab.id}} loading="{{::tab.lazyLoad ? 'lazy' : 'eager'}}" ng-src="{{::tab.path}}" data-parameters="{{getParams()}}"></iframe>`,
     }))
     .directive('splittedTabs', (Layout) => ({
         restrict: 'E',

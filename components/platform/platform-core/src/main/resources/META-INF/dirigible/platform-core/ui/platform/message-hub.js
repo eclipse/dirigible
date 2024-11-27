@@ -35,7 +35,7 @@ class MessageHubApi {
      * @param data - This is the actual message/data that will be transmitted.
      */ // @ts-ignore
     postMessage({ topic = undefined, data } = {}) {
-        if (data) {
+        if (data !== null && data !== undefined) {
             this.hubWindow.postMessage({ topic: topic, data: data }, this.targetOrigin);
         } else throw new Error('MessageHub: postMessage - data parameter is required');
     }

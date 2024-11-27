@@ -12,8 +12,8 @@
 class LayoutApi extends MessageHubApi {
     /**
      * Returns a list of the currently opened views.
-     * @param {object} params - Custom parameters.
-     */
+     * @param {object} [params] - Custom parameters.
+     */ // @ts-ignore
     getOpenedViews({ params } = {}) {
         const callbackTopic = `platform.layout.views.opened.${new Date().valueOf()}`;
         this.postMessage({
@@ -46,8 +46,8 @@ class LayoutApi extends MessageHubApi {
     /**
      * Returns true if a view is opened.
      * @param {string} id - View id.
-     * @param {object} params - Custom parameters.
-     */
+     * @param {object} [params] - Custom parameters.
+     */ // @ts-ignore
     isViewOpen({ id, params } = {}) {
         const callbackTopic = `platform.layout.views.is-open.${new Date().valueOf()}`;
         this.postMessage({
@@ -81,8 +81,8 @@ class LayoutApi extends MessageHubApi {
     /**
      * Opens a view inside the layout. If the view is already opened, it will become visible.
      * @param {string} id - View id.
-     * @param {object} params - Custom parameters that will be set to the view's data-parameters attribute.
-     */
+     * @param {object} [params] - Custom parameters that will be set to the view's data-parameters attribute.
+     */ // @ts-ignore
     openView({ id, params } = {}) {
         this.postMessage({
             topic: 'platform.layout.view.open',
@@ -103,9 +103,33 @@ class LayoutApi extends MessageHubApi {
     }
 
     /**
+     * Shows a perspective inside the shell.
+     * @param {string} id - Perspective id.
+     * @param {object} [params] - Extra parameters.
+     */ // @ts-ignore
+    showPerspective({ id, params } = {}) {
+        this.postMessage({
+            topic: 'platform.shell.perspective.show',
+            data: {
+                id: id,
+                params: params,
+            }
+        });
+    }
+
+    /**
+     * Triggered when a perspective should be shown.
+     * @param handler - Callback function.
+     * @returns - A reference to the listener. In order to remove/disable the listener, you need to use this reference and pass it to the 'removeMessageListener' function.
+     */
+    onShowPerspective(handler) {
+        return this.addMessageListener({ topic: 'platform.shell.perspective.show', handler: handler });
+    }
+
+    /**
      * Tells a view that it should gain focus from the inside.
      * @param {string} id - View id.
-     * @param {object} params - Custom parameters that will be set to the view's data-parameters attribute.
+     * @param {object} [params] - Custom parameters that will be set to the view's data-parameters attribute.
      */
     focusView({ id, params } = {}) {
         this.postMessage({
@@ -129,8 +153,8 @@ class LayoutApi extends MessageHubApi {
     /**
      * Closes a view inside the layout.
      * @param {string} id - View id.
-     * @param {object} params - Custom parameters.
-     */
+     * @param {object} [params] - Custom parameters.
+     */ // @ts-ignore
     closeView({ id, params } = {}) {
         this.postMessage({
             topic: 'platform.layout.view.close',
@@ -153,8 +177,8 @@ class LayoutApi extends MessageHubApi {
     /**
      * Closes all other views inside the layout.
      * @param {string} id - View id.
-     * @param {object} params - Custom parameters.
-     */
+     * @param {object} [params] - Custom parameters.
+     */ // @ts-ignore
     closeOtherViews({ id, params } = {}) {
         this.postMessage({
             topic: 'platform.layout.view.close.others',
@@ -176,8 +200,8 @@ class LayoutApi extends MessageHubApi {
 
     /**
      * Closes all views inside the layout.
-     * @param {object} params - Custom parameters.
-     */
+     * @param {object} [params] - Custom parameters.
+     */ // @ts-ignore
     closeAllViews({ params } = {}) {
         this.postMessage({
             topic: 'platform.layout.view.close.all',
@@ -200,8 +224,8 @@ class LayoutApi extends MessageHubApi {
      * Marks a view in the layout as dirty.
      * @param {string} id - View id.
      * @param {boolean} dirty - Dirty state.
-     * @param {object} params - Custom parameters.
-     */
+     * @param {object} [params] - Custom parameters.
+     */ // @ts-ignore
     setViewDirty({ id, dirty, params } = {}) {
         this.postMessage({
             topic: 'platform.layout.view.dirty',

@@ -16,31 +16,31 @@ const defaultMenuItems = [
 	{
 		label: 'Help Portal',
 		action: 'open',
-		data: 'https://www.dirigible.io/help/',
+		link: 'https://www.dirigible.io/help/',
 		separator: false
 	},
 	{
 		label: 'Contact Support',
 		action: 'open',
-		data: 'https://github.com/eclipse/dirigible/issues',
+		link: 'https://github.com/eclipse/dirigible/issues',
 		separator: false
 	},
 	{
 		label: 'Suggest a Feature',
 		action: 'open',
-		data: 'https://github.com/eclipse/dirigible/issues/new?assignees=&labels=&template=feature_request.md&title=[New%20Feature]',
+		link: 'https://github.com/eclipse/dirigible/issues/new?assignees=&labels=&template=feature_request.md&title=[New%20Feature]',
 		separator: false
 	},
 	{
 		label: 'What\'s New',
 		action: 'open',
-		data: 'https://twitter.com/dirigible_io',
+		link: 'https://twitter.com/dirigible_io',
 		separator: false
 	},
 	{
 		label: 'Check for Updates',
 		action: 'open',
-		data: 'http://download.dirigible.io/',
+		link: 'http://download.dirigible.io/',
 		separator: true
 	}
 ];
@@ -60,7 +60,7 @@ export const getMenu = () => {
 				label: config.get(`DIRIGIBLE_BRANDING_HELP_ITEM_${item}_NAME`, item),
 				order: parseInt(config.get(`DIRIGIBLE_BRANDING_HELP_ITEM_${item}_ORDER`, '0')),
 				action: 'open',
-				data: config.get(`DIRIGIBLE_BRANDING_HELP_ITEM_${item}_URL`, '#'),
+				link: config.get(`DIRIGIBLE_BRANDING_HELP_ITEM_${item}_URL`, '#'),
 				separator: config.get(`DIRIGIBLE_BRANDING_HELP_ITEM_${item}_DIVIDER`, 'false').toLowerCase() === 'true'
 			});
 		});
@@ -69,9 +69,9 @@ export const getMenu = () => {
 		menu.items = defaultMenuItems;
 	}
 	menu.items.push({
+		id: 'about',
 		label: 'About',
 		action: 'openWindow',
-		windowId: 'about',
 		separator: false
 	});
 	return {

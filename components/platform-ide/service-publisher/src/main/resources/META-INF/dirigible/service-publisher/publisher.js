@@ -20,11 +20,6 @@ angular.module('PublisherService', []).provider('PublisherService', function Pub
             const url = new UriBuilder().path(this.publisherServiceUrl.split('/')).path(resourcePath.split('/')).build();
             return $http.post(url, {}, {
                 headers: { 'Dirigible-Editor': 'Publish' }
-            }).then(function successCallback(response) {
-                return { status: response.status, data: response.data };
-            }, function errorCallback(response) {
-                console.error('Publisher service:', response);
-                return { status: response.status };
             });
         }.bind(this);
 
@@ -34,14 +29,7 @@ angular.module('PublisherService', []).provider('PublisherService', function Pub
          */
         const unpublish = function (resourcePath) {
             const url = new UriBuilder().path(this.publisherServiceUrl.split('/')).path(resourcePath.split('/')).build();
-            return $http.delete(url, {
-                headers: { 'Dirigible-Editor': 'Publish' }
-            }).then(function successCallback(response) {
-                return { status: response.status, data: response.data };
-            }, function errorCallback(response) {
-                console.error('Publisher service:', response);
-                return { status: response.status };
-            });
+            return $http.delete(url, { headers: { 'Dirigible-Editor': 'Publish' } });
         }.bind(this);
 
         const isEnabled = function () {

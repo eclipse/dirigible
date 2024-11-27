@@ -15,6 +15,7 @@ angular.module('platformExtensions', [])
      * Here is an example:
      * .constant('extensionPoints', {
      *     perspectives: ["example-perspectives"],
+     *     shells: ["example-shells"],
      *     views: ["example-views"],
      *     subviews: ["example-subviews"],
      *     editors: ["example-editors"],
@@ -27,27 +28,30 @@ angular.module('platformExtensions', [])
     .constant('extensionPoints', {})
     .factory('Extensions', ['$http', 'extensionPoints', ($http, extensionPoints) => ({
         getViews: (exPoints = extensionPoints.views) => {
-            return $http.get('/services/js/platform-core/extension-services/views.js', { params: { extensionPoints: exPoints }, cache: true });
+            return $http.get('/services/js/platform-core/extension-services/views.js', { params: { extensionPoints: exPoints } });
         },
         getSubviews: (exPoints = extensionPoints.subviews) => {
-            return $http.get('/services/js/platform-core/extension-services/views.js', { params: { extensionPoints: exPoints ?? ['platform-subviews'] }, cache: true });
+            return $http.get('/services/js/platform-core/extension-services/views.js', { params: { extensionPoints: exPoints ?? ['platform-subviews'] } });
         },
         getWindows: (exPoints = extensionPoints.windows) => {
-            return $http.get('/services/js/platform-core/extension-services/views.js', { params: { extensionPoints: exPoints ?? ['platform-windows'] }, cache: true });
+            return $http.get('/services/js/platform-core/extension-services/views.js', { params: { extensionPoints: exPoints ?? ['platform-windows'] } });
         },
         getSettings: (exPoints = extensionPoints.settings) => {
-            return $http.get('/services/js/platform-core/extension-services/views.js', { params: { extensionPoints: exPoints ?? ['platform-settings'] }, cache: true });
+            return $http.get('/services/js/platform-core/extension-services/views.js', { params: { extensionPoints: exPoints ?? ['platform-settings'] } });
         },
         getEditors: (exPoints = extensionPoints.editors) => {
-            return $http.get('/services/js/platform-core/extension-services/editors.js', { params: { extensionPoints: exPoints }, cache: true });
+            return $http.get('/services/js/platform-core/extension-services/editors.js', { params: { extensionPoints: exPoints } });
         },
         getPerspectives: (exPoints = extensionPoints.perspectives) => {
-            return $http.get('/services/js/platform-core/extension-services/perspectives.js', { params: { extensionPoints: exPoints }, cache: true });
+            return $http.get('/services/js/platform-core/extension-services/perspectives.js', { params: { extensionPoints: exPoints } });
+        },
+        getShells: (exPoints = extensionPoints.shells) => {
+            return $http.get('/services/js/platform-core/extension-services/shells.js', { params: { extensionPoints: exPoints } });
         },
         getMenus: (exPoints = extensionPoints.menus) => {
-            return $http.get('/services/js/platform-core/extension-services/menus.js', { params: { extensionPoints: exPoints }, cache: true });
+            return $http.get('/services/js/platform-core/extension-services/menus.js', { params: { extensionPoints: exPoints } });
         },
         getThemes: (exPoints = extensionPoints.themes) => {
-            return $http.get('/services/js/platform-core/extension-services/themes.js', { params: { extensionPoints: exPoints }, cache: true });
+            return $http.get('/services/js/platform-core/extension-services/themes.js', { params: { extensionPoints: exPoints } });
         },
     })]);

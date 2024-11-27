@@ -25,11 +25,12 @@ searchView.controller('SearchController', ($scope, WorkspaceService, StatusBarAP
 
     $scope.reloadWorkspaceList = () => {
         WorkspaceService.listWorkspaceNames().then((response) => {
-            if (response.status === 200) {
-                $scope.workspaceNames = response.data;
-                if (!$scope.workspaceNames.includes($scope.selectedWorkspace.name))
-                    $scope.selectedWorkspace.name = 'workspace'; // Default
-            } else StatusBarAPI.showError('Unable to load workspace list');
+            $scope.workspaceNames = response.data;
+            if (!$scope.workspaceNames.includes($scope.selectedWorkspace.name))
+                $scope.selectedWorkspace.name = 'workspace'; // Default
+        }, (response) => {
+            console.error(response);
+            StatusBarAPI.showError('Unable to load workspace list');
         });
     };
 
@@ -66,12 +67,14 @@ searchView.controller('SearchController', ($scope, WorkspaceService, StatusBarAP
             WorkspaceService.search($scope.selectedWorkspace.name, $scope.search.text).then((response) => {
                 $scope.$evalAsync(() => {
                     $scope.search.searching = false;
-                    if (response.status === 200) {
-                        for (let i = 0; i < response.data.length; i++) {
-                            $scope.search.results.push(response.data[i]);
-                        }
-                    } else StatusBarAPI.setError('There was an error while performing a search');
+                    for (let i = 0; i < response.data.length; i++) {
+                        $scope.search.results.push(response.data[i]);
+                    }
                 });
+            }, (response) => {
+                console.error(response);
+                $scope.$evalAsync(() => { $scope.search.searching = false; });
+                StatusBarAPI.setError('There was an error while performing a search');
             });
         } else $scope.search.searching = false;
     };

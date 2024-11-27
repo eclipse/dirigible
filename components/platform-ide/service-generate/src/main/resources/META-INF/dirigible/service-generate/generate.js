@@ -15,25 +15,13 @@ angular.module('GenerateService', []).provider('GenerateService', function Gener
     this.$get = ['$http', function generateApiFactory($http) {
         const generateFromTemplate = function (workspace, project, file, template, parameters = { '__empty': '' }) {
             const url = new UriBuilder().path(this.generateServiceUrl.split('/')).path('file').path(workspace).path(project).path(file.split('/')).build();
-            return $http.post(url, { 'template': template, 'parameters': parameters })
-                .then(function successCallback(response) {
-                    return { status: response.status, data: response.data };
-                }, function errorCallback(response) {
-                    console.error('Generate service:', response);
-                    return { status: response.status };
-                });
+            return $http.post(url, { 'template': template, 'parameters': parameters });
         }.bind(this);
 
         const generateFromModel = function (workspace, project, file, template, parameters = { '__empty': '' }) {
             let url = new UriBuilder().path(this.generateModelServiceUrl.split('/')).path('model').path(workspace).path(project).build();
             url = `${url}?path=${file.split('/')}`;
-            return $http.post(url, { 'template': template, 'parameters': parameters, 'model': file })
-                .then(function successCallback(response) {
-                    return { status: response.status, data: response.data };
-                }, function errorCallback(response) {
-                    console.error('Generate service:', response);
-                    return { status: response.status };
-                });
+            return $http.post(url, { 'template': template, 'parameters': parameters, 'model': file });
         }.bind(this);
 
         const isEnabled = function () {

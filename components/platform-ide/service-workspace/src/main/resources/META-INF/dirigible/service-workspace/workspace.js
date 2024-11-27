@@ -35,13 +35,7 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
          * Lists all available workspaces.
          */
         const listWorkspaceNames = function () {
-            return $http.get(this.workspacesServiceUrl)
-                .then(function successCallback(response) {
-                    return { status: response.status, data: response.data };
-                }, function errorCallback(response) {
-                    console.error('Workspace service:', response);
-                    return { status: response.status };
-                });
+            return $http.get(this.workspacesServiceUrl);
         }.bind(this);
 
         /**
@@ -50,13 +44,7 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
          */
         const list = function (resourcePath) {
             const url = UriBuilder().path(this.workspacesServiceUrl.split('/')).path(resourcePath.split('/')).build();
-            return $http.get(url, { headers: { 'describe': 'application/json' } })
-                .then(function successCallback(response) {
-                    return { status: response.status, data: response.data };
-                }, function errorCallback(response) {
-                    console.error('Workspace service:', response);
-                    return { status: response.status };
-                });
+            return $http.get(url, { headers: { 'describe': 'application/json' } });
         }.bind(this);
 
         /**
@@ -65,14 +53,7 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
          */
         const resourceExists = function (resourcePath) {
             const url = UriBuilder().path(this.workspacesServiceUrl.split('/')).path(resourcePath.split('/')).build();
-            return $http.head(url)
-                .then(function successCallback(response) {
-                    return { status: response.status };
-                }, function errorCallback(response) {
-                    if (response.status !== 404)
-                        console.error('Workspace service:', response);
-                    return { status: response.status };
-                });
+            return $http.head(url);
         }.bind(this);
 
         /**
@@ -81,13 +62,7 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
          */
         const loadContent = async function (resourcePath) {
             const url = UriBuilder().path(this.workspacesServiceUrl.split('/')).path(resourcePath.split('/')).build();
-            return $http.get(url)
-                .then(function successCallback(response) {
-                    return { status: response.status, data: response.data };
-                }, function errorCallback(response) {
-                    console.error('Workspace service:', response);
-                    return { status: response.status };
-                });
+            return $http.get(url);
         }.bind(this);
 
         /**
@@ -97,13 +72,7 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
          */
         const saveContent = async function (resourcePath, content) {
             const url = UriBuilder().path(this.workspacesServiceUrl.split('/')).path(resourcePath.split('/')).build();
-            return $http.put(url, content, { headers: { 'Content-Type': 'text/plain;charset=UTF-8' } })
-                .then(function successCallback(response) {
-                    return { status: response.status, data: response.data };
-                }, function errorCallback(response) {
-                    console.error('Workspace service:', response);
-                    return { status: response.status };
-                });
+            return $http.put(url, content, { headers: { 'Content-Type': 'text/plain;charset=UTF-8' } });
         }.bind(this);
 
         /**
@@ -111,13 +80,7 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
          * @param {string} resourceUrl - URL of the resource.
          */
         const getMetadataByUrl = function (resourceUrl) {
-            return $http.get(UriBuilder().path(resourceUrl.split('/')).build(), { headers: { 'describe': 'application/json' } })
-                .then(function successCallback(response) {
-                    return { status: response.status, data: response.data };
-                }, function errorCallback(response) {
-                    console.error('Workspace service:', response);
-                    return { status: response.status };
-                });
+            return $http.get(UriBuilder().path(resourceUrl.split('/')).build(), { headers: { 'describe': 'application/json' } });
         }
 
         /**
@@ -126,13 +89,7 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
          */
         const getMetadata = function (resourcePath) {
             const resourceUrl = UriBuilder().path(this.workspacesServiceUrl.split('/')).path(resourcePath.split('/')).build();
-            return $http.get(resourceUrl, { headers: { 'describe': 'application/json' } })
-                .then(function successCallback(response) {
-                    return { status: response.status, data: response.data };
-                }, function errorCallback(response) {
-                    console.error('Workspace service:', response);
-                    return { status: response.status };
-                });
+            return $http.get(resourceUrl, { headers: { 'describe': 'application/json' } });
         }.bind(this);
 
         /**
@@ -146,20 +103,21 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
             const workspace = pathSegments.shift();
             if (pathSegments.length >= 1) {
                 const url = UriBuilder().path(this.workspaceManagerServiceUrl.split('/')).path(workspace).path('rename').build();
-                return $http.post(url, {
-                    sources: [UriBuilder().path(pathSegments).path(oldName).build()],
-                    target: UriBuilder().path(pathSegments).path(newName).build(),
-                    sourceWorkspace: workspace,
-                    targetWorkspace: workspace
-                }).then(function successCallback(response) {
-                    for (let i = 0; i < response.data.length; i++) {
-                        response.data[i].from = `/${workspace}/${response.data[i].from}`;
-                        response.data[i].to = `/${workspace}/${response.data[i].to}`;
-                    }
-                    return { status: response.status, data: response.data };
-                }, function errorCallback(response) {
-                    console.error('Workspace service:', response);
-                    return { status: response.status };
+                return new Promise((resolve, reject) => {
+                    $http.post(url, {
+                        sources: [UriBuilder().path(pathSegments).path(oldName).build()],
+                        target: UriBuilder().path(pathSegments).path(newName).build(),
+                        sourceWorkspace: workspace,
+                        targetWorkspace: workspace
+                    }).then((response) => {
+                        for (let i = 0; i < response.data.length; i++) {
+                            response.data[i].from = `/${workspace}/${response.data[i].from}`;
+                            response.data[i].to = `/${workspace}/${response.data[i].to}`;
+                        }
+                        resolve(response);
+                    }, (response) => {
+                        reject(response);
+                    });
                 });
             }
         }.bind(this);
@@ -170,13 +128,7 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
          */
         const remove = function (resourcePath) {
             const url = UriBuilder().path(this.workspacesServiceUrl.split('/')).path(resourcePath.split('/')).build();
-            return $http.delete(url, { headers: { 'Dirigible-Editor': 'Workspace' } })
-                .then(function successCallback(response) {
-                    return { status: response.status, data: response.data };
-                }, function errorCallback(response) {
-                    console.error('Workspace service:', response);
-                    return { status: response.status };
-                });
+            return $http.delete(url, { headers: { 'Dirigible-Editor': 'Workspace' } });
         }.bind(this);
 
         /**
@@ -206,11 +158,6 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
                 sources: sources,
                 targetWorkspace: targetWorkspace, // TODO: Remove the target workspace from the body as we already have it it the URL
                 target: targetSegments.join('/'),
-            }).then(function successCallback(response) {
-                return { status: response.status, data: response.data };
-            }, function errorCallback(response) {
-                console.error('Workspace service:', response);
-                return { status: response.status };
             });
         }.bind(this);
 
@@ -237,20 +184,21 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
             const targetSegments = targetPath.split('/');
             const targetWorkspace = targetSegments.splice(1, 1)[0];
             const url = UriBuilder().path(this.workspaceManagerServiceUrl.split('/')).path(sourceWorkspace).path('move').build();
-            return $http.post(url, {
-                sources: sources,
-                target: targetSegments.join('/'),
-                sourceWorkspace: sourceWorkspace, // TODO: Remove the source workspace from the body as we already have it it the URL
-                targetWorkspace: targetWorkspace
-            }).then(function successCallback(response) {
-                for (let i = 0; i < response.data.length; i++) {
-                    response.data[i].from = `/${sourceWorkspace}/${response.data[i].from}`;
-                    response.data[i].to = `/${targetWorkspace}/${response.data[i].to}`;
-                }
-                return { status: response.status, data: response.data };
-            }, function errorCallback(response) {
-                console.error('Workspace service:', response);
-                return { status: response.status };
+            return new Promise((resolve, reject) => {
+                $http.post(url, {
+                    sources: sources,
+                    target: targetSegments.join('/'),
+                    sourceWorkspace: sourceWorkspace, // TODO: Remove the source workspace from the body as we already have it it the URL
+                    targetWorkspace: targetWorkspace
+                }).then((response) => {
+                    for (let i = 0; i < response.data.length; i++) {
+                        response.data[i].from = `/${sourceWorkspace}/${response.data[i].from}`;
+                        response.data[i].to = `/${targetWorkspace}/${response.data[i].to}`;
+                    }
+                    resolve(response);
+                }, (response) => {
+                    reject(response);
+                });
             });
         }.bind(this);
 
@@ -299,13 +247,7 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
          */
         const createWorkspace = function (workspace) {
             const url = UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspace).build();
-            return $http.post(url, {})
-                .then(function successCallback(response) {
-                    return { status: response.status, data: response.data };
-                }, function errorCallback(response) {
-                    console.error('Workspace service:', response);
-                    return { status: response.status };
-                });
+            return $http.post(url, {});
         }.bind(this);
 
         /**
@@ -314,13 +256,7 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
          */
         const deleteWorkspace = function (workspace) {
             const url = UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspace).build();
-            return $http.delete(url, { headers: { 'Dirigible-Editor': 'Workspace' } })
-                .then(function successCallback(response) {
-                    return { status: response.status, data: response.data };
-                }, function errorCallback(response) {
-                    console.error('Workspace service:', response);
-                    return { status: response.status };
-                });
+            return $http.delete(url, { headers: { 'Dirigible-Editor': 'Workspace' } });
         }.bind(this);
 
         /**
@@ -330,13 +266,7 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
          */
         const createProject = function (workspace, projectName) {
             const url = UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspace).path(projectName).build();
-            return $http.post(url, {})
-                .then(function successCallback(response) {
-                    return { status: response.status, data: response.data };
-                }, function errorCallback(response) {
-                    console.error('Workspace service:', response);
-                    return { status: response.status };
-                });
+            return $http.post(url, {});
         }.bind(this);
 
         // TODO: Check if this API works
@@ -345,11 +275,6 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
         //     return $http.post(url, {
         //         sources: Array.isArray(projectName) ? projectName : [projectName],
         //         target: path
-        //     }).then(function successCallback(response) {
-        //         return { status: response.status, data: response.data };
-        //     }, function errorCallback(response) {
-        //         console.error('Workspace service:', response);
-        //         return { status: response.status };
         //     });
         // }.bind(this);
 
@@ -360,13 +285,7 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
          */
         const deleteProject = function (workspace, projectName) {
             const url = UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspace).path(projectName).build();
-            return $http.delete(url, { headers: { 'Dirigible-Editor': 'Workspace' } })
-                .then(function successCallback(response) {
-                    return { status: response.status, data: response.data };
-                }, function errorCallback(response) {
-                    console.error('Workspace service:', response);
-                    return { status: response.status };
-                });
+            return $http.delete(url, { headers: { 'Dirigible-Editor': 'Workspace' } });
         }.bind(this);
 
         /**
@@ -376,13 +295,7 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
          */
         const search = function (searchPath, searchTerm) {
             const url = UriBuilder().path(this.workspaceSearchServiceUrl.split('/')).path(searchPath.split('/')).build();
-            return $http.post(url, searchTerm)
-                .then(function successCallback(response) {
-                    return { status: response.status, data: response.data };
-                }, function errorCallback(response) {
-                    console.error('Workspace service:', response);
-                    return { status: response.status };
-                });
+            return $http.post(url, searchTerm);
         }.bind(this);
 
         /**

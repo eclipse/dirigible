@@ -14,60 +14,59 @@ import { request, response } from "sdk/http";
 import { uuid } from "sdk/utils";
 import { user } from "sdk/security";
 
-const views = [];
-const extensionPoints = (request.getParameter('extensionPoints') || 'platform-views').split(',');
-const viewExtensions = [];
+const shells = [];
+const extensionPoints = (request.getParameter('extensionPoints') || 'platform-shells').split(',');
+const shellExtensions = [];
 for (let i = 0; i < extensionPoints.length; i++) {
 	// @ts-ignore
 	const extensionList = await Promise.resolve(extensions.loadExtensionModules(extensionPoints[i]));
 	for (let e = 0; e < extensionList.length; e++) {
-		viewExtensions.push(extensionList[e]);
+		shellExtensions.push(extensionList[e]);
 	}
 }
 
 function setETag() {
 	const maxAge = 30 * 24 * 60 * 60;
 	const etag = uuid.random();
-	response.setHeader("ETag", etag);
+	response.setHeader('ETag', etag);
 	response.setHeader('Cache-Control', `public, must-revalidate, max-age=${maxAge}`);
 }
 
-viewLoop: for (let i = 0; i < viewExtensions?.length; i++) {
-	const view = viewExtensions[i].getView();
-	if (!view.id) {
-		console.error(`View ['${view.label || view.path}'] does not have an id.`);
-	} else if (!view.label) {
-		console.error(`View ['${view.id}'] does not have a label.`);
-	} else if (!view.path) {
-		console.error(`View ['${view.id}'] does not have a path.`);
+shellLoop: for (let i = 0; i < shellExtensions?.length; i++) {
+	const shell = shellExtensions[i].getShell();
+	if (!shell.id) {
+		console.error(`Shell ['${shell.label || shell.path}'] does not have an id.`);
+	} else if (!shell.label) {
+		console.error(`Shell ['${shell.id}'] does not have a label.`);
+	} else if (!shell.path) {
+		console.error(`Shell ['${shell.id}'] does not have a path.`);
 	} else {
-		for (let v = 0; v < views.length; v++) {
-			if (views[v].id === view.id) {
-				console.error(`Duplication at view with id: ['${views[v].id}'] pointing to paths: ['${views[v].path}'] and ['${view.path}']`);
-				continue viewLoop;
+		for (let v = 0; v < shells.length; v++) {
+			if (shells[v].id === shell.id) {
+				console.error(`Duplication at shell with id: ['${shells[v].id}'] pointing to paths: ['${shells[v].path}'] and ['${shell.path}']`);
+				continue shellLoop;
 			}
 		}
-		if (!view.region) view.autoFocusTab = false;
-		if (view.roles && Array.isArray(view.roles)) {
+		if (shell.roles && Array.isArray(shell.roles)) {
 			let hasRoles = true;
-			for (const next of view.roles) {
+			for (const next of shell.roles) {
 				if (!user.isInRole(next)) {
 					hasRoles = false;
 					break;
 				}
 			}
 			if (hasRoles) {
-				views.push(view);
+				shells.push(shell);
 			}
-		} else if (view.role && user.isInRole(view.role)) {
-			views.push(view);
-		} else if (view.role === undefined) {
-			views.push(view);
+		} else if (shell.role && user.isInRole(shell.role)) {
+			shells.push(shell);
+		} else if (shell.role === undefined) {
+			shells.push(shell);
 		}
 	}
 }
 
-function sortViews(a, b) {
+function sortShells(a, b) {
 	if (a.order !== undefined && b.order !== undefined) {
 		return (parseInt(a.order) - parseInt(b.order));
 	} else if (a.order === undefined && b.order === undefined) {
@@ -80,10 +79,10 @@ function sortViews(a, b) {
 	return 0;
 }
 
-views.sort(sortViews);
+shells.sort(sortShells);
 
 response.setContentType("application/json");
 setETag();
-response.println(JSON.stringify(views));
+response.println(JSON.stringify(shells));
 response.flush();
 response.close();

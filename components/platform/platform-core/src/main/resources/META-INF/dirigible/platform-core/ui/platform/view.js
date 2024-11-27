@@ -173,8 +173,19 @@ angular.module('platformView', ['platformExtensions', 'platformTheming'])
                 }
             }
             else if (typeof perspectiveData !== 'undefined') scope.label = perspectiveData.label;
-            else if (typeof editorData !== 'undefined') scope.label = editorData.label;
-            else throw Error("configTitle: missing view data");
+            else if (typeof editorData !== 'undefined') {
+                scope.label = editorData.label;
+                if ($window.frameElement && $window.frameElement.hasAttribute('tab-id')) {
+                    const layoutApi = new LayoutApi();
+                    const tabId = $window.frameElement.getAttribute('tab-id');
+                    const onFocus = () => layoutApi.focusView({ id: tabId });
+                    angular.element($window).on('focus', onFocus);
+                    scope.$on('$destroy', () => {
+                        angular.element($window).off('focus', onFocus);
+                    });
+                }
+            }
+            else throw Error('configTitle: missing view data');
         },
         template: '{{::label}}'
     }));

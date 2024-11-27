@@ -82,7 +82,7 @@ body {
     box-sizing: border-box;
     font-size: var(--sapFontSmallSize, .75rem);
     font-weight: normal;
-    color: var(--fdToolbar_Info_Color, #303030);
+    color: var(--fdToolbar_Info_Color, var(--sapTextColor));
     font-family: var(--sapFontBoldFamily);
     word-break: break-word;
     display: inline-flex;

@@ -13,59 +13,29 @@ angular.module('RepositoryService', []).provider('RepositoryService', function R
     this.repositoryServiceUrl = '/services/core/repository';
     this.$get = ['$http', function repositoryApiFactory($http) {
         const getMetadata = function (resourceUrl) {
-            return $http.get(resourceUrl, { headers: { 'describe': 'application/json' } })
-                .then(function successCallback(response) {
-                    return { status: response.status, data: response.data };
-                }, function errorCallback(response) {
-                    console.error('Repository service:', response);
-                    return { status: response.status };
-                });
+            return $http.get(resourceUrl, { headers: { 'describe': 'application/json' } });
         }
 
         const loadRepository = function (resourcePath = '/') {
             const url = new UriBuilder().path(this.repositoryServiceUrl.split('/')).path(resourcePath.split('/')).build();
-            return $http.get(url, { headers: { 'describe': 'application/json' } })
-                .then(function successCallback(response) {
-                    return { status: response.status, data: response.data };
-                }, function errorCallback(response) {
-                    console.error('Repository service:', response);
-                    return { status: response.status };
-                });
+            return $http.get(url, { headers: { 'describe': 'application/json' } });
         }.bind(this);
 
         const createCollection = function (path, name) {
             const url = new UriBuilder().path(this.repositoryServiceUrl.split('/')).path(path.split('/')).path(name).build() + '/';
-            return $http.post(url)
-                .then(function successCallback(response) {
-                    return { status: response.status, data: response.config.url };
-                }, function errorCallback(response) {
-                    console.error('Repository service:', response);
-                    return { status: response.status };
-                });
+            return $http.post(url);
         }.bind(this);
 
         const createResource = function (path, name) {
             const url = new UriBuilder().path(this.repositoryServiceUrl.split('/')).path(path.split('/')).path(name).build();
-            return $http.post(url)
-                .then(function successCallback(response) {
-                    return { status: response.status, data: response.config.url };
-                }, function errorCallback(response) {
-                    console.error('Repository service:', response);
-                    return { status: response.status };
-                });
+            return $http.post(url);
         }.bind(this);
 
         const remove = function (resourcePath) {
             if (resourcePath !== undefined && !(typeof resourcePath === 'string'))
                 throw Error("remove: resourcePath must be a path");
             const url = new UriBuilder().path(this.repositoryServiceUrl.split('/')).path(resourcePath.split('/')).build();
-            return $http.delete(url, { headers: { 'describe': 'application/json' } })
-                .then(function successCallback(response) {
-                    return { status: response.status };
-                }, function errorCallback(response) {
-                    console.error('Repository service:', response);
-                    return { status: response.status };
-                });
+            return $http.delete(url, { headers: { 'describe': 'application/json' } });
         }.bind(this);
 
         return {

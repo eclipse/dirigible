@@ -11,7 +11,7 @@
  */
 const shellData = {
 	id: 'ideShell',
-	path: '../shell-ide/index.html',
+	path: '/services/web/shell-ide/index.html',
 	label: 'Dirigible IDE Shell'
 };
 if (typeof exports !== 'undefined') {

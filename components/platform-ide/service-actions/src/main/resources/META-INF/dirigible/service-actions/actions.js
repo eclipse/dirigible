@@ -14,13 +14,7 @@ angular.module('ActionsService', []).provider('ActionsService', function Actions
     this.$get = ['$http', function actionsApiFactory($http) {
         const executeAction = function (workspace, project, action) {
             const url = new UriBuilder().path(this.workspaceActionsServiceUrl.split('/')).path(workspace).path(project).path(action).build();
-            return $http.post(url, {})
-                .then(function successCallback(response) {
-                    return { status: response.status, data: response.data };
-                }, function errorCallback(response) {
-                    console.error('Actions service:', response);
-                    return { status: response.status };
-                });
+            return $http.post(url, {});
         }.bind(this);
 
         const isEnabled = function () {

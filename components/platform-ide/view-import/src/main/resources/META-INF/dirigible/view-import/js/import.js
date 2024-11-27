@@ -144,11 +144,14 @@ importView.controller('ImportViewController',
 
         $scope.reloadWorkspaceList = () => {
             WorkspaceService.listWorkspaceNames().then((response) => {
-                if (response.status === 200) {
+                $scope.$evalAsync(() => {
                     $scope.workspaceNames = response.data;
                     if (!$scope.workspaceNames.includes($scope.selectedWorkspace.name))
                         $scope.selectedWorkspace.name = 'workspace'; // Default
-                } else StatusBarAPI.showError('Unable to load workspace list');
+                });
+            }, (response) => {
+                console.error(response);
+                StatusBarAPI.showError('Unable to load workspace list');
             });
         };
 

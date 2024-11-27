@@ -26,31 +26,46 @@ exports.getMenu = () => ({
 						{
 							label: 'Project',
 							order: 1,
-							event: 'projects.create.project',
+							action: 'event',
+							data: {
+								topic: 'projects.create.project'
+							},
 						},
 					],
 				},
 				{
 					label: 'Save All',
 					order: 2,
-					event: 'projects.files.save.all',
+					action: 'event',
+					data: {
+						topic: 'projects.files.save.all'
+					},
 					separator: true,
 				},
 				{
 					label: 'Publish All',
 					order: 3,
-					event: 'projects.publish.all',
+					action: 'event',
+					data: {
+						topic: 'projects.publish.all'
+					},
 				},
 				{
 					label: 'Unpublish All',
 					order: 4,
-					event: 'projects.unpublish.all',
+					action: 'event',
+					data: {
+						topic: 'projects.unpublish.all'
+					},
 					separator: true,
 				},
 				{
 					label: 'Export All',
 					order: 5,
-					event: 'projects.export.all',
+					action: 'event',
+					data: {
+						topic: 'projects.export.all'
+					},
 				},
 			]
 		},
