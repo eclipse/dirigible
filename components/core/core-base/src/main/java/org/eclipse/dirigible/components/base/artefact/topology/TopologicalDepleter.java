@@ -9,6 +9,8 @@
  */
 package org.eclipse.dirigible.components.base.artefact.topology;
 
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +36,12 @@ public class TopologicalDepleter<T extends TopologicallyDepletable> {
      * @param flow the flow
      * @return the list
      */
+    @WithSpan
     public Set<T> deplete(Set<T> list, ArtefactPhase flow) {
+        Span span = Span.current();
+        span.setAttribute("flow", flow.getValue());
+        span.setAttribute("artifacts_count", list.size());
+
         Set<T> depletables = new HashSet<>();
         depletables.addAll(list);
         int count = depletables.size();

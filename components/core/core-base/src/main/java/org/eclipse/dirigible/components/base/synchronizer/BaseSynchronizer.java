@@ -66,18 +66,6 @@ public abstract class BaseSynchronizer<A extends Artefact, ID> implements Synchr
         }
     }
 
-    private void addSpanAttributes(Span span, TopologyWrapper<A> wrapper, ArtefactPhase phase) {
-        addSpanAttributes(wrapper.getArtefact(), span);
-
-        span.setAttribute("phase", phase.getValue());
-    }
-
-    private void addSpanAttributes(A artefact, Span span) {
-        span.setAttribute("synchronizer", this.getClass()
-                                              .getName());
-        span.setAttribute("artefactKey", artefact.getKey());
-    }
-
     private boolean completeInternal(TopologyWrapper<A> wrapper, ArtefactPhase flow) {
         A artefact = wrapper.getArtefact();
         ArtefactLifecycle lifecycle = artefact.getLifecycle();
@@ -129,6 +117,18 @@ public abstract class BaseSynchronizer<A extends Artefact, ID> implements Synchr
      * @return true, if successful
      */
     protected abstract boolean completeImpl(TopologyWrapper<A> wrapper, ArtefactPhase flow);
+
+    private void addSpanAttributes(Span span, TopologyWrapper<A> wrapper, ArtefactPhase phase) {
+        addSpanAttributes(wrapper.getArtefact(), span);
+
+        span.setAttribute("phase", phase.getValue());
+    }
+
+    private void addSpanAttributes(A artefact, Span span) {
+        span.setAttribute("synchronizer", this.getClass()
+                                              .getName());
+        span.setAttribute("artefactKey", artefact.getKey());
+    }
 
     /**
      * Cleanup.
