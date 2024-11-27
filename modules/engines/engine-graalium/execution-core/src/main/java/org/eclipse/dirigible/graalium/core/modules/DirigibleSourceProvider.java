@@ -45,7 +45,7 @@ public class DirigibleSourceProvider implements JavascriptSourceProvider {
      */
     @Override
     public Path getAbsoluteSourcePath(String projectName, String projectFileName) {
-        
+
         String projectFilePath = Path.of(projectName, projectFileName)
                                      .toString();
         String internalRepositoryRelativeSourcePath = getInternalRepositoryRelativeSourcePath(projectFilePath);
