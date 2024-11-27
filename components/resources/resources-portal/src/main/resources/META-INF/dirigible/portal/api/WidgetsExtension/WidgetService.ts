@@ -11,8 +11,12 @@ for (let i = 0; i < widgetExtensions.length; i++) {
 
     const { getWidget } = await import(path);
 
-    const widget = getWidget();
-    widgetList.push(widget);
+    try {
+        const widget = getWidget();
+        widgetList.push(widget);
+    } catch (err) {
+        console.error(err)
+    }
 }
 
 response.println(JSON.stringify(widgetList));

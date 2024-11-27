@@ -1,9 +1,9 @@
 const perspectiveData = {
     id: "portal-launchpad",
     name: "Dashboard",
-    link: "../portal/dashboard.html",
+    link: "../dashboard.html",
     order: "0",
-    icon: "../portal/images/navigation.svg",
+    icon: "../images/navigation.svg",
 };
 
 if (typeof exports !== 'undefined') {

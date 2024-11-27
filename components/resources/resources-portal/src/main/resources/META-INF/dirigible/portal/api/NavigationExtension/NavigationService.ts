@@ -11,8 +11,12 @@ for (let i = 0; i < navigationExtensions.length; i++) {
 
     const { getNavigation } = await import(path);
 
-    const navigation = getNavigation();
-    navigationList.push(navigation);
+    try {
+        const navigation = getNavigation();
+        navigationList.push(navigation);
+    } catch (err) {
+        console.error(err)
+    }
 }
 
 response.println(JSON.stringify(navigationList));
