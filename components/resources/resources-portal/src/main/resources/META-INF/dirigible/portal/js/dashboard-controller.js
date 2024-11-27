@@ -11,7 +11,7 @@ dashboard.controller('DashboardController', ['$scope', '$http', 'messageHub', fu
         busyText: "Loading...",
     };
 
-    $http.get("/services/js/codbex-athena/api/WidgetsExtension/WidgetService.js")
+    $http.get("/services/ts/portal/api/WidgetsExtension/WidgetService.ts")
         .then(function (response) {
             $scope.widgetList = response.data;
 
@@ -32,6 +32,10 @@ dashboard.controller('DashboardController', ['$scope', '$http', 'messageHub', fu
         }
 
         const iframe = document.createElement('iframe');
+
+        if (widgetData.redirectViewId)
+            iframe.style.pointerEvents = "none";
+
         iframe.src = widgetData.link;
         iframe.title = widgetData.label;
         iframe.className = 'tile-auto-layout';
@@ -51,7 +55,7 @@ dashboard.controller('DashboardController', ['$scope', '$http', 'messageHub', fu
             widgetContainer.className = 'fd-col fd-col--12 fd-col-md--6 fd-col-lg--6 fd-col-xl--6';
             iframe.style.width = '100%';
             iframe.style.height = '200px';
-        } else { // large - TODO: needs to be made higher.
+        } else {
             widgetContainer.className = 'fd-col fd-col--12 fd-col-md--6 fd-col-lg--6 fd-col-xl--6';
             iframe.style.width = '100%';
             iframe.style.height = '320px';
@@ -67,17 +71,4 @@ dashboard.controller('DashboardController', ['$scope', '$http', 'messageHub', fu
             console.error('Widget container not found');
         }
     }
-
-    messageHub.onDidReceiveMessage(
-        "contextmenu",
-        function (msg) {
-            if (msg.data === 'sales-orders') {
-                messageHub.postMessage('launchpad.switch.perspective', { perspectiveId: 'sales-orders' }, true);
-            } else if (msg.data === 'products') {
-                messageHub.postMessage('launchpad.switch.perspective', { perspectiveId: 'products' }, true);
-            } else if (msg.data === 'sales-invoices') {
-                messageHub.postMessage('launchpad.switch.perspective', { perspectiveId: 'sales-invoices' }, true);
-            }
-        }
-    );
 }]);
