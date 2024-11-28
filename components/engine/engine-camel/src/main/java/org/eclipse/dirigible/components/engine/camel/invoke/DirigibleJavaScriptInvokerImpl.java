@@ -7,6 +7,7 @@
  *
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors SPDX-License-Identifier: EPL-2.0
  */
+
 package org.eclipse.dirigible.components.engine.camel.invoke;
 
 import org.apache.camel.Exchange;
@@ -15,6 +16,7 @@ import org.apache.camel.spi.Synchronization;
 import org.eclipse.dirigible.components.engine.camel.components.DirigibleJavaScriptInvoker;
 import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
 import org.graalvm.polyglot.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
@@ -22,8 +24,18 @@ import java.nio.file.Path;
 @Component
 class DirigibleJavaScriptInvokerImpl implements DirigibleJavaScriptInvoker {
 
+    private final ClassLoader currentClassLoader;
+
+    @Autowired
+    public DirigibleJavaScriptInvokerImpl() {
+        this.currentClassLoader = Thread.currentThread()
+                                        .getContextClassLoader();
+    }
+
     @Override
     public void invoke(Message camelMessage, String javaScriptPath) {
+        Thread.currentThread()
+              .setContextClassLoader(currentClassLoader);
         DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner();
 
         var module = runner.run(Path.of(javaScriptPath));
