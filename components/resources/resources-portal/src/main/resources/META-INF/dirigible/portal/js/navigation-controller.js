@@ -2,7 +2,7 @@ const navigation = angular.module("launchpad", ["ngResource", "ideLayout", "ideU
 navigation.controller("LaunchpadViewController", ["$scope", "messageHub", "$http", function ($scope, messageHub, $http) {
     $scope.currentViewId = 'dashboard';
 
-    $scope.extraExtensionPoints = ['app'];
+    $scope.extraExtensionPoints = ['app', "dashboard-navigations", "dashboard-widgets"];
     $scope.groups = [];
 
     $scope.switchView = function (id, event) {
@@ -13,17 +13,18 @@ navigation.controller("LaunchpadViewController", ["$scope", "messageHub", "$http
     $scope.isGroupVisible = function (group) {
         const items = $scope.groupItems[group.label.toLowerCase()];
         return items.some(function (item) {
-            return $scope.currentViewId === item.view;
+            return $scope.currentViewId === item.id;
         });
     };
 
     messageHub.onDidReceiveMessage('launchpad.switch.perspective', function (msg) {
         $scope.$apply(function () {
-            $scope.switchView(msg.data.perspectiveId);
+            $scope.switchView(msg.data.viewId);
         });
     }, true)
 
     $scope.groupItems = [];
+    $scope.groupItems['assets'] = [];
     $scope.groupItems["purchasing"] = [];
     $scope.groupItems["sales"] = [];
     $scope.groupItems["inventory"] = [];
@@ -35,38 +36,24 @@ navigation.controller("LaunchpadViewController", ["$scope", "messageHub", "$http
 
 
     $scope.groups = [
-        {
-            "label": "Purchasing", "expanded": "purchasingExpanded", "icon": "credit-card"
-        },
-        {
-            "label": "Sales", "expanded": "salesExpanded", "icon": "currency"
-        },
-        {
-            "label": "Inventory", "expanded": "inventoryExpanded", "icon": "retail-store"
-        },
-        {
-            "label": "Reports", "expanded": "reportsExpanded", "icon": "area-chart"
-        },
-        {
-            "label": "Products", "expanded": "productExpanded", "icon": "product"
-        },
-        {
-            "label": "Employees", "expanded": "peopleExpanded", "icon": "company-view"
-        },
-        {
-            "label": "Partners", "expanded": "partnersExpanded", "icon": "customer-and-contacts"
-        },
-        {
-            "label": "Configurations", "expanded": "configurationsExpanded", "icon": "wrench"
-        }
+        { "label": "Assets", "icon": "it-host" },
+        { "label": "Purchasing", "icon": "credit-card" },
+        { "label": "Sales", "icon": "currency" },
+        { "label": "Inventory", "icon": "retail-store" },
+        { "label": "Reports", "icon": "area-chart" },
+        { "label": "Products", "icon": "product" },
+        { "label": "Employees", "icon": "company-view" },
+        { "label": "Partners", "icon": "customer-and-contacts" },
+        { "label": "Configurations", "icon": "wrench" }
     ]
-    $http.get("/services/ts/portal/api/NavigationExtension/NavigationService.ts")
+
+    $http.get("/services/js/portal/api/NavigationExtension/NavigationService.js")
         .then(function (response) {
             $scope.navigationList = response.data;
 
             $scope.navigationList.forEach(e => addNavigationItem(e));
 
-            $scope.groupItems.forEach(e => e.sort((a, b) => a.orderNumber - b.orderNumber));
+            $scope.groupItems.forEach(e => e.sort((a, b) => a.order - b.order));
 
         })
         .catch(function (error) {
@@ -76,20 +63,20 @@ navigation.controller("LaunchpadViewController", ["$scope", "messageHub", "$http
         });
 
     function addNavigationItem(itemData) {
-        if (!itemData || !itemData.label || !itemData.view || !itemData.group || !itemData.orderNumber || !itemData.link) {
+        if (!itemData || !itemData.label || !itemData.group || !itemData.order || !itemData.link) {
             console.error('Invalid item data:', itemData);
             return;
         }
 
-        const groupKey = itemData.group.toLowerCase();
-        if (!$scope.groupItems[groupKey]) {
-            console.error('Group key not found:', groupKey);
+        itemData.group = itemData.group.toLowerCase();
+        if (!$scope.groupItems[itemData.group]) {
+            console.error('Group key not found:', itemData.group);
             return;
         }
 
-        $scope.groupItems[itemData.group.toLowerCase()].push({
+        $scope.groupItems[itemData.group].push({
+            "id": itemData.id,
             "label": itemData.label,
-            "view": itemData.view,
             "link": itemData.link
         });
     }
