@@ -17,9 +17,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
-/**
- * The Class BeanProvider.
- */
 @Component
 public class OpenTelemetryProvider implements ApplicationContextAware {
 
