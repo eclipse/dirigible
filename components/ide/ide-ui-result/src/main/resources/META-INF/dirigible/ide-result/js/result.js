@@ -87,7 +87,7 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
         $scope.isEditDialogOpen = true;
     };
 
-    $scope.saveRow = function () {
+    $scope.confirmEdit = function () {
         if (!$scope.selectedRow) {
             console.error("No row selected for editing.");
             return;
@@ -142,7 +142,7 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
             data: $scope.selectedRow
         };
 
-        $http.delete("/services/js/ide-result/js/crud.js/delete", requestBody)
+        $http.post("/services/js/ide-result/js/crud.js/delete", requestBody)
             .then((response) => {
                 $scope.isDeleteDialogOpen = false;
 

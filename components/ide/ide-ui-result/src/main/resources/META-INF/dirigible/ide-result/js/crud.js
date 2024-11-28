@@ -1,12 +1,13 @@
 import { Controller, Get, Post, Put, Delete, response } from "sdk/http";
 import { query } from "sdk/db";
+import { update } from "sdk/db";
 
 @Controller
 class CRUDService {
 
     @Get("/")
-    async getAll(req, res) {
-        const { schemaName, tableName } = req.body;
+    async getAllRows(filter) {
+        const { schemaName, tableName } = filter;
 
         const sqlQuery = `
         SELECT * FROM "${schemaName}"."${tableName}";
@@ -21,11 +22,11 @@ class CRUDService {
     }
 
     @Post("/create")
-    async create(req, res) {
-        const { schemaName, tableName, data } = req.body;
+    async createRow(record) {
+        const { schemaName, tableName, data } = record;
 
-        if (!entityName || !data) {
-            return res.status(400).send({ error: "Entity name and data are required" });
+        if (!schemaName || !tableName || !data) {
+            return res.status(400).send({ error: "Required 'schemaName', 'tableName' and 'data'" });
         }
 
         const columns = Object.keys(data);
@@ -39,7 +40,7 @@ class CRUDService {
         `;
 
         try {
-            query.execute(sqlQuery, values);
+            update.execute(sqlQuery, values);
             res.send({ success: true });
         } catch (error) {
             res.status(500).send({ error: "Failed to create row", details: error });
@@ -47,26 +48,30 @@ class CRUDService {
     }
 
     @Put("/update")
-    async update(req, res) {
-        const { tableName, schemaName, data, primaryKey } = req.body;
-        debugger
-        if (!entityName || !data || !primaryKey) {
-            return res.status(400).send({ error: "Entity name, data, and primary key are required" });
+    async updateRow(record) {
+
+        const { schemaName, tableName, data, primaryKey } = record;
+
+        if (!schemaName || !tableName || !data || !primaryKey) {
+            return res.status(400).send({ error: "Required 'schemaName', 'tableName', 'data' and 'primaryKey'" });
         }
 
         const setClauses = [];
-        const parameters = [];
         const whereClauses = [];
+        const keyValues = [];
+        const columnValues = [];
 
         Object.keys(data).forEach((key) => {
             if (!primaryKey.includes(key)) {
                 setClauses.push(`"${key}" = ?`);
-                parameters.push(data[key]);
+                columnValues.push(data[key]);
             } else {
                 whereClauses.push(`"${key}" = ?`);
-                parameters.push(data[key]);
+                keyValues.push(data[key]);
             }
         });
+
+        const parameters = columnValues.concat(keyValues);
 
         const sqlQuery = `
             UPDATE "${schemaName}"."${tableName}"
@@ -75,19 +80,20 @@ class CRUDService {
         `;
 
         try {
-            query.execute(sqlQuery, parameters);
+            update.execute(sqlQuery, parameters);
             res.send({ success: true });
         } catch (error) {
             res.status(500).send({ error: "Failed to update row", details: error });
         }
     }
 
-    @Delete("/delete")
-    async delete(req, res) {
-        const { schemaName, tableName, primaryKey } = req.body;
+    @Post("/delete")
+    async deleteRow(keys) {
 
-        if (!entityName || !primaryKey) {
-            return res.status(400).send({ error: "Entity name and primary key are required" });
+        const { schemaName, tableName, data, primaryKey } = keys;
+
+        if (!schemaName || !tableName || !primaryKey) {
+            return res.status(400).send({ error: "Required 'schemaName', 'tableName' and 'primaryKey'" });
         }
 
         const whereClauses = [];
@@ -95,7 +101,7 @@ class CRUDService {
 
         primaryKey.forEach((key) => {
             whereClauses.push(`"${key}" = ?`);
-            parameters.push(req.body[key]);
+            parameters.push(data[key]);
         });
 
         const sqlQuery = `
@@ -104,7 +110,7 @@ class CRUDService {
         `;
 
         try {
-            query.execute(sqlQuery, parameters);
+            update.execute(sqlQuery, parameters);
             res.send({ success: true });
         } catch (error) {
             res.status(500).send({ error: "Failed to delete row", details: error });
