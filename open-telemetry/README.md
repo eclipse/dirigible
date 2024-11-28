@@ -78,7 +78,12 @@ The application is located at [open-telemetry-sample-project.zip](dirigible-samp
 Steps:
 - Open Dirigible UI and import the zip
 - Publish the project
-
+- To test traces and metrics:
+   - Trigger BPM process using POST to http://localhost:8080/services/ts/open-telemetry-sample-project/bpm/process-trigger-service.ts
+   - Call Camel HTTP route using GET to http://localhost:8080/services/integrations/test-camel-route
+   - Check traces for cron Camel route using `SpringCronConsumer.run`
+   - Script execution and HTTP Client call using GET to http://localhost:8080/services/ts/open-telemetry-sample-project/api/test-api.ts/data
+   - Check traces for quartz job `defined.test-job`
 
 ## Usefull
 - Export Grafana dashboards
