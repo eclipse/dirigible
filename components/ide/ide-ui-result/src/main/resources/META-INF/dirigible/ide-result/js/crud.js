@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Put, Delete, response } from "sdk/http";
 import { query } from "sdk/db";
 
-@Service
+@Controller
 class CRUDService {
 
     @Get("/")
