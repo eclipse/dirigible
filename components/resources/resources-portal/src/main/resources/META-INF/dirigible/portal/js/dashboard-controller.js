@@ -11,7 +11,7 @@ dashboard.controller('DashboardController', ['$scope', '$http', 'messageHub', fu
         busyText: "Loading...",
     };
 
-    $http.get("/services/ts/portal/api/WidgetsExtension/WidgetService.ts")
+    $http.get("/services/js/portal/api/WidgetsExtension/WidgetService.js")
         .then(function (response) {
             $scope.widgetList = response.data;
 

@@ -47,7 +47,7 @@ navigation.controller("LaunchpadViewController", ["$scope", "messageHub", "$http
         { "label": "Configurations", "icon": "wrench" }
     ]
 
-    $http.get("/services/ts/portal/api/NavigationExtension/NavigationService.ts")
+    $http.get("/services/js/portal/api/NavigationExtension/NavigationService.js")
         .then(function (response) {
             $scope.navigationList = response.data;
 
