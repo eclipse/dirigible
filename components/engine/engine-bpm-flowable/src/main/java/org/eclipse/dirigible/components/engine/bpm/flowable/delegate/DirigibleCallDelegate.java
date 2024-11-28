@@ -216,7 +216,7 @@ public class DirigibleCallDelegate implements JavaDelegate {
         try (Scope scope = span.makeCurrent()) {
             addSpanAttributes(execution, span);
 
-            extractedInternal(execution);
+            executeInternal(execution);
         } catch (RuntimeException e) {
             span.recordException(e);
             span.setStatus(io.opentelemetry.api.trace.StatusCode.ERROR, "Exception occurred during task execution");
@@ -241,7 +241,7 @@ public class DirigibleCallDelegate implements JavaDelegate {
         span.setAttribute("process.definition.id", processDefinitionId);
     }
 
-    private void extractedInternal(DelegateExecution execution) {
+    private void executeInternal(DelegateExecution execution) {
         String action = (String) execution.getVariable(DIRIGIBLE_BPM_INTERNAL_SKIP_STEP);
         if (SKIP.getActionName()
                 .equals(action)) {
