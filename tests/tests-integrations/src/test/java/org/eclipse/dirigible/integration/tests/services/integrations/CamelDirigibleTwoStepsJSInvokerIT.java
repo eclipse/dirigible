@@ -50,7 +50,7 @@ class CamelDirigibleTwoStepsJSInvokerIT extends UserInterfaceIntegrationTest {
 
     @Test
     void testInvokeJSWithEndpointRoute() {
-        ide.createAndPublishProjectFromResources("CamelDirigibleTwoStepsJSInvokerIT/http-route/call-dirigible-js-two-steps");
+        ide.createAndPublishProjectFromResources("CamelDirigibleTwoStepsJSInvokerIT/http-route/http-route-call-dirigible-js-two-steps");
 
         restAssuredExecutor.execute( //
                 () -> given().when()
