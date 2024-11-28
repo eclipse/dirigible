@@ -229,16 +229,16 @@ public class DirigibleCallDelegate implements JavaDelegate {
 
     private void addSpanAttributes(DelegateExecution execution, Span span) {
         String executionId = execution.getId();
-        span.setAttribute("executionId", executionId);
+        span.setAttribute("execution.id", executionId);
 
         String processInstanceId = execution.getProcessInstanceId();
-        span.setAttribute("processInstanceId", processInstanceId);
+        span.setAttribute("process.instance.id", processInstanceId);
 
         String processInstanceBusinessKey = execution.getProcessInstanceBusinessKey();
-        span.setAttribute("processInstanceBusinessKey", processInstanceBusinessKey);
+        span.setAttribute("process.instance.business.key", processInstanceBusinessKey);
 
         String processDefinitionId = execution.getProcessDefinitionId();
-        span.setAttribute("processDefinitionId", processDefinitionId);
+        span.setAttribute("process.definition.id", processDefinitionId);
     }
 
     private void extractedInternal(DelegateExecution execution) {

@@ -157,7 +157,7 @@ public abstract class BaseSynchronizer<A extends Artefact, ID> implements Synchr
     private void addSpanAttributes(A artefact, Span span) {
         span.setAttribute("synchronizer", this.getClass()
                                               .getName());
-        span.setAttribute("artefactKey", artefact.getKey());
+        span.setAttribute("artefact.key", artefact.getKey());
     }
 
     /**

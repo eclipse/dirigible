@@ -147,8 +147,8 @@ public class JavascriptEndpoint extends BaseEndpoint {
      */
     @WithSpan
     @GetMapping(HTTP_PATH_MATCHER)
-    public ResponseEntity<?> get(@SpanAttribute("projectName") @PathVariable("projectName") String projectName,
-            @SpanAttribute("projectFilePath") @PathVariable("projectFilePath") String projectFilePath,
+    public ResponseEntity<?> get(@SpanAttribute("project.name") @PathVariable("projectName") String projectName,
+            @SpanAttribute("project.file.path") @PathVariable("projectFilePath") String projectFilePath,
             @Nullable @RequestParam(required = false) MultiValueMap<String, String> params) {
         return executeJavaScript(projectName, projectFilePath, params, null);
     }
@@ -304,8 +304,8 @@ public class JavascriptEndpoint extends BaseEndpoint {
      */
     @WithSpan
     @PostMapping(HTTP_PATH_MATCHER)
-    public ResponseEntity<?> post(@SpanAttribute("projectName") @PathVariable("projectName") String projectName,
-            @SpanAttribute("projectFilePath") @PathVariable("projectFilePath") String projectFilePath,
+    public ResponseEntity<?> post(@SpanAttribute("project.name") @PathVariable("projectName") String projectName,
+            @SpanAttribute("project.file.path") @PathVariable("projectFilePath") String projectFilePath,
             @Nullable @RequestParam(required = false) MultiValueMap<String, String> params) {
         return executeJavaScript(projectName, projectFilePath, params, null);
     }
@@ -321,8 +321,8 @@ public class JavascriptEndpoint extends BaseEndpoint {
      */
     @WithSpan
     @PostMapping(value = HTTP_PATH_MATCHER, consumes = "multipart/form-data")
-    public ResponseEntity<?> postFile(@SpanAttribute("projectName") @PathVariable("projectName") String projectName,
-            @SpanAttribute("projectFilePath") @PathVariable("projectFilePath") String projectFilePath,
+    public ResponseEntity<?> postFile(@SpanAttribute("project.name") @PathVariable("projectName") String projectName,
+            @SpanAttribute("project.file.path") @PathVariable("projectFilePath") String projectFilePath,
             @Nullable @RequestParam(required = false) MultiValueMap<String, String> params,
             @Validated @RequestParam("file") MultipartFile[] file) {
         return executeJavaScript(projectName, projectFilePath, params, file);
@@ -338,8 +338,8 @@ public class JavascriptEndpoint extends BaseEndpoint {
      */
     @WithSpan
     @PutMapping(HTTP_PATH_MATCHER)
-    public ResponseEntity<?> put(@SpanAttribute("projectName") @PathVariable("projectName") String projectName,
-            @SpanAttribute("projectFilePath") @PathVariable("projectFilePath") String projectFilePath,
+    public ResponseEntity<?> put(@SpanAttribute("project.name") @PathVariable("projectName") String projectName,
+            @SpanAttribute("project.file.path") @PathVariable("projectFilePath") String projectFilePath,
             @Nullable @RequestParam(required = false) MultiValueMap<String, String> params) {
         return executeJavaScript(projectName, projectFilePath, params, null);
     }
@@ -355,8 +355,8 @@ public class JavascriptEndpoint extends BaseEndpoint {
      */
     @WithSpan
     @PutMapping(value = HTTP_PATH_MATCHER, consumes = "multipart/form-data")
-    public ResponseEntity<?> putFile(@SpanAttribute("projectName") @PathVariable("projectName") String projectName,
-            @SpanAttribute("projectFilePath") @PathVariable("projectFilePath") String projectFilePath,
+    public ResponseEntity<?> putFile(@SpanAttribute("project.name") @PathVariable("projectName") String projectName,
+            @SpanAttribute("project.file.path") @PathVariable("projectFilePath") String projectFilePath,
             @Nullable @RequestParam(required = false) MultiValueMap<String, String> params,
             @Validated @RequestParam("file") MultipartFile file) {
         return executeJavaScript(projectName, projectFilePath, params, new MultipartFile[] {file});
@@ -372,8 +372,8 @@ public class JavascriptEndpoint extends BaseEndpoint {
      */
     @PatchMapping(HTTP_PATH_MATCHER)
     @WithSpan("java_script_endpoint_patch")
-    public ResponseEntity<?> patch(@SpanAttribute("projectName") @PathVariable("projectName") String projectName,
-            @SpanAttribute("projectFilePath") @PathVariable("projectFilePath") String projectFilePath,
+    public ResponseEntity<?> patch(@SpanAttribute("project.name") @PathVariable("projectName") String projectName,
+            @SpanAttribute("project.file.path") @PathVariable("projectFilePath") String projectFilePath,
             @Nullable @RequestParam(required = false) MultiValueMap<String, String> params) {
         return executeJavaScript(projectName, projectFilePath, params, null);
     }
@@ -388,8 +388,8 @@ public class JavascriptEndpoint extends BaseEndpoint {
      */
     @WithSpan
     @DeleteMapping(HTTP_PATH_MATCHER)
-    public ResponseEntity<?> delete(@SpanAttribute("projectName") @PathVariable("projectName") String projectName,
-            @SpanAttribute("projectFilePath") @PathVariable("projectFilePath") String projectFilePath,
+    public ResponseEntity<?> delete(@SpanAttribute("project.name") @PathVariable("projectName") String projectName,
+            @SpanAttribute("project.file.path") @PathVariable("projectFilePath") String projectFilePath,
             @Nullable @RequestParam(required = false) MultiValueMap<String, String> params) {
         return executeJavaScript(projectName, projectFilePath, params, null);
     }
