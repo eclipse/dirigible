@@ -21,50 +21,38 @@ class SecurityIT extends IntegrationTest {
     private MockMvc mvc;
 
     @Test
-    void testPublicEndpoint() {
+    void testPublicEndpoint() throws Exception {
         Set<String> paths = Set.of("/actuator/health", "/actuator/health/liveness", "/actuator/health/readiness", "/login", "/error.html");
-        paths.forEach(path -> {
-            try {
-                mvc.perform(get(path))
-                   .andExpect(status().is(HttpStatus.OK.value()));
-            } catch (Exception e) {
-                fail(e);
-            }
-        });
+        for (String path : paths) {
+            mvc.perform(get(path))
+               .andExpect(status().is(HttpStatus.OK.value()));
+        }
+
     }
 
     @Test
-    void testProtectedEndpointWithoutAuthentication() {
+    void testProtectedEndpointWithoutAuthentication() throws Exception {
         Set<String> paths = Set.of("/spring-admin", "/actuator/info");
-        paths.forEach(path -> {
-            try {
-                mvc.perform(get(path))
-                   .andExpect(status().isUnauthorized());
-            } catch (Exception e) {
-                fail(e);
-            }
-        });
+        for (String path : paths) {
+            mvc.perform(get(path))
+               .andExpect(status().isUnauthorized());
+        }
     }
 
     @Test
     @WithMockUser(username = "user_without_roles", roles = {"SOME_UNUSED_ROLE"})
-    void testProtectedEndpointsWithUnauthorizedUser() {
+    void testProtectedEndpointsWithUnauthorizedUser() throws Exception {
         Set<String> paths = Set.of("/actuator/info");
-        paths.forEach(path -> {
-            try {
-                mvc.perform(get(path))
-                   .andExpect(status().isForbidden());
-            } catch (Exception e) {
-                fail(e);
-            }
-        });
+        for (String path : paths) {
+            mvc.perform(get(path))
+               .andExpect(status().isForbidden());
+        }
     }
 
     @Test
     @WithMockUser(username = "operator", roles = {Roles.RoleNames.OPERATOR})
     void testOperatorEndpointIsAccessible() {
         Map<String, HttpStatus> paths = Map.of("/spring-admin", HttpStatus.NOT_FOUND, "/actuator/info", HttpStatus.OK);
-
         paths.forEach((path, expectedStatus) -> {
             try {
                 mvc.perform(get(path))
@@ -77,16 +65,12 @@ class SecurityIT extends IntegrationTest {
 
     @Test
     @WithMockUser(username = "developer", roles = {Roles.RoleNames.DEVELOPER})
-    void testDeveloperEndpointIsAccessible() {
+    void testDeveloperEndpointIsAccessible() throws Exception {
         Set<String> paths = Set.of("/services/ide/123", "/websockets/ide/123");
-        paths.forEach(path -> {
-            try {
-                mvc.perform(get(path))
-                   .andExpect(status().is(HttpStatus.NOT_FOUND.value()));
-            } catch (Exception e) {
-                fail(e);
-            }
-        });
+        for (String path : paths) {
+            mvc.perform(get(path))
+               .andExpect(status().is(HttpStatus.NOT_FOUND.value()));
+        }
     }
 
 }
