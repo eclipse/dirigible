@@ -42,7 +42,7 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
         $scope.newRow = {};
 
         $scope.columns.forEach(function (column) {
-            $scope.newRow[column.name] = column.nullable ? null : '';  // Using `null` or `""` depending on if the column is nullable
+            $scope.newRow[column] = null;
         });
         $scope.isCreateDialogOpen = true;
     };

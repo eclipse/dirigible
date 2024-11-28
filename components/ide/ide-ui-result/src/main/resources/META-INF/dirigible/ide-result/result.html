@@ -163,9 +163,9 @@
             <div class="dialog">
                 <h3>Add New Row</h3>
                 <form>
-                    <div ng-repeat="column in columns">
-                        <label>{{column.name}}</label>
-                        <input type="text" ng-model="newRow[column.name]" placeholder="Enter {{column.name}}" />
+                    <div ng-repeat="(key, value) in newRow">
+                        <label>{{key}}</label>
+                        <input type="text" ng-model="newRow[key]" />
                     </div>
                     <div class="dialog-actions">
                         <fd-button dg-label="Save" dg-type="emphasized" ng-click="confirmCreate()">Save</fd-button>
