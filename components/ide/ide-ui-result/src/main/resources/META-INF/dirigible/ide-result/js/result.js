@@ -31,12 +31,65 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
 
     $scope.procedureResults = [];
     $scope.hasMultipleProcedureResults = false;
+    $scope.isCreateDialogOpen = false;
     $scope.isEditDialogOpen = false;
     $scope.isDeleteDialogOpen = false;
     $scope.schemaName = null;
     $scope.tableName = null;
     $scope.selectedRow = null;
     $scope.selectedRowOriginal = null;
+
+    const CrudService = require('./crud.js');
+
+    $scope.createRow = function () {
+        $scope.newRowData = {};
+        $scope.isCreateDialogOpen = true;
+    };
+
+    $scope.confirmCreate = function () {
+        if (!$scope.newRowData) {
+            console.error("No data provided for the new row.");
+            return;
+        }
+
+        $scope.tableColumns = $scope.tableColumns || [];
+
+        const columns = [];
+        const parameters = [];
+
+        $scope.tableColumns.forEach((column) => {
+            if ($scope.newRowData[column] !== undefined) {
+                columns.push(`"${column}"`);
+                parameters.push($scope.newRowData[column]);
+            }
+        });
+
+        if (columns.length === 0) {
+            console.error("No valid columns found for the new row.");
+            return;
+        }
+
+        const sqlCommand = `
+        INSERT INTO "${$scope.schemaName}"."${$scope.tableName}"
+        (${columns.join(", ")})
+        VALUES (${columns.map(() => "?").join(", ")})
+    `;
+
+        CrudService.executeQuery({ query: sqlCommand, parameters })
+            .then(() => {
+                $scope.isCreateDialogOpen = false;
+
+                // Refresh the table
+                messageHub.postMessage('database.sql.showContent', {
+                    schemaName: $scope.schemaName,
+                    tableName: $scope.tableName
+                });
+            })
+            .catch((error) => {
+                console.error("Failed to create row:", error);
+            });
+    };
+
 
     $scope.editRow = function (row) {
         console.log("Row object:", row);
@@ -56,26 +109,53 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
         }
 
         const updatedData = $scope.selectedRow;
-        const setClauses = Object.keys(updatedData)
-            .map(key => `"${key}" = '${updatedData[key]}'`)
-            .join(", ");
 
-        const primaryKeyColumn = findIdKey(updatedData);
-        const condition = `"${primaryKeyColumn}" = '${updatedData[primaryKeyColumn]}'`;
+        $scope.primaryKeyColumns = $scope.primaryKeyColumns || [];
+        const parameters = [];
+        const setClauses = [];
 
-        const sqlCommand =
-            `UPDATE "${$scope.schemaName}"."${$scope.tableName}"\n` +
-            `SET ${setClauses}\n` +
-            `WHERE ${condition};`;
-
-        executeQuery({ data: sqlCommand });
-
-        $scope.isEditDialogOpen = false;
-
-        messageHub.postMessage('database.sql.showContent', {
-            schemaName: $scope.schemaName,
-            tableName: $scope.tableName
+        Object.keys(updatedData).forEach((key) => {
+            if (!$scope.primaryKeyColumns.includes(key)) {
+                setClauses.push(`"${key}" = ?`);
+                parameters.push(updatedData[key]);
+            }
         });
+
+        if (setClauses.length === 0) {
+            console.log("No fields to update.");
+            return;
+        }
+
+        const whereClauses = [];
+        $scope.primaryKeyColumns.forEach((key) => {
+            whereClauses.push(`"${key}" = ?`);
+            parameters.push(updatedData[key]);
+        });
+
+        if (whereClauses.length === 0) {
+            console.error("No primary key columns found for the table.");
+            return;
+        }
+
+        const sqlCommand = `
+        UPDATE "${$scope.schemaName}"."${$scope.tableName}"
+        SET ${setClauses.join(", ")}
+        WHERE ${whereClauses.join(" AND ")}
+    `;
+
+        CrudService.executeQuery({ query: sqlCommand, parameters })
+            .then(() => {
+                $scope.isEditDialogOpen = false;
+
+                // Refresh the table
+                messageHub.postMessage('database.sql.showContent', {
+                    schemaName: $scope.schemaName,
+                    tableName: $scope.tableName
+                });
+            })
+            .catch((error) => {
+                console.error("Failed to create row:", error);
+            });
     };
 
     $scope.closeEditDialog = function () {
@@ -90,24 +170,43 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
 
     $scope.confirmDelete = function () {
         if (!$scope.selectedRow) {
-            console.error("No row selected for editing.");
+            console.error("No row selected for deletion.");
             return;
         }
 
-        const primaryKeyColumn = findIdKey($scope.selectedRow);
-        const condition = `"${primaryKeyColumn}" = '${$scope.selectedRow[primaryKeyColumn]}'`;
+        $scope.primaryKeyColumns = $scope.primaryKeyColumns || [];
 
-        const sqlCommand =
-            `DELETE FROM "${$scope.schemaName}"."${$scope.tableName}" WHERE ${condition};`;
+        const whereClauses = [];
+        const parameters = [];
+        $scope.primaryKeyColumns.forEach((key) => {
+            if ($scope.selectedRow[key] !== undefined) {
+                whereClauses.push(`"${key}" = ?`);
+                parameters.push($scope.selectedRow[key]);
+            }
+        });
 
-        executeQuery({ data: sqlCommand });
+        if (whereClauses.length === 0) {
+            console.error("No primary key columns found for the table.");
+            return;
+        }
+
+        const sqlCommand = `
+        DELETE FROM "${$scope.schemaName}"."${$scope.tableName}"
+        WHERE ${whereClauses.join(" AND ")}
+    `;
+
+        executeQuery({
+            data: { query: sqlCommand, parameters: parameters }
+        });
 
         $scope.isDeleteDialogOpen = false;
+
         messageHub.postMessage('database.sql.showContent', {
             schemaName: $scope.schemaName,
             tableName: $scope.tableName
         });
     };
+
 
     $scope.closeDeleteDialog = function () {
         $scope.selectedRow = null;
@@ -115,9 +214,22 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
 
     };
 
-    function findIdKey(dataObject) {
-        const idKey = Object.keys(dataObject).find(key => key.toUpperCase().includes('ID'));
-        return idKey;
+    function extractSpecialAndPrimaryKeys(tableMetadata) {
+        const specialColumns = [];
+        const primaryKeyColumns = [];
+
+        tableMetadata.columns.forEach(column => {
+            const type = column.type.toUpperCase();
+            if (type === 'BLOB' || type === 'CLOB') {
+                specialColumns.push(column.name);
+            }
+
+            if (column.primaryKey) {
+                primaryKeyColumns.push(column.name);
+            }
+        });
+
+        return { specialColumns, primaryKeyColumns };
     }
 
     $http.get("", { headers: { "X-CSRF-Token": "Fetch" } }).then(function (response) {
@@ -356,7 +468,19 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
         $scope.tableName = data.tableName;
         let sqlCommand = "SELECT * FROM \"" + data.schemaName + "\"" + "." + "\"" + data.tableName + "\";\n";
         executeQuery({ data: sqlCommand });
-        // $scope.initializeMetadata();
+        $http.get("/services/data/definition/" + $scope.datasource + '/' + $scope.schemaName
+            + '/' + $scope.tableName)
+            .then(function (response) {
+                $scope.metadata = response.data; // Set the metadata once the response is received
+                console.log("Metadata fetched:", $scope.metadata);
+                // Extract primary key columns and special columns from the metadata
+                const extractedKeys = extractSpecialAndPrimaryKeys($scope.metadata);
+                $scope.primaryKeyColumns = extractedKeys.primaryKeyColumns;
+                $scope.specialColumns = extractedKeys.specialColumns;
+            })
+            .catch(function (error) {
+                console.error("Error fetching metadata:", error);
+            });
     });
 
     messageHub.onDidReceiveMessage("database.sql.execute", executeQuery, true);
