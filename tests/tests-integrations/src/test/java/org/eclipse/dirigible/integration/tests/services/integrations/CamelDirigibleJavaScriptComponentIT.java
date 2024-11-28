@@ -22,9 +22,6 @@ import static org.awaitility.Awaitility.await;
 
 class CamelDirigibleJavaScriptComponentIT extends UserInterfaceIntegrationTest {
 
-    private static final String TEST_PROJECT_NAME = "call-dirigible-js-custom-component";
-    private static final String TEST_PROJECT_FOLDER_PATH = "CamelDirigibleJavaScriptComponentIT/" + TEST_PROJECT_NAME;
-
     private LogsAsserter logsAsserter;
 
     @BeforeEach
@@ -34,7 +31,7 @@ class CamelDirigibleJavaScriptComponentIT extends UserInterfaceIntegrationTest {
 
     @Test
     void testInvokeJSWithCronRoute() {
-        ide.createAndPublishProjectFromResources(TEST_PROJECT_FOLDER_PATH);
+        ide.createAndPublishProjectFromResources("CamelDirigibleJavaScriptComponentIT/cron-route/call-dirigible-js-custom-component");
 
         assertBodyIsPassedAndHandledProperlyByJSHandler();
     }

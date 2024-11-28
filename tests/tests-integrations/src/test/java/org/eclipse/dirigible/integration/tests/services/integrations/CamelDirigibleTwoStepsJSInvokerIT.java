@@ -22,9 +22,6 @@ import static org.awaitility.Awaitility.await;
 
 class CamelDirigibleTwoStepsJSInvokerIT extends UserInterfaceIntegrationTest {
 
-    private static final String TEST_PROJECT_NAME = "call-dirigible-js-two-steps";
-    private static final String TEST_PROJECT_FOLDER_PATH = "CamelDirigibleTwoStepsJSInvokerIT/" + TEST_PROJECT_NAME;
-
     private LogsAsserter logsAsserter;
 
     @BeforeEach
@@ -34,7 +31,7 @@ class CamelDirigibleTwoStepsJSInvokerIT extends UserInterfaceIntegrationTest {
 
     @Test
     void testInvokeJSWithCronRoute() {
-        ide.createAndPublishProjectFromResources(TEST_PROJECT_FOLDER_PATH);
+        ide.createAndPublishProjectFromResources("CamelDirigibleTwoStepsJSInvokerIT/cron-route/call-dirigible-js-two-steps");
 
         assertBodyIsPassedAndHandledProperlyByJSHandler();
     }
