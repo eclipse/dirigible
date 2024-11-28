@@ -58,7 +58,6 @@ class CRUDService {
         const parameters = [];
         const whereClauses = [];
 
-        // Construct the SET clauses and WHERE clauses based on the data and primary key
         Object.keys(data).forEach((key) => {
             if (!primaryKey.includes(key)) {
                 setClauses.push(`"${key}" = ?`);

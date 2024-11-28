@@ -103,7 +103,6 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
             data: updatedData,
             primaryKey: $scope.primaryKeyColumns
         };
-        debugger
 
         $http.put("/services/js/ide-result/js/crud.js/update", requestBody)
             .then((response) => {
