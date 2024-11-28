@@ -24,6 +24,33 @@
         <link type="text/css" rel="stylesheet" href="/services/js/resources-core/services/loader.js?id=ide-view-css" />
         <theme></theme>
         <script type="text/javascript" src="js/result.js"></script>
+        <style>
+            .dialog-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .dialog {
+                background: #fff;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            }
+
+            .dialog-actions {
+                display: flex;
+                justify-content: flex-end;
+                gap: 10px;
+            }
+
+        </style>
     </head>
 
     <body class="dg-vbox">
@@ -38,7 +65,16 @@
                 ng-show="columns" outer-borders="none" class="dg-list-border-bottom">
                 <thead fd-table-header sticky="true">
                     <tr fd-table-row>
+                        <td fd-table-cell colspan="{{columns.length}}">
+                        </td>
+                        <td fd-table-cell style="text-align: right;">
+                            <fd-button compact="true" glyph="sap-icon--add" dg-type="emphasized"
+                                aria-label="Add New Record" ng-click="createRow()">+</fd-button>
+                        </td>
+                    </tr>
+                    <tr fd-table-row>
                         <th fd-table-header-cell ng-repeat="column in columns">{{column}}</th>
+                        <th fd-table-header-cell>Actions</th>
                     </tr>
                 </thead>
                 <tbody fd-table-body>
@@ -47,6 +83,12 @@
                             <div class="tdSingleLine">
                                 {{cell}}
                             </div>
+                        </td>
+                        <td fd-table-cell>
+                            <fd-button compact="true" glyph="sap-icon--edit" dg-type="transparent" aria-label="Edit"
+                                ng-click="editRow(row)">Edit</fd-button>
+                            <fd-button compact="true" glyph="sap-icon--delete" dg-type="transparent" aria-label="Delete"
+                                ng-click="openDeleteDialog(row)">Delete</fd-button>
                         </td>
                     </tr>
                 </tbody>
@@ -89,6 +131,51 @@
                 </table>
             </section>
         </fd-scrollbar>
+        <div class="dialog-overlay" ng-show="isEditDialogOpen">
+            <div class="dialog">
+                <h3>Edit Row</h3>
+                <form>
+                    <div ng-repeat="(key, value) in selectedRow" ng-if="!key.toUpperCase().includes('ID')">
+                        <label>{{key}}</label>
+                        <input type="text" ng-model="selectedRow[key]" />
+                    </div>
+                    <div class="dialog-actions">
+                        <fd-button dg-label="Save" dg-type="emphasized" ng-click="saveRow()">Save</fd-button>
+                        <fd-button dg-label="Cancel" dg-type="transparent" ng-click="closeEditDialog()">Cancel
+                        </fd-button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="dialog-overlay" ng-show="isDeleteDialogOpen">
+            <div class="dialog">
+                <h3>Delete Row</h3>
+                <p>Are you sure you want to delete this row?</p>
+                <p><strong>{{selectedRow | json}}</strong></p>
+
+                <div class="dialog-actions">
+                    <fd-button dg-label="Delete" dg-type="negative" ng-click="confirmDelete()">Delete</fd-button>
+                    <fd-button dg-label="Cancel" dg-type="transparent" ng-click="closeDeleteDialog()">Cancel</fd-button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-overlay" ng-show="isCreateDialogOpen">
+            <div class="dialog">
+                <h3>Add New Row</h3>
+                <form>
+                    <div ng-repeat="(key, value) in newRow">
+                        <label>{{key}}</label>
+                        <input type="text" ng-model="newRow[key]" />
+                    </div>
+                    <div class="dialog-actions">
+                        <fd-button dg-label="Save" dg-type="emphasized" ng-click="confirmCreate()">Save</fd-button>
+                        <fd-button dg-label="Cancel" dg-type="transparent" ng-click="closeCreateDialog()">Cancel
+                        </fd-button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
     </body>
 
 </html>
