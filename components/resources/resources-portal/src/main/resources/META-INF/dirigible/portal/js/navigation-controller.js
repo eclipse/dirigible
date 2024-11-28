@@ -7,7 +7,7 @@ navigation.controller("LaunchpadViewController", ["$scope", "messageHub", "$http
     $scope.groupItems = [];
 
     function loadNavigationGroups() {
-        return $http.get("/services/js/portal/api/NavigationGroupExtension/NavigationGroupService.js")
+        return $http.get("/services/js/portal/api/NavigationGroupsExtension/NavigationGroupsService.js")
             .then(function (response) {
                 $scope.groups = response.data;
 
