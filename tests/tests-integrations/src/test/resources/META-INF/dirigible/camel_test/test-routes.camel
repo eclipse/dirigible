@@ -1,22 +1,4 @@
 - route:
-    id: route-e308
-    from:
-      uri: platform-http:/camelTest
-      id: from-48ea
-      steps:
-        - setProperty:
-            name: resource
-            id: setProperty-8ed5
-            expression:
-              constant:
-                expression: camel_test/calledFromCamel.mjs
-                id: constant-f4ba
-        - to:
-            uri: class:org.eclipse.dirigible.components.engine.camel.invoke.Invoker
-            id: to-5fb3
-            parameters:
-              method: invoke
-- route:
     id: route-bda8
     from:
       uri: direct:inbound1

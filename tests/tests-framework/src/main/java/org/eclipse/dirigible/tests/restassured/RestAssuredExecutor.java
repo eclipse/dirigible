@@ -103,6 +103,20 @@ public class RestAssuredExecutor {
         }
     }
 
+    public void execute(CallableNoResultAndNoException callable, long timeoutSeconds) {
+        await().atMost(timeoutSeconds, TimeUnit.SECONDS)
+               .pollInterval(500, TimeUnit.MILLISECONDS)
+               .until(() -> {
+                   try {
+                       this.execute(callable);
+                       return true;
+                   } catch (AssertionError err) {
+                       LOGGER.warn("Assertion error. Will try again until timeout is reached.", err);
+                       return false;
+                   }
+               });
+    }
+
     public void execute(CallableNoResultAndNoException callable) {
         String user = DirigibleConfig.BASIC_ADMIN_USERNAME.getFromBase64Value();
         String pass = DirigibleConfig.BASIC_ADMIN_PASS.getFromBase64Value();
