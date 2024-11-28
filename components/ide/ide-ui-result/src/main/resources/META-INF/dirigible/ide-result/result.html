@@ -65,6 +65,14 @@
                 ng-show="columns" outer-borders="none" class="dg-list-border-bottom">
                 <thead fd-table-header sticky="true">
                     <tr fd-table-row>
+                        <td fd-table-cell colspan="{{columns.length}}">
+                        </td>
+                        <td fd-table-cell style="text-align: right;">
+                            <fd-button compact="true" glyph="sap-icon--add" dg-type="emphasized"
+                                aria-label="Add New Record" ng-click="createRow()">+</fd-button>
+                        </td>
+                    </tr>
+                    <tr fd-table-row>
                         <th fd-table-header-cell ng-repeat="column in columns">{{column}}</th>
                         <th fd-table-header-cell>Actions</th>
                     </tr>
@@ -151,6 +159,23 @@
                 </div>
             </div>
         </div>
+        <div class="dialog-overlay" ng-show="isCreateDialogOpen">
+            <div class="dialog">
+                <h3>Add New Row</h3>
+                <form>
+                    <div ng-repeat="column in columns">
+                        <label>{{column.name}}</label>
+                        <input type="text" ng-model="newRow[column.name]" placeholder="Enter {{column.name}}" />
+                    </div>
+                    <div class="dialog-actions">
+                        <fd-button dg-label="Save" dg-type="emphasized" ng-click="confirmCreate()">Save</fd-button>
+                        <fd-button dg-label="Cancel" dg-type="transparent" ng-click="closeCreateDialog()">Cancel
+                        </fd-button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
     </body>
 
 </html>
