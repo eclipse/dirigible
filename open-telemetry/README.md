@@ -1,9 +1,10 @@
 ## Setup
-This setup instruments OTEL Collector, Jaeger, Prometheus, Loki, OpenSearch and Grafana.
+This setup instruments OTEL Collector, Jaeger, Prometheus, Loki, OpenSearch and Grafana locally.
 
 ### Profiles
 Depending on  the different scenarios you want to install, you can use different Docker profiles.
-__Prerequisites__
+
+__Prerequisites:__
 ```shell
 export MAVEN_OPTS="-Xms1024m -Xmx4096m"
 cd <path_to_dirigible_git_repo>
@@ -67,18 +68,17 @@ cd <path_to_dirigible_git_repo>
 |-----------------------|-------------------------------|----------------------------|
 | Prometheus            | http://localhost:16686        | Traces                     |
 | Jaeger Web UI         | http://localhost:9090         | Metrics                    |
-| OpenSearch            | http://localhost:9200         | Search and analytics suite |
-| OpenSearch Dashboards | http://localhost:5601         | OpenSearch UI              |
 | Loki                  | http://localhost:3100         | Log aggregation system     |
 | Grafana               | http://localhost:3000/grafana | Visualize all in one       | 
+| OpenSearch            | http://localhost:9200         | Search and analytics suite |
+| OpenSearch Dashboards | http://localhost:5601         | OpenSearch UI              |
 
-#### Make telemetry load
-To generate random telemetry load using the testing APIs, execute the following script
-```
-cd <path_to_dirigible_git_repo>
+#### Run OpenTelemetry sample application
+The application is located at [open-telemetry-sample-project.zip](dirigible-sample-project/open-telemetry-sample-project.zip).
+Steps:
+- Open Dirigible UI and import the zip
+- Publish the project
 
-open-telemetry/scripts/run_fake_load.sh
-```
 
 ## Usefull
 - Export Grafana dashboards
