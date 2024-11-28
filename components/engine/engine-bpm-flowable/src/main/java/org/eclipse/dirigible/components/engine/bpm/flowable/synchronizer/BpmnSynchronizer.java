@@ -87,7 +87,7 @@ public class BpmnSynchronizer extends BaseSynchronizer<Bpmn, Long> {
      * @throws ParseException the parse exception
      */
     @Override
-    public List<Bpmn> parse(String location, byte[] content) throws ParseException {
+    protected List<Bpmn> parseImpl(String location, byte[] content) throws ParseException {
         Bpmn bpmn = new Bpmn();
         bpmn.setLocation(location);
         bpmn.setName(Paths.get(location)

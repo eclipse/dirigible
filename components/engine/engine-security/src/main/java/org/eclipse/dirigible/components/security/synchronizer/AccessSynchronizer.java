@@ -90,7 +90,7 @@ public class AccessSynchronizer extends BaseSynchronizer<Access, Long> {
      * @throws ParseException the parse exception
      */
     @Override
-    public List<Access> parse(String location, byte[] content) throws ParseException {
+    public List<Access> parseImpl(String location, byte[] content) throws ParseException {
         Constraints constraints = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Constraints.class);
         Configuration.configureObject(constraints);
 

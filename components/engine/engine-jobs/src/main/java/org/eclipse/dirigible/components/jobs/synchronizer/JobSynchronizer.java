@@ -105,7 +105,7 @@ public class JobSynchronizer extends MultitenantBaseSynchronizer<Job, Long> {
      * @throws ParseException the parse exception
      */
     @Override
-    public List<Job> parse(String location, byte[] content) throws ParseException {
+    protected List<Job> parseImpl(String location, byte[] content) throws ParseException {
         Job job = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Job.class);
         Configuration.configureObject(job);
         job.setLocation(location);

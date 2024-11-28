@@ -84,49 +84,6 @@ public class ODataSynchronizer extends BaseSynchronizer<OData, Long> {
     }
 
     /**
-     * Checks if is accepted.
-     *
-     * @param type the type
-     * @return true, if is accepted
-     */
-    @Override
-    public boolean isAccepted(String type) {
-        return OData.ARTEFACT_TYPE.equals(type);
-    }
-
-    /**
-     * Load.
-     *
-     * @param location the location
-     * @param content the content
-     * @return the list
-     * @throws ParseException the parse exception
-     */
-    @Override
-    public List<OData> parse(String location, byte[] content) throws ParseException {
-        OData odata = parseOData(location, new String(content, StandardCharsets.UTF_8));
-        try {
-            OData maybe = getService().findByKey(odata.getKey());
-            if (maybe != null) {
-                odata.setId(maybe.getId());
-            }
-            odata = getService().save(odata);
-        } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error(e.getMessage(), e);
-            }
-            if (logger.isErrorEnabled()) {
-                logger.error("odata: {}", odata);
-            }
-            if (logger.isErrorEnabled()) {
-                logger.error("content: {}", new String(content));
-            }
-            throw new ParseException(e.getMessage(), 0);
-        }
-        return List.of(odata);
-    }
-
-    /**
      * Parses the O data.
      *
      * @param location the location
@@ -159,6 +116,49 @@ public class ODataSynchronizer extends BaseSynchronizer<OData, Long> {
                  }
              });
         return odata;
+    }
+
+    /**
+     * Checks if is accepted.
+     *
+     * @param type the type
+     * @return true, if is accepted
+     */
+    @Override
+    public boolean isAccepted(String type) {
+        return OData.ARTEFACT_TYPE.equals(type);
+    }
+
+    /**
+     * Load.
+     *
+     * @param location the location
+     * @param content the content
+     * @return the list
+     * @throws ParseException the parse exception
+     */
+    @Override
+    protected List<OData> parseImpl(String location, byte[] content) throws ParseException {
+        OData odata = parseOData(location, new String(content, StandardCharsets.UTF_8));
+        try {
+            OData maybe = getService().findByKey(odata.getKey());
+            if (maybe != null) {
+                odata.setId(maybe.getId());
+            }
+            odata = getService().save(odata);
+        } catch (Exception e) {
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage(), e);
+            }
+            if (logger.isErrorEnabled()) {
+                logger.error("odata: {}", odata);
+            }
+            if (logger.isErrorEnabled()) {
+                logger.error("content: {}", new String(content));
+            }
+            throw new ParseException(e.getMessage(), 0);
+        }
+        return List.of(odata);
     }
 
     /**
@@ -278,19 +278,6 @@ public class ODataSynchronizer extends BaseSynchronizer<OData, Long> {
     }
 
     /**
-     * Cleanup O data.
-     *
-     * @param odata the odata
-     */
-    public void cleanupOData(OData odata) {
-        // CLEAN UP LOGIC
-        odataSchemaService.removeSchema(odata.getLocation());
-        odataContainerService.removeContainer(odata.getLocation());
-        odataMappingService.removeMappings(odata.getLocation());
-        odataHandlerService.removeHandlers(odata.getLocation());
-    }
-
-    /**
      * Generate OData Schema.
      *
      * @param model the model
@@ -321,6 +308,19 @@ public class ODataSynchronizer extends BaseSynchronizer<OData, Long> {
      */
     private List<ODataHandler> generateODataHandlers(OData model) throws SQLException {
         return odata2ODataHTransformer.transform(model);
+    }
+
+    /**
+     * Cleanup O data.
+     *
+     * @param odata the odata
+     */
+    public void cleanupOData(OData odata) {
+        // CLEAN UP LOGIC
+        odataSchemaService.removeSchema(odata.getLocation());
+        odataContainerService.removeContainer(odata.getLocation());
+        odataMappingService.removeMappings(odata.getLocation());
+        odataHandlerService.removeHandlers(odata.getLocation());
     }
 
     /**

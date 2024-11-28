@@ -40,7 +40,7 @@ public class TopologicalDepleter<T extends TopologicallyDepletable> {
     public Set<T> deplete(Set<T> list, ArtefactPhase flow) {
         Span span = Span.current();
         span.setAttribute("flow", flow.getValue());
-        span.setAttribute("artifacts_count", list.size());
+        span.setAttribute("artifacts.count", list.size());
 
         Set<T> depletables = new HashSet<>();
         depletables.addAll(list);

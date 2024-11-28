@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -34,6 +35,37 @@ public abstract class BaseSynchronizer<A extends Artefact, ID> implements Synchr
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(BaseSynchronizer.class);
+
+    @Override
+    public final List<A> parse(String location, byte[] content) throws ParseException {
+        Tracer tracer = OpenTelemetryProvider.get()
+                                             .getTracer("eclipse-dirigible");
+
+        Span span = tracer.spanBuilder(getSynchronizerSpanPrefix() + "parse_execution")
+                          .startSpan();
+
+        try (Scope scope = span.makeCurrent()) {
+            span.setAttribute("location", location);
+
+            return parseImpl(location, content);
+
+        } catch (RuntimeException e) {
+            span.recordException(e);
+            span.setStatus(io.opentelemetry.api.trace.StatusCode.ERROR, "Exception occurred during synchronization");
+
+            throw e;
+        } finally {
+            span.end();
+        }
+    }
+
+    private String getSynchronizerSpanPrefix() {
+        String synchronizerClassName = this.getClass()
+                                           .getSimpleName();
+        return "synchronizer_" + synchronizerClassName + "_";
+    }
+
+    protected abstract List<A> parseImpl(String location, byte[] content) throws ParseException;
 
     /**
      * Complete.
@@ -47,9 +79,7 @@ public abstract class BaseSynchronizer<A extends Artefact, ID> implements Synchr
         Tracer tracer = OpenTelemetryProvider.get()
                                              .getTracer("eclipse-dirigible");
 
-        String synchronizerClassName = this.getClass()
-                                           .getSimpleName();
-        Span span = tracer.spanBuilder("synchronizer_" + synchronizerClassName + "_complete_execution")
+        Span span = tracer.spanBuilder(getSynchronizerSpanPrefix() + "complete_execution")
                           .startSpan();
 
         try (Scope scope = span.makeCurrent()) {
@@ -86,7 +116,7 @@ public abstract class BaseSynchronizer<A extends Artefact, ID> implements Synchr
 
         return results.stream()
                       .map(TenantResult::getResult)
-                      .allMatch(r -> Boolean.TRUE.equals(r));
+                      .allMatch(Boolean.TRUE::equals);
     }
 
     /**
@@ -139,9 +169,7 @@ public abstract class BaseSynchronizer<A extends Artefact, ID> implements Synchr
         Tracer tracer = OpenTelemetryProvider.get()
                                              .getTracer("eclipse-dirigible");
 
-        String synchronizerClassName = this.getClass()
-                                           .getSimpleName();
-        Span span = tracer.spanBuilder("synchronizer_" + synchronizerClassName + "_cleanup_execution")
+        Span span = tracer.spanBuilder(getSynchronizerSpanPrefix() + "cleanup_execution")
                           .startSpan();
 
         try (Scope scope = span.makeCurrent()) {

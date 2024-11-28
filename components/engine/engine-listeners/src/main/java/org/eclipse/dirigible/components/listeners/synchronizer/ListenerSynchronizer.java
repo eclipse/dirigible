@@ -75,7 +75,7 @@ public class ListenerSynchronizer extends MultitenantBaseSynchronizer<Listener, 
      * @throws ParseException the parse exception
      */
     @Override
-    public List<Listener> parse(String location, byte[] content) throws ParseException {
+    protected List<Listener> parseImpl(String location, byte[] content) throws ParseException {
         Listener listener = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Listener.class);
         Configuration.configureObject(listener);
         listener.setLocation(location);

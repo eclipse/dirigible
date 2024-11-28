@@ -79,7 +79,7 @@ public class CamelSynchronizer extends BaseSynchronizer<Camel, Long> {
      * @return the list
      */
     @Override
-    public List<Camel> parse(String location, byte[] content) {
+    protected List<Camel> parseImpl(String location, byte[] content) {
         Camel camel = new Camel();
         camel.setLocation(location);
         camel.setName(Paths.get(location)
