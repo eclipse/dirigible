@@ -216,6 +216,7 @@
 		<module>platform-ide/editor-monaco</module>
 		<module>platform-ide/editor-monaco-extensions</module>
 		<module>platform-ide/editor-bpm</module>
+		<module>platform-ide/editor-image</module>
 		<module>platform-ide/menu-bpm</module>
 
 		<!-- Resources -->
@@ -263,6 +264,7 @@
 		<module>template/template-websocket</module>
 		<module>template/template-typescript</module>
 		<module>template/template-view</module>
+		<module>template/template-editor</module>
 		<module>template/template-perspective</module>
 
 		<!-- Groups -->
@@ -1203,6 +1205,11 @@
 				<artifactId>dirigible-components-editor-bpm</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-editor-image</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
@@ -1493,6 +1500,11 @@
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-components-template-view</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-template-editor</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
