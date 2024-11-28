@@ -45,6 +45,6 @@ export function getTemplate() {
 			name: 'perspectiveName',
 			label: 'Name'
 		}],
-		order: 11
+		order: 14
 	};
 };

@@ -60,8 +60,8 @@
             <div ng-if="templates.length" class="fd-col fd-col--12 fd-col-md--6 fd-col-lg--4 fd-col-xl--3" ng-repeat="template in filteredTemplates | startFrom:(currentPage-1)*pageSize | limitTo:pageSize">
               <bk-card card-type="object" aria-roledescription="Card" ng-click="openCreateProjectDialog(template)">
                 <bk-card-header title="{{::template.name}}" subtitle="{{::template.description}}" interactive="true" description="Create project from template {{::template.name}}">
-                  <bk-avatar ng-if="!template.glyph && !template.image" glyph="sap-icon--example" style="font-size:1.5rem" size="s" aria-label="project template icon"></bk-avatar>
-                  <bk-avatar ng-if="template.glyph && !template.image" glyph="{{::template.glyph}}" style="font-size:1.5rem" size="s" aria-label="project template icon"></bk-avatar>
+                  <bk-avatar ng-if="!template.glyph && !template.image" glyph="sap-icon--example" style="font-size:2rem" size="s" aria-label="project template icon"></bk-avatar>
+                  <bk-avatar ng-if="template.glyph && !template.image" glyph="{{::template.glyph}}" style="font-size:2rem" size="s" aria-label="project template icon"></bk-avatar>
                   <bk-avatar ng-if="!template.glyph && template.image" class="imgColor" image="{{::template.image}}" style="font-size:1.5rem" size="s" aria-label="project template icon"></bk-avatar>
                 </bk-card-header>
               </bk-card>
