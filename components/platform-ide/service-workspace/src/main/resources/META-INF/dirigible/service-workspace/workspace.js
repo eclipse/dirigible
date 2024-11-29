@@ -14,20 +14,19 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
     this.workspaceManagerServiceUrl = '/services/ide/workspace';
     this.workspaceSearchServiceUrl = '/services/ide/workspace-search';
     this.$get = ['$http', function workspaceApiFactory($http) {
-        const setWorkspace = function (workspaceName) {
-            if (workspaceName !== undefined && !(typeof workspaceName === 'string'))
-                throw Error("setWorkspace: workspaceName must be an string");
-            const workspace = { name: workspaceName };
-            localStorage.setItem(workspaceStorageKey, JSON.stringify(workspace));
+        const setWorkspace = (workspace) => {
+            if (workspace === undefined || workspace === null || typeof workspace !== 'string')
+                throw Error("setWorkspace: workspace parameter must be an string");
+            localStorage.setItem(workspaceStorageKey, workspace);
             return workspace;
         };
 
         /**
          * Returns the currently selected workspace.
          */
-        const getCurrentWorkspace = function () {
-            let storedWorkspace = JSON.parse(localStorage.getItem(workspaceStorageKey) || '{}');
-            if (!('name' in storedWorkspace)) storedWorkspace = setWorkspace('workspace');
+        const getCurrentWorkspace = () => {
+            let storedWorkspace = localStorage.getItem(workspaceStorageKey);
+            if (!storedWorkspace) storedWorkspace = setWorkspace('workspace');
             return storedWorkspace;
         };
 

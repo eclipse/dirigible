@@ -29,7 +29,7 @@ class ContextMenuApi extends MessageHubApi {
      * @typedef {Object} MenuSublist
      * @property {string} id - Id of the sublist.
      * @property {string} label - Label for the sublist.
-     * @property {boolean} [separator] - Set a emnu item separator after this item.
+     * @property {boolean} [separator] - Set a menu item separator after this item.
      * @property {string} [iconClass] - CSS icon class. Icon will be shown before the label.
      * @property {string} [iconPath] - Icon url path. Icon will be shown before the label.
      * @property {Array.<MenuItem|MenuSublist>} items - List of menu items and/or sublists.

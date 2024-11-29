@@ -209,7 +209,7 @@ projectsView.controller('ProjectsViewController', function (
             WorkspaceAPI.announceFileSelected({
                 path: data.node.data.path,
                 contentType: data.node.data.contentType,
-                params: { workspace: $scope.selectedWorkspace.name },
+                params: { workspace: $scope.selectedWorkspace },
             });
         }
     });
@@ -677,16 +677,16 @@ projectsView.controller('ProjectsViewController', function (
                                 importType: id !== 'importZip' ? 'file' : 'zip',
                                 uploadPath: contextMenuNodes[0].data.path,
                                 projectsViewId: contextMenuNodes[0].id,
-                                workspace: $scope.selectedWorkspace.name,
+                                workspace: $scope.selectedWorkspace,
                             }
                         });
                     } else if (id === 'exportProjects') {
                         $scope.exportProjects();
                     } else if (id === 'exportProject') {
-                        TransportService.exportProject($scope.selectedWorkspace.name, contextMenuNodes[0].text);
+                        TransportService.exportProject($scope.selectedWorkspace, contextMenuNodes[0].text);
                     } else if (id === 'actionsProject') {
                         actionData.project = contextMenuNodes[0].text;
-                        actionData.workspace = $scope.selectedWorkspace.name;
+                        actionData.workspace = $scope.selectedWorkspace;
                         DialogAPI.showFormDialog({
                             title: 'Enter the action to execute',
                             form: {
@@ -821,7 +821,7 @@ projectsView.controller('ProjectsViewController', function (
                                         }
                                     }
                                     GenerateService.generateFromTemplate(
-                                        $scope.selectedWorkspace.name,
+                                        $scope.selectedWorkspace,
                                         form['pgfd2'],
                                         form['pgfi1'],
                                         template.id,
@@ -1023,7 +1023,7 @@ projectsView.controller('ProjectsViewController', function (
     };
 
     $scope.isSelectedWorkspace = (name) => {
-        if ($scope.selectedWorkspace.name === name) return true;
+        if ($scope.selectedWorkspace === name) return true;
         return false;
     };
 
@@ -1046,7 +1046,7 @@ projectsView.controller('ProjectsViewController', function (
     $scope.reloadWorkspace = (setConfig = false) => {
         projects.length = 0;
         $scope.state.isBusy = true;
-        WorkspaceService.list($scope.selectedWorkspace.name).then((response) => {
+        WorkspaceService.list($scope.selectedWorkspace).then((response) => {
             $scope.$evalAsync(() => {
                 for (let i = 0; i < response.data.projects.length; i++) {
                     let project = {
@@ -1116,27 +1116,27 @@ projectsView.controller('ProjectsViewController', function (
 
     $scope.publishAll = () => {
         StatusBarAPI.showBusy('Publishing projects...');
-        PublisherService.publish(`/${$scope.selectedWorkspace.name}/*`).then(() => {
+        PublisherService.publish(`/${$scope.selectedWorkspace}/*`).then(() => {
             StatusBarAPI.hideBusy();
-            StatusBarAPI.showMessage(`Published all projects in '${$scope.selectedWorkspace.name}'`);
-            WorkspaceAPI.announcePublished({ path: `/${$scope.selectedWorkspace.name}` });
+            StatusBarAPI.showMessage(`Published all projects in '${$scope.selectedWorkspace}'`);
+            WorkspaceAPI.announcePublished({ path: `/${$scope.selectedWorkspace}` });
         }, (response) => {
             console.error(response);
             StatusBarAPI.hideBusy();
-            StatusBarAPI.showError(`Unable to publish projects in '${$scope.selectedWorkspace.name}'`);
+            StatusBarAPI.showError(`Unable to publish projects in '${$scope.selectedWorkspace}'`);
         });
     };
 
     function unpublishAll() {
         StatusBarAPI.showBusy('Unpublishing projects...');
-        PublisherService.unpublish(`/${$scope.selectedWorkspace.name}/*`).then(() => {
-            StatusBarAPI.showMessage(`Unpublished all projects in '${$scope.selectedWorkspace.name}'`);
+        PublisherService.unpublish(`/${$scope.selectedWorkspace}/*`).then(() => {
+            StatusBarAPI.showMessage(`Unpublished all projects in '${$scope.selectedWorkspace}'`);
             StatusBarAPI.hideBusy();
-            WorkspaceAPI.announceUnpublished({ path: `/${$scope.selectedWorkspace.name}` });
+            WorkspaceAPI.announceUnpublished({ path: `/${$scope.selectedWorkspace}` });
         }, (response) => {
             console.error(response);
             StatusBarAPI.hideBusy();
-            StatusBarAPI.showError(`Unable to unpublish projects in '${$scope.selectedWorkspace.name}'`);
+            StatusBarAPI.showError(`Unable to unpublish projects in '${$scope.selectedWorkspace}'`);
         });
     };
 
@@ -1169,8 +1169,8 @@ projectsView.controller('ProjectsViewController', function (
     };
 
     $scope.switchWorkspace = (workspace) => {
-        if ($scope.selectedWorkspace.name !== workspace) {
-            $scope.selectedWorkspace.name = workspace;
+        if ($scope.selectedWorkspace !== workspace) {
+            $scope.selectedWorkspace = workspace;
             WorkspaceService.setWorkspace(workspace);
             $scope.reloadWorkspace();
         }
@@ -1208,7 +1208,7 @@ projectsView.controller('ProjectsViewController', function (
     };
 
     $scope.exportProjects = () => {
-        TransportService.exportProject($scope.selectedWorkspace.name, '*');
+        TransportService.exportProject($scope.selectedWorkspace, '*');
     };
 
     $scope.createProject = () => {
@@ -1234,7 +1234,7 @@ projectsView.controller('ProjectsViewController', function (
         }).then((form) => {
             if (form) {
                 DialogAPI.showBusyDialog('Creating...');
-                WorkspaceService.createProject($scope.selectedWorkspace.name, form['pgfi1']).then(() => {
+                WorkspaceService.createProject($scope.selectedWorkspace, form['pgfi1']).then(() => {
                     DialogAPI.closeBusyDialog();
                     StatusBarAPI.showMessage(`Created project '${form['pgfi1']}'`);
                     $scope.$evalAsync(() => {
@@ -1279,7 +1279,7 @@ projectsView.controller('ProjectsViewController', function (
                 controlType: 'dropdown',
                 label: 'Duplicate in workspace',
                 required: true,
-                value: $scope.selectedWorkspace.name,
+                value: $scope.selectedWorkspace,
                 options: workspaces,
             }
         };
@@ -1341,7 +1341,7 @@ projectsView.controller('ProjectsViewController', function (
                 }
                 WorkspaceService.copy(originalPath, duplicatePath).then(() => {
                     DialogAPI.closeBusyDialog();
-                    if (form['pgfd1'] === $scope.selectedWorkspace.name)
+                    if (form['pgfd1'] === $scope.selectedWorkspace)
                         $scope.$evalAsync(() => {
                             $scope.reloadWorkspace(); // Temporary solution
                         });
@@ -1416,25 +1416,25 @@ projectsView.controller('ProjectsViewController', function (
     };
 
     $scope.deleteWorkspace = () => {
-        if ($scope.selectedWorkspace.name !== 'workspace') {
+        if ($scope.selectedWorkspace !== 'workspace') {
             DialogAPI.showDialog({
                 title: 'Delete workspace?',
-                message: `Are you sure you want to delete workspace "${$scope.selectedWorkspace.name}"? This action cannot be undone.`,
+                message: `Are you sure you want to delete workspace "${$scope.selectedWorkspace}"? This action cannot be undone.`,
                 buttons: [
                     { id: 'yes', label: 'Yes', state: ButtonStates.Emphasized },
                     { id: 'no', label: 'No' }
                 ]
             }).then((buttonId) => {
                 if (buttonId === 'yes') {
-                    WorkspaceService.deleteWorkspace($scope.selectedWorkspace.name).then(() => {
-                        WorkspaceAPI.announceWorkspaceDeleted($scope.selectedWorkspace.name);
+                    WorkspaceService.deleteWorkspace($scope.selectedWorkspace).then(() => {
+                        WorkspaceAPI.announceWorkspaceDeleted($scope.selectedWorkspace);
                         $scope.$evalAsync(() => {
                             $scope.switchWorkspace('workspace');
                             $scope.reloadWorkspaceList();
                         });
                     }, (response) => {
                         console.error(response);
-                        StatusBarAPI.showError(`Unable to delete workspace '${$scope.selectedWorkspace.name}'`);
+                        StatusBarAPI.showError(`Unable to delete workspace '${$scope.selectedWorkspace}'`);
                     });
                 }
             }, (error) => {
@@ -1820,7 +1820,7 @@ projectsView.controller('ProjectsViewController', function (
         }).then((buttonId) => {
             function deleteNode(node) {
                 if (node.type === 'project') {
-                    deleteProject($scope.selectedWorkspace.name, node.text, node.id);
+                    deleteProject($scope.selectedWorkspace, node.text, node.id);
                 } else {
                     deleteFileFolder(node.data.path, node.id, node.type);
                 }
@@ -1873,7 +1873,7 @@ projectsView.controller('ProjectsViewController', function (
 
     function generateModel(isRegenerating = false) {
         GenerateService.generateFromModel(
-            $scope.selectedWorkspace.name,
+            $scope.selectedWorkspace,
             gmodel.project,
             gmodel.model,
             gmodel.templateId,
@@ -1928,7 +1928,7 @@ projectsView.controller('ProjectsViewController', function (
     });
 
     WorkspaceAPI.onWorkspaceChanged((changed) => {
-        if (changed.workspace === $scope.selectedWorkspace.name) {
+        if (changed.workspace === $scope.selectedWorkspace) {
             if (changed.params.projectsViewId) {
                 jstreeWidget.jstree(true).refresh_node(changed.params.projectsViewId);
             } else $scope.$evalAsync(() => {
@@ -1947,7 +1947,7 @@ projectsView.controller('ProjectsViewController', function (
     WorkspaceAPI.addMessageListener({
         topic: 'projects.tree.refresh',
         handler: (msg) => {
-            if (msg.workspace === $scope.selectedWorkspace.name) {
+            if (msg.workspace === $scope.selectedWorkspace) {
                 if (msg.partial) {
                     const instance = jstreeWidget.jstree(true);
                     for (let item in instance._model.data) {
@@ -2000,7 +2000,7 @@ projectsView.controller('ProjectsViewController', function (
     WorkspaceAPI.addMessageListener({
         topic: 'projects.tree.select',
         handler: (msg) => {
-            if (msg.filePath.startsWith(`/${$scope.selectedWorkspace.name}/`)) {
+            if (msg.filePath.startsWith(`/${$scope.selectedWorkspace}/`)) {
                 const instance = jstreeWidget.jstree(true);
                 if (typeof instance._model !== 'undefined')
                     for (let item in instance._model.data) { // Uses the unofficial '_model' property but this is A LOT faster then using 'get_json()'

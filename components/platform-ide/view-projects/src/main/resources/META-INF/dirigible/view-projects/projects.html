@@ -52,7 +52,7 @@
             <bk-toolbar-separator></bk-toolbar-separator>
             <bk-popover>
                 <bk-popover-control>
-                    <bk-button state="transparent" is-menu="::true" label="{{ selectedWorkspace.name }}" title="Workspace select">
+                    <bk-button state="transparent" is-menu="::true" label="{{ selectedWorkspace }}" title="Workspace select">
                     </bk-button>
                 </bk-popover-control>
                 <bk-popover-body align="bottom-right" no-arrow="::true">
@@ -73,7 +73,7 @@
                 <bk-toolbar-separator></bk-toolbar-separator>
                 <bk-button state="transparent" label="Create workspace" glyph="sap-icon--add" is-overflow="::true" ng-click="createWorkspace()">
                 </bk-button>
-                <bk-button state="transparent" label="Delete workspace" glyph="sap-icon--delete" is-overflow="::true" state="{{ selectedWorkspace.name === 'workspace' ? 'disabled' : '' }}" ng-click="deleteWorkspace()">
+                <bk-button state="transparent" label="Delete workspace" glyph="sap-icon--delete" is-overflow="::true" state="{{ selectedWorkspace === 'workspace' ? 'disabled' : '' }}" ng-click="deleteWorkspace()">
                 </bk-button>
             </bk-toolbar-overflow>
         </bk-toolbar>

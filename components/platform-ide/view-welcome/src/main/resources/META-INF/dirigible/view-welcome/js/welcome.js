@@ -42,7 +42,7 @@ welcome.controller('WelcomeController', ($scope, $http, WorkspaceService, Templa
                 controlType: 'dropdown',
                 label: 'Workspace',
                 required: true,
-                value: selectedWorkspace.name,
+                value: selectedWorkspace,
                 options: workspaces,
             },
             'projectName': {

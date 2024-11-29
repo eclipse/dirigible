@@ -53,7 +53,7 @@ importView.controller('ImportViewController',
                     $scope.dropAreaSubtitle = 'Drop snaphot here, or use the "+" button.';
                 } else {
                     $scope.uploadPath = params.uploadPath;
-                    if (params.workspace) $scope.selectedWorkspace.name = params.workspace;
+                    if (params.workspace) $scope.selectedWorkspace = params.workspace;
                     if (params.importType === 'file') {
                         $scope.inputAccept = '';
                         $scope.importType = params.importType;
@@ -93,7 +93,7 @@ importView.controller('ImportViewController',
         $scope.uploader.onBeforeUploadItem = (item) => {
             if (!$scope.importRepository) {
                 if (!$scope.inDialog) {
-                    item.url = UriBuilder().path(projectImportUrl.split('/')).path($scope.selectedWorkspace.name).build();
+                    item.url = UriBuilder().path(projectImportUrl.split('/')).path($scope.selectedWorkspace).build();
                 } else if ($scope.inDialog && $scope.importType === 'file') {
                     item.headers = {
                         'Dirigible-Editor': 'Editor'
@@ -114,18 +114,18 @@ importView.controller('ImportViewController',
             } else if ($scope.inDialog) {
                 // Temporary, publishes all files in the import directory, not just imported ones
                 WorkspaceAPI.announceWorkspaceChanged({
-                    workspace: $scope.selectedWorkspace.name,
+                    workspace: $scope.selectedWorkspace,
                     params: {
                         projectsViewId: $scope.projectsViewId,
                         publish: { path: $scope.uploadPath }
                     }
                 });
             } else {
-                WorkspaceAPI.announceWorkspaceChanged({ workspace: $scope.selectedWorkspace.name, params: { publish: { workspace: true } } });
+                WorkspaceAPI.announceWorkspaceChanged({ workspace: $scope.selectedWorkspace, params: { publish: { workspace: true } } });
             }
         };
 
-        $scope.isSelectedWorkspace = (name) => $scope.selectedWorkspace.name === name;
+        $scope.isSelectedWorkspace = (name) => $scope.selectedWorkspace === name;
 
         $scope.isUploadEnabled = () => {
             if ($scope.uploader.getNotUploadedItems().length) return false;
@@ -137,8 +137,8 @@ importView.controller('ImportViewController',
         };
 
         $scope.switchWorkspace = (workspace) => {
-            if ($scope.selectedWorkspace.name !== workspace) {
-                $scope.selectedWorkspace.name = workspace;
+            if ($scope.selectedWorkspace !== workspace) {
+                $scope.selectedWorkspace = workspace;
             }
         };
 
@@ -146,8 +146,8 @@ importView.controller('ImportViewController',
             WorkspaceService.listWorkspaceNames().then((response) => {
                 $scope.$evalAsync(() => {
                     $scope.workspaceNames = response.data;
-                    if (!$scope.workspaceNames.includes($scope.selectedWorkspace.name))
-                        $scope.selectedWorkspace.name = 'workspace'; // Default
+                    if (!$scope.workspaceNames.includes($scope.selectedWorkspace))
+                        $scope.selectedWorkspace = 'workspace'; // Default
                 });
             }, (response) => {
                 console.error(response);

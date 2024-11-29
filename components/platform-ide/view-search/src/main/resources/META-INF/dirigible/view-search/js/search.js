@@ -26,8 +26,8 @@ searchView.controller('SearchController', ($scope, WorkspaceService, StatusBarAP
     $scope.reloadWorkspaceList = () => {
         WorkspaceService.listWorkspaceNames().then((response) => {
             $scope.workspaceNames = response.data;
-            if (!$scope.workspaceNames.includes($scope.selectedWorkspace.name))
-                $scope.selectedWorkspace.name = 'workspace'; // Default
+            if (!$scope.workspaceNames.includes($scope.selectedWorkspace))
+                $scope.selectedWorkspace = 'workspace'; // Default
         }, (response) => {
             console.error(response);
             StatusBarAPI.showError('Unable to load workspace list');
@@ -38,13 +38,13 @@ searchView.controller('SearchController', ($scope, WorkspaceService, StatusBarAP
     const workspaceDeletedListener = WorkspaceAPI.onWorkspaceDeleted($scope.reloadWorkspaceList);
 
     $scope.switchWorkspace = (workspace) => {
-        if ($scope.selectedWorkspace.name !== workspace) {
-            $scope.selectedWorkspace.name = workspace;
+        if ($scope.selectedWorkspace !== workspace) {
+            $scope.selectedWorkspace = workspace;
             $scope.refresh();
         }
     };
 
-    $scope.isSelectedWorkspace = (name) => $scope.selectedWorkspace.name === name;
+    $scope.isSelectedWorkspace = (name) => $scope.selectedWorkspace === name;
 
     $scope.itemClick = (index) => $scope.selectedItemIndex = index;
 
@@ -64,7 +64,7 @@ searchView.controller('SearchController', ($scope, WorkspaceService, StatusBarAP
         $scope.search.results.length = 0;
         $scope.search.searching = true;
         if ($scope.search.text) {
-            WorkspaceService.search($scope.selectedWorkspace.name, $scope.search.text).then((response) => {
+            WorkspaceService.search($scope.selectedWorkspace, $scope.search.text).then((response) => {
                 $scope.$evalAsync(() => {
                     $scope.search.searching = false;
                     for (let i = 0; i < response.data.length; i++) {
