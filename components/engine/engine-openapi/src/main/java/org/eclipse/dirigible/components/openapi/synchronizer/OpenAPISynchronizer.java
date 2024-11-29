@@ -87,7 +87,7 @@ public class OpenAPISynchronizer extends BaseSynchronizer<OpenAPI, Long> {
      * @throws ParseException the parse exception
      */
     @Override
-    public List<OpenAPI> parse(String location, byte[] content) throws ParseException {
+    protected List<OpenAPI> parseImpl(String location, byte[] content) throws ParseException {
         OpenAPI openAPI = new OpenAPI();
         // JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), OpenAPI.class);
         Configuration.configureObject(openAPI);

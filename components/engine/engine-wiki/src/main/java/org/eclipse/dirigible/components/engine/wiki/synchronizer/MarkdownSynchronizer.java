@@ -115,7 +115,7 @@ public class MarkdownSynchronizer extends BaseSynchronizer<Markdown, Long> {
      * @throws ParseException the parse exception
      */
     @Override
-    public List<Markdown> parse(String location, byte[] content) throws ParseException {
+    protected List<Markdown> parseImpl(String location, byte[] content) throws ParseException {
         Markdown wiki = new Markdown();
         Configuration.configureObject(wiki);
         wiki.setLocation(location);

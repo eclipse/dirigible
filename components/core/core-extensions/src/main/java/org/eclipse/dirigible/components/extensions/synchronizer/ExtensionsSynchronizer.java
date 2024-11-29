@@ -78,7 +78,7 @@ public class ExtensionsSynchronizer extends BaseSynchronizer<Extension, Long> {
      * @throws ParseException the parse exception
      */
     @Override
-    public List<Extension> parse(String location, byte[] content) throws ParseException {
+    protected List<Extension> parseImpl(String location, byte[] content) throws ParseException {
         Extension extension = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Extension.class);
         Configuration.configureObject(extension);
         extension.setLocation(location);

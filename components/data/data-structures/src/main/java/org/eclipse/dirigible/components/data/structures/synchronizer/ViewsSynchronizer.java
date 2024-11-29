@@ -90,7 +90,7 @@ public class ViewsSynchronizer extends MultitenantBaseSynchronizer<View, Long> {
      * @throws ParseException the parse exception
      */
     @Override
-    public List<View> parse(String location, byte[] content) throws ParseException {
+    protected List<View> parseImpl(String location, byte[] content) throws ParseException {
         View view = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), View.class);
         Configuration.configureObject(view);
         view.setLocation(location);

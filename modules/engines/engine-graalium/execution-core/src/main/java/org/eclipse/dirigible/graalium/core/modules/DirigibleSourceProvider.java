@@ -18,6 +18,7 @@ import org.eclipse.dirigible.repository.api.IResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,6 +45,7 @@ public class DirigibleSourceProvider implements JavascriptSourceProvider {
      */
     @Override
     public Path getAbsoluteSourcePath(String projectName, String projectFileName) {
+
         String projectFilePath = Path.of(projectName, projectFileName)
                                      .toString();
         String internalRepositoryRelativeSourcePath = getInternalRepositoryRelativeSourcePath(projectFilePath);

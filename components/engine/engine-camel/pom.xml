@@ -72,8 +72,8 @@
 			</plugin>
 		</plugins>
 	</build>
-	<dependencies>
 
+	<dependencies>
 		<!-- Core -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
@@ -88,18 +88,23 @@
 		<!-- Library -->
 		<dependency>
 			<groupId>org.apache.camel.springboot</groupId>
+			<artifactId>camel-opentelemetry-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel.springboot</groupId>
+			<artifactId>camel-micrometer-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel.springboot</groupId>
 			<artifactId>camel-spring-boot-starter</artifactId>
-			<version>${camel.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.camel.springboot</groupId>
 			<artifactId>camel-platform-http-starter</artifactId>
-			<version>${camel.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.camel.springboot</groupId>
 			<artifactId>camel-yaml-dsl-starter</artifactId>
-			<version>${camel.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.camel</groupId>
@@ -151,6 +156,19 @@
 			<artifactId>dirigible-components-engine-javascript</artifactId>
 		</dependency>
 	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.apache.camel.springboot</groupId>
+				<artifactId>camel-spring-boot-bom</artifactId>
+				<version>${camel.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
 
 
 

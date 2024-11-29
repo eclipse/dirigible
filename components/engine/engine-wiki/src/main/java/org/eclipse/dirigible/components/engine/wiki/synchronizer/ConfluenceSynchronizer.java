@@ -115,7 +115,7 @@ public class ConfluenceSynchronizer extends BaseSynchronizer<Confluence, Long> {
      * @throws ParseException the parse exception
      */
     @Override
-    public List<Confluence> parse(String location, byte[] content) throws ParseException {
+    protected List<Confluence> parseImpl(String location, byte[] content) throws ParseException {
         Confluence wiki = new Confluence();
         Configuration.configureObject(wiki);
         wiki.setLocation(location);

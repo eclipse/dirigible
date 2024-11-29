@@ -9,11 +9,6 @@
  */
 package org.eclipse.dirigible.components.api.test;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,6 +22,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @WithMockUser
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -35,19 +35,22 @@ import org.springframework.web.context.WebApplicationContext;
 public class APIAssertTest {
 
     @Autowired
+    protected WebApplicationContext wac;
+    @Autowired
     private JavascriptService javascriptService;
-
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    protected WebApplicationContext wac;
 
     // @Autowired
     // private FilterChainProxy springSecurityFilterChain;
     //
     // @Autowired
     // private IRepository repository;
+
+
+    @SpringBootApplication
+    static class TestConfiguration {
+    }
 
     @Test
     public void successful() throws Exception {
@@ -71,9 +74,5 @@ public class APIAssertTest {
             assertTrue(e.getMessage()
                         .endsWith("Assertion 'assertTrue' failed"));
         }
-    }
-
-    @SpringBootApplication
-    static class TestConfiguration {
     }
 }

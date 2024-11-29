@@ -1,3 +1,4 @@
+#!/bin/sh
 # fail the whole script if any command bellow fails
 set -e
 
