@@ -3,19 +3,25 @@
  *
  * Do not modify the content as it may be re-generated again.
  */
-const perspectiveData = {
+const navigationData = {
 	id: '${projectName}-${fileName}',
-	name: 'Reports',
-	link: '/services/web/${projectName}/gen/${genFolderName}/ui/Reports/index.html',
+	label: '${title}',
+	group: 'reports',
 	order: 999,
-	icon: '/services/web/resources/unicons/dashboard.svg',
+	link: '/services/web/${projectName}/gen/${genFolderName}/ui/Reports/index.html',
 #if($perspectiveRole)
 	role: '${perspectiveRole}',
 #end
 };
 
+function getNavigation() {
+    return navigationData;
+}
+
 if (typeof exports !== 'undefined') {
-	exports.getPerspective = function () {
-		return perspectiveData;
+	exports.getNavigation = function () {
+		return navigationData;
 	}
 }
+
+export { getNavigation }
