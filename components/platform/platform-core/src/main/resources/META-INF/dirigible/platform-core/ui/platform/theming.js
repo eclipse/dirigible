@@ -12,8 +12,8 @@
 angular.module('platformTheming', ['platformExtensions'])
     .constant('ThemeHub', new ThemingHub())
     .provider('theming', function ThemingProvider() {
-        this.$get = ['Theming', 'Extensions', function editorsFactory(ThemeHub, Extensions) {
-            let theme = Theming.getSavedTheme();
+        this.$get = ['ThemeHub', 'Extensions', function editorsFactory(ThemeHub, Extensions) {
+            let theme = ThemeHub.getSavedTheme();
             let themes = [];
 
             Extensions.getThemes().then((response) => {
