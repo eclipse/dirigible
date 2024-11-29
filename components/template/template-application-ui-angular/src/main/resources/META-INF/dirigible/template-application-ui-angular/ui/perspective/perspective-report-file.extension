@@ -1,5 +1,5 @@
 {
     "module": "{{projectName}}/gen/{{genFolderName}}/ui/Reports/perspective.js",
-    "extensionPoint": "{{extensionPoint}}",
-    "description": "{{extensionPoint}} - Perspective - Reports"
+    "extensionPoint": "dashboard-navigations",
+    "description": "{{title}} - Navigation"
 }

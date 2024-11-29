@@ -5,17 +5,23 @@
  */
 const perspectiveData = {
 	id: '${projectName}-${fileName}',
-	name: 'Reports',
-	link: '/services/web/${projectName}/gen/${genFolderName}/ui/Reports/index.html',
+	label: '${title}',
+	group: 'reports',
 	order: 999,
-	icon: '/services/web/resources/unicons/dashboard.svg',
+	link: '/services/web/${projectName}/gen/${genFolderName}/ui/Reports/index.html',
 #if($perspectiveRole)
 	role: '${perspectiveRole}',
 #end
 };
+
+function getNavigation() {
+    return perspectiveData;
+}
 
 if (typeof exports !== 'undefined') {
 	exports.getPerspective = function () {
 		return perspectiveData;
 	}
 }
+
+export { getNavigation }
