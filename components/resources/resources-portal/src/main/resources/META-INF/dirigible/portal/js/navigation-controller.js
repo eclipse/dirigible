@@ -4,6 +4,65 @@ navigation.controller("LaunchpadViewController", ["$scope", "messageHub", "$http
 
     $scope.extraExtensionPoints = ['app', "dashboard-navigations", "dashboard-widgets"];
     $scope.groups = [];
+    $scope.groupItems = [];
+
+    function loadNavigationGroups() {
+        return $http.get("/services/js/portal/api/NavigationGroupsExtension/NavigationGroupsService.js")
+            .then(function (response) {
+                $scope.groups = response.data;
+
+                response.data.forEach(elem => {
+                    $scope.groupItems[elem.label.toLowerCase()] = [];
+                });
+            })
+            .catch(function (error) {
+                console.error('Error fetching navigation groups:', error);
+                $scope.state = { error: true, errorMessage: 'Failed to load navigation groups' };
+                return async () => { };
+            });
+    }
+
+    function loadNavigationItems() {
+        return $http.get("/services/js/portal/api/NavigationExtension/NavigationService.js")
+            .then(function (response) {
+                $scope.navigationList = response.data;
+
+                $scope.navigationList.forEach(e => addNavigationItem(e));
+
+                Object.values($scope.groupItems).forEach(items => {
+                    items.sort((a, b) => a.order - b.order);
+                });
+            })
+            .catch(function (error) {
+                console.error('Error fetching navigation items:', error);
+                $scope.state = { error: true, errorMessage: 'Failed to load navigation items' };
+            });
+    }
+
+    function addNavigationItem(itemData) {
+        if (!itemData || !itemData.label || !itemData.group || !itemData.order || !itemData.link) {
+            console.error('Invalid item data:', itemData);
+            return;
+        }
+
+        const groupKey = itemData.group.toLowerCase();
+        if (!$scope.groupItems[groupKey]) {
+            console.error('Group key not found:', groupKey);
+            return;
+        }
+
+        $scope.groupItems[groupKey].push({
+            id: itemData.id,
+            label: itemData.label,
+            link: itemData.link
+        });
+    }
+
+    loadNavigationGroups()
+        .then(loadNavigationItems)
+        .catch(function (error) {
+            console.error('Error during initialization:', error);
+        });
 
     $scope.switchView = function (id, event) {
         if (event) event.stopPropagation();
@@ -22,62 +81,4 @@ navigation.controller("LaunchpadViewController", ["$scope", "messageHub", "$http
             $scope.switchView(msg.data.viewId);
         });
     }, true)
-
-    $scope.groupItems = [];
-    $scope.groupItems['assets'] = [];
-    $scope.groupItems["purchasing"] = [];
-    $scope.groupItems["sales"] = [];
-    $scope.groupItems["inventory"] = [];
-    $scope.groupItems["reports"] = [];
-    $scope.groupItems["products"] = [];
-    $scope.groupItems["employees"] = [];
-    $scope.groupItems["partners"] = [];
-    $scope.groupItems["configurations"] = [];
-
-
-    $scope.groups = [
-        { "label": "Assets", "icon": "it-host" },
-        { "label": "Purchasing", "icon": "credit-card" },
-        { "label": "Sales", "icon": "currency" },
-        { "label": "Inventory", "icon": "retail-store" },
-        { "label": "Reports", "icon": "area-chart" },
-        { "label": "Products", "icon": "product" },
-        { "label": "Employees", "icon": "company-view" },
-        { "label": "Partners", "icon": "customer-and-contacts" },
-        { "label": "Configurations", "icon": "wrench" }
-    ]
-
-    $http.get("/services/js/portal/api/NavigationExtension/NavigationService.js")
-        .then(function (response) {
-            $scope.navigationList = response.data;
-
-            $scope.navigationList.forEach(e => addNavigationItem(e));
-
-            $scope.groupItems.forEach(e => e.sort((a, b) => a.order - b.order));
-
-        })
-        .catch(function (error) {
-            console.error('Error fetching navigation list:', error);
-            $scope.state.error = true;
-            $scope.errorMessage = 'Failed to load navigation list';
-        });
-
-    function addNavigationItem(itemData) {
-        if (!itemData || !itemData.label || !itemData.group || !itemData.order || !itemData.link) {
-            console.error('Invalid item data:', itemData);
-            return;
-        }
-
-        itemData.group = itemData.group.toLowerCase();
-        if (!$scope.groupItems[itemData.group]) {
-            console.error('Group key not found:', itemData.group);
-            return;
-        }
-
-        $scope.groupItems[itemData.group].push({
-            "id": itemData.id,
-            "label": itemData.label,
-            "link": itemData.link
-        });
-    }
 }]);
