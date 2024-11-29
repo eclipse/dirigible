@@ -74,10 +74,11 @@ cd <path_to_dirigible_git_repo>
 | OpenSearch Dashboards | http://localhost:5601         | OpenSearch UI              |
 
 #### Run OpenTelemetry sample application
-The application is located at [open-telemetry-sample-project.zip](dirigible-sample-project/open-telemetry-sample-project.zip).<br>
+The application is located in [this GitHub repository](https://github.com/dirigiblelabs/sample-open-telemetry).<br>
 Steps:
-   - Open Dirigible UI and import the zip
-   - Publish the project
+   - Open Dirigible UI
+   - Open the git perspective and clone the project
+   - Go to the workbench perspective and publish the project
    - To test traces and metrics:
       - Trigger BPM process using POST to http://localhost:8080/services/ts/open-telemetry-sample-project/bpm/process-trigger-service.ts
       - Call Camel HTTP route using GET to http://localhost:8080/services/integrations/test-camel-route
