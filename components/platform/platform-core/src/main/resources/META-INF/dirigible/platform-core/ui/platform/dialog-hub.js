@@ -17,7 +17,7 @@ const AlertTypes = {
     Information: 'information'
 };
 
-class DialogApi extends MessageHubApi {
+class DialogHub extends MessageHubApi {
     constructor(viewId) {
         super();
         this.viewId = viewId || location.pathname;

@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-class StatusBarApi extends MessageHubApi {
+class StatusBarHub extends MessageHubApi {
     /**
      * Shows a message in the status bar.
      * @param {string} message - Message text.

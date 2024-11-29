@@ -11,8 +11,8 @@
  */
 const consoleView = angular.module('console', ['blimpKit', 'platformView']);
 consoleView.controller('ConsoleController', ($scope, uuid) => {
-    const notificationApi = new NotificationApi();
-    const statusBarApi = new StatusBarApi();
+    const notificationHub = new NotificationHub();
+    const statusBarHub = new StatusBarHub();
     $scope.allLogs = [];
     $scope.logs = [];
     $scope.search = { text: '' };
@@ -106,7 +106,7 @@ consoleView.controller('ConsoleController', ($scope, uuid) => {
                     scrollToBottom();
 
                     if (record.level === 'ERROR' || record.level === 'WARN') {
-                        statusBarApi.showError(record.message);
+                        statusBarHub.showError(record.message);
                     }
                 }
             };
@@ -118,7 +118,7 @@ consoleView.controller('ConsoleController', ($scope, uuid) => {
                     date: new Date().toISOString()
                 };
                 consoleLogMessage(record);
-                notificationApi.show({ type: 'negative', title: 'Console View', description: record.message });
+                notificationHub.show({ type: 'negative', title: 'Console View', description: record.message });
             };
         }
     }

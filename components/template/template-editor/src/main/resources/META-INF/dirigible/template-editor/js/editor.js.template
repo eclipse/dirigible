@@ -13,11 +13,12 @@ const editor = angular.module('editor', [
     'blimpKit',
     'platformView',
     'platformShortcuts', // Enable shortcut functionality, using the 'shortcut' directive
-    'WorkspaceService']); // Include the WorkspaceService for working with files
+    'WorkspaceService', // Include the WorkspaceService for working with files
+]);
 editor.controller('EditorController', function ($scope, $window, WorkspaceService, ViewParameters) {
-    const statusBarApi = new StatusBarApi(); // This is an API based on MessageHub for communicating with the shell's status bar
-    const workspaceApi = new WorkspaceApi(); // This is an API based on MessageHub for triggering and receiving file related events
-    const layoutApi = new LayoutApi(); // This is an API based on MessageHub for communicating with the layout
+    const statusBarHub = new StatusBarHub(); // This is an API based on MessageHub for communicating with the shell's status bar
+    const workspaceHub = new WorkspaceHub(); // This is an API based on MessageHub for triggering and receiving file related events
+    const layoutHub = new LayoutHub(); // This is an API based on MessageHub for communicating with the layout
     $scope.state = {
         isBusy: true,
         error: false,
@@ -29,12 +30,12 @@ editor.controller('EditorController', function ($scope, $window, WorkspaceServic
 
     // When the editor is focused, clean the status bar label (or set the proper one).
     angular.element($window).bind('focus', () => {
-        statusBarApi.showLabel('');
+        statusBarHub.showLabel('');
     });
 
     // Whenever there is a change to the file model, mark the file as dirty
     $scope.modelChange = () => {
-        workspaceApi.setFileDirty({
+        workspaceHub.setFileDirty({
             path: $scope.dataParameters.filePath,
             dirty: true,
         });
@@ -46,7 +47,7 @@ editor.controller('EditorController', function ($scope, $window, WorkspaceServic
             $scope.state.isBusy = true;
             WorkspaceService.saveContent($scope.dataParameters.filePath, $scope.file.model).then(() => {
                 // Clean the dirty status, once the file has been saved.
-                workspaceApi.setFileDirty({
+                workspaceHub.setFileDirty({
                     path: $scope.dataParameters.filePath,
                     dirty: false,
                 });
@@ -82,12 +83,12 @@ editor.controller('EditorController', function ($scope, $window, WorkspaceServic
     };
 
     // If the editor has been focused from the outside, clean the status bar label (or set the proper one).
-    layoutApi.onFocusView((data) => {
-        if (data.params && data.params.resourcePath === $scope.dataParameters.filePath) statusBarApi.showLabel('');
+    layoutHub.onFocusView((data) => {
+        if (data.params && data.params.resourcePath === $scope.dataParameters.filePath) statusBarHub.showLabel('');
     });
 
     // If the file changes (rename, move, etc) outside the editor, parameters will be changed and should be reloaded.
-    workspaceApi.onReloadEditorParams((data) => {
+    workspaceHub.onReloadEditorParams((data) => {
         if (data.path === $scope.dataParameters.filePath) {
             $scope.$evalAsync(() => {
                 $scope.dataParameters = ViewParameters.get();

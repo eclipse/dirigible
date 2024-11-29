@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-class RepositoryApi extends MessageHubApi {
+class RepositoryHub extends MessageHubApi {
     /**
      * Sends a message containing information on what has changed.
      * @param {string} [data] - Any information.

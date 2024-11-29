@@ -11,12 +11,12 @@
  */
 const general = angular.module('general', ['ngCookies', 'blimpKit', 'platformView']);
 general.controller('GeneralController', ($scope, $http, $cookies, theming, ButtonStates) => {
-    const dialogApi = new DialogApi();
-    const themingApi = new ThemingApi();
+    const dialogHub = new DialogHub();
+    const themingHub = new ThemingHub();
     $scope.themes = [];
-    const themesLoadedListener = themingApi.onThemesLoaded(() => {
+    const themesLoadedListener = themingHub.onThemesLoaded(() => {
         $scope.$apply(() => $scope.themes = theming.getThemes());
-        themingApi.removeMessageListener(themesLoadedListener)
+        themingHub.removeMessageListener(themesLoadedListener)
     });
     $scope.currentTheme = theming.getCurrentTheme();
 
@@ -27,7 +27,7 @@ general.controller('GeneralController', ($scope, $http, $cookies, theming, Butto
     };
 
     $scope.resetAll = () => {
-        dialogApi.showDialog({
+        dialogHub.showDialog({
             title: `Reset ${brandingInfo.brand}`,
             message: `This will clear all settings, open tabs and cache.\n${brandingInfo.brand} will then reload.\nDo you wish to continue?`,
             buttons: [
@@ -37,7 +37,7 @@ general.controller('GeneralController', ($scope, $http, $cookies, theming, Butto
             closeButton: false
         }).then((buttonId) => {
             if (buttonId === 'yes') {
-                dialogApi.showBusyDialog('Resetting...');
+                dialogHub.showBusyDialog('Resetting...');
                 localStorage.clear();
                 theming.reset();
                 $http.get('/services/js/platform-core/services/clear-cache.js').then(() => {
@@ -49,8 +49,8 @@ general.controller('GeneralController', ($scope, $http, $cookies, theming, Butto
                     location.reload();
                 }, (error) => {
                     console.error(error);
-                    dialogApi.closeBusyDialog();
-                    dialogApi.showAlert({
+                    dialogHub.closeBusyDialog();
+                    dialogHub.showAlert({
                         title: 'Failed to reset',
                         message: 'There was an error during the reset process. Please refresh manually.',
                         type: AlertTypes.Error,

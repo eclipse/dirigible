@@ -15,8 +15,8 @@ previewView.controller('PreviewController', ($scope, ViewParameters, ButtonState
         'container': 'layout',
         'perspectiveId': 'workbench'
     };
-    const workspaceApi = new WorkspaceApi();
-    const dialogApi = new DialogApi();
+    const workspaceHub = new WorkspaceHub();
+    const dialogHub = new DialogHub();
     let customParamsId = `${brandingInfo.keyPrefix}.preview.customParameters`;
     let urlLockedId = `${brandingInfo.keyPrefix}.preview.urlLocked`;
     let inDebugPerspective = false;
@@ -220,7 +220,7 @@ previewView.controller('PreviewController', ($scope, ViewParameters, ButtonState
     };
 
     $scope.customizeParameters = (custom) => {
-        dialogApi.showFormDialog({
+        dialogHub.showFormDialog({
             title: 'Set custom ViewParameters',
             subheader: 'Data will be accessible through the "ViewParameters.get()" function.',
             form: {
@@ -245,7 +245,7 @@ previewView.controller('PreviewController', ($scope, ViewParameters, ButtonState
                         $scope.reload();
                     });
                 } catch (error) {
-                    dialogApi.showAlert({
+                    dialogHub.showAlert({
                         title: 'Invalid input',
                         message: 'Not a valid JSON',
                         type: AlertTypes.Error,
@@ -262,7 +262,7 @@ previewView.controller('PreviewController', ($scope, ViewParameters, ButtonState
         });
     };
 
-    workspaceApi.onFileSelected((fileDescriptor) => {
+    workspaceHub.onFileSelected((fileDescriptor) => {
         if ($scope.urlLocked) return;
         const pathSegments = fileDescriptor.path.split('/');
         pathSegments.splice(1, 1);
@@ -270,7 +270,7 @@ previewView.controller('PreviewController', ($scope, ViewParameters, ButtonState
         if (url) $scope.$apply($scope.gotoUrl(url, false));
     });
 
-    workspaceApi.onPublished((fileDescriptor) => {
+    workspaceHub.onPublished((fileDescriptor) => {
         if ($scope.urlLocked) return;
 
         if (fileDescriptor.path) {
@@ -281,7 +281,7 @@ previewView.controller('PreviewController', ($scope, ViewParameters, ButtonState
         } else $scope.$apply($scope.reload());
     });
 
-    workspaceApi.onUnpublished((fileDescriptor) => {
+    workspaceHub.onUnpublished((fileDescriptor) => {
         if ($scope.urlLocked) return;
 
         if (fileDescriptor.path) {

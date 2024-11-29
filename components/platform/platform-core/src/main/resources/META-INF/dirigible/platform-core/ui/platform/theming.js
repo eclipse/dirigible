@@ -10,10 +10,10 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 angular.module('platformTheming', ['platformExtensions'])
-    .constant('themingApi', new ThemingApi())
+    .constant('ThemeHub', new ThemingHub())
     .provider('theming', function ThemingProvider() {
-        this.$get = ['themingApi', 'Extensions', function editorsFactory(themingApi, Extensions) {
-            let theme = themingApi.getSavedTheme();
+        this.$get = ['Theming', 'Extensions', function editorsFactory(ThemeHub, Extensions) {
+            let theme = Theming.getSavedTheme();
             let themes = [];
 
             Extensions.getThemes().then((response) => {
@@ -30,7 +30,7 @@ angular.module('platformTheming', ['platformExtensions'])
                         }
                     }
                 }
-                themingApi.themesLoaded();
+                ThemeHub.themesLoaded();
             });
 
             function setTheme(themeId, sendEvent = true) {
@@ -42,9 +42,9 @@ angular.module('platformTheming', ['platformExtensions'])
             }
 
             function setThemeObject(themeObj, sendEvent = true) {
-                themingApi.setSavedTheme(themeObj);
+                ThemeHub.setSavedTheme(themeObj);
                 theme = themeObj;
-                if (sendEvent) themingApi.themeChanged({
+                if (sendEvent) ThemeHub.themeChanged({
                     id: themeObj.id,
                     type: themeObj.type,
                     links: themeObj.links
@@ -68,11 +68,11 @@ angular.module('platformTheming', ['platformExtensions'])
             }
         }];
     })
-    .factory('Theme', ['theming', 'themingApi', function (_theming, themingApi) { // theming must be injected to set defaults
-        let theme = themingApi.getSavedTheme();
+    .factory('Theme', ['theming', 'ThemeHub', function (_theming, ThemeHub) { // theming must be injected to set defaults
+        let theme = ThemeHub.getSavedTheme();
         return {
             reload: () => {
-                theme = themingApi.getSavedTheme();
+                theme = ThemeHub.getSavedTheme();
             },
             getLinks: () => {
                 return theme.links || [];
@@ -84,19 +84,19 @@ angular.module('platformTheming', ['platformExtensions'])
                 return theme;
             },
         }
-    }]).directive('theme', (Theme, themingApi) => ({
+    }]).directive('theme', (Theme, ThemeHub) => ({
         restrict: 'E',
         replace: true,
         transclude: false,
         link: (scope) => {
             scope.links = Theme.getLinks();
-            const themeChangeListener = themingApi.onThemeChange((themeData) => {
+            const themeChangeListener = ThemeHub.onThemeChange((themeData) => {
                 scope.$applyAsync(() => {
                     scope.links = themeData.links;
                 });
             });
             scope.$on('$destroy', () => {
-                themingApi.removeMessageListener(themeChangeListener);
+                ThemeHub.removeMessageListener(themeChangeListener);
             });
         },
         template: '<link type="text/css" rel="stylesheet" ng-repeat="link in links" ng-href="{{ link }}">'

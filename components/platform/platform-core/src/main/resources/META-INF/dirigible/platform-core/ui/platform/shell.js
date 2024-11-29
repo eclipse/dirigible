@@ -52,7 +52,7 @@ angular.module('platformShell', ['ngCookies', 'platformUser', 'platformExtension
         }
     })
     .constant('MessageHub', new MessageHubApi())
-    .constant('Layout', new LayoutApi())
+    .constant('Layout', new LayoutHub())
     .config(function config($compileProvider) {
         $compileProvider.debugInfoEnabled(false);
         $compileProvider.commentDirectivesEnabled(false);
@@ -62,7 +62,7 @@ angular.module('platformShell', ['ngCookies', 'platformUser', 'platformExtension
         replace: true,
         link: (scope, element) => {
             const notificationStateKey = `${brandingInfo.keyPrefix}.notifications`;
-            const dialogApi = new DialogApi();
+            const dialogHub = new DialogHub();
             scope.perspectiveId = shellState.perspective.id;
             shellState.registerStateListener((data) => {
                 scope.perspectiveId = data.id;
@@ -157,7 +157,7 @@ angular.module('platformShell', ['ngCookies', 'platformUser', 'platformExtension
                 } else if (item.action === 'showPerspective') {
                     Layout.showPerspective({ id: item.id });
                 } else if (item.action === 'openWindow') {
-                    dialogApi.showWindow({
+                    dialogHub.showWindow({
                         hasHeader: item.hasHeader,
                         id: item.id
                     });
@@ -352,13 +352,13 @@ angular.module('platformShell', ['ngCookies', 'platformUser', 'platformExtension
         restrict: 'E',
         replace: true,
         link: (scope) => {
-            const notificationApi = new NotificationApi();
+            const notificationHub = new NotificationHub();
             scope.notification = {
                 type: '',
                 title: '',
                 description: '',
             };
-            const onNotificationListener = notificationApi.onShow((data) => {
+            const onNotificationListener = notificationHub.onShow((data) => {
                 scope.$applyAsync(() => {
                     scope.notification.type = data.type ?? 'information';
                     scope.notification.title = data.title;
@@ -374,7 +374,7 @@ angular.module('platformShell', ['ngCookies', 'platformUser', 'platformExtension
             scope.hide = () => {
                 scope.notification.type = '';
             };
-            scope.$on('$destroy', () => notificationApi.removeMessageListener(onNotificationListener));
+            scope.$on('$destroy', () => notificationHub.removeMessageListener(onNotificationListener));
         },
         template: `<div ng-if="notification.type" class="notification-overlay">
             <bk-notification is-banner="true" style="width: 100%; max-width:33rem">
@@ -395,20 +395,20 @@ angular.module('platformShell', ['ngCookies', 'platformUser', 'platformExtension
         restrict: 'E',
         replace: true,
         link: (scope) => {
-            const statusBarApi = new StatusBarApi();
+            const statusBarHub = new StatusBarHub();
             scope.busy = '';
             scope.message = '';
             scope.label = '';
             scope.error = '';
-            const busyListener = statusBarApi.onBusy((text) => scope.$apply(() => scope.busy = text));
-            const messageListener = statusBarApi.onMessage((message) => scope.$apply(() => scope.message = message));
-            const errorListener = statusBarApi.onError((message) => scope.$apply(() => scope.error = message));
-            const labelListener = statusBarApi.onLabel((label) => scope.$apply(() => scope.label = label));
+            const busyListener = statusBarHub.onBusy((text) => scope.$apply(() => scope.busy = text));
+            const messageListener = statusBarHub.onMessage((message) => scope.$apply(() => scope.message = message));
+            const errorListener = statusBarHub.onError((message) => scope.$apply(() => scope.error = message));
+            const labelListener = statusBarHub.onLabel((label) => scope.$apply(() => scope.label = label));
             scope.$on('$destroy', () => {
-                statusBarApi.removeMessageListener(busyListener);
-                statusBarApi.removeMessageListener(messageListener);
-                statusBarApi.removeMessageListener(errorListener);
-                statusBarApi.removeMessageListener(labelListener);
+                statusBarHub.removeMessageListener(busyListener);
+                statusBarHub.removeMessageListener(messageListener);
+                statusBarHub.removeMessageListener(errorListener);
+                statusBarHub.removeMessageListener(labelListener);
             });
         },
         template: `<div class="statusbar">

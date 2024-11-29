@@ -10,17 +10,17 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 const projectsView = angular.module('projects', ['blimpKit', 'platformView', 'platformShortcuts', 'platformEditors', 'WorkspaceService', 'PublisherService', 'TemplatesService', 'GenerateService', 'TransportService', 'ActionsService']);
-projectsView.constant('StatusBarAPI', new StatusBarApi());
-projectsView.constant('DialogAPI', new DialogApi());
-projectsView.constant('WorkspaceAPI', new WorkspaceApi());
-projectsView.constant('ContextMenuAPI', new ContextMenuApi());
+projectsView.constant('StatusBar', new StatusBarHub());
+projectsView.constant('Dialogs', new DialogHub());
+projectsView.constant('Workspace', new WorkspaceHub());
+projectsView.constant('ContextMenu', new ContextMenuHub());
 projectsView.controller('ProjectsViewController', function (
     $scope,
     $document,
-    StatusBarAPI,
-    DialogAPI,
-    WorkspaceAPI,
-    ContextMenuAPI,
+    StatusBar,
+    Dialogs,
+    Workspace,
+    ContextMenu,
     WorkspaceService,
     Editors,
     PublisherService,
@@ -87,7 +87,7 @@ projectsView.controller('ProjectsViewController', function (
             },
             data: (node, cb) => {
                 if (node.id === '#') cb(projects);
-                else WorkspaceService.loadContent(node.data.path).then((response) => {
+                else WorkspaceService.list(node.data.path).then((response) => {
                     let children;
                     if (response.data.folders && response.data.files) {
                         children = processChildren(response.data.folders.concat(response.data.files));
@@ -98,7 +98,7 @@ projectsView.controller('ProjectsViewController', function (
                     }
                     cb(children);
                 }, () => {
-                    StatusBarAPI.showError(`There was an error while refreshing the contents of '${node.data.path}'`);
+                    StatusBar.showError(`There was an error while refreshing the contents of '${node.data.path}'`);
                     console.error(response);
                     $scope.$evalAsync(() => {
                         $scope.reloadWorkspace();
@@ -206,7 +206,7 @@ projectsView.controller('ProjectsViewController', function (
 
     jstreeWidget.on('select_node.jstree', (_event, data) => {
         if (data.event && data.event.type === 'click' && data.node.type === 'file') {
-            WorkspaceAPI.announceFileSelected({
+            Workspace.announceFileSelected({
                 path: data.node.data.path,
                 contentType: data.node.data.contentType,
                 params: { workspace: $scope.selectedWorkspace },
@@ -230,11 +230,11 @@ projectsView.controller('ProjectsViewController', function (
         }
         function onResponse(response) {
             if (response.status === 200) { // Move
-                WorkspaceAPI.getCurrentlyOpenedFiles().then((result) => {
+                Workspace.getCurrentlyOpenedFiles().then((result) => {
                     for (let r = 0; r < response.data.length; r++) {
                         for (let f = 0; f < result.length; f++) {
                             if (result[f].startsWith(response.data[r].from)) {
-                                WorkspaceAPI.announceFileMoved({
+                                Workspace.announceFileMoved({
                                     newPath: result[f].replace(response.data[r].from, response.data[r].to),
                                     oldPath: result[f],
                                 });
@@ -254,13 +254,13 @@ projectsView.controller('ProjectsViewController', function (
                 $scope.reloadWorkspace();
             });
             if (pasteObj.mode !== 'copy_node' && pasteObj.node.length > 1)
-                StatusBarAPI.showError(`Unable to move ${pasteObj.node.length} objects.`);
+                StatusBar.showError(`Unable to move ${pasteObj.node.length} objects.`);
             else if (pasteObj.mode !== 'copy_node' && pasteObj.node.length === 1)
-                StatusBarAPI.showError(`Unable to move '${pasteObj.node[0].text}'.`);
+                StatusBar.showError(`Unable to move '${pasteObj.node[0].text}'.`);
             if (pasteObj.mode === 'copy_node' && pasteObj.node.length > 1)
-                StatusBarAPI.showError(`Unable to copy ${pasteObj.node.length} objects.`);
+                StatusBar.showError(`Unable to copy ${pasteObj.node.length} objects.`);
             else if (pasteObj.mode === 'copy_node' && pasteObj.node.length === 1)
-                StatusBarAPI.showError(`Unable to copy '${pasteObj.node[0].text}'.`);
+                StatusBar.showError(`Unable to copy '${pasteObj.node[0].text}'.`);
         }
 
         if (pasteObj.mode === 'copy_node') {
@@ -270,7 +270,7 @@ projectsView.controller('ProjectsViewController', function (
                 for (let i = 0; i < parent.children.length; i++) {
                     const node = jstreeWidget.jstree(true).get_node(parent.children[i]);
                     if (node.text === pasteObj.node[pIndex].text && node.id !== pasteObj.node[pIndex].id) {
-                        DialogAPI.showAlert({
+                        Dialogs.showAlert({
                             title: 'Could not move',
                             message: 'The destination contains a file/folder with the same name.',
                             type: AlertTypes.Error,
@@ -612,7 +612,7 @@ projectsView.controller('ProjectsViewController', function (
                     }
                 }
             }
-            ContextMenuAPI.showContextMenu({
+            ContextMenu.showContextMenu({
                 ariaLabel: 'projects view contextmenu',
                 posX: event.clientX,
                 posY: event.clientY,
@@ -670,7 +670,7 @@ projectsView.controller('ProjectsViewController', function (
                     } else if (id === 'unpublishAll') {
                         unpublishAll();
                     } else if (id === 'import' || id === 'importZip') {
-                        DialogAPI.showWindow({
+                        Dialogs.showWindow({
                             hasHeader: true,
                             id: 'importWindow',
                             params: {
@@ -687,7 +687,7 @@ projectsView.controller('ProjectsViewController', function (
                     } else if (id === 'actionsProject') {
                         actionData.project = contextMenuNodes[0].text;
                         actionData.workspace = $scope.selectedWorkspace;
-                        DialogAPI.showFormDialog({
+                        Dialogs.showFormDialog({
                             title: 'Enter the action to execute',
                             form: {
                                 'fdti1': {
@@ -709,7 +709,7 @@ projectsView.controller('ProjectsViewController', function (
                             console.error(error);
                         });
                     } else if (id === 'regenerateModel') {
-                        DialogAPI.showBusyDialog('Regenerating...');
+                        Dialogs.showBusyDialog('Regenerating...');
                         WorkspaceService.loadContent(contextMenuNodes[0].data.path).then((response) => {
                             gmodel.nodeParents = contextMenuNodes[0].parents;
                             gmodel.project = response.data.projectName;
@@ -717,8 +717,8 @@ projectsView.controller('ProjectsViewController', function (
                             let { models, perspectives, templateId, filePath, workspaceName, projectName, ...params } = response.data;
                             gmodel.parameters = params;
                             if (!response.data.templateId) {
-                                DialogAPI.closeBusyDialog();
-                                DialogAPI.showFormDialog({
+                                Dialogs.closeBusyDialog();
+                                Dialogs.showFormDialog({
                                     title: 'Choose template',
                                     form: {
                                         'pgfd1': {
@@ -735,7 +735,7 @@ projectsView.controller('ProjectsViewController', function (
                                 }).then((form) => {
                                     if (form) {
                                         gmodel.templateId = form['pgfd1'];
-                                        DialogAPI.showBusyDialog('Regenerating from model...');
+                                        Dialogs.showBusyDialog('Regenerating from model...');
                                         generateModel(true);
                                     }
                                 }, (error) => {
@@ -743,12 +743,12 @@ projectsView.controller('ProjectsViewController', function (
                                 });
                             } else {
                                 gmodel.templateId = response.data.templateId;
-                                DialogAPI.showBusyDialog('Regenerating from model...');
+                                Dialogs.showBusyDialog('Regenerating from model...');
                                 generateModel(true);
                             }
                         }, (response) => {
-                            DialogAPI.closeBusyDialog();
-                            DialogAPI.showAlert({
+                            Dialogs.closeBusyDialog();
+                            Dialogs.showAlert({
                                 title: 'Unable to load file',
                                 message: 'There was an error while loading the file. See the log for more information.',
                                 type: AlertTypes.Error,
@@ -781,7 +781,7 @@ projectsView.controller('ProjectsViewController', function (
                                 project = contextMenuNodes[0].text;
                                 generatePath = '/filename';
                             }
-                            DialogAPI.showFormDialog({
+                            Dialogs.showFormDialog({
                                 title: 'Generate from template',
                                 form: {
                                     'pgfd1': {
@@ -827,22 +827,22 @@ projectsView.controller('ProjectsViewController', function (
                                         template.id,
                                         template.parameters
                                     ).then(() => {
-                                        StatusBarAPI.showMessage('Successfully generated from template.');
+                                        StatusBar.showMessage('Successfully generated from template.');
                                         jstreeWidget.jstree(true).refresh_node(getProjectNode(nodeParents));
                                     }, (response) => {
                                         console.error(response);
-                                        DialogAPI.showAlert({
+                                        Dialogs.showAlert({
                                             title: 'Failed to generate from template',
                                             message: `An unexpected error has occurred while trying generate from template '${template.name}'`,
                                             type: AlertTypes.Error,
                                             preformatted: false,
                                         });
-                                        StatusBarAPI.showError(`Unable to generate from template '${template.name}'`);
+                                        StatusBar.showError(`Unable to generate from template '${template.name}'`);
                                     });
                                 }
                             }, (error) => {
                                 console.error(error);
-                                DialogAPI.showAlert({
+                                Dialogs.showAlert({
                                     title: 'Failed to generate from template',
                                     message: 'An unexpected error has occurred.',
                                     type: AlertTypes.Error,
@@ -853,7 +853,7 @@ projectsView.controller('ProjectsViewController', function (
                             let pnode = getProjectNode(contextMenuNodes[0].parents);
                             project = pnode.text;
                             const templateItems = getModelTemplates(getFileExtension(contextMenuNodes[0].text));
-                            DialogAPI.showFormDialog({
+                            Dialogs.showFormDialog({
                                 title: 'Generate from template',
                                 form: {
                                     'pgfd1': {
@@ -947,7 +947,7 @@ projectsView.controller('ProjectsViewController', function (
 
     function generateFromModelHandler(form) {
         if (form) {
-            DialogAPI.showBusyDialog('Generating...');
+            Dialogs.showBusyDialog('Generating...');
             if (gmodel.model === '') {
                 gmodel.templateId = form['pgfd1'];
                 gmodel.project = form['pgfd2'];
@@ -983,8 +983,8 @@ projectsView.controller('ProjectsViewController', function (
                     }
                 }
                 if (Object.keys(newForm).length > 0) {
-                    DialogAPI.closeBusyDialog();
-                    DialogAPI.showFormDialog({
+                    Dialogs.closeBusyDialog();
+                    Dialogs.showFormDialog({
                         title: 'Generate from template',
                         form: newForm,
                         submitLabel: 'Generate',
@@ -1008,7 +1008,7 @@ projectsView.controller('ProjectsViewController', function (
 
     function generateFromModelErrorHandler(error) {
         console.error(error);
-        DialogAPI.showAlert({
+        Dialogs.showAlert({
             title: 'Failed to generate from template',
             message: 'An unexpected error has occurred.',
             type: AlertTypes.Error,
@@ -1039,7 +1039,7 @@ projectsView.controller('ProjectsViewController', function (
             console.error(response);
             $scope.state.error = true;
             $scope.errorMessage = 'Unable to load workspace list.';
-            StatusBarAPI.showError('Unable to load workspace list');
+            StatusBar.showError('Unable to load workspace list');
         });
     };
 
@@ -1077,7 +1077,7 @@ projectsView.controller('ProjectsViewController', function (
             $scope.state.isBusy = false;
             $scope.state.error = true;
             $scope.errorMessage = 'Unable to load workspace data.';
-            StatusBarAPI.showError('Unable to load workspace data');
+            StatusBar.showError('Unable to load workspace data');
         });
     };
 
@@ -1097,7 +1097,7 @@ projectsView.controller('ProjectsViewController', function (
             }
         }, (response) => {
             console.error(response);
-            StatusBarAPI.showError('Unable to load menu template list');
+            StatusBar.showError('Unable to load menu template list');
         });
         TemplatesService.listTemplates().then((response) => {
             for (let i = 0; i < response.data.length; i++) {
@@ -1110,61 +1110,61 @@ projectsView.controller('ProjectsViewController', function (
             }
         }, (response) => {
             console.error(response);
-            StatusBarAPI.showError('Unable to load template list');
+            StatusBar.showError('Unable to load template list');
         });
     };
 
     $scope.publishAll = () => {
-        StatusBarAPI.showBusy('Publishing projects...');
+        StatusBar.showBusy('Publishing projects...');
         PublisherService.publish(`/${$scope.selectedWorkspace}/*`).then(() => {
-            StatusBarAPI.hideBusy();
-            StatusBarAPI.showMessage(`Published all projects in '${$scope.selectedWorkspace}'`);
-            WorkspaceAPI.announcePublished({ path: `/${$scope.selectedWorkspace}` });
+            StatusBar.hideBusy();
+            StatusBar.showMessage(`Published all projects in '${$scope.selectedWorkspace}'`);
+            Workspace.announcePublished({ path: `/${$scope.selectedWorkspace}` });
         }, (response) => {
             console.error(response);
-            StatusBarAPI.hideBusy();
-            StatusBarAPI.showError(`Unable to publish projects in '${$scope.selectedWorkspace}'`);
+            StatusBar.hideBusy();
+            StatusBar.showError(`Unable to publish projects in '${$scope.selectedWorkspace}'`);
         });
     };
 
     function unpublishAll() {
-        StatusBarAPI.showBusy('Unpublishing projects...');
+        StatusBar.showBusy('Unpublishing projects...');
         PublisherService.unpublish(`/${$scope.selectedWorkspace}/*`).then(() => {
-            StatusBarAPI.showMessage(`Unpublished all projects in '${$scope.selectedWorkspace}'`);
-            StatusBarAPI.hideBusy();
-            WorkspaceAPI.announceUnpublished({ path: `/${$scope.selectedWorkspace}` });
+            StatusBar.showMessage(`Unpublished all projects in '${$scope.selectedWorkspace}'`);
+            StatusBar.hideBusy();
+            Workspace.announceUnpublished({ path: `/${$scope.selectedWorkspace}` });
         }, (response) => {
             console.error(response);
-            StatusBarAPI.hideBusy();
-            StatusBarAPI.showError(`Unable to unpublish projects in '${$scope.selectedWorkspace}'`);
+            StatusBar.hideBusy();
+            StatusBar.showError(`Unable to unpublish projects in '${$scope.selectedWorkspace}'`);
         });
     };
 
     function publish(path, fileDescriptor, callback) {
-        StatusBarAPI.showBusy(`Publishing '${path}'...`);
+        StatusBar.showBusy(`Publishing '${path}'...`);
         PublisherService.publish(path).then(() => {
-            StatusBarAPI.hideBusy();
-            StatusBarAPI.showMessage(`Published '${path}'`);
+            StatusBar.hideBusy();
+            StatusBar.showMessage(`Published '${path}'`);
             if (callback) callback();
-            if (fileDescriptor) WorkspaceAPI.announcePublished(fileDescriptor);
+            if (fileDescriptor) Workspace.announcePublished(fileDescriptor);
         }, (response) => {
             console.error(response);
-            StatusBarAPI.hideBusy();
-            StatusBarAPI.showError(`Unable to publish '${path}'`);
+            StatusBar.hideBusy();
+            StatusBar.showError(`Unable to publish '${path}'`);
         });
     };
 
     function unpublish(path, fileDescriptor, callback) {
-        StatusBarAPI.showBusy(`Unpublishing '${path}'...`);
+        StatusBar.showBusy(`Unpublishing '${path}'...`);
         PublisherService.unpublish(path).then(() => {
-            StatusBarAPI.hideBusy();
-            StatusBarAPI.showMessage(`Unpublished '${path}'`);
+            StatusBar.hideBusy();
+            StatusBar.showMessage(`Unpublished '${path}'`);
             if (callback) callback();
-            if (fileDescriptor) WorkspaceAPI.announceUnpublished(fileDescriptor);
+            if (fileDescriptor) Workspace.announceUnpublished(fileDescriptor);
         }, (response) => {
             console.error(response);
-            StatusBarAPI.hideBusy();
-            StatusBarAPI.showError(`Unable to unpublish '${path}'`);
+            StatusBar.hideBusy();
+            StatusBar.showError(`Unable to unpublish '${path}'`);
         });
     };
 
@@ -1178,32 +1178,32 @@ projectsView.controller('ProjectsViewController', function (
 
     $scope.isPublishEnabled = () => PublisherService.isEnabled();
 
-    $scope.saveAll = () => WorkspaceAPI.saveAll();
+    $scope.saveAll = () => Workspace.saveAll();
 
     function deleteFileFolder(path, nodeId, type) {
         WorkspaceService.remove(path).then(() => {
-            StatusBarAPI.showMessage(`Deleted '${path}'.`);
-            if (type === 'file') WorkspaceAPI.announceFileDeleted({
+            StatusBar.showMessage(`Deleted '${path}'.`);
+            if (type === 'file') Workspace.announceFileDeleted({
                 path: path,
             });
-            else WorkspaceAPI.announceFolderDeleted({
+            else Workspace.announceFolderDeleted({
                 path: path,
             });
             jstreeWidget.jstree(true).delete_node(nodeId);
         }, (response) => {
             console.error(response);
-            StatusBarAPI.showMessage(`Unable to delete '${path}'.`);
+            StatusBar.showMessage(`Unable to delete '${path}'.`);
         });
     };
 
     function deleteProject(workspace, project, nodeId) {
         WorkspaceService.deleteProject(workspace, project).then(() => {
-            StatusBarAPI.showMessage(`Deleted '${project}'.`);
-            WorkspaceAPI.announceProjectDeleted({ project: project, workspace: workspace });
+            StatusBar.showMessage(`Deleted '${project}'.`);
+            Workspace.announceProjectDeleted({ project: project, workspace: workspace });
             jstreeWidget.jstree(true).delete_node(nodeId);
         }, (response) => {
             console.error(response);
-            StatusBarAPI.showError(`Unable to delete '${project}'.`);
+            StatusBar.showError(`Unable to delete '${project}'.`);
         });
     };
 
@@ -1212,7 +1212,7 @@ projectsView.controller('ProjectsViewController', function (
     };
 
     $scope.createProject = () => {
-        DialogAPI.showFormDialog({
+        Dialogs.showFormDialog({
             title: 'Create project',
             form: {
                 'pgfi1': {
@@ -1233,34 +1233,34 @@ projectsView.controller('ProjectsViewController', function (
             cancelLabel: 'Cancel',
         }).then((form) => {
             if (form) {
-                DialogAPI.showBusyDialog('Creating...');
+                Dialogs.showBusyDialog('Creating...');
                 WorkspaceService.createProject($scope.selectedWorkspace, form['pgfi1']).then(() => {
-                    DialogAPI.closeBusyDialog();
-                    StatusBarAPI.showMessage(`Created project '${form['pgfi1']}'`);
+                    Dialogs.closeBusyDialog();
+                    StatusBar.showMessage(`Created project '${form['pgfi1']}'`);
                     $scope.$evalAsync(() => {
                         $scope.reloadWorkspace();
                     });
                 }, (response) => {
                     console.error(response);
-                    DialogAPI.closeBusyDialog();
-                    DialogAPI.showAlert({
+                    Dialogs.closeBusyDialog();
+                    Dialogs.showAlert({
                         title: 'Failed to create project',
                         message: `An unexpected error has occurred while trying create a project named '${form['pgfi1']}'`,
                         type: AlertTypes.Error,
                         preformatted: false,
                     });
-                    StatusBarAPI.showError(`Unable to create project '${form['pgfi1']}'`);
+                    StatusBar.showError(`Unable to create project '${form['pgfi1']}'`);
                 });
             }
         }, (error) => {
             console.error(error);
-            DialogAPI.showAlert({
+            Dialogs.showAlert({
                 title: 'Failed to create project',
                 message: `An unexpected error has occurred while trying create a project named '${form['pgfi1']}'`,
                 type: AlertTypes.Error,
                 preformatted: false,
             });
-            StatusBarAPI.showError(`Unable to create project '${form['pgfi1']}'`);
+            StatusBar.showError(`Unable to create project '${form['pgfi1']}'`);
         });
     };
 
@@ -1317,14 +1317,14 @@ projectsView.controller('ProjectsViewController', function (
             },
             value: projectName,
         };
-        DialogAPI.showFormDialog({
+        Dialogs.showFormDialog({
             title: title,
             form: formItems,
             submitLabel: 'Duplicate',
             cancelLabel: 'Cancel',
         }).then((form) => {
             if (form) {
-                DialogAPI.showBusyDialog('Duplicating...');
+                Dialogs.showBusyDialog('Duplicating...');
                 let originalPath;
                 let duplicatePath = `/${form['pgfd1']}/${form['pgfi1']}`;
                 if (Object.prototype.hasOwnProperty.call(form, 'pgfd2')) {
@@ -1340,17 +1340,17 @@ projectsView.controller('ProjectsViewController', function (
                     originalPath = duplicateProjectData.originalPath;
                 }
                 WorkspaceService.copy(originalPath, duplicatePath).then(() => {
-                    DialogAPI.closeBusyDialog();
+                    Dialogs.closeBusyDialog();
                     if (form['pgfd1'] === $scope.selectedWorkspace)
                         $scope.$evalAsync(() => {
                             $scope.reloadWorkspace(); // Temporary solution
                         });
-                    StatusBarAPI.showMessage(`Duplicated '${originalPath}'`);
+                    StatusBar.showMessage(`Duplicated '${originalPath}'`);
                 }, (response) => {
                     console.error(response);
-                    DialogAPI.closeBusyDialog();
-                    StatusBarAPI.showError(`Unable to duplicate '${originalPath}'`);
-                    DialogAPI.showAlert({
+                    Dialogs.closeBusyDialog();
+                    StatusBar.showError(`Unable to duplicate '${originalPath}'`);
+                    Dialogs.showAlert({
                         title: 'Failed to duplicate project',
                         message: `An unexpected error has occurred while trying duplicate '${originalPath}'`,
                         type: AlertTypes.Error,
@@ -1362,7 +1362,7 @@ projectsView.controller('ProjectsViewController', function (
     };
 
     $scope.createWorkspace = () => {
-        DialogAPI.showFormDialog({
+        Dialogs.showFormDialog({
             title: 'Create workspace',
             form: {
                 'pgfi1': {
@@ -1383,41 +1383,41 @@ projectsView.controller('ProjectsViewController', function (
             cancelLabel: 'Cancel',
         }).then((form) => {
             if (form) {
-                DialogAPI.showBusyDialog('Creating...');
+                Dialogs.showBusyDialog('Creating...');
                 WorkspaceService.createWorkspace(form['pgfi1']).then(() => {
-                    DialogAPI.closeBusyDialog();
-                    StatusBarAPI.showMessage(`Created workspace '${form['pgfi1']}'`);
-                    WorkspaceAPI.announceWorkspaceCreated({ workspace: form['pgfi1'] });
+                    Dialogs.closeBusyDialog();
+                    StatusBar.showMessage(`Created workspace '${form['pgfi1']}'`);
+                    Workspace.announceWorkspaceCreated({ workspace: form['pgfi1'] });
                     $scope.$evalAsync(() => {
                         $scope.reloadWorkspaceList();
                     });
                 }, (response) => {
                     console.error(response);
-                    DialogAPI.closeBusyDialog();
-                    DialogAPI.showAlert({
+                    Dialogs.closeBusyDialog();
+                    Dialogs.showAlert({
                         title: 'Failed to create workspace',
                         message: `An unexpected error has occurred while trying create a workspace named '${form['pgfi1']}'`,
                         type: AlertTypes.Error,
                         preformatted: false,
                     });
-                    StatusBarAPI.showError(`Unable to create workspace '${form['pgfi1']}'`);
+                    StatusBar.showError(`Unable to create workspace '${form['pgfi1']}'`);
                 });
             }
         }, (error) => {
             console.error(error);
-            DialogAPI.showAlert({
+            Dialogs.showAlert({
                 title: 'Failed to create workspace',
                 message: `An unexpected error has occurred while trying create a workspace named '${form['pgfi1']}'`,
                 type: AlertTypes.Error,
                 preformatted: false,
             });
-            StatusBarAPI.showError(`Unable to create workspace '${form['pgfi1']}'`);
+            StatusBar.showError(`Unable to create workspace '${form['pgfi1']}'`);
         });
     };
 
     $scope.deleteWorkspace = () => {
         if ($scope.selectedWorkspace !== 'workspace') {
-            DialogAPI.showDialog({
+            Dialogs.showDialog({
                 title: 'Delete workspace?',
                 message: `Are you sure you want to delete workspace "${$scope.selectedWorkspace}"? This action cannot be undone.`,
                 buttons: [
@@ -1427,18 +1427,18 @@ projectsView.controller('ProjectsViewController', function (
             }).then((buttonId) => {
                 if (buttonId === 'yes') {
                     WorkspaceService.deleteWorkspace($scope.selectedWorkspace).then(() => {
-                        WorkspaceAPI.announceWorkspaceDeleted($scope.selectedWorkspace);
+                        Workspace.announceWorkspaceDeleted($scope.selectedWorkspace);
                         $scope.$evalAsync(() => {
                             $scope.switchWorkspace('workspace');
                             $scope.reloadWorkspaceList();
                         });
                     }, (response) => {
                         console.error(response);
-                        StatusBarAPI.showError(`Unable to delete workspace '${$scope.selectedWorkspace}'`);
+                        StatusBar.showError(`Unable to delete workspace '${$scope.selectedWorkspace}'`);
                     });
                 }
             }, (error) => {
-                StatusBarAPI.showMessage(`An error occurred - ${error}`);
+                StatusBar.showMessage(`An error occurred - ${error}`);
             });
         }
     };
@@ -1565,7 +1565,7 @@ projectsView.controller('ProjectsViewController', function (
         if (parent.data.git) {
             extraArgs.gitName = parent.data.gitName;
         }
-        WorkspaceAPI.openFile({
+        Workspace.openFile({
             path: node.data.path,
             contentType: node.data.contentType,
             editorId: editor,
@@ -1599,11 +1599,11 @@ projectsView.controller('ProjectsViewController', function (
                 );
             }, (response) => {
                 console.error(response);
-                DialogAPI.showAlert(alertBody);
+                Dialogs.showAlert(alertBody);
             });
         }, (response) => {
             console.error(response);
-            DialogAPI.showAlert(alertBody);
+            Dialogs.showAlert(alertBody);
         });
     }
 
@@ -1624,7 +1624,7 @@ projectsView.controller('ProjectsViewController', function (
             );
         }, (response) => {
             console.error(response);
-            DialogAPI.showAlert({
+            Dialogs.showAlert({
                 title: 'Could not create a folder',
                 message: `There was an error while creating '${name}'`,
                 type: AlertTypes.Error,
@@ -1635,7 +1635,7 @@ projectsView.controller('ProjectsViewController', function (
 
     function executeAction(workspace, project, name) {
         ActionsService.executeAction(workspace, project, name).then(() => {
-            DialogAPI.showAlert({
+            Dialogs.showAlert({
                 title: 'Execute action',
                 message: `Action '${name}' executed successfully`,
                 type: AlertTypes.Information,
@@ -1643,7 +1643,7 @@ projectsView.controller('ProjectsViewController', function (
             });
         }, (response) => {
             console.error(response);
-            DialogAPI.showAlert({
+            Dialogs.showAlert({
                 title: 'Execute action',
                 message: `There was an error while executing action '${name}'`,
                 type: AlertTypes.Error,
@@ -1653,7 +1653,7 @@ projectsView.controller('ProjectsViewController', function (
     }
 
     function openNewFileDialog(excluded, value) {
-        DialogAPI.showFormDialog({
+        Dialogs.showFormDialog({
             title: 'Create a new file',
             form: {
                 'fdti1': {
@@ -1680,7 +1680,7 @@ projectsView.controller('ProjectsViewController', function (
             }
         }, (error) => {
             console.error(error);
-            DialogAPI.showAlert({
+            Dialogs.showAlert({
                 title: 'Create file error',
                 message: 'There was an error while processing the new file data.',
                 type: AlertTypes.Error,
@@ -1690,7 +1690,7 @@ projectsView.controller('ProjectsViewController', function (
     }
 
     function openNewFolderDialog() {
-        DialogAPI.showFormDialog({
+        Dialogs.showFormDialog({
             title: 'Create new folder',
             form: {
                 'fdti1': {
@@ -1718,7 +1718,7 @@ projectsView.controller('ProjectsViewController', function (
     }
 
     function openRenameDialog(renameNode) {
-        DialogAPI.showFormDialog({
+        Dialogs.showFormDialog({
             title: `Rename ${renameNode.type}`,
             form: {
                 'fdti1': {
@@ -1753,7 +1753,7 @@ projectsView.controller('ProjectsViewController', function (
                             node.data.contentType = metadata.data.contentType;
                             node.state.status = metadata.data.status;
                             node.icon = getFileIcon(metadata.data.name);
-                            WorkspaceAPI.announceFileRenamed({
+                            Workspace.announceFileRenamed({
                                 oldPath: renameNode.data.path,
                                 newPath: node.data.path,
                                 contentType: node.data.contentType,
@@ -1761,7 +1761,7 @@ projectsView.controller('ProjectsViewController', function (
                             jstreeWidget.jstree(true).redraw_node(node);
                         }, (response) => {
                             console.error(response);
-                            DialogAPI.showAlert({
+                            Dialogs.showAlert({
                                 title: 'Rename file error',
                                 message: `Unable to rename '${renameNode.text}'.`,
                                 type: AlertTypes.Error,
@@ -1769,11 +1769,11 @@ projectsView.controller('ProjectsViewController', function (
                             });
                         });
                     } else {
-                        WorkspaceAPI.getCurrentlyOpenedFiles(renameNode.data.path).then((result) => {
+                        Workspace.getCurrentlyOpenedFiles(renameNode.data.path).then((result) => {
                             for (let i = 0; i < result.length; i++) {
                                 const updatedPath = result[i].replace(renameNode.data.path, newPath);
                                 if (updatedPath !== result[i])
-                                    WorkspaceAPI.announceFileMoved({
+                                    Workspace.announceFileMoved({
                                         newPath: result[i].replace(renameNode.data.path, newPath),
                                         oldPath: result[i],
                                     });
@@ -1789,7 +1789,7 @@ projectsView.controller('ProjectsViewController', function (
                     }
                 }, (response) => {
                     console.error(response);
-                    DialogAPI.showAlert({
+                    Dialogs.showAlert({
                         title: 'Rename file error',
                         message: `Unable to rename '${renameNode.text}'.`,
                         type: AlertTypes.Error,
@@ -1799,7 +1799,7 @@ projectsView.controller('ProjectsViewController', function (
             }
         }, (error) => {
             console.error(error);
-            DialogAPI.showAlert({
+            Dialogs.showAlert({
                 title: 'Rename file error',
                 message: 'There was an error while processing the new file name.',
                 type: AlertTypes.Error,
@@ -1809,7 +1809,7 @@ projectsView.controller('ProjectsViewController', function (
     }
 
     function openDeleteDialog(selected) {
-        DialogAPI.showDialog({
+        Dialogs.showDialog({
             title: (selected.length > 1) ? `Delete ${selected.length} items?` : `Delete '${selected[0].text}'?`,
             message: 'This action cannot be undone. It is recommended that you unpublish and delete.',
             buttons: [
@@ -1838,7 +1838,7 @@ projectsView.controller('ProjectsViewController', function (
             }
         }, (error) => {
             console.error(error);
-            DialogAPI.showAlert({
+            Dialogs.showAlert({
                 title: 'Delete error',
                 message: (selected.length > 1) ? `Error while deleting ${selected.length} files.` : `Error while deleting '${selected[0].text}'.`,
                 type: AlertTypes.Error,
@@ -1879,8 +1879,8 @@ projectsView.controller('ProjectsViewController', function (
             gmodel.templateId,
             gmodel.parameters
         ).then(() => {
-            DialogAPI.closeBusyDialog();
-            StatusBarAPI.showMessage(`Generated from model '${gmodel.model}'`);
+            Dialogs.closeBusyDialog();
+            StatusBar.showMessage(`Generated from model '${gmodel.model}'`);
             if (isRegenerating && gmodel.nodeParents.length) {
                 jstreeWidget.jstree(true).refresh_node(getProjectNode(gmodel.nodeParents));
             } else $scope.reloadWorkspace();
@@ -1892,8 +1892,8 @@ projectsView.controller('ProjectsViewController', function (
             gmodel.templateId = '';
         }, (response) => {
             console.error(response);
-            DialogAPI.closeBusyDialog();
-            DialogAPI.showAlert({
+            Dialogs.closeBusyDialog();
+            Dialogs.showAlert({
                 title: 'Failed to generate from model',
                 message: `An unexpected error has occurred while trying generate from model '${gmodel.model}'`,
                 type: AlertTypes.Error,
@@ -1902,7 +1902,7 @@ projectsView.controller('ProjectsViewController', function (
         });
     }
 
-    WorkspaceAPI.onFileSaved((fileData) => {
+    Workspace.onFileSaved((fileData) => {
         publish(fileData.path, fileData);
         if (fileData.status) {
             const instance = jstreeWidget.jstree(true);
@@ -1927,7 +1927,7 @@ projectsView.controller('ProjectsViewController', function (
         }
     });
 
-    WorkspaceAPI.onWorkspaceChanged((changed) => {
+    Workspace.onWorkspaceChanged((changed) => {
         if (changed.workspace === $scope.selectedWorkspace) {
             if (changed.params.projectsViewId) {
                 jstreeWidget.jstree(true).refresh_node(changed.params.projectsViewId);
@@ -1944,7 +1944,7 @@ projectsView.controller('ProjectsViewController', function (
         }
     });
 
-    WorkspaceAPI.addMessageListener({
+    Workspace.addMessageListener({
         topic: 'projects.tree.refresh',
         handler: (msg) => {
             if (msg.workspace === $scope.selectedWorkspace) {
@@ -1962,42 +1962,42 @@ projectsView.controller('ProjectsViewController', function (
         },
     });
 
-    WorkspaceAPI.addMessageListener({
+    Workspace.addMessageListener({
         topic: 'projects.create.project',
         handler: () => {
             $scope.createProject();
         },
     });
 
-    WorkspaceAPI.addMessageListener({
+    Workspace.addMessageListener({
         topic: 'projects.files.save.all',
         handler: () => {
-            WorkspaceAPI.saveAll();
+            Workspace.saveAll();
         },
     });
 
-    WorkspaceAPI.addMessageListener({
+    Workspace.addMessageListener({
         topic: 'projects.publish.all',
         handler: () => {
             $scope.publishAll();
         },
     });
 
-    WorkspaceAPI.addMessageListener({
+    Workspace.addMessageListener({
         topic: 'projects.unpublish.all',
         handler: () => {
             unpublishAll();
         },
     });
 
-    WorkspaceAPI.addMessageListener({
+    Workspace.addMessageListener({
         topic: 'projects.export.all',
         handler: () => {
             $scope.exportProjects();
         },
     });
 
-    WorkspaceAPI.addMessageListener({
+    Workspace.addMessageListener({
         topic: 'projects.tree.select',
         handler: (msg) => {
             if (msg.filePath.startsWith(`/${$scope.selectedWorkspace}/`)) {

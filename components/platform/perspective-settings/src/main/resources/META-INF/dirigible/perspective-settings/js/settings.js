@@ -10,8 +10,8 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 const settings = angular.module('settings', ['platformView', 'platformSplit', 'blimpKit']);
-settings.constant('DialogApi', new DialogApi());
-settings.controller('SettingsController', ($scope, Extensions, DialogApi) => {
+settings.constant('Dialog', new DialogHub());
+settings.controller('SettingsController', ($scope, Extensions, Dialog) => {
     $scope.settings = [];
 
     $scope.switchSetting = (id) => {
@@ -23,7 +23,7 @@ settings.controller('SettingsController', ($scope, Extensions, DialogApi) => {
         $scope.activeId = $scope.settings[0].id;
     }, (error) => {
         console.log(error);
-        DialogApi.showAlert({
+        Dialog.showAlert({
             title: 'Failed to load settings',
             message: 'There was an error while trying to load the settings list.',
             type: AlertTypes.Error,

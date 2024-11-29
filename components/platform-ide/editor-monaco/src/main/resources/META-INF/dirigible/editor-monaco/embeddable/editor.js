@@ -11,8 +11,7 @@
 // /webjars/monaco-editor/min/vs/base/browser/ui/codicons/codicon/codicon.ttf
 const require = { paths: { vs: '/webjars/monaco-editor/min/vs' } };
 angular.module('codeEditor', ['platformTheming'])
-    .constant('Theming', new ThemingApi())
-    .directive('codeEditor', function (Theming, Theme, $window) {
+    .directive('codeEditor', function (Theme, $window) {
         /**
          * readOnly: Boolean - Sets the editor mode. Default is 'false'.
          * codeLang: String - The language of the code. Default is 'javascript'.
@@ -50,6 +49,7 @@ angular.module('codeEditor', ['platformTheming'])
                     }
                 },
                 post: (scope, element, _, ngModel) => {
+                    const themingHub = new ThemingHub()
                     let outsideChange = false;
                     monaco.editor.defineTheme('blimpkit-dark', {
                         base: 'vs-dark',
@@ -102,7 +102,7 @@ angular.module('codeEditor', ['platformTheming'])
                         }
                     }
 
-                    Theming.onThemeChange((theme) => {
+                    themingHub.onThemeChange((theme) => {
                         if (theme.type === 'light') {
                             scope.monacoTheme = 'vs-light';
                             monaco.editor.setTheme(scope.monacoTheme);

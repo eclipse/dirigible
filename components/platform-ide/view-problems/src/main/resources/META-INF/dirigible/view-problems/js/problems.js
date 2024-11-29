@@ -11,7 +11,7 @@
  */
 const problemsView = angular.module('problems', ['blimpKit', 'platformView']);
 problemsView.controller('ProblemsController', ($scope, $http, $timeout) => {
-    const dialogApi = new DialogApi();
+    const dialogHub = new DialogHub();
     $scope.models = {
         search: '',
         selectAll: false,
@@ -127,7 +127,7 @@ problemsView.controller('ProblemsController', ($scope, $http, $timeout) => {
     };
 
     $scope.showInfo = (problem) => {
-        dialogApi.showWindow({
+        dialogHub.showWindow({
             hasHeader: true,
             id: 'problem-details',
             params: { problemDetails: problem },

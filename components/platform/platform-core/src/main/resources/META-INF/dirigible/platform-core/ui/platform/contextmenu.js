@@ -13,7 +13,7 @@ angular.module('platformContextMenu', []).directive('contextMenu', () => ({
     restrict: 'E',
     replace: true,
     controller: ['$scope', '$element', '$timeout', function ($scope, $element, $timeout) {
-        const contextMenuApi = new ContextMenuApi();
+        const contextMenuHub = new ContextMenuHub();
         $scope.menuConfig = {
             items: []
         };
@@ -22,7 +22,7 @@ angular.module('platformContextMenu', []).directive('contextMenu', () => ({
             top: `0px`,
             left: `0px`,
         };
-        const contextmenuListener = contextMenuApi.onContextMenu((config) => {
+        const contextmenuListener = contextMenuHub.onContextMenu((config) => {
             if (!$scope.menuConfig.items.length) $scope.$evalAsync(() => {
                 $scope.menuConfig = config;
                 $scope.menuPos.top = `${$scope.menuConfig.posY}px`;
@@ -66,15 +66,15 @@ angular.module('platformContextMenu', []).directive('contextMenu', () => ({
                 if ($element[0].firstElementChild.contains(event.target)) return;
             }
             if (itemId)
-                contextMenuApi.postMessage({ topic: $scope.menuConfig.topic, data: itemId });
-            else contextMenuApi.triggerEvent($scope.menuConfig.topic);
+                contextMenuHub.postMessage({ topic: $scope.menuConfig.topic, data: itemId });
+            else contextMenuHub.triggerEvent($scope.menuConfig.topic);
             $scope.menuConfig.items.length = 0;
         }
 
         $scope.itemClick = this.itemClick;
 
         $scope.$on('$destroy', () => {
-            contextMenuApi.removeMessageListener(contextmenuListener);
+            contextMenuHub.removeMessageListener(contextmenuListener);
         });
     }],
     template: `<div ng-style="backdropStyle()" ng-click="itemClick(undefined, $event)" ng-on-contextmenu="itemClick(undefined, $event)">

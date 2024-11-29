@@ -39,7 +39,7 @@ var flowableModule = flowableModeler;
 var flowableApp = flowableModeler;
 
 function setEditorDirtyState(dirty) {
-    workspaceApi.setFileDirty({
+    workspaceHub.setFileDirty({
         path: editorParams.filePath,
         dirty: dirty,
     });
@@ -206,7 +206,7 @@ flowableModeler
 
             updateWindowSize();
 
-            workspaceApi.onReloadEditorParams((data) => {
+            workspaceHub.onReloadEditorParams((data) => {
                 if (editorParams.filePath === data.path) {
                     if ($window.frameElement && $window.frameElement.hasAttribute("data-parameters")) {
                         editorParams = JSON.parse($window.frameElement.getAttribute("data-parameters"));
@@ -215,12 +215,12 @@ flowableModeler
                 }
             });
 
-            workspaceApi.onSaveAll(() => {
+            workspaceHub.onSaveAll(() => {
                 var services = { '$rootScope': $rootScope, '$http': $http, 'editorManager': editorManager };
                 FLOWABLE.TOOLBAR.ACTIONS.saveModel(services);
             });
 
-            workspaceApi.onSaveFile((data) => {
+            workspaceHub.onSaveFile((data) => {
                 if (data.path === editorParams.filePath) {
                     var services = { '$rootScope': $rootScope, '$http': $http, 'editorManager': editorManager };
                     FLOWABLE.TOOLBAR.ACTIONS.saveModel(services);

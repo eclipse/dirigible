@@ -11,9 +11,9 @@
  */
 angular.module('platformLayout', ['platformEditors', 'platformView', 'platformSplit'])
     .constant('layoutConstants', { version: 3.0, stateKey: 'platform.layout.state' })
-    .constant('Layout', new LayoutApi())
-    .constant('Workspace', new WorkspaceApi())
-    .constant('Dialog', new DialogApi())
+    .constant('Layout', new LayoutHub())
+    .constant('Workspace', new WorkspaceHub())
+    .constant('Dialog', new DialogHub())
     .directive('layout', function (Views, Editors, SplitPaneState, layoutConstants, uuid, Layout, Workspace, Dialog, ButtonStates) {
         if (typeof perspectiveData === 'undefined' && (!perspectiveData.id || !perspectiveData.label)) {
             console.error('Layout requires perspectiveData config');

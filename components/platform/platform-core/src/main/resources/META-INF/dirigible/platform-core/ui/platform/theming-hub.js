@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-class ThemingApi extends MessageHubApi {
+class ThemingHub extends MessageHubApi {
 
     getSavedTheme() {
         return JSON.parse(localStorage.getItem(`${brandingInfo.keyPrefix}.platform.theme`) || '{}');

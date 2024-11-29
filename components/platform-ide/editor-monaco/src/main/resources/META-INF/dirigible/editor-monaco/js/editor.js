@@ -2,10 +2,10 @@ const WORKSPACE_API = "/services/ide/workspaces";
 const REPOSITORY_API = "/services/core/repository";
 const REGISTRY_API = "/services/core/repository/registry/public";
 
-const themingApi = new ThemingApi();
-const statusBarApi = new StatusBarApi();
-const layoutApi = new LayoutApi();
-const workspaceApi = new WorkspaceApi();
+const themingHub = new ThemingHub();
+const statusBarHub = new StatusBarHub();
+const layoutHub = new LayoutHub();
+const workspaceHub = new WorkspaceHub();
 
 let csrfToken;
 let lineDecorations = [];
@@ -17,7 +17,7 @@ let headElement = document.getElementsByTagName('head')[0];
 let autoThemeListener = false;
 
 function setTheme(theme, monaco) {
-    if (!theme) theme = themingApi.getSavedTheme();
+    if (!theme) theme = themingHub.getSavedTheme();
     themeId = theme.id;
     let themeLinks = headElement.querySelectorAll("link[data-type='theme']");
     for (let i = 0; i < themeLinks.length; i++) {
@@ -101,16 +101,16 @@ require(['vs/editor/editor.main', 'parser/acorn-loose'], async function (monaco,
 
 class Utils {
     static logMessage(message) {
-        statusBarApi.showMessage(message);
+        statusBarHub.showMessage(message);
     }
 
     static logErrorMessage(errorMessage) {
         console.error(errorMessage);
-        statusBarApi.showError(errorMessage);
+        statusBarHub.showError(errorMessage);
     }
 
     static setEditorDirty(dirty) {
-        workspaceApi.setFileDirty({
+        workspaceHub.setFileDirty({
             path: editorParameters.resourcePath,
             dirty: dirty,
         });
@@ -308,7 +308,7 @@ class FileIO {
 
             Utils.setEditorDirty(false);
 
-            workspaceApi.announceFileSaved({
+            workspaceHub.announceFileSaved({
                 path: editorParameters.resourcePath,
                 contentType: editorParameters.contentType,
                 status: editorParameters.gitName && lineDecorations.length ? 'modified' : 'unmodified'
@@ -317,7 +317,7 @@ class FileIO {
             Utils.logMessage(`File '${fileName}' saved`);
 
             if (TypeScriptUtils.isTypeScriptFile(fileName)) {
-                workspaceApi.postMessage({
+                workspaceHub.postMessage({
                     topic: 'monaco.ts.reload',
                     data: fileName
                 });
@@ -448,7 +448,7 @@ class EditorActionsProvider {
             contextMenuGroupId: 'fileIO',
             contextMenuOrder: 1.5,
             run: function () {
-                layoutApi.openView({ id: 'search' });
+                layoutHub.openView({ id: 'search' });
             }
         };
     }
@@ -490,7 +490,7 @@ class EditorActionsProvider {
                 }
 
                 window.localStorage.setItem(EditorActionsProvider.#autoFormatExcludedKey, jsonString);
-                layoutApi.postMessage({ topic: 'code-editor.settings.update', data: { fileName: fileName } });
+                layoutHub.postMessage({ topic: 'code-editor.settings.update', data: { fileName: fileName } });
             }
         };
     }
@@ -517,7 +517,7 @@ class DirigibleEditor {
     static computeDiff = new Worker("js/workers/computeDiff.js");
 
     static closeEditor() {
-        workspaceApi.closeFile({
+        workspaceHub.closeFile({
             path: editorParameters.resourcePath,
         });
     }
@@ -666,12 +666,12 @@ class DirigibleEditor {
         });
 
         editor.onDidFocusEditorText(function () {
-            workspaceApi.openFile({
+            workspaceHub.openFile({
                 path: editorParameters.resourcePath,
             });
             if (EditorActionsProvider.isAutoRevealEnabled()) {
                 setTimeout(() => {
-                    layoutApi.postMessage({
+                    layoutHub.postMessage({
                         topic: 'projects.tree.select',
                         data: {
                             filePath: editorParameters.resourcePath
@@ -682,7 +682,7 @@ class DirigibleEditor {
         });
 
         editor.onDidChangeCursorPosition(function (e) {
-            statusBarApi.showLabel(`Line ${e.position.lineNumber}, Column ${e.position.column}`);
+            statusBarHub.showLabel(`Line ${e.position.lineNumber}, Column ${e.position.column}`);
         });
 
         if (!this.readOnly) {
@@ -691,7 +691,7 @@ class DirigibleEditor {
         editor.addAction(EditorActionsProvider.createSearchAction());
         if (!this.isTemplate) {
             EditorActionsProvider._toggleAutoFormattingActionRegistration = editor.addAction(EditorActionsProvider.createToggleAutoFormattingAction());
-            layoutApi.addMessageListener({
+            layoutHub.addMessageListener({
                 topic: 'code-editor.settings.update', handler: (data) => {
                     if (data.fileName && data.fileName === fileName && EditorActionsProvider._toggleAutoFormattingActionRegistration) {
                         // @ts-ignore
@@ -847,7 +847,7 @@ class DirigibleEditor {
             }
         });
 
-        themingApi.onThemeChange((theme) => {
+        themingHub.onThemeChange((theme) => {
             setTheme(theme, this.monaco);
         });
 
@@ -865,7 +865,7 @@ class DirigibleEditor {
             provideImplementation: function (model, position) {
                 const filePath = getTypeScriptFileImport(model, position, fileObject);
                 if (filePath) {
-                    workspaceApi.openFile({
+                    workspaceHub.openFile({
                         path: filePath,
                         contentType: "typescript",
                     });
@@ -892,7 +892,7 @@ class DirigibleEditor {
         const monaco = this.monaco;
         const fileObject = this.fileObject;
 
-        workspaceApi.onSaveFile(async function (data) {
+        workspaceHub.onSaveFile(async function (data) {
             if (data.file && data.file === fileIO.resolveResourcePath()) {
                 const model = editor.getModel();
                 if (DirigibleEditor.#isDirty(model)) {
@@ -904,7 +904,7 @@ class DirigibleEditor {
             }
         });
 
-        workspaceApi.onSaveAll(async function () {
+        workspaceHub.onSaveAll(async function () {
             const model = editor.getModel();
             if (DirigibleEditor.#isDirty(model)) {
                 fileIO.saveText(model.getValue());
@@ -913,17 +913,17 @@ class DirigibleEditor {
             }
         });
 
-        workspaceApi.onReloadEditorParams((data) => {
+        workspaceHub.onReloadEditorParams((data) => {
             if (data.path === editorParameters.resourcePath) {
                 editorParameters = getViewParameters();
             }
         });
 
-        layoutApi.onFocusView((data) => {
+        layoutHub.onFocusView((data) => {
             if (data.params && data.params.file === fileIO.resolveResourcePath()) {
                 editor.focus();
                 if (EditorActionsProvider.isAutoRevealEnabled()) {
-                    layoutApi.postMessage({
+                    layoutHub.postMessage({
                         topic: 'projects.tree.select',
                         data: { filePath: data.id }
                     });
@@ -931,7 +931,7 @@ class DirigibleEditor {
             }
         });
 
-        workspaceApi.addMessageListener({
+        workspaceHub.addMessageListener({
             topic: 'monaco.ts.reload',
             handler: (fileData) => {
                 if (fileData === editorParameters.resourcePath) {
@@ -1044,7 +1044,7 @@ class TypeScriptUtils {
             };
             xhrModules.onerror = function (error) {
                 console.error('Error loading DTS', error);
-                statusBarApi.showError('Error loading DTS');
+                statusBarHub.showError('Error loading DTS');
             };
             xhrModules.send();
         }

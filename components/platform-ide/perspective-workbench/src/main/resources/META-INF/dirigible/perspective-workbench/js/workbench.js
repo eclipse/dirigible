@@ -11,8 +11,8 @@
  */
 const workbench = angular.module('workbench', ['platformView', 'platformLayout', 'blimpKit']);
 workbench.controller('WorkbenchController', ($scope) => {
-    const contextMenuApi = new ContextMenuApi();
-    const workspaceApi = new WorkspaceApi();
+    const contextMenuHub = new ContextMenuHub();
+    const workspaceHub = new WorkspaceHub();
     let rightClickTabId;
 
     $scope.layoutConfig = {
@@ -36,7 +36,7 @@ workbench.controller('WorkbenchController', ($scope) => {
                 rightClickTabId = event.target.getAttribute('data-file-path');
             } else return;
         }
-        contextMenuApi.showContextMenu({
+        contextMenuHub.showContextMenu({
             ariaLabel: 'editor tab contextmenu',
             posX: event.clientX,
             posY: event.clientY,
@@ -62,18 +62,18 @@ workbench.controller('WorkbenchController', ($scope) => {
             ]
         }).then((id) => {
             if (id === 'reveal') {
-                contextMenuApi.postMessage({ topic: 'projects.tree.select', data: { filePath: rightClickTabId } });
+                contextMenuHub.postMessage({ topic: 'projects.tree.select', data: { filePath: rightClickTabId } });
             } else if (id === 'close') {
-                workspaceApi.closeFile({
+                workspaceHub.closeFile({
                     path: rightClickTabId,
                 });
             } else if (id === 'closeOthers') {
-                workspaceApi.closeFile({
+                workspaceHub.closeFile({
                     path: rightClickTabId,
                     params: { closeOthers: true }
                 });
             } else if (id === 'closeAll') {
-                workspaceApi.closeAllFiles();
+                workspaceHub.closeAllFiles();
             }
         });
     };

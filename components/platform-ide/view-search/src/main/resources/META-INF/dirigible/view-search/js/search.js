@@ -10,10 +10,10 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 const searchView = angular.module('search', ['blimpKit', 'platformView', 'WorkspaceService', 'platformEditors']);
-searchView.constant('StatusBarAPI', new StatusBarApi());
-searchView.constant('WorkspaceAPI', new WorkspaceApi());
-searchView.constant('ContextMenuAPI', new ContextMenuApi());
-searchView.controller('SearchController', ($scope, WorkspaceService, StatusBarAPI, ContextMenuAPI, WorkspaceAPI, Editors) => {
+searchView.constant('StatusBar', new StatusBarHub());
+searchView.constant('Workspace', new WorkspaceHub());
+searchView.constant('ContextMenu', new ContextMenuHub());
+searchView.controller('SearchController', ($scope, WorkspaceService, StatusBar, ContextMenu, Workspace, Editors) => {
     $scope.selectedWorkspace = WorkspaceService.getCurrentWorkspace();
     $scope.workspaceNames = [];
     $scope.search = { searching: false, text: '', results: [] };
@@ -30,12 +30,12 @@ searchView.controller('SearchController', ($scope, WorkspaceService, StatusBarAP
                 $scope.selectedWorkspace = 'workspace'; // Default
         }, (response) => {
             console.error(response);
-            StatusBarAPI.showError('Unable to load workspace list');
+            StatusBar.showError('Unable to load workspace list');
         });
     };
 
-    const workspaceCreatedListener = WorkspaceAPI.onWorkspaceCreated($scope.reloadWorkspaceList);
-    const workspaceDeletedListener = WorkspaceAPI.onWorkspaceDeleted($scope.reloadWorkspaceList);
+    const workspaceCreatedListener = Workspace.onWorkspaceCreated($scope.reloadWorkspaceList);
+    const workspaceDeletedListener = Workspace.onWorkspaceDeleted($scope.reloadWorkspaceList);
 
     $scope.switchWorkspace = (workspace) => {
         if ($scope.selectedWorkspace !== workspace) {
@@ -48,7 +48,7 @@ searchView.controller('SearchController', ($scope, WorkspaceService, StatusBarAP
 
     $scope.itemClick = (index) => $scope.selectedItemIndex = index;
 
-    $scope.openFile = (index, editor = undefined) => WorkspaceAPI.openFile({
+    $scope.openFile = (index, editor = undefined) => Workspace.openFile({
         path: $scope.search.results[index].path,
         contentType: $scope.search.results[index].contentType,
         editorId: editor,
@@ -74,7 +74,7 @@ searchView.controller('SearchController', ($scope, WorkspaceService, StatusBarAP
             }, (response) => {
                 console.error(response);
                 $scope.$evalAsync(() => { $scope.search.searching = false; });
-                StatusBarAPI.setError('There was an error while performing a search');
+                StatusBar.setError('There was an error while performing a search');
             });
         } else $scope.search.searching = false;
     };
@@ -143,7 +143,7 @@ searchView.controller('SearchController', ($scope, WorkspaceService, StatusBarAP
                 },
             );
         }
-        ContextMenuAPI.showContextMenu({
+        ContextMenu.showContextMenu({
             ariaLabel: 'search contextmenu',
             posX: event.clientX,
             posY: event.clientY,
@@ -167,7 +167,7 @@ searchView.controller('SearchController', ($scope, WorkspaceService, StatusBarAP
     $scope.reloadWorkspaceList();
 
     $scope.$on('$destroy', () => {
-        WorkspaceAPI.removeMessageListener(workspaceCreatedListener);
-        WorkspaceAPI.removeMessageListener(workspaceDeletedListener);
+        Workspace.removeMessageListener(workspaceCreatedListener);
+        Workspace.removeMessageListener(workspaceDeletedListener);
     });
 });

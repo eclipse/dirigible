@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-class ContextMenuApi extends MessageHubApi {
+class ContextMenuHub extends MessageHubApi {
     /**
      * Definition of a menu item object.
      * @typedef {Object} MenuItem

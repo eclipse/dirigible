@@ -56,7 +56,7 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
         }.bind(this);
 
         /**
-         * Loades file content.
+         * Loads file content.
          * @param {string} resourcePath - Full resource path, including workspace name.
          */
         const loadContent = async function (resourcePath) {
@@ -290,6 +290,7 @@ angular.module('WorkspaceService', []).constant('workspaceStorageKey', `${brandi
         /**
          * Performs a search.
          * @param {string} searchPath - Full path, including the workspace, where the search should be performed.
+         * @param {string} searchTerm - File content to search for.
          * @returns - List of matching results.
          */
         const search = function (searchPath, searchTerm) {

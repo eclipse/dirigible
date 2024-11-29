@@ -74,11 +74,11 @@ FLOWABLE.TOOLBAR = {
                             eventType: 'update-model'
                         };
                         FLOWABLE.eventBus.dispatch(FLOWABLE.eventBus.EVENT_TYPE_MODEL_SAVED, saveEvent);
-                        workspaceApi.announceFileSaved({
+                        workspaceHub.announceFileSaved({
                             path: editorParams.filePath,
                             contentType: 'application/bpmn+xml',
                         });
-                        statusBarApi.showMessage(`File '${editorParams.filePath}' saved`);
+                        statusBarHub.showMessage(`File '${editorParams.filePath}' saved`);
                         setEditorDirtyState(false);
                     })
                     .error(function (data, status, headers, config) {

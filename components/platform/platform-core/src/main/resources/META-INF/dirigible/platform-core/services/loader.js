@@ -93,16 +93,16 @@ function getLocations(scriptId) {
         '/platform-core/utilities/uri-builder.js',
         '/platform-core/ui/platform/user.js',
         '/platform-core/ui/platform/message-hub.js',
-        '/platform-core/ui/platform/layout-api.js',
-        '/platform-core/ui/platform/status-bar-api.js',
+        '/platform-core/ui/platform/layout-hub.js',
+        '/platform-core/ui/platform/status-bar-hub.js',
         '/platform-core/ui/platform/extensions.js',
-        '/platform-core/ui/platform/theming-api.js',
+        '/platform-core/ui/platform/theming-hub.js',
         '/platform-core/ui/platform/theming.js',
         '/platform-core/ui/platform/view.js',
-        '/platform-core/ui/platform/dialog-api.js',
+        '/platform-core/ui/platform/dialog-hub.js',
         '/platform-core/ui/platform/dialogs.js',
-        '/platform-core/ui/platform/notification-api.js',
-        '/platform-core/ui/platform/contextmenu-api.js',
+        '/platform-core/ui/platform/notification-hub.js',
+        '/platform-core/ui/platform/contextmenu-hub.js',
         '/platform-core/ui/platform/contextmenu.js',
         '/platform-core/ui/platform/shortcuts.js',
         '/platform-core/ui/blimpkit/blimpkit.js',
@@ -156,11 +156,19 @@ function getLocations(scriptId) {
     switch (scriptId) {
         case 'view-js':
             return baseJs;
+        case 'editor-js':
+            return [
+                ...baseJs,
+                '/service-workspace/workspace-hub.js',
+                '/service-workspace/workspace.js',
+                '/service-repository/repository-hub.js',
+                '/service-repository/repository.js',
+            ];
         case 'perspective-js':
             return [
                 ...baseJs,
                 '/split.js/1.6.5/dist/split.min.js',
-                '/service-workspace/workspace-api.js',
+                '/service-workspace/workspace-hub.js',
                 '/platform-core/ui/platform/split.js',
                 '/platform-core/ui/platform/editors.js',
                 '/platform-core/ui/platform/layout.js',

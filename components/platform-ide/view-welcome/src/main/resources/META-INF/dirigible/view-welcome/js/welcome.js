@@ -18,9 +18,9 @@ welcome.filter('startFrom', () => {
     };
 });
 welcome.controller('WelcomeController', ($scope, $http, WorkspaceService, TemplatesService) => {
-    const dialogApi = new DialogApi();
-    const statusBarApi = new StatusBarApi();
-    const workspaceApi = new WorkspaceApi();
+    const dialogHub = new DialogHub();
+    const statusBarHub = new StatusBarHub();
+    const workspaceHub = new WorkspaceHub();
     $scope.templates = [];
     const workspaces = [];
     const selectedWorkspace = WorkspaceService.getCurrentWorkspace();
@@ -78,7 +78,7 @@ welcome.controller('WelcomeController', ($scope, $http, WorkspaceService, Templa
         });
     }, (response) => {
         console.error(response);
-        dialogApi.showAlert({
+        dialogHub.showAlert({
             title: 'Template API error',
             message: 'Unable to load template list',
             type: AlertTypes.Error,
@@ -91,7 +91,7 @@ welcome.controller('WelcomeController', ($scope, $http, WorkspaceService, Templa
         });
     }, (response) => {
         console.error(response);
-        dialogApi.showAlert({
+        dialogHub.showAlert({
             title: 'Workspace API error',
             message: 'Unable to load workspace list',
             type: AlertTypes.Error,
@@ -100,7 +100,7 @@ welcome.controller('WelcomeController', ($scope, $http, WorkspaceService, Templa
 
     $scope.openCreateProjectDialog = (template) => {
         $scope.selectedTemplate = template;
-        dialogApi.showFormDialog({
+        dialogHub.showFormDialog({
             title: 'Create from template',
             subheader: template.name,
             form: getTemplateFormItems(template),
@@ -108,20 +108,20 @@ welcome.controller('WelcomeController', ($scope, $http, WorkspaceService, Templa
             cancelLabel: 'Cancel'
         }).then(async (form) => {
             if (form) {
-                dialogApi.showBusyDialog('Creating...');
+                dialogHub.showBusyDialog('Creating...');
                 try {
                     await createFromTemplate(form);
                 } catch (ex) {
                     console.error(ex);
-                    dialogApi.showAlert({
+                    dialogHub.showAlert({
                         title: 'Failed to create project',
                         message: ex.message || 'There was an error while trying to create a new project from template.',
                         type: AlertTypes.Error,
                     });
-                    statusBarApi.showError('Failed to create project');
+                    statusBarHub.showError('Failed to create project');
                 } finally {
-                    statusBarApi.showMessage(`Created new project in '${form.workspace}'`);
-                    dialogApi.closeBusyDialog();
+                    statusBarHub.showMessage(`Created new project in '${form.workspace}'`);
+                    dialogHub.closeBusyDialog();
                 }
             }
         }, (error) => {
@@ -148,7 +148,7 @@ welcome.controller('WelcomeController', ($scope, $http, WorkspaceService, Templa
         return new Promise((resolve, reject) => {
             $http.post(url, { template: $scope.selectedTemplate.id, parameters })
                 .then(response => {
-                    workspaceApi.announceWorkspaceChanged({ workspace: workspace, params: { publish: { path: `/${workspace}/${projectName}` } } });
+                    workspaceHub.announceWorkspaceChanged({ workspace: workspace, params: { publish: { path: `/${workspace}/${projectName}` } } });
                     resolve(response.data);
                 }).catch(ex => {
                     reject(ex);

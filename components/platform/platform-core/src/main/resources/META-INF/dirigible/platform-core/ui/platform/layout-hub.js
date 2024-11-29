@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-class LayoutApi extends MessageHubApi {
+class LayoutHub extends MessageHubApi {
     /**
      * Returns a list of the currently opened views.
      * @param {object} [params] - Custom parameters.

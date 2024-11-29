@@ -164,8 +164,8 @@ angular.module('platformView', ['platformExtensions', 'platformTheming'])
             if (typeof viewData !== 'undefined') {
                 scope.label = viewData.label;
                 if (viewData.autoFocusTab !== false) {
-                    const layoutApi = new LayoutApi();
-                    const onFocus = () => layoutApi.focusView({ id: viewData.id });
+                    const layoutHub = new LayoutHub();
+                    const onFocus = () => layoutHub.focusView({ id: viewData.id });
                     angular.element($window).on('focus', onFocus);
                     scope.$on('$destroy', () => {
                         angular.element($window).off('focus', onFocus);
@@ -176,9 +176,9 @@ angular.module('platformView', ['platformExtensions', 'platformTheming'])
             else if (typeof editorData !== 'undefined') {
                 scope.label = editorData.label;
                 if ($window.frameElement && $window.frameElement.hasAttribute('tab-id')) {
-                    const layoutApi = new LayoutApi();
+                    const layoutHub = new LayoutHub();
                     const tabId = $window.frameElement.getAttribute('tab-id');
-                    const onFocus = () => layoutApi.focusView({ id: tabId });
+                    const onFocus = () => layoutHub.focusView({ id: tabId });
                     angular.element($window).on('focus', onFocus);
                     scope.$on('$destroy', () => {
                         angular.element($window).off('focus', onFocus);

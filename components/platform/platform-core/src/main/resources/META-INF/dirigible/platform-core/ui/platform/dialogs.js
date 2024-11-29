@@ -21,29 +21,29 @@ angular.module('platformDialogs', ['blimpKit', 'platformView']).directive('dialo
             console.log(error);
         });
         // @ts-ignore
-        const dialogApi = new DialogApi();
+        const dialogHub = new DialogHub();
 
         scope.messageBoxes = [];
-        const alertListener = dialogApi.onAlert((data) => {
+        const alertListener = dialogHub.onAlert((data) => {
             scope.$apply(() => scope.messageBoxes.push(data));
         });
         scope.closeAlert = (buttonId) => {
-            if (scope.messageBoxes[0].topic) dialogApi.postMessage({ topic: scope.messageBoxes[0].topic, data: buttonId });
+            if (scope.messageBoxes[0].topic) dialogHub.postMessage({ topic: scope.messageBoxes[0].topic, data: buttonId });
             scope.messageBoxes.shift();
         };
 
         scope.dialogs = [];
-        const dialogListener = dialogApi.onDialog((data) => {
+        const dialogListener = dialogHub.onDialog((data) => {
             scope.$apply(() => scope.dialogs.push(data));
         });
         scope.closeDialog = (buttonId) => {
-            if (buttonId) dialogApi.postMessage({ topic: scope.dialogs[0].topic, data: buttonId });
-            else dialogApi.triggerEvent(scope.dialogs[0].topic);
+            if (buttonId) dialogHub.postMessage({ topic: scope.dialogs[0].topic, data: buttonId });
+            else dialogHub.triggerEvent(scope.dialogs[0].topic);
             scope.dialogs.shift();
         };
 
         scope.busyDialog = { id: '', message: '' };
-        const busyDialogListener = dialogApi.onBusyDialog((data) => {
+        const busyDialogListener = dialogHub.onBusyDialog((data) => {
             scope.$apply(() => {
                 if (data.close && scope.busyDialog.id === data.id) {
                     scope.busyDialog.id = '';
@@ -59,7 +59,7 @@ angular.module('platformDialogs', ['blimpKit', 'platformView']).directive('dialo
 
         scope.formDialog = { form: {} };
         scope.formDialogs = [];
-        const formDialogListener = dialogApi.onFormDialog((data) => {
+        const formDialogListener = dialogHub.onFormDialog((data) => {
             scope.$apply(() => scope.formDialogs.push(data));
         });
         const isEnabled = (enabledOn) => {
@@ -113,16 +113,16 @@ angular.module('platformDialogs', ['blimpKit', 'platformView']).directive('dialo
                     // @ts-ignore
                     formData[keys[i]] = scope.formDialogs[0].form[keys[i]].value;
                 }
-                dialogApi.postMessage({
+                dialogHub.postMessage({
                     topic: scope.formDialogs[0].topic,
                     data: formData
                 });
-            } else dialogApi.triggerEvent(scope.formDialogs[0].topic);
+            } else dialogHub.triggerEvent(scope.formDialogs[0].topic);
             scope.formDialogs.shift();
         };
 
         scope.dialogWindows = [];
-        const dialogWindowListener = dialogApi.onWindow((data) => {
+        const dialogWindowListener = dialogHub.onWindow((data) => {
             if (data.id) {
                 const viewConfig = cachedWindows.find(v => v.id === data.id);
                 scope.$apply(() => {
@@ -143,16 +143,16 @@ angular.module('platformDialogs', ['blimpKit', 'platformView']).directive('dialo
             } else scope.$apply(() => scope.dialogWindows.push(data));
         });
         scope.closeDialogWindow = () => {
-            if (scope.dialogWindows[0].callbackTopic) dialogApi.triggerEvent(scope.dialogWindows[0].callbackTopic);
+            if (scope.dialogWindows[0].callbackTopic) dialogHub.triggerEvent(scope.dialogWindows[0].callbackTopic);
             scope.dialogWindows.shift();
         };
 
         scope.$on('$destroy', () => {
-            dialogApi.removeMessageListener(alertListener);
-            dialogApi.removeMessageListener(dialogListener);
-            dialogApi.removeMessageListener(busyDialogListener);
-            dialogApi.removeMessageListener(formDialogListener);
-            dialogApi.removeMessageListener(dialogWindowListener);
+            dialogHub.removeMessageListener(alertListener);
+            dialogHub.removeMessageListener(dialogListener);
+            dialogHub.removeMessageListener(busyDialogListener);
+            dialogHub.removeMessageListener(formDialogListener);
+            dialogHub.removeMessageListener(dialogWindowListener);
         });
     },
     templateUrl: '/services/web/platform-core/ui/templates/dialogs.html',

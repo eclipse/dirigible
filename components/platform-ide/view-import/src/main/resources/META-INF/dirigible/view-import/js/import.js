@@ -10,9 +10,9 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 const importView = angular.module('import', ['blimpKit', 'platformView', 'WorkspaceService', 'TransportService', 'angularFileUpload']);
-importView.constant('StatusBarAPI', new StatusBarApi());
-importView.constant('WorkspaceAPI', new WorkspaceApi());
-importView.constant('RepositoryAPI', new RepositoryApi());
+importView.constant('StatusBar', new StatusBarHub());
+importView.constant('Workspace', new WorkspaceHub());
+importView.constant('Repository', new RepositoryHub());
 importView.controller('ImportViewController',
     function (
         $scope,
@@ -21,9 +21,9 @@ importView.controller('ImportViewController',
         WorkspaceService,
         TransportService,
         FileUploader,
-        StatusBarAPI,
-        WorkspaceAPI,
-        RepositoryAPI
+        StatusBar,
+        Workspace,
+        Repository
     ) {
         const projectImportUrl = TransportService.getProjectImportUrl();
         $scope.selectedWorkspace = WorkspaceService.getCurrentWorkspace();
@@ -110,10 +110,10 @@ importView.controller('ImportViewController',
 
         $scope.uploader.onCompleteAll = () => {
             if ($scope.importRepository) {
-                RepositoryAPI.announceRepositoryModified();
+                Repository.announceRepositoryModified();
             } else if ($scope.inDialog) {
                 // Temporary, publishes all files in the import directory, not just imported ones
-                WorkspaceAPI.announceWorkspaceChanged({
+                Workspace.announceWorkspaceChanged({
                     workspace: $scope.selectedWorkspace,
                     params: {
                         projectsViewId: $scope.projectsViewId,
@@ -121,7 +121,7 @@ importView.controller('ImportViewController',
                     }
                 });
             } else {
-                WorkspaceAPI.announceWorkspaceChanged({ workspace: $scope.selectedWorkspace, params: { publish: { workspace: true } } });
+                Workspace.announceWorkspaceChanged({ workspace: $scope.selectedWorkspace, params: { publish: { workspace: true } } });
             }
         };
 
@@ -151,18 +151,18 @@ importView.controller('ImportViewController',
                 });
             }, (response) => {
                 console.error(response);
-                StatusBarAPI.showError('Unable to load workspace list');
+                StatusBar.showError('Unable to load workspace list');
             });
         };
 
-        const workspaceCreatedListener = WorkspaceAPI.onWorkspaceCreated($scope.reloadWorkspaceList);
-        const workspaceDeletedListener = WorkspaceAPI.onWorkspaceDeleted($scope.reloadWorkspaceList);
+        const workspaceCreatedListener = Workspace.onWorkspaceCreated($scope.reloadWorkspaceList);
+        const workspaceDeletedListener = Workspace.onWorkspaceDeleted($scope.reloadWorkspaceList);
 
         // Initialization
         $scope.initImport();
 
         $scope.$on('$destroy', () => {
-            WorkspaceAPI.removeMessageListener(workspaceCreatedListener);
-            WorkspaceAPI.removeMessageListener(workspaceDeletedListener);
+            Workspace.removeMessageListener(workspaceCreatedListener);
+            Workspace.removeMessageListener(workspaceDeletedListener);
         });
     });

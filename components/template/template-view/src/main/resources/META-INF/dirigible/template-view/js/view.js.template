@@ -17,8 +17,8 @@ const view = angular.module('view', [
 ]);
 // Initialize controller
 view.controller('ViewController', ($scope, ViewParameters) => {
-    const Dialog = new DialogApi();
-    const ContextMenu = new ContextMenuApi();
+    const Dialog = new DialogHub();
+    const ContextMenu = new ContextMenuHub();
 
     $scope.title = 'This is a Dirigible view!';
     $scope.dataParameters = ViewParameters.get();

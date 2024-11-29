@@ -11,9 +11,9 @@
  */
 const editorView = angular.module('image-app', ['blimpKit', 'platformView', 'WorkspaceService']);
 editorView.controller('ImageViewController', function ($scope, $window, WorkspaceService, ViewParameters) {
-    const statusBarApi = new StatusBarApi();
-    const workspaceApi = new WorkspaceApi();
-    const layoutApi = new LayoutApi();
+    const statusBarHub = new StatusBarHub();
+    const workspaceHub = new WorkspaceHub();
+    const layoutHub = new LayoutHub();
     $scope.imageLink = '';
     $scope.state = {
         isBusy: true,
@@ -22,7 +22,7 @@ editorView.controller('ImageViewController', function ($scope, $window, Workspac
     };
 
     angular.element($window).bind('focus', () => {
-        statusBarApi.showLabel('');
+        statusBarHub.showLabel('');
     });
 
     angular.element('#image-view').bind('error', () => {
@@ -34,11 +34,11 @@ editorView.controller('ImageViewController', function ($scope, $window, Workspac
         $scope.state.isBusy = false;
     };
 
-    layoutApi.onFocusView((data) => {
-        if (data.params && data.params.resourcePath === $scope.dataParameters.filePath) statusBarApi.showLabel('');
+    layoutHub.onFocusView((data) => {
+        if (data.params && data.params.resourcePath === $scope.dataParameters.filePath) statusBarHub.showLabel('');
     });
 
-    workspaceApi.onReloadEditorParams((data) => {
+    workspaceHub.onReloadEditorParams((data) => {
         if (data.path === $scope.dataParameters.filePath) {
             $scope.$evalAsync(() => {
                 $scope.dataParameters = ViewParameters.get();

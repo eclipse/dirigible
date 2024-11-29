@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-class WorkspaceApi extends MessageHubApi {
+class WorkspaceHub extends MessageHubApi {
     /**
      * Sends a message containing information on which workspace has been changed.
      * @param {string} workspace - Name of the changed workspace.

@@ -9,7 +9,7 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-class NotificationApi extends MessageHubApi {
+class NotificationHub extends MessageHubApi {
     /**
      * Shows a notification.
      * @param {('information'|'warning'|'negative'|'positive')} type - Type of notification.
