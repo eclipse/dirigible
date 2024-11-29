@@ -3,7 +3,7 @@
  *
  * Do not modify the content as it may be re-generated again.
  */
-const navigationData = {
+const perspectiveData = {
 	id: '${projectName}-${fileName}',
 	label: '${title}',
 	group: 'reports',
@@ -15,12 +15,12 @@ const navigationData = {
 };
 
 function getNavigation() {
-    return navigationData;
+    return perspectiveData;
 }
 
 if (typeof exports !== 'undefined') {
-	exports.getNavigation = function () {
-		return navigationData;
+	exports.getPerspective = function () {
+		return perspectiveData;
 	}
 }
 
