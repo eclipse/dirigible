@@ -9,6 +9,8 @@
  */
 package org.eclipse.dirigible.components.engine.camel.synchronizer;
 
+import io.opentelemetry.context.Context;
+import io.opentelemetry.context.Scope;
 import org.eclipse.dirigible.components.base.artefact.ArtefactLifecycle;
 import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
@@ -77,7 +79,7 @@ public class CamelSynchronizer extends BaseSynchronizer<Camel, Long> {
      * @return the list
      */
     @Override
-    public List<Camel> parse(String location, byte[] content) {
+    protected List<Camel> parseImpl(String location, byte[] content) {
         Camel camel = new Camel();
         camel.setLocation(location);
         camel.setName(Paths.get(location)
@@ -207,7 +209,11 @@ public class CamelSynchronizer extends BaseSynchronizer<Camel, Long> {
      * @param camel the camel
      */
     private void addToProcessor(Camel camel) {
-        camelProcessor.onCreateOrUpdate(camel);
+        // remove trace context to decouple async routes from the synchronizer job
+        Context rootContext = Context.root();
+        try (Scope scope = rootContext.makeCurrent()) {
+            camelProcessor.onCreateOrUpdate(camel);
+        }
     }
 
     /**
@@ -216,8 +222,13 @@ public class CamelSynchronizer extends BaseSynchronizer<Camel, Long> {
      * @param camel the camel
      */
     private void removeFromProcessor(Camel camel) {
-        getService().delete(camel);
-        camelProcessor.onRemove(camel);
+        // remove trace context to decouple async routes from the synchronizer job
+        Context rootContext = Context.root();
+        try (Scope scope = rootContext.makeCurrent()) {
+            getService().delete(camel);
+            camelProcessor.onRemove(camel);
+        }
+
     }
 
     /**

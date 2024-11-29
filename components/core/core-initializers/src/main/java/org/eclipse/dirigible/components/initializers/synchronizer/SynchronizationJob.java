@@ -75,7 +75,8 @@ class SynchronizationJob extends SystemJob {
      */
     @Override
     protected String getJobKey() {
-        return "SynchronizationJobDetail";
+        return this.getClass()
+                   .getSimpleName();
     }
 
     /**

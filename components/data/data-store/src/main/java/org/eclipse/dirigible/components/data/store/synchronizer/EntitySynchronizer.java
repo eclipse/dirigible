@@ -91,7 +91,7 @@ public class EntitySynchronizer extends BaseSynchronizer<Entity, Long> {
      * @throws ParseException the parse exception
      */
     @Override
-    public List<Entity> parse(String location, byte[] content) throws ParseException {
+    protected List<Entity> parseImpl(String location, byte[] content) throws ParseException {
         Entity entity = new Entity();
         entity.setLocation(location);
         entity.setName(Paths.get(location)

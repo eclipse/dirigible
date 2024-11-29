@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2010-2024 Eclipse Dirigible contributors
+ *
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-FileCopyrightText: Eclipse Dirigible contributors SPDX-License-Identifier: EPL-2.0
+ */
 package org.eclipse.dirigible.integration.tests.api;
 
 import org.eclipse.dirigible.components.base.http.roles.Roles;
@@ -11,7 +20,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Map;
 import java.util.Set;
 
-import static org.assertj.core.api.Assertions.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -51,16 +59,13 @@ class SecurityIT extends IntegrationTest {
 
     @Test
     @WithMockUser(username = "operator", roles = {Roles.RoleNames.OPERATOR})
-    void testOperatorEndpointIsAccessible() {
+    void testOperatorEndpointIsAccessible() throws Exception {
         Map<String, HttpStatus> paths = Map.of("/spring-admin", HttpStatus.NOT_FOUND, "/actuator/info", HttpStatus.OK);
-        paths.forEach((path, expectedStatus) -> {
-            try {
-                mvc.perform(get(path))
-                   .andExpect(status().is(expectedStatus.value()));
-            } catch (Exception e) {
-                fail(e);
-            }
-        });
+        for (Map.Entry<String, HttpStatus> entry : paths.entrySet()) {
+            mvc.perform(get(entry.getKey()))
+               .andExpect(status().is(entry.getValue()
+                                           .value()));
+        }
     }
 
     @Test

@@ -71,7 +71,7 @@ public class WebsocketsSynchronizer extends BaseSynchronizer<Websocket, Long> {
      * @throws ParseException the parse exception
      */
     @Override
-    public List<Websocket> parse(String location, byte[] content) throws ParseException {
+    protected List<Websocket> parseImpl(String location, byte[] content) throws ParseException {
         Websocket websocket = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Websocket.class);
         Configuration.configureObject(websocket);
         websocket.setLocation(location);

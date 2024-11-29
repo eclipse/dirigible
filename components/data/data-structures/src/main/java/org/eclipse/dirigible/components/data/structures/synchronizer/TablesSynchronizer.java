@@ -89,7 +89,7 @@ public class TablesSynchronizer extends MultitenantBaseSynchronizer<Table, Long>
      * @throws ParseException the parse exception
      */
     @Override
-    public List<Table> parse(String location, byte[] content) throws ParseException {
+    protected List<Table> parseImpl(String location, byte[] content) throws ParseException {
         Table table = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Table.class);
         Configuration.configureObject(table);
         table.setLocation(location);

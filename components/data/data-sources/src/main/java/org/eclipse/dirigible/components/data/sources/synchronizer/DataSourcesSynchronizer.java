@@ -82,7 +82,7 @@ public class DataSourcesSynchronizer extends BaseSynchronizer<DataSource, Long> 
      * @throws ParseException the parse exception
      */
     @Override
-    public List<DataSource> parse(String location, byte[] content) throws ParseException {
+    protected List<DataSource> parseImpl(String location, byte[] content) throws ParseException {
         DataSource datasource = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), DataSource.class);
         Configuration.configureObject(datasource);
         datasource.setLocation(location);

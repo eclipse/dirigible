@@ -9,6 +9,7 @@
  */
 package org.eclipse.dirigible.components.jobs.handler;
 
+import io.opentelemetry.api.trace.Span;
 import org.eclipse.dirigible.components.base.tenant.Tenant;
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.jobs.domain.JobLog;
@@ -96,6 +97,8 @@ public class JobHandler implements Job {
         JobDataMap params = context.getJobDetail()
                                    .getJobDataMap();
         String handler = params.getString(JOB_PARAMETER_HANDLER);
+        Span.current()
+            .setAttribute("handler", handler);
 
         JobLog triggered = registerTriggered(name, handler);
         if (triggered != null) {

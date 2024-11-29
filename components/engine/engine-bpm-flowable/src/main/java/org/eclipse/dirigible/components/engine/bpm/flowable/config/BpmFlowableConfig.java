@@ -11,12 +11,13 @@ package org.eclipse.dirigible.components.engine.bpm.flowable.config;
 
 import org.eclipse.dirigible.components.engine.bpm.BpmProvider;
 import org.eclipse.dirigible.components.engine.bpm.flowable.provider.BpmProviderFlowable;
-import org.eclipse.dirigible.repository.api.IRepository;
+import org.flowable.engine.ProcessEngine;
+import org.flowable.spring.boot.actuate.endpoint.ProcessEngineEndpoint;
+import org.flowable.spring.boot.actuate.info.FlowableInfoContributor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration;
 import org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -36,15 +37,23 @@ public class BpmFlowableConfig {
         return bpmProviderFlowable;
     }
 
-    @Bean(destroyMethod = "cleanup")
-    BpmProviderFlowable provideBpmProviderFlowable(@Qualifier("SystemDB") DataSource datasource, IRepository repository,
-            ApplicationContext applicationContext, DataSourceTransactionManager dataSourceTransactionManager) {
-        return new BpmProviderFlowable(datasource, repository, dataSourceTransactionManager, applicationContext);
-    }
-
     @Bean
     DataSourceTransactionManager provideTransactionManager(@Qualifier("SystemDB") DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
+    }
+
+    /**
+     * Enable actuator flowable endpoint
+     */
+    @Bean
+    ProcessEngineEndpoint processEngineEndpoint(BpmProviderFlowable bpmProviderFlowable) {
+        ProcessEngine engine = bpmProviderFlowable.getProcessEngine();
+        return new ProcessEngineEndpoint(engine);
+    }
+
+    @Bean
+    FlowableInfoContributor flowableInfoContributor() {
+        return new FlowableInfoContributor();
     }
 
 }

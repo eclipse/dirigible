@@ -124,7 +124,7 @@ public class SchemasSynchronizer extends MultitenantBaseSynchronizer<Schema, Lon
      * @throws ParseException the parse exception
      */
     @Override
-    public List<Schema> parse(String location, byte[] content) throws ParseException {
+    protected List<Schema> parseImpl(String location, byte[] content) throws ParseException {
         final Schema schema = parseSchema(location, new String(content, StandardCharsets.UTF_8));
         Configuration.configureObject(schema);
         schema.setLocation(location);
