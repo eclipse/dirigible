@@ -162,7 +162,7 @@ class WorkspaceHub extends MessageHubApi {
     }
 
     /**
-     * Triggered when a file dirty state check is called.
+     * Triggered when a file dirty state is requested.
      * @param handler - Callback function.
      * @returns - A reference to the listener. In order to remove/disable the listener, you need to use this reference and pass it to the 'removeMessageListener' function.
      */
@@ -310,7 +310,7 @@ class WorkspaceHub extends MessageHubApi {
     }
 
     /**
-     * Triggered when a file, folder or project has been published.
+     * Triggered when a file, folder or project has been unpublished.
      * @param handler - Callback function.
      * @returns - A reference to the listener. In order to remove/disable the listener, you need to use this reference and pass it to the 'removeMessageListener' function.
      */
@@ -452,13 +452,15 @@ class WorkspaceHub extends MessageHubApi {
     /**
      * Sends a message containing information on which folder has been deleted.
      * @param {string} path - Full folder path, including folder name.
+     * @param {object} [params] - Custom parameters.
      */ // @ts-ignore
-    announceFolderDeleted({ path } = {}) {
+    announceFolderDeleted({ path, params } = {}) {
         this.postMessage({
             topic: 'platform.folders.deleted',
             data: {
                 // name: path.substring(path.lastIndexOf('/') + 1, path.length),
                 path: path,
+                params: params,
             }
         });
     }
