@@ -1,6 +1,6 @@
-angular.module('cruddialog', ['ideUI', 'ideView']);
+const crudDialog = angular.module('crudDialog', ['ideUI', 'ideView']);
 
-angular.module('cruddialog').controller('CRUDDialogController', ['$scope', 'messageHub', 'ViewParameters', function ($scope, messageHub, ViewParameters) {
+crudDialog.controller('CRUDDialogController', ['$scope', 'messageHub', 'ViewParameters', function ($scope, messageHub, ViewParameters) {
     // State management
     $scope.state = {
         dialogType: null, // 'edit', 'delete', 'create'
@@ -9,6 +9,12 @@ angular.module('cruddialog').controller('CRUDDialogController', ['$scope', 'mess
         busyText: "Loading...",
     };
 
+    $scope.forms = {
+        crudForm: {},
+    };
+
+    $scope.dialogType = null;
+
     // Data
     $scope.data = {
         selectedRow: {},
@@ -16,12 +22,28 @@ angular.module('cruddialog').controller('CRUDDialogController', ['$scope', 'mess
     };
 
     // Close dialog
-    $scope.closeDialog = function () {
-        $scope.state.isDialogOpen = false;
-        $scope.state.dialogType = null;
-        $scope.data.selectedRow = {};
-        $scope.data.newRow = {};
+    $scope.cancel = function () {
+        messageHub.closeDialogWindow('result-view-crud');
     };
+
+    $scope.dataParameters = ViewParameters.get();
+    if (!$scope.dataParameters.hasOwnProperty('dialogType')) {
+        $scope.state.error = true;
+        $scope.errorMessage = "The 'type' parameter is missing.";
+    } else {
+        $scope.dialogType = $scope.dataParameters.dialogType;
+        if ($scope.type == "edit" || $scope.type == "delete") {
+            if (!$scope.dataParameters.hasOwnProperty('data')) {
+                $scope.state.error = true;
+                $scope.errorMessage = "The 'data' parameter is missing.";
+            } else {
+                $scope.data.selectedRow = $scope.dataParameters.data;
+            }
+        } else $scope.data.newRow = $scope.dataParameters.data;
+        console.log($scope.data);
+        console.log($scope.dialogType);
+        $scope.state.isBusy = false;
+    }
 
     // Confirm actions
     $scope.confirmAction = function () {
@@ -29,14 +51,14 @@ angular.module('cruddialog').controller('CRUDDialogController', ['$scope', 'mess
         $scope.state.busyText = "Processing...";
 
         switch ($scope.state.dialogType) {
+            case 'create':
+                messageHub.postMessage('create-row', $scope.data.newRow, true);
+                break;
             case 'edit':
                 messageHub.postMessage('edit-row', $scope.data.selectedRow, true);
                 break;
             case 'delete':
                 messageHub.postMessage('delete-row', $scope.data.selectedRow, true);
-                break;
-            case 'create':
-                messageHub.postMessage('create-row', $scope.data.newRow, true);
                 break;
         }
 

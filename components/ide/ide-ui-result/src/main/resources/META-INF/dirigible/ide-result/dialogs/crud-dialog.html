@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="cruddialog" ng-controller="CRUDDialogController">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="crudDialog" ng-controller="CRUDDialogController">
 
     <head>
         <meta charset="utf-8" />
@@ -18,28 +18,24 @@
             {{state.busyText}}
         </fd-busy-indicator-extended>
         <div class="fd-padding dg-fill-parent" fd-scrollbar ng-show="!state.error && !state.isBusy">
-            <fd-fieldset ng-form="forms.dbForm">
-                <div class="dialog-overlay" ng-show="state.isDialogOpen">
+            <fd-fieldset ng-form="forms.crudForm">
+                <div class="dialog-overlay">
                     <div class="dialog">
-                        <h3 ng-if="type === 'edit'">Edit Row</h3>
-                        <h3 ng-if="type === 'delete'">Delete Row</h3>
-                        <h3 ng-if="type === 'create'">Add New Row</h3>
-
-                        <form ng-if="type === 'edit' || type === 'create'">
-                            <div ng-repeat="(key, value) in (type === 'edit' ? data.selectedRow : data.newRow)">
+                        <form ng-if="dialogType === 'edit' || dialogType === 'create'">
+                            <div ng-repeat="(key, value) in (dialogType === 'edit' ? data.selectedRow : data.newRow)">
                                 <fd-form-group>
                                     <fd-form-item>
                                         <fd-form-label for="{{key}}" dg-colon="true" dg-required="true">{{key}}
                                         </fd-form-label>
                                         <fd-input id="{{key}}" name="{{key}}" type="text" placeholder="Enter a {{key}}"
-                                            ng-model="type === 'edit' ? data.selectedRow[key] : data.newRow[key]"
+                                            ng-model="dialogType === 'edit' ? data.selectedRow[key] : data.newRow[key]"
                                             ng-required="true" ng-trim="false"></fd-input>
                                     </fd-form-item>
                                 </fd-form-group>
                             </div>
                         </form>
 
-                        <div ng-if="type === 'delete'">
+                        <div ng-if="dialogType === 'delete'">
                             <p>Are you sure you want to delete this row?</p>
                             <p><strong>{{data.selectedRow | json}}</strong></p>
                         </div>
@@ -47,12 +43,13 @@
                         <fd-bar bar-design="footer">
                             <fd-bar-right>
                                 <fd-bar-element>
-                                    <fd-button dg-label="{{type | uppercase}}" ng-click="confirmAction()"
-                                        dg-type="{{type === 'delete' ? 'negative' : 'emphasized'}}" compact="true">
+                                    <fd-button dg-label="{{dialogType | uppercase}}" ng-click="confirmAction()"
+                                        dg-type="{{dialogType === 'delete' ? 'negative' : 'emphasized'}}"
+                                        compact="true">
                                     </fd-button>
                                 </fd-bar-element>
                                 <fd-bar-element>
-                                    <fd-button dg-label="Cancel" ng-click="closeDialog()" dg-type="transparent"
+                                    <fd-button dg-label="Cancel" ng-click="cancel()" dg-type="transparent"
                                         compact="true">
                                     </fd-button>
                                 </fd-bar-element>

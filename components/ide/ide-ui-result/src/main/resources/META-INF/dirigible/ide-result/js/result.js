@@ -39,46 +39,93 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
     $scope.selectedRowOriginal = null;
 
     $scope.openCreateDialog = function () {
-        debugger
+        newRow = {};
+
+        $scope.columns.forEach(function (column) {
+            newRow[column] = null;
+        });
+        console.log(newRow);
         messageHub.showDialogWindow('result-view-crud',
-            { type: 'create' },
+            {
+                dialogType: 'create',
+                data: newRow
+            },
             null,
             false);
     };
-    $scope.openEditDialog = function () {
-        messageHub.showDialogWindow('result-view-crud', { type: 'edit', data: result }, null,
+    $scope.openEditDialog = function (row) {
+        const selectedRow = angular.copy(row);
+        messageHub.showDialogWindow('result-view-crud',
+            {
+                dialogType: 'edit',
+                data: selectedRow
+            },
+            null,
             false);
     };
-    $scope.openDeleteDialog = function () {
-        messageHub.showDialogWindow('result-view-crud', { type: 'delete', data: result }, null,
+    $scope.openDeleteDialog = function (row) {
+        const selectedRow = angular.copy(row);
+        messageHub.showDialogWindow('result-view-crud', {
+            dialogType: 'delete',
+            data: selectedRow
+        },
+            null,
             false);
     };
 
-    $scope.confirmCreate = function () {
-        if (!$scope.newRow) {
-            console.error("No data provided for the new row.");
-            return;
-        }
-
-        const requestBody = {
-            schemaName: $scope.schemaName,
-            tableName: $scope.tableName,
-            data: $scope.newRow
-        };
-
-        $http.post("/services/js/ide-result/js/crud.js/create", requestBody)
-            .then((response) => {
-                $scope.isCreateDialogOpen = false;
-
-                messageHub.postMessage('database.sql.showContent', {
+    messageHub.onDidReceiveMessage(
+        'create-row',
+        function (msg) {
+            if (msg.data) {
+                let row = msg.data;
+                const requestBody = {
                     schemaName: $scope.schemaName,
-                    tableName: $scope.tableName
-                });
-            })
-            .catch((error) => {
-                console.error("Failed to create row:", error);
-            });
-    };
+                    tableName: $scope.tableName,
+                    data: row
+                };
+
+                $http.post("/services/js/ide-result/js/crud.js/create", requestBody)
+                    .then((response) => {
+
+                        messageHub.postMessage('database.sql.showContent', {
+                            schemaName: $scope.schemaName,
+                            tableName: $scope.tableName
+                        });
+                    })
+                    .catch((error) => {
+                        console.error("Failed to create row:", error);
+                    });
+            }
+            messageHub.closeDialogWindow('database-create-edit');
+        },
+        true
+    );
+
+    // $scope.confirmCreate = function () {
+    //     if (!$scope.newRow) {
+    //         console.error("No data provided for the new row.");
+    //         return;
+    //     }
+
+    //     const requestBody = {
+    //         schemaName: $scope.schemaName,
+    //         tableName: $scope.tableName,
+    //         data: $scope.newRow
+    //     };
+
+    //     $http.post("/services/js/ide-result/js/crud.js/create", requestBody)
+    //         .then((response) => {
+    //             $scope.isCreateDialogOpen = false;
+
+    //             messageHub.postMessage('database.sql.showContent', {
+    //                 schemaName: $scope.schemaName,
+    //                 tableName: $scope.tableName
+    //             });
+    //         })
+    //         .catch((error) => {
+    //             console.error("Failed to create row:", error);
+    //         });
+    // };
 
     // $scope.closeCreateDialog = function () {
     //     $scope.isCreateDialogOpen = false;
