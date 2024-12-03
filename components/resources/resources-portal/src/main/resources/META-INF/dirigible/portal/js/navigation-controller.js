@@ -9,6 +9,14 @@ navigation.controller("LaunchpadViewController", ["$scope", "messageHub", "$http
     function loadNavigationGroups() {
         return $http.get("/services/js/portal/api/NavigationGroupsExtension/NavigationGroupsService.js")
             .then(function (response) {
+
+                for (itemData of response.data) {
+                    if (!itemData || !itemData.icon || !itemData.order || !itemData.label) {
+                        console.error(`Invalid navigation group data: ${JSON.stringify(itemData)}. Missing one of the properties: icon, order, label`);
+                        return;
+                    }
+                }
+
                 $scope.groups = response.data;
 
                 $scope.groups.sort((a, b) => a.order - b.order)
@@ -45,7 +53,7 @@ navigation.controller("LaunchpadViewController", ["$scope", "messageHub", "$http
 
     function addNavigationItem(itemData) {
         if (!itemData || !itemData.label || !itemData.group || !itemData.order || !itemData.link) {
-            console.error('Invalid item data:', itemData);
+            console.error(`Invalid item data: ${JSON.stringify(itemData)} Missing one of the properties: label, group, order, link`);
             return;
         }
 
