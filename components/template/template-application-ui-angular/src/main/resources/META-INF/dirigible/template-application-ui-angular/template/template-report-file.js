@@ -49,6 +49,12 @@ export function getTemplate(parameters) {
         sources: reportFileTemplate.getSources(),
         parameters: [
             {
+                name: "extensionPoint",
+                label: "Extension Point",
+                placeholder: "Enter Extension Point, if not provided defaults to the project name",
+                required: false
+            },
+            {
                 name: "brand",
                 label: "Brand",
                 placeholder: "Enter Brand"
