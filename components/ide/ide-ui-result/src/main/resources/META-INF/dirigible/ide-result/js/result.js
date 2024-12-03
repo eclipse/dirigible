@@ -38,13 +38,8 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
     $scope.selectedRow = null;
     $scope.selectedRowOriginal = null;
 
-    $scope.createRow = function () {
-        $scope.newRow = {};
-
-        $scope.columns.forEach(function (column) {
-            $scope.newRow[column] = null;
-        });
-        $scope.isCreateDialogOpen = true;
+    $scope.newResult = function () {
+        messageHub.postMessage('open-dialog', { type: 'create' }, true);
     };
 
     $scope.confirmCreate = function () {
@@ -77,14 +72,8 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
         $scope.isCreateDialogOpen = false;
     };
 
-    $scope.editRow = function (row) {
-        console.log("Row object:", row);
-        $scope.selectedRow = angular.copy(row);
-        $scope.selectedRowOriginal = angular.copy(row);
-
-        console.log("Selected Row:", $scope.selectedRow);
-
-        $scope.isEditDialogOpen = true;
+    $scope.editResult = function (result) {
+        messageHub.postMessage('open-dialog', { type: 'edit', data: result }, true);
     };
 
     $scope.confirmEdit = function () {
@@ -122,9 +111,8 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
         $scope.isEditDialogOpen = false;
     };
 
-    $scope.openDeleteDialog = function (row) {
-        $scope.selectedRow = angular.copy(row);
-        $scope.isDeleteDialogOpen = true;
+    $scope.deleteResult = function (result) {
+        messageHub.postMessage('open-dialog', { type: 'delete', data: result }, true);
     };
 
     $scope.confirmDelete = function () {
@@ -162,6 +150,48 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
         $scope.isDeleteDialogOpen = false;
 
     };
+
+    messageHub.onDidReceiveMessage('create-row', function (msg) {
+        if (msg.data) {
+            $http.post('/services/data/results', msg.data)
+                .then(function () {
+                    $scope.listResults();
+                    messageHub.triggerEvent('refresh-results', true);
+                })
+                .catch(function (error) {
+                    console.error(error);
+                    messageHub.showAlertError('Error while creating result', 'Check console for details.');
+                });
+        }
+    });
+
+    messageHub.onDidReceiveMessage('edit-row', function (msg) {
+        if (msg.data) {
+            $http.put('/services/data/results/' + msg.data.id, msg.data)
+                .then(function () {
+                    $scope.listResults();
+                    messageHub.triggerEvent('refresh-results', true);
+                })
+                .catch(function (error) {
+                    console.error(error);
+                    messageHub.showAlertError('Error while editing result', 'Check console for details.');
+                });
+        }
+    });
+
+    messageHub.onDidReceiveMessage('delete-row', function (msg) {
+        if (msg.data) {
+            $http.delete('/services/data/results/' + msg.data.id)
+                .then(function () {
+                    $scope.listResults();
+                    messageHub.triggerEvent('refresh-results', true);
+                })
+                .catch(function (error) {
+                    console.error(error);
+                    messageHub.showAlertError('Error while deleting result', 'Check console for details.');
+                });
+        }
+    });
 
     function extractSpecialAndPrimaryKeys(tableMetadata) {
         const specialColumns = [];
