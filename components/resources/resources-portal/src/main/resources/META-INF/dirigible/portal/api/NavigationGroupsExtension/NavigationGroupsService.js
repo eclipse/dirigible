@@ -15,7 +15,7 @@ for (let i = 0; i < groupExtensions.length; i++) {
         const group = getGroup();
         groupList.push(group);
     } catch (err) {
-        console.error(err)
+        console.error(`${err}\npath: ${path}`);
     }
 }
 
