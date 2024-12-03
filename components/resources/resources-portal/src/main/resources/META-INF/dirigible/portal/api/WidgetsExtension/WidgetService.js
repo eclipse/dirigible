@@ -15,7 +15,7 @@ for (let i = 0; i < widgetExtensions.length; i++) {
         const widget = getWidget();
         widgetList.push(widget);
     } catch (err) {
-        console.error(err)
+        console.error(`${err}\npath: ${path}`);
     }
 }
 
