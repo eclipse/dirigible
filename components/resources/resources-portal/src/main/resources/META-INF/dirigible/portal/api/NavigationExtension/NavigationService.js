@@ -15,7 +15,7 @@ for (let i = 0; i < navigationExtensions.length; i++) {
         const navigation = getNavigation();
         navigationList.push(navigation);
     } catch (err) {
-        console.error(err)
+        console.error(`${err}\npath: ${path}`);
     }
 }
 
