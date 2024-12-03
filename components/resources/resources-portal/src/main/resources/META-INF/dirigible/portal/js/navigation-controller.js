@@ -11,9 +11,13 @@ navigation.controller("LaunchpadViewController", ["$scope", "messageHub", "$http
             .then(function (response) {
                 $scope.groups = response.data;
 
+                $scope.groups.sort((a, b) => a.order - b.order)
+
                 response.data.forEach(elem => {
                     $scope.groupItems[elem.label.toLowerCase()] = [];
                 });
+
+
             })
             .catch(function (error) {
                 console.error('Error fetching navigation groups:', error);
