@@ -57,7 +57,7 @@
         <fd-toolbar dg-type="solid">
             <fd-toolbar-spacer></fd-toolbar-spacer>
             <fd-button dg-type="transparent" glyph="sap-icon--add" title="New" aria-label="New Row"
-                ng-click="createRow()">
+                ng-click="openCreateDialog()">
             </fd-button>
         </fd-toolbar>
         <fd-scrollbar class="dg-full-height" ng-hide="hasMultipleProcedureResults">
@@ -86,10 +86,10 @@
                         </td>
                         <td fd-table-cell style="text-align: center; width: 8em">
                             <fd-button dg-type="transparent" glyph="sap-icon--edit" title="Edit" aria-label="Edit"
-                                ng-click="editRow(row)">
+                                ng-click="openEditDialog(row)">
                             </fd-button>
                             <fd-button dg-type="transparent" glyph="sap-icon--delete" title="Delete"
-                                aria-label="Delete Database" ng-click="openDeleteDialog(row)">
+                                aria-label="Delete Row" ng-click="openDeleteDialog(row)">
                             </fd-button>
                         </td>
                     </tr>
@@ -133,7 +133,7 @@
                 </table>
             </section>
         </fd-scrollbar>
-        <div class="dialog-overlay" ng-show="state.isDialogOpen">
+        <!-- <div class="dialog-overlay" ng-show="state.isDialogOpen">
             <div class="dialog">
                 <h3 ng-if="state.dialogType === 'edit'">Edit Row</h3>
                 <h3 ng-if="state.dialogType === 'delete'">Delete Row</h3>
@@ -171,7 +171,7 @@
                     </fd-bar-right>
                 </fd-bar>
             </div>
-        </div>
+        </div> -->
     </body>
 
 </html>

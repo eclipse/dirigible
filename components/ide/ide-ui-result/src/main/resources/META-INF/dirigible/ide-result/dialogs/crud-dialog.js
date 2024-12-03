@@ -1,13 +1,12 @@
-angular.module('dialogManager', ['ideUI', 'ideView']);
+angular.module('cruddialog', ['ideUI', 'ideView']);
 
-angular.module('dialogManager').controller('DialogController', ['$scope', 'messageHub', function ($scope, messageHub) {
+angular.module('cruddialog').controller('CRUDDialogController', ['$scope', 'messageHub', 'ViewParameters', function ($scope, messageHub, ViewParameters) {
     // State management
     $scope.state = {
-        isDialogOpen: false,
         dialogType: null, // 'edit', 'delete', 'create'
-        isBusy: false,
+        isBusy: true,
         error: false,
-        busyText: "",
+        busyText: "Loading...",
     };
 
     // Data
@@ -16,12 +15,6 @@ angular.module('dialogManager').controller('DialogController', ['$scope', 'messa
         newRow: {},
     };
 
-    // Open dialog
-    messageHub.onDidReceiveMessage('open-dialog', function (msg) {
-        if (msg.data) {
-            $scope.openDialog(msg.data.type, msg.data.data || null);
-        }
-    });
     // Close dialog
     $scope.closeDialog = function () {
         $scope.state.isDialogOpen = false;

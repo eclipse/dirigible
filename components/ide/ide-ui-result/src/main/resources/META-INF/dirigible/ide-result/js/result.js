@@ -38,8 +38,20 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
     $scope.selectedRow = null;
     $scope.selectedRowOriginal = null;
 
-    $scope.newResult = function () {
-        messageHub.postMessage('open-dialog', { type: 'create' }, true);
+    $scope.openCreateDialog = function () {
+        debugger
+        messageHub.showDialogWindow('result-view-crud',
+            { type: 'create' },
+            null,
+            false);
+    };
+    $scope.openEditDialog = function () {
+        messageHub.showDialogWindow('result-view-crud', { type: 'edit', data: result }, null,
+            false);
+    };
+    $scope.openDeleteDialog = function () {
+        messageHub.showDialogWindow('result-view-crud', { type: 'delete', data: result }, null,
+            false);
     };
 
     $scope.confirmCreate = function () {
@@ -68,13 +80,9 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
             });
     };
 
-    $scope.closeCreateDialog = function () {
-        $scope.isCreateDialogOpen = false;
-    };
-
-    $scope.editResult = function (result) {
-        messageHub.postMessage('open-dialog', { type: 'edit', data: result }, true);
-    };
+    // $scope.closeCreateDialog = function () {
+    //     $scope.isCreateDialogOpen = false;
+    // };
 
     $scope.confirmEdit = function () {
         if (!$scope.selectedRow) {
@@ -107,13 +115,9 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
             });
     };
 
-    $scope.closeEditDialog = function () {
-        $scope.isEditDialogOpen = false;
-    };
-
-    $scope.deleteResult = function (result) {
-        messageHub.postMessage('open-dialog', { type: 'delete', data: result }, true);
-    };
+    // $scope.closeEditDialog = function () {
+    //     $scope.isEditDialogOpen = false;
+    // };
 
     $scope.confirmDelete = function () {
         if (!$scope.selectedRow) {
@@ -145,11 +149,11 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
     };
 
 
-    $scope.closeDeleteDialog = function () {
-        $scope.selectedRow = null;
-        $scope.isDeleteDialogOpen = false;
+    // $scope.closeDeleteDialog = function () {
+    //     $scope.selectedRow = null;
+    //     $scope.isDeleteDialogOpen = false;
 
-    };
+    // };
 
     messageHub.onDidReceiveMessage('create-row', function (msg) {
         if (msg.data) {
