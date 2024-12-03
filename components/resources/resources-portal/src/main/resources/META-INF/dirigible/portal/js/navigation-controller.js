@@ -24,8 +24,6 @@ navigation.controller("LaunchpadViewController", ["$scope", "messageHub", "$http
                 response.data.forEach(elem => {
                     $scope.groupItems[elem.label.toLowerCase()] = [];
                 });
-
-
             })
             .catch(function (error) {
                 console.error('Error fetching navigation groups:', error);
@@ -66,7 +64,8 @@ navigation.controller("LaunchpadViewController", ["$scope", "messageHub", "$http
         $scope.groupItems[groupKey].push({
             id: itemData.id,
             label: itemData.label,
-            link: itemData.link
+            link: itemData.link,
+            order: itemData.order
         });
     }
 
