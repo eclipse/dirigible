@@ -10,10 +10,10 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 const viewData = {
-    id: 'branchesLocal',
-    label: 'Local branches',
-    region: 'left',
-    path: '/services/web/view-git-branches/local.html'
+    id: 'gitStaging',
+    label: 'Staging',
+    region: 'right',
+    path: '/services/web/view-git-staging/staging.html'
 };
 if (typeof exports !== 'undefined') {
     exports.getView = () => viewData;

@@ -198,6 +198,7 @@
 		<!-- Platform IDE -->
 		<module>platform-ide/shell-ide</module>
 		<module>platform-ide/perspective-workbench</module>
+		<module>platform-ide/perspective-git</module>
 		<module>platform-ide/view-welcome</module>
 		<module>platform-ide/view-search</module>
 		<module>platform-ide/view-projects</module>
@@ -1106,6 +1107,11 @@
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-components-perspective-workbench</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-perspective-git</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
