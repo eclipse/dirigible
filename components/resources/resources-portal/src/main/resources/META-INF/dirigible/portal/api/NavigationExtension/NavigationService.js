@@ -15,7 +15,7 @@ for (let i = 0; i < navigationExtensions.length; i++) {
         const navigation = getNavigation();
         navigationList.push(navigation);
     } catch (err) {
-        console.error(`NavigationService: ${err}\npath: ${path}`);
+        console.error(`Failed to load a navigation group in NavigationService: ${err}\npath: ${path}`);
     }
 }
 

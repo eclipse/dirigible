@@ -15,7 +15,7 @@ for (let i = 0; i < widgetExtensions.length; i++) {
         const widget = getWidget();
         widgetList.push(widget);
     } catch (err) {
-        console.error(`WidgetService: ${err}\npath: ${path}`);
+        console.error(`Failed to load a widget in WidgetService: ${err}\npath: ${path}`);
     }
 }
 
