@@ -13,17 +13,25 @@ crudDialog.controller('CRUDDialogController', ['$scope', 'messageHub', 'ViewPara
         crudForm: {},
     };
 
+    $scope.inputRules = {
+        patterns: ['^(?! ).*(?<! )$']
+    };
+
     $scope.dialogType = null;
 
     // Data
     $scope.data = {
-        selectedRow: {},
-        newRow: {},
+        row: {},
+        primaryKeys: null,
+        specialKeys: null
     };
 
-    // Close dialog
     $scope.cancel = function () {
         messageHub.closeDialogWindow('result-view-crud');
+        $scope.data.row = {};
+        $scope.data.primaryKeys = null;
+        $scope.data.specialKeys = null;
+        $scope.dialogType = null;
     };
 
     $scope.dataParameters = ViewParameters.get();
@@ -32,36 +40,48 @@ crudDialog.controller('CRUDDialogController', ['$scope', 'messageHub', 'ViewPara
         $scope.errorMessage = "The 'type' parameter is missing.";
     } else {
         $scope.dialogType = $scope.dataParameters.dialogType;
-        if ($scope.type == "edit" || $scope.type == "delete") {
-            if (!$scope.dataParameters.hasOwnProperty('data')) {
-                $scope.state.error = true;
-                $scope.errorMessage = "The 'data' parameter is missing.";
+        if (!$scope.dataParameters.hasOwnProperty('data')) {
+            $scope.state.error = true;
+            $scope.errorMessage = "The 'data' parameter is missing.";
+        } else {
+            if ($scope.dataParameters.dialogType == "edit") {
+                $scope.data.row = $scope.dataParameters.data.row;
+                $scope.data.primaryKeys = $scope.dataParameters.data.primaryKeys
+                    ? $scope.dataParameters.data.primaryKeys
+                    : null;
+                $scope.data.specialKeys = $scope.dataParameters.data.specialKeys
+                    ? $scope.dataParameters.data.specialKeys
+                    : null;
             } else {
-                $scope.data.selectedRow = $scope.dataParameters.data;
+                $scope.data.row = $scope.dataParameters.data;
             }
-        } else $scope.data.newRow = $scope.dataParameters.data;
+        }
         console.log($scope.data);
-        console.log($scope.dialogType);
         $scope.state.isBusy = false;
     }
 
-    // Confirm actions
     $scope.confirmAction = function () {
         $scope.state.isBusy = true;
         $scope.state.busyText = "Processing...";
 
-        switch ($scope.state.dialogType) {
+        switch ($scope.dialogType) {
             case 'create':
-                messageHub.postMessage('create-row', $scope.data.newRow, true);
+                messageHub.postMessage('create-row', $scope.data.row, true);
                 break;
             case 'edit':
-                messageHub.postMessage('edit-row', $scope.data.selectedRow, true);
+                messageHub.postMessage('edit-row', $scope.data.row, true);
                 break;
             case 'delete':
-                messageHub.postMessage('delete-row', $scope.data.selectedRow, true);
+                messageHub.postMessage('delete-row', $scope.data.row, true);
                 break;
         }
 
         $scope.closeDialog();
     };
+
+    $scope.isPrimaryOrSpecialKey = function (key) {
+        return ($scope.data.primaryKeys && $scope.data.primaryKeys.includes(key)) ||
+            ($scope.data.specialKeys && $scope.data.specialKeys.includes(key));
+    };
+
 }]);
