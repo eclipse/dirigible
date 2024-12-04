@@ -12,7 +12,6 @@
 const viewData = {
 	id: 'diff',
 	label: 'Difference',
-	factory: 'frame',
 	region: 'center',
 	path: '/services/web/editor-monaco/diff-view.html'
 };

@@ -14,17 +14,17 @@ angular.module('TemplatesService', []).provider('TemplatesService', function Tem
     this.$get = ['$http', function templateApiFactory($http) {
 
         const listTemplates = function () {
-            const url = new UriBuilder().path(this.templatesServiceUrl.split('/')).build();
+            const url = UriBuilder().path(this.templatesServiceUrl.split('/')).build();
             return $http.get(url);
         }.bind(this);
 
         const fileExtensions = function () {
-            const url = new UriBuilder().path(this.templatesServiceUrl.split('/')).path('extensions').build();
+            const url = UriBuilder().path(this.templatesServiceUrl.split('/')).path('extensions').build();
             return $http.get(url);
         }.bind(this);
 
         const menuTemplates = function () {
-            const url = new UriBuilder().path(this.templatesServiceUrl.split('/')).path('menu').build();
+            const url = UriBuilder().path(this.templatesServiceUrl.split('/')).path('menu').build();
             return $http.get(url);
         }.bind(this);
 

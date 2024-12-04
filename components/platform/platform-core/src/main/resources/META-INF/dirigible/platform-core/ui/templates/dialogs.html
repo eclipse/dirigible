@@ -27,8 +27,7 @@
         <bk-dialog-header header="{{dialogs[0].header}}" title="{{dialogs[0].title}}" subheader="{{dialogs[0].subheader}}">
             <bk-button ng-if="dialogs[0].closeButton" glyph="sap-icon--decline" aria-label="Close dialog" compact="::true" round="::true" ng-click="closeDialog()"></bk-button>
         </bk-dialog-header>
-        <bk-dialog-body class="bk-padding{{dialogs[0].preformatted ? ' bk-preformatted' : ''}}">{{dialogs[0].message}}
-        </bk-dialog-body>
+        <bk-dialog-body class="bk-padding{{dialogs[0].preformatted ? ' bk-preformatted' : ''}}">{{dialogs[0].message}}</bk-dialog-body>
         <bk-dialog-footer compact="::true">
             <bk-bar-element ng-repeat="button in dialogs[0].buttons track by button.id">
                 <bk-button label="{{button.label}}" decisive="true" ng-click="closeDialog(button.id)" state="{{button.state}}">

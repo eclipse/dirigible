@@ -91,7 +91,7 @@
                         <bk-button bk-shellbar-button glyph="sap-icon--bell" badge="{{notifications.length ? notifications.length : ''}}" aria-label="notification list button" ng-click="notificationsPanelOpen()">
                         </bk-button>
                     </bk-popover-control>
-                    <bk-popover-body align="bottom-right" can-scroll="true" class="notification-popover">
+                    <bk-popover-body align="bottom-right" can-scroll="true" class="bk-vbox notification-popover">
                         <bk-toolbar has-title="true">
                             <bk-toolbar-title ng-if="notifications.length">Notifications ({{notifications.length}})
                             </bk-toolbar-title>

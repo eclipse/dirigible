@@ -13,7 +13,7 @@ angular.module('RegistryService', []).provider('RegistryService', function regis
     this.registryServiceUrl = '/services/core/registry';
     this.$get = ['$http', function registryApiFactory($http) {
         const loadRegistry = function (resourcePath = '/') {
-            const url = new UriBuilder().path(this.registryServiceUrl.split('/')).path(resourcePath.split('/')).build();
+            const url = UriBuilder().path(this.registryServiceUrl.split('/')).path(resourcePath.split('/')).build();
             return $http.get(url, { headers: { 'describe': 'application/json' } });
         }.bind(this);
 

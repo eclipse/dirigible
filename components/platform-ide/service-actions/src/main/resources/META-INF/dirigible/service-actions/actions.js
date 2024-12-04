@@ -13,7 +13,7 @@ angular.module('ActionsService', []).provider('ActionsService', function Actions
     this.workspaceActionsServiceUrl = '/services/ide/workspace-actions';
     this.$get = ['$http', function actionsApiFactory($http) {
         const executeAction = function (workspace, project, action) {
-            const url = new UriBuilder().path(this.workspaceActionsServiceUrl.split('/')).path(workspace).path(project).path(action).build();
+            const url = UriBuilder().path(this.workspaceActionsServiceUrl.split('/')).path(workspace).path(project).path(action).build();
             return $http.post(url, {});
         }.bind(this);
 

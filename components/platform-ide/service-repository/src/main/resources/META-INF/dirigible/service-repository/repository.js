@@ -17,24 +17,24 @@ angular.module('RepositoryService', []).provider('RepositoryService', function R
         }
 
         const loadRepository = function (resourcePath = '/') {
-            const url = new UriBuilder().path(this.repositoryServiceUrl.split('/')).path(resourcePath.split('/')).build();
+            const url = UriBuilder().path(this.repositoryServiceUrl.split('/')).path(resourcePath.split('/')).build();
             return $http.get(url, { headers: { 'describe': 'application/json' } });
         }.bind(this);
 
         const createCollection = function (path, name) {
-            const url = new UriBuilder().path(this.repositoryServiceUrl.split('/')).path(path.split('/')).path(name).build() + '/';
+            const url = UriBuilder().path(this.repositoryServiceUrl.split('/')).path(path.split('/')).path(name).build() + '/';
             return $http.post(url);
         }.bind(this);
 
         const createResource = function (path, name) {
-            const url = new UriBuilder().path(this.repositoryServiceUrl.split('/')).path(path.split('/')).path(name).build();
+            const url = UriBuilder().path(this.repositoryServiceUrl.split('/')).path(path.split('/')).path(name).build();
             return $http.post(url);
         }.bind(this);
 
         const remove = function (resourcePath) {
             if (resourcePath !== undefined && !(typeof resourcePath === 'string'))
                 throw Error("remove: resourcePath must be a path");
-            const url = new UriBuilder().path(this.repositoryServiceUrl.split('/')).path(resourcePath.split('/')).build();
+            const url = UriBuilder().path(this.repositoryServiceUrl.split('/')).path(resourcePath.split('/')).build();
             return $http.delete(url, { headers: { 'describe': 'application/json' } });
         }.bind(this);
 

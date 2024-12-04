@@ -14,12 +14,12 @@ angular.module('GenerateService', []).provider('GenerateService', function Gener
     this.generateModelServiceUrl = '/services/js/service-generate/generate.mjs';
     this.$get = ['$http', function generateApiFactory($http) {
         const generateFromTemplate = function (workspace, project, file, template, parameters = { '__empty': '' }) {
-            const url = new UriBuilder().path(this.generateServiceUrl.split('/')).path('file').path(workspace).path(project).path(file.split('/')).build();
+            const url = UriBuilder().path(this.generateServiceUrl.split('/')).path('file').path(workspace).path(project).path(file.split('/')).build();
             return $http.post(url, { 'template': template, 'parameters': parameters });
         }.bind(this);
 
         const generateFromModel = function (workspace, project, file, template, parameters = { '__empty': '' }) {
-            let url = new UriBuilder().path(this.generateModelServiceUrl.split('/')).path('model').path(workspace).path(project).build();
+            let url = UriBuilder().path(this.generateModelServiceUrl.split('/')).path('model').path(workspace).path(project).build();
             url = `${url}?path=${file.split('/')}`;
             return $http.post(url, { 'template': template, 'parameters': parameters, 'model': file });
         }.bind(this);

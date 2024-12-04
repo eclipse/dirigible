@@ -666,10 +666,6 @@ ng-transclude:empty {
   background-position: 0 0, 8px 8px;
 }
 
-.bk-popover-text--multiline .fd-text {
-  white-space: normal;
-}
-
 .bk-font--italic {
   font-style: italic;
 }

@@ -15,30 +15,30 @@ angular.module('TransportService', [])
         this.$get = ['$window', function transportApiFactory($window) {
 
             const exportProject = function (workspace, projectName) {
-                if (!workspace) throw Error("Transport API: You must provide a workspace name");
-                if (!projectName) throw Error("Transport API: You must provide a project name");
-                const url = new UriBuilder().path(this.transportServiceUrl.split('/')).path('project').path(workspace).path(projectName).build();
+                if (!workspace) throw Error('Transport API: You must provide a workspace name');
+                if (!projectName) throw Error('Transport API: You must provide a project name');
+                const url = UriBuilder().path(this.transportServiceUrl.split('/')).path('project').path(workspace).path(projectName).build();
                 $window.open(url, '_blank');
             }.bind(this);
 
             const getProjectImportUrl = function () {
-                return new UriBuilder().path(this.transportServiceUrl.split('/')).path('project').build();
+                return UriBuilder().path(this.transportServiceUrl.split('/')).path('project').build();
             }.bind(this);
 
             const getZipImportUrl = function () {
-                return new UriBuilder().path(this.transportServiceUrl.split('/')).path('zipimport').build();
+                return UriBuilder().path(this.transportServiceUrl.split('/')).path('zipimport').build();
             }.bind(this);
 
             const getFileImportUrl = function () {
-                return new UriBuilder().path(this.transportServiceUrl.split('/')).path('fileimport').build();
+                return UriBuilder().path(this.transportServiceUrl.split('/')).path('fileimport').build();
             }.bind(this);
 
             const getSnapshotUrl = function () {
-                return new UriBuilder().path(this.transportServiceUrl.split('/')).path('snapshot').build();
+                return UriBuilder().path(this.transportServiceUrl.split('/')).path('snapshot').build();
             }.bind(this);
 
             const exportRepository = function () {
-                const url = new UriBuilder().path(this.transportServiceUrl.split('/')).path('snapshot').build();
+                const url = UriBuilder().path(this.transportServiceUrl.split('/')).path('snapshot').build();
                 $window.open(url, '_blank');
             }.bind(this);
 

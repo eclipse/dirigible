@@ -217,23 +217,37 @@ angular.module('platformShell', ['ngCookies', 'platformUser', 'platformExtension
                 }
             },
             post: (scope) => {
+                const selectedPerspectiveKey = `${brandingInfo.keyPrefix ?? 'DIRIGIBLE'}.shell.selected-perspective`;
+                scope.activeId = localStorage.getItem(selectedPerspectiveKey);
                 shellState.registerStateListener((data) => {
                     scope.activeId = data.id;
+                    saveSelectedPerspective(data.id);
                 });
+                function saveSelectedPerspective(id) {
+                    localStorage.setItem(selectedPerspectiveKey, id);
+                }
                 function setDefaultPerspective() {
                     if (scope.config.perspectives.length) {
-                        if (scope.config.perspectives[0].items) {
+                        const label = getPerspectiveLabel(scope.activeId, scope.config.perspectives);
+                        if (label) {
+                            shellState.perspective = {
+                                id: scope.activeId,
+                                label: label,
+                            };
+                        } else if (scope.config.perspectives[0].items) {
                             scope.activeId = scope.config.perspectives[0].items[0].id;
                             shellState.perspective = {
                                 id: scope.config.perspectives[0].items[0].id,
                                 label: scope.config.perspectives[0].items[0].label
                             };
+                            saveSelectedPerspective(scope.config.perspectives[0].items[0].id);
                         } else {
                             scope.activeId = scope.config.perspectives[0].id;
                             shellState.perspective = {
                                 id: scope.config.perspectives[0].id,
                                 label: scope.config.perspectives[0].label
                             };
+                            saveSelectedPerspective(scope.config.perspectives[0].id);
                         }
                     }
                 }

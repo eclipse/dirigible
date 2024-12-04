@@ -17,7 +17,7 @@ angular.module('PublisherService', []).provider('PublisherService', function Pub
          * @param {string} resourcePath - Full resource path, including workspace name.
          */
         const publish = function (resourcePath) {
-            const url = new UriBuilder().path(this.publisherServiceUrl.split('/')).path(resourcePath.split('/')).build();
+            const url = UriBuilder().path(this.publisherServiceUrl.split('/')).path(resourcePath.split('/')).build();
             return $http.post(url, {}, {
                 headers: { 'Dirigible-Editor': 'Publish' }
             });
@@ -28,7 +28,7 @@ angular.module('PublisherService', []).provider('PublisherService', function Pub
          * @param {string} resourcePath - Full resource path, including workspace name.
          */
         const unpublish = function (resourcePath) {
-            const url = new UriBuilder().path(this.publisherServiceUrl.split('/')).path(resourcePath.split('/')).build();
+            const url = UriBuilder().path(this.publisherServiceUrl.split('/')).path(resourcePath.split('/')).build();
             return $http.delete(url, { headers: { 'Dirigible-Editor': 'Publish' } });
         }.bind(this);
 
