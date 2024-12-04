@@ -206,6 +206,10 @@
 		<module>platform-ide/view-preview</module>
 		<module>platform-ide/view-problems</module>
 		<module>platform-ide/view-properties</module>
+		<module>platform-ide/view-git-branches</module>
+		<module>platform-ide/view-git-staging</module>
+		<module>platform-ide/view-git-history</module>
+		<module>platform-ide/view-git-projects</module>
 		<module>platform-ide/service-workspace</module>
 		<module>platform-ide/service-transport</module>
 		<module>platform-ide/service-template</module>
@@ -214,6 +218,7 @@
 		<module>platform-ide/service-publisher</module>
 		<module>platform-ide/service-generate</module>
 		<module>platform-ide/service-actions</module>
+		<module>platform-ide/service-git</module>
 		<module>platform-ide/editor-monaco</module>
 		<module>platform-ide/editor-monaco-extensions</module>
 		<module>platform-ide/editor-bpm</module>
@@ -1149,6 +1154,26 @@
 				<artifactId>dirigible-components-view-properties</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-view-git-branches</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-view-git-staging</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-view-git-history</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-view-git-projects</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
@@ -1188,6 +1213,11 @@
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-components-service-actions</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-service-git</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 

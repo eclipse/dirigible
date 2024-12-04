@@ -55,6 +55,22 @@
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-view-properties</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-view-git-branches</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-view-git-staging</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-view-git-history</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-view-git-projects</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
@@ -87,6 +103,10 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-service-actions</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-service-git</artifactId>
 		</dependency>
 
 		<dependency>
