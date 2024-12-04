@@ -49,7 +49,7 @@ class CRUDService {
 
     @Put("/update")
     async updateRow(record) {
-        debugger
+
         const { schemaName, tableName, data, primaryKey } = record;
 
         if (!schemaName || !tableName || !data || !primaryKey) {
