@@ -28,9 +28,158 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
     };
 
     let csrfToken = null;
-
     $scope.procedureResults = [];
     $scope.hasMultipleProcedureResults = false;
+    $scope.schemaName = null;
+    $scope.tableName = null;
+    $scope.selectedRow = null;
+    $scope.hasResult = false;
+
+    $scope.openCreateDialog = function () {
+        newRow = {};
+
+        $scope.columns.forEach(function (column) {
+            newRow[column] = null;
+        });
+        console.log(newRow);
+        messageHub.showDialogWindow('result-view-crud',
+            {
+                dialogType: 'create',
+                data: newRow
+            },
+            null,
+            false);
+    };
+    $scope.openEditDialog = function (row) {
+        const selectedRow = angular.copy(row);
+        messageHub.showDialogWindow('result-view-crud',
+            {
+                dialogType: 'edit',
+                data: {
+                    row: selectedRow,
+                    primaryKeys: $scope.primaryKeyColumns,
+                    specialKeys: $scope.specialColumns
+                }
+            },
+            null,
+            false);
+    };
+    $scope.openDeleteDialog = function (row) {
+        const selectedRow = angular.copy(row);
+        messageHub.showDialogWindow('result-view-crud', {
+            dialogType: 'delete',
+            data: selectedRow
+        },
+            null,
+            false);
+    };
+
+    messageHub.onDidReceiveMessage(
+        'create-row',
+        function (msg) {
+            if (msg.data) {
+                let row = msg.data;
+                const requestBody = {
+                    schemaName: $scope.schemaName,
+                    tableName: $scope.tableName,
+                    data: row
+                };
+
+                $http.post("/services/js/ide-result/js/crud.js/create", requestBody)
+                    .then((response) => {
+
+                        messageHub.postMessage('database.sql.showContent', {
+                            schemaName: $scope.schemaName,
+                            tableName: $scope.tableName
+                        });
+                    })
+                    .catch((error) => {
+                        console.error("Failed to create row:", error);
+                    });
+            }
+            messageHub.closeDialogWindow('result-view-crud');
+        },
+        true
+    );
+
+    messageHub.onDidReceiveMessage(
+        'edit-row',
+        function (msg) {
+            if (msg.data) {
+                let row = msg.data;
+                const requestBody = {
+                    schemaName: $scope.schemaName,
+                    tableName: $scope.tableName,
+                    data: row,
+                    primaryKey: $scope.primaryKeyColumns
+                };
+
+                $http.put("/services/js/ide-result/js/crud.js/update", requestBody)
+                    .then((response) => {
+
+                        messageHub.postMessage('database.sql.showContent', {
+                            schemaName: $scope.schemaName,
+                            tableName: $scope.tableName
+                        });
+                    })
+                    .catch((error) => {
+                        console.error("Failed to edit row:", error);
+                    });
+            }
+            messageHub.closeDialogWindow('result-view-crud');
+        },
+        true
+    );
+
+    messageHub.onDidReceiveMessage(
+        'delete-row',
+        function (msg) {
+            if (msg.data) {
+                let row = msg.data;
+                const requestBody = {
+                    schemaName: $scope.schemaName,
+                    tableName: $scope.tableName,
+                    data: row,
+                    primaryKey: $scope.primaryKeyColumns
+                };
+
+                $http.post("/services/js/ide-result/js/crud.js/delete", requestBody)
+                    .then((response) => {
+
+                        messageHub.postMessage('database.sql.showContent', {
+                            schemaName: $scope.schemaName,
+                            tableName: $scope.tableName
+                        });
+                    })
+                    .catch((error) => {
+                        console.error("Failed to delete row:", error);
+                    });
+            }
+            messageHub.closeDialogWindow('result-view-crud');
+        },
+        true
+    );
+
+    function extractSpecialAndPrimaryKeys(tableMetadata) {
+        const specialColumns = [];
+        const primaryKeyColumns = [];
+        const columns = [];
+
+        tableMetadata.columns.forEach(column => {
+            columns.push(column);
+
+            const type = column.type.toUpperCase();
+            if (type === 'BLOB' || type === 'CLOB') {
+                specialColumns.push(column.name);
+            }
+
+            if (column.primaryKey) {
+                primaryKeyColumns.push(column.name);
+            }
+        });
+
+        return { columns, specialColumns, primaryKeyColumns };
+    }
 
     $http.get("", { headers: { "X-CSRF-Token": "Fetch" } }).then(function (response) {
         csrfToken = response.headers()["x-csrf-token"];
@@ -61,7 +210,8 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
         $scope.$apply();
     };
 
-    messageHub.onDidReceiveMessage("database.sql.execute", function (command) {
+    function executeQuery(command) {
+
         $scope.state.error = false;
         $scope.showProgress();
         let url = "/services/data/" + $scope.datasource;
@@ -88,11 +238,14 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
                             }
                             break;
                         }
+                        $scope.hasResult = true;
                     } else if (result.data !== null && result.data.errorMessage !== null && result.data.errorMessage !== undefined) {
                         $scope.state.error = true;
                         $scope.errorMessage = result.data.errorMessage;
+                        $scope.hasResult = false;
                     } else {
                         $scope.result = 'Empty result';
+                        $scope.hasResult = false;
                     }
                     $scope.hideProgress();
                 }, function (reject) {
@@ -258,7 +411,29 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
                 }
             );
         }
-    }, true);
+    }
+
+    messageHub.onDidReceiveMessage("database.sql.showContent", function (event) {
+
+        let data = event.data;
+        $scope.schemaName = data.schemaName;
+        $scope.tableName = data.tableName;
+        let sqlCommand = "SELECT * FROM \"" + data.schemaName + "\"" + "." + "\"" + data.tableName + "\";\n";
+        executeQuery({ data: sqlCommand });
+        $http.get("/services/data/definition/" + $scope.datasource + '/' + $scope.schemaName
+            + '/' + $scope.tableName)
+            .then(function (response) {
+                $scope.metadata = response.data; // Set the metadata once the response is received
+                const extractedKeys = extractSpecialAndPrimaryKeys($scope.metadata);
+                $scope.primaryKeyColumns = extractedKeys.primaryKeyColumns;
+                $scope.specialColumns = extractedKeys.specialColumns;
+            })
+            .catch(function (error) {
+                console.error("Error fetching metadata:", error);
+            });
+    });
+
+    messageHub.onDidReceiveMessage("database.sql.execute", executeQuery, true);
 
     messageHub.onDidReceiveMessage("database.data.import.artifact", function (command) {
         let artifact = command.data.split('.');
@@ -309,7 +484,7 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
 
     messageHub.onDidReceiveMessage("database.metadata.project.export.model", function (command) {
         let schema = command.data;
-        let url = "/services/data/project/model/" + $scope.datasource + "/" +    schema;
+        let url = "/services/data/project/model/" + $scope.datasource + "/" + schema;
         $http({
             method: 'PUT',
             url: url,
@@ -404,7 +579,7 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
         $scope.hasMultipleProcedureResults = false;
         $scope.procedureResults.length = 0;
     }
-    
+
     messageHub.onDidReceiveMessage("database.sql.error", function (error) {
         $scope.state.error = true;
         $scope.errorMessage = error.data;

@@ -114,9 +114,9 @@
 		<maven-license-plugin.version>4.6</maven-license-plugin.version>
 
 		<!-- Spring -->
-		<spring.boot.version>3.3.4</spring.boot.version>
+		<spring.boot.version>3.4.0</spring.boot.version>
 		<spring.admin.version>${spring.boot.version}</spring.admin.version>
-		<springdoc.version>2.6.0</springdoc.version>
+		<springdoc.version>2.7.0</springdoc.version>
 		
 		<!-- Webjars -->
 		<webjars.bootstrap.version>5.3.2</webjars.bootstrap.version>
@@ -127,7 +127,7 @@
 		<graalvm.version>24.0.1</graalvm.version>
 
 		<!-- Commons -->
-		<commons.io>2.17.0</commons.io>
+		<commons.io>2.18.0</commons.io>
 		<commons.lang3>3.17.0</commons.lang3>
 		<commons.exec>1.4.0</commons.exec>
 		<commons-csv.version>1.11.0</commons-csv.version>
@@ -135,6 +135,7 @@
 		<apache-httpcomponents-httpmime.version>4.5.14</apache-httpcomponents-httpmime.version>
 		<apache-httpcomponents-httpclient.version>4.5.14</apache-httpcomponents-httpclient.version>
 		<apache-httpcomponents-httpasyncclient.version>4.1.5</apache-httpcomponents-httpasyncclient.version>
+		<okhttp.version>4.12.0</okhttp.version>
 
 		<jaxb.version>2.3.1</jaxb.version>
 		
@@ -174,12 +175,12 @@
 		<!-- JDBC -->
 		<mongodb.version>3.12.14</mongodb.version>
 		<ngdbc.version>2.22.12</ngdbc.version>
-		<snowflake.version>3.19.1</snowflake.version>
+		<snowflake.version>3.20.0</snowflake.version>
 		<mysql.version>8.4.0</mysql.version>
 		
 		<!-- QLDB -->
 		<qldb.driver.version>2.3.1</qldb.driver.version>
-		<qldb.sdk.version>1.12.778</qldb.sdk.version>
+		<qldb.sdk.version>1.12.779</qldb.sdk.version>
 		
 		<!-- jETCD -->
 		<jetcd.core.version>0.8.3</jetcd.core.version>
@@ -188,8 +189,8 @@
 		<c3p0.version>0.10.1</c3p0.version>
 		<guava.version>33.3.1-jre</guava.version>
 		<icu4j.version>76.1</icu4j.version>
-		<classgraph.version>4.8.177</classgraph.version>
-		<logcaptor.version>2.9.3</logcaptor.version>
+		<classgraph.version>4.8.179</classgraph.version>
+		<logcaptor.version>2.10.0</logcaptor.version>
 
 		<!-- UI -->
 		<jquery-ui.version>1.13.0</jquery-ui.version>
@@ -211,7 +212,7 @@
 		<fontawesome.version>4.7.0</fontawesome.version>
 
 		<!-- Tests -->
-		<testcontainers.version>1.20.3</testcontainers.version>
+		<testcontainers.version>1.20.4</testcontainers.version>
 
 		<profile.content.phase>none</profile.content.phase>
 
@@ -742,11 +743,13 @@
 			<groupId>com.squareup.okhttp3</groupId>
 			<artifactId>okhttp</artifactId>
 			<scope>test</scope>
+            <version>${okhttp.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.squareup.okhttp3</groupId>
 			<artifactId>okhttp-urlconnection</artifactId>
 			<scope>test</scope>
+            <version>${okhttp.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
@@ -758,6 +761,13 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>io.opentelemetry.instrumentation</groupId>
+				<artifactId>opentelemetry-instrumentation-bom</artifactId>
+				<version>2.10.0</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-dependencies</artifactId>
@@ -780,7 +790,7 @@
 			<dependency>
 				<groupId>org.seleniumhq.selenium</groupId>
 				<artifactId>selenium-java</artifactId>
-				<version>4.25.0</version>
+				<version>4.27.0</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>

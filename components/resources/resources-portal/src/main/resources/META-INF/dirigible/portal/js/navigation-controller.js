@@ -2,82 +2,55 @@ const navigation = angular.module("launchpad", ["ngResource", "ideLayout", "ideU
 navigation.controller("LaunchpadViewController", ["$scope", "messageHub", "$http", function ($scope, messageHub, $http) {
     $scope.currentViewId = 'dashboard';
 
-    $scope.extraExtensionPoints = ['app'];
+    $scope.extraExtensionPoints = ['app', "dashboard-navigations", "dashboard-widgets"];
     $scope.groups = [];
-
-    $scope.switchView = function (id, event) {
-        if (event) event.stopPropagation();
-        $scope.currentViewId = id;
-    };
-
-    $scope.isGroupVisible = function (group) {
-        const items = $scope.groupItems[group.label.toLowerCase()];
-        return items.some(function (item) {
-            return $scope.currentViewId === item.view;
-        });
-    };
-
-    messageHub.onDidReceiveMessage('launchpad.switch.perspective', function (msg) {
-        $scope.$apply(function () {
-            $scope.switchView(msg.data.perspectiveId);
-        });
-    }, true)
-
     $scope.groupItems = [];
-    $scope.groupItems["purchasing"] = [];
-    $scope.groupItems["sales"] = [];
-    $scope.groupItems["inventory"] = [];
-    $scope.groupItems["reports"] = [];
-    $scope.groupItems["products"] = [];
-    $scope.groupItems["employees"] = [];
-    $scope.groupItems["partners"] = [];
-    $scope.groupItems["configurations"] = [];
 
+    function loadNavigationGroups() {
+        return $http.get("/services/js/portal/api/NavigationGroupsExtension/NavigationGroupsService.js")
+            .then(function (response) {
+                for (itemData of response.data) {
+                    if (!itemData || !itemData.icon || !itemData.order || !itemData.label) {
+                        console.error(`Invalid navigation group data: ${JSON.stringify(itemData)}. Missing one of the properties: icon, order, label`);
+                        return;
+                    }
+                }
 
-    $scope.groups = [
-        {
-            "label": "Purchasing", "expanded": "purchasingExpanded", "icon": "credit-card"
-        },
-        {
-            "label": "Sales", "expanded": "salesExpanded", "icon": "currency"
-        },
-        {
-            "label": "Inventory", "expanded": "inventoryExpanded", "icon": "retail-store"
-        },
-        {
-            "label": "Reports", "expanded": "reportsExpanded", "icon": "area-chart"
-        },
-        {
-            "label": "Products", "expanded": "productExpanded", "icon": "product"
-        },
-        {
-            "label": "Employees", "expanded": "peopleExpanded", "icon": "company-view"
-        },
-        {
-            "label": "Partners", "expanded": "partnersExpanded", "icon": "customer-and-contacts"
-        },
-        {
-            "label": "Configurations", "expanded": "configurationsExpanded", "icon": "wrench"
-        }
-    ]
-    $http.get("/services/ts/portal/api/NavigationExtension/NavigationService.ts")
-        .then(function (response) {
-            $scope.navigationList = response.data;
+                $scope.groups = response.data;
 
-            $scope.navigationList.forEach(e => addNavigationItem(e));
+                $scope.groups.sort((a, b) => a.order - b.order)
 
-            $scope.groupItems.forEach(e => e.sort((a, b) => a.orderNumber - b.orderNumber));
+                response.data.forEach(elem => {
+                    $scope.groupItems[elem.label.toLowerCase()] = [];
+                });
+            })
+            .catch(function (error) {
+                console.error('Error fetching navigation groups:', error);
+                $scope.state = { error: true, errorMessage: 'Failed to load navigation groups' };
+                return async () => { };
+            });
+    }
 
-        })
-        .catch(function (error) {
-            console.error('Error fetching navigation list:', error);
-            $scope.state.error = true;
-            $scope.errorMessage = 'Failed to load navigation list';
-        });
+    function loadNavigationItems() {
+        return $http.get("/services/js/portal/api/NavigationExtension/NavigationService.js")
+            .then(function (response) {
+                $scope.navigationList = response.data;
+
+                $scope.navigationList.forEach(e => addNavigationItem(e));
+
+                Object.values($scope.groupItems).forEach(items => {
+                    items.sort((a, b) => a.order - b.order);
+                });
+            })
+            .catch(function (error) {
+                console.error('Error fetching navigation items:', error);
+                $scope.state = { error: true, errorMessage: 'Failed to load navigation items' };
+            });
+    }
 
     function addNavigationItem(itemData) {
-        if (!itemData || !itemData.label || !itemData.view || !itemData.group || !itemData.orderNumber || !itemData.link) {
-            console.error('Invalid item data:', itemData);
+        if (!itemData || !itemData.label || !itemData.group || !itemData.order || !itemData.link) {
+            console.error(`Invalid item data: ${JSON.stringify(itemData)} Missing one of the properties: label, group, order, link`);
             return;
         }
 
@@ -87,10 +60,35 @@ navigation.controller("LaunchpadViewController", ["$scope", "messageHub", "$http
             return;
         }
 
-        $scope.groupItems[itemData.group.toLowerCase()].push({
-            "label": itemData.label,
-            "view": itemData.view,
-            "link": itemData.link
+        $scope.groupItems[groupKey].push({
+            id: itemData.id,
+            label: itemData.label,
+            link: itemData.link,
+            order: itemData.order
         });
     }
+
+    loadNavigationGroups()
+        .then(loadNavigationItems)
+        .catch(function (error) {
+            console.error('Error during initialization:', error);
+        });
+
+    $scope.switchView = function (id, event) {
+        if (event) event.stopPropagation();
+        $scope.currentViewId = id;
+    };
+
+    $scope.isGroupVisible = function (group) {
+        const items = $scope.groupItems[group.label.toLowerCase()];
+        return items.some(function (item) {
+            return $scope.currentViewId === item.id;
+        });
+    };
+
+    messageHub.onDidReceiveMessage('launchpad.switch.perspective', function (msg) {
+        $scope.$apply(function () {
+            $scope.switchView(msg.data.viewId);
+        });
+    }, true)
 }]);

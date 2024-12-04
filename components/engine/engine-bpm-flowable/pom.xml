@@ -46,7 +46,11 @@
 		</dependency>
 		
 		<!-- Libraries -->
-
+		<dependency>
+			<groupId>org.flowable</groupId>
+			<artifactId>flowable-spring-boot-starter-actuator</artifactId>
+			<version>${flowable.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.flowable</groupId>
 			<artifactId>flowable-spring</artifactId>

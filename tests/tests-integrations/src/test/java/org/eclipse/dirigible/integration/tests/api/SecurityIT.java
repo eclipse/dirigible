@@ -1,17 +1,24 @@
+/*
+ * Copyright (c) 2010-2024 Eclipse Dirigible contributors
+ *
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-FileCopyrightText: Eclipse Dirigible contributors SPDX-License-Identifier: EPL-2.0
+ */
 package org.eclipse.dirigible.integration.tests.api;
 
 import org.eclipse.dirigible.components.base.http.roles.Roles;
 import org.eclipse.dirigible.integration.tests.IntegrationTest;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.stream.Stream;
+import java.util.Map;
+import java.util.Set;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -21,61 +28,54 @@ class SecurityIT extends IntegrationTest {
     @Autowired
     private MockMvc mvc;
 
-    @ParameterizedTest
-    @MethodSource("providePublicEndpointsParams")
-    void testPublicEndpoint(String path, HttpStatus expectedStatusCode) throws Exception {
-        mvc.perform(get(path))
-           .andExpect(status().is(expectedStatusCode.value()));
+    @Test
+    void testPublicEndpoint() throws Exception {
+        Set<String> paths = Set.of("/actuator/health", "/actuator/health/liveness", "/actuator/health/readiness", "/login", "/error.html");
+        for (String path : paths) {
+            mvc.perform(get(path))
+               .andExpect(status().is(HttpStatus.OK.value()));
+        }
+
     }
 
-    private static Stream<Arguments> providePublicEndpointsParams() {
-        return Stream.of(//
-                Arguments.of("/actuator/health", HttpStatus.OK), //
-                Arguments.of("/actuator/health/liveness", HttpStatus.OK), //
-                Arguments.of("/actuator/health/readiness", HttpStatus.OK), //
-                Arguments.of("/login", HttpStatus.OK), //
-                Arguments.of("/error.html", HttpStatus.OK));
+    @Test
+    void testProtectedEndpointWithoutAuthentication() throws Exception {
+        Set<String> paths = Set.of("/spring-admin", "/actuator/info");
+        for (String path : paths) {
+            mvc.perform(get(path))
+               .andExpect(status().isUnauthorized());
+        }
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"/spring-admin", "/actuator/info"})
-    void testProtectedEndpointWithoutAuthentication(String path) throws Exception {
-        mvc.perform(get(path))
-           .andExpect(status().isUnauthorized());
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"/actuator/info"})
+    @Test
     @WithMockUser(username = "user_without_roles", roles = {"SOME_UNUSED_ROLE"})
-    void testProtectedEndpointsWithUnauthorizedUser(String path) throws Exception {
-        mvc.perform(get(path))
-           .andExpect(status().isForbidden());
+    void testProtectedEndpointsWithUnauthorizedUser() throws Exception {
+        Set<String> paths = Set.of("/actuator/info");
+        for (String path : paths) {
+            mvc.perform(get(path))
+               .andExpect(status().isForbidden());
+        }
     }
 
-    @ParameterizedTest
-    @MethodSource("provideOperatorEndpointsParams")
+    @Test
     @WithMockUser(username = "operator", roles = {Roles.RoleNames.OPERATOR})
-    void testOperatorEndpointIsAccessible(String path, HttpStatus expectedStatusCode) throws Exception {
-        mvc.perform(get(path))
-           .andExpect(status().is(expectedStatusCode.value()));
+    void testOperatorEndpointIsAccessible() throws Exception {
+        Map<String, HttpStatus> paths = Map.of("/spring-admin", HttpStatus.NOT_FOUND, "/actuator/info", HttpStatus.OK);
+        for (Map.Entry<String, HttpStatus> entry : paths.entrySet()) {
+            mvc.perform(get(entry.getKey()))
+               .andExpect(status().is(entry.getValue()
+                                           .value()));
+        }
     }
 
-    private static Stream<Arguments> provideOperatorEndpointsParams() {
-        return Stream.of(Arguments.of("/spring-admin", HttpStatus.NOT_FOUND), //
-                Arguments.of("/actuator/info", HttpStatus.OK));
-    }
-
-    @ParameterizedTest
-    @MethodSource("provideDeveloperEndpointsParams")
+    @Test
     @WithMockUser(username = "developer", roles = {Roles.RoleNames.DEVELOPER})
-    void testDeveloperEndpointIsAccessible(String path, HttpStatus expectedStatusCode) throws Exception {
-        mvc.perform(get(path))
-           .andExpect(status().is(expectedStatusCode.value()));
-    }
-
-    private static Stream<Arguments> provideDeveloperEndpointsParams() {
-        return Stream.of(Arguments.of("/services/ide/123", HttpStatus.NOT_FOUND),
-                Arguments.of("/websockets/ide/123", HttpStatus.NOT_FOUND));
+    void testDeveloperEndpointIsAccessible() throws Exception {
+        Set<String> paths = Set.of("/services/ide/123", "/websockets/ide/123");
+        for (String path : paths) {
+            mvc.perform(get(path))
+               .andExpect(status().is(HttpStatus.NOT_FOUND.value()));
+        }
     }
 
 }

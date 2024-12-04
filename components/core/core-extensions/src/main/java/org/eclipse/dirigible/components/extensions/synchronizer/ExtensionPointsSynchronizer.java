@@ -79,7 +79,7 @@ public class ExtensionPointsSynchronizer extends BaseSynchronizer<ExtensionPoint
      * @throws ParseException the parse exception
      */
     @Override
-    public List<ExtensionPoint> parse(String location, byte[] content) throws ParseException {
+    protected List<ExtensionPoint> parseImpl(String location, byte[] content) throws ParseException {
         ExtensionPoint extensionPoint = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), ExtensionPoint.class);
         Configuration.configureObject(extensionPoint);
         extensionPoint.setLocation(location);

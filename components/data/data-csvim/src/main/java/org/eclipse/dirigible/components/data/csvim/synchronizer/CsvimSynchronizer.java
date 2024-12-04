@@ -112,7 +112,7 @@ public class CsvimSynchronizer extends MultitenantBaseSynchronizer<Csvim, Long> 
      * @throws ParseException the parse exception
      */
     @Override
-    public List<Csvim> parse(String location, byte[] content) throws ParseException {
+    protected List<Csvim> parseImpl(String location, byte[] content) throws ParseException {
         Csvim csvim = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Csvim.class);
         Configuration.configureObject(csvim);
         csvim.setLocation(location);

@@ -10,6 +10,9 @@
 package org.eclipse.dirigible.components.jobs.config;
 
 import org.eclipse.dirigible.components.data.sources.config.SystemDataSourceName;
+import org.eclipse.dirigible.components.jobs.telemetry.JobExecutionsCountListener;
+import org.eclipse.dirigible.components.jobs.telemetry.JobExecutionsDurationListener;
+import org.eclipse.dirigible.components.jobs.telemetry.JobFailuresCountListener;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.impl.jdbcjobstore.JobStoreTX;
@@ -37,18 +40,11 @@ class QuartzConfig {
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(QuartzConfig.class);
 
-    /**
-     * Scheduler.
-     *
-     * @param factory the factory
-     * @param systemDataSource the system data source
-     * @param systemDataSourceName the system data source name
-     * @return the scheduler
-     * @throws SchedulerException the scheduler exception
-     */
     @Bean
     Scheduler scheduler(SchedulerFactoryBean factory, @Qualifier("SystemDB") DataSource systemDataSource,
-            @SystemDataSourceName String systemDataSourceName) throws SchedulerException {
+            @SystemDataSourceName String systemDataSourceName, JobExecutionsCountListener jobExecutionsCountListener,
+            JobExecutionsDurationListener jobExecutionsDurationListener, JobFailuresCountListener jobFailuresCountListener)
+            throws SchedulerException {
         factory.setDataSource(systemDataSource);
         DBConnectionManager.getInstance()
                            .addConnectionProvider(systemDataSourceName, new CustomConnectionProvider(systemDataSource));
@@ -58,6 +54,13 @@ class QuartzConfig {
 
         // give some time for spring auto configurations to pass before starting
         scheduler.startDelayed(STARTUP_DELAY_SECONDS);
+
+        scheduler.getListenerManager()
+                 .addJobListener(jobExecutionsCountListener);
+        scheduler.getListenerManager()
+                 .addJobListener(jobExecutionsDurationListener);
+        scheduler.getListenerManager()
+                 .addJobListener(jobFailuresCountListener);
 
         return scheduler;
     }

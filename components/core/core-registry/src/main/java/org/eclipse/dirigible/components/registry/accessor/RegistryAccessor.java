@@ -9,22 +9,18 @@
  */
 package org.eclipse.dirigible.components.registry.accessor;
 
+import org.apache.commons.io.IOUtils;
+import org.eclipse.dirigible.repository.api.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.apache.commons.io.IOUtils;
-import org.eclipse.dirigible.repository.api.IRepository;
-import org.eclipse.dirigible.repository.api.IRepositoryStructure;
-import org.eclipse.dirigible.repository.api.IResource;
-import org.eclipse.dirigible.repository.api.RepositoryException;
-import org.eclipse.dirigible.repository.api.RepositoryNotFoundException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * The Class RegistryAccessor.
@@ -36,19 +32,14 @@ public class RegistryAccessor {
      * The Constant logger.
      */
     private static final Logger logger = LoggerFactory.getLogger(RegistryAccessor.class);
-
-    /** The predelivered. */
-    private static Map<String, byte[]> PREDELIVERED = Collections.synchronizedMap(new HashMap<String, byte[]>());
-
     /** The Constant LOCATION_META_INF_DIRIGIBLE. */
     private static final String LOCATION_META_INF_DIRIGIBLE = "/META-INF/dirigible";
-
     /** The Constant LOCATION_META_INF_WEBJARS. */
     private static final String LOCATION_META_INF_WEBJARS = "/META-INF/resources/webjars";
-
-
+    /** The predelivered. */
+    private static final Map<String, byte[]> PREDELIVERED = Collections.synchronizedMap(new HashMap<>());
     /** The repository. */
-    private IRepository repository;
+    private final IRepository repository;
 
     /**
      * Instantiates a new registry accessor.
@@ -127,9 +118,10 @@ public class RegistryAccessor {
      */
     public byte[] getResourceContent(String root, String module, String extension) throws RepositoryException {
 
-        byte[] result = null;
+        byte[] result;
 
-        if ((module == null) || "".equals(module.trim())) {
+        if ((module == null) || module.trim()
+                                      .isEmpty()) {
             throw new RepositoryException("Module name cannot be empty or null.");
         }
         if (module.trim()
@@ -148,16 +140,12 @@ public class RegistryAccessor {
             }
         }
 
-        if (result != null) {
-            return result;
+        if (result == null) {
+            String repositoryPath = createResourcePath(root, module, extension);
+            String logMsg = String.format("There is no resource at the specified path: %s", repositoryPath);
+            throw new RepositoryNotFoundException(logMsg);
         }
-
-        String repositoryPath = createResourcePath(root, module, extension);
-        final String logMsg = String.format("There is no resource at the specified path: %s", repositoryPath);
-        if (logger.isErrorEnabled()) {
-            logger.error(logMsg);
-        }
-        throw new RepositoryNotFoundException(logMsg);
+        return result;
     }
 
     /**
@@ -174,64 +162,6 @@ public class RegistryAccessor {
         final IResource resource = repository.getResource(repositoryPath);
         if (resource.exists()) {
             result = resource.getContent();
-        }
-        return result;
-    }
-
-    /**
-     * Try from dirigible location.
-     *
-     * @param module the module
-     * @param extension the extension
-     * @return the byte[]
-     */
-    private byte[] tryFromDirigibleLocation(String module, String extension) {
-        return tryFromClassloaderLocation(module, extension, LOCATION_META_INF_DIRIGIBLE);
-    }
-
-    /**
-     * Try from web jars location.
-     *
-     * @param module the module
-     * @param extension the extension
-     * @return the byte[]
-     */
-    private byte[] tryFromWebJarsLocation(String module, String extension) {
-        return tryFromClassloaderLocation(module, extension, LOCATION_META_INF_WEBJARS);
-    }
-
-    /**
-     * Try from classloader location.
-     *
-     * @param module the module
-     * @param extension the extension
-     * @param path the path
-     * @return the byte[]
-     */
-    private byte[] tryFromClassloaderLocation(String module, String extension, String path) {
-        byte[] result = null;
-        try {
-            String prefix = Character.toString(module.charAt(0))
-                                     .equals(IRepository.SEPARATOR) ? "" : IRepository.SEPARATOR;
-            String location = prefix + module + (extension != null ? extension : "");
-            byte[] content = PREDELIVERED.get(location);
-            if (content != null) {
-                return content;
-            }
-            InputStream bundled = RegistryAccessor.class.getResourceAsStream(path + location);
-            try {
-                if (bundled != null) {
-                    content = IOUtils.toByteArray(bundled);
-                    PREDELIVERED.put(location, content);
-                    result = content;
-                }
-            } finally {
-                if (bundled != null) {
-                    bundled.close();
-                }
-            }
-        } catch (IOException e) {
-            throw new RepositoryException(e);
         }
         return result;
     }
@@ -254,8 +184,60 @@ public class RegistryAccessor {
         if (extension != null) {
             buff.append(extension);
         }
-        String resourcePath = buff.toString();
-        return resourcePath;
+        return buff.toString();
+    }
+
+    /**
+     * Try from dirigible location.
+     *
+     * @param module the module
+     * @param extension the extension
+     * @return the byte[]
+     */
+    private byte[] tryFromDirigibleLocation(String module, String extension) {
+        return tryFromClassloaderLocation(module, extension, LOCATION_META_INF_DIRIGIBLE);
+    }
+
+    /**
+     * Try from classloader location.
+     *
+     * @param module the module
+     * @param extension the extension
+     * @param path the path
+     * @return the byte[]
+     */
+    private byte[] tryFromClassloaderLocation(String module, String extension, String path) {
+        byte[] result = null;
+        try {
+            String prefix = Character.toString(module.charAt(0))
+                                     .equals(IRepository.SEPARATOR) ? "" : IRepository.SEPARATOR;
+            String location = prefix + module + (extension != null ? extension : "");
+            byte[] content = PREDELIVERED.get(location);
+            if (content != null) {
+                return content;
+            }
+            try (InputStream bundled = RegistryAccessor.class.getResourceAsStream(path + location)) {
+                if (bundled != null) {
+                    content = IOUtils.toByteArray(bundled);
+                    PREDELIVERED.put(location, content);
+                    result = content;
+                }
+            }
+        } catch (IOException e) {
+            throw new RepositoryException(e);
+        }
+        return result;
+    }
+
+    /**
+     * Try from web jars location.
+     *
+     * @param module the module
+     * @param extension the extension
+     * @return the byte[]
+     */
+    private byte[] tryFromWebJarsLocation(String module, String extension) {
+        return tryFromClassloaderLocation(module, extension, LOCATION_META_INF_WEBJARS);
     }
 
     // /**

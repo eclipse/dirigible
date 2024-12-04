@@ -90,7 +90,7 @@ public class RolesSynchronizer extends BaseSynchronizer<Role, Long> {
      * @throws ParseException the parse exception
      */
     @Override
-    public List<Role> parse(String location, byte[] content) throws ParseException {
+    protected List<Role> parseImpl(String location, byte[] content) throws ParseException {
         Role[] roles = JsonHelper.fromJson(new String(content, StandardCharsets.UTF_8), Role[].class);
         Integer roleIndex = 1;
         for (Role role : roles) {
