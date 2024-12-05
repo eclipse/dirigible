@@ -10,9 +10,8 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 const workbench = angular.module('workbench', ['platformView', 'platformLayout', 'blimpKit']);
-workbench.controller('WorkbenchController', ($scope) => {
+workbench.controller('WorkbenchController', ($scope, Layout) => {
     const contextMenuHub = new ContextMenuHub();
-    const workspaceHub = new WorkspaceHub();
     let rightClickTabId;
 
     $scope.layoutConfig = {
@@ -64,16 +63,16 @@ workbench.controller('WorkbenchController', ($scope) => {
             if (id === 'reveal') {
                 contextMenuHub.postMessage({ topic: 'projects.tree.select', data: { filePath: rightClickTabId } });
             } else if (id === 'close') {
-                workspaceHub.closeFile({
+                Layout.closeEditor({
                     path: rightClickTabId,
                 });
             } else if (id === 'closeOthers') {
-                workspaceHub.closeFile({
+                Layout.closeEditor({
                     path: rightClickTabId,
                     params: { closeOthers: true }
                 });
             } else if (id === 'closeAll') {
-                workspaceHub.closeAllFiles();
+                Layout.closeAllEditors();
             }
         });
     };

@@ -12,8 +12,9 @@
 const searchView = angular.module('search', ['blimpKit', 'platformView', 'WorkspaceService', 'platformEditors']);
 searchView.constant('StatusBar', new StatusBarHub());
 searchView.constant('Workspace', new WorkspaceHub());
+searchView.constant('Layout', new LayoutHub());
 searchView.constant('ContextMenu', new ContextMenuHub());
-searchView.controller('SearchController', ($scope, WorkspaceService, StatusBar, ContextMenu, Workspace, Editors) => {
+searchView.controller('SearchController', ($scope, WorkspaceService, StatusBar, ContextMenu, Workspace, Layout, Editors) => {
     $scope.selectedWorkspace = WorkspaceService.getCurrentWorkspace();
     $scope.workspaceNames = [];
     $scope.search = { searching: false, text: '', results: [] };
@@ -48,7 +49,7 @@ searchView.controller('SearchController', ($scope, WorkspaceService, StatusBar, 
 
     $scope.itemClick = (index) => $scope.selectedItemIndex = index;
 
-    $scope.openFile = (index, editor = undefined) => Workspace.openFile({
+    $scope.openFile = (index, editor = undefined) => Layout.openEditor({
         path: $scope.search.results[index].path,
         contentType: $scope.search.results[index].contentType,
         editorId: editor,

@@ -39,7 +39,7 @@ var flowableModule = flowableModeler;
 var flowableApp = flowableModeler;
 
 function setEditorDirtyState(dirty) {
-    workspaceHub.setFileDirty({
+    layoutHub.setEditorDirty({
         path: editorParams.filePath,
         dirty: dirty,
     });
@@ -206,7 +206,7 @@ flowableModeler
 
             updateWindowSize();
 
-            workspaceHub.onReloadEditorParams((data) => {
+            layout.onReloadEditorParams((data) => {
                 if (editorParams.filePath === data.path) {
                     if ($window.frameElement && $window.frameElement.hasAttribute("data-parameters")) {
                         editorParams = JSON.parse($window.frameElement.getAttribute("data-parameters"));

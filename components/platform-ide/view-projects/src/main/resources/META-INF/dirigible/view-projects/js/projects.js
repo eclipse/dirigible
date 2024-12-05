@@ -13,14 +13,18 @@ const projectsView = angular.module('projects', ['blimpKit', 'platformView', 'pl
 projectsView.constant('StatusBar', new StatusBarHub());
 projectsView.constant('Dialogs', new DialogHub());
 projectsView.constant('Workspace', new WorkspaceHub());
+projectsView.constant('Layout', new LayoutHub());
 projectsView.constant('ContextMenu', new ContextMenuHub());
+projectsView.constant('MessageHub', new MessageHubApi());
 projectsView.controller('ProjectsViewController', function (
     $scope,
     $document,
     StatusBar,
     Dialogs,
     Workspace,
+    Layout,
     ContextMenu,
+    MessageHub,
     WorkspaceService,
     Editors,
     PublisherService,
@@ -230,7 +234,7 @@ projectsView.controller('ProjectsViewController', function (
         }
         function onResponse(response) {
             if (response.status === 200) { // Move
-                Workspace.getCurrentlyOpenedFiles().then((result) => {
+                Layout.getCurrentlyOpenedEditors().then((result) => {
                     for (let r = 0; r < response.data.length; r++) {
                         for (let f = 0; f < result.length; f++) {
                             if (result[f].startsWith(response.data[r].from)) {
@@ -1565,7 +1569,7 @@ projectsView.controller('ProjectsViewController', function (
         if (parent.data.git) {
             extraArgs.gitName = parent.data.gitName;
         }
-        Workspace.openFile({
+        Layout.openEditor({
             path: node.data.path,
             contentType: node.data.contentType,
             editorId: editor,
@@ -1769,7 +1773,7 @@ projectsView.controller('ProjectsViewController', function (
                             });
                         });
                     } else {
-                        Workspace.getCurrentlyOpenedFiles(renameNode.data.path).then((result) => {
+                        Layout.getCurrentlyOpenedEditors(renameNode.data.path).then((result) => {
                             for (let i = 0; i < result.length; i++) {
                                 const updatedPath = result[i].replace(renameNode.data.path, newPath);
                                 if (updatedPath !== result[i])
@@ -1929,13 +1933,13 @@ projectsView.controller('ProjectsViewController', function (
 
     Workspace.onWorkspaceChanged((changed) => {
         if (changed.workspace === $scope.selectedWorkspace) {
-            if (changed.params.projectsViewId) {
+            if (changed.params && changed.params.projectsViewId) {
                 jstreeWidget.jstree(true).refresh_node(changed.params.projectsViewId);
             } else $scope.$evalAsync(() => {
                 $scope.reloadWorkspace();
             });
         }
-        if (changed.params.publish) {
+        if (changed.params && changed.params.publish) {
             if (changed.params.publish.path) {
                 publish(changed.params.publish.path);
             } else if (changed.workspace) {
@@ -1944,7 +1948,7 @@ projectsView.controller('ProjectsViewController', function (
         }
     });
 
-    Workspace.addMessageListener({
+    MessageHub.addMessageListener({
         topic: 'projects.tree.refresh',
         handler: (msg) => {
             if (msg.workspace === $scope.selectedWorkspace) {
@@ -1962,42 +1966,42 @@ projectsView.controller('ProjectsViewController', function (
         },
     });
 
-    Workspace.addMessageListener({
+    MessageHub.addMessageListener({
         topic: 'projects.create.project',
         handler: () => {
             $scope.createProject();
         },
     });
 
-    Workspace.addMessageListener({
+    MessageHub.addMessageListener({
         topic: 'projects.files.save.all',
         handler: () => {
             Workspace.saveAll();
         },
     });
 
-    Workspace.addMessageListener({
+    MessageHub.addMessageListener({
         topic: 'projects.publish.all',
         handler: () => {
             $scope.publishAll();
         },
     });
 
-    Workspace.addMessageListener({
+    MessageHub.addMessageListener({
         topic: 'projects.unpublish.all',
         handler: () => {
             unpublishAll();
         },
     });
 
-    Workspace.addMessageListener({
+    MessageHub.addMessageListener({
         topic: 'projects.export.all',
         handler: () => {
             $scope.exportProjects();
         },
     });
 
-    Workspace.addMessageListener({
+    MessageHub.addMessageListener({
         topic: 'projects.tree.select',
         handler: (msg) => {
             if (msg.filePath.startsWith(`/${$scope.selectedWorkspace}/`)) {

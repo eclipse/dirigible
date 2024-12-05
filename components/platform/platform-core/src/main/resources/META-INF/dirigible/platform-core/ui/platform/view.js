@@ -71,13 +71,8 @@ angular.module('platformView', ['platformExtensions', 'platformTheming'])
             getViews: getViews,
             getSubviews: getSubviews,
         };
-    }).factory('ViewParameters', ($window) => ({
-        get: () => {
-            if ($window.frameElement && $window.frameElement.hasAttribute('data-parameters')) {
-                return JSON.parse($window.frameElement.getAttribute('data-parameters'));
-            }
-            return {};
-        }
+    }).factory('ViewParameters', () => ({
+        get: getViewParameters
     })).directive('embeddedView', function (Views) {
         /**
          * viewId: String - ID of the view you want to show.
@@ -171,12 +166,11 @@ angular.module('platformView', ['platformExtensions', 'platformTheming'])
                         angular.element($window).off('focus', onFocus);
                     });
                 }
-            }
-            else if (typeof perspectiveData !== 'undefined') scope.label = perspectiveData.label;
-            else if (typeof editorData !== 'undefined') {
+            } else if (typeof perspectiveData !== 'undefined') {
+                scope.label = perspectiveData.label;
+            } else if (typeof editorData !== 'undefined') {
                 scope.label = editorData.label;
                 if ($window.frameElement && $window.frameElement.hasAttribute('tab-id')) {
-                    const layoutHub = new LayoutHub();
                     const tabId = $window.frameElement.getAttribute('tab-id');
                     const onFocus = () => layoutHub.focusView({ id: tabId });
                     angular.element($window).on('focus', onFocus);
@@ -184,8 +178,7 @@ angular.module('platformView', ['platformExtensions', 'platformTheming'])
                         angular.element($window).off('focus', onFocus);
                     });
                 }
-            }
-            else throw Error('configTitle: missing view data');
+            } else throw Error('configTitle: missing view data');
         },
         template: '{{::label}}'
     }));

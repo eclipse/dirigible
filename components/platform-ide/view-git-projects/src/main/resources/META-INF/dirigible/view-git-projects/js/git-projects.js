@@ -283,6 +283,10 @@ gitProjectsView.controller('GitProjectsController', ($scope, StatusBar, Dialogs,
                             Dialogs.showBusyDialog('Deleting...');
                             let unpublishOnDelete = buttonId === 'b2';
                             GitService.deleteRepository($scope.selectedWorkspace, selectedNode.text, unpublishOnDelete).then(() => {
+                                Workspace.announceWorkspaceChanged({
+                                    workspace: $scope.selectedWorkspace,
+                                    params: { gitAction: 'delete' },
+                                });
                                 jstreeWidget.jstree(true).delete_node(selectedNode);
                             }, (response) => {
                                 console.error(response);
@@ -665,8 +669,14 @@ gitProjectsView.controller('GitProjectsController', ($scope, StatusBar, Dialogs,
                         title: 'Repository cloned',
                         description: `Repository '${form['curli'].split('/').pop().replace('.git', '')}'`
                     });
-                    $scope.state.busyText = 'Loading...';
-                    $scope.reloadProjects();
+                    Workspace.announceWorkspaceChanged({
+                        workspace: $scope.selectedWorkspace,
+                        params: { gitAction: 'clone' },
+                    });
+                    $scope.$evalAsync(() => {
+                        $scope.state.busyText = 'Loading...';
+                        $scope.reloadProjects();
+                    });
                 }, (response) => {
                     $scope.$evalAsync(() => {
                         $scope.state.isBusy = false;
@@ -945,7 +955,8 @@ gitProjectsView.controller('GitProjectsController', ($scope, StatusBar, Dialogs,
 
     Workspace.onWorkspaceChanged((changed) => {
         if (changed.workspace === $scope.selectedWorkspace) {
-            $scope.reloadProjects();
+            if (changed.params && !changed.params.gitAction)
+                $scope.reloadProjects();
         }
     });
 

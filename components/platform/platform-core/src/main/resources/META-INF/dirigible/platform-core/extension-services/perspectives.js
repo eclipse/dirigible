@@ -10,10 +10,10 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 // @ts-nocheck
-import { extensions } from "sdk/extensions";
-import { request, response } from "sdk/http";
-import { uuid } from "sdk/utils";
-import { user } from "sdk/security";
+import { extensions } from 'sdk/extensions';
+import { request, response } from 'sdk/http';
+import { uuid } from 'sdk/utils';
+import { user } from 'sdk/security';
 
 
 const perspectives = [];
@@ -34,7 +34,7 @@ for (let i = 0; i < extensionPoints.length; i++) {
 function setETag() {
 	const maxAge = 30 * 24 * 60 * 60;
 	const etag = uuid.random();
-	response.setHeader("ETag", etag);
+	response.setHeader('ETag', etag);
 	response.setHeader('Cache-Control', `public, must-revalidate, max-age=${maxAge}`);
 }
 
@@ -51,34 +51,23 @@ function sortPerspectives(a, b) {
 	return 0;
 }
 
+const pIds = new Set([]);
+
 perspectiveLoop: for (let i = 0; i < perspectiveExtensions?.length; i++) {
 	let perspective;
-	if (typeof perspectiveExtensions[i].getPerspectiveGroup === "function") {
+	if (typeof perspectiveExtensions[i].getPerspectiveGroup === 'function') {
 		perspective = perspectiveExtensions[i].getPerspectiveGroup();
-		for (let p = 0; p < sidebarConfig.perspectives.length; p++) {
-			if (sidebarConfig.perspectives[p].id === perspective.id) {
-				console.error(`Duplication at group perspective with id: ['${perspective.id}'] pointing to paths: ['${sidebarConfig.perspectives[p].path}'] and ['${perspective.path}']`);
-				continue perspectiveLoop;
-			}
-		}
-	} else if (typeof perspectiveExtensions[i].getUtilityPerspective === "function") {
+	} else if (typeof perspectiveExtensions[i].getUtilityPerspective === 'function') {
 		perspective = perspectiveExtensions[i].getUtilityPerspective();
-		for (let p = 0; p < sidebarConfig.utilities.length; p++) {
-			if (sidebarConfig.utilities[p].id === perspective.id) {
-				console.error(`Duplication at utility perspective with id: ['${sidebarConfig.utilities[p].id}'] pointing to paths: ['${sidebarConfig.utilities[p].path}'] and ['${perspective.path}']`);
-				continue perspectiveLoop;
-			}
-		}
 		perspective.isUtility = true;
 	} else {
 		perspective = perspectiveExtensions[i].getPerspective();
-		for (let p = 0; p < sidebarConfig.perspectives.length; p++) {
-			if (sidebarConfig.perspectives[p].id === perspective.id) {
-				console.error(`Duplication at perspective with id: ['${sidebarConfig.perspectives[p].id}'] pointing to paths: ['${sidebarConfig.perspectives[p].path}'] and ['${perspective.path}']`);
-				continue perspectiveLoop;
-			}
-		}
 	}
+	if (pIds.has(perspective.id)) {
+		console.error(`Perspective with non-unique id: ['${perspective.id}'] with path: ['${perspective.path}'].`);
+		continue perspectiveLoop;
+	}
+	pIds.add(perspective.id);
 	if (perspective.roles && Array.isArray(perspective.roles)) {
 		let hasRoles = true;
 		for (const next of perspective.roles) {
@@ -109,7 +98,7 @@ perspectiveLoop: for (let i = 0; i < perspectiveExtensions?.length; i++) {
 	}
 }
 
-response.setContentType("application/json");
+response.setContentType('application/json');
 for (let i = 0; i < perspectives.length; i++) {
 	if (perspectives[i].groupId) {
 		for (let g = 0; g < sidebarConfig.perspectives.length; g++) {

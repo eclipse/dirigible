@@ -10,14 +10,33 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 class LayoutHub extends MessageHubApi {
+    constructor(layoutId, setId = false) {
+        super();
+        if (layoutId !== undefined && layoutId !== null) {
+            this.layoutId = `.${layoutId}`;
+            if (setId) window['layoutId'] = layoutId;
+        } else {
+            this.layoutId = window['layoutId'] ?? '';
+            if (!this.layoutId) {
+                let current = window;
+                while (current !== top) {
+                    current = current.parent;
+                    if (current['layoutId']) {
+                        this.layoutId = `.${current['layoutId']}`;
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Returns a list of the currently opened views.
      * @param {object} [params] - Custom parameters.
      */ // @ts-ignore
     getOpenedViews({ params } = {}) {
-        const callbackTopic = `platform.layout.views.opened.${new Date().valueOf()}`;
+        const callbackTopic = `platform.layout${this.layoutId}.views.opened.${new Date().valueOf()}`;
         this.postMessage({
-            topic: 'platform.layout.views.opened',
+            topic: `platform.layout${this.layoutId}.views.opened`,
             data: {
                 topic: callbackTopic,
                 params: params,
@@ -40,7 +59,7 @@ class LayoutHub extends MessageHubApi {
      * @returns - A reference to the listener. In order to remove/disable the listener, you need to use this reference and pass it to the 'removeMessageListener' function.
      */
     onGetOpenedViews(handler) {
-        return this.addMessageListener({ topic: 'platform.layout.views.opened', handler: handler });
+        return this.addMessageListener({ topic: `platform.layout${this.layoutId}.views.opened`, handler: handler });
     }
 
     /**
@@ -49,9 +68,9 @@ class LayoutHub extends MessageHubApi {
      * @param {object} [params] - Custom parameters.
      */ // @ts-ignore
     isViewOpen({ id, params } = {}) {
-        const callbackTopic = `platform.layout.views.is-open.${new Date().valueOf()}`;
+        const callbackTopic = `platform.layout${this.layoutId}.views.is-open.${new Date().valueOf()}`;
         this.postMessage({
-            topic: 'platform.layout.views.is-open',
+            topic: `platform.layout${this.layoutId}.views.is-open`,
             data: {
                 topic: callbackTopic,
                 id: id,
@@ -75,7 +94,7 @@ class LayoutHub extends MessageHubApi {
      * @returns - A reference to the listener. In order to remove/disable the listener, you need to use this reference and pass it to the 'removeMessageListener' function.
      */
     onIsViewOpen(handler) {
-        return this.addMessageListener({ topic: 'platform.layout.views.is-open', handler: handler });
+        return this.addMessageListener({ topic: `platform.layout${this.layoutId}.views.is-open`, handler: handler });
     }
 
     /**
@@ -85,7 +104,7 @@ class LayoutHub extends MessageHubApi {
      */ // @ts-ignore
     openView({ id, params } = {}) {
         this.postMessage({
-            topic: 'platform.layout.view.open',
+            topic: `platform.layout${this.layoutId}.view.open`,
             data: {
                 id: id,
                 params: params,
@@ -99,31 +118,7 @@ class LayoutHub extends MessageHubApi {
      * @returns - A reference to the listener. In order to remove/disable the listener, you need to use this reference and pass it to the 'removeMessageListener' function.
      */
     onOpenView(handler) {
-        return this.addMessageListener({ topic: 'platform.layout.view.open', handler: handler });
-    }
-
-    /**
-     * Shows a perspective inside the shell.
-     * @param {string} id - Perspective id.
-     * @param {object} [params] - Extra parameters.
-     */ // @ts-ignore
-    showPerspective({ id, params } = {}) {
-        this.postMessage({
-            topic: 'platform.shell.perspective.show',
-            data: {
-                id: id,
-                params: params,
-            }
-        });
-    }
-
-    /**
-     * Triggered when a perspective should be shown.
-     * @param handler - Callback function.
-     * @returns - A reference to the listener. In order to remove/disable the listener, you need to use this reference and pass it to the 'removeMessageListener' function.
-     */
-    onShowPerspective(handler) {
-        return this.addMessageListener({ topic: 'platform.shell.perspective.show', handler: handler });
+        return this.addMessageListener({ topic: `platform.layout${this.layoutId}.view.open`, handler: handler });
     }
 
     /**
@@ -133,7 +128,7 @@ class LayoutHub extends MessageHubApi {
      */
     focusView({ id, params } = {}) {
         this.postMessage({
-            topic: 'platform.layout.view.focus',
+            topic: `platform.layout${this.layoutId}.view.focus`,
             data: {
                 id: id,
                 params: params,
@@ -147,7 +142,7 @@ class LayoutHub extends MessageHubApi {
      * @returns - A reference to the listener. In order to remove/disable the listener, you need to use this reference and pass it to the 'removeMessageListener' function.
      */
     onFocusView(handler) {
-        return this.addMessageListener({ topic: 'platform.layout.view.focus', handler: handler });
+        return this.addMessageListener({ topic: `platform.layout${this.layoutId}.view.focus`, handler: handler });
     }
 
     /**
@@ -157,7 +152,7 @@ class LayoutHub extends MessageHubApi {
      */ // @ts-ignore
     closeView({ id, params } = {}) {
         this.postMessage({
-            topic: 'platform.layout.view.close',
+            topic: `platform.layout${this.layoutId}.view.close`,
             data: {
                 id: id,
                 params: params,
@@ -171,7 +166,7 @@ class LayoutHub extends MessageHubApi {
      * @returns - A reference to the listener. In order to remove/disable the listener, you need to use this reference and pass it to the 'removeMessageListener' function.
      */
     onCloseView(handler) {
-        return this.addMessageListener({ topic: 'platform.layout.view.close', handler: handler });
+        return this.addMessageListener({ topic: `platform.layout${this.layoutId}.view.close`, handler: handler });
     }
 
     /**
@@ -181,7 +176,7 @@ class LayoutHub extends MessageHubApi {
      */ // @ts-ignore
     closeOtherViews({ id, params } = {}) {
         this.postMessage({
-            topic: 'platform.layout.view.close.others',
+            topic: `platform.layout${this.layoutId}.view.close.others`,
             data: {
                 id: id,
                 params: params,
@@ -195,7 +190,7 @@ class LayoutHub extends MessageHubApi {
      * @returns - A reference to the listener. In order to remove/disable the listener, you need to use this reference and pass it to the 'removeMessageListener' function.
      */
     onCloseOtherViews(handler) {
-        return this.addMessageListener({ topic: 'platform.layout.view.close.others', handler: handler });
+        return this.addMessageListener({ topic: `platform.layout${this.layoutId}.view.close.others`, handler: handler });
     }
 
     /**
@@ -204,7 +199,7 @@ class LayoutHub extends MessageHubApi {
      */ // @ts-ignore
     closeAllViews({ params } = {}) {
         this.postMessage({
-            topic: 'platform.layout.view.close.all',
+            topic: `platform.layout${this.layoutId}.view.close.all`,
             data: {
                 params: params
             }
@@ -217,7 +212,7 @@ class LayoutHub extends MessageHubApi {
      * @returns - A reference to the listener. In order to remove/disable the listener, you need to use this reference and pass it to the 'removeMessageListener' function.
      */
     onCloseAllViews(handler) {
-        return this.addMessageListener({ topic: 'platform.layout.view.close.all', handler: handler });
+        return this.addMessageListener({ topic: `platform.layout${this.layoutId}.view.close.all`, handler: handler });
     }
 
     /**
@@ -228,7 +223,7 @@ class LayoutHub extends MessageHubApi {
      */ // @ts-ignore
     setViewDirty({ id, dirty, params } = {}) {
         this.postMessage({
-            topic: 'platform.layout.view.dirty',
+            topic: `platform.layout${this.layoutId}.view.dirty`,
             data: {
                 id: id,
                 dirty: dirty,
@@ -243,6 +238,235 @@ class LayoutHub extends MessageHubApi {
      * @returns - A reference to the listener. In order to remove/disable the listener, you need to use this reference and pass it to the 'removeMessageListener' function.
      */
     onViewDirty(handler) {
-        return this.addMessageListener({ topic: 'platform.layout.view.dirty', handler: handler });
+        return this.addMessageListener({ topic: `platform.layout${this.layoutId}.view.dirty`, handler: handler });
+    }
+
+    /**
+     * Sends a message containing information on which file and editor has to be opened.
+     * @param {string} path - Full file path, including file name.
+     * @param {string} contentType - The file content type.
+     * @param {string} [editorId] - The ID of the preffered editor.
+     * @param {Object.<any, any>} [params] - Extra parameters that will be passed to the view parameters of the editor.
+     */ // @ts-ignore
+    openEditor({ path, contentType, editorId, params } = {}) {
+        this.postMessage({
+            topic: `platform.layout${this.layoutId}.editors.open`,
+            data: {
+                name: path.substring(path.lastIndexOf('/') + 1, path.length),
+                path: path,
+                contentType: contentType,
+                editorId: editorId,
+                params: params,
+            }
+        });
+    }
+
+    /**
+     * Triggered when an editor has to be opened.
+     * @param handler - Callback function.
+     * @returns - A reference to the listener. In order to remove/disable the listener, you need to use this reference and pass it to the 'removeMessageListener' function.
+     */
+    onOpenEditor(handler) {
+        return this.addMessageListener({ topic: `platform.layout${this.layoutId}.editors.open`, handler: handler });
+    }
+
+    /**
+     * Sends a message containing information on which editor has to be closed.
+     * @param {string} path - Full file path, including file name.
+     * @param {Object.<any, any>} [params] - Extra parameters.
+     */ // @ts-ignore
+    closeEditor({ path, params } = {}) {
+        this.postMessage({
+            topic: `platform.layout${this.layoutId}.editors.close`,
+            data: {
+                path: path,
+                params: params,
+            }
+        });
+    }
+
+    /**
+     * Triggered when an editor has to be closed.
+     * @param handler - Callback function.
+     * @returns - A reference to the listener. In order to remove/disable the listener, you need to use this reference and pass it to the 'removeMessageListener' function.
+     */
+    onCloseEditor(handler) {
+        return this.addMessageListener({ topic: `platform.layout${this.layoutId}.editors.close`, handler: handler });
+    }
+
+    /**
+     * Sends a message when all editors should be closed.
+     * @param {Object.<any, any>} [params] - Extra parameters.
+     */ // @ts-ignore
+    closeAllEditors({ params } = {}) {
+        this.postMessage({
+            topic: `platform.layout${this.layoutId}.editors.close.all`,
+            data: {
+                params: params,
+            }
+        });
+    }
+
+    /**
+     * Triggered when all editors have to be closed.
+     * @param handler - Callback function.
+     * @returns - A reference to the listener. In order to remove/disable the listener, you need to use this reference and pass it to the 'removeMessageListener' function.
+     */
+    onCloseAllEditors(handler) {
+        return this.addMessageListener({ topic: `platform.layout${this.layoutId}.editors.close.all`, handler: handler });
+    }
+
+    /**
+     * Sends a message containing information on which editor has to be set to dirty.
+     * @param {string} path - Full file path, including file name.
+     * @param {boolean} dirty - Editor dirty state.
+     * @param {Object.<any, any>} [params] - Extra parameters.
+     */ // @ts-ignore
+    setEditorDirty({ path, dirty, params } = {}) {
+        this.postMessage({
+            topic: `platform.layout${this.layoutId}.editors.set-dirty`,
+            data: {
+                path: path,
+                dirty: dirty,
+                params: params,
+            }
+        });
+    }
+
+    /**
+     * Triggered when an editor has to be set as dirty.
+     * @param handler - Callback function.
+     * @returns - A reference to the listener. In order to remove/disable the listener, you need to use this reference and pass it to the 'removeMessageListener' function.
+     */
+    onSetEditorDirty(handler) {
+        return this.addMessageListener({ topic: `platform.layout${this.layoutId}.editors.set-dirty`, handler: handler });
+    }
+
+    /**
+     * Gets the dirty state of an editor.
+     * @param {string} path - Full file path, including file name.
+     * @param {Object.<any, any>} [params] - Extra parameters.
+     */ // @ts-ignore
+    isEditorDirty({ path, params } = {}) {
+        const callbackTopic = `platform.layout${this.layoutId}.editors.is-dirty.${new Date().valueOf()}`;
+        this.postMessage({
+            topic: `platform.layout${this.layoutId}.editors.is-dirty`,
+            data: {
+                topic: callbackTopic,
+                path: path,
+                params: params,
+            },
+        });
+        return new Promise((resolve) => {
+            const callbackListener = this.addMessageListener({
+                topic: callbackTopic,
+                handler: (data) => {
+                    this.removeMessageListener(callbackListener);
+                    resolve(data);
+                }
+            });
+        });
+    }
+
+    /**
+     * Triggered when an editor's dirty state is requested.
+     * @param handler - Callback function.
+     * @returns - A reference to the listener. In order to remove/disable the listener, you need to use this reference and pass it to the 'removeMessageListener' function.
+     */
+    onIsEditorDirty(handler) {
+        return this.addMessageListener({ topic: `platform.layout${this.layoutId}.editors.is-dirty`, handler: handler });
+    }
+
+    /**
+     * Checks if an editor is open.
+     * @param {string} path - Full file path, including file name.
+     * @param {Object.<any, any>} [params] - Extra parameters.
+     */ // @ts-ignore
+    isEditorOpen({ path, params } = {}) {
+        const callbackTopic = `platform.layout${this.layoutId}.editors.is-open.${new Date().valueOf()}`;
+        this.postMessage({
+            topic: `platform.layout${this.layoutId}.editors.is-open`,
+            data: {
+                topic: callbackTopic,
+                path: path,
+                params: params,
+            },
+        });
+        return new Promise((resolve) => {
+            const callbackListener = this.addMessageListener({
+                topic: callbackTopic,
+                handler: (data) => {
+                    this.removeMessageListener(callbackListener);
+                    resolve(data);
+                }
+            });
+        });
+    }
+
+    /**
+     * Triggered when performing a check for an open editor.
+     * @param handler - Callback function.
+     * @returns - A reference to the listener. In order to remove/disable the listener, you need to use this reference and pass it to the 'removeMessageListener' function.
+     */
+    onIsEditorOpen(handler) {
+        return this.addMessageListener({ topic: `platform.layout${this.layoutId}.editors.is-open`, handler: handler });
+    }
+
+    /**
+     * Gets all file paths from the currently opened editors.
+     * @param {string} basePath - If provided, it will only return files with a matching base path.
+     * @return {Promise} - Returns a promise with a list of paths as a parameter.
+     */ // @ts-ignore
+    getCurrentlyOpenedEditors({ basePath = '/' } = {}) {
+        const callbackTopic = `platform.layout${this.layoutId}.editors.opened.${new Date().valueOf()}`;
+        this.postMessage({
+            topic: `platform.layout${this.layoutId}.editors.opened`,
+            data: {
+                basePath: basePath,
+                topic: callbackTopic,
+            }
+        });
+        return new Promise((resolve) => {
+            const callbackListener = this.addMessageListener({
+                topic: callbackTopic,
+                handler: (data) => {
+                    this.removeMessageListener(callbackListener);
+                    resolve(data);
+                }
+            });
+        });
+    }
+
+    /**
+     * Triggered when a list of opened files is requested.
+     * @param handler - Callback function.
+     * @returns - A reference to the listener. In order to remove/disable the listener, you need to use this reference and pass it to the 'removeMessageListener' function.
+     */
+    onGetCurrentlyOpenedEditors(handler) {
+        return this.addMessageListener({ topic: `platform.layout${this.layoutId}.editors.opened`, handler: handler });
+    }
+
+    /**
+     * Tells an editor that it should reload its view parameters.
+     * @param {string} path - Full file path, including file name.
+     * @param {object} [params] - Custom parameters.
+     */ // @ts-ignore
+    reloadEditorParams({ path, params } = {}) {
+        this.postMessage({
+            topic: `platform.layout${this.layoutId}.editors.reload-params`,
+            data: {
+                path: path,
+                params: params,
+            }
+        });
+    }
+
+    /**
+     * Triggered when an editor should reload its view parameters.
+     * @param handler - Callback function.
+     * @returns - A reference to the listener. In order to remove/disable the listener, you need to use this reference and pass it to the 'removeMessageListener' function.
+     */
+    onReloadEditorParams(handler) {
+        return this.addMessageListener({ topic: `platform.layout${this.layoutId}.editors.reload-params`, handler: handler });
     }
 }

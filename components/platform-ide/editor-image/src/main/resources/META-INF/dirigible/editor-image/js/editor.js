@@ -12,7 +12,6 @@
 const editorView = angular.module('image-app', ['blimpKit', 'platformView', 'WorkspaceService']);
 editorView.controller('ImageViewController', function ($scope, $window, WorkspaceService, ViewParameters) {
     const statusBarHub = new StatusBarHub();
-    const workspaceHub = new WorkspaceHub();
     const layoutHub = new LayoutHub();
     $scope.imageLink = '';
     $scope.state = {
@@ -38,7 +37,7 @@ editorView.controller('ImageViewController', function ($scope, $window, Workspac
         if (data.params && data.params.resourcePath === $scope.dataParameters.filePath) statusBarHub.showLabel('');
     });
 
-    workspaceHub.onReloadEditorParams((data) => {
+    layoutHub.onReloadEditorParams((data) => {
         if (data.path === $scope.dataParameters.filePath) {
             $scope.$evalAsync(() => {
                 $scope.dataParameters = ViewParameters.get();

@@ -110,7 +110,7 @@ class Utils {
     }
 
     static setEditorDirty(dirty) {
-        workspaceHub.setFileDirty({
+        layoutHub.setEditorDirty({
             path: editorParameters.resourcePath,
             dirty: dirty,
         });
@@ -317,7 +317,7 @@ class FileIO {
             Utils.logMessage(`File '${fileName}' saved`);
 
             if (TypeScriptUtils.isTypeScriptFile(fileName)) {
-                workspaceHub.postMessage({
+                themingHub.postMessage({
                     topic: 'monaco.ts.reload',
                     data: fileName
                 });
@@ -490,7 +490,7 @@ class EditorActionsProvider {
                 }
 
                 window.localStorage.setItem(EditorActionsProvider.#autoFormatExcludedKey, jsonString);
-                layoutHub.postMessage({ topic: 'code-editor.settings.update', data: { fileName: fileName } });
+                themingHub.postMessage({ topic: 'code-editor.settings.update', data: { fileName: fileName } });
             }
         };
     }
@@ -517,7 +517,7 @@ class DirigibleEditor {
     static computeDiff = new Worker("js/workers/computeDiff.js");
 
     static closeEditor() {
-        workspaceHub.closeFile({
+        layoutHub.closeEditor({
             path: editorParameters.resourcePath,
         });
     }
@@ -666,12 +666,12 @@ class DirigibleEditor {
         });
 
         editor.onDidFocusEditorText(function () {
-            workspaceHub.openFile({
+            layoutHub.openEditor({
                 path: editorParameters.resourcePath,
             });
             if (EditorActionsProvider.isAutoRevealEnabled()) {
                 setTimeout(() => {
-                    layoutHub.postMessage({
+                    themingHub.postMessage({
                         topic: 'projects.tree.select',
                         data: {
                             filePath: editorParameters.resourcePath
@@ -691,7 +691,7 @@ class DirigibleEditor {
         editor.addAction(EditorActionsProvider.createSearchAction());
         if (!this.isTemplate) {
             EditorActionsProvider._toggleAutoFormattingActionRegistration = editor.addAction(EditorActionsProvider.createToggleAutoFormattingAction());
-            layoutHub.addMessageListener({
+            themingHub.addMessageListener({
                 topic: 'code-editor.settings.update', handler: (data) => {
                     if (data.fileName && data.fileName === fileName && EditorActionsProvider._toggleAutoFormattingActionRegistration) {
                         // @ts-ignore
@@ -865,7 +865,7 @@ class DirigibleEditor {
             provideImplementation: function (model, position) {
                 const filePath = getTypeScriptFileImport(model, position, fileObject);
                 if (filePath) {
-                    workspaceHub.openFile({
+                    layoutHub.openEditor({
                         path: filePath,
                         contentType: "typescript",
                     });
@@ -913,7 +913,7 @@ class DirigibleEditor {
             }
         });
 
-        workspaceHub.onReloadEditorParams((data) => {
+        layoutHub.onReloadEditorParams((data) => {
             if (data.path === editorParameters.resourcePath) {
                 editorParameters = getViewParameters();
             }
@@ -923,7 +923,7 @@ class DirigibleEditor {
             if (data.params && data.params.file === fileIO.resolveResourcePath()) {
                 editor.focus();
                 if (EditorActionsProvider.isAutoRevealEnabled()) {
-                    layoutHub.postMessage({
+                    themingHub.postMessage({
                         topic: 'projects.tree.select',
                         data: { filePath: data.id }
                     });
@@ -931,7 +931,7 @@ class DirigibleEditor {
             }
         });
 
-        workspaceHub.addMessageListener({
+        themingHub.addMessageListener({
             topic: 'monaco.ts.reload',
             handler: (fileData) => {
                 if (fileData === editorParameters.resourcePath) {

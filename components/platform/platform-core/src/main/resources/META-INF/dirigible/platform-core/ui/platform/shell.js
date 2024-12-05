@@ -52,12 +52,12 @@ angular.module('platformShell', ['ngCookies', 'platformUser', 'platformExtension
         }
     })
     .constant('MessageHub', new MessageHubApi())
-    .constant('Layout', new LayoutHub())
+    .constant('Shell', new ShellHub())
     .config(function config($compileProvider) {
         $compileProvider.debugInfoEnabled(false);
         $compileProvider.commentDirectivesEnabled(false);
         $compileProvider.cssClassDirectivesEnabled(false);
-    }).directive('shellHeader', ($window, User, Extensions, shellState, notifications, MessageHub, Layout) => ({
+    }).directive('shellHeader', ($window, User, Extensions, shellState, notifications, MessageHub, Shell) => ({
         restrict: 'E',
         replace: true,
         link: (scope, element) => {
@@ -153,9 +153,9 @@ angular.module('platformShell', ['ngCookies', 'platformUser', 'platformExtension
 
             scope.menuClick = (item) => {
                 if (item.action === 'openView') {
-                    Layout.openView({ id: item.id, params: item.data });
+                    new LayoutHub(scope.perspectiveId).openView({ id: item.id, params: item.data });
                 } else if (item.action === 'showPerspective') {
-                    Layout.showPerspective({ id: item.id });
+                    Shell.showPerspective({ id: item.id });
                 } else if (item.action === 'openWindow') {
                     dialogHub.showWindow({
                         hasHeader: item.hasHeader,
@@ -198,7 +198,7 @@ angular.module('platformShell', ['ngCookies', 'platformUser', 'platformExtension
         },
         template: `<bk-menu-item ng-repeat-start="item in sublist track by $index" ng-if="!item.items" has-separator="::item.divider" title="{{ ::item.label }}" ng-click="::menuHandler(item)"></bk-menu-item>
         <bk-menu-sublist ng-if="item.items" has-separator="::item.divider" title="{{ ::item.label }}" can-scroll="::isScrollable($index)" ng-repeat-end><submenu sublist="::item.items" menu-handler="::menuHandler"></submenu></bk-menu-sublist>`,
-    })).directive('perspectiveContainer', (Extensions, shellState, Layout) => ({
+    })).directive('perspectiveContainer', (Extensions, shellState, Shell) => ({
         restrict: 'E',
         transclude: true,
         replace: true,
@@ -289,7 +289,7 @@ angular.module('platformShell', ['ngCookies', 'platformUser', 'platformExtension
                     return label;
                 }
 
-                const showPerspectiveListener = Layout.onShowPerspective((data) => {
+                const showPerspectiveListener = Shell.onShowPerspective((data) => {
                     const label = getPerspectiveLabel(data.id, scope.config.perspectives);
                     if (label) {
                         scope.$evalAsync(() => {
@@ -307,7 +307,7 @@ angular.module('platformShell', ['ngCookies', 'platformUser', 'platformExtension
                 });
 
                 scope.$on('$destroy', () => {
-                    Layout.removeMessageListener(showPerspectiveListener);
+                    Shell.removeMessageListener(showPerspectiveListener);
                 });
             },
         },
