@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.dirigible.components.ide.git.domain.GitConnectorException;
 import org.eclipse.dirigible.components.ide.git.domain.GitConnectorFactory;
@@ -20,6 +21,7 @@ import org.eclipse.dirigible.components.ide.git.domain.IGitConnector;
 import org.eclipse.dirigible.components.ide.git.model.GitPushModel;
 import org.eclipse.dirigible.components.ide.git.project.ProjectPropertiesVerifier;
 import org.eclipse.dirigible.components.ide.git.utils.GitFileUtils;
+import org.eclipse.dirigible.components.ide.workspace.domain.Project;
 import org.eclipse.dirigible.components.ide.workspace.domain.Workspace;
 import org.eclipse.dirigible.components.ide.workspace.project.ProjectMetadataManager;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -85,10 +87,15 @@ public class PushCommand {
      * @throws GitConnectorException in case of exception
      */
     public void execute(final Workspace workspace, GitPushModel model) throws GitConnectorException {
+        if (model.getProjects() == null) {
+            model.setProjects(GitFileUtils.getAllGitProjects(workspace));
+        }
+
         if (model.getProjects()
                  .size() == 0) {
-            logger.warn("No repository is selected for the Push action");
+            logger.warn("No git aware project is selected for the Push action");
         }
+
         for (String repositoryName : model.getProjects()) {
             if (projectPropertiesVerifier.verify(workspace.getName(), repositoryName)) {
                 if (logger.isDebugEnabled()) {
