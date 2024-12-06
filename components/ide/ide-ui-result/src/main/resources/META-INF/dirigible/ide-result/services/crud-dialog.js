@@ -1,6 +1,6 @@
 const viewData = {
     id: "result-view-crud",
-    label: "Edit Table",
+    label: "Row Dialog",
     link: "../ide-result/dialogs/crud-dialog.html"
 };
 if (typeof exports !== 'undefined') {
