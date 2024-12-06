@@ -32,13 +32,13 @@ class FlowableMetricsConfigurator implements ApplicationListener<ApplicationRead
 
     /** The Constant METRIC_PREFIX. */
     private static final String METRIC_PREFIX = "flowable_";
-    
+
     /** The Constant METER_SCOPE_NAME. */
     private static final String METER_SCOPE_NAME = "dirigible_flowable";
 
     /** The bpm provider flowable. */
     private final BpmProviderFlowable bpmProviderFlowable;
-    
+
     /** The open telemetry. */
     private final OpenTelemetry openTelemetry;
 

@@ -25,7 +25,7 @@ class RunningJobsCountMetricsConfigurator implements ApplicationListener<Applica
 
     /** The open telemetry. */
     private final OpenTelemetry openTelemetry;
-    
+
     /** The scheduler. */
     private final Scheduler scheduler;
 
