@@ -33,7 +33,7 @@ class BpmProviderFlowableFactoryBean implements FactoryBean<BpmProviderFlowable>
 
     /** The bpm provider flowable. */
     private BpmProviderFlowable bpmProviderFlowable;
-    
+
     /** The application context. */
     private ApplicationContext applicationContext;
 

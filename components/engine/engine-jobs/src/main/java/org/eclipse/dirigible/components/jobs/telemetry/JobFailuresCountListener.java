@@ -19,13 +19,10 @@ import org.quartz.JobKey;
 import org.springframework.stereotype.Component;
 
 /**
- * The listener interface for receiving jobFailuresCount events.
- * The class that is interested in processing a jobFailuresCount
- * event implements this interface, and the object created
- * with that class is registered with a component using the
- * component's <code>addJobFailuresCountListener<code> method. When
- * the jobFailuresCount event occurs, that object's appropriate
- * method is invoked.
+ * The listener interface for receiving jobFailuresCount events. The class that is interested in
+ * processing a jobFailuresCount event implements this interface, and the object created with that
+ * class is registered with a component using the component's addJobFailuresCountListener method.
+ * When the jobFailuresCount event occurs, that object's appropriate method is invoked.
  *
  * @see JobFailuresCountEvent
  */
