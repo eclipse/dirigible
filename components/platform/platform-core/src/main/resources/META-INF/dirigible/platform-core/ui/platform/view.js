@@ -171,6 +171,7 @@ angular.module('platformView', ['platformExtensions', 'platformTheming'])
             } else if (typeof editorData !== 'undefined') {
                 scope.label = editorData.label;
                 if ($window.frameElement && $window.frameElement.hasAttribute('tab-id')) {
+                    const layoutHub = new LayoutHub();
                     const tabId = $window.frameElement.getAttribute('tab-id');
                     const onFocus = () => layoutHub.focusView({ id: tabId });
                     angular.element($window).on('focus', onFocus);

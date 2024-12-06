@@ -228,7 +228,7 @@ angular.module('platformShell', ['ngCookies', 'platformUser', 'platformExtension
                 }
                 function setDefaultPerspective() {
                     if (scope.config.perspectives.length) {
-                        const label = getPerspectiveLabel(scope.activeId, scope.config.perspectives);
+                        const label = getPerspectiveLabel(scope.activeId, scope.config.perspectives) ?? getPerspectiveLabel(scope.activeId, scope.config.utilities);
                         if (label) {
                             shellState.perspective = {
                                 id: scope.activeId,
