@@ -580,7 +580,7 @@ public class GitEndpoint {
      *
      * @param workspace the workspace
      * @param project the project
-     * @param url the new fetch URL
+     * @param input the input
      * @return the response
      * @throws GitConnectorException Git Connector Exception
      * @throws GitAPIException Git API Exception
@@ -602,7 +602,7 @@ public class GitEndpoint {
      *
      * @param workspace the workspace
      * @param project the project
-     * @param url the new fetch URL
+     * @param input the input
      * @return the response
      * @throws GitConnectorException Git Connector Exception
      * @throws GitAPIException Git API Exception
