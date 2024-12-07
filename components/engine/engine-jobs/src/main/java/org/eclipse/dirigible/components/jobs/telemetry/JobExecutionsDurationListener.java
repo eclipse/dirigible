@@ -25,8 +25,8 @@ import java.time.Instant;
  * The listener interface for receiving jobExecutionsDuration events. The class that is interested
  * in processing a jobExecutionsDuration event implements this interface, and the object created
  * with that class is registered with a component using the component's
- * addJobExecutionsDurationListener method. When the jobExecutionsDuration event occurs,
- * that object's appropriate method is invoked.
+ * addJobExecutionsDurationListener method. When the jobExecutionsDuration event occurs, that
+ * object's appropriate method is invoked.
  *
  * @see JobExecutionsDurationEvent
  */
