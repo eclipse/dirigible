@@ -14,8 +14,8 @@ import org.quartz.listeners.JobListenerSupport;
 /**
  * The listener interface for receiving openTelemetry events. The class that is interested in
  * processing a openTelemetry event implements this interface, and the object created with that
- * class is registered with a component using the component's addOpenTelemetryListener
- * method. When the openTelemetry event occurs, that object's appropriate method is invoked.
+ * class is registered with a component using the component's addOpenTelemetryListener method. When
+ * the openTelemetry event occurs, that object's appropriate method is invoked.
  *
  * @see OpenTelemetryEvent
  */
