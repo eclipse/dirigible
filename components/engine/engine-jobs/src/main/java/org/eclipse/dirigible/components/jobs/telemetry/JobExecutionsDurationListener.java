@@ -28,7 +28,7 @@ import java.time.Instant;
  * addJobExecutionsDurationListener method. When the jobExecutionsDuration event occurs, that
  * object's appropriate method is invoked.
  *
- * @see JobExecutionsDurationEvent
+ * see JobExecutionsDurationEvent
  */
 @Component
 public class JobExecutionsDurationListener extends OpenTelemetryListener {

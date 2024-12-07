@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
  * class is registered with a component using the component's addJobFailuresCountListener method.
  * When the jobFailuresCount event occurs, that object's appropriate method is invoked.
  *
- * @see JobFailuresCountEvent
+ * see JobFailuresCountEvent
  */
 @Component
 public class JobFailuresCountListener extends OpenTelemetryListener {
