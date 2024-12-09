@@ -1200,11 +1200,10 @@ projectsView.controller('ProjectsViewController', function (
         });
     };
 
-    function deleteProject(workspace, project, nodeId) {
+    function deleteProject(workspace, project, _nodeId) {
         WorkspaceService.deleteProject(workspace, project).then(() => {
             StatusBar.showMessage(`Deleted '${project}'.`);
             Workspace.announceProjectDeleted({ project: project, workspace: workspace });
-            jstreeWidget.jstree(true).delete_node(nodeId);
         }, (response) => {
             console.error(response);
             StatusBar.showError(`Unable to delete '${project}'.`);
@@ -1241,9 +1240,7 @@ projectsView.controller('ProjectsViewController', function (
                 WorkspaceService.createProject($scope.selectedWorkspace, form['pgfi1']).then(() => {
                     Dialogs.closeBusyDialog();
                     StatusBar.showMessage(`Created project '${form['pgfi1']}'`);
-                    $scope.$evalAsync(() => {
-                        $scope.reloadWorkspace();
-                    });
+                    Workspace.announceWorkspaceChanged({ workspace: $scope.selectedWorkspace, params: { publish: { path: `/${$scope.selectedWorkspace}/${form['pgfi1']}` } } });
                 }, (response) => {
                     console.error(response);
                     Dialogs.closeBusyDialog();
@@ -1345,10 +1342,7 @@ projectsView.controller('ProjectsViewController', function (
                 }
                 WorkspaceService.copy(originalPath, duplicatePath).then(() => {
                     Dialogs.closeBusyDialog();
-                    if (form['pgfd1'] === $scope.selectedWorkspace)
-                        $scope.$evalAsync(() => {
-                            $scope.reloadWorkspace(); // Temporary solution
-                        });
+                    Workspace.announceWorkspaceChanged({ workspace: form['pgfd1'], params: { publish: { path: `/${form['pgfd1']}/${form['pgfi1']}` } } });
                     StatusBar.showMessage(`Duplicated '${originalPath}'`);
                 }, (response) => {
                     console.error(response);
@@ -1392,9 +1386,6 @@ projectsView.controller('ProjectsViewController', function (
                     Dialogs.closeBusyDialog();
                     StatusBar.showMessage(`Created workspace '${form['pgfi1']}'`);
                     Workspace.announceWorkspaceCreated({ workspace: form['pgfi1'] });
-                    $scope.$evalAsync(() => {
-                        $scope.reloadWorkspaceList();
-                    });
                 }, (response) => {
                     console.error(response);
                     Dialogs.closeBusyDialog();
@@ -1431,11 +1422,7 @@ projectsView.controller('ProjectsViewController', function (
             }).then((buttonId) => {
                 if (buttonId === 'yes') {
                     WorkspaceService.deleteWorkspace($scope.selectedWorkspace).then(() => {
-                        Workspace.announceWorkspaceDeleted($scope.selectedWorkspace);
-                        $scope.$evalAsync(() => {
-                            $scope.switchWorkspace('workspace');
-                            $scope.reloadWorkspaceList();
-                        });
+                        Workspace.announceWorkspaceDeleted({ workspace: $scope.selectedWorkspace });
                     }, (response) => {
                         console.error(response);
                         StatusBar.showError(`Unable to delete workspace '${$scope.selectedWorkspace}'`);
@@ -1945,6 +1932,40 @@ projectsView.controller('ProjectsViewController', function (
             } else if (changed.workspace) {
                 publish(`/${changed.workspace}/*`);
             }
+        }
+    });
+
+    Workspace.onWorkspaceCreated((data) => {
+        $scope.$evalAsync(() => {
+            $scope.workspaceNames.push(data.workspace);
+        });
+    });
+
+    Workspace.onWorkspaceDeleted((data) => {
+        $scope.$evalAsync(() => {
+            $scope.workspaceNames.splice($scope.workspaceNames.indexOf(data.workspace), 1);
+            $scope.switchWorkspace('workspace');
+        });
+    });
+
+    Workspace.onProjectDeleted((data) => {
+        if (data.workspace === $scope.selectedWorkspace) {
+            const instance = jstreeWidget.jstree(true);
+            if (typeof instance._model !== 'undefined')
+                for (let item in instance._model.data) { // Uses the unofficial '_model' property but this is A LOT faster then using 'get_json()'
+                    if (item !== '#' && instance._model.data[item].type === 'project' && instance._model.data[item].text === data.project) {
+                        instance.deselect_all();
+                        instance.delete_node(instance._model.data[item]);
+                        break;
+                    }
+                }
+            Layout.getCurrentlyOpenedEditors().then((result) => {
+                for (let f = 0; f < result.length; f++) {
+                    if (result[f].startsWith(`/${data.workspace}/${data.project}/`)) {
+                        Layout.closeEditor({ path: result[f] });
+                    }
+                }
+            });
         }
     });
 

@@ -281,7 +281,7 @@ gitProjectsView.controller('GitProjectsController', ($scope, StatusBar, Dialogs,
                     }).then((buttonId) => {
                         if (buttonId !== 'b3') {
                             Dialogs.showBusyDialog('Deleting...');
-                            let unpublishOnDelete = buttonId === 'b2';
+                            const unpublishOnDelete = buttonId === 'b2';
                             GitService.deleteRepository($scope.selectedWorkspace, selectedNode.text, unpublishOnDelete).then(() => {
                                 Workspace.announceWorkspaceChanged({
                                     workspace: $scope.selectedWorkspace,
@@ -958,6 +958,19 @@ gitProjectsView.controller('GitProjectsController', ($scope, StatusBar, Dialogs,
             if (changed.params && !changed.params.gitAction)
                 $scope.reloadProjects();
         }
+    });
+
+    Workspace.onWorkspaceCreated((data) => {
+        $scope.$evalAsync(() => {
+            $scope.workspaceNames.push(data.workspace);
+        });
+    });
+
+    Workspace.onWorkspaceDeleted((data) => {
+        $scope.$evalAsync(() => {
+            $scope.workspaceNames.splice($scope.workspaceNames.indexOf(data.workspace), 1);
+            if (data.workspace === $scope.selectedWorkspace) $scope.switchWorkspace('workspace');
+        });
     });
 
     // Initialization

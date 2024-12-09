@@ -277,8 +277,8 @@ localBranchesView.controller('LocalBranchesViewController', ($scope, GitService,
                                 break;
                             }
                         }
+                        if (!$scope.activeBranch.name) $scope.loadBranches();
                     });
-                    if (!$scope.activeBranch.name) $scope.loadBranches();
                 }
             }
         }
