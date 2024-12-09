@@ -28,11 +28,16 @@ import org.eclipse.dirigible.components.ide.git.domain.GitConnectorFactory;
 import org.eclipse.dirigible.components.ide.git.domain.IGitConnector;
 import org.eclipse.dirigible.components.ide.workspace.domain.Folder;
 import org.eclipse.dirigible.components.ide.workspace.domain.Project;
+import org.eclipse.dirigible.components.ide.workspace.domain.Workspace;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.eclipse.dirigible.repository.fs.FileSystemRepository;
 import org.eclipse.dirigible.repository.local.LocalWorkspaceMapper;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -339,6 +344,28 @@ public class GitFileUtils implements InitializingBean {
     }
 
     /**
+     * Repository exists.
+     *
+     * @param directory the directory
+     * @return true, if successful
+     */
+    public static boolean repositoryExists(File directory) {
+        try {
+            Git git = Git.open(directory);
+            Repository repo = git.getRepository();
+            for (Ref ref : repo.getRefDatabase()
+                               .getRefs()) {
+                if (ref.getObjectId() == null)
+                    continue;
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
      * Checks if is git project.
      *
      * @param repository the repository
@@ -348,11 +375,13 @@ public class GitFileUtils implements InitializingBean {
     public static boolean isGitProject(IRepository repository, String repositoryPath) {
         try {
             if (repository instanceof FileSystemRepository) {
+
                 String path = LocalWorkspaceMapper.getMappedName((FileSystemRepository) repository, repositoryPath);
                 File gitDirectory = new File(path).getCanonicalFile();
-                IGitConnector gitConnector = GitConnectorFactory.getConnector(gitDirectory.getCanonicalPath());
-                gitConnector.getBranch();
-                return true;
+                // IGitConnector gitConnector =
+                // GitConnectorFactory.getConnector(gitDirectory.getCanonicalPath());
+                // gitConnector.getBranch();
+                return repositoryExists(gitDirectory);
             }
             if (logger.isErrorEnabled()) {
                 logger.error("Not a file system based repository used with git");
@@ -364,6 +393,21 @@ public class GitFileUtils implements InitializingBean {
             return false;
         }
         return false;
+    }
+
+    /**
+     * Gets the all git projects.
+     *
+     * @param workspace the workspace
+     * @return the all git projects
+     */
+    public static final List<String> getAllGitProjects(Workspace workspace) {
+        return workspace.getProjects()
+                        .stream()
+                        .filter(p -> isGitProject(p.getRepository(), p.getInternal()
+                                                                      .getPath()))
+                        .map(Project::getName)
+                        .collect(Collectors.toList());
     }
 
     /**
@@ -419,7 +463,8 @@ public class GitFileUtils implements InitializingBean {
      * @return the directory
      */
     public static File getGitDirectoryByRepositoryName(String user, String workspace, String repositoryName) {
-        // File gitDirectoryByRepositoryName = FileSystemUtils.getGitDirectoryByRepositoryName(user,
+        // File gitDirectoryByRepositoryName =
+        // FileSystemUtils.getGitDirectoryByRepositoryName(user,
         // workspace, repositoryName + IRepository.SEPARATOR + repositoryName);
         File gitDirectoryByRepositoryName = FileSystemUtils.getGitDirectoryByRepositoryName(user, workspace, repositoryName);
         if (gitDirectoryByRepositoryName == null) {

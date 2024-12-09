@@ -1,3 +1,14 @@
+/*
+ * Copyright (c) 2010-2024 Eclipse Dirigible contributors
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v2.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-FileCopyrightText: Eclipse Dirigible contributors
+ * SPDX-License-Identifier: EPL-2.0
+ */
 const navigation = angular.module("launchpad", ["ngResource", "ideLayout", "ideUI"]);
 navigation.controller("LaunchpadViewController", ["$scope", "messageHub", "$http", function ($scope, messageHub, $http) {
     $scope.currentViewId = 'dashboard';
@@ -9,7 +20,16 @@ navigation.controller("LaunchpadViewController", ["$scope", "messageHub", "$http
     function loadNavigationGroups() {
         return $http.get("/services/js/portal/api/NavigationGroupsExtension/NavigationGroupsService.js")
             .then(function (response) {
+                for (itemData of response.data) {
+                    if (!itemData || !itemData.icon || !itemData.order || !itemData.label) {
+                        console.error(`Invalid navigation group data: ${JSON.stringify(itemData)}. Missing one of the properties: icon, order, label`);
+                        return;
+                    }
+                }
+
                 $scope.groups = response.data;
+
+                $scope.groups.sort((a, b) => a.order - b.order)
 
                 response.data.forEach(elem => {
                     $scope.groupItems[elem.label.toLowerCase()] = [];
@@ -41,7 +61,7 @@ navigation.controller("LaunchpadViewController", ["$scope", "messageHub", "$http
 
     function addNavigationItem(itemData) {
         if (!itemData || !itemData.label || !itemData.group || !itemData.order || !itemData.link) {
-            console.error('Invalid item data:', itemData);
+            console.error(`Invalid item data: ${JSON.stringify(itemData)} Missing one of the properties: label, group, order, link`);
             return;
         }
 
@@ -54,7 +74,8 @@ navigation.controller("LaunchpadViewController", ["$scope", "messageHub", "$http
         $scope.groupItems[groupKey].push({
             id: itemData.id,
             label: itemData.label,
-            link: itemData.link
+            link: itemData.link,
+            order: itemData.order
         });
     }
 

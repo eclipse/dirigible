@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2010-2024 Eclipse Dirigible contributors
+ *
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-FileCopyrightText: Eclipse Dirigible contributors SPDX-License-Identifier: EPL-2.0
+ */
 package org.eclipse.dirigible.components.engine.bpm.flowable.open.telemetry;
 
 import io.opentelemetry.api.OpenTelemetry;
@@ -12,17 +21,33 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
+/**
+ * The Class FlowableMetricsConfigurator.
+ */
 @Component
 class FlowableMetricsConfigurator implements ApplicationListener<ApplicationReadyEvent> {
 
+    /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(FlowableMetricsConfigurator.class);
 
+    /** The Constant METRIC_PREFIX. */
     private static final String METRIC_PREFIX = "flowable_";
+
+    /** The Constant METER_SCOPE_NAME. */
     private static final String METER_SCOPE_NAME = "dirigible_flowable";
 
+    /** The bpm provider flowable. */
     private final BpmProviderFlowable bpmProviderFlowable;
+
+    /** The open telemetry. */
     private final OpenTelemetry openTelemetry;
 
+    /**
+     * Instantiates a new flowable metrics configurator.
+     *
+     * @param bpmProviderFlowable the bpm provider flowable
+     * @param openTelemetry the open telemetry
+     */
     FlowableMetricsConfigurator(BpmProviderFlowable bpmProviderFlowable, OpenTelemetry openTelemetry) {
         this.bpmProviderFlowable = bpmProviderFlowable;
         this.openTelemetry = openTelemetry;
@@ -30,7 +55,7 @@ class FlowableMetricsConfigurator implements ApplicationListener<ApplicationRead
 
     /**
      * Create meters based on the logic in the Flowable actuator endpoint in
-     * {@link ProcessEngineEndpoint} class
+     * {@link ProcessEngineEndpoint} class.
      *
      * @param event app ready event
      */
@@ -102,6 +127,12 @@ class FlowableMetricsConfigurator implements ApplicationListener<ApplicationRead
                                                                                      .count()));
     }
 
+    /**
+     * Seconds for days.
+     *
+     * @param days the days
+     * @return the long
+     */
     private long secondsForDays(int days) {
         int hour = 60 * 60 * 1000;
         int day = 24 * hour;

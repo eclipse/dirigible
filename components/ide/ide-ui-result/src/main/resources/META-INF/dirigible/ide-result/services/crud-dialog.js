@@ -10,13 +10,12 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 const viewData = {
-    id: "portal-dashboard",
-    label: "Dashboard",
-    lazyLoad: true,
-    link: "/services/web/portal/subviews/dashboard.html"
+    id: "result-view-crud",
+    label: "Row Dialog",
+    link: "../ide-result/dialogs/crud-dialog.html"
 };
 if (typeof exports !== 'undefined') {
-    exports.getView = function () {
+    exports.getDialogWindow = function () {
         return viewData;
     }
 }

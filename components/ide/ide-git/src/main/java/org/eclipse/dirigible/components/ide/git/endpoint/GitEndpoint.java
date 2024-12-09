@@ -18,6 +18,8 @@ import org.eclipse.dirigible.components.api.security.UserFacade;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
 import org.eclipse.dirigible.components.ide.git.domain.GitCommitInfo;
 import org.eclipse.dirigible.components.ide.git.domain.GitConnectorException;
+import org.eclipse.dirigible.components.ide.git.domain.GitUrlInput;
+import org.eclipse.dirigible.components.ide.git.domain.GitUrlOutput;
 import org.eclipse.dirigible.components.ide.git.model.BaseGitModel;
 import org.eclipse.dirigible.components.ide.git.model.GitCheckoutModel;
 import org.eclipse.dirigible.components.ide.git.model.GitCloneModel;
@@ -50,7 +52,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import com.google.gson.JsonObject;
 import jakarta.validation.Valid;
 
 /**
@@ -579,7 +580,7 @@ public class GitEndpoint {
      *
      * @param workspace the workspace
      * @param project the project
-     * @param url the new fetch URL
+     * @param input the input
      * @return the response
      * @throws GitConnectorException Git Connector Exception
      * @throws GitAPIException Git API Exception
@@ -587,13 +588,12 @@ public class GitEndpoint {
      */
     @PostMapping(value = {"/{project}/fetch-url"}, produces = {"application/json"})
     public ResponseEntity<?> setFetchUrl(@PathVariable("workspace") String workspace, @PathVariable("project") String project,
-            @Valid @RequestBody JsonObject url) throws GitConnectorException, GitAPIException, URISyntaxException {
-        String newurl = url.get("url")
-                           .getAsString();
+            @Valid @RequestBody GitUrlInput input) throws GitConnectorException, GitAPIException, URISyntaxException {
+        String newurl = input.getUrl();
         gitService.setFetchUrl(workspace, project, newurl);
-        JsonObject res = new JsonObject();
-        res.addProperty("status", "success");
-        res.addProperty("url", newurl);
+        GitUrlOutput res = new GitUrlOutput();
+        res.setStatus("success");
+        res.setUrl(newurl);
         return ResponseEntity.ok(res);
     }
 
@@ -602,7 +602,7 @@ public class GitEndpoint {
      *
      * @param workspace the workspace
      * @param project the project
-     * @param url the new fetch URL
+     * @param input the input
      * @return the response
      * @throws GitConnectorException Git Connector Exception
      * @throws GitAPIException Git API Exception
@@ -610,13 +610,12 @@ public class GitEndpoint {
      */
     @PostMapping(value = {"/{project}/push-url"}, produces = {"application/json"})
     public ResponseEntity<?> setPushUrl(@PathVariable("workspace") String workspace, @PathVariable("project") String project,
-            @Valid @RequestBody JsonObject url) throws GitConnectorException, GitAPIException, URISyntaxException {
-        String newurl = url.get("url")
-                           .getAsString();
+            @Valid @RequestBody GitUrlInput input) throws GitConnectorException, GitAPIException, URISyntaxException {
+        String newurl = input.getUrl();
         gitService.setPushUrl(workspace, project, newurl);
-        JsonObject res = new JsonObject();
-        res.addProperty("status", "success");
-        res.addProperty("url", newurl);
+        GitUrlOutput res = new GitUrlOutput();
+        res.setStatus("success");
+        res.setUrl(newurl);
         return ResponseEntity.ok(res);
     }
 

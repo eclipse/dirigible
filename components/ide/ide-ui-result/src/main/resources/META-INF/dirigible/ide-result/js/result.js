@@ -30,138 +30,135 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
     let csrfToken = null;
     $scope.procedureResults = [];
     $scope.hasMultipleProcedureResults = false;
-    $scope.isCreateDialogOpen = false;
-    $scope.isEditDialogOpen = false;
-    $scope.isDeleteDialogOpen = false;
     $scope.schemaName = null;
     $scope.tableName = null;
     $scope.selectedRow = null;
-    $scope.selectedRowOriginal = null;
+    $scope.hasResult = false;
 
-    $scope.createRow = function () {
-        $scope.newRow = {};
+    $scope.openCreateDialog = function () {
+        newRow = {};
 
         $scope.columns.forEach(function (column) {
-            $scope.newRow[column] = null;
+            newRow[column] = null;
         });
-        $scope.isCreateDialogOpen = true;
+        console.log(newRow);
+        messageHub.showDialogWindow('result-view-crud',
+            {
+                dialogType: 'create',
+                data: newRow
+            },
+            null,
+            false);
     };
-
-    $scope.confirmCreate = function () {
-        if (!$scope.newRow) {
-            console.error("No data provided for the new row.");
-            return;
-        }
-
-        const requestBody = {
-            schemaName: $scope.schemaName,
-            tableName: $scope.tableName,
-            data: $scope.newRow
-        };
-
-        $http.post("/services/js/ide-result/js/crud.js/create", requestBody)
-            .then((response) => {
-                $scope.isCreateDialogOpen = false;
-
-                messageHub.postMessage('database.sql.showContent', {
-                    schemaName: $scope.schemaName,
-                    tableName: $scope.tableName
-                });
-            })
-            .catch((error) => {
-                console.error("Failed to create row:", error);
-            });
+    $scope.openEditDialog = function (row) {
+        const selectedRow = angular.copy(row);
+        messageHub.showDialogWindow('result-view-crud',
+            {
+                dialogType: 'edit',
+                data: {
+                    row: selectedRow,
+                    primaryKeys: $scope.primaryKeyColumns,
+                    specialKeys: $scope.specialColumns
+                }
+            },
+            null,
+            false);
     };
-
-    $scope.closeCreateDialog = function () {
-        $scope.isCreateDialogOpen = false;
-    };
-
-    $scope.editRow = function (row) {
-        console.log("Row object:", row);
-        $scope.selectedRow = angular.copy(row);
-        $scope.selectedRowOriginal = angular.copy(row);
-
-        console.log("Selected Row:", $scope.selectedRow);
-
-        $scope.isEditDialogOpen = true;
-    };
-
-    $scope.confirmEdit = function () {
-        if (!$scope.selectedRow) {
-            console.error("No row selected for editing.");
-            return;
-        }
-
-        const updatedData = $scope.selectedRow;
-
-        $scope.primaryKeyColumns = $scope.primaryKeyColumns || [];
-
-        const requestBody = {
-            schemaName: $scope.schemaName,
-            tableName: $scope.tableName,
-            data: updatedData,
-            primaryKey: $scope.primaryKeyColumns
-        };
-
-        $http.put("/services/js/ide-result/js/crud.js/update", requestBody)
-            .then((response) => {
-                $scope.isEditDialogOpen = false;
-
-                messageHub.postMessage('database.sql.showContent', {
-                    schemaName: $scope.schemaName,
-                    tableName: $scope.tableName
-                });
-            })
-            .catch((error) => {
-                console.error("Failed to update row:", error);
-            });
-    };
-
-    $scope.closeEditDialog = function () {
-        $scope.isEditDialogOpen = false;
-    };
-
     $scope.openDeleteDialog = function (row) {
-        $scope.selectedRow = angular.copy(row);
-        $scope.isDeleteDialogOpen = true;
+        const selectedRow = angular.copy(row);
+        messageHub.showDialogWindow('result-view-crud', {
+            dialogType: 'delete',
+            data: selectedRow
+        },
+            null,
+            false);
     };
 
-    $scope.confirmDelete = function () {
-        if (!$scope.selectedRow) {
-            console.error("No row selected for deletion.");
-            return;
-        }
-
-        $scope.primaryKeyColumns = $scope.primaryKeyColumns || [];
-
-        const requestBody = {
-            schemaName: $scope.schemaName,
-            tableName: $scope.tableName,
-            primaryKey: $scope.primaryKeyColumns,
-            data: $scope.selectedRow
-        };
-
-        $http.post("/services/js/ide-result/js/crud.js/delete", requestBody)
-            .then((response) => {
-                $scope.isDeleteDialogOpen = false;
-
-                messageHub.postMessage('database.sql.showContent', {
+    messageHub.onDidReceiveMessage(
+        'create-row',
+        function (msg) {
+            if (msg.data) {
+                let row = msg.data;
+                const requestBody = {
                     schemaName: $scope.schemaName,
-                    tableName: $scope.tableName
-                });
-            })
-            .catch((error) => {
-                console.error("Failed to delete row:", error);
-            });
-    };
+                    tableName: $scope.tableName,
+                    data: row
+                };
 
+                $http.post("/services/js/ide-result/js/crud.js/create", requestBody)
+                    .then((response) => {
 
-    $scope.closeDeleteDialog = function () {
-        $scope.selectedRow = null;
-        $scope.isDeleteDialogOpen = false;
+                        messageHub.postMessage('database.sql.showContent', {
+                            schemaName: $scope.schemaName,
+                            tableName: $scope.tableName
+                        });
+                    })
+                    .catch((error) => {
+                        console.error("Failed to create row:", error);
+                    });
+            }
+            messageHub.closeDialogWindow('result-view-crud');
+        },
+        true
+    );
 
-    };
+    messageHub.onDidReceiveMessage(
+        'edit-row',
+        function (msg) {
+            if (msg.data) {
+                let row = msg.data;
+                const requestBody = {
+                    schemaName: $scope.schemaName,
+                    tableName: $scope.tableName,
+                    data: row,
+                    primaryKey: $scope.primaryKeyColumns
+                };
+
+                $http.put("/services/js/ide-result/js/crud.js/update", requestBody)
+                    .then((response) => {
+
+                        messageHub.postMessage('database.sql.showContent', {
+                            schemaName: $scope.schemaName,
+                            tableName: $scope.tableName
+                        });
+                    })
+                    .catch((error) => {
+                        console.error("Failed to edit row:", error);
+                    });
+            }
+            messageHub.closeDialogWindow('result-view-crud');
+        },
+        true
+    );
+
+    messageHub.onDidReceiveMessage(
+        'delete-row',
+        function (msg) {
+            if (msg.data) {
+                let row = msg.data;
+                const requestBody = {
+                    schemaName: $scope.schemaName,
+                    tableName: $scope.tableName,
+                    data: row,
+                    primaryKey: $scope.primaryKeyColumns
+                };
+
+                $http.post("/services/js/ide-result/js/crud.js/delete", requestBody)
+                    .then((response) => {
+
+                        messageHub.postMessage('database.sql.showContent', {
+                            schemaName: $scope.schemaName,
+                            tableName: $scope.tableName
+                        });
+                    })
+                    .catch((error) => {
+                        console.error("Failed to delete row:", error);
+                    });
+            }
+            messageHub.closeDialogWindow('result-view-crud');
+        },
+        true
+    );
 
     function extractSpecialAndPrimaryKeys(tableMetadata) {
         const specialColumns = [];
@@ -241,11 +238,14 @@ resultView.controller('DatabaseResultController', ['$scope', '$http', 'messageHu
                             }
                             break;
                         }
+                        $scope.hasResult = true;
                     } else if (result.data !== null && result.data.errorMessage !== null && result.data.errorMessage !== undefined) {
                         $scope.state.error = true;
                         $scope.errorMessage = result.data.errorMessage;
+                        $scope.hasResult = false;
                     } else {
                         $scope.result = 'Empty result';
+                        $scope.hasResult = false;
                     }
                     $scope.hideProgress();
                 }, function (reject) {

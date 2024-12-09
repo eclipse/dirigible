@@ -99,10 +99,15 @@ public class PullCommand {
      * @throws GitConnectorException in case of exception
      */
     public void execute(final Workspace workspace, GitPullModel model) throws GitConnectorException {
+        if (model.getProjects() == null) {
+            model.setProjects(GitFileUtils.getAllGitProjects(workspace));
+        }
+
         if (model.getProjects()
                  .size() == 0) {
-            logger.warn("No repository is selected for the Pull action");
+            logger.warn("No git aware project is selected for the Pull action");
         }
+
         List<String> pulledProjects = new ArrayList<String>();
         boolean atLeastOne = false;
         for (String repositoryName : model.getProjects()) {
