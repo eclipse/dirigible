@@ -68,6 +68,11 @@ export function getTemplate(parameters) {
                 name: "title",
                 label: "Title",
                 placeholder: "Enter Title"
+            },
+            {
+                name: "navigationOrder",
+                label: "Navigation Order",
+                placeholder: "Enter Navigation Order Number"
             }]
     };
 };
