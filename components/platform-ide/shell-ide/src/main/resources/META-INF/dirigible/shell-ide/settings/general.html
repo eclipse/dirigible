@@ -1,0 +1,59 @@
+<!--
+
+    Copyright (c) 2010-2024 Eclipse Dirigible contributors
+
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v2.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v20.html
+
+    SPDX-FileCopyrightText: Eclipse Dirigible contributors
+    SPDX-License-Identifier: EPL-2.0
+
+-->
+<!DOCTYPE HTML>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="general" ng-controller="GeneralController">
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
+		<title config-title></title>
+		<script type="text/javascript" src="/services/web/shell-ide/configs/general.js"></script>
+		<script type="text/javascript" src="/services/js/platform-core/services/loader.js?ids=view-js,cookies"></script>
+		<link type="text/css" rel="stylesheet" href="/services/js/platform-core/services/loader.js?id=view-css" />
+		<script type="text/javascript" src="js/general.js"></script>
+	</head>
+
+	<body>
+		<bk-toolbar has-title="true">
+			<bk-toolbar-title>General</bk-toolbar-title>
+			<bk-toolbar-spacer></bk-toolbar-spacer>
+			<bk-button label="Reset all" state="negative" title="Reset all" aria-label="reset all settings button"
+				ng-click="resetAll()">
+			</bk-button>
+		</bk-toolbar>
+		<div class="bk-center--horizontal bk-padding">
+			<bk-card class="bk-full-width bk-restrict-width--sm" card-type="list"
+				aria-roledescription="theme setting section">
+				<bk-card-header title="Themes">
+					<bk-avatar glyph="sap-icon--palette" style="font-size:1.5rem" is-transparent="true"
+						aria-label="theme icon">
+					</bk-avatar>
+				</bk-card-header>
+				<bk-card-content aria-roledescription="Card content">
+					<bk-list no-border="::true" class="bk-list-border--top">
+						<bk-list-item interactive="::true" ng-repeat="theme in themes track by theme.id"
+							ng-click="setTheme(theme.id, theme.name)" selected="theme.id === currentTheme.id">
+							<bk-list-icon glyph="{{ theme.id === currentTheme.id ? 'sap-icon--accept' : 'sap-icon' }}">
+							</bk-list-icon>
+							<bk-list-title>{{::theme.name}}</bk-list-title>
+						</bk-list-item>
+					</bk-list>
+				</bk-card-content>
+			</bk-card>
+		</div>
+		<theme></theme>
+	</body>
+
+</html>
