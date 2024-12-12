@@ -213,6 +213,7 @@
 		<module>platform-ide/view-git-history</module>
 		<module>platform-ide/view-git-projects</module>
 		<module>platform-ide/view-terminal</module>
+		<module>platform-ide/view-debugger</module>
 		<module>platform-ide/service-workspace</module>
 		<module>platform-ide/service-transport</module>
 		<module>platform-ide/service-template</module>
@@ -1190,6 +1191,11 @@
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-components-view-terminal</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-view-debugger</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 

@@ -83,6 +83,10 @@
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-view-terminal</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-view-debugger</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
