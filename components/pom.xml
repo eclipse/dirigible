@@ -199,6 +199,7 @@
 		<module>platform-ide/shell-ide</module>
 		<module>platform-ide/perspective-workbench</module>
 		<module>platform-ide/perspective-git</module>
+		<module>platform-ide/perspective-documents</module>
 		<module>platform-ide/view-welcome</module>
 		<module>platform-ide/view-search</module>
 		<module>platform-ide/view-projects</module>
@@ -211,6 +212,7 @@
 		<module>platform-ide/view-git-staging</module>
 		<module>platform-ide/view-git-history</module>
 		<module>platform-ide/view-git-projects</module>
+		<module>platform-ide/view-terminal</module>
 		<module>platform-ide/service-workspace</module>
 		<module>platform-ide/service-transport</module>
 		<module>platform-ide/service-template</module>
@@ -1116,6 +1118,11 @@
 			</dependency>
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-perspective-documents</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-components-perspective-settings</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -1178,6 +1185,11 @@
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-components-view-git-projects</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-view-terminal</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
