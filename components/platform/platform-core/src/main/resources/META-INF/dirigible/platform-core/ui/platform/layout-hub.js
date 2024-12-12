@@ -63,7 +63,7 @@ class LayoutHub extends MessageHubApi {
     }
 
     /**
-     * Returns true if a view is opened.
+     * Returns { isOpen: true/false } object.
      * @param {string} id - View id.
      * @param {object} [params] - Custom parameters.
      */ // @ts-ignore

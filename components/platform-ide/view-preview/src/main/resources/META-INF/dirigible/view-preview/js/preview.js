@@ -10,22 +10,18 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 const previewView = angular.module('preview', ['blimpKit', 'platformView']);
-previewView.controller('PreviewController', ($scope, ViewParameters, ButtonStates) => {
+previewView.controller('PreviewController', ($scope, ButtonStates) => {
     const defaultParameters = {
         'container': 'layout',
         'perspectiveId': 'workbench'
     };
     const workspaceHub = new WorkspaceHub();
     const dialogHub = new DialogHub();
+    const layoutHub = new LayoutHub();
+    const notificationHub = new NotificationHub();
     let customParamsId = `${brandingInfo.keyPrefix}.preview.customParameters`;
     let urlLockedId = `${brandingInfo.keyPrefix}.preview.urlLocked`;
-    let inDebugPerspective = false;
-    $scope.dataParameters = ViewParameters.get();
-    if ($scope.dataParameters.hasOwnProperty('perspectiveId') && $scope.dataParameters.perspectiveId === 'debugger') {
-        inDebugPerspective = true;
-        customParamsId = `${brandingInfo.keyPrefix}.debugger.preview.customParameters`;
-        urlLockedId = `${brandingInfo.keyPrefix}.debugger.preview.urlLocked`;
-    }
+    let isDebugPreview = false;
 
     $scope.urlLocked = localStorage.getItem(urlLockedId) === 'true';
 
@@ -215,7 +211,7 @@ previewView.controller('PreviewController', ($scope, ViewParameters, ButtonState
             }
             url += resourcePath;
         }
-        if (inDebugPerspective) url += '?debug=true';
+        if (isDebugPreview) url += '?debug=true';
         return url;
     };
 
@@ -262,12 +258,44 @@ previewView.controller('PreviewController', ($scope, ViewParameters, ButtonState
         });
     };
 
-    workspaceHub.onFileSelected((fileDescriptor) => {
+    const fileSelected = (fileDescriptor) => {
         if ($scope.urlLocked) return;
         const pathSegments = fileDescriptor.path.split('/');
         pathSegments.splice(1, 1);
         const url = $scope.makeUrlFromPath(pathSegments.join('/'));
-        if (url) $scope.$apply($scope.gotoUrl(url, false));
+        if (url) $scope.$evalAsync($scope.gotoUrl(url, false));
+    };
+
+    workspaceHub.addMessageListener({
+        topic: 'preview.file.debug',
+        handler: (fileDescriptor) => {
+            layoutHub.isViewOpen({ id: 'debugger' }).then((data) => {
+                if (data.isOpen) {
+                    isDebugPreview = true;
+                    fileSelected(fileDescriptor);
+                } else {
+                    layoutHub.openView({ id: 'debugger' });
+                    notificationHub.show({
+                        type: 'information',
+                        title: 'Debugger not loaded',
+                        description: 'Debugger view is not loaded. Please wait for it to load and then try to debug again.',
+                    });
+                }
+            }, (error) => {
+                console.error(error);
+                Dialogs.showAlert({
+                    title: 'Debug preview failed',
+                    message: 'An unexpected error has occurred. Check console for errors.',
+                    type: AlertTypes.Error,
+                    preformatted: false,
+                });
+            });
+        }
+    });
+
+    workspaceHub.onFileSelected((fileDescriptor) => {
+        isDebugPreview = false;
+        fileSelected(fileDescriptor);
     });
 
     workspaceHub.onPublished((fileDescriptor) => {
@@ -277,8 +305,8 @@ previewView.controller('PreviewController', ($scope, ViewParameters, ButtonState
             const pathSegments = fileDescriptor.path.split('/');
             pathSegments.splice(1, 1);
             const url = $scope.makeUrlFromPath(pathSegments.join('/'));
-            if (url) $scope.$apply($scope.gotoUrl(url));
-        } else $scope.$apply($scope.reload());
+            if (url) $scope.$evalAsync($scope.gotoUrl(url));
+        } else $scope.$evalAsync($scope.reload());
     });
 
     workspaceHub.onUnpublished((fileDescriptor) => {
@@ -288,7 +316,7 @@ previewView.controller('PreviewController', ($scope, ViewParameters, ButtonState
             const pathSegments = fileDescriptor.path.split('/');
             pathSegments.splice(1, 1);
             const url = $scope.makeUrlFromPath(pathSegments.join('/'));
-            if (url) $scope.$apply($scope.gotoUrl(url));
-        } else $scope.$apply($scope.reload());
+            if (url) $scope.$evalAsync($scope.gotoUrl(url));
+        } else $scope.$evalAsync($scope.reload());
     });
 });

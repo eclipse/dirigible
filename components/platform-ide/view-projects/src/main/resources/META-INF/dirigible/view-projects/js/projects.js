@@ -556,6 +556,7 @@ projectsView.controller('ProjectsViewController', function (
                     }
                     setMenuTemplateItems(node.id, items);
                 } else if (node.type === 'file') {
+                    const fileExt = getFileExtension(node.text);
                     items.push(
                         {
                             id: 'open',
@@ -569,6 +570,12 @@ projectsView.controller('ProjectsViewController', function (
                         deleteObj,
                     );
                     if (nodes.length <= 1) {
+                        if (['js', 'ts', 'mjs', 'cjs'].includes(fileExt)) items.push({
+                            id: 'debug',
+                            label: 'Debug',
+                            leftIconPath: '/services/web/view-projects/images/debugger.svg',
+                            separator: true,
+                        });
                         items.splice(1, 0, {
                             id: 'openWith',
                             label: 'Open With',
@@ -582,7 +589,6 @@ projectsView.controller('ProjectsViewController', function (
                         items.push(unpublishObj);
                     }
                     if (generateObj && GenerateService.isEnabled()) {
-                        const fileExt = getFileExtension(node.text);
                         if (fileExt === 'gen') {
                             let regenObj = {
                                 id: 'regenerateModel',
@@ -673,6 +679,14 @@ projectsView.controller('ProjectsViewController', function (
                         }
                     } else if (id === 'unpublishAll') {
                         unpublishAll();
+                    } else if (id === 'debug') {
+                        Layout.openView({ id: 'preview' });
+                        Workspace.postMessage({
+                            topic: 'preview.file.debug',
+                            data: {
+                                path: contextMenuNodes[0].data.path,
+                            },
+                        });
                     } else if (id === 'import' || id === 'importZip') {
                         Dialogs.showWindow({
                             hasHeader: true,
