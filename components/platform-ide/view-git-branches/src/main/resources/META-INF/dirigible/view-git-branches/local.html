@@ -71,7 +71,7 @@
         </bk-popover-body>
       </bk-popover>
     </bk-toolbar>
-    <bk-toolbar size="cozy" ng-if="searchVisible">
+    <bk-toolbar size="cozy" ng-if="searchVisible && !loadingBranches">
       <bk-input type="search" placeholder="Search" ng-keyup="search($event)" ng-model="searchField.text" bk-focus="true"></bk-input>
     </bk-toolbar>
     <bk-scrollbar class="bk-full-height" ng-hide="branches.length || loadingBranches">

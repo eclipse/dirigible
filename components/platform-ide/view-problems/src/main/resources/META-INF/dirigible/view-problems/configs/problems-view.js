@@ -13,6 +13,8 @@ const viewData = {
     id: 'problems',
     region: 'bottom',
     label: 'Problems',
+    lazyLoad: true,
+    autoFocusTab: false,
     path: '/services/web/view-problems/problems.html'
 };
 if (typeof exports !== 'undefined') {

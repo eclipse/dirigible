@@ -13,6 +13,8 @@ const viewData = {
 	id: 'console',
 	label: 'Console',
 	region: 'bottom',
+	lazyLoad: false,
+	autoFocusTab: false,
 	path: '/services/web/view-console/console.html'
 };
 if (typeof exports !== 'undefined') {

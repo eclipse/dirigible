@@ -1212,6 +1212,7 @@
     --fdModal_BackgroundColor: rgba(0, 0, 0, .6)
 }
 
+iframe,
 input {
     color-scheme: light;
 }

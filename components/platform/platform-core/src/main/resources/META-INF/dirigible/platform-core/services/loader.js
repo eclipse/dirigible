@@ -112,6 +112,7 @@ function getLocations(scriptId) {
         '/platform-core/ui/blimpkit/avatar.js',
         '/platform-core/ui/blimpkit/badge.js',
         '/platform-core/ui/blimpkit/bar.js',
+        '/platform-core/ui/blimpkit/breadcrumb.js',
         '/platform-core/ui/blimpkit/busy-indicator.js',
         '/platform-core/ui/blimpkit/button.js',
         '/platform-core/ui/blimpkit/card.js',
@@ -171,8 +172,8 @@ function getLocations(scriptId) {
             return [
                 ...baseJs,
                 '/split.js/1.6.5/dist/split.min.js',
-                '/service-workspace/workspace-hub.js',
                 '/platform-core/ui/platform/split.js',
+                '/service-workspace/workspace-hub.js',
                 '/platform-core/ui/platform/editors.js',
                 '/platform-core/ui/platform/layout.js',
             ];

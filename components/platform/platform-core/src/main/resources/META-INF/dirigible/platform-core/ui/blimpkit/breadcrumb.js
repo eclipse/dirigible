@@ -9,14 +9,16 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-const viewData = {
-	id: 'properties',
-	label: 'Properties',
-	region: 'bottom',
-	lazyLoad: true,
-	autoFocusTab: false,
-	path: '/services/web/view-properties/properties.html'
-}
-if (typeof exports !== 'undefined') {
-	exports.getView = () => viewData;
-}
+blimpkit.directive('bkBreadcrumb', () => ({
+    restrict: 'E',
+    transclude: true,
+    replace: true,
+    scope: false,
+    template: '<ul class="fd-breadcrumb" ng-transclude></ul>',
+})).directive('bkBreadcrumbItem', () => ({
+    restrict: 'E',
+    transclude: true,
+    replace: true,
+    scope: false,
+    template: `<li class="fd-breadcrumb__item" ng-transclude></li>`
+}));

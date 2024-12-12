@@ -27,15 +27,15 @@
 
     <body>
         <split direction="horizontal">
-            <split-pane size="20" min-size="::280">
+            <split-pane size="20" min-size="280">
                 <bk-list>
-                    <bk-list-item interactive="::true" ng-repeat="setting in settings track by setting.id" ng-click="switchSetting(setting.id)" selected="setting.id === activeId">
+                    <bk-list-item interactive="true" ng-repeat="setting in settings track by setting.id" ng-click="switchSetting(setting.id)" selected="setting.id === activeId">
                         <bk-list-icon glyph="{{::setting.glyph || 'sap-icon'}}"></bk-list-icon>
                         <bk-list-title>{{::setting.label}}</bk-list-title>
                     </bk-list-item>
                 </bk-list>
             </split-pane>
-            <split-pane size="80" min-size="::0">
+            <split-pane size="80" min-size="0">
                 <iframe ng-repeat="setting in settings track by setting.id" ng-show="setting.id === activeId" title="{{::setting.label}}" ng-src="{{::setting.path}}" loading="lazy"></iframe>
             </split-pane>
         </split>

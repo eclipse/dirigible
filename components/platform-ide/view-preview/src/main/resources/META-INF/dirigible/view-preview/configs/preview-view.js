@@ -13,6 +13,8 @@ const viewData = {
 	id: 'preview',
 	label: 'Preview',
 	region: 'bottom',
+	lazyLoad: false,
+	autoFocusTab: false,
 	path: '/services/web/view-preview/preview.html'
 };
 if (typeof exports !== 'undefined') {
