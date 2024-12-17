@@ -257,6 +257,13 @@
             const layoutHub = new LayoutHub();
             const statusBarHub = new StatusBarHub();
             var editorParams;
+            const tabId = window.frameElement?.getAttribute('tab-id');
+            window.addEventListener('focus', () => {
+                layoutHub.focusEditor({
+                    id: tabId,
+                    path: editorParams.filePath,
+                });
+            });
 
             if (window.frameElement && window.frameElement.hasAttribute("data-parameters")) {
                 editorParams = JSON.parse(window.frameElement.getAttribute("data-parameters") || '');

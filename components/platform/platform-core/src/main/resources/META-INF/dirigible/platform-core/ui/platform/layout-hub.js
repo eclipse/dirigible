@@ -317,6 +317,32 @@ class LayoutHub extends MessageHubApi {
     }
 
     /**
+     * Tells an editor that it has been focused.
+     * @param {string} id - Editor tab id.
+     * @param {string} [path] - Full file path, including file name.
+     * @param {object} [params] - Custom parameters that will be set to the view's data-parameters attribute.
+     */
+    focusEditor({ id, path, params } = {}) {
+        this.postMessage({
+            topic: `platform.layout${this.layoutId}.editor.focus`,
+            data: {
+                id: id,
+                path: path,
+                params: params,
+            }
+        });
+    }
+
+    /**
+     * Triggered when an editor gains focus.
+     * @param handler - Callback function.
+     * @returns - A reference to the listener. In order to remove/disable the listener, you need to use this reference and pass it to the 'removeMessageListener' function.
+     */
+    onFocusEditor(handler) {
+        return this.addMessageListener({ topic: `platform.layout${this.layoutId}.editor.focus`, handler: handler });
+    }
+
+    /**
      * Sends a message containing information on which editor has to be set to dirty.
      * @param {string} path - Full file path, including file name.
      * @param {boolean} dirty - Editor dirty state.

@@ -10,10 +10,23 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 const general = angular.module('general', ['ngCookies', 'blimpKit', 'platformView']);
-general.controller('GeneralController', ($scope, $http, $cookies, theming, ButtonStates) => {
+general.controller('GeneralController', ($scope, $http, $cookies, $window, theming, ButtonStates) => {
     const dialogHub = new DialogHub();
     const themingHub = new ThemingHub();
+    const autoRevealKey = `${brandingInfo.keyPrefix}.settings.general.autoReveal`;
     $scope.themes = [];
+    $scope.switches = {
+        autoReveal: getAutoReveal(),
+    };
+    function getAutoReveal() {
+        let autoReveal = $window.localStorage.getItem(autoRevealKey);
+        if (autoReveal === null) {
+            autoReveal = true;
+            $window.localStorage.setItem(autoRevealKey, 'true');
+        } else autoReveal = JSON.parse(autoReveal);
+        return autoReveal;
+    }
+
     const themesLoadedListener = themingHub.onThemesLoaded(() => {
         $scope.$apply(() => $scope.themes = theming.getThemes());
         themingHub.removeMessageListener(themesLoadedListener)
@@ -24,6 +37,14 @@ general.controller('GeneralController', ($scope, $http, $cookies, theming, Butto
         $scope.currentTheme.id = themeId;
         $scope.currentTheme.name = name;
         theming.setTheme(themeId);
+    };
+
+    $scope.autoRevealChange = () => {
+        $window.localStorage.setItem(autoRevealKey, `${$scope.switches.autoReveal}`);
+        themingHub.postMessage({
+            topic: 'general.settings.projects',
+            data: { setting: 'autoReveal', value: $scope.switches.autoReveal }
+        });
     };
 
     $scope.resetAll = () => {

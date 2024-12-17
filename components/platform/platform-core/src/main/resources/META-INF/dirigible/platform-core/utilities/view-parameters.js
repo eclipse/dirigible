@@ -9,9 +9,9 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
-function getViewParameters() {
-    if (window.frameElement && window.frameElement.hasAttribute('data-parameters')) {
-        return JSON.parse(window.frameElement.getAttribute('data-parameters') ?? '{}');
+function getViewParameters({ vframe = window, attribute = 'data-parameters' } = {}) {
+    if (vframe.frameElement && vframe.frameElement.hasAttribute(attribute)) {
+        return JSON.parse(vframe.frameElement.getAttribute(attribute) ?? '{}');
     }
     return {};
 }

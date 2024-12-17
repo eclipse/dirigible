@@ -69,6 +69,14 @@ function getViewParameters() {
 }
 
 let editorParameters = getViewParameters();
+const tabId = window.frameElement?.getAttribute('tab-id');
+
+window.addEventListener('focus', () => {
+    layoutHub.focusEditor({
+        id: tabId,
+        path: editorParameters.resourcePath,
+    });
+});
 
 // @ts-ignore
 require.config({
@@ -396,11 +404,6 @@ class EditorActionsProvider {
     static #autoFormatExcludedKey = `${brandingInfo.keyPrefix}.code-editor.autoFormat.excluded`;
     static _toggleAutoFormattingActionRegistration = undefined;
 
-    static isAutoRevealEnabled() {
-        const autoRevealEnabled = window.localStorage.getItem(`${brandingInfo.keyPrefix}.code-editor.autoReveal`);
-        return autoRevealEnabled === null || autoRevealEnabled === 'true';
-    }
-
     static isAutoFormattingEnabled() {
         const autoFormat = window.localStorage.getItem(`${brandingInfo.keyPrefix}.code-editor.autoFormat`);
         return autoFormat === null || autoFormat === 'true';
@@ -516,6 +519,26 @@ class DirigibleEditor {
     static sourceBeingChangedProgramatically = false;
     static computeDiff = new Worker("js/workers/computeDiff.js");
 
+    static isAutoBracketsEnabled() {
+        const autoBracketsEnabled = window.localStorage.getItem(`${brandingInfo.keyPrefix}.code-editor.autoBrackets`);
+        return autoBracketsEnabled === null || autoBracketsEnabled === 'true';
+    }
+
+    static isMinimapAutohideEnabled() {
+        const minimapAutohideEnabled = window.localStorage.getItem(`${brandingInfo.keyPrefix}.code-editor.minimapAutohide`);
+        return minimapAutohideEnabled === null || minimapAutohideEnabled === 'true';
+    }
+
+    static getRenderWhitespace() {
+        const whitespace = window.localStorage.getItem(`${brandingInfo.keyPrefix}.code-editor.whitespace`);
+        return whitespace ?? 'trailing';
+    }
+
+    static getWordWrap() {
+        const wordWrap = window.localStorage.getItem(`${brandingInfo.keyPrefix}.code-editor.wordWrap`);
+        return wordWrap ?? 'off';
+    }
+
     static closeEditor() {
         layoutHub.closeEditor({
             path: editorParameters.resourcePath,
@@ -548,9 +571,7 @@ class DirigibleEditor {
     }
 
     async init() {
-        if (!this.fileName) {
-            return
-        }
+        if (!this.fileName) return;
 
         this.editor = await this.#createEditorInstance();
 
@@ -587,6 +608,12 @@ class DirigibleEditor {
                         value: '',
                         automaticLayout: true,
                         readOnly: readOnly,
+                        autoClosingBrackets: DirigibleEditor.isAutoBracketsEnabled(),
+                        renderWhitespace: DirigibleEditor.getRenderWhitespace(),
+                        wordWrap: DirigibleEditor.getWordWrap(),
+                        minimap: {
+                            autohide: DirigibleEditor.isMinimapAutohideEnabled(),
+                        }
                     };
                     if (TypeScriptUtils.isTypeScriptFile(fileName)) {
                         // @ts-ignore
@@ -665,22 +692,6 @@ class DirigibleEditor {
             }
         });
 
-        editor.onDidFocusEditorText(function () {
-            layoutHub.openEditor({
-                path: editorParameters.resourcePath,
-            });
-            if (EditorActionsProvider.isAutoRevealEnabled()) {
-                setTimeout(() => {
-                    themingHub.postMessage({
-                        topic: 'projects.tree.select',
-                        data: {
-                            filePath: editorParameters.resourcePath
-                        }
-                    });
-                }, 100);
-            }
-        });
-
         editor.onDidChangeCursorPosition(function (e) {
             statusBarHub.showLabel(`Line ${e.position.lineNumber}, Column ${e.position.column}`);
         });
@@ -691,15 +702,6 @@ class DirigibleEditor {
         editor.addAction(EditorActionsProvider.createSearchAction());
         if (!this.isTemplate) {
             EditorActionsProvider._toggleAutoFormattingActionRegistration = editor.addAction(EditorActionsProvider.createToggleAutoFormattingAction());
-            themingHub.addMessageListener({
-                topic: 'code-editor.settings.update', handler: (data) => {
-                    if (data.fileName && data.fileName === fileName && EditorActionsProvider._toggleAutoFormattingActionRegistration) {
-                        // @ts-ignore
-                        EditorActionsProvider._toggleAutoFormattingActionRegistration.dispose();
-                        EditorActionsProvider._toggleAutoFormattingActionRegistration = editor.addAction(EditorActionsProvider.createToggleAutoFormattingAction());
-                    }
-                }
-            });
         }
 
         DirigibleEditor.computeDiff.onmessage = function (event) {
@@ -847,10 +849,6 @@ class DirigibleEditor {
             }
         });
 
-        themingHub.onThemeChange((theme) => {
-            setTheme(theme, this.monaco);
-        });
-
         const getTypeScriptFileImport = (model, position, fileObject) => {
             const lineContent = model.getLineContent(position.lineNumber);
             for (const next of fileObject.importedFilesNames) {
@@ -888,9 +886,34 @@ class DirigibleEditor {
 
     subscribeEvents() {
         const fileIO = new FileIO();
+        const fileName = this.fileName;
         const editor = this.editor;
         const monaco = this.monaco;
         const fileObject = this.fileObject;
+
+        themingHub.addMessageListener({
+            topic: 'code-editor.settings.update', handler: (data) => {
+                if (data.setting === 'autoFormat' && !this.isTemplate) {
+                    if (data.fileName && data.fileName === fileName && EditorActionsProvider._toggleAutoFormattingActionRegistration) {
+                        // @ts-ignore
+                        EditorActionsProvider._toggleAutoFormattingActionRegistration.dispose();
+                        EditorActionsProvider._toggleAutoFormattingActionRegistration = editor.addAction(EditorActionsProvider.createToggleAutoFormattingAction());
+                    }
+                } else if (data.setting === 'autoBrackets') {
+                    editor.updateOptions({ autoClosingBrackets: data.value });
+                } else if (data.setting === 'minimapAutohide') {
+                    editor.updateOptions({ minimap: { autohide: data.value } });
+                } else if (data.setting === 'whitespace') {
+                    editor.updateOptions({ renderWhitespace: data.value });
+                } else if (data.setting === 'wordWrap') {
+                    editor.updateOptions({ wordWrap: data.value });
+                }
+            }
+        });
+
+        themingHub.onThemeChange((theme) => {
+            setTheme(theme, this.monaco);
+        });
 
         workspaceHub.onSaveFile(async function (data) {
             if (data.file && data.file === fileIO.resolveResourcePath()) {
@@ -919,16 +942,8 @@ class DirigibleEditor {
             }
         });
 
-        layoutHub.onFocusView((data) => {
-            if (data.params && data.params.file === fileIO.resolveResourcePath()) {
-                editor.focus();
-                if (EditorActionsProvider.isAutoRevealEnabled()) {
-                    themingHub.postMessage({
-                        topic: 'projects.tree.select',
-                        data: { filePath: data.id }
-                    });
-                }
-            }
+        layoutHub.onFocusEditor((data) => {
+            if (data.path === fileIO.resolveResourcePath()) editor.focus();
         });
 
         themingHub.addMessageListener({

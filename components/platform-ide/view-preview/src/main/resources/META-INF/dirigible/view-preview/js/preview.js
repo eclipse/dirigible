@@ -10,7 +10,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 const previewView = angular.module('preview', ['blimpKit', 'platformView']);
-previewView.controller('PreviewController', ($scope, ButtonStates) => {
+previewView.controller('PreviewController', ($scope, $document, ButtonStates) => {
     const defaultParameters = {
         'container': 'layout',
         'perspectiveId': 'workbench'
@@ -22,8 +22,12 @@ previewView.controller('PreviewController', ($scope, ButtonStates) => {
     let customParamsId = `${brandingInfo.keyPrefix}.preview.customParameters`;
     let urlLockedId = `${brandingInfo.keyPrefix}.preview.urlLocked`;
     let isDebugPreview = false;
+    let iframe;
 
     $scope.urlLocked = localStorage.getItem(urlLockedId) === 'true';
+    $scope.previewUrl = {
+        value: '',
+    };
 
     function initCustomParameters() {
         const saved = localStorage.getItem(customParamsId);
@@ -37,7 +41,10 @@ previewView.controller('PreviewController', ($scope, ButtonStates) => {
 
     initCustomParameters();
 
-    $scope.iframe = document.getElementById('preview-iframe');
+    angular.element($document[0]).ready(() => {
+        iframe = $document[0].getElementById('preview-iframe');
+    });
+
     $scope.history = {
         idx: -1,
         state: []
@@ -49,9 +56,8 @@ previewView.controller('PreviewController', ($scope, ButtonStates) => {
     };
 
     $scope.reload = () => {
-        let iframeDocument = $scope.iframe.contentDocument || $scope.contentWindow.document;
-        if (iframeDocument) {
-            iframeDocument.location.reload(true);
+        if (iframe.contentDocument) {
+            iframe.contentDocument.location.reload(true);
         }
     };
 
@@ -66,22 +72,20 @@ previewView.controller('PreviewController', ($scope, ButtonStates) => {
     $scope.goBack = () => {
         if ($scope.hasBack()) {
             const url = $scope.history.state[--$scope.history.idx];
-            $scope.replaceLocationUrl(url);
+            replaceLocationUrl(url);
         }
     };
 
     $scope.goForward = () => {
         if ($scope.hasForward()) {
             const url = $scope.history.state[++$scope.history.idx];
-            $scope.replaceLocationUrl(url);
+            replaceLocationUrl(url);
         }
     };
 
-    $scope.gotoUrl = (url, shouldReload = true) => {
-        const currentUrl = $scope.getCurrentUrl();
-        if (currentUrl && currentUrl === url) {
-            if (shouldReload)
-                $scope.reload();
+    const gotoUrl = (url, shouldReload = true) => {
+        if ($scope.getCurrentUrl() === url) {
+            if (shouldReload || isDebugPreview) $scope.reload();
             return;
         };
 
@@ -91,30 +95,26 @@ previewView.controller('PreviewController', ($scope, ButtonStates) => {
         $scope.history.state.push(url);
         $scope.history.idx++;
 
-        $scope.replaceLocationUrl(url);
+        replaceLocationUrl(url);
     };
 
-    $scope.replaceLocationUrl = (url) => {
-        $scope.previewUrl = url;
-        $scope.iframe.contentWindow.location.replace(url);
+    const replaceLocationUrl = (url) => {
+        $scope.previewUrl.value = url;
+        iframe.contentWindow.location.replace(url);
     };
 
     $scope.inputUrlKeyUp = (e) => {
-        switch (e.key) {
-            case 'Escape': // cancel url edit
-                const currentUrl = $scope.getCurrentUrl();
-                $scope.previewUrl = currentUrl || '';
-                break;
-            case 'Enter':
-                $scope.previewUrl = e.target.value;
-                if ($scope.previewUrl) {
-                    $scope.gotoUrl($scope.previewUrl);
-                }
-                break;
+        if (e.key === 'Escape') {
+            $scope.previewUrl.value = $scope.getCurrentUrl() ?? '';
+        } else if (e.key === 'Enter') {
+            $scope.previewUrl.value = e.target.value;
+            if ($scope.previewUrl.value) {
+                gotoUrl($scope.previewUrl.value);
+            }
         }
     };
 
-    $scope.makeUrlFromPath = (resourcePath) => {
+    const makeUrlFromPath = (resourcePath) => {
         let url = window.location.protocol + '//' + window.location.host + window.location.pathname.substring(window.location.pathname.indexOf('/web/'), 0);
         const type = resourcePath.substring(resourcePath.lastIndexOf('.') + 1);
         const isOData = resourcePath.endsWith('.odata');
@@ -262,8 +262,8 @@ previewView.controller('PreviewController', ($scope, ButtonStates) => {
         if ($scope.urlLocked) return;
         const pathSegments = fileDescriptor.path.split('/');
         pathSegments.splice(1, 1);
-        const url = $scope.makeUrlFromPath(pathSegments.join('/'));
-        if (url) $scope.$evalAsync($scope.gotoUrl(url, false));
+        const url = makeUrlFromPath(pathSegments.join('/'));
+        if (url) $scope.$evalAsync(gotoUrl(url, false));
     };
 
     workspaceHub.addMessageListener({
@@ -304,8 +304,8 @@ previewView.controller('PreviewController', ($scope, ButtonStates) => {
         if (fileDescriptor.path) {
             const pathSegments = fileDescriptor.path.split('/');
             pathSegments.splice(1, 1);
-            const url = $scope.makeUrlFromPath(pathSegments.join('/'));
-            if (url) $scope.$evalAsync($scope.gotoUrl(url));
+            const url = makeUrlFromPath(pathSegments.join('/'));
+            if (url) $scope.$evalAsync(gotoUrl(url));
         } else $scope.$evalAsync($scope.reload());
     });
 
@@ -315,8 +315,8 @@ previewView.controller('PreviewController', ($scope, ButtonStates) => {
         if (fileDescriptor.path) {
             const pathSegments = fileDescriptor.path.split('/');
             pathSegments.splice(1, 1);
-            const url = $scope.makeUrlFromPath(pathSegments.join('/'));
-            if (url) $scope.$evalAsync($scope.gotoUrl(url));
+            const url = makeUrlFromPath(pathSegments.join('/'));
+            if (url) $scope.$evalAsync(gotoUrl(url));
         } else $scope.$evalAsync($scope.reload());
     });
 });

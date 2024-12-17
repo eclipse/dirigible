@@ -31,29 +31,24 @@
         <bk-bar compact="true">
             <bk-bar-left>
                 <bk-bar-element>
-                    <bk-button glyph="sap-icon--arrow-left" aria-label="Go back" title="Go back" state="transparent" state="{{ hasBack() ? undefined : 'disabled' }}" ng-click="goBack()">
-                    </bk-button>
+                    <bk-button glyph="sap-icon--arrow-left" aria-label="Go back" title="Go back" state="transparent" ng-disabled="!hasBack()" ng-click="goBack()"></bk-button>
                 </bk-bar-element>
                 <bk-bar-element>
-                    <bk-button glyph="sap-icon--arrow-right" aria-label="Go forward" title="Go forward" state="transparent" state="{{ hasForward() ? undefined : 'disabled' }}" ng-click="goForward()">
-                    </bk-button>
+                    <bk-button glyph="sap-icon--arrow-right" aria-label="Go forward" title="Go forward" state="transparent" ng-disabled="!hasForward()" ng-click="goForward()"></bk-button>
                 </bk-bar-element>
                 <bk-bar-element>
-                    <bk-button glyph="sap-icon--refresh" aria-label="Reload" state="transparent" state="{{ getCurrentUrl() ? undefined : 'disabled' }}" ng-click="reload()">
-                    </bk-button>
+                    <bk-button glyph="sap-icon--refresh" aria-label="Reload" state="transparent" ng-disabled="!getCurrentUrl()" ng-click="reload()"></bk-button>
                 </bk-bar-element>
                 <bk-bar-element class="bk-stretch">
                     <bk-input-group state="{{urlLocked ? 'warning' : undefined}}">
-                        <bk-input type="text" in-group="true" ng-model="previewUrl" ng-keyup="inputUrlKeyUp($event)" placeholder="Url">
-                        </bk-input>
+                        <bk-input type="text" ng-model="previewUrl.value" ng-keyup="inputUrlKeyUp($event)" placeholder="http://..."></bk-input>
                         <bk-input-group-addon has-button="true">
-                            <bk-button label="{{ urlLocked ? 'Locked' : 'Unlocked'}}" in-group="true" glyph="{{ urlLocked ? 'sap-icon--locked' : 'sap-icon--unlocked'}}" state="transparent" ng-click="urlLockedToggle()"></bk-button>
+                            <bk-button label="{{ urlLocked ? 'Locked' : 'Unlocked'}}" glyph="{{ urlLocked ? 'sap-icon--locked' : 'sap-icon--unlocked'}}" state="transparent" ng-click="urlLockedToggle()"></bk-button>
                         </bk-input-group-addon>
                     </bk-input-group>
                 </bk-bar-element>
                 <bk-bar-element>
-                    <bk-button glyph="sap-icon--customize" aria-label="Set custom view parameters" title="Set custom view parameters" state="transparent" ng-click="customizeParameters()">
-                    </bk-button>
+                    <bk-button glyph="sap-icon--customize" aria-label="Set custom view parameters" title="Set custom view parameters" state="transparent" ng-click="customizeParameters()"></bk-button>
                 </bk-bar-element>
             </bk-bar-left>
         </bk-bar>

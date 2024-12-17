@@ -19,6 +19,7 @@ projectsView.constant('MessageHub', new MessageHubApi());
 projectsView.controller('ProjectsViewController', function (
     $scope,
     $document,
+    $window,
     StatusBar,
     Dialogs,
     Workspace,
@@ -40,6 +41,7 @@ projectsView.controller('ProjectsViewController', function (
         busyText: 'Loading...',
     };
     const inMacOS = clientOS.isMac();
+    const isDebugEnabled = ['Chrome/', 'Edg/', 'Brave/', 'OPR/', 'Electron/'].some(el => navigator.userAgent.includes(el));
     $scope.searchVisible = false;
     $scope.searchField = { text: '' };
     $scope.workspaceNames = [];
@@ -160,6 +162,17 @@ projectsView.controller('ProjectsViewController', function (
         },
     };
 
+    function getAutoReveal() {
+        const autoRevealKey = `${brandingInfo.keyPrefix}.settings.general.autoReveal`;
+        let autoReveal = $window.localStorage.getItem(autoRevealKey);
+        if (autoReveal === null) {
+            autoReveal = true;
+        } else autoReveal = JSON.parse(autoReveal);
+        return autoReveal;
+    }
+
+    let autoReveal = getAutoReveal();
+
     $scope.keyboardShortcuts = (keySet, event) => {
         event.preventDefault();
         let nodes;
@@ -208,7 +221,10 @@ projectsView.controller('ProjectsViewController', function (
         }
     };
 
+    let selectedFilePath = '';
+
     jstreeWidget.on('select_node.jstree', (_event, data) => {
+        selectedFilePath = data.node.data.path;
         if (data.event && data.event.type === 'click' && data.node.type === 'file') {
             Workspace.announceFileSelected({
                 path: data.node.data.path,
@@ -570,7 +586,7 @@ projectsView.controller('ProjectsViewController', function (
                         deleteObj,
                     );
                     if (nodes.length <= 1) {
-                        if (['js', 'ts', 'mjs', 'cjs'].includes(fileExt)) items.push({
+                        if (isDebugEnabled && ['js', 'ts', 'mjs', 'cjs'].includes(fileExt)) items.push({
                             id: 'debug',
                             label: 'Debug',
                             leftIconPath: '/services/web/view-projects/images/debugger.svg',
@@ -2036,22 +2052,41 @@ projectsView.controller('ProjectsViewController', function (
         },
     });
 
+    const selectFile = (path) => {
+        const instance = jstreeWidget.jstree(true);
+        if (typeof instance._model !== 'undefined')
+            for (let item in instance._model.data) { // Uses the unofficial '_model' property but this is A LOT faster then using 'get_json()'
+                if (item !== '#' && instance._model.data[item].data.path === path) {
+                    instance.deselect_all();
+                    instance._open_to(item).focus();
+                    instance.select_node(item);
+                    const objNode = instance.get_node(item, true);
+                    objNode[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    break;
+                }
+            }
+    }
+
+    Layout.onFocusEditor((data) => {
+        if (autoReveal && data.path && data.path !== selectedFilePath) {
+            selectFile(data.path);
+        }
+    });
+
     MessageHub.addMessageListener({
         topic: 'projects.tree.select',
         handler: (msg) => {
-            if (msg.filePath.startsWith(`/${$scope.selectedWorkspace}/`)) {
-                const instance = jstreeWidget.jstree(true);
-                if (typeof instance._model !== 'undefined')
-                    for (let item in instance._model.data) { // Uses the unofficial '_model' property but this is A LOT faster then using 'get_json()'
-                        if (item !== '#' && instance._model.data[item].data.path === msg.filePath) {
-                            instance.deselect_all();
-                            instance._open_to(item).focus();
-                            instance.select_node(item);
-                            const objNode = instance.get_node(item, true);
-                            objNode[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            break;
-                        }
-                    }
+            if (msg.filePath !== selectedFilePath) {
+                selectFile(msg.filePath);
+            }
+        },
+    });
+
+    MessageHub.addMessageListener({
+        topic: 'general.settings.projects',
+        handler: (data) => {
+            if (data.setting === 'autoReveal') {
+                autoReveal = data.value;
             }
         },
     });

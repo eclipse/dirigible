@@ -33,8 +33,8 @@ editorView.controller('ImageViewController', function ($scope, $window, Workspac
         $scope.state.isBusy = false;
     };
 
-    layoutHub.onFocusView((data) => {
-        if (data.params && data.params.resourcePath === $scope.dataParameters.filePath) statusBarHub.showLabel('');
+    layoutHub.onFocusEditor((data) => {
+        if (data.path && data.path === $scope.dataParameters.filePath) statusBarHub.showLabel('');
     });
 
     layoutHub.onReloadEditorParams((data) => {

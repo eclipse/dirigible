@@ -818,12 +818,17 @@ if (typeof perspectiveData === 'undefined' && (!perspectiveData.id || !perspecti
                 } else Layout.postMessage({ topic: data.topic, data: { isOpen: false } });
             });
 
-            const onFocusViewListener = Layout.onFocusView((data) => {
-                const result = findCenterSplittedTabViewById(data.id);
-                if (result) $scope.$apply(() => {
-                    $scope.focusedTabView = result.tabsView;
-                });
-            });
+            const onFocusTab = (data) => {
+                if ($scope.focusedTabView.selectedTab !== data.id) {
+                    const result = findCenterSplittedTabViewById(data.id);
+                    if (result) $scope.$apply(() => {
+                        $scope.focusedTabView = result.tabsView;
+                    });
+                }
+            };
+
+            const onFocusViewListener = Layout.onFocusView(onFocusTab);
+            const onFocusEditorListener = Layout.onFocusEditor(onFocusTab);
 
             function shortenCenterTabsLabels() {
 
@@ -1094,6 +1099,7 @@ if (typeof perspectiveData === 'undefined' && (!perspectiveData.id || !perspecti
                 Workspace.removeMessageListener(onFileRenamedListener);
                 Workspace.removeMessageListener(onFileDeletedListener);
                 Layout.removeMessageListener(onFocusViewListener);
+                Layout.removeMessageListener(onFocusEditorListener);
             });
         }],
         templateUrl: '/services/web/platform-core/ui/templates/layout.html',
@@ -1122,11 +1128,14 @@ if (typeof perspectiveData === 'undefined' && (!perspectiveData.id || !perspecti
             </bk-panel>
         </div>`,
     }))
-    .directive('layoutTabContent', () => ({
+    .directive('layoutTabContent', ($timeout) => ({
         restrict: 'E',
         replace: true,
         scope: { tab: '=' },
-        link: (scope) => {
+        link: (scope, element) => {
+            scope.tab.focusFrame = () => {
+                $timeout(() => { element[0].contentWindow.focus() }, 0);
+            };
             scope.getParams = () => JSON.stringify({
                 ...scope.tab.params,
                 container: 'layout',
@@ -1135,7 +1144,7 @@ if (typeof perspectiveData === 'undefined' && (!perspectiveData.id || !perspecti
         },
         template: `<iframe title="{{::tab.label}}" tab-id={{::tab.id}} loading="{{::tab.lazyLoad ? 'lazy' : 'eager'}}" ng-src="{{::tab.path}}" data-parameters="{{getParams()}}"></iframe>`,
     }))
-    .directive('splittedTabs', (Layout) => ({
+    .directive('splittedTabs', () => ({
         restrict: 'E',
         transclude: true,
         replace: true,
@@ -1178,9 +1187,12 @@ if (typeof perspectiveData === 'undefined' && (!perspectiveData.id || !perspecti
 
             scope.isMoreTabsButtonVisible = (pane) => pane.tabs.some(x => x.isHidden);
 
-            scope.onTabClick = (pane, tabId, resourcePath) => {
+            scope.onTabClick = (pane, tabId) => {
                 pane.selectedTab = tabId;
-                Layout.focusView({ id: tabId, params: { resourcePath: resourcePath } });
+                scope.focusedPane = pane;
+                for (let t = 0; t < pane.tabs.length; t++) {
+                    if (pane.tabs[t].id === tabId) pane.tabs[t].focusFrame();
+                }
             };
         },
         templateUrl: '/services/web/platform-core/ui/templates/splitted-tabs.html',

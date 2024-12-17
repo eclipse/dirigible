@@ -206,7 +206,7 @@ flowableModeler
 
             updateWindowSize();
 
-            layout.onReloadEditorParams((data) => {
+            layoutHub.onReloadEditorParams((data) => {
                 if (editorParams.filePath === data.path) {
                     if ($window.frameElement && $window.frameElement.hasAttribute("data-parameters")) {
                         editorParams = JSON.parse($window.frameElement.getAttribute("data-parameters"));

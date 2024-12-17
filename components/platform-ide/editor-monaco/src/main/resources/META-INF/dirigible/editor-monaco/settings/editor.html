@@ -28,26 +28,43 @@
 		<bk-toolbar has-title="true">
 			<bk-toolbar-title>Code Editor</bk-toolbar-title>
 			<bk-toolbar-spacer></bk-toolbar-spacer>
-			<bk-button label="Reset all" state="negative" title="Reset all"
-				aria-label="reset all code editor settings button" ng-click="resetAll()">
-			</bk-button>
+			<bk-button label="Reset all" state="negative" title="Reset all" aria-label="reset all code editor settings button" ng-click="resetAll()"></bk-button>
 		</bk-toolbar>
 		<bk-scrollbar class="bk-center--horizontal bk-padding bk-box--items-start">
 			<div class="bk-vbox bk-box--gap-xl bk-full-width bk-restrict-width--sm">
 				<bk-card card-type="list" aria-roledescription="code editor setting section">
 					<bk-card-content aria-roledescription="Card content">
 						<bk-list>
-							<bk-list-item interactive="::true">
-								<bk-list-title id="afl">Auto-Formatting</bk-list-title>
-								<bk-switch class="bk-margin-inline--none" switch-id="afsw" switch-labelledby="afl"
-									ng-model="switches.autoFormat" ng-change="autoFormatChange()">
-								</bk-switch>
+							<bk-list-item interactive="true">
+								<bk-list-title id="afl">Format On Save</bk-list-title>
+								<bk-switch class="bk-margin-inline--none" switch-id="afsw" switch-labelledby="afl" ng-model="switches.autoFormat" ng-change="autoFormatChange()"></bk-switch>
 							</bk-list-item>
-							<bk-list-item interactive="::true" class="bk-no-border--bottom">
-								<bk-list-title id="arl">Auto-Reveal Active File</bk-list-title>
-								<bk-switch class="bk-margin-inline--none" switch-id="arsw" switch-labelledby="arl"
-									ng-model="switches.autoReveal" ng-change="autoRevealChange()">
-								</bk-switch>
+							<bk-list-item interactive="true">
+								<bk-list-title id="acb">Auto Closing Brackets</bk-list-title>
+								<bk-switch class="bk-margin-inline--none" switch-id="acbsw" switch-labelledby="acb" ng-model="switches.autoBrackets" ng-change="autoBracketsChange()"></bk-switch>
+							</bk-list-item>
+							<bk-list-item interactive="true">
+								<bk-list-title id="amm">Autohide Minimap</bk-list-title>
+								<bk-switch class="bk-margin-inline--none" switch-id="ammsw" switch-labelledby="amm" ng-model="switches.minimapAutohide" ng-change="minimapAutohideChange()"></bk-switch>
+							</bk-list-item>
+							<bk-list-item interactive="false">
+								<bk-list-title>Render Whitespace</bk-list-title>
+								<bk-select compact="true" ng-model="selects.whitespace" ng-change="onWhitespaceChange()" dropdown-fixed="true">
+									<bk-option text="All" value="'all'"></bk-option>
+									<bk-option text="None" value="'none'"></bk-option>
+									<bk-option text="Boundary" value="'boundary'"></bk-option>
+									<bk-option text="Selection" value="'selection'"></bk-option>
+									<bk-option text="Trailing" value="'trailing'"></bk-option>
+								</bk-select>
+							</bk-list-item>
+							<bk-list-item interactive="false" class="bk-no-border--bottom">
+								<bk-list-title>Word Wrap</bk-list-title>
+								<bk-select compact="true" ng-model="selects.wordWrap" ng-change="onWordWrapChange()" dropdown-fixed="true">
+									<bk-option text="Off" value="'off'"></bk-option>
+									<bk-option text="On" value="'on'"></bk-option>
+									<bk-option text="Word Wrap Column" value="'wordWrapColumn'"></bk-option>
+									<bk-option text="Column Bounds" value="'bounded'"></bk-option>
+								</bk-select>
 							</bk-list-item>
 						</bk-list>
 					</bk-card-content>
@@ -56,25 +73,15 @@
 				<div class="bk-vbox bk-box--gap">
 					<div class="bk-hbox bk-box--space-between bk-box--items-center">
 						<span class="fd-text"><b>Auto-format excluded files</b></span>
-						<bk-button glyph="sap-icon--delete" label="Clear all" title="Clear all"
-							ng-disabled="!autoFormatExcluded.length" ng-click="clearExcluded()">
-						</bk-button>
+						<bk-button glyph="sap-icon--delete" label="Clear all" title="Clear all" ng-disabled="!autoFormatExcluded.length" ng-click="clearExcluded()"></bk-button>
 					</div>
 					<bk-card card-type="list" aria-roledescription="auto format exluded files section">
 						<bk-card-content aria-roledescription="Card content">
-							<div class="bk-padding" style="text-align: center;" ng-if="!autoFormatExcluded.length">
-								No exluded files
-							</div>
+							<div class="bk-padding" style="text-align: center;" ng-if="!autoFormatExcluded.length">No excluded files</div>
 							<bk-list byline="true" ng-if="autoFormatExcluded.length">
-								<bk-list-item interactive="::true"
-									ng-repeat="file in autoFormatExcluded track by $index"
-									class="{{$last ? 'bk-no-border--bottom' : ''}}">
-									<bk-list-content
-										item-title="{{file.substring(file.lastIndexOf('/') + 1, file.length)}}">{{file}}
-									</bk-list-content>
-									<bk-button bk-list-button state="transparent" glyph="sap-icon--delete"
-										aria-label="remove" ng-click="clearExcluded(file)">
-									</bk-button>
+								<bk-list-item interactive="true" ng-repeat="file in autoFormatExcluded track by $index" class="{{$last ? 'bk-no-border--bottom' : ''}}">
+									<bk-list-content item-title="{{file.substring(file.lastIndexOf('/') + 1, file.length)}}">{{file}}</bk-list-content>
+									<bk-button bk-list-button state="transparent" glyph="sap-icon--delete" aria-label="remove" ng-click="clearExcluded(file)"></bk-button>
 								</bk-list-item>
 							</bk-list>
 						</bk-card-content>
@@ -88,7 +95,10 @@
 				const messageHub = new MessageHubApi();
 				const autoFormatKey = `${brandingInfo.keyPrefix}.code-editor.autoFormat`;
 				const autoFormatExcludedKey = `${brandingInfo.keyPrefix}.code-editor.autoFormat.excluded`;
-				const autoRevealKey = `${brandingInfo.keyPrefix}.code-editor.autoReveal`;
+				const autoBracketsKey = `${brandingInfo.keyPrefix}.code-editor.autoBrackets`;
+				const minimapAutohideKey = `${brandingInfo.keyPrefix}.code-editor.minimapAutohide`;
+				const whitespaceKey = `${brandingInfo.keyPrefix}.code-editor.whitespace`;
+				const wordWrapKey = `${brandingInfo.keyPrefix}.code-editor.wordWrap`;
 
 				$scope.autoFormatExcluded = JSON.parse($window.localStorage.getItem(autoFormatExcludedKey) || '[]');
 
@@ -101,25 +111,86 @@
 					return autoFormat;
 				}
 
-				function getAutoReveal() {
-					let autoReveal = $window.localStorage.getItem(autoRevealKey);
-					if (autoReveal === null) {
-						autoReveal = true;
-						$window.localStorage.setItem(autoRevealKey, 'true');
-					} else autoReveal = JSON.parse(autoReveal);
-					return autoReveal;
+				function getAutoBrackets() {
+					let autoBrackets = $window.localStorage.getItem(autoBracketsKey);
+					if (autoBrackets === null) {
+						autoBrackets = true;
+						$window.localStorage.setItem(autoBracketsKey, 'true');
+					} else autoBrackets = JSON.parse(autoBrackets);
+					return autoBrackets;
+				}
+
+				function getMinimapAutohide() {
+					let minimapAutohide = $window.localStorage.getItem(minimapAutohideKey);
+					if (minimapAutohide === null) {
+						minimapAutohide = false;
+						$window.localStorage.setItem(minimapAutohideKey, 'false');
+					} else minimapAutohide = JSON.parse(minimapAutohide);
+					return minimapAutohide;
+				}
+
+				function getWhitespace() {
+					let whitespace = $window.localStorage.getItem(whitespaceKey);
+					if (whitespace === null) {
+						whitespace = 'trailing';
+						$window.localStorage.setItem(whitespaceKey, whitespace);
+					}
+					return whitespace;
+				}
+
+				function getWordWrap() {
+					let wordWrap = $window.localStorage.getItem(wordWrapKey);
+					if (wordWrap === null) {
+						wordWrap = 'off';
+						$window.localStorage.setItem(wordWrapKey, wordWrap);
+					}
+					return wordWrap;
 				}
 
 				$scope.switches = {
 					autoFormat: getAutoFormat(),
-					autoReveal: getAutoReveal(),
+					autoBrackets: getAutoBrackets(),
+					minimapAutohide: getMinimapAutohide(),
+				};
+
+				$scope.selects = {
+					whitespace: getWhitespace(),
+					wordWrap: getWordWrap(),
 				};
 
 				$scope.autoFormatChange = () => {
 					$window.localStorage.setItem(autoFormatKey, `${$scope.switches.autoFormat}`);
 				};
-				$scope.autoRevealChange = () => {
-					$window.localStorage.setItem(autoRevealKey, `${$scope.switches.autoReveal}`);
+				$scope.autoBracketsChange = () => {
+					$window.localStorage.setItem(autoBracketsKey, `${$scope.switches.autoBrackets}`);
+					messageHub.postMessage({
+						topic: 'code-editor.settings.update',
+						data: { fromSettings: true, setting: 'autoBrackets', value: $scope.switches.autoBrackets }
+					});
+				};
+
+				$scope.minimapAutohideChange = () => {
+					$window.localStorage.setItem(minimapAutohideKey, `${$scope.switches.minimapAutohide}`);
+					messageHub.postMessage({
+						topic: 'code-editor.settings.update',
+						data: { fromSettings: true, setting: 'minimapAutohide', value: $scope.switches.minimapAutohide }
+					});
+				};
+
+				$scope.onWhitespaceChange = () => {
+					$window.localStorage.setItem(whitespaceKey, $scope.selects.whitespace);
+					messageHub.postMessage({
+						topic: 'code-editor.settings.update',
+						data: { fromSettings: true, setting: 'whitespace', value: $scope.selects.whitespace }
+					});
+				};
+
+				$scope.onWordWrapChange = () => {
+					$window.localStorage.setItem(wordWrapKey, $scope.selects.wordWrap);
+					messageHub.postMessage({
+						topic: 'code-editor.settings.update',
+						data: { fromSettings: true, setting: 'wordWrap', value: $scope.selects.wordWrap }
+					});
 				};
 
 				$scope.clearExcluded = (file) => {
@@ -128,13 +199,13 @@
 					$window.localStorage.setItem(autoFormatExcludedKey, JSON.stringify($scope.autoFormatExcluded));
 					messageHub.postMessage({
 						topic: 'code-editor.settings.update',
-						data: { fromSettings: true, fileName: file }
+						data: { fromSettings: true, setting: 'autoFormat', fileName: file }
 					});
 				};
 
 				$scope.resetAll = () => {
 					$window.localStorage.setItem(autoFormatKey, 'true');
-					$window.localStorage.setItem(autoRevealKey, 'true');
+					$window.localStorage.setItem(autoBracketsKey, 'true');
 				};
 
 				const updateListener = messageHub.addMessageListener({ topic: 'code-editor.settings.update', handler: (data) => {

@@ -173,7 +173,8 @@ angular.module('platformView', ['platformExtensions', 'platformTheming'])
                 if ($window.frameElement && $window.frameElement.hasAttribute('tab-id')) {
                     const layoutHub = new LayoutHub();
                     const tabId = $window.frameElement.getAttribute('tab-id');
-                    const onFocus = () => layoutHub.focusView({ id: tabId });
+                    const { filePath } = getViewParameters({ vframe: $window });
+                    const onFocus = () => layoutHub.focusEditor({ id: tabId, path: filePath });
                     angular.element($window).on('focus', onFocus);
                     scope.$on('$destroy', () => {
                         angular.element($window).off('focus', onFocus);
