@@ -33,6 +33,10 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-perspective-database</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-view-welcome</artifactId>
 		</dependency>
 		<dependency>
@@ -86,6 +90,26 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-view-debugger</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-view-databases</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-view-db-explorer</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-view-result</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-view-sql</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-view-transfer</artifactId>
 		</dependency>
 
 		<dependency>

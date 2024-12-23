@@ -1,7 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-components-parent</artifactId>
@@ -9,9 +8,9 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-	<name>Components - IDE - Documents - Perspective</name>
-	<artifactId>dirigible-components-perspective-documents</artifactId>
-    <packaging>jar</packaging>
+	<name>Components - IDE - DB Explorer - View</name>
+	<artifactId>dirigible-components-view-db-explorer</artifactId>
+	<packaging>jar</packaging>
 
 	<properties>
 		<license.header.location>../../../licensing-header.txt</license.header.location>
