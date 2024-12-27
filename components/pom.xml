@@ -201,6 +201,7 @@
 		<module>platform-ide/perspective-git</module>
 		<module>platform-ide/perspective-documents</module>
 		<module>platform-ide/perspective-database</module>
+		<module>platform-ide/perspective-operations</module>
 		<module>platform-ide/view-welcome</module>
 		<module>platform-ide/view-search</module>
 		<module>platform-ide/view-projects</module>
@@ -220,6 +221,8 @@
 		<module>platform-ide/view-result</module>
 		<module>platform-ide/view-sql</module>
 		<module>platform-ide/view-transfer</module>
+		<module>platform-ide/view-artefacts</module>
+		<module>platform-ide/view-configurations</module>
 		<module>platform-ide/service-workspace</module>
 		<module>platform-ide/service-transport</module>
 		<module>platform-ide/service-template</module>
@@ -234,6 +237,16 @@
 		<module>platform-ide/editor-bpm</module>
 		<module>platform-ide/editor-image</module>
 		<module>platform-ide/menu-bpm</module>
+		<module>platform-ide/menu-database</module>
+		<module>platform-ide/menu-entity</module>
+		<module>platform-ide/menu-extensions</module>
+		<module>platform-ide/menu-form-builder</module>
+		<module>platform-ide/menu-jobs</module>
+		<module>platform-ide/menu-listeners</module>
+		<module>platform-ide/menu-projects</module>
+		<module>platform-ide/menu-schema</module>
+		<module>platform-ide/menu-security</module>
+		<module>platform-ide/menu-websockets</module>
 
 		<!-- Resources -->
 		<module>resources/resources-core</module>
@@ -1138,6 +1151,11 @@
 				<artifactId>dirigible-components-perspective-settings</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-perspective-operations</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
@@ -1234,6 +1252,16 @@
 				<artifactId>dirigible-components-view-transfer</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-view-artefacts</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-view-configurations</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
@@ -1305,6 +1333,56 @@
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-components-menu-bpm</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-menu-database</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-menu-entity</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-menu-extensions</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-menu-form-builder</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-menu-jobs</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-menu-listeners</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-menu-projects</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-menu-schema</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-menu-security</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-menu-websockets</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			
