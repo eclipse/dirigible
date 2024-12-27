@@ -706,7 +706,7 @@ projectsView.controller('ProjectsViewController', function (
                     } else if (id === 'import' || id === 'importZip') {
                         Dialogs.showWindow({
                             hasHeader: true,
-                            id: 'importWindow',
+                            id: 'import',
                             params: {
                                 importType: id !== 'importZip' ? 'file' : 'zip',
                                 uploadPath: contextMenuNodes[0].data.path,

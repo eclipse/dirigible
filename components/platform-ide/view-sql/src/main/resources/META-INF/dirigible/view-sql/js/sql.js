@@ -12,10 +12,8 @@
 const themingHub = new ThemingHub();
 const statusBarHub = new StatusBarHub();
 const dialogHub = new DialogHub();
-let sqlPlaceholder = "-- Press F8 to execute the selected command\n";
 let csrfToken;
-let loadingOverview = document.getElementById('loadingOverview');
-let loadingMessage = document.getElementById('loadingMessage');
+const loadingOverview = document.getElementById('loadingOverview');
 let monacoTheme = 'vs-light';
 let themeId = 'vs-light';
 let headElement = document.getElementsByTagName('head')[0];
@@ -68,7 +66,7 @@ function createEditorInstance() {
                         containerEl.removeChild(containerEl.children.item(i));
                 }
                 let editor = monaco.editor.create(containerEl, {
-                    value: sqlPlaceholder,
+                    value: '',
                     automaticLayout: true,
                     language: "sql",
                 });
@@ -81,6 +79,19 @@ function createEditorInstance() {
             }
         });
     });
+}
+
+function createSaveAction() {
+    return {
+        id: 'dirigible-sql-save',
+        label: 'Save',
+        keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS],
+        precondition: null,
+        keybindingContext: null,
+        contextMenuGroupId: 'fileIO',
+        contextMenuOrder: 1.5,
+        run: () => statusBarHub.showMessage('SQL commands saved'),
+    };
 }
 
 function createExecuteAction() {
@@ -131,26 +142,30 @@ function createExecuteAction() {
             });
             themingHub.addMessageListener({
                 topic: "database.sql.script",
-                handler: function (command) {
+                handler: (command) => {
                     //_editor.trigger('keyboard', 'type', {text: command.data});
-                    var line = editor.getPosition();
-                    var range = new monaco.Range(line.lineNumber, 1, line.lineNumber, 1);
-                    var id = { major: 1, minor: 1 };
-                    var text = command.data;
-                    var op = { identifier: id, range: range, text: text, forceMoveMarkers: true };
+                    let line = editor.getPosition();
+                    let range = new monaco.Range(line.lineNumber + 1, 1, line.lineNumber + 1, 1);
+                    let id = { major: 1, minor: 1 };
+                    let text;
+                    if (command.startsWith('\n')) text = command;
+                    else text = `\n${command}`;
+                    let op = { identifier: id, range: range, text: text, forceMoveMarkers: true };
                     editor.executeEdits("source", [op]);
                 }
             });
-            let sqlCommand = loadSQLCommand();
-            return sqlPlaceholder + sqlCommand;
+            if (loadingOverview) loadingOverview.classList.add("bk-hidden");
+            else console.log(loadingOverview)
+            return loadSQLCommand();
         }).then((fileText) => {
             let model = monaco.editor.createModel(fileText, "sql");
             _editor.setModel(model);
             _editor.addAction(createExecuteAction());
+            _editor.addAction(createSaveAction());
             _editor.onDidChangeCursorPosition(function (e) {
                 statusBarHub.showLabel("Line " + e.position.lineNumber + " : Column " + e.position.column);
             });
-            _editor.onDidChangeModelContent(function (e) {
+            _editor.onDidChangeModelContent(function (_e) {
                 saveSQLCommand(_editor.getValue());
             });
         });
@@ -211,21 +226,11 @@ function createExecuteAction() {
 
 const savedSqlCommandKey = `${brandingInfo.keyPrefix}.view-sql.command`;
 
-function getSQLCommand(text) {
-    let sqlCommand = text;
-    let sqlPlaceHolderIndex = text.indexOf(sqlPlaceholder);
-    if (sqlPlaceHolderIndex >= 0) {
-        sqlCommand = text.substring(sqlPlaceholder.length);
-    }
-    return sqlCommand;
-}
-
-function saveSQLCommand(text) {
-    const sqlCommand = getSQLCommand(text);
-    localStorage.setItem(savedSqlCommandKey, sqlCommand);
+function saveSQLCommand(sqlCommands) {
+    localStorage.setItem(savedSqlCommandKey, sqlCommands);
 }
 
 function loadSQLCommand() {
     const sqlCommand = localStorage.getItem(savedSqlCommandKey);
-    return sqlCommand ? sqlCommand : "";
+    return sqlCommand ? sqlCommand : '';
 }
