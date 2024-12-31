@@ -435,9 +435,11 @@ projectsView.controller('ProjectsViewController', function (
                     items: [{
                         id: 'file',
                         label: 'File',
+                        leftIconClass: 'sap-icon--add-document',
                     }, {
                         id: 'folder',
                         label: 'Folder',
+                        leftIconClass: 'sap-icon--add-folder',
                         separator: true,
                     }],
                     separator: true,
@@ -1735,6 +1737,12 @@ projectsView.controller('ProjectsViewController', function (
             }
         }, (error) => {
             console.error(error);
+            Dialogs.showAlert({
+                title: 'Create folder error',
+                message: 'There was an error while processing the new folder data.',
+                type: AlertTypes.Error,
+                preformatted: false,
+            });
         });
     }
 

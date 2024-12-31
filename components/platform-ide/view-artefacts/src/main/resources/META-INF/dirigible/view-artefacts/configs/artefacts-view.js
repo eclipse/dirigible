@@ -12,9 +12,9 @@
 const viewData = {
 	id: 'artefacts',
 	label: 'Artefacts',
-	region: 'bottom',
+	region: 'center',
 	lazyLoad: false,
-	autoFocusTab: false,
+	autoFocusTab: true,
 	path: '/services/web/view-artefacts/artefacts.html'
 };
 if (typeof exports !== 'undefined') {

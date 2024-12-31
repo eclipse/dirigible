@@ -223,6 +223,15 @@
 		<module>platform-ide/view-transfer</module>
 		<module>platform-ide/view-artefacts</module>
 		<module>platform-ide/view-configurations</module>
+		<module>platform-ide/view-data-structures</module>
+		<module>platform-ide/view-extensions</module>
+		<module>platform-ide/view-jobs</module>
+		<module>platform-ide/view-listeners</module>
+		<module>platform-ide/view-loggers</module>
+		<module>platform-ide/view-logs</module>
+		<module>platform-ide/view-registry</module>
+		<module>platform-ide/view-repository</module>
+		<module>platform-ide/view-websockets</module>
 		<module>platform-ide/service-workspace</module>
 		<module>platform-ide/service-transport</module>
 		<module>platform-ide/service-template</module>
@@ -232,6 +241,7 @@
 		<module>platform-ide/service-generate</module>
 		<module>platform-ide/service-actions</module>
 		<module>platform-ide/service-git</module>
+		<module>platform-ide/service-extensions</module>
 		<module>platform-ide/editor-monaco</module>
 		<module>platform-ide/editor-monaco-extensions</module>
 		<module>platform-ide/editor-bpm</module>
@@ -1262,6 +1272,51 @@
 				<artifactId>dirigible-components-view-configurations</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-view-data-structures</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-view-extensions</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-view-jobs</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-view-listeners</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-view-loggers</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-view-logs</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-view-registry</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-view-repository</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-view-websockets</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
@@ -1306,6 +1361,11 @@
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-components-service-git</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-service-extensions</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
