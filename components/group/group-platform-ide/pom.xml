@@ -41,6 +41,14 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-perspective-jobs</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-perspective-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-view-welcome</artifactId>
 		</dependency>
 		<dependency>
@@ -158,6 +166,10 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-view-websockets</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-view-security</artifactId>
 		</dependency>
 
 		<dependency>

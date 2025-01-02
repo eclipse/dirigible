@@ -202,6 +202,8 @@
 		<module>platform-ide/perspective-documents</module>
 		<module>platform-ide/perspective-database</module>
 		<module>platform-ide/perspective-operations</module>
+		<module>platform-ide/perspective-jobs</module>
+		<module>platform-ide/perspective-security</module>
 		<module>platform-ide/view-welcome</module>
 		<module>platform-ide/view-search</module>
 		<module>platform-ide/view-projects</module>
@@ -232,6 +234,7 @@
 		<module>platform-ide/view-registry</module>
 		<module>platform-ide/view-repository</module>
 		<module>platform-ide/view-websockets</module>
+		<module>platform-ide/view-security</module>
 		<module>platform-ide/service-workspace</module>
 		<module>platform-ide/service-transport</module>
 		<module>platform-ide/service-template</module>
@@ -1166,6 +1169,16 @@
 				<artifactId>dirigible-components-perspective-operations</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-perspective-jobs</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-perspective-security</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
@@ -1315,6 +1328,11 @@
 			<dependency>
 				<groupId>org.eclipse.dirigible</groupId>
 				<artifactId>dirigible-components-view-websockets</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-components-view-security</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
