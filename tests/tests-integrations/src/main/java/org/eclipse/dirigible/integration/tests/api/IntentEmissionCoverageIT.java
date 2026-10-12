@@ -2942,27 +2942,36 @@ class IntentEmissionCoverageIT extends IntegrationTest {
         assertTrue(billHeaderRepository.contains("totals.put(\"BalanceDue\", entity.BalanceDue)"),
                 "the totals recompute must persist the refreshed calculated field: " + billHeaderRepository);
 
-        // Frozen header card (#7501): Bill is the fixture's only MANAGE_DOCUMENT master carrying
-        // immutableWhen (function: Document + Status == 2), power-only (its Person relation carries
-        // no personal: true, so it has no my-surface). The card must render (not merely disable the
-        // edit form) and format each value through the shared fieldDisplay() rather than the raw form
-        // value - a DATE field (dueOn) is the one the review's "raw model values" finding named.
+        // Read-only header (#7501, reworked by #7770): Bill is the fixture's only MANAGE_DOCUMENT
+        // master carrying immutableWhen (function: Document + Status == 2), power-only (its Person
+        // relation carries no personal: true, so it has no my-surface). An immutable document opens in
+        // preview, and preview renders every header field as its VALUE through the shared
+        // fieldDisplay() - never a disabled input, never the raw form value. A DATE field (dueOn) is
+        // the one the #7501 review's "raw model values" finding named.
         String billDocumentView = contentOf("gen/emission/views/Bill/Bill-document.html");
-        assertTrue(billDocumentView.contains("x-show=\"!mutable\""),
-                "immutableWhen on a MANAGE_DOCUMENT master must render the frozen header card, not only disable the edit form");
-        assertTrue(billDocumentView.contains("x-text=\"fieldDisplay(form.DueOn, 'DATE', '', null)\""),
-                "the frozen header card must read a DATE field through fieldDisplay(), not print the raw form value: " + billDocumentView);
+        assertTrue(billDocumentView.contains("x-text=\"fieldDisplay(form.DueOn, 'DATE', '', null) || '\\u2014'\""),
+                "the preview must read a DATE field through fieldDisplay(), not print the raw form value: " + billDocumentView);
         // ...and a DROPDOWN relation through its option label (#7576): the options travel as the Alpine
-        // scope's options<Prop>, which an x-text expression resolves, so the card cannot drop the relation.
-        assertTrue(billDocumentView.contains("x-text=\"fieldDisplay(form.Person, 'DROPDOWN', '', optionsPerson)\""),
-                "the frozen header card must show a DROPDOWN relation's option label through fieldDisplay(): " + billDocumentView);
-        // ...and so must the Details card beside it, the one the read-only fields live in (#7522):
-        // both cards share the helper, neither prints a raw form value.
+        // scope's options<Prop>, which an x-text expression resolves, so the preview cannot drop the
+        // relation.
+        assertTrue(billDocumentView.contains("x-text=\"fieldDisplay(form.Person, 'DROPDOWN', '', optionsPerson) || '\\u2014'\""),
+                "the preview must show a DROPDOWN relation's option label through fieldDisplay(): " + billDocumentView);
+        // ...and so must the rail's Details, the section the read-only fields live in (#7522).
         assertTrue(billDocumentView.contains("fieldDisplay(form.SendOutcome, "),
-                "the Details card must read a read-only field through fieldDisplay(): " + billDocumentView);
-        assertFalse(billDocumentView.contains("x-text=\"form."), "no read-only card may print a raw form value: " + billDocumentView);
-        assertTrue(billDocumentView.contains("class=\"vbox gap-4 w-full\" x-show=\"mutable\""),
-                "immutableWhen on a MANAGE_DOCUMENT master must hide the header edit form once the record is immutable");
+                "the Details rail must read a read-only field through fieldDisplay(): " + billDocumentView);
+        assertFalse(billDocumentView.contains("x-text=\"form."), "no read-only value may print a raw form value: " + billDocumentView);
+        // One read-only rendering: the separate frozen-header card and the form it swapped out are gone,
+        // and the editable controls exist only outside preview.
+        assertFalse(billDocumentView.contains("x-show=\"mutable\""),
+                "the header form must not be swapped for a frozen card any more - preview is the read-only header");
+        assertTrue(billDocumentView.contains("<template x-if=\"!isPreview\">"),
+                "the header controls must render only in the editable modes");
+        // The document follows the manage form's bar (#7770): one primary chosen by the page, no Back to
+        // list beside Close/Cancel, and the workflow task as the primary rather than in its own banner.
+        assertTrue(billDocumentView.contains("primaryAction === 'save' ? 'primary' : 'outline'"),
+                "Save must step down to outlined while a clean document's task holds the primary slot");
+        assertFalse(billDocumentView.contains("Back to list"), "the document bar must not carry Back to list beside its dismiss");
+        assertFalse(billDocumentView.contains("x-h-card"), "the document's groups are headings and rules, not cards");
         // The page's status stepper is chosen and ordered by status id, never by the label it renders
         // (#7592): the picker's options arrive sorted by their TRANSLATED label - here Bulgarian, which
         // the English terminal heuristic cannot read either - and the stepper read off them listed

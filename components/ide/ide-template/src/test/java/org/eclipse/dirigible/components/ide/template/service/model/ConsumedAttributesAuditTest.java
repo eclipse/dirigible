@@ -101,7 +101,7 @@ class ConsumedAttributesAuditTest {
         // widgetLength is derived by the Java pipeline and menuIndex belongs to the entity editor:
         // neither is ever named in a template source, and neither is a defect.
         String model = """
-                {"model":{"entities":[{"name":"Book","menuIndex":"100","tooltip":"A book","properties":[
+                {"model":{"entities":[{"name":"Book","menuIndex":"100","tooltip":"A book","caption":"Manage entity Book","properties":[
                   {"name":"Title","widgetLength":"120","relationshipEntityPerspectiveLabel":"Books"}]}]}}
                 """;
 
