@@ -143,7 +143,6 @@
 
         <!-- Spring -->
         <spring.boot.version>4.1.0</spring.boot.version>
-        <spring.admin.version>4.1.3</spring.admin.version>
         <springdoc.version>3.1.1</springdoc.version>
 
         <!-- Webjars -->
@@ -207,6 +206,7 @@
         <mongodb.version>3.12.14</mongodb.version>
         <ngdbc.version>2.30.11</ngdbc.version>
         <snowflake.version>4.4.0</snowflake.version>
+        <mssql.version>13.6.0.jre11</mssql.version>
         <mysql.version>8.4.0</mysql.version>
 
         <!-- AWS SDK v2 - the single line every software.amazon.awssdk artifact in the fat jar
@@ -227,7 +227,6 @@
         <!-- Various -->
         <c3p0.version>0.14.2</c3p0.version>
         <guava.version>33.7.2-jre</guava.version>
-        <icu4j.version>78.3</icu4j.version>
         <classgraph.version>4.8.196</classgraph.version>
         <logcaptor.version>2.12.7</logcaptor.version>
 
@@ -334,6 +333,25 @@
             <plugin>
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>
+            </plugin>
+            <!-- Browser source maps are never served to a runtime, only to a developer's devtools, and
+                 they are the single largest thing the platform's own module jars carry: 38.7 MB
+                 uncompressed across five of them (view-swagger 14.5, editor-integrations 11.5,
+                 karavan-libs 11.5, flowable-libs 1.0, dev-tools 0.2), with single files up to 8.3 MB.
+                 Excluded from packaging for EVERY module here rather than module by module, so a
+                 module that vendors a new bundle does not have to remember (#7787). A developer who
+                 needs a map takes it from the npm package the bundle came from. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>**/*.js.map</exclude>
+                        <exclude>**/*.css.map</exclude>
+                        <exclude>**/*.mjs.map</exclude>
+                        <exclude>**/*.d.ts.map</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
         </plugins>
         <pluginManagement>
@@ -1095,22 +1113,11 @@
                 <artifactId>ag-grid-community__infinite-row-model</artifactId>
                 <version>27.1.0</version>
             </dependency>
-            <!-- via bpmn-visualization (${bpmn-visualization.version}); strnum through fast-xml-parser -->
-            <dependency>
-                <groupId>org.webjars.npm</groupId>
-                <artifactId>typed-mxgraph__typed-mxgraph</artifactId>
-                <version>1.0.8</version>
-            </dependency>
-            <dependency>
-                <groupId>org.webjars.npm</groupId>
-                <artifactId>es-toolkit</artifactId>
-                <version>1.39.10</version>
-            </dependency>
-            <dependency>
-                <groupId>org.webjars.npm</groupId>
-                <artifactId>strnum</artifactId>
-                <version>2.3.0</version>
-            </dependency>
+            <!-- bpmn-visualization's five transitive webjars (typed-mxgraph, es-toolkit,
+                 fast-xml-parser, strnum, mxgraph) used to be pinned here, because those webjars
+                 declare npm-style open ranges. perspective-processes now EXCLUDES all five (#7786) -
+                 the UI loads only dist/bpmn-visualization.min.js, which bundles them - so there is
+                 no path left to pin. -->
             <!-- The Harmonia stack (harmonia.version, alpinejs.version, lucide.version,
                  pinecone-router.version, i18next.version) is bumped as one. When Harmonia is updated,
                  update the pins below as well: read the ranges the new webjars declare (their poms) and

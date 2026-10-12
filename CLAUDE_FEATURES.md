@@ -16,8 +16,7 @@ Source-of-truth pointers are included in each section so generated docs can cite
   - **JavaScript** — ES6+ syntax over GraalJS; synchronous programming model (in contrast to Node.js); CommonJS + ESM supported.
   - **TypeScript** — transpiled at the platform; full strong typing via tsconfig at the project root.
   - **Java** — client `.java` compiled in-process by `engine-java`.
-  - **Python** — server-side modules via `engine-python` (subset).
-  - **Declarative artefacts** — XML / JSON / YAML / Markdown / Confluence wiki (see §2).
+  - **Declarative artefacts** — XML / JSON / YAML, plus Markdown / Confluence wiki with the `engine-wiki` add-on (see §2).
 - **Default UI.** `http://localhost:8080`, login `admin` / `admin`.
 - **License.** Eclipse Public License 2.0.
 
@@ -35,7 +34,6 @@ Use this table as the canonical list of file extensions and the runtime behavior
 | ------------------- | -------- | ----------------------- | ---------------------------- |
 | `*.js`, `*.mjs`, `*.ts` | JavaScript / TypeScript module | `engine-javascript` (Graalium / GraalVM polyglot) — served at `/services/js/...` and `/public/js/...` | Not synchronized; loaded on demand by `JavascriptEndpoint` / `TypeScriptEndpoint` |
 | `*.java` | Client Java source | `engine-java` — single `javac` + single `ClientClassLoader` per cycle; served at `/services/java/{project}/{*classPath}` and `/public/java/...` | `JavaSynchronizer` |
-| `*.py` | Python module | `engine-python` (limited) | `PythonEndpoint` |
 | `*.bpmn` | BPMN 2.0 process | `engine-bpm-flowable` (Flowable) | `BpmnSynchronizer` |
 | `*.camel` | Apache Camel route (YAML / XML route definition) | `engine-camel` | `CamelSynchronizer` |
 | `*.job` | Scheduled job (Quartz, cron) | `engine-jobs` | `JobSynchronizer` |
@@ -62,6 +60,8 @@ Use this table as the canonical list of file extensions and the runtime behavior
 | `*.csvim`, `*.csv` | CSV import model + data files | `CsvimSynchronizer` (data-csvim) |
 
 ### 2.3 Documentation / wiki artefacts
+
+Add-on: provided by `engine-wiki`, which is not in the default bundle (see `components/engine/engine-wiki/README.md`).
 
 | Extension | Purpose | Synchronizer |
 | --------- | ------- | ------------ |
@@ -122,15 +122,14 @@ The platform is composed by what lands on the classpath — `build/application` 
 | `engine-odata` | OData v2 (CXF) at `/odata/v2/...`. |
 | `engine-openapi` | Aggregates OpenAPI fragments published by TS and Java controllers; served at `/services/openapi`. |
 | `engine-web` | `expose`-driven static / project-resource serving. |
-| `engine-cms`, `engine-cms-internal`, `engine-cms-s3`, `engine-cms-sharepoint` | Content management — internal CMIS, AWS S3 backend, MS SharePoint backend. |
+| `engine-cms`, `engine-cms-internal`, `engine-cms-s3`, `engine-cms-sharepoint` | Content management — internal CMIS, AWS S3 backend, MS SharePoint backend. SharePoint (`engine-cms-sharepoint` + `api-sharepoint`) is an add-on, not in the default bundle — see `components/engine/engine-cms-sharepoint/README.md`. |
 | `engine-command` | Run shell commands from user code. |
 | `engine-di` | Dependency injection for TS components (`*Component.ts`). |
 | `engine-ftp`, `engine-sftp` | (S)FTP server endpoints. |
 | `engine-proxy` | HTTP reverse-proxy routes. |
-| `engine-python` | Python module execution. |
 | `engine-security` | Declarative `.access` / `.roles` enforcement; integrates with Spring Security. |
 | `engine-template`, `engine-template-javascript`, `engine-template-mustache`, `engine-template-velocity` | Template-language runtimes for generation. |
-| `engine-wiki` | Markdown and Confluence rendering. |
+| `engine-wiki` | Markdown and Confluence rendering at `/services/wiki`. An add-on, not in the default bundle — see `components/engine/engine-wiki/README.md`. |
 | `engine-open-telemetry` | OpenTelemetry trace/metric export (Camel-aware). |
 
 ---
@@ -147,8 +146,8 @@ The canonical package is `@aerokit/sdk` — submodules are imported as `@aerokit
 - `@aerokit/sdk/cms` — Content management (CMIS + S3 + SharePoint).
 - `@aerokit/sdk/s3` — Amazon S3 client.
 - `@aerokit/sdk/mongodb` — MongoDB driver.
-- `@aerokit/sdk/qldb` — Amazon QLDB.
-- `@aerokit/sdk/etcd` — etcd client.
+- `@aerokit/sdk/qldb` — Amazon QLDB (the driver is an add-on, not in the default bundle — see `components/api/api-qldb-driver/README.md`).
+- `@aerokit/sdk/etcd` — etcd client (the client library is an add-on, not in the default bundle — see `components/api/api-etcd-client/README.md`).
 - `@aerokit/sdk/redis` — Redis client.
 - `@aerokit/sdk/cache` — In-process / shared cache.
 
@@ -156,7 +155,6 @@ The canonical package is `@aerokit/sdk` — submodules are imported as `@aerokit
 
 - `@aerokit/sdk/http` — HTTP client + JAX-RS-style server helpers (`client`, `client-async`, `request`, `response`, `session`, `upload`, `rs`, `decorators`).
 - `@aerokit/sdk/messaging` — Generic message bus.
-- `@aerokit/sdk/kafka` — Kafka producer / consumer.
 - `@aerokit/sdk/rabbitmq` — RabbitMQ.
 - `@aerokit/sdk/mail` — SMTP send.
 - `@aerokit/sdk/net` — Low-level networking.
@@ -205,7 +203,6 @@ The published portal organises the API into ~100 reference pages. Each row below
 | `indexing` | `searcher`, `writer` |
 | `io` | `bytes`, `files`, `ftp`, `image`, `streams`, `zip` |
 | `job` | `scheduler` |
-| `kafka` | `consumer`, `producer` |
 | `log` | `logging` |
 | `mail` | `client` |
 | `messaging` | `consumer`, `producer` |
@@ -325,7 +322,7 @@ Each facade is a Spring component or a static utility that exposes platform capa
 | `GlobalsFacade` | api-core | `@aerokit/sdk/core/globals` — process-wide variables. |
 | `DatabaseFacade` | api-database | `@aerokit/sdk/db/database` — connections / queries / updates. |
 | `DataStoreFacade` | api-database | `@aerokit/sdk/db/store` — Hibernate-backed entity store (dynamic map mode). |
-| `EtcdFacade` | api-etcd | `@aerokit/sdk/etcd/client` — etcd K/V client. |
+| `EtcdFacade` | api-etcd | `@aerokit/sdk/etcd/client` — etcd K/V client (jetcd is the `api-etcd-client` add-on; without it every call throws `EtcdNotAvailableException`). |
 | `ExtensionsFacade` | api-extensions | `@aerokit/sdk/extensions/*` — discover and call `.extension` providers. |
 | `GitFacade` | api-git | `@aerokit/sdk/git/client` — clone / pull / push / commit / log. |
 | `HttpClientFacade`, `HttpClientAsyncFacade` | api-http | `@aerokit/sdk/http/client` and `client-async`. |
@@ -333,7 +330,6 @@ Each facade is a Spring component or a static utility that exposes platform capa
 | `IndexingFacade` | api-indexing | `@aerokit/sdk/indexing/{searcher,writer}` — Lucene index ops. |
 | `BytesFacade`, `FilesFacade`, `FTPFacade`, `ImageFacade`, `StreamsFacade`, `ZipFacade` | api-io | `@aerokit/sdk/io/{bytes,files,ftp,image,streams,zip}`. |
 | `JobFacade` | api-job | `@aerokit/sdk/job/scheduler` — Quartz job control. |
-| `KafkaFacade` | api-kafka | Kafka producer / consumer. |
 | `LogFacade` | api-log | `@aerokit/sdk/log/logging` — SLF4J bridge. |
 | `MailFacade` | api-mail | `@aerokit/sdk/mail/client`. |
 | `MessagingFacade` | api-messaging | `@aerokit/sdk/messaging/{consumer,producer}`. |
@@ -351,7 +347,7 @@ Each facade is a Spring component or a static utility that exposes platform capa
 | `RedisFacade` | api-redis | `@aerokit/sdk/redis/client`. |
 | `S3Facade` | api-s3 | AWS S3 client (CMS-S3 backing). |
 | `UserFacade` | api-security | `@aerokit/sdk/security/user` — current user, roles, anonymous-mode checks (canonical source of role semantics, mirrored by `@Roles`). |
-| `SharepointFacade` | api-sharepoint | MS SharePoint CMS backing. |
+| `SharepointFacade` | api-sharepoint | MS SharePoint CMS backing (add-on, not in the default bundle). |
 | `TemplateEnginesFacade` | api-template | `@aerokit/sdk/template/engines` — Mustache / Velocity / JS templating. |
 | `Base64Facade`, `DigestFacade`, `EscapeFacade`, `HexFacade`, `QRCodeFacade`, `UTF8Facade`, `UrlFacade`, `UuidFacade`, `Xml2JsonFacade` | api-utils | `@aerokit/sdk/utils/*`. |
 | `ThreadContextFacade` | core-base + commons-helpers | Internal: per-request thread-context propagation. |
@@ -480,8 +476,7 @@ Interfaces that are either explicit SPIs (intended for extension), or load-beari
 
 | Interface | Role |
 | --------- | ---- |
-| `CodeRunner` | Top-level runner contract; specialized by `JavascriptCodeRunner`, `PythonCodeRunner`. |
-| `PythonCodeRunner` | Python runtime hook. |
+| `CodeRunner` | Top-level runner contract; specialized by `JavascriptCodeRunner`. |
 | `DirigibleJavascriptHooksProvider` | Plug into the JS context lifecycle (before/after eval). |
 | `JavascriptSourceProvider` | Resolve source modules; default is repository-backed. |
 | `ExternalModuleResolver` | Resolve external (non-`@aerokit/sdk/*`) imports. |
@@ -537,7 +532,7 @@ The IDE is composed of WebJar UI modules under `components/ui/` plus backend ser
 - **Tracing** — OpenTelemetry-backed view.
 
 ### 7.2 Editors (`components/ui/editor-*`)
-- `editor-monaco` (and `editor-monaco-extensions`) — Monaco-based code editing for JS/TS/Java/CSS/HTML/etc., with breakpoint glyphs (`debug-breakpoint-glyph`, `debug-current-line-glyph`). Powers JS/TS/Java/Python/HTML/CSS/JSON authoring.
+- `editor-monaco` (and `editor-monaco-extensions`) — Monaco-based code editing for JS/TS/Java/CSS/HTML/etc., with breakpoint glyphs (`debug-breakpoint-glyph`, `debug-current-line-glyph`). Powers JS/TS/Java/HTML/CSS/JSON authoring.
 - Visual / form editors: `editor-bpm` (BPMN), `editor-csv`, `editor-csvim`, `editor-data-structures` (schema / table / view), `editor-entity`, `editor-extensions`, `editor-form-builder`, `editor-image`, `editor-integrations`, `editor-jobs`, `editor-listeners`, `editor-mapping`, `editor-report`, `editor-schema`, `editor-security`, `editor-websockets`.
 
 #### Modelers (visual designers)
@@ -587,17 +582,14 @@ The IDE chrome (sidebars, dialogs, tabs, menus, toolbars, forms) is built on [Bl
 ### 8.1 Supported databases (`modules/database/`)
 - `database-h2` (default, file-backed at `./target/dirigible/h2/DefaultDB`)
 - `database-sql-postgres`
-- `database-sql-mssql`
-- `database-sql-hana`
-- `database-sql-mariadb`
-- `database-sql-mysql`
+- `database-sql-mssql`, `database-sql-hana`, `database-sql-mariadb`, `database-sql-mysql` - dialects only; their JDBC drivers are **not bundled** (#7804). An edition adds the driver (application pom, `/modules` drop-in, or a project.json `scope: "platform"` dependency); `DataSourceInitializer` refuses a data source whose driver class is missing with a message naming the coordinate (`JdbcDriverAvailability`). Versions stay pinned in `dependencies/pom.xml` / the Spring Boot BOM.
 - `database-sql-snowflake`
 - `database-sql-h2`
 - `database-sql-mongodb` (NoSQL)
 - `database-mongodb-jdbc`
 - `database-persistence` — JDBC persistence abstraction.
 
-CI runs the integration suite three times (H2, PostgreSQL 16, MSSQL 2022) — when changing SQL/DDL emission, replicate locally on the affected DB.
+CI runs the integration suite on H2 and PostgreSQL 16 (the only bundled drivers) — when changing SQL/DDL emission, replicate locally on the affected DB.
 
 ### 8.2 Data tooling components
 - `data-sources` — JDBC pool registry + `.datasource` synchronizer.
@@ -642,7 +634,6 @@ Stable URL roots (`BaseEndpoint.PREFIX_ENDPOINT_*`):
 | `/odata/v2/...` | OData services. |
 | `/websockets/...` | WebSocket endpoints (incl. `/websockets/ide/java-debug?workspace=<name>`). |
 | `/swagger-ui/index.html`, `/api-docs` | Swagger UI + OpenAPI document. |
-| `/spring-admin/` | Spring Boot Admin (server profile enabled). |
 | `/actuator/health/readiness`, `/actuator/health/liveness` | Health probes. |
 | `/` | Redirects to `DIRIGIBLE_HOME_URL` (default `services/web/shell-ide/`). |
 
@@ -714,7 +705,7 @@ Notable env-vars (non-exhaustive — full list lives in the source):
 | `DIRIGIBLE_JAVA_LSP_ENABLED` / `_INSTALL_DIR` | — | JDT.LS install controls. |
 | `DIRIGIBLE_MAIL_*` | — | SMTP defaults for the Mail API. |
 | `DIRIGIBLE_FLOWABLE_*` | — | Flowable engine datasource + mail settings. |
-| `DIRIGIBLE_MS_SHAREPOINT_*` | — | SharePoint CMS credentials. |
+| `DIRIGIBLE_MS_SHAREPOINT_*` | — | SharePoint CMS credentials (only with the SharePoint add-on on the classpath). |
 | `DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER` | — | Internal CMIS root. |
 | `DIRIGIBLE_SYNCHRONIZER_FREQUENCY` | — | Reconciliation cadence. |
 | `DIRIGIBLE_SYNCHRONIZER_CROSS_RETRY_COUNT` / `_INTERVAL_MILLIS` | — | Cross-synchronizer retry tuning. |
@@ -730,7 +721,6 @@ Notable env-vars (non-exhaustive — full list lives in the source):
 
 ## 13. Observability
 
-- **Spring Boot Admin** at `/spring-admin/`.
 - **Actuator probes** at `/actuator/health/readiness`, `/actuator/health/liveness`.
 - **OpenTelemetry** via `engine-open-telemetry` + Camel OpenTelemetry; configurable per the OTLP convention. Companion config under `open-telemetry/`.
 - **Logs** — live in `components/ide/ide-logs` (REST: `LogsEndpoint`, `LogsConfigurationsEndpoint`; UI: `view-logs`, `view-loggers`).
