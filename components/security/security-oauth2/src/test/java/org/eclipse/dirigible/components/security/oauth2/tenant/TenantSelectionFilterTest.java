@@ -440,6 +440,11 @@ class TenantSelectionFilterTest {
         assertThat(filter.shouldNotFilter(new MockHttpServletRequest("GET", "/services/security/tenant-selection/current"))).isTrue();
         assertThat(filter.shouldNotFilter(new MockHttpServletRequest("GET", "/webjars/codbex__harmonia/dist/harmonia.css"))).isTrue();
         assertThat(filter.shouldNotFilter(new MockHttpServletRequest("GET", "/services/js/platform-branding/branding.js"))).isTrue();
+        // the images branding.js names - the picker's logo and favicon
+        assertThat(
+                filter.shouldNotFilter(new MockHttpServletRequest("GET", "/services/web/platform-branding/images/dirigible.svg"))).isTrue();
+        assertThat(
+                filter.shouldNotFilter(new MockHttpServletRequest("GET", "/services/web/platform-branding/images/favicon.ico"))).isTrue();
         assertThat(filter.shouldNotFilter(new MockHttpServletRequest("GET", "/logout"))).isTrue();
         assertThat(filter.shouldNotFilter(new MockHttpServletRequest("GET", "/services/web/home/index.html"))).isFalse();
     }

@@ -106,6 +106,8 @@ public class TenantSelectionFilter extends OncePerRequestFilter {
             "/services/web/platform-core/", //
             "/services/js/platform-core/", //
             "/services/js/platform-branding/", //
+            // the logo and favicon branding.js points the picker at
+            "/services/web/platform-branding/", //
             "/services/core/theme/", //
             "/services/core/healthcheck", //
             "/services/core/readiness", //
