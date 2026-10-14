@@ -59,7 +59,16 @@ public final class Configurations {
         if (origin == null || origin.isBlank()) {
             origin = Configuration.get(DirigibleConfig.HOST.getKey(), "");
         }
-        return origin.strip()
-                     .replaceAll("/+$", "");
+        return withoutTrailingSlashes(origin.strip());
+    }
+
+    // A scan, not a "/+$" regex: the value is tenant-settable, and that regex backtracks quadratically
+    // on a long run of slashes that is not at the end.
+    private static String withoutTrailingSlashes(String value) {
+        int end = value.length();
+        while (end > 0 && value.charAt(end - 1) == '/') {
+            end--;
+        }
+        return value.substring(0, end);
     }
 }
