@@ -113,6 +113,20 @@ class ResilientServiceTaskDelegateExpressionEngineTest {
         }
     }
 
+    /**
+     * Always fails with an {@link Error} (#7840) - which the superclass's {@code catch (Exception)}
+     * never hands to {@code handleException}.
+     */
+    public static class UnlinkableDelegate implements JavaDelegate {
+
+        static final AtomicInteger ATTEMPTS = new AtomicInteger();
+
+        @Override
+        public void execute(DelegateExecution execution) {
+            throw new NoClassDefFoundError("unlinkable (attempt " + ATTEMPTS.incrementAndGet() + ")");
+        }
+    }
+
     /** Raises its own BPMN error - which the wrapper must leave to its own boundary, unconverted. */
     public static class RefusingDelegate implements JavaDelegate {
 
@@ -152,6 +166,7 @@ class ResilientServiceTaskDelegateExpressionEngineTest {
         Map<Object, Object> beans = new HashMap<>();
         beans.put("doomed", new DoomedDelegate());
         beans.put("flaky", new FlakyDelegate());
+        beans.put("unlinkable", new UnlinkableDelegate());
         beans.put("refusing", new RefusingDelegate());
         beans.put("recordFailure", new RecordFailureDelegate());
         beans.put("recordRefusal", new RecordRefusalDelegate());
@@ -186,6 +201,24 @@ class ResilientServiceTaskDelegateExpressionEngineTest {
                               .createDeadLetterJobQuery()
                               .count(),
                 "the converted failure must never dead-letter");
+    }
+
+    /**
+     * An {@link Error} is a failure like any other to the step (#7840): before, it bypassed the
+     * conversion, the job dead-lettered and the instance stayed parked on the step.
+     */
+    @Test
+    void anErrorOnTheFinalAttemptRoutesThroughTheErrorBoundary() {
+        deploy("unlinkable-expression", "unlinkable", "R2/PT1S");
+        ProcessInstance instance = engine.getRuntimeService()
+                                         .startProcessInstanceByKey("unlinkable-expression");
+
+        assertEquals("unlinkable (attempt 2)", historicVariable(instance, "recorded"),
+                "the declared cycle must still run, and its final Error must take the error route");
+        assertEquals(0, engine.getManagementService()
+                              .createDeadLetterJobQuery()
+                              .count(),
+                "the converted Error must never dead-letter");
     }
 
     @Test

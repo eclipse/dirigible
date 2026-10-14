@@ -76,11 +76,12 @@ class ResilientClassDelegate extends ClassDelegate {
     public void execute(DelegateExecution execution) {
         try {
             super.execute(execution);
-        } catch (RuntimeException exception) {
+        } catch (RuntimeException | Error failure) {
             // A BpmnError never reaches here (the superclass propagates it to its boundary itself);
-            // this is a plain failure, normally destined for the retry cycle / dead-letter path.
-            if (!IntentStepResilience.convertFinalFailure(execution, exception)) {
-                throw exception;
+            // this is a plain failure, normally destined for the retry cycle / dead-letter path. An
+            // Error passes the superclass untouched, so it is caught here too (#7840).
+            if (!IntentStepResilience.convertFinalFailure(execution, failure)) {
+                throw failure;
             }
         }
     }
