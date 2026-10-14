@@ -10,6 +10,7 @@
 package org.eclipse.dirigible.sdk.core;
 
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.commons.config.DirigibleConfig;
 
 /**
  * Reads platform configuration values through {@link Configuration} — the same source the rest of
@@ -42,5 +43,23 @@ public final class Configurations {
 
     public static void remove(String key) {
         Configuration.remove(key);
+    }
+
+    /**
+     * The application's external origin, for composing absolute links (a notification's deep links).
+     * {@code DIRIGIBLE_APP_BASE_URL} when it is set - tenant-overridable, so read in the caller's
+     * tenant scope - else {@code DIRIGIBLE_HOST}, the instance origin every OAuth deployment already
+     * sets, so a single-host instance needs no second key. Trailing slashes are stripped so an appended
+     * path never renders {@code //}; empty only when neither key is set.
+     *
+     * @return the origin without a trailing slash, or an empty string when none is configured
+     */
+    public static String appBaseUrl() {
+        String origin = Configuration.get(DirigibleConfig.APP_BASE_URL.getKey());
+        if (origin == null || origin.isBlank()) {
+            origin = Configuration.get(DirigibleConfig.HOST.getKey(), "");
+        }
+        return origin.strip()
+                     .replaceAll("/+$", "");
     }
 }

@@ -876,7 +876,7 @@ class IntentEngineIT extends IntegrationTest {
         // intent emits is the bare identifier; the local composed here is what makes the link work, and
         // is the whole point of the token over hand-typing a path after {appUrl}.
         assertTrue(
-                notification.contains("String recordUrl = Configurations.get(\"DIRIGIBLE_APP_BASE_URL\", \"\")")
+                notification.contains("String recordUrl = Configurations.appBaseUrl()")
                         && notification.contains("\"/services/web/intent-test/gen/orders/index.html#/Order/\" + entity.Id"),
                 "the notification should declare the recordUrl local composed from the project, gen folder, entity and key");
         assertTrue(notification.contains("+ recordUrl"), "the body should read the declared link local, not an entity field");

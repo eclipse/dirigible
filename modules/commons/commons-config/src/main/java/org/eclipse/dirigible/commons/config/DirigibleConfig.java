@@ -102,7 +102,8 @@ public enum DirigibleConfig {
 
     /**
      * The application's externally-reachable base URL, used to build absolute links (e.g. in
-     * notification emails). Per tenant, because a tenant may be served from its own host.
+     * notification emails). Per tenant, because a tenant may be served from its own host. Unset, the
+     * links fall back to {@link #HOST}.
      */
     APP_BASE_URL("DIRIGIBLE_APP_BASE_URL", "", meta().type(ConfigType.URL)
                                                      .tenant(12)), //
