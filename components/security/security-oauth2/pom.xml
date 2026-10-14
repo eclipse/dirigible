@@ -32,6 +32,12 @@
             <artifactId>dirigible-components-core-tenants</artifactId>
         </dependency>
 
+        <!-- The registered roles tell a global role this instance knows from an unrelated group. -->
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-components-engine-security</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-client</artifactId>
