@@ -74,6 +74,31 @@ class KnownGlobalRolesTest {
         verifyNoInteractions(roleService);
     }
 
+    /**
+     * The filter asks on every request of a user without a tenant; the database is asked once.
+     */
+    @Test
+    void aRegisteredRoleIsLookedUpOnceAcrossRequests() {
+        when(roleService.roleExistsByName("library-librarian")).thenReturn(true);
+
+        for (int request = 0; request < 3; request++) {
+            assertThat(knownGlobalRoles.anyKnown(Set.of("library-librarian"))).isTrue();
+        }
+
+        verify(roleService, times(1)).roleExistsByName("library-librarian");
+    }
+
+    @Test
+    void anUnknownGroupIsLookedUpOnceAcrossRequests() {
+        when(roleService.roleExistsByName(FEDERATION_GROUP)).thenReturn(false);
+
+        for (int request = 0; request < 3; request++) {
+            assertThat(knownGlobalRoles.anyKnown(Set.of(FEDERATION_GROUP))).isFalse();
+        }
+
+        verify(roleService, times(1)).roleExistsByName(FEDERATION_GROUP);
+    }
+
     @Test
     void theFirstRegisteredRoleEndsTheSearch() {
         when(roleService.roleExistsByName(anyString())).thenReturn(true);
