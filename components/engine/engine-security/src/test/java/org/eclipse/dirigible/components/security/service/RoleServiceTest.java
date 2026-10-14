@@ -112,6 +112,19 @@ class RoleServiceTest {
     }
 
     /**
+     * Two projects may declare a role of the same name - the artefact key carries the location - and
+     * asking whether the name exists must answer, not fail on the second row.
+     */
+    @Test
+    void testRoleExistsByNameDeclaredByTwoProjects() {
+        roleRepository.save(createSecurityRole("/project-a/app.roles", "Librarian", "description"));
+        roleRepository.save(createSecurityRole("/project-b/app.roles", "Librarian", "description"));
+
+        assertTrue(roleService.roleExistsByName("Librarian"));
+        assertFalse(roleService.roleExistsByName("eu-central-1_AbCdEf123_Google"));
+    }
+
+    /**
      * Test save.
      */
     @Test

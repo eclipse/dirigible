@@ -51,8 +51,11 @@ import jakarta.servlet.http.HttpServletResponse;
  * An interactive session keeps its choice: a user of exactly one tenant is put into it without
  * being asked. A user of several is sent to the picker - a browser by redirect, anything
  * programmatic by a {@code 409} naming the choices, so an API client is told what to do rather than
- * silently landing in the wrong tenant. A user of none is let through if they have global roles
- * (staff of the instance) and refused otherwise.
+ * silently landing in the wrong tenant. A user of none is let through if they hold a global role
+ * this instance knows (staff of the instance, see {@code KnownGlobalRoles}) and otherwise sent to
+ * the picker, which tells them they have no access - a browser by redirect, anything programmatic
+ * by a {@code 403} naming the reason. A group that merely carries no tenant, such as one the
+ * identity provider manages itself, is no reason to serve the default tenant.
  *
  * <p>
  * A bearer request has no session to keep a choice in, so it names its tenant on every request, in
@@ -60,8 +63,8 @@ import jakarta.servlet.http.HttpServletResponse;
  * token's own groups exactly as a session selection is, the roles the groups grant in it are added
  * for this request only, and the rest of the chain runs in that tenant. Without the header the
  * request stays in the default tenant with the token's global roles - and an ID token whose groups
- * grant no global role is refused, as the session of such a user is: it has nothing to do there. An
- * access token carries no groups and passes as it always did.
+ * grant no global role this instance knows is refused, as the session of such a user is: it has
+ * nothing to do there. An access token carries no groups and passes as it always did.
  *
  * <p>
  * It runs <em>before</em> authorization on purpose: until a tenant is entered the user has no
@@ -83,6 +86,12 @@ public class TenantSelectionFilter extends OncePerRequestFilter {
     /** Answered to a programmatic caller that has to choose. */
     private static final String TENANT_SELECTION_REQUIRED = "TENANT_SELECTION_REQUIRED";
 
+    /** Answered to a programmatic caller that has no tenant of this application to work in. */
+    private static final String NO_TENANT_ASSIGNED = "NO_TENANT_ASSIGNED";
+
+    /** Why a user without a tenant is refused. */
+    private static final String NO_TENANT_ASSIGNED_MESSAGE = "User is not assigned to any tenant of this application";
+
     /**
      * What a request may need before a tenant is known: the picker itself and what it loads, the
      * selection endpoint, authentication, error pages and the platform's own status surfaces. The
@@ -97,6 +106,8 @@ public class TenantSelectionFilter extends OncePerRequestFilter {
             "/services/web/platform-core/", //
             "/services/js/platform-core/", //
             "/services/js/platform-branding/", //
+            // the logo and favicon branding.js points the picker at
+            "/services/web/platform-branding/", //
             "/services/core/theme/", //
             "/services/core/healthcheck", //
             "/services/core/readiness", //
@@ -113,6 +124,8 @@ public class TenantSelectionFilter extends OncePerRequestFilter {
 
     private final ObjectProvider<ResourceServerJwtSupport> bearerTokenSupport;
 
+    private final KnownGlobalRoles knownGlobalRoles;
+
     private final TenantResolutionStrategy resolutionStrategy;
 
     private final Gson gson;
@@ -125,12 +138,15 @@ public class TenantSelectionFilter extends OncePerRequestFilter {
      * @param bearerTokenSupport the bearer token rules of the login profile, present on the profiles
      *        that accept bearer tokens - it tells an ID token, which identifies a user, from an access
      *        token
+     * @param knownGlobalRoles tells the global roles that admit a user without a tenant into the
+     *        default tenant from the groups that only happen to carry no tenant
      */
     public TenantSelectionFilter(TenantSelectionManager tenantSelectionManager, TenantContext tenantContext,
-            ObjectProvider<ResourceServerJwtSupport> bearerTokenSupport) {
+            ObjectProvider<ResourceServerJwtSupport> bearerTokenSupport, KnownGlobalRoles knownGlobalRoles) {
         this.tenantSelectionManager = tenantSelectionManager;
         this.tenantContext = tenantContext;
         this.bearerTokenSupport = bearerTokenSupport;
+        this.knownGlobalRoles = knownGlobalRoles;
         this.resolutionStrategy = TenantResolutionStrategy.fromConfiguration();
         this.gson = new GsonBuilder().serializeNulls()
                                      .create();
@@ -165,13 +181,13 @@ public class TenantSelectionFilter extends OncePerRequestFilter {
         }
         UserTenantAssignments assignments = tenantSelectionManager.assignmentsOf(authentication);
         if (assignments.hasNoTenants()) {
-            if (assignments.globalRoles()
-                           .isEmpty()) {
-                LOGGER.warn("User [{}] is not assigned to any tenant of this application.", authentication.getName());
-                response.sendError(HttpServletResponse.SC_FORBIDDEN, "User is not assigned to any tenant of this application");
+            if (!knownGlobalRoles.anyKnown(assignments.globalRoles())) {
+                LOGGER.warn("User [{}] is not assigned to any tenant of this application and holds no global role it knows.",
+                        authentication.getName());
+                refuseWithoutTenant(request, response, authentication);
                 return;
             }
-            LOGGER.debug("User [{}] is assigned to no tenant but has global roles. Passing through.", authentication.getName());
+            LOGGER.debug("User [{}] is assigned to no tenant but holds a known global role. Passing through.", authentication.getName());
             chain.doFilter(request, response);
             return;
         }
@@ -206,9 +222,8 @@ public class TenantSelectionFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         String tenantId = requestedTenant(request);
         if (tenantId == null) {
-            if (isUserToken(bearer) && tenantSelectionManager.assignmentsOf(bearer)
-                                                             .globalRoles()
-                                                             .isEmpty()) {
+            if (isUserToken(bearer) && !knownGlobalRoles.anyKnown(tenantSelectionManager.assignmentsOf(bearer)
+                                                                                        .globalRoles())) {
                 LOGGER.warn("Bearer user [{}] holds no global role of this application and names no tenant in [{}].", bearer.getName(),
                         TenantSelectionConstants.TENANT_HEADER);
                 response.sendError(HttpServletResponse.SC_FORBIDDEN, "User holds no global role of this application and the request"
@@ -371,6 +386,32 @@ public class TenantSelectionFilter extends OncePerRequestFilter {
         body.put("error", TENANT_SELECTION_REQUIRED);
         body.put("tenants", tenantSelectionManager.availableTenants(authentication));
         response.setStatus(HttpServletResponse.SC_CONFLICT);
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.getWriter()
+                .write(gson.toJson(body));
+    }
+
+    /**
+     * Tells a user without a tenant that they have no access: a browser is sent to the picker, whose
+     * empty state says so and offers to sign out, a programmatic caller is answered with a forbidden
+     * naming the reason. Either way the default tenant is not served to them.
+     *
+     * @param request the request
+     * @param response the response
+     * @param authentication the authenticated user
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    private void refuseWithoutTenant(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
+            throws IOException {
+        if (prefersHtml(request)) {
+            LOGGER.debug("User [{}] has no tenant. Redirecting to the picker.", authentication.getName());
+            response.sendRedirect(request.getContextPath() + TENANT_SELECTION_PAGE);
+            return;
+        }
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("error", NO_TENANT_ASSIGNED);
+        body.put("message", NO_TENANT_ASSIGNED_MESSAGE);
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.getWriter()
                 .write(gson.toJson(body));
