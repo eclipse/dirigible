@@ -211,13 +211,13 @@ public class ${className}Transition {
             // The ROUTE is composed HERE, in the layer that knows the generated application's URL
             // layout; the intent layer contributes only the entity and its key, which is what keeps it
             // path-agnostic.
-            String recordUrl = org.eclipse.dirigible.sdk.core.Configurations.get("DIRIGIBLE_APP_BASE_URL", "")
+            String recordUrl = org.eclipse.dirigible.sdk.core.Configurations.appBaseUrl()
                     + "/services/web/${projectName}/gen/${genFolderName}/index.html#/${recordUrlEntity}/" + entity.${recordUrlKeyProperty}
                     + "/edit";
 #end
 #if($usesInboxUrl == "true")
             // {inboxUrl} - the deep link to the recipient's process Inbox.
-            String inboxUrl = org.eclipse.dirigible.sdk.core.Configurations.get("DIRIGIBLE_APP_BASE_URL", "")
+            String inboxUrl = org.eclipse.dirigible.sdk.core.Configurations.appBaseUrl()
                     + "/services/web/${projectName}/gen/${genFolderName}/index.html#/inbox";
 #end
             String to = ${notifyToExpression};

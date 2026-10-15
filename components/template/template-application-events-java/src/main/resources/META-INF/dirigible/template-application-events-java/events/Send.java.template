@@ -178,13 +178,13 @@ public class ${className} implements JavaDelegate {
         // {recordUrl} - the deep link to the record this message is about (the ROW in a fan-out). The
         // ROUTE is composed HERE, in the layer that knows the generated application's URL layout; the
         // intent layer contributes only the entity and its key, which is what keeps it path-agnostic.
-        String recordUrl = Configurations.get("DIRIGIBLE_APP_BASE_URL", "")
+        String recordUrl = Configurations.appBaseUrl()
                 + "/services/web/${projectName}/gen/${genFolderName}/index.html#/${recordUrlEntity}/" + entity.${recordUrlKeyProperty}
                 + "/edit";
 #end
 #if($usesInboxUrl == "true")
         // {inboxUrl} - the deep link to the recipient's process Inbox.
-        String inboxUrl = Configurations.get("DIRIGIBLE_APP_BASE_URL", "")
+        String inboxUrl = Configurations.appBaseUrl()
                 + "/services/web/${projectName}/gen/${genFolderName}/index.html#/inbox";
 #end
         String to = ${notifyToExpression};

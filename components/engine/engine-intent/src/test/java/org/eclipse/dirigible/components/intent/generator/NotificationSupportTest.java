@@ -101,9 +101,10 @@ class NotificationSupportTest {
         assertTrue(plan.loads()
                        .isEmpty(),
                 "appUrl is a config token, not a relation - it must not register a relation load");
-        assertEquals("\"Order \" + entity.Id + \" total \" + entity.Total + \". Review it here: \""
-                + " + org.eclipse.dirigible.sdk.core.Configurations.get(\"DIRIGIBLE_APP_BASE_URL\", \"\")" + " + \"/orders/\""
-                + " + entity.Id", plan.subjectExpression());
+        assertEquals(
+                "\"Order \" + entity.Id + \" total \" + entity.Total + \". Review it here: \""
+                        + " + org.eclipse.dirigible.sdk.core.Configurations.appBaseUrl()" + " + \"/orders/\"" + " + entity.Id",
+                plan.subjectExpression());
     }
 
     @Test
@@ -116,9 +117,10 @@ class NotificationSupportTest {
         assertEquals(1, plan.loads()
                             .size(),
                 "the relation.field placeholder still registers its own load");
-        assertEquals("\"Hi \" + (customer == null ? null : customer.Name) + \", review it here: \""
-                + " + org.eclipse.dirigible.sdk.core.Configurations.get(\"DIRIGIBLE_APP_BASE_URL\", \"\")" + " + \"/orders/\""
-                + " + entity.Id", plan.subjectExpression());
+        assertEquals(
+                "\"Hi \" + (customer == null ? null : customer.Name) + \", review it here: \""
+                        + " + org.eclipse.dirigible.sdk.core.Configurations.appBaseUrl()" + " + \"/orders/\"" + " + entity.Id",
+                plan.subjectExpression());
     }
 
     @Test

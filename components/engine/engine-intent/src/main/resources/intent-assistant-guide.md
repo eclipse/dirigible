@@ -250,7 +250,7 @@ not as an apology.
   the intent layer does not know the generated app's URLs, and a path typed into a body would break
   the day the generated layout changes. In a fan-out (`forEach:`) `{recordUrl}` links the ROW, like
   every other bare path, while `{record.<field>}` reads the anchor record.
-- **`{appUrl}` is the raw origin** (`DIRIGIBLE_APP_BASE_URL`, tenant-overridable) - reach for it only
+- **`{appUrl}` is the raw origin** (`DIRIGIBLE_APP_BASE_URL`, tenant-overridable, else `DIRIGIBLE_HOST`) - reach for it only
   for a link the two above cannot express, e.g. a page of your own: `"{appUrl}/services/web/..."`.
   All three names are reserved, so an entity must not declare a field literally named `appUrl`,
   `recordUrl` or `inboxUrl` (it would be shadowed in every notify block).
