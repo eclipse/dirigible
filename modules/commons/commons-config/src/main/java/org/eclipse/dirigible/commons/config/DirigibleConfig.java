@@ -498,9 +498,8 @@ public enum DirigibleConfig {
      * holds about {@code tenants + 2} connections however many listeners it declares;
      * {@code per-listener} opens a connection per subscription per tenant, the shape the platform had
      * before #7875. The client id a durable topic subscription is registered under differs between the
-     * two modes, so switching an existing deployment leaves the previous mode's durable subscriptions
-     * offline until the broker's offline-subscriber timeout reclaims them (7 days on the embedded
-     * broker; an external broker's own setting).
+     * two modes, so after a switch the reconciliation pass unsubscribes the previous mode's durable
+     * subscriptions of the handlers it subscribes, retrying a client id another instance still holds.
      */
     MESSAGING_LISTENER_CONNECTIONS("DIRIGIBLE_MESSAGING_LISTENER_CONNECTIONS", "shared"),
 

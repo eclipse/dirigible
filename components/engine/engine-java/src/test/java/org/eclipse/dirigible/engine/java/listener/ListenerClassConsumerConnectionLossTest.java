@@ -149,7 +149,12 @@ class ListenerClassConsumerConnectionLossTest {
         ActiveMQConnectionArtifactsFactory connectionFactory = mock(ActiveMQConnectionArtifactsFactory.class);
         when(connectionFactory.createConnection(any(), any())).thenAnswer(invocation -> {
             Connection connection = mock(Connection.class);
-            opened.add(new Opened(connection, invocation.getArgument(0), currentTenantId.get()));
+            String clientId = invocation.getArgument(1);
+            // A scope's client id is the shared mode's: in this mode only a pass reclaiming what that
+            // mode registered opens one (#7890), and it subscribes nothing.
+            if (clientId == null || !clientId.startsWith("dirigible-java-tenant-")) {
+                opened.add(new Opened(connection, invocation.getArgument(0), currentTenantId.get()));
+            }
             return connection;
         });
         when(connectionFactory.createSession(any())).thenReturn(session);
