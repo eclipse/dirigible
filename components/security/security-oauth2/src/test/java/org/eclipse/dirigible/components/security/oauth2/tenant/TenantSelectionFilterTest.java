@@ -32,6 +32,7 @@ import org.eclipse.dirigible.components.base.tenant.groups.UserTenantAssignments
 import org.eclipse.dirigible.components.base.util.AuthoritiesUtil;
 import org.eclipse.dirigible.components.security.oauth2.resourceserver.ResourceServerJwtSettings;
 import org.eclipse.dirigible.components.security.oauth2.resourceserver.ResourceServerJwtSupport;
+import org.eclipse.dirigible.components.tenants.tenant.TenantImpl;
 import org.eclipse.dirigible.components.tenants.tenant.TenantSelectionConstants;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -272,10 +273,57 @@ class TenantSelectionFilterTest {
     void anExistingSelectionIsKeptConsistent() throws Exception {
         authenticate();
         when(tenantSelectionManager.selectedTenantId(request)).thenReturn(ACME);
+        when(tenantSelectionManager.ensureConsistent(request, response)).thenReturn(true);
 
         filter.doFilter(request, response, chain);
 
         verify(tenantSelectionManager).ensureConsistent(request, response);
+        assertThat(chain.getRequest()).isNotNull();
+    }
+
+    /**
+     * The regression this guards: the tenant scope of the request was opened from a selection the
+     * consistency check then dropped, so passing the request on would serve it in the tenant the user
+     * just lost.
+     */
+    @Test
+    void aRequestWhoseSelectionWasRevokedIsNotServedInTheRevokedTenant() throws Exception {
+        authenticate();
+        request.addHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+        when(tenantSelectionManager.selectedTenantId(request)).thenReturn(ACME);
+        when(tenantSelectionManager.ensureConsistent(request, response)).thenReturn(false);
+        when(tenantSelectionManager.assignmentsOf(any())).thenReturn(assignments(Map.of(), Set.of()));
+
+        filter.doFilter(request, response, chain);
+
+        assertThat(chain.getRequest()).isNull();
+        assertThat(response.getStatus()).isEqualTo(403);
+    }
+
+    @Test
+    void aRequestWhoseSelectionWasRevokedMovesIntoTheOnlyTenantLeft() throws Exception {
+        authenticate();
+        when(tenantSelectionManager.selectedTenantId(request)).thenReturn(ACME);
+        when(tenantSelectionManager.ensureConsistent(request, response)).thenReturn(false);
+        when(tenantSelectionManager.assignmentsOf(any())).thenReturn(assignments(Map.of(GLOBEX, Set.of("User")), Set.of()));
+
+        filter.doFilter(request, response, chain);
+
+        verify(tenantSelectionManager).selectTenant(any(), any(), eq(GLOBEX));
+        verify(tenantContext).execute(eq(GLOBEX), any(CallableResultAndException.class));
+        assertThat(chain.getRequest()).isNotNull();
+    }
+
+    @Test
+    void aStaffMemberWhoseSelectionWasRevokedContinuesInTheDefaultTenant() throws Exception {
+        authenticate();
+        when(tenantSelectionManager.selectedTenantId(request)).thenReturn(ACME);
+        when(tenantSelectionManager.ensureConsistent(request, response)).thenReturn(false);
+        when(tenantSelectionManager.assignmentsOf(any())).thenReturn(assignments(Map.of(), Set.of("DEVELOPER")));
+
+        filter.doFilter(request, response, chain);
+
+        verify(tenantContext).execute(eq(TenantImpl.getDefaultTenant()), any(CallableResultAndException.class));
         assertThat(chain.getRequest()).isNotNull();
     }
 
