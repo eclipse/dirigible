@@ -10,6 +10,7 @@
 package org.eclipse.dirigible.components.listeners.config;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -93,6 +94,42 @@ class ActiveMQConnectionArtifactsFactoryFailoverTest {
 
         assertThat(lost.await(10, TimeUnit.SECONDS)).as("the exception listener learned that the connection is gone")
                                                     .isTrue();
+    }
+
+    /**
+     * A refused attempt leaves nothing behind (#7853). While another connection holds the client id,
+     * the attempt is refused - the rolling-deploy overlap, where the old instance still holds it. A
+     * refused connection that survived would keep its failover transport, and after the next transport
+     * interruption (here: a broker restart, which also ends the holder - a client-id connection is not
+     * reconnected by its transport, #7851) it would reconnect, replay the id and take it: a connection
+     * nobody can reach or close, refused against every later attempt with the same id.
+     */
+    @Test
+    void aRefusedClientIdConnectionLeavesNothingBehind() throws Exception {
+        factory.createConnection(exception -> {
+        }, "durable-subscriber");
+        assertThrows(IllegalStateException.class, () -> factory.createConnection(exception -> {
+        }, "durable-subscriber"));
+
+        restartBroker();
+        // Long enough for a surviving transport to reconnect (initialReconnectDelay=50ms) and take the id.
+        Thread.sleep(2000);
+        connection = factory.createConnection(exception -> {
+        }, "durable-subscriber");
+
+        assertThat(connection).as("the client id is free: no leaked connection took it")
+                              .isNotNull();
+    }
+
+    private void restartBroker() throws Exception {
+        broker.stop();
+        broker.waitUntilStopped();
+        broker = new BrokerService();
+        broker.setBrokerName(BROKER_NAME);
+        broker.setPersistent(false);
+        broker.setUseJmx(false);
+        broker.start();
+        broker.waitUntilStarted();
     }
 
     private static FailoverTransport failoverOf(Connection connection) {

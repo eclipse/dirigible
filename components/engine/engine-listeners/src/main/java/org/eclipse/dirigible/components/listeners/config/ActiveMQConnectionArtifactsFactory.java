@@ -15,6 +15,8 @@ import org.apache.activemq.RedeliveryPolicy;
 import org.apache.activemq.broker.region.policy.RedeliveryPolicyMap;
 import org.apache.activemq.command.ActiveMQDestination;
 import org.apache.activemq.transport.failover.FailoverTransport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import jakarta.jms.Connection;
@@ -28,6 +30,8 @@ import jakarta.jms.Session;
  */
 @Component
 public class ActiveMQConnectionArtifactsFactory {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ActiveMQConnectionArtifactsFactory.class);
 
     /** The Constant INITIAL_REDELIVERY_DELAY. */
     private static final int INITIAL_REDELIVERY_DELAY = 1000;
@@ -100,8 +104,14 @@ public class ActiveMQConnectionArtifactsFactory {
      * @throws IllegalStateException the illegal state exception
      */
     public Connection createConnection(ExceptionListener exceptionListener, String clientId) throws IllegalStateException {
+        // Held outside the try: once created, the connection owns a started transport, and a failure
+        // after that - the broker refusing the client id at start() above all - must not leave it behind.
+        // The caller never receives it, so nobody else could close it, and over a failover: URL its
+        // transport would keep reconnecting and replaying the client id for the life of the process,
+        // refused against the instance's own later subscription (#7853).
+        Connection connection = null;
         try {
-            Connection connection = connectionFactory.createConnection();
+            connection = connectionFactory.createConnection();
             connection.setExceptionListener(exceptionListener);
             if (clientId != null) {
                 // Must precede start() - JMS forbids setting the client id on a started connection.
@@ -116,7 +126,28 @@ public class ActiveMQConnectionArtifactsFactory {
 
             return connection;
         } catch (JMSException ex) {
+            closeQuietly(connection);
             throw new IllegalStateException("Failed to create connection to ActiveMQ", ex);
+        } catch (RuntimeException ex) {
+            closeQuietly(connection);
+            throw ex;
+        }
+    }
+
+    /**
+     * Close a connection that failed to start. Quietly: the broker that just refused it may refuse the
+     * close too, and the failure that brought us here is the one the caller has to see.
+     *
+     * @param connection the connection, or {@code null} if it was never created
+     */
+    private static void closeQuietly(Connection connection) {
+        if (connection == null) {
+            return;
+        }
+        try {
+            connection.close();
+        } catch (JMSException | RuntimeException e) {
+            LOGGER.debug("Failed to close a JMS connection that did not start: {}", e.getMessage(), e);
         }
     }
 
