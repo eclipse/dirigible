@@ -408,6 +408,9 @@ public final class IntentParser {
         validateProcesses(model, entityNames, issues);
         validateForms(model, entityNames, issues);
         validateActions(model, entityNames, issues);
+        // A reversal IS a create-from of its entity onto itself (issue #7886): expanded before the
+        // create-froms are validated, so its expansion meets every rule an authored one does.
+        ReversalExpander.expand(model, issues);
         validateGenerates(model, entityNames, usesAliases, issues);
         validateTransitions(model, entityNames, issues);
         validateLifecycles(model, issues);

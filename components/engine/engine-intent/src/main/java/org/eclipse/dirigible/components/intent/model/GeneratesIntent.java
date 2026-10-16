@@ -292,6 +292,13 @@ public class GeneratesIntent {
      */
     private GeneratesLinkIntent link;
 
+    /**
+     * The {@code reversals:} entry this create-from was expanded from (issue #7886), or {@code null}
+     * for an authored one. Transient: it is never read from YAML - an author cannot spell its negation,
+     * refusals or back-link on a {@code generates:} - and never written back out with the model.
+     */
+    private transient ReversalIntent reversal;
+
     public String getName() {
         return name;
     }
@@ -543,5 +550,22 @@ public class GeneratesIntent {
     public boolean hasLink() {
         return link != null && link.getEntity() != null && !link.getEntity()
                                                                 .isBlank();
+    }
+
+    public ReversalIntent getReversal() {
+        return reversal;
+    }
+
+    public void setReversal(ReversalIntent reversal) {
+        this.reversal = reversal;
+    }
+
+    /**
+     * Whether this create-from is a declared reversal.
+     *
+     * @return true when it was expanded from a {@code reversals:} entry
+     */
+    public boolean isReversal() {
+        return reversal != null;
     }
 }
