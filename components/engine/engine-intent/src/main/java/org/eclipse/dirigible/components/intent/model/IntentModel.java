@@ -55,6 +55,8 @@ public class IntentModel {
     private List<ScheduleIntent> schedules = new ArrayList<>();
     private List<IntegrationIntent> integrations = new ArrayList<>();
     private List<InboundIntent> inbound = new ArrayList<>();
+    /** File imports: an uploaded file (CSV, MT940, camt.053) read into the rows of an entity. */
+    private List<ImportIntent> imports = new ArrayList<>();
     /** Outbound departures: a record emitted on a queue or a topic when an event fires. */
     private List<OutboundIntent> outbound = new ArrayList<>();
     private List<RollupIntent> rollups = new ArrayList<>();
@@ -272,6 +274,14 @@ public class IntentModel {
 
     public void setInbound(List<InboundIntent> inbound) {
         this.inbound = inbound == null ? new ArrayList<>() : inbound;
+    }
+
+    public List<ImportIntent> getImports() {
+        return imports;
+    }
+
+    public void setImports(List<ImportIntent> imports) {
+        this.imports = imports == null ? new ArrayList<>() : imports;
     }
 
     public List<OutboundIntent> getOutbound() {

@@ -24,6 +24,7 @@ import javax.lang.model.SourceVersion;
 
 import org.eclipse.dirigible.components.intent.generator.ArrivalSupport;
 import org.eclipse.dirigible.components.intent.generator.EventBinding;
+import org.eclipse.dirigible.components.intent.generator.ImportSupport;
 import org.eclipse.dirigible.components.intent.generator.IntegrationSupport;
 import org.eclipse.dirigible.components.intent.generator.IntentEntities;
 import org.eclipse.dirigible.components.intent.generator.FileNameSupport;
@@ -419,6 +420,7 @@ public final class IntentParser {
         validateSchedules(model, entityNames, usesAliases, issues);
         validateIntegrations(model, entityNames, issues);
         validateInbound(model, entityNames, issues);
+        ImportSupport.validate(model, issues);
         validateOutbound(model, entityNames, issues);
         validateRollups(model, usesAliases, issues);
         validateExpansions(model, issues);
