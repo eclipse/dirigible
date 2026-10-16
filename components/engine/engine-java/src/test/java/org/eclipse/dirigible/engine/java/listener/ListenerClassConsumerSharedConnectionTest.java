@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -20,11 +21,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -52,6 +56,8 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
 import jakarta.jms.Connection;
 import jakarta.jms.ExceptionListener;
+import jakarta.jms.InvalidClientIDException;
+import jakarta.jms.InvalidDestinationException;
 import jakarta.jms.JMSException;
 import jakarta.jms.JMSSecurityException;
 import jakarta.jms.MessageConsumer;
@@ -107,6 +113,25 @@ class ListenerClassConsumerSharedConnectionTest {
         }
     }
 
+    /** A second typed listener on a tenant-scoped topic. */
+    static class AuditHandler implements MessageHandler {
+
+        @Override
+        public String destination() {
+            return "audit";
+        }
+
+        @Override
+        public ListenerKind kind() {
+            return ListenerKind.TOPIC;
+        }
+
+        @Override
+        public void onMessage(String message) {
+            // The subscription, not the dispatch, is what this test is about.
+        }
+    }
+
     /** A typed listener on a topic shared with another deployment. */
     static class GlobalEventsHandler implements MessageHandler {
 
@@ -143,6 +168,26 @@ class ListenerClassConsumerSharedConnectionTest {
     /** While set, the connection is handed out and the session on it is refused. */
     private final AtomicBoolean brokerRefusingSessions = new AtomicBoolean();
 
+    /**
+     * The connections a pass opened to reclaim the previous mode's durable subscriptions (#7890), kept
+     * apart from the subscriptions' own so the assertions about those stay what they were.
+     */
+    private final List<Opened> reclaimConnections = new ArrayList<>();
+    private final List<Session> reclaimSessions = new ArrayList<>();
+    private final Set<Connection> reclaimConnectionSet = Collections.newSetFromMap(new IdentityHashMap<>());
+
+    /** While set, the broker refuses a reclaim connection's client id, as while another holds it. */
+    private final AtomicBoolean clientIdsInUse = new AtomicBoolean();
+
+    /** While set, a reclaim session finds nothing registered under the name it unsubscribes. */
+    private final AtomicBoolean nothingToReclaim = new AtomicBoolean();
+
+    private ComponentContainer componentContainer;
+    private ActiveMQConnectionArtifactsFactory connectionFactory;
+    private TenantContext tenantContext;
+    private TenantConfigurationService tenantConfigurationService;
+    private DestinationNameManager destinationNameManager;
+    private ListenerConnectionMode mode;
     private ListenerClassConsumer consumer;
     private ListAppender<ILoggingEvent> appender;
     private Logger consumerLogger;
@@ -153,21 +198,42 @@ class ListenerClassConsumerSharedConnectionTest {
         addTenant(DEFAULT_TENANT_ID);
         addTenant("acme");
 
-        ComponentContainer componentContainer = mock(ComponentContainer.class);
+        componentContainer = mock(ComponentContainer.class);
         when(componentContainer.instanceOf(EventsHandler.class)).thenReturn(Optional.of(new EventsHandler()));
+        when(componentContainer.instanceOf(AuditHandler.class)).thenReturn(Optional.of(new AuditHandler()));
         when(componentContainer.instanceOf(OrdersHandler.class)).thenReturn(Optional.of(new OrdersHandler()));
         when(componentContainer.instanceOf(GlobalEventsHandler.class)).thenReturn(Optional.of(new GlobalEventsHandler()));
 
-        ActiveMQConnectionArtifactsFactory connectionFactory = mock(ActiveMQConnectionArtifactsFactory.class);
+        connectionFactory = mock(ActiveMQConnectionArtifactsFactory.class);
         when(connectionFactory.createConnection(any(), any())).thenAnswer(invocation -> {
+            String clientId = invocation.getArgument(1);
+            if (isReclaimClientId(clientId)) {
+                if (clientIdsInUse.get()) {
+                    throw new IllegalStateException("Failed to create connection to ActiveMQ",
+                            new InvalidClientIDException("Broker: localhost - Client: " + clientId + " already connected"));
+                }
+                Connection connection = mock(Connection.class);
+                reclaimConnections.add(new Opened(connection, invocation.getArgument(0), clientId));
+                reclaimConnectionSet.add(connection);
+                return connection;
+            }
             if (brokerRefusingConnections.get()) {
                 throw new IllegalStateException("Failed to create connection to ActiveMQ");
             }
             Connection connection = mock(Connection.class);
-            opened.add(new Opened(connection, invocation.getArgument(0), invocation.getArgument(1)));
+            opened.add(new Opened(connection, invocation.getArgument(0), clientId));
             return connection;
         });
         when(connectionFactory.createSession(any())).thenAnswer(invocation -> {
+            if (reclaimConnectionSet.contains(invocation.getArgument(0))) {
+                Session session = mock(Session.class);
+                if (nothingToReclaim.get()) {
+                    doThrow(new InvalidDestinationException("No durable subscription exists")).when(session)
+                                                                                              .unsubscribe(anyString());
+                }
+                reclaimSessions.add(session);
+                return session;
+            }
             if (brokerRefusingSessions.get()) {
                 throw new JMSSecurityException("Destination authorization refused");
             }
@@ -184,7 +250,7 @@ class ListenerClassConsumerSharedConnectionTest {
             return session;
         });
 
-        TenantContext tenantContext = mock(TenantContext.class);
+        tenantContext = mock(TenantContext.class);
         when(tenantContext.getCurrentTenant()).thenAnswer(invocation -> provisionedTenants.get(currentTenantId.get()));
         when(tenantContext.executeForEachTenant(any())).thenAnswer(invocation -> {
             for (String tenantId : new ArrayList<>(provisionedTenants.keySet())) {
@@ -195,7 +261,7 @@ class ListenerClassConsumerSharedConnectionTest {
             return List.of();
         });
 
-        DestinationNameManager destinationNameManager = mock(DestinationNameManager.class);
+        destinationNameManager = mock(DestinationNameManager.class);
         when(destinationNameManager.toTenantName(anyString())).thenAnswer(invocation -> {
             String logicalName = invocation.getArgument(0);
             if (DestinationNameManager.isGlobal(logicalName)) {
@@ -205,11 +271,10 @@ class ListenerClassConsumerSharedConnectionTest {
             return DEFAULT_TENANT_ID.equals(tenantId) ? logicalName : tenantId + "###" + logicalName;
         });
 
-        TenantConfigurationService tenantConfigurationService = mock(TenantConfigurationService.class);
+        tenantConfigurationService = mock(TenantConfigurationService.class);
         when(tenantConfigurationService.resolveInjectableForCurrentTenant()).thenReturn(new HashMap<>());
 
-        consumer = new ListenerClassConsumer(componentContainer, connectionFactory, tenantContext, mock(TenantPropertyManager.class),
-                mock(Tenant.class), tenantConfigurationService, destinationNameManager, ListenerConnectionMode.SHARED);
+        consumer = newConsumer(ListenerConnectionMode.SHARED);
 
         appender = new ListAppender<>();
         appender.start();
@@ -394,6 +459,117 @@ class ListenerClassConsumerSharedConnectionTest {
         for (Opened connection : opened) {
             verify(connection.connection()).close();
         }
+    }
+
+    /**
+     * A switch from the per-listener mode leaves a durable subscription under each handler's own client
+     * id (#7890). Once the scope is subscribed, the pass unsubscribes it - on a connection of that
+     * client id, closed again - and never looks for it a second time.
+     */
+    @Test
+    void aSwitchToTheSharedModeReclaimsThePerListenerSubscriptionsOnce() throws Exception {
+        load(EventsHandler.class);
+        assertTrue(reclaimConnections.isEmpty(), "subscribing opens no reclaim connection - the pass does");
+
+        consumer.reconcile();
+
+        List<String> reclaimed = reclaimConnections.stream()
+                                                   .map(Opened::clientId)
+                                                   .toList();
+        assertEquals(2, reclaimed.size(), "one per-listener client id per tenant: " + reclaimed);
+        for (int i = 0; i < reclaimed.size(); i++) {
+            verify(reclaimSessions.get(i)).unsubscribe(reclaimed.get(i));
+            verify(reclaimConnections.get(i)
+                                     .connection()).close();
+        }
+
+        consumer.reconcile();
+        load(EventsHandler.class);
+        consumer.reconcile();
+
+        assertEquals(2, reclaimConnections.size(), "a reclaimed identity is not looked for again - not even after a republish");
+    }
+
+    /** The reverse switch leaves them under the scope's client id: one connection per scope. */
+    @Test
+    void aSwitchToThePerListenerModeReclaimsTheSharedSubscriptionsOneConnectionPerScope() throws Exception {
+        consumer = newConsumer(ListenerConnectionMode.PER_LISTENER);
+        load(EventsHandler.class);
+        load(AuditHandler.class);
+        load(GlobalEventsHandler.class);
+
+        consumer.reconcile();
+
+        assertEquals(Set.of("dirigible-java-tenant-default-tenant", "dirigible-java-tenant-acme", "dirigible-java-global"),
+                Set.copyOf(reclaimClientIds()), "one reclaim connection per scope, however many handlers it has");
+        assertEquals(3, reclaimConnections.size());
+        Session defaultTenant = reclaimSessions.get(reclaimClientIds().indexOf("dirigible-java-tenant-default-tenant"));
+        verify(defaultTenant, times(2)).unsubscribe(anyString());
+    }
+
+    @Test
+    void aQueueHasNoDurableSubscriptionToReclaim() {
+        load(OrdersHandler.class);
+
+        consumer.reconcile();
+
+        assertTrue(reclaimConnections.isEmpty());
+    }
+
+    /**
+     * The usual answer - the mode never changed - counts as reclaimed, or every pass would ask again.
+     */
+    @Test
+    void anIdentityNothingIsRegisteredUnderIsNotLookedForAgain() {
+        nothingToReclaim.set(true);
+        load(EventsHandler.class);
+
+        consumer.reconcile();
+        consumer.reconcile();
+
+        assertEquals(2, reclaimConnections.size());
+    }
+
+    /**
+     * In a rolling deploy the previous instance still holds the client id: the broker refuses it, and
+     * the identity stays queued until the client id is free - reported once, never dropped.
+     */
+    @Test
+    void aClientIdStillHeldElsewhereIsReportedOnceAndRetriedUntilItIsFree() throws Exception {
+        clientIdsInUse.set(true);
+        load(EventsHandler.class);
+
+        consumer.reconcile();
+        consumer.reconcile();
+
+        assertTrue(reclaimConnections.isEmpty());
+        assertEquals(2, warnings("are not reclaimed yet").size(), "one report per client id, not one per pass");
+
+        clientIdsInUse.set(false);
+        consumer.reconcile();
+
+        assertEquals(2, reclaimConnections.size(), "both identities reclaimed once their client ids are free");
+        for (Session session : reclaimSessions) {
+            verify(session).unsubscribe(anyString());
+        }
+    }
+
+    private ListenerClassConsumer newConsumer(ListenerConnectionMode connectionMode) {
+        mode = connectionMode;
+        return new ListenerClassConsumer(componentContainer, connectionFactory, tenantContext, mock(TenantPropertyManager.class),
+                mock(Tenant.class), tenantConfigurationService, destinationNameManager, connectionMode);
+    }
+
+    /** A reclaim connection carries the client id the OTHER mode gives a subscription. */
+    private boolean isReclaimClientId(String clientId) {
+        boolean scopeId = clientId != null && (clientId.startsWith("dirigible-java-tenant-") || clientId.equals("dirigible-java-global"));
+        return clientId != null && (mode == ListenerConnectionMode.SHARED) != scopeId;
+    }
+
+    private List<String> reclaimClientIds() {
+        return reclaimConnections.stream()
+                                 .map(Opened::clientId)
+                                 .toList();
     }
 
     private List<String> clientIds() {

@@ -13,6 +13,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,7 @@ import org.springframework.stereotype.Component;
 import jakarta.annotation.PreDestroy;
 import jakarta.jms.Connection;
 import jakarta.jms.Destination;
+import jakarta.jms.InvalidDestinationException;
 import jakarta.jms.JMSException;
 import jakarta.jms.Message;
 import jakarta.jms.MessageConsumer;
@@ -127,6 +129,16 @@ import jakarta.jms.Topic;
  * handler and the destination. The loss of that connection is the loss of its whole scope, which is
  * exactly the unit #7851 already re-subscribes. In the {@link ListenerConnectionMode#PER_LISTENER}
  * mode every subscription keeps a connection of its own, the shape before #7875.
+ *
+ * <p>
+ * <b>A mode switch reclaims what the previous mode registered</b> (#7890). The broker remembers a
+ * durable subscription by client id and subscription name, and the two modes derive the client id
+ * differently - the subscription's own name per listener, the scope's in the shared mode - so the
+ * subscriptions a switch leaves behind would go on retaining every message published to their
+ * topics, for good on a broker without an offline timeout. Once a scope is subscribed, the other
+ * mode's identity of each of its durable subscriptions is queued, and {@link #reconcile()}
+ * unsubscribes it on its own connection, one client id at a time; a client id still held elsewhere
+ * (the previous instance of a rolling deploy) is refused and stays queued for the next pass.
  */
 @Component
 @Order(500)
@@ -177,6 +189,21 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
      * connection being closed.
      */
     private final ConcurrentLinkedQueue<Connection> lostConnections = new ConcurrentLinkedQueue<>();
+
+    /**
+     * The other connection mode's identities of the durable subscriptions this instance opened, waiting
+     * for {@link #reclaimPreviousMode()} to unsubscribe them (#7890).
+     */
+    private final Set<DurableIdentity> pendingReclaims = ConcurrentHashMap.newKeySet();
+
+    /**
+     * The identities already unsubscribed, or found absent: a scope subscribed again - after a lost
+     * connection, a republish, a new tenant - must not open a connection per handler to find out again.
+     */
+    private final Set<DurableIdentity> reclaimed = ConcurrentHashMap.newKeySet();
+
+    /** The client ids whose refusal to reclaim was already reported, so a retry logs at DEBUG. */
+    private final Set<String> reportedReclaimFailures = ConcurrentHashMap.newKeySet();
 
     @Autowired
     public ListenerClassConsumer(ComponentContainer componentContainer, ActiveMQConnectionArtifactsFactory connectionFactory,
@@ -264,8 +291,9 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
     }
 
     /**
-     * Re-attempt whatever is still not subscribed, on the reconciliation timer. Gated on the flag so an
-     * instance whose subscriptions are all open pays nothing per tick - not even the tenant lookup the
+     * Re-attempt whatever is still not subscribed, on the reconciliation timer, then reclaim what the
+     * previous connection mode left on the broker. Both are gated so an instance whose subscriptions
+     * are all open and whose reclaims are done pays nothing per tick - not even the tenant lookup the
      * fan-out below performs.
      *
      * <p>
@@ -274,10 +302,10 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
      */
     @Override
     public void reconcile() {
-        if (!subscriptionsIncomplete.compareAndSet(true, false)) {
-            return;
+        if (subscriptionsIncomplete.compareAndSet(true, false)) {
+            topUp();
         }
-        topUp();
+        reclaimPreviousMode();
     }
 
     /** Replace whatever this class had subscribed with the subscriptions it declares now. */
@@ -390,11 +418,102 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
             // second time and openHandles() would report what is already gone.
             closeAll(fqn, opened);
             markIncomplete();
-        } else if (global) {
-            registration.globalSubscribed(opened);
         } else {
-            registration.subscribed(tenantId, opened);
+            if (global) {
+                registration.globalSubscribed(opened);
+            } else {
+                registration.subscribed(tenantId, opened);
+            }
+            queuePreviousModeIdentities(subscriptions, tenantId);
         }
+    }
+
+    /**
+     * Queue the identity the other connection mode gives each durable subscription of a scope that has
+     * just been subscribed, unless it was reclaimed already. Runs in the scope's tenant context, so the
+     * subscription name resolves exactly as the subscribe did.
+     *
+     * @param subscriptions the scope's subscriptions, all of them open
+     * @param tenantId the tenant, or {@code null} for the global destinations
+     */
+    private void queuePreviousModeIdentities(List<Subscription> subscriptions, String tenantId) {
+        for (Subscription subscription : subscriptions) {
+            if (subscription.kind() != ListenerKind.TOPIC) {
+                continue;
+            }
+            String name = durableSubscriptionId(subscription.label(), destinationNameManager.toTenantName(subscription.destination()));
+            String previousClientId = connectionMode == ListenerConnectionMode.SHARED ? name : sharedClientId(tenantId);
+            DurableIdentity previous = new DurableIdentity(previousClientId, name);
+            if (!reclaimed.contains(previous)) {
+                pendingReclaims.add(previous);
+            }
+        }
+    }
+
+    /**
+     * Unsubscribe the queued identities, one client id - and so one connection - at a time, so the
+     * burst a mode switch causes stays small. Runs on the reconciliation thread and outside this
+     * consumer's monitor: it touches none of the live subscriptions.
+     */
+    private void reclaimPreviousMode() {
+        if (pendingReclaims.isEmpty()) {
+            return;
+        }
+        Map<String, List<String>> namesByClientId = new LinkedHashMap<>();
+        for (DurableIdentity identity : pendingReclaims) {
+            namesByClientId.computeIfAbsent(identity.clientId(), clientId -> new ArrayList<>())
+                           .add(identity.subscriptionName());
+        }
+        namesByClientId.forEach(this::reclaim);
+    }
+
+    /**
+     * Unsubscribe the given durable subscriptions of one client id. The broker refuses the connection
+     * while another connection holds the client id - the previous instance of a rolling deploy - and
+     * the identities then stay queued for the next pass, never skipped for good.
+     *
+     * @param clientId the client id the previous mode registered them under
+     * @param subscriptionNames their subscription names
+     */
+    private void reclaim(String clientId, List<String> subscriptionNames) {
+        Connection connection = null;
+        try {
+            connection = connectionFactory.createConnection(
+                    ex -> LOGGER.debug("[java-listener] JMS error on the reclaim connection [{}]: {}", clientId, ex.getMessage(), ex),
+                    clientId);
+            Session session = connectionFactory.createSession(connection);
+            for (String subscriptionName : subscriptionNames) {
+                unsubscribe(session, new DurableIdentity(clientId, subscriptionName));
+            }
+            reportedReclaimFailures.remove(clientId);
+        } catch (JMSException | RuntimeException e) {
+            // RuntimeException: the connection factory reports a refused client id as an
+            // IllegalStateException - the very case this retry exists for.
+            String message = "The durable subscription(s) " + subscriptionNames + " the previous listener connection mode registered under"
+                    + " client id [" + clientId + "] are not reclaimed yet - the client id or a subscription is still in use; retrying on"
+                    + " the next pass.";
+            if (reportedReclaimFailures.add(clientId)) {
+                LOGGER.warn("{} {}", message, e.getMessage(), e);
+            } else {
+                LOGGER.debug("{} {}", message, e.getMessage(), e);
+            }
+        } finally {
+            closeQuietly("reclaim " + clientId, connection);
+        }
+    }
+
+    private void unsubscribe(Session session, DurableIdentity identity) throws JMSException {
+        try {
+            session.unsubscribe(identity.subscriptionName());
+            LOGGER.info("Reclaimed the durable subscription [{}] the previous listener connection mode registered under client id [{}].",
+                    identity.subscriptionName(), identity.clientId());
+        } catch (InvalidDestinationException absent) {
+            // The usual answer: the mode never changed, so there is nothing registered under it.
+            LOGGER.debug("No durable subscription [{}] under client id [{}] to reclaim: {}", identity.subscriptionName(),
+                    identity.clientId(), absent.getMessage(), absent);
+        }
+        reclaimed.add(identity);
+        pendingReclaims.remove(identity);
     }
 
     /**
@@ -829,6 +948,10 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
             // redelivery policy configured above retries it, and dead-letters it once exhausted.
             throw new IllegalStateException("@Listener [" + label + "] failed handling a message", cause);
         }
+    }
+
+    /** How the broker remembers a durable subscription: the connection's client id and its name. */
+    private record DurableIdentity(String clientId, String subscriptionName) {
     }
 
     /**

@@ -169,8 +169,9 @@ instantiate client classes.
   connection is reported once per scope (not once per handler), a refused session closes the session
   and keeps the connection, and the loss of the connection is the loss of the whole scope, which the
   next reconciliation pass closes and subscribes again. `per-listener` restores a connection per
-  subscription; the modes' durable identities differ, so a switch strands the previous mode's
-  durable subscriptions until the broker's offline timeout. See `.claude/docs/messaging.md`.
+  subscription. The modes' durable identities differ, so once a scope is subscribed the reconciliation
+  pass unsubscribes the other mode's identity of each of its durable subscriptions (#7890), retrying a
+  client id still held by the previous instance of a rolling deploy. See `.claude/docs/messaging.md`.
 - **A subscription (or a job registration) that could not be established is retried on a JVM-local
   timer.** `JavaConsumersReconciler` calls `JavaClassConsumer.reconcile()` on every consumer every
   `DIRIGIBLE_JAVA_RECONCILE_INTERVAL_SECONDS` (30), and `ListenerClassConsumer` /
