@@ -293,6 +293,7 @@ public class DataSourceInitializer implements DisposableBean {
 
     @Override
     public void destroy() {
+        timer.cancel();
         logger.info("Clearing datasources...");
         clear();
     }

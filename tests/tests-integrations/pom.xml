@@ -149,16 +149,24 @@
                     <systemPropertyVariables>
                         <dirigible.it.partition>${it.partition}</dirigible.it.partition>
                     </systemPropertyVariables>
-                    <!-- Fresh JVM per test class. Every IT boots a full Dirigible context per test
-                         method (@DirtiesContext AFTER_EACH_TEST_METHOD) and closed contexts do not
-                         release all their heap (schedulers, engine pools, statics), so a single
-                         shared fork accumulates the leak across the ~85 IT classes and OOMs late in
-                         the full run (the -Xmx6g fork died at DependsOnHarmoniaIT). Per-class forks
-                         bound the accumulation at one class; JVM startup is noise next to the
-                         per-method Spring boots. ExitOnOutOfMemoryError kills the fork on the first
-                         OOM instead of letting a heap-thrashing JVM drag the job out for hours.
+                    <!-- One JVM for the whole run; each class still boots its OWN Spring context
+                         (@DirtiesContext on IntegrationTest is unchanged), so no state is shared
+                         between classes beyond the JVM's statics. JVM startup is not noise: a boot
+                         in a cold JVM costs ~16 s on CI, in a warm one ~4.5 s (class loading and JIT),
+                         and per-class forks paid the cold price ~160 times per run (#7868).
+                         The reason this was false: closed contexts stayed reachable, so a shared fork
+                         accumulated them and OOMed late in the full run. A context is pinned by
+                         whatever outlives it - a thread it started, a static registry it joined - so
+                         a bean that opens one must release it on shutdown (DataStore's session
+                         factories, ListenerClassConsumer's JMS connections, the repository searcher's
+                         timer were the ones found; a heap dump's path to GC roots from a
+                         DefaultListableBeanFactory names the next). Test code restores the JVM
+                         globals it points at its context (RestAssuredExecutor's proxy) when that
+                         context closes. See .claude/docs/ci.md. ExitOnOutOfMemoryError kills the
+                         fork on the first OOM instead of letting a heap-thrashing JVM drag the job
+                         out for hours.
                          argLine here REPLACES the root pom's (no merge) - keep the add-opens list. -->
-                    <reuseForks>false</reuseForks>
+                    <reuseForks>true</reuseForks>
                     <!-- The -javaagent is the launcher agent the executable jar delivers via its
                          Launcher-Agent-Class manifest entry in production; the ITs run from the
                          plain classpath, so the flag is the equivalent delivery here. It only
