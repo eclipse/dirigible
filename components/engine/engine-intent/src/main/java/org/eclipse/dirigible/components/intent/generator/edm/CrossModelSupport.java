@@ -99,12 +99,16 @@ public final class CrossModelSupport {
      *        owner's {@code numberStampOnIssue}), whose value is a UUID placeholder until the document
      *        is issued - a dropdown labelled by one, or a {@code show:} column of one, shows the draft
      *        marker instead (issue #7722); empty when the model was not resolved
+     * @param hierarchyColumn the physical column of the {@code hierarchyProperty} tree edge (the
+     *        owner's {@code dataName} for it) - what a consumer walking the tree in SQL joins on, as a
+     *        {@code kind: ledger} report does to widen a group account to its leaves (issue #7887);
+     *        {@code null} when the target declares no hierarchy or the model was not resolved
      */
     public record TargetInfo(boolean resolved, String perspectiveName, String tableDataName, String keyField, String keyColumn,
             String labelField, String fkType, java.util.Set<String> propertyNames, String hierarchyProperty, String identityProperty,
             java.util.Map<String, String> propertyWidgets, String statusProperty, java.util.Map<String, String> propertyRelations,
             java.util.Set<String> translatedProperties, java.util.Map<String, String> propertyTypes,
-            java.util.Set<String> draftNumberProperties) {
+            java.util.Set<String> draftNumberProperties, String hierarchyColumn) {
     }
 
     @SuppressWarnings("unchecked")
@@ -488,6 +492,7 @@ public final class CrossModelSupport {
                 java.util.Map<String, String> propertyWidgets = null;
                 java.util.Map<String, String> propertyRelations = null;
                 java.util.Map<String, String> propertyTypes = null;
+                java.util.Map<String, String> propertyColumns = new java.util.LinkedHashMap<>();
                 String statusProperty = null;
                 if (properties != null) {
                     propertyNames = new java.util.LinkedHashSet<>();
@@ -503,6 +508,10 @@ public final class CrossModelSupport {
                         String propertyName = str(p.get("name"), null);
                         if (propertyName != null) {
                             propertyNames.add(propertyName);
+                            String dataName = str(p.get("dataName"), null);
+                            if (dataName != null) {
+                                propertyColumns.put(propertyName, dataName);
+                            }
                             String dataType = str(p.get("dataType"), null);
                             if (dataType != null) {
                                 propertyTypes.put(propertyName, dataType);
@@ -530,7 +539,7 @@ public final class CrossModelSupport {
                 return new TargetInfo(true, perspective, tableDataName, keyField, keyColumn, labelField, fkType, propertyNames,
                         hierarchyProperty, identityProperty, propertyWidgets, statusProperty, propertyRelations,
                         translatedProperties("true".equals(String.valueOf(entity.get("multilingual"))), properties), propertyTypes,
-                        draftNumberProperties(properties));
+                        draftNumberProperties(properties), hierarchyProperty == null ? null : propertyColumns.get(hierarchyProperty));
             }
         } catch (RuntimeException e) {
             LOGGER.warn("Failed to read owner model [{}] for cross-model target [{}]", LoggedValue.of(modelPath),
@@ -615,7 +624,7 @@ public final class CrossModelSupport {
         String table = IntentNaming.upperSnake(alias) + "_" + IntentNaming.upperSnake(targetEntity);
         String keyColumn = IntentNaming.upperSnake(targetEntity) + "_ID";
         return new TargetInfo(false, targetEntity, table, "Id", keyColumn, "Name", "INTEGER", null, null, null, null, null, null,
-                java.util.Set.of(), null, java.util.Set.of());
+                java.util.Set.of(), null, java.util.Set.of(), null);
     }
 
     /**

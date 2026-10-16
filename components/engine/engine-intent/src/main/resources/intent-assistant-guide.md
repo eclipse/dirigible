@@ -2670,8 +2670,9 @@ target is compared as a date, so a `le` bound includes the chosen day. The targe
 - a relation itself is not one (name a field of it: `Customer.name`), `boolean` and `text` fields are
 not parameterizable, and the name must be a plain, non-keyword identifier that is not one the
 platform already binds (`language`) or the generated controller declares (`filter`, `limit`,
-`offset`, `repository`). `kind: balance` and `kind: statement` declare their own
-`fromDate`/`toDate`, so either may add further parameters but not redeclare those two.
+`offset`, `repository`). `kind: balance`, `kind: statement` and `kind: ledger` declare their own
+`fromDate`/`toDate` (a ledger also its `account`), so each may add further parameters but not
+redeclare those.
 
 #### reports[].scope - which lifecycle rows an aggregate counts
 
@@ -2920,6 +2921,48 @@ touches no cash account is not read at all. **Rules:** only the four `period*` m
 flow is a movement within the window); `date` must be a `<relation>.<field>` path over the source's
 relation to its journal entry, because the cash an entry moved is a fact about the entry; and the
 entries must balance (debits = credits), which is what makes the sections reconcile.
+
+#### reports[].kind: ledger - the account analysis (account card)
+
+**Use when:** the user needs the *lines* of one account - the account card an accountant reconciles
+with: the opening balance at the window start, each posted line in date order with its own debit,
+credit and a running balance, and the closing balance at the end. A `kind: balance` report sums per
+account; a ledger lists what makes up one account's figure.
+
+```yaml
+reports:
+  - name: AccountAnalysis
+    kind: ledger
+    source: JournalEntryItem              # the ledger line items (same as a balance report)
+    date: journalEntry.entryDate          # the date driving the window
+    debit: debit
+    credit: credit
+    account: account                      # the to-one RELATION to the account - bound at runtime
+    columns: [journalEntry.number, journalEntry.reason, Customer, note]
+    correspondence: account.code          # optional - each line's counter-side accounts
+    filter: "journalEntry.status == 2"
+```
+
+The rows are: an **Opening balance** row (everything strictly before `fromDate`), the lines of the
+window ordered by date, entry and line, each with `Balance` = opening + running `debit - credit`, and a
+**Closing balance** row carrying the window's debit and credit turnover and the closing balance. The
+window is the balance report's, so opening + debit - credit = closing, equal to what a `kind: balance`
+report shows for the same account and window. The report declares `fromDate`, `toDate` and
+`account` (the account's key) on its own behalf; until an account is chosen it binds `0` and renders
+an empty card. When the account entity declares `hierarchy:`, choosing a **group account** lists the
+lines of every account below it (a generated `<REPORT>_ACCOUNT_TREE` view walks the tree), so a
+group's closing balance is the sum of its leaves'. The query pages in the database, so an account
+with tens of thousands of lines loads one page at a time and every page carries the running balance
+of the whole window.
+
+`columns` are the per-line columns between the date and the amounts - a field of the source, a
+one-hop `relation.field`, or a bare to-one relation (shown by its label). `correspondence` names the
+account path read off the entry's opposite-side lines, listed distinct per line (`411, 453`) - a
+compound entry shows every account a line faced.
+
+**Rules:** `account` must be a to-one relation of the source, not one of its fields; the source needs
+a `primaryKey` (the running balance accumulates line by line in key order); no `dimensions`,
+`measures`, `lines`, `cashAccounts`, `widget` or `chart` - the rows are the account's lines.
 
 #### reports[].chart - render as a chart
 
