@@ -126,6 +126,9 @@
         <maven-exec-plugin.version>3.6.4</maven-exec-plugin.version>
         <maven-git-commit-id-plugin.version>4.9.10</maven-git-commit-id-plugin.version>
         <maven-download-plugin.version>1.13.0</maven-download-plugin.version>
+        <maven-dependency-plugin.version>3.11.0</maven-dependency-plugin.version>
+        <maven-jar-plugin.version>3.5.1</maven-jar-plugin.version>
+        <maven-build-helper-plugin.version>3.6.2</maven-build-helper-plugin.version>
 
         <!-- JDT Language Server bundled at build time.
              Served from our own mirror (dirigiblelabs/jdtls-mirror releases) because
@@ -373,6 +376,26 @@
                     <groupId>com.googlecode.maven-download-plugin</groupId>
                     <artifactId>download-maven-plugin</artifactId>
                     <version>${maven-download-plugin.version}</version>
+                </plugin>
+                <!-- Declared in <build><plugins> (or a module's) without a version, these three were
+                     resolved from Maven Central's metadata on every build: a job without a warm local
+                     repository failed whenever that one download did (the PR code-style job, run
+                     38895231529), and the build silently picked up whatever release came next. The
+                     versions are the ones that resolution was picking. -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>${maven-dependency-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${maven-jar-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>${maven-build-helper-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>com.mycila</groupId>
