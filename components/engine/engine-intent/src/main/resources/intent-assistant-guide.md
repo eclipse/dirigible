@@ -145,6 +145,11 @@ The three categories, and the extension point that carries each:
    generated scaffold already carries an `<image src="Templates/Print/logo.png"/>` slot and the answer
    is to upload the file there (Documents perspective), or ship a default as
    `doc/Templates/Print/logo.png`. A missing file prints nothing.
+   A statutory FILE is not this category: a VAT ledger in fixed-width windows-1251, a CSV for a
+   bank, an XML declaration over a report are `exports:`. What stays outside an export is a structure
+   beyond header / line / trailer records (nested XML hierarchies, several row sets in one file,
+   validation against an XSD) and the signed submission to an authority - not implemented yet; say
+   so, and propose the export plus a `custom/` component that signs and delivers its file.
 
 Also outside: a bespoke screen (an `actions:` custom page), a bespoke dashboard number (a `widgets:`
 tile backed by a developer endpoint).
@@ -4204,6 +4209,80 @@ else. Mark that one `global:` (`to: { topic: "global:codbex.orders" }`) and the 
 plain name it was given. What the marker costs: the destination no longer carries the tenant, so a
 business tenant that matters downstream must travel in the payload - a `tenantId: "{tenant}"` key in
 the declared envelope is exactly that.
+
+### exports - a file in an exacting format over a query
+
+**Use when:** the app must produce a FILE someone else reads - a statutory filing (a VAT ledger, a
+payroll declaration, an intrastat return), a bank bulk-transfer file, the feed of a third-party
+ledger. Use a `report` for a screen and `attach: print` for a document a person reads; an export is
+for a machine that rejects the file over one shifted column.
+
+```yaml
+entities:
+  - name: ExportRun              # the ledger: declared with NO fields - its columns are injected
+exports:
+  - name: VatPurchaseLedger
+    source: PurchaseInvoice      # an entity, or a plain report of this intent
+    format: fixedWidth           # fixedWidth | delimited | xml
+    encoding: windows-1251       # UTF-8 when omitted
+    ledger: ExportRun
+    fileName: "VAT-{fromDate}.txt"
+    orderBy: [documentDate, number]
+    parameters:
+      - { name: fromDate, field: documentDate, op: ge, required: true }
+      - { name: toDate,   field: documentDate, op: le }
+    records:
+      - type: header             # once, first
+        fields:
+          - { literal: 'H', width: 1 }
+          - { param: fromDate, width: 8, pattern: ddMMyyyy }
+      - type: line               # once per row
+        fields:
+          - { from: supplier.vatNumber, width: 15 }
+          - { from: documentDate, width: 8, pattern: ddMMyyyy }
+          - { from: taxBase, width: 15, scale: 2, align: right, pad: '0' }
+      - type: trailer            # once, last
+        fields:
+          - { literal: 'TOTAL', width: 5 }
+          - { from: count(), width: 6, align: right, pad: '0' }
+          - { from: sum(taxBase), width: 15, scale: 2, align: right }
+```
+
+**What it generates:** one Java class per export that is both the download
+(`GET .../gen/events/<module>/<Export>Export/download?<parameters>` answers the file) and a bean any
+job or `custom/` code injects and calls (`run(Map.of("fromDate", "2026-03-01"))` returns the ledger
+row). Every run is recorded on the ledger entity - `Export`, `Format`, `Parameters` (JSON),
+`Outcome` (SUCCEEDED / FAILED), `RecordCount`, `Checksum` (SHA-256), `ErrorMessage`, the stored file
+(`FileName`, `ContentType`, `FileSize`, `StoragePath`) and who ran it when. A ledger row is
+append-only and serves its file at its own `/{id}/download`.
+
+**Rules - each refused at parse with the reason:**
+- A field takes exactly one of `from:` (a field, a one-hop `relation.field`, or a total `sum(x)` /
+  `count()`), `literal:` or `param:` (a declared parameter). A header or trailer is written once, so
+  it reads literals, parameters and totals - never a row.
+- `fixedWidth`: every field needs a `width:`; `align: left|right`, `pad:` (one character) and
+  `truncate: true` (cut instead of refusing a wider value) are positional-only. `lineEnding: crlf|lf`
+  (CRLF by default).
+- `delimited`: `delimiter:` (`,`), `quote:` (`"`, empty for none), `quoting: minimal|all`.
+- `xml`: `root:` (the export name by default), a record's `element:` (its type by default), a field's
+  `name:` (required when it cannot be derived from `from:`/`param:`) and `attribute: true`.
+- `scale:` writes a decimal rounded half-up, with `decimalSeparator:` (empty = implied point);
+  `pattern:` writes a date in a `DateTimeFormatter` pattern - never both on one field.
+- A **report** source: `from:` names one of the report's `dimensions` / `measures` exactly as declared
+  (`supplier.name`, `count(*)`), a total over a measure is `sum(sum(taxBase))`, and a parameter names
+  one of the report's own parameters. A `kind: balance` / `statement` report is refused.
+- An **entity** source: a parameter filters `field:` (its name by default, a field or a to-one
+  relation) by `op:` `eq|ne|gt|ge|lt|le`; a timestamp field is refused. `orderBy:` lists its fields;
+  the primary key orders the rows otherwise. A hop into another model is refused - export over a
+  report that joins it.
+- `ledger:` names an entity with no fields and no relations. `<Export>:read` in `permissions` is who
+  may run it; with no token naming it, any signed-in user may.
+
+**Say these out loud:** nothing is written approximately. A value wider than its field, a character
+the encoding cannot represent or one XML does not allow FAILS the run (422, recorded FAILED with the
+reason) - a filing with a silently replaced character is rejected by its recipient long after. A
+missing or unreadable parameter is refused (400) and records nothing. `submit:` - the signed delivery
+to an authority - is reserved and refused until it ships.
 
 ### rollups - maintain a count on a parent
 

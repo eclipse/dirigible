@@ -1751,6 +1751,82 @@ public class ReportIntentGenerator implements IntentTargetGenerator {
         return widget;
     }
 
+    /**
+     * The output columns of a plain (non-ledger) report, keyed by the authored dimension or measure
+     * they come from (compared as {@link #expressionKey(String)} compares them) and valued by the
+     * result-set alias the generated query names them with - what a generated report repository's rows
+     * are keyed by.
+     *
+     * <p>
+     * It is derived here, beside the code that names the columns, from the same patterns and the same
+     * {@code humanize} spelling, so a consumer of the rows (a declared export) never restates the alias
+     * convention. A measure that matches no aggregate produces no column and is absent. A ledger kind's
+     * columns are fixed by its own shape rather than by authored expressions, so it has none here.
+     *
+     * @param report the report
+     * @return authored expression key to column alias, in output order; empty for a ledger kind
+     */
+    public static Map<String, String> outputAliases(ReportIntent report) {
+        Map<String, String> aliases = new LinkedHashMap<>();
+        if (report.isLedgerKind()) {
+            return aliases;
+        }
+        for (String dimension : report.getDimensions()) {
+            if (dimension == null || dimension.isBlank()) {
+                continue;
+            }
+            Matcher bucket = DATE_BUCKET.matcher(dimension.trim());
+            Matcher ageing = AGEING_BUCKET.matcher(dimension.trim());
+            String alias;
+            if (bucket.matches()) {
+                alias = humanize(bucket.group(1)
+                                       .toLowerCase(Locale.ROOT)
+                        + " " + bucket.group(2)
+                                      .trim()
+                                      .replace('.', ' '));
+            } else if (ageing.matches()) {
+                alias = humanize("ageing " + ageing.group(1)
+                                                   .trim()
+                                                   .replace('.', ' '));
+            } else {
+                alias = humanize(dimension.trim());
+            }
+            aliases.put(expressionKey(dimension), alias);
+        }
+        for (String measure : report.getMeasures()) {
+            if (measure == null || measure.isBlank()) {
+                continue;
+            }
+            Matcher matcher = AGGREGATE_EXPRESSION.matcher(measure.trim());
+            if (!matcher.matches()) {
+                continue;
+            }
+            String aggregate = matcher.group(1)
+                                      .toUpperCase(Locale.ROOT);
+            String field = matcher.group(2)
+                                  .trim();
+            if (!KNOWN_AGGREGATES.contains(aggregate)) {
+                continue;
+            }
+            String alias = field.isEmpty() || "*".equals(field) ? aggregate.charAt(0) + aggregate.substring(1)
+                                                                                                 .toLowerCase(Locale.ROOT)
+                    : humanize(aggregate.toLowerCase(Locale.ROOT) + " " + leaf(field));
+            aliases.put(expressionKey(measure), alias);
+        }
+        return aliases;
+    }
+
+    /**
+     * The key {@link #outputAliases(ReportIntent)} is keyed by: an authored dimension or measure
+     * expression with its whitespace removed, lower-cased.
+     *
+     * @param expression the authored expression
+     * @return the key
+     */
+    public static String columnKey(String expression) {
+        return expressionKey(expression);
+    }
+
     /** Whitespace/case-insensitive compare key for authored measure and dimension expressions. */
     private static String expressionKey(String expression) {
         return expression == null ? ""

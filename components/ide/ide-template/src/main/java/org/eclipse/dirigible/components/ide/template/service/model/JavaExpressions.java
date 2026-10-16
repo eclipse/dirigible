@@ -54,6 +54,11 @@ import java.util.Map;
  * <td>{@code version}</td>
  * </tr>
  * <tr>
+ * <td>{@code column}</td>
+ * <td>{@code owner}, {@code alias}</td>
+ * <td>{@code row.get("Sum Tax Base")}</td>
+ * </tr>
+ * <tr>
  * <td>{@code string}</td>
  * <td>{@code text}</td>
  * <td>{@code "..."}, escaped</td>
@@ -214,6 +219,7 @@ public final class JavaExpressions {
                 yield "(" + owner + " == null ? null : " + access(reading) + ")";
             }
             case "local" -> text(reading, "name");
+            case "column" -> text(reading, "owner") + ".get(" + literal(text(reading, "alias")) + ")";
             case "string" -> literal(text(reading, "text"));
             case "number" -> number(text(reading, "text"), text(reading, "type"));
             case "boolean" -> "true".equals(text(reading, "text")) ? "true" : "false";
