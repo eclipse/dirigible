@@ -32,8 +32,8 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name = "DIRIGIBLE_CROSS_TENANT_AUDIT",
-        indexes = {@Index(name = "IDX_DIRIGIBLE_CROSS_TENANT_AUDIT_TENANT", columnList = "CTAUDIT_TENANT_ID, CTAUDIT_AT"),
-                @Index(name = "IDX_DIRIGIBLE_CROSS_TENANT_AUDIT_PRINCIPAL", columnList = "CTAUDIT_PRINCIPAL, CTAUDIT_AT")})
+        indexes = {@Index(name = "IX_DIRIGIBLE_CROSS_TENANT_AUDIT_TENANT", columnList = "CTAUDIT_TENANT_ID, CTAUDIT_AT"),
+                @Index(name = "IX_DIRIGIBLE_CROSS_TENANT_AUDIT_PRINCIPAL", columnList = "CTAUDIT_PRINCIPAL, CTAUDIT_AT")})
 public class CrossTenantAuditRecord {
 
     /** The longest detail kept - the column's length. */
