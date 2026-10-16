@@ -43,6 +43,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import jakarta.annotation.PreDestroy;
 import jakarta.jms.Connection;
 import jakarta.jms.Destination;
 import jakarta.jms.JMSException;
@@ -407,6 +408,18 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
         while ((connection = lostConnections.poll()) != null) {
             closeQuietly("lost connection", connection);
         }
+    }
+
+    /**
+     * Close every connection on shutdown, the lost ones included: no pass comes after it to close them,
+     * and a connection left open keeps its executor thread, which holds this consumer and through it
+     * the whole application context (#7868).
+     */
+    @PreDestroy
+    synchronized void closeConnections() {
+        registrations.forEach((fqn, registration) -> closeAll(fqn, registration.openConnections()));
+        registrations.clear();
+        closeLost();
     }
 
     private void markIncomplete() {
