@@ -137,6 +137,24 @@ public final class PermissionSupport {
             return roles;
         }
 
+        /**
+         * The write gate of an entity as every generated surface checks it: the roles a {@code can:} token
+         * authors for the entity (or, for a composition child without its own, for its composition root),
+         * else the convention role {@code <project>.<root>.<Entity>FullAccess} - and the deployment's extra
+         * write roles after either. The entity's REST controller and anything else that writes its rows on
+         * a user's behalf (a file import's upload) must agree on it.
+         *
+         * @param projectName the project the convention role is prefixed with
+         * @param rolePerspective the entity's composition root (the entity itself when it is one)
+         * @param entity the entity's declared name
+         * @return the comma-separated write roles
+         */
+        public String writeGate(String projectName, String rolePerspective, String entity) {
+            String gateName = covers(entity) ? entity : rolePerspective;
+            String authored = covers(gateName) ? writeRoles(gateName) : null;
+            return appendWrite(authored != null ? authored : projectName + "." + rolePerspective + "." + entity + "FullAccess");
+        }
+
         private static List<String> append(Collection<String> roles, List<String> extras) {
             Set<String> gate = new LinkedHashSet<>(roles);
             gate.addAll(extras);
