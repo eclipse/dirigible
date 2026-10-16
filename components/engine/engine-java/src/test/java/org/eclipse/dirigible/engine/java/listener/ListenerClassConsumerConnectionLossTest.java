@@ -264,6 +264,24 @@ class ListenerClassConsumerConnectionLossTest {
         assertEquals(afterRepublish, opened.size(), "nothing was subscribed again");
     }
 
+    /**
+     * No pass follows the shutdown, so it closes what is open and what was lost: a connection left open
+     * keeps its executor thread, and that thread the whole application context (#7868).
+     */
+    @Test
+    void theShutdownClosesEveryConnectionIncludingTheLostOnes() throws Exception {
+        load(EventsHandler.class);
+        load(OrdersHandler.class);
+        Opened lost = openedIn("acme");
+        lose(lost);
+
+        consumer.closeConnections();
+
+        for (Opened connection : opened) {
+            verify(connection.connection(), times(1)).close();
+        }
+    }
+
     private Opened openedIn(String tenantId) {
         return opened.stream()
                      .filter(candidate -> tenantId.equals(candidate.tenantId()))

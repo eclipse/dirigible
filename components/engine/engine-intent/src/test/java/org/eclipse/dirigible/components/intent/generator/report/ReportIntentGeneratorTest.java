@@ -761,7 +761,7 @@ class ReportIntentGeneratorTest {
                     account: code
                 """));
         assertTrue(error.getMessage()
-                        .contains("declares account/lines but is not kind: statement"),
+                        .contains("declares account/lines/cashAccounts but is not kind: statement"),
                 error.getMessage());
     }
 

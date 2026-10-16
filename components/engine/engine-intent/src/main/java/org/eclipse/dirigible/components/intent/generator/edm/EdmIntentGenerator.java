@@ -32,6 +32,7 @@ import com.google.gson.GsonBuilder;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.intent.LoggedValue;
 import org.eclipse.dirigible.components.intent.generator.ExportSupport;
+import org.eclipse.dirigible.components.intent.generator.ImportSupport;
 import org.eclipse.dirigible.components.intent.generator.IntentEntities;
 import org.eclipse.dirigible.components.intent.generator.IntentGenerationContext;
 import org.eclipse.dirigible.components.intent.generator.CheckSupport;
@@ -236,6 +237,7 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
         // which nothing else in the intent mentions. Every gate, either kind, also admits the roles the
         // project's .settings append for the deployment (access.extraRoles).
         PermissionSupport.Gates gates = PermissionSupport.gates(model, settings);
+        Set<String> importTargets = ImportSupport.targets(model);
         int perspectiveOrder = 1;
 
         for (EntityIntent entity : entities) {
@@ -463,6 +465,12 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
             // whole trail - which is what a regulated domain has to be able to answer.
             if (entity.isHistorized()) {
                 entityMap.put("history", "true");
+            }
+            // importLedger: a file import writes this entity's rows, and every attempt - imported,
+            // refused as a duplicate, rejected - is recorded in a sibling <TABLE>_IMPORTS table the
+            // schema template generates and the generated import appends to.
+            if (importTargets.contains(name)) {
+                entityMap.put("importLedger", "true");
             }
             // dropped (#7635): the columns of former fields and relations a publish removes, data
             // included. A field simply deleted from the intent keeps its column and its values; this
@@ -1250,20 +1258,18 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
         entity.put("perspectiveRole", "");
         entity.put("generateReport", "false");
         String conventionRead = projectName + "." + rolePerspective + "." + name + "ReadOnly";
-        String conventionWrite = projectName + "." + rolePerspective + "." + name + "FullAccess";
         // A composition child is managed under its master, so it is gated by the master's grants when
         // it carries none of its own - otherwise granting write on a document would not extend to its
         // line items and the generated app would refuse the very edits the grant describes.
         String gateName = gates.covers(name) ? name : rolePerspective;
         boolean covered = gates.covers(gateName);
         String authoredRead = covered ? gates.readRoles(gateName) : null;
-        String authoredWrite = covered ? gates.writeRoles(gateName) : null;
         entity.put("generateDefaultRoles", covered ? "false" : "true");
         // The deployment's extra roles (.settings access.extraRoles) are appended AFTER the gate's own
         // roles and never suppress them: a convention gate keeps its roles declared (the template layer
         // declares a gate's first role), so assignments made in the Security perspective keep working.
         entity.put("roleRead", gates.appendRead(authoredRead != null ? authoredRead : conventionRead));
-        entity.put("roleWrite", gates.appendWrite(authoredWrite != null ? authoredWrite : conventionWrite));
+        entity.put("roleWrite", gates.writeGate(projectName, rolePerspective, name));
         return entity;
     }
 

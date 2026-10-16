@@ -123,6 +123,13 @@ export function getTemplate(parameters) {
                 collection: "inboundFiles"
             },
             {
+                location: "/template-application-events-java/events/Import.java.template",
+                action: "generate",
+                rename: "gen/events/{{javaGenFolderName}}/{{className}}Import.java",
+                engine: "velocity",
+                collection: "imports"
+            },
+            {
                 location: "/template-application-events-java/events/Outbound.java.template",
                 action: "generate",
                 rename: "gen/events/{{javaGenFolderName}}/{{className}}Publisher.java",

@@ -2888,6 +2888,44 @@ a cycle. Restrict to posted entries with a `filter`, exactly as for a balance re
 layout stays a hand-authored `.print` template over that result — the platform's standing contract
 for statutory form.
 
+**The cash-flow statement — `cashAccounts:`.** A direct-method cash-flow statement classifies cash
+movements by their *counter-side*: receipts from customers are the credits to the receivable
+accounts in entries that debit cash, payments to suppliers the debits to the payable accounts in
+entries that credit cash. Name the cash accounts with `cashAccounts:` (the same selector grammar as
+`accounts`) and the statement switches to the cash basis, with the same `lines:` / `sum:` / `less:`:
+
+```yaml
+reports:
+  - name: CashFlow
+    kind: statement
+    source: JournalEntryItem
+    date: journalEntry.entryDate          # must go through the entry relation - see below
+    debit: debit
+    credit: credit
+    account: account.code
+    cashAccounts: "50*"                   # the cash and bank accounts
+    filter: "journalEntry.status == 2"
+    lines:
+      - { code: A.1, label: Receipts from customers, accounts: "41*", measure: periodCredit }
+      - { code: A.2, label: Payments to suppliers,   accounts: "40*", measure: periodDebit }
+      - { code: A,   label: Operating activities,    sum: [A.1], less: [A.2] }
+      - { code: B.1, label: Purchases of equipment,  accounts: "20*", measure: periodDebit }
+      - { code: B,   label: Investing activities,    less: [B.1] }
+      - { code: C.1, label: Borrowings,              accounts: "15*", measure: periodCredit }
+      - { code: C,   label: Financing activities,    sum: [C.1] }
+      - { code: N,   label: Net cash flow,           sum: [A, B, C] }
+```
+
+On the cash basis a line's accounts are the **counter-accounts**: `periodCredit` is the cash received
+from them, `periodDebit` the cash paid to them. An entry whose cash covers only part of its counter
+side is spread over it by amount (100 cash against 75 receivable and 25 sales gives the customer 75
+and sales 25), so a complete statement's sections add up exactly to the change in the cash accounts'
+balance over the window. A transfer between two cash accounts is no cash flow, and an entry that
+touches no cash account is not read at all. **Rules:** only the four `period*` measures apply (a cash
+flow is a movement within the window); `date` must be a `<relation>.<field>` path over the source's
+relation to its journal entry, because the cash an entry moved is a fact about the entry; and the
+entries must balance (debits = credits), which is what makes the sections reconcile.
+
 #### reports[].chart - render as a chart
 
 Add `chart:` to render the report page as a chart instead of a table (the page keeps a Table/Chart
@@ -4073,6 +4111,62 @@ inbound:
   child of `create:` (an arrival creates only rows it owns), a child declared in another model, and
   two collections filling the same child relation.
 
+### imports - a user uploads a file of records (bank statement, CSV)
+
+**Use when:** a person (or a job) brings a **file** whose records become rows: a bank statement to
+reconcile, a price list, a CSV export of another system. `inbound:` is for a JSON record another
+system sends; `imports:` is for a file in a fixed format with locale, encoding and duplicate rules.
+
+```yaml
+imports:
+  - name: bankCsv
+    into: StatementLine            # the entity whose rows the file becomes
+    format: csv                    # csv | mt940 | camt053
+    encoding: windows-1251         # csv / mt940; default UTF-8 (camt053 is XML and declares its own)
+    csv:                           # csv only; every key optional
+      separator: ";"               # default ","
+      decimal: ","                 # default "."
+      grouping: "."                # default none - "1.234,56" needs it
+      dateFormat: dd.MM.yyyy       # default yyyy-MM-dd
+      skipLines: 1                 # lines before the header (a bank's preamble)
+      # header: false              # columns are then named by 1-based position: map: { amount: 4 }
+    map:                           # <entity field>: <source>
+      statementId: _file           # _file = the uploaded file's name, _line = the record's position
+      lineNumber:  _line
+      bookedOn:    Дата            # csv: a column of the header
+      amount:      Сума
+      details:     Основание
+    duplicateKey: [statementId, lineNumber]
+  - name: swift
+    into: StatementLine
+    format: mt940
+    map: { statementId: statementId, lineNumber: lineNumber, bookedOn: valueDate, amount: amount, details: details }
+    duplicateKey: [statementId, lineNumber]
+```
+
+An `mt940` / `camt053` file is read into one record per statement line (`:61:` / `Ntry`) with these
+keys - map from them: `statementId`, `sequence`, `account`, `currency`, `lineNumber` (counts from 1 in
+each statement), `valueDate`, `bookingDate`, `mark` (`C`/`D`), `amount` (signed: a debit is negative),
+`transactionType`, `reference`, `bankReference`, `details` (`:86:` / the remittance text);
+`mt940` adds `supplementary`, `camt053` adds `counterpartyName` and `counterpartyAccount`.
+
+Each import generates `gen/events/<module>/<Name>Import.java`: an **upload** endpoint (`POST
+.../<Name>Import/upload`, a multipart file or the raw body with `?fileName=`), gated by the entity's
+write role, and a bean method `importFile(fileName, bytes)` a job can call. A file is imported **whole
+or not at all**: an unreadable value answers 400, and a record repeating the `duplicateKey` of a row
+already imported (or of another record of the file) answers 409 - so re-uploading a statement saves
+nothing. Every attempt is recorded in the entity's `<TABLE>_IMPORTS` ledger (file name, checksum,
+records, status, who, when). After the rows are committed, every `@Component` implementing
+`<Name>Import.Hook` in `custom/` is called with them - that is where matching rules go (a hook is
+code, not intent; mention it as a boundary when the requirement asks for matching).
+
+**Rules:** unique name; `into` is a local entity that is not a composition child, extends nothing and
+has no required to-one relation (an import fills fields, never relations); `map` names fields only,
+never the primary key, and must cover every required field without a default; a `csv` source without
+a header is a 1-based column number; an `mt940`/`camt053` source is one of the keys above (or
+`_line`/`_file`); `duplicateKey` lists mapped fields. Declare a `unique:` over the same fields too
+when two concurrent uploads of one statement must be impossible - the check runs before the write.
+
 ### outbound - the app raises an event for another system
 
 **Use when:** something **outside the app must be told** that a record happened, and it listens on a
@@ -4615,6 +4709,8 @@ or a seeded name.
 | notify `outcome` | a `string` field (length >= 64) of the record the message is about - a fan-out's ROW - stamped `sent` / `failed: <reason>`; a failure publishes `<Entity>-notifyFailed` |
 | schedule `where` `op` | `eq`, `ne`, `gt`, `ge`, `lt`, `le`, `like` |
 | integration `method` | `GET`, `POST`, `PUT`, `PATCH`, `DELETE` |
+| import `format` | `csv`, `mt940`, `camt053` |
+| import `map` source | `csv`: a header column (or a 1-based position with `header: false`); `mt940`/`camt053`: `statementId`, `sequence`, `account`, `currency`, `lineNumber`, `valueDate`, `bookingDate`, `mark`, `amount`, `transactionType`, `reference`, `bankReference`, `details` (+ `supplementary` for mt940; `counterpartyName`, `counterpartyAccount` for camt053); any format: `_line`, `_file` |
 | entity `function` | `Document`, `DocumentItem`, `Master`, `Detail`, `List`, `Setting`, `Calendar` (reserved-and-rejected: `Board`, `Gantt`, `Timeline`) |
 | field `function` | `DocumentTitle` |
 | relation `function` | `EntityStatus` |
@@ -4672,6 +4768,7 @@ or a seeded name.
 - "let an external system create X" -> **inbound** (`path` for HTTP, `source: { queue | topic }` for a message, `source: { folder, cron }` for dropped files)
 - "the arriving payload is an envelope, not the record" -> **inbound `map:`** (+ `lookup:` to turn a business key into a relation, and `accept:` to ignore the message types this app does not understand)
 - "the arriving payload carries an array - an order with its lines, a request with its items - and each element is a child row" -> **an inbound `map:` collection** (`<oneToMany>: { from, max?, map }` onto a composition child; one arrival = one record + its children in one transaction = one process instance)
+- "upload a bank statement / a CSV / an MT940 or camt.053 file and turn its lines into records" -> **imports** (`format`, `encoding`, `csv:` locale rules, `map:`, `duplicateKey:` so a re-upload is refused; matching rules after the import are a `custom/` `<Name>Import.Hook`)
 - "keep a running count of children on the parent" -> **rollups**
 - "expand a from-to span into day/week/month child rows / loan installments / vacation day items" -> **expansions**
 - "compute days between two dates on the form (working days / months)" -> **calculated field with a date function**

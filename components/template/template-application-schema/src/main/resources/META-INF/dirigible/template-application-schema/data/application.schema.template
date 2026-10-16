@@ -73,6 +73,67 @@
             },
 #end
 #end
+## An entity a file import writes into gets a sibling <TABLE>_IMPORTS ledger: one row per import
+## attempt - imported, refused as a duplicate or rejected - with the file's name and checksum, how many
+## records it saved, why it was refused, and who imported it when. The generated import is the only
+## writer. Emitted before the base tables so each entry is always comma-terminated.
+#foreach ($model in $models)
+#if($model.importLedger == "true" && $model.type != "REPORT" && $model.type != "FILTER" && $model.type != "PROJECTION")
+            {
+                "name": "${tablePrefix}${model.dataName}_IMPORTS",
+                "type": "TABLE",
+                "columns": [
+                    {
+                        "type": "INTEGER",
+                        "primaryKey": true,
+                        "identity": true,
+                        "name": "Id"
+                    },
+                    {
+                        "type": "VARCHAR",
+                        "length": 128,
+                        "name": "ImportName"
+                    },
+                    {
+                        "type": "VARCHAR",
+                        "length": 255,
+                        "nullable": true,
+                        "name": "FileName"
+                    },
+                    {
+                        "type": "VARCHAR",
+                        "length": 64,
+                        "name": "Checksum"
+                    },
+                    {
+                        "type": "INTEGER",
+                        "name": "Records"
+                    },
+                    {
+                        "type": "VARCHAR",
+                        "length": 16,
+                        "name": "Status"
+                    },
+                    {
+                        "type": "VARCHAR",
+                        "length": 2000,
+                        "nullable": true,
+                        "name": "Message"
+                    },
+                    {
+                        "type": "TIMESTAMP",
+                        "name": "ImportedAt"
+                    },
+                    {
+                        "type": "VARCHAR",
+                        "length": 255,
+                        "nullable": true,
+                        "name": "ImportedBy"
+                    }
+                ]
+            },
+#end
+#end
 ## A multilingual entity gets a sibling <TABLE>_LANG translation table (the codbex convention):
 ## GUID pk, Id -> the base row, one column per translatable (string-typed, non-PK, non-FK,
 ## non-calculated, non-audit, not translatable=false) property NAMED AFTER THE PROPERTY (that is what the runtime

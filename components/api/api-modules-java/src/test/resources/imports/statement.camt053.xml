@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.053.001.08">
+  <BkToCstmrStmt>
+    <GrpHdr><MsgId>MSG-1</MsgId><CreDtTm>2026-04-01T08:00:00</CreDtTm></GrpHdr>
+    <Stmt>
+      <Id>CAMT-2026-03</Id>
+      <ElctrncSeqNb>42</ElctrncSeqNb>
+      <Acct><Id><IBAN>BG80BNBG96611020345678</IBAN></Id><Ccy>BGN</Ccy></Acct>
+      <Ntry>
+        <NtryRef>E-1</NtryRef>
+        <Amt Ccy="BGN">1234.56</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Sts><Cd>BOOK</Cd></Sts>
+        <BookgDt><Dt>2026-03-15</Dt></BookgDt>
+        <ValDt><Dt>2026-03-15</Dt></ValDt>
+        <AcctSvcrRef>BANK-REF-1</AcctSvcrRef>
+        <BkTxCd><Domn><Cd>PMNT</Cd><Fmly><Cd>RCDT</Cd><SubFmlyCd>ESCT</SubFmlyCd></Fmly></Domn></BkTxCd>
+        <NtryDtls><TxDtls>
+          <Refs><EndToEndId>INV-1001</EndToEndId></Refs>
+          <RltdPties>
+            <Dbtr><Pty><Nm>ACME OOD</Nm></Pty></Dbtr>
+            <DbtrAcct><Id><IBAN>BG18RZBB91550123456789</IBAN></Id></DbtrAcct>
+          </RltdPties>
+          <RmtInf><Ustrd>Плащане по фактура 1001</Ustrd></RmtInf>
+        </TxDtls></NtryDtls>
+      </Ntry>
+      <Ntry>
+        <Amt Ccy="BGN">12.50</Amt>
+        <CdtDbtInd>DBIT</CdtDbtInd>
+        <Sts><Cd>BOOK</Cd></Sts>
+        <BookgDt><DtTm>2026-03-16T10:15:00+02:00</DtTm></BookgDt>
+        <ValDt><Dt>2026-03-16</Dt></ValDt>
+        <BkTxCd><Prtry><Cd>FEE</Cd></Prtry></BkTxCd>
+        <NtryDtls><TxDtls>
+          <Refs><EndToEndId>NOTPROVIDED</EndToEndId></Refs>
+          <RltdPties><Cdtr><Nm>Bank</Nm></Cdtr></RltdPties>
+        </TxDtls></NtryDtls>
+        <AddtlNtryInf>Такса обслужване</AddtlNtryInf>
+      </Ntry>
+    </Stmt>
+  </BkToCstmrStmt>
+</Document>

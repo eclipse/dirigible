@@ -51,7 +51,7 @@ class GlueGenerator {
     /** The names of the collections this generator handles. */
     private static final List<String> COLLECTIONS = List.of("triggers", "resolvers", "fieldLoaders", "assignees", "timerLoaders", "waits",
             "aborts", "deleteAborts", "setters", "writers", "notifications", "schedules", "integrations", "inbound", "inboundMessages",
-            "inboundFiles", "outbound", "exports", "stepEvents", "rollups", "expansions", "expansionCleanups", "settlements",
+            "inboundFiles", "imports", "outbound", "exports", "stepEvents", "rollups", "expansions", "expansionCleanups", "settlements",
             "settlementListeners", "settlementCleanups", "generates", "generateEvents", "generateReopens", "transitions", "sends", "posts",
             "aggregates", "postings", "postingReopens", "printFeeders", "snapshots", "numbering", "resolves");
 
@@ -107,6 +107,7 @@ class GlueGenerator {
             case "inbound" -> each(collection, source, content, model, parameters, GlueGenerator::bindInbound);
             case "inboundMessages" -> each(collection, source, content, model, parameters, GlueGenerator::bindInboundMessage);
             case "inboundFiles" -> each(collection, source, content, model, parameters, GlueGenerator::bindInboundFile);
+            case "imports" -> each(collection, source, content, model, parameters, GlueGenerator::bindImport);
             case "outbound" -> each(collection, source, content, model, parameters, GlueGenerator::bindOutbound);
             case "exports" -> each(collection, source, content, model, parameters, GlueGenerator::bindExport);
             case "stepEvents" -> each(collection, source, content, model, parameters, GlueGenerator::bindStepEvent);
@@ -699,6 +700,29 @@ class GlueGenerator {
             case '\\' -> "\\\\";
             default -> String.valueOf(character);
         };
+    }
+
+    /**
+     * Binds a file import - the controller that reads an uploaded file into the rows of an entity, and
+     * the bean method a job calls to import a file it fetched. Its ledger is the entity's {@code
+     *
+    <TABLE>
+     * _IMPORTS} sibling, so the table name carries the deployment's table prefix exactly as the schema
+     * template's does.
+     *
+     * @param item the descriptor
+     * @param context the template context
+     * @param parameters the generation parameters
+     */
+    private static void bindImport(Map<String, Object> item, Map<String, Object> context, Map<String, Object> parameters) {
+        copy(context, item, "name", "nameLiteral", "className", "entity", "perspective", "format", "readerExpression", "valuesExpression",
+                "roles", "mapFields", "hasDuplicateKey", "duplicateKey");
+        context.put("javaPerspective", sanitize(item, "perspective"));
+        String tablePrefix = strOr(parameters, "tablePrefix", "");
+        if (!tablePrefix.isEmpty() && !tablePrefix.endsWith("_")) {
+            tablePrefix = tablePrefix + "_";
+        }
+        context.put("table", tablePrefix + str(item, "table"));
     }
 
     /**
