@@ -523,18 +523,6 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
         }
     }
 
-    /**
-     * Close every connection on shutdown, the lost ones included: no pass comes after it to close them,
-     * and a connection left open keeps its executor thread, which holds this consumer and through it
-     * the whole application context (#7868).
-     */
-    @PreDestroy
-    synchronized void closeConnections() {
-        registrations.forEach((fqn, registration) -> closeAll(fqn, registration.openConnections()));
-        registrations.clear();
-        closeLost();
-    }
-
     private void markIncomplete() {
         subscriptionsIncomplete.set(true);
     }
@@ -736,11 +724,13 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
     }
 
     /**
-     * Close every subscription and every shared connection when the context goes down. A clean close
-     * releases the client ids on the broker at once, so the instance replacing this one in a rolling
-     * deploy is not refused them until the broker gives up on a dead socket. The closing happens
-     * outside the monitor: a connection's exception listener takes it, and a close that waited for that
-     * listener while holding it would never return.
+     * Close every subscription and every shared connection when the context goes down, the lost ones
+     * included: no pass comes after it to close them, and a connection left open keeps its executor
+     * thread, which holds this consumer and through it the whole application context (#7868). A clean
+     * close also releases the client ids on the broker at once, so the instance replacing this one in a
+     * rolling deploy is not refused them until the broker gives up on a dead socket. The closing
+     * happens outside the monitor: a connection's exception listener takes it, and a close that waited
+     * for that listener while holding it would never return.
      */
     @PreDestroy
     void shutdown() {
