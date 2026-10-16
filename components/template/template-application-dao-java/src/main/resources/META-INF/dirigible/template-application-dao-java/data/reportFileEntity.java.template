@@ -196,7 +196,12 @@ public class ${name}Repository {
         parameters.add(parameter("language", "VARCHAR", language()));
 #end
 #foreach($parameter in $parameters)
+#if($parameter.type == "DATE" && $parameter.initial == "CURRENT_DATE")
+        // initial: CURRENT_DATE - the day the report is run, resolved per request.
+        parameters.add(parameter("${parameter.name}", "${parameter.type}", value(filter, "${parameter.name}", java.time.LocalDate.now().toString())));
+#else
         parameters.add(parameter("${parameter.name}", "${parameter.type}", value(filter, "${parameter.name}", "${parameter.initialJavaLiteral}")));
+#end
 #end
         return parameters;
     }

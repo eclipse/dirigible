@@ -465,6 +465,15 @@ a `required` text field is refused when it is blank after that trim - spaces alo
   `dimensions: ["ageing(due, [30, 60, 90])"]` with `measures: ["sum(balance)"]` is the standard receivables report.
   The field may be an own `date`/`timestamp` or a one-hop `relation.field`; thresholds must ascend and be positive.
   Prefer equal-digit thresholds - the bucket is a text label and sorts lexicographically.
+- `aging:` (on a report) - **aged receivables / payables**: one row per dimension (the counterparty), one
+  COLUMN per bucket of days past due, summing each open document's open amount as of a report date:
+  `aging: { due: due, amount: "total - paid", buckets: [30, 60, 90], date: issuedOn }` yields `Not Yet Due` /
+  `Overdue 0-30` / `Overdue 31-60` / `Overdue 61-90` / `Overdue 90+` and the `Open Amount` they add up to. A document
+  due after the as-of date (or with no due date) is `Not Yet Due`, never `0-30`; one due ON it is 0 days past due.
+  `amount` is a numeric field or numeric fields joined by `+`/`-` (a missing value reads as 0); fully settled documents
+  drop out. The report declares the date parameter `asOf` itself (rename it with `asOf: <name>`), defaulting to the day
+  the report is run - do not declare it under `parameters:`. The optional `date` (the document date) leaves out
+  documents issued after the as-of date. Prefer this over the `ageing(...)` dimension for an AR/AP ageing report.
 - `where` (on a user-picked to-one relation) - **a static option filter**: a single
   `<target property>: <literal>` pair that permanently narrows the dropdown's option list to matching
   target rows. Unlike `dependsOn` (which reacts to a sibling selection) the condition is constant.
