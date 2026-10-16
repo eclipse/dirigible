@@ -21,6 +21,30 @@ import java.time.Instant;
  * @param principal the principal name
  * @param email the email claim of the identity token, or null when the token carries none
  * @param at when
+ * @param previousTenantId the tenant the session had selected before, or null when this is the
+ *        first selection of the session - a switch between two tenants is told apart from a sign-in
+ *        by it
  */
-public record TenantEnteredEvent(String tenantId, String principal, String email, Instant at) {
+public record TenantEnteredEvent(String tenantId, String principal, String email, Instant at, String previousTenantId) {
+
+    /**
+     * A first selection of the session.
+     *
+     * @param tenantId the tenant entered
+     * @param principal the principal name
+     * @param email the email claim of the identity token, or null
+     * @param at when
+     */
+    public TenantEnteredEvent(String tenantId, String principal, String email, Instant at) {
+        this(tenantId, principal, email, at, null);
+    }
+
+    /**
+     * Whether the user moved here from another tenant without signing in again.
+     *
+     * @return true for a switch
+     */
+    public boolean isSwitch() {
+        return previousTenantId != null && !previousTenantId.equals(tenantId);
+    }
 }

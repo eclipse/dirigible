@@ -12093,6 +12093,185 @@
           }
         ]
       }
+    },
+    {
+      "changeSet": {
+        "id": "create-DIRIGIBLE_CROSS_TENANT_AUDIT",
+        "author": "dirigible",
+        "preConditions": [
+          {
+            "onFail": "MARK_RAN"
+          },
+          {
+            "not": [
+              {
+                "tableExists": {
+                  "tableName": "DIRIGIBLE_CROSS_TENANT_AUDIT"
+                }
+              }
+            ]
+          }
+        ],
+        "changes": [
+          {
+            "createTable": {
+              "columns": [
+                {
+                  "column": {
+                    "autoIncrement": true,
+                    "name": "CTAUDIT_ID",
+                    "type": "BIGINT",
+                    "constraints": {
+                      "nullable": false,
+                      "primaryKey": true,
+                      "primaryKeyName": "PK_DIRIGIBLE_CROSS_TENANT_AUDIT"
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "CTAUDIT_AT",
+                    "type": "TIMESTAMP",
+                    "constraints": {
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "CTAUDIT_PRINCIPAL",
+                    "type": "VARCHAR(320)",
+                    "constraints": {
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "CTAUDIT_ACTION",
+                    "type": "VARCHAR(32)",
+                    "constraints": {
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "CTAUDIT_TENANT_ID",
+                    "type": "VARCHAR(255)",
+                    "constraints": {
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "CTAUDIT_FROM_TENANT_ID",
+                    "type": "VARCHAR(255)"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "CTAUDIT_OPERATION",
+                    "type": "VARCHAR(255)"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "CTAUDIT_DETAIL",
+                    "type": "VARCHAR(1024)"
+                  }
+                }
+              ],
+              "tableName": "DIRIGIBLE_CROSS_TENANT_AUDIT"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "IX_DIRIGIBLE_CROSS_TENANT_AUDIT_TENANT",
+        "author": "dirigible",
+        "preConditions": [
+          {
+            "onFail": "MARK_RAN"
+          },
+          {
+            "not": [
+              {
+                "indexExists": {
+                  "indexName": "IX_DIRIGIBLE_CROSS_TENANT_AUDIT_TENANT",
+                  "tableName": "DIRIGIBLE_CROSS_TENANT_AUDIT"
+                }
+              }
+            ]
+          }
+        ],
+        "changes": [
+          {
+            "createIndex": {
+              "associatedWith": "",
+              "columns": [
+                {
+                  "column": {
+                    "name": "CTAUDIT_TENANT_ID"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "CTAUDIT_AT"
+                  }
+                }
+              ],
+              "indexName": "IX_DIRIGIBLE_CROSS_TENANT_AUDIT_TENANT",
+              "tableName": "DIRIGIBLE_CROSS_TENANT_AUDIT"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "IX_DIRIGIBLE_CROSS_TENANT_AUDIT_PRINCIPAL",
+        "author": "dirigible",
+        "preConditions": [
+          {
+            "onFail": "MARK_RAN"
+          },
+          {
+            "not": [
+              {
+                "indexExists": {
+                  "indexName": "IX_DIRIGIBLE_CROSS_TENANT_AUDIT_PRINCIPAL",
+                  "tableName": "DIRIGIBLE_CROSS_TENANT_AUDIT"
+                }
+              }
+            ]
+          }
+        ],
+        "changes": [
+          {
+            "createIndex": {
+              "associatedWith": "",
+              "columns": [
+                {
+                  "column": {
+                    "name": "CTAUDIT_PRINCIPAL"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "CTAUDIT_AT"
+                  }
+                }
+              ],
+              "indexName": "IX_DIRIGIBLE_CROSS_TENANT_AUDIT_PRINCIPAL",
+              "tableName": "DIRIGIBLE_CROSS_TENANT_AUDIT"
+            }
+          }
+        ]
+      }
     }
   ]
 }

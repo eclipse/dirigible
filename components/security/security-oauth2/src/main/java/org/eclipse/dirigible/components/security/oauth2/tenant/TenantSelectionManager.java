@@ -24,9 +24,11 @@ import org.eclipse.dirigible.components.base.util.AuthoritiesUtil;
 import org.eclipse.dirigible.components.tenants.domain.Tenant;
 import org.eclipse.dirigible.components.tenants.domain.TenantStatus;
 import org.eclipse.dirigible.components.tenants.service.TenantService;
+import org.eclipse.dirigible.components.tenants.tenant.TenantAccessRefusedEvent;
 import org.eclipse.dirigible.components.tenants.tenant.TenantEnteredEvent;
 import org.eclipse.dirigible.components.tenants.tenant.TenantImpl;
 import org.eclipse.dirigible.components.tenants.tenant.TenantSelectionConstants;
+import org.eclipse.dirigible.components.tenants.tenant.TenantSelectionRevokedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -175,6 +177,7 @@ public class TenantSelectionManager {
         }
         UserTenantAssignments assignments = assignmentsOf(authentication);
         enterableTenant(assignments, tenantId, authentication.getName());
+        String previousTenantId = selectedTenantId(request);
         request.getSession()
                .setAttribute(TenantSelectionConstants.SELECTED_TENANT_ID_SESSION_ATTRIBUTE, tenantId);
         Set<String> roles = rolesOf(assignments, tenantId);
@@ -185,7 +188,7 @@ public class TenantSelectionManager {
         // is where a sign-in into a tenant is announced. A listener's failure must not undo the selection,
         // which is why listeners catch their own.
         String email = oauth2Authentication.getPrincipal() instanceof OidcUser oidcUser ? oidcUser.getEmail() : null;
-        events.publishEvent(new TenantEnteredEvent(tenantId, authentication.getName(), email, Instant.now()));
+        events.publishEvent(new TenantEnteredEvent(tenantId, authentication.getName(), email, Instant.now(), previousTenantId));
         return roles;
     }
 
@@ -229,6 +232,10 @@ public class TenantSelectionManager {
     private Tenant enterableTenant(UserTenantAssignments assignments, String tenantId, String user) {
         if (assignments.rolesFor(tenantId)
                        .isEmpty()) {
+            if (tenantId != null && user != null) {
+                events.publishEvent(
+                        new TenantAccessRefusedEvent(tenantId, user, TenantSelectionException.Reason.NOT_A_MEMBER.name(), Instant.now()));
+            }
             throw new TenantSelectionException(TenantSelectionException.Reason.NOT_A_MEMBER, tenantId,
                     "User [" + user + "] is not assigned to tenant [" + tenantId + "] of this application");
         }
@@ -255,18 +262,24 @@ public class TenantSelectionManager {
      * reflected in the very next token. A selection that is no longer granted is dropped, so the user
      * is asked to pick again instead of keeping roles they lost.
      *
+     * <p>
+     * The tenant scope of the current request was opened from the selection before this ran, so a
+     * caller must not serve the request in it once the selection is dropped - see the return value.
+     *
      * @param request the request
      * @param response the response
+     * @return false when the selection was dropped, so the current request must not continue in the
+     *         tenant scope it was opened in; true otherwise
      */
-    public void ensureConsistent(HttpServletRequest request, HttpServletResponse response) {
+    public boolean ensureConsistent(HttpServletRequest request, HttpServletResponse response) {
         Authentication authentication = SecurityContextHolder.getContext()
                                                              .getAuthentication();
         if (!(authentication instanceof OAuth2AuthenticationToken oauth2Authentication)) {
-            return;
+            return true;
         }
         String selectedTenantId = selectedTenantId(request);
         if (selectedTenantId == null) {
-            return;
+            return true;
         }
         UserTenantAssignments assignments = assignmentsOf(authentication);
         if (assignments.rolesFor(selectedTenantId)
@@ -276,7 +289,8 @@ public class TenantSelectionManager {
             request.getSession()
                    .removeAttribute(TenantSelectionConstants.SELECTED_TENANT_ID_SESSION_ATTRIBUTE);
             reauthenticate(oauth2Authentication, assignments.globalRoles(), request, response);
-            return;
+            events.publishEvent(new TenantSelectionRevokedEvent(selectedTenantId, authentication.getName(), Instant.now()));
+            return false;
         }
         Set<String> expectedRoles = rolesOf(assignments, selectedTenantId);
         Set<String> currentRoles = new LinkedHashSet<>(AuthoritiesUtil.toRoleNames(authentication.getAuthorities()));
@@ -285,6 +299,7 @@ public class TenantSelectionManager {
                     authentication.getName(), expectedRoles, currentRoles);
             reauthenticate(oauth2Authentication, expectedRoles, request, response);
         }
+        return true;
     }
 
     private Set<String> rolesOf(UserTenantAssignments assignments, String tenantId) {
