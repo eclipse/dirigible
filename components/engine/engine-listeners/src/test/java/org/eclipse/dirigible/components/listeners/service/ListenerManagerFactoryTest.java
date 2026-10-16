@@ -10,9 +10,9 @@
 package org.eclipse.dirigible.components.listeners.service;
 
 import org.eclipse.dirigible.components.listeners.config.ActiveMQConnectionArtifactsFactory;
+import org.eclipse.dirigible.components.listeners.config.ListenerConnectionMode;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -23,10 +23,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @ExtendWith(MockitoExtension.class)
 class ListenerManagerFactoryTest {
-    /** The factory. */
-    @InjectMocks
-    private ListenerManagerFactory factory;
-
     /** The asynchronous message listener factory. */
     @Mock
     private AsynchronousMessageListenerFactory asynchronousMessageListenerFactory;
@@ -34,6 +30,10 @@ class ListenerManagerFactoryTest {
     /** The connection artifacts factory. */
     @Mock
     private ActiveMQConnectionArtifactsFactory connectionArtifactsFactory;
+
+    /** The connection the shared mode rides. */
+    @Mock
+    private SharedListenerConnection sharedConnection;
 
     /** The listener. */
     @Mock
@@ -44,6 +44,8 @@ class ListenerManagerFactoryTest {
      */
     @Test
     void testCreate() {
+        ListenerManagerFactory factory = new ListenerManagerFactory(connectionArtifactsFactory, asynchronousMessageListenerFactory,
+                ListenerConnectionMode.SHARED, sharedConnection);
         ListenerManager manager = factory.create(listenerDescriptor);
 
         assertThat(manager).isNotNull();

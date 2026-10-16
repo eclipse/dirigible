@@ -29,6 +29,7 @@ import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.base.tenant.TenantPostProvisioningStep;
 import org.eclipse.dirigible.components.configurations.tenant.TenantConfigurationService;
 import org.eclipse.dirigible.components.listeners.config.ActiveMQConnectionArtifactsFactory;
+import org.eclipse.dirigible.components.listeners.config.ListenerConnectionMode;
 import org.eclipse.dirigible.components.listeners.service.DestinationNameManager;
 import org.eclipse.dirigible.components.listeners.service.TenantPropertyManager;
 import org.eclipse.dirigible.engine.java.component.ComponentContainer;
@@ -43,6 +44,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import jakarta.annotation.PreDestroy;
 import jakarta.jms.Connection;
 import jakarta.jms.Destination;
 import jakarta.jms.JMSException;
@@ -64,7 +66,7 @@ import jakarta.jms.Topic;
  * bean may host several.</li>
  * </ul>
  * The bean is built (with constructor + field injection) by the {@link ComponentContainer}; this
- * consumer fetches it and opens a JMS connection per subscription, tearing them down on unload.
+ * consumer fetches it and opens its subscriptions on the broker, tearing them down on unload.
  *
  * <p>
  * <b>One subscription per provisioned tenant.</b> A destination name a client class declares is
@@ -113,6 +115,18 @@ import jakarta.jms.Topic;
  * listener hands its scope (the tenant, or the global destinations) back: the scope's connections
  * leave the registration, the next pass closes them and subscribes the scope again, and the durable
  * subscription keeps what was published to it in between.
+ *
+ * <p>
+ * <b>The subscriptions of a scope share one connection</b> (#7875,
+ * {@link ListenerConnectionMode#SHARED}, the default). A connection is what the broker meters - a
+ * generated application suite declares well over a hundred handlers, and one connection per
+ * subscription per tenant exceeded a small broker's quota with a single tenant. So each scope - a
+ * tenant, or the global destinations - opens one connection carrying a client id of its own
+ * ({@link #sharedClientId}), and every subscription is a session on it: the durable subscriptions
+ * of a tenant's handlers are told apart by their subscription names, which still derive from the
+ * handler and the destination. The loss of that connection is the loss of its whole scope, which is
+ * exactly the unit #7851 already re-subscribes. In the {@link ListenerConnectionMode#PER_LISTENER}
+ * mode every subscription keeps a connection of its own, the shape before #7875.
  */
 @Component
 @Order(500)
@@ -123,6 +137,11 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
     /** Width of the broker's client-id and durable-subscription-name columns. */
     private static final int MAX_SUBSCRIPTION_ID_LENGTH = 200;
 
+    /** The failure-report label of a scope's shared connection; no class name starts with it. */
+    private static final String SHARED_CONNECTION_LABEL = "<shared connection>";
+
+    private static final String GLOBAL_SCOPE = "all tenants (global destination)";
+
     private final ComponentContainer componentContainer;
     private final ActiveMQConnectionArtifactsFactory connectionFactory;
     private final TenantContext tenantContext;
@@ -130,9 +149,16 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
     private final Tenant defaultTenant;
     private final TenantConfigurationService tenantConfigurationService;
     private final DestinationNameManager destinationNameManager;
+    private final ListenerConnectionMode connectionMode;
 
-    /** fqn → what the loaded class declared, and the connections open for it per tenant. */
+    /** fqn → what the loaded class declared, and the subscriptions open for it per tenant. */
     private final ConcurrentMap<String, Registration> registrations = new ConcurrentHashMap<>();
+
+    /**
+     * client id → the connection every subscription of that scope rides, in the shared mode. Guarded by
+     * this consumer's monitor, as the registrations' open handles are.
+     */
+    private final Map<String, Connection> sharedConnections = new HashMap<>();
 
     /** Set while anything this consumer declared is not subscribed; drives {@link #reconcile()}. */
     private final AtomicBoolean subscriptionsIncomplete = new AtomicBoolean();
@@ -155,7 +181,8 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
     @Autowired
     public ListenerClassConsumer(ComponentContainer componentContainer, ActiveMQConnectionArtifactsFactory connectionFactory,
             TenantContext tenantContext, TenantPropertyManager tenantPropertyManager, @DefaultTenant Tenant defaultTenant,
-            TenantConfigurationService tenantConfigurationService, DestinationNameManager destinationNameManager) {
+            TenantConfigurationService tenantConfigurationService, DestinationNameManager destinationNameManager,
+            ListenerConnectionMode connectionMode) {
         this.componentContainer = componentContainer;
         this.connectionFactory = connectionFactory;
         this.tenantContext = tenantContext;
@@ -163,6 +190,7 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
         this.defaultTenant = defaultTenant;
         this.tenantConfigurationService = tenantConfigurationService;
         this.destinationNameManager = destinationNameManager;
+        this.connectionMode = connectionMode;
     }
 
     @Override
@@ -288,34 +316,9 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
      * Open this class's global subscriptions - once for the deployment, not once per tenant. Runs on
      * the loading thread, which has no tenant of its own, and needs none: a global destination resolves
      * to the same physical name everywhere.
-     *
-     * <p>
-     * All or nothing, and idempotent, for the same reason the per-tenant branch is: a retry must not be
-     * able to open a second consumer beside one that is already live.
      */
-    private synchronized void subscribeGlobal(String fqn, Registration registration) {
-        if (isSuperseded(fqn, registration) || registration.isGlobalSubscribed()) {
-            return;
-        }
-        List<Connection> opened = new ArrayList<>();
-        boolean complete = true;
-        for (Subscription subscription : registration.globalSubscriptions()) {
-            Connection connection =
-                    subscribe(subscription, "all tenants (global destination)", () -> connectionLost(fqn, registration, null));
-            if (connection == null) {
-                complete = false;
-            } else {
-                opened.add(connection);
-            }
-        }
-        if (complete) {
-            registration.globalSubscribed(opened);
-        } else {
-            // Leave the connections unrecorded before closing them, or a later teardown would close
-            // them a second time and openConnections() would report handles that are already gone.
-            closeAll(fqn, opened);
-            markIncomplete();
-        }
+    private void subscribeGlobal(String fqn, Registration registration) {
+        subscribeScope(fqn, registration, null);
     }
 
     /**
@@ -337,29 +340,107 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
     }
 
     /** Open one class's tenant-scoped subscriptions in the tenant whose context is currently active. */
-    private synchronized void subscribeTenant(String fqn, Registration registration, String tenantId) {
-        if (isSuperseded(fqn, registration) || registration.isSubscribed(tenantId)) {
+    private void subscribeTenant(String fqn, Registration registration, String tenantId) {
+        subscribeScope(fqn, registration, tenantId);
+    }
+
+    /**
+     * Open one class's subscriptions of one scope: a tenant's, or - for {@code null} - the global ones.
+     *
+     * <p>
+     * All or nothing, and idempotent: a retry must not be able to open a second consumer beside one
+     * that is already live, so the scope is recorded only once every subscription of it is open, and
+     * what did open in a failed attempt is closed again. In the shared mode the scope's connection is
+     * taken first; while the broker refuses it there is nothing to attempt per subscription, and the
+     * refusal is reported once for the scope rather than once per handler.
+     */
+    private synchronized void subscribeScope(String fqn, Registration registration, String tenantId) {
+        boolean global = tenantId == null;
+        if (isSuperseded(fqn, registration) || (global ? registration.isGlobalSubscribed() : registration.isSubscribed(tenantId))) {
             return;
         }
-        List<Connection> opened = new ArrayList<>();
-        boolean complete = true;
-        for (Subscription subscription : registration.tenantSubscriptions()) {
-            Connection connection = subscribe(subscription, "tenant [" + tenantId + "]", () -> connectionLost(fqn, registration, tenantId));
-            if (connection == null) {
-                complete = false;
-            } else {
-                opened.add(connection);
+        List<Subscription> subscriptions = global ? registration.globalSubscriptions() : registration.tenantSubscriptions();
+        if (subscriptions.isEmpty()) {
+            // Nothing to open in this scope - and so no reason to hold a connection for it.
+            registration.subscribed(tenantId, List.of());
+            return;
+        }
+        String scope = global ? GLOBAL_SCOPE : "tenant [" + tenantId + "]";
+        Connection shared = null;
+        if (connectionMode == ListenerConnectionMode.SHARED) {
+            shared = sharedConnection(tenantId, scope);
+            if (shared == null) {
+                markIncomplete();
+                return;
             }
         }
-        if (complete) {
-            registration.subscribed(tenantId, opened);
-        } else {
-            // All or nothing per tenant: leave the tenant unrecorded so the reconciliation timer
-            // retries it cleanly, and close what did open so that retry cannot end up with two
-            // consumers competing on the same destination.
+        List<AutoCloseable> opened = new ArrayList<>();
+        boolean complete = true;
+        for (Subscription subscription : subscriptions) {
+            AutoCloseable handle = shared == null ? subscribe(subscription, scope, () -> connectionLost(fqn, registration, tenantId))
+                    : subscribeOn(shared, subscription, scope);
+            if (handle == null) {
+                complete = false;
+            } else {
+                opened.add(handle);
+            }
+        }
+        if (!complete) {
+            // Leave the handles unrecorded before closing them, or a later teardown would close them a
+            // second time and openHandles() would report what is already gone.
             closeAll(fqn, opened);
             markIncomplete();
+        } else if (global) {
+            registration.globalSubscribed(opened);
+        } else {
+            registration.subscribed(tenantId, opened);
         }
+    }
+
+    /**
+     * The connection a scope's subscriptions share, opened on first use (shared mode). Its client id is
+     * the scope's, so the loss of the connection reaches one exception listener, which hands the whole
+     * scope back for the next pass to subscribe again - the connection is not reconnected by its
+     * transport, as no client-id connection is (#7851).
+     *
+     * @param tenantId the tenant, or {@code null} for the global destinations
+     * @param scope what the connection covers, for the log
+     * @return the connection, or {@code null} if the broker refused it
+     */
+    private Connection sharedConnection(String tenantId, String scope) {
+        String clientId = sharedClientId(tenantId);
+        Connection connection = sharedConnections.get(clientId);
+        if (connection != null) {
+            return connection;
+        }
+        try {
+            connection = connectionFactory.createConnection(ex -> {
+                LOGGER.error("[java-listener] JMS error on the shared connection [{}] for {}: {}", clientId, scope, ex.getMessage(), ex);
+                sharedConnectionLost(clientId, tenantId, scope);
+            }, clientId);
+        } catch (RuntimeException e) {
+            reportFailure(SHARED_CONNECTION_LABEL, scope, e);
+            return null;
+        }
+        sharedConnections.put(clientId, connection);
+        reportedFailures.remove(failureKey(SHARED_CONNECTION_LABEL, scope));
+        LOGGER.info("Java listeners share the broker connection [{}] for {}.", clientId, scope);
+        return connection;
+    }
+
+    /**
+     * The client id of a scope's shared connection. Stable, so the durable subscriptions registered
+     * under it are resumed rather than replaced on every boot, and unique per scope - two tenants' or
+     * two instances' connections may not claim one id. Two deployments sharing one broker share the
+     * default tenant's id as well, but they already share that tenant's physical destinations, which is
+     * the older of the two collisions.
+     *
+     * @param tenantId the tenant, or {@code null} for the global destinations
+     * @return the client id
+     */
+    static String sharedClientId(String tenantId) {
+        String id = tenantId == null ? "dirigible-java-global" : "dirigible-java-tenant-" + tenantId;
+        return id.replaceAll("[^A-Za-z0-9._-]", "_");
     }
 
     /**
@@ -373,18 +454,18 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
     }
 
     /**
-     * A subscription's broker connection is gone for good (#7851): take its whole scope out of the
-     * registration - all or nothing, as {@link #subscribeTenant} and {@link #subscribeGlobal} open it -
-     * so the next pass subscribes it again, and queue the scope's connections for that pass to close.
-     * Called on the JMS exception thread; every connection of a scope may report the same loss, and
-     * only the first one finds anything left to take.
+     * A subscription's broker connection is gone for good (#7851, per-listener mode): take its whole
+     * scope out of the registration - all or nothing, as {@link #subscribeScope} opens it - so the next
+     * pass subscribes it again, and queue the scope's connections for that pass to close. Called on the
+     * JMS exception thread; every connection of a scope may report the same loss, and only the first
+     * one finds anything left to take.
      *
      * @param fqn the class the subscription belongs to
      * @param registration the registration that opened it
      * @param tenantId the tenant whose subscriptions it is, or {@code null} for the global ones
      */
     private void connectionLost(String fqn, Registration registration, String tenantId) {
-        List<Connection> lost;
+        List<AutoCloseable> lost;
         synchronized (this) {
             if (isSuperseded(fqn, registration)) {
                 // A republish or an unload already closed it with the rest of the old registration.
@@ -395,13 +476,46 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
         if (lost.isEmpty()) {
             return;
         }
-        lostConnections.addAll(lost);
+        for (AutoCloseable handle : lost) {
+            // Every handle of this mode is the subscription's own connection.
+            lostConnections.add((Connection) handle);
+        }
         markIncomplete();
         LOGGER.warn("Java @Listener [{}] lost its broker connection for {} - subscribing it again on the next reconciliation pass.", fqn,
-                tenantId == null ? "all tenants (global destination)" : "tenant [" + tenantId + "]");
+                tenantId == null ? GLOBAL_SCOPE : "tenant [" + tenantId + "]");
     }
 
-    /** Close what {@link #connectionLost} took out of the registrations. */
+    /**
+     * A scope's shared connection is gone for good (shared mode): every loaded class loses that scope,
+     * so the next pass opens a new connection and subscribes them all again. The sessions die with the
+     * connection and are only forgotten; the connection itself is queued for the pass to close. Called
+     * on the JMS exception thread; a loss reported twice finds nothing left the second time.
+     *
+     * @param clientId the lost connection's client id
+     * @param tenantId the scope's tenant, or {@code null} for the global destinations
+     * @param scope what the connection covered, for the log
+     */
+    private void sharedConnectionLost(String clientId, String tenantId, String scope) {
+        int subscriptions = 0;
+        synchronized (this) {
+            Connection connection = sharedConnections.remove(clientId);
+            if (connection == null) {
+                return;
+            }
+            for (Registration registration : registrations.values()) {
+                subscriptions += (tenantId == null ? registration.globalLost() : registration.lost(tenantId)).size();
+            }
+            lostConnections.add(connection);
+        }
+        markIncomplete();
+        LOGGER.warn("The shared broker connection [{}] for {} is gone - subscribing its [{}] Java listener subscription(s) again on the"
+                + " next reconciliation pass.", clientId, scope, subscriptions);
+    }
+
+    /**
+     * Close what {@link #connectionLost} and {@link #sharedConnectionLost} took out of the
+     * registrations.
+     */
     private void closeLost() {
         Connection connection;
         while ((connection = lostConnections.poll()) != null) {
@@ -430,9 +544,9 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
     }
 
     /**
-     * Open one subscription. A tenant-scoped one runs inside the target tenant's context, so the
-     * physical destination is the very name a producer in that tenant computes for the same logical
-     * one; a global one resolves to the bare name regardless.
+     * Open one subscription on a connection of its own (per-listener mode). A tenant-scoped one runs
+     * inside the target tenant's context, so the physical destination is the very name a producer in
+     * that tenant computes for the same logical one; a global one resolves to the bare name regardless.
      *
      * @param subscription what to subscribe to
      * @param scope what this subscription covers, for the log
@@ -467,19 +581,7 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
                 }
             }, subscriptionId);
             Session session = connectionFactory.createSession(connection);
-            Destination destination = topic ? session.createTopic(destinationName) : session.createQueue(destinationName);
-            // Bound the retries, exactly as the JavaScript listener path does. Without this the broker
-            // still retries a failed delivery, but on its own defaults rather than a budget this
-            // project chose - and the two listener paths would disagree about how forgiving they are.
-            connectionFactory.configureRedeliveryPolicy(connection, destination);
-            // A topic subscription is also DURABLE, because it goes down on every republish: the handler
-            // set is torn down and re-registered, and a plain subscriber would silently lose every event
-            // published in that window - a record created mid-republish would never start its process,
-            // resolve its register or post its document, and would look exactly like one the automation
-            // had nothing to do for. The cast is what `topic` already decided one line above.
-            MessageConsumer consumer =
-                    topic ? session.createDurableSubscriber((Topic) destination, subscriptionId) : session.createConsumer(destination);
-            consumer.setMessageListener(msg -> dispatch(msg, subscription.dispatcher(), label));
+            attach(connection, session, subscription, destinationName, subscriptionId);
             reportedFailures.remove(failureKey(label, scope));
             LOGGER.info("Java @Listener [{}] connected to {} '{}' for {}.", label, subscription.kind(), destinationName, scope);
             return connection;
@@ -495,18 +597,77 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
     }
 
     /**
-     * Close a connection nothing will ever hold a reference to. The failure that brought us here is
-     * already reported, and a broker that just refused the subscription is likely to refuse the close
-     * too, so this one is DEBUG - it must not add a second line per tick to a lasting outage.
+     * Open one subscription as a session on its scope's shared connection (shared mode). What the
+     * subscription owns, and what a refusal closes, is the session alone: the connection stays up for
+     * the scope's other subscriptions.
+     *
+     * @param connection the scope's shared connection
+     * @param subscription what to subscribe to
+     * @param scope what this subscription covers, for the log
+     * @return the session it opened, or {@code null} if the broker refused the subscription
      */
-    private static void closeQuietly(String label, Connection connection) {
-        if (connection == null) {
+    private Session subscribeOn(Connection connection, Subscription subscription, String scope) {
+        String label = subscription.label();
+        boolean topic = subscription.kind() == ListenerKind.TOPIC;
+        Session session = null;
+        try {
+            String destinationName = destinationNameManager.toTenantName(subscription.destination());
+            session = connectionFactory.createSession(connection);
+            attach(connection, session, subscription, destinationName, topic ? durableSubscriptionId(label, destinationName) : null);
+            reportedFailures.remove(failureKey(label, scope));
+            LOGGER.info("Java @Listener [{}] connected to {} '{}' for {} on the shared connection.", label, subscription.kind(),
+                    destinationName, scope);
+            return session;
+        } catch (JMSException | RuntimeException e) {
+            reportFailure(label, scope, e);
+            closeQuietly(label, session);
+            return null;
+        }
+    }
+
+    /**
+     * The part of opening a subscription that both modes share: the destination, the redelivery budget,
+     * the consumer and its dispatch.
+     *
+     * @param connection the connection the session belongs to - the redelivery policy is kept per
+     *        connection and destination
+     * @param session the session to open the consumer on
+     * @param subscription what to subscribe to
+     * @param destinationName the physical, tenant-resolved destination
+     * @param subscriptionId the durable subscription's name, or {@code null} for a queue
+     * @throws JMSException if the broker refuses any step
+     */
+    private void attach(Connection connection, Session session, Subscription subscription, String destinationName, String subscriptionId)
+            throws JMSException {
+        boolean topic = subscriptionId != null;
+        Destination destination = topic ? session.createTopic(destinationName) : session.createQueue(destinationName);
+        // Bound the retries, exactly as the JavaScript listener path does. Without this the broker
+        // still retries a failed delivery, but on its own defaults rather than a budget this
+        // project chose - and the two listener paths would disagree about how forgiving they are.
+        connectionFactory.configureRedeliveryPolicy(connection, destination);
+        // A topic subscription is also DURABLE, because it goes down on every republish: the handler
+        // set is torn down and re-registered, and a plain subscriber would silently lose every event
+        // published in that window - a record created mid-republish would never start its process,
+        // resolve its register or post its document, and would look exactly like one the automation
+        // had nothing to do for. The cast is what `topic` already decided one line above.
+        MessageConsumer consumer =
+                topic ? session.createDurableSubscriber((Topic) destination, subscriptionId) : session.createConsumer(destination);
+        consumer.setMessageListener(msg -> dispatch(msg, subscription.dispatcher(), subscription.label()));
+    }
+
+    /**
+     * Close a connection or session nothing will ever hold a reference to. The failure that brought us
+     * here is already reported, and a broker that just refused the subscription is likely to refuse the
+     * close too, so this one is DEBUG - it must not add a second line per tick to a lasting outage.
+     */
+    private static void closeQuietly(String label, AutoCloseable handle) {
+        if (handle == null) {
             return;
         }
         try {
-            connection.close();
-        } catch (JMSException | RuntimeException e) {
-            LOGGER.debug("Failed to close the JMS connection of the refused subscription [{}]: {}", label, e.getMessage(), e);
+            handle.close();
+        } catch (Exception e) {
+            LOGGER.debug("Failed to close the JMS handle of the refused subscription [{}]: {}", label, e.getMessage(), e);
         }
     }
 
@@ -517,8 +678,11 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
      * destination that can never be opened.
      */
     private void reportFailure(String label, String scope, Exception cause) {
-        String consequence = "Failed to start listener [" + label + "] for " + scope
-                + " - messages published to its destination are not handled until it connects; retrying on the next pass.";
+        String consequence = SHARED_CONNECTION_LABEL.equals(label)
+                ? "Failed to open the shared broker connection for " + scope
+                        + " - none of its Java listeners is subscribed until it connects; retrying on the next pass."
+                : "Failed to start listener [" + label + "] for " + scope
+                        + " - messages published to its destination are not handled until it connects; retrying on the next pass.";
         if (reportedFailures.add(failureKey(label, scope))) {
             LOGGER.warn("{} {}", consequence, cause.getMessage(), cause);
         } else {
@@ -555,16 +719,39 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
         Registration old = registrations.remove(fqn);
         reportedFailures.removeIf(key -> key.startsWith(fqn + "|") || key.startsWith(fqn + "#"));
         if (old != null) {
-            closeAll(fqn, old.openConnections());
+            closeAll(fqn, old.openHandles());
         }
     }
 
-    private static void closeAll(String fqn, List<Connection> connections) {
-        for (Connection connection : connections) {
+    /**
+     * Close every subscription and every shared connection when the context goes down. A clean close
+     * releases the client ids on the broker at once, so the instance replacing this one in a rolling
+     * deploy is not refused them until the broker gives up on a dead socket. The closing happens
+     * outside the monitor: a connection's exception listener takes it, and a close that waited for that
+     * listener while holding it would never return.
+     */
+    @PreDestroy
+    void shutdown() {
+        List<AutoCloseable> open = new ArrayList<>();
+        synchronized (this) {
+            registrations.values()
+                         .forEach(registration -> open.addAll(registration.openHandles()));
+            registrations.clear();
+            open.addAll(sharedConnections.values());
+            sharedConnections.clear();
+        }
+        for (AutoCloseable handle : open) {
+            closeQuietly("shutdown", handle);
+        }
+        closeLost();
+    }
+
+    private static void closeAll(String fqn, List<AutoCloseable> handles) {
+        for (AutoCloseable handle : handles) {
             try {
-                connection.close();
-            } catch (JMSException e) {
-                LOGGER.warn("Failed to close JMS connection for [{}]: {}", fqn, e.getMessage(), e);
+                handle.close();
+            } catch (Exception e) {
+                LOGGER.warn("Failed to close the JMS subscription of [{}]: {}", fqn, e.getMessage(), e);
             }
         }
     }
@@ -650,7 +837,10 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
     private record Subscription(String destination, ListenerKind kind, Dispatcher dispatcher, String label) {
     }
 
-    /** What one loaded class declared, plus the connections open for it in each tenant. */
+    /**
+     * What one loaded class declared, plus what is open for it in each tenant: the subscription's own
+     * connection in the per-listener mode, its session on the shared one in the shared mode.
+     */
     private static final class Registration {
 
         /** Subscriptions opened once per provisioned tenant. */
@@ -659,11 +849,11 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
         /** Subscriptions opened once for the whole deployment. */
         private final List<Subscription> globalSubscriptions;
 
-        /** tenant id → the JMS connections open for this class in that tenant. */
-        private final Map<String, List<Connection>> connectionsByTenant = new HashMap<>();
+        /** tenant id → the handles open for this class in that tenant. */
+        private final Map<String, List<AutoCloseable>> handlesByTenant = new HashMap<>();
 
-        /** The JMS connections open for this class's global destinations. */
-        private List<Connection> globalConnections = List.of();
+        /** The handles open for this class's global destinations. */
+        private List<AutoCloseable> globalHandles = List.of();
 
         /** Whether every global destination this class declares is subscribed. */
         private boolean globalSubscribed;
@@ -691,40 +881,40 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
             return globalSubscribed;
         }
 
-        void globalSubscribed(List<Connection> connections) {
-            this.globalConnections = List.copyOf(connections);
+        void globalSubscribed(List<AutoCloseable> handles) {
+            this.globalHandles = List.copyOf(handles);
             this.globalSubscribed = true;
         }
 
         boolean isSubscribed(String tenantId) {
-            return connectionsByTenant.containsKey(tenantId);
+            return handlesByTenant.containsKey(tenantId);
         }
 
-        void subscribed(String tenantId, List<Connection> connections) {
-            connectionsByTenant.put(tenantId, connections);
+        void subscribed(String tenantId, List<AutoCloseable> handles) {
+            handlesByTenant.put(tenantId, handles);
         }
 
-        /** Forget a tenant's subscriptions, so they are opened again; returns their connections. */
-        List<Connection> lost(String tenantId) {
-            List<Connection> connections = connectionsByTenant.remove(tenantId);
-            return connections == null ? List.of() : connections;
+        /** Forget a tenant's subscriptions, so they are opened again; returns their handles. */
+        List<AutoCloseable> lost(String tenantId) {
+            List<AutoCloseable> handles = handlesByTenant.remove(tenantId);
+            return handles == null ? List.of() : handles;
         }
 
-        /** Forget the global subscriptions, so they are opened again; returns their connections. */
-        List<Connection> globalLost() {
+        /** Forget the global subscriptions, so they are opened again; returns their handles. */
+        List<AutoCloseable> globalLost() {
             if (globalSubscriptions.isEmpty() || !globalSubscribed) {
                 return List.of();
             }
-            List<Connection> connections = globalConnections;
-            globalConnections = List.of();
+            List<AutoCloseable> handles = globalHandles;
+            globalHandles = List.of();
             globalSubscribed = false;
-            return connections;
+            return handles;
         }
 
-        List<Connection> openConnections() {
-            List<Connection> all = new ArrayList<>(globalConnections);
-            connectionsByTenant.values()
-                               .forEach(all::addAll);
+        List<AutoCloseable> openHandles() {
+            List<AutoCloseable> all = new ArrayList<>(globalHandles);
+            handlesByTenant.values()
+                           .forEach(all::addAll);
             return all;
         }
     }
