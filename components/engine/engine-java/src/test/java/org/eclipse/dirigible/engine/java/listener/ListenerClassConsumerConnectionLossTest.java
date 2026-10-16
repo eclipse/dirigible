@@ -280,7 +280,7 @@ class ListenerClassConsumerConnectionLossTest {
         Opened lost = openedIn("acme");
         lose(lost);
 
-        consumer.closeConnections();
+        consumer.shutdown();
 
         for (Opened connection : opened) {
             verify(connection.connection(), times(1)).close();
