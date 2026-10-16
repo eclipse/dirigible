@@ -106,8 +106,14 @@ public class ConsumedAttributesAudit {
      * expected to read them. They are set on every model the editor or the intent's {@code .edm}
      * derivation writes, so without this set the audit would report the same handful on every
      * generation and be ignored - which is the one way a warning fails.
+     *
+     * <p>
+     * {@code caption} is the entity's caption in the editor's General dialog ("Manage entity X" as the
+     * intent derivation writes it); the generated pages label an entity from its own label, so nothing
+     * generated reads it. It went unreported only while an HTML comment in the document view happened
+     * to contain the English word.
      */
-    private static final Set<String> EDITOR_OWNED = Set.of("menuIndex", "menuKey", "tooltip", "navigationPath",
+    private static final Set<String> EDITOR_OWNED = Set.of("caption", "menuIndex", "menuKey", "tooltip", "navigationPath",
             "projectionReferencedEntity", "relationshipEntityPerspectiveLabel", "widgetDependsOnEntity", "widgetDependsOnValueByEntity");
 
     /** Renders/reads the template sources being audited. */

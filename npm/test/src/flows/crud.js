@@ -92,7 +92,8 @@ export function crudFlow(manifest, entity, opts = {}) {
           // Save is disabled again once the re-read header is the new pristine state - leaving before
           // that would meet the unsaved-changes guard
           await expect(save).toBeDisabled();
-          await page.getByRole('button', { name: 'Back to list', exact: true }).click();
+          // A clean document's dismiss is Cancel (dirigible #7770).
+          await page.getByRole('button', { name: 'Cancel', exact: true }).click();
         } else {
           await page.getByRole('button', { name: 'Save', exact: true }).click();
         }

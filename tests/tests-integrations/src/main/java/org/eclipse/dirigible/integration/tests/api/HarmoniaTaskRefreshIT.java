@@ -155,8 +155,12 @@ class HarmoniaTaskRefreshIT {
         // A child row's own task is offered on the form's detail table, on Preview too - the row menu
         // is withheld there, and with the master-detail browse pane retired the form is where a
         // master's children are worked from (#7390).
-        assertTrue(form.contains("<template x-for=\"task in $store.processTasks.getTasks(row)\" :key=\"task.id\">"),
-                "the form's detail rows do not offer their own actionable tasks");
+        // The PANEL_VIEWS share that loop: the document's secondary details (an allocation, a review
+        // row) offer their rows' tasks the same way (#7770).
+        for (String view : PANEL_VIEWS) {
+            assertTrue(read(UI_BASE + view).contains("<template x-for=\"task in $store.processTasks.getTasks(row)\" :key=\"task.id\">"),
+                    view + "'s detail rows do not offer their own actionable tasks");
+        }
         assertTrue(read(UI_BASE + "perspective/manage/list-page.js.template").contains("await this.load(true)"),
                 "the manage list's task-driven re-read is not quiet - it would blank the rows behind the open sheet");
     }

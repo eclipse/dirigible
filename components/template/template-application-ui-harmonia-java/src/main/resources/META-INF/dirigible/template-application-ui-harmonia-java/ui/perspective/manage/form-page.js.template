@@ -623,27 +623,34 @@ document.addEventListener('alpine:init', () => {
         const from = rec == null ? null : rec.${property.widgetDependsOnValueFrom};
 #end
 #if($property.widgetType == "DROPDOWN")
-        if (from == null || from === '') return;
-        const rows = await App.services.api.post('${property.widgetDropdownControllerUrl}/search', {
-          conditions: [{ propertyName: '${property.widgetDependsOnFilterBy}', operator: 'EQ', value: from }#if($property.widgetOptionsFilterBy),
-            { propertyName: '${property.widgetOptionsFilterBy}', operator: 'EQ', value: ${property.widgetOptionsFilterValueJs} }#end]
-        }, { baseUrl: '' });
+        if (from == null || from === '') {
+          // The source record leaves it empty: nothing to narrow by, so the whole list - as with no trigger.
+          await this.loadAllOptions${property.name}();
+        } else {
+          const rows = await App.services.api.post('${property.widgetDropdownControllerUrl}/search', {
+            conditions: [{ propertyName: '${property.widgetDependsOnFilterBy}', operator: 'EQ', value: from }#if($property.widgetOptionsFilterBy),
+              { propertyName: '${property.widgetOptionsFilterBy}', operator: 'EQ', value: ${property.widgetOptionsFilterValueJs} }#end]
+          }, { baseUrl: '' });
 #if($property.widgetPickable)
-        this.options${property.name} = this.sortOptions(this.pickableOptions(#labelRows($property "rows"), '${property.widgetDropDownKey}', '${property.widgetDropDownValue}', ${property.widgetPickable}), '$!{property.widgetOptionsOrdered}');
-        if (adjust) {
-          // Only a row the picker rule lets the user pick is auto-selected.
-          const pickable = this.options${property.name}.filter(o => !o.disabled);
-          this.form.${property.name} = pickable.length === 1 ? String(pickable[0].value) : '';
-        }
+          this.options${property.name} = this.sortOptions(this.pickableOptions(#labelRows($property "rows"), '${property.widgetDropDownKey}', '${property.widgetDropDownValue}', ${property.widgetPickable}), '$!{property.widgetOptionsOrdered}');
+          if (adjust) {
+            // Only a row the picker rule lets the user pick is auto-selected.
+            const pickable = this.options${property.name}.filter(o => !o.disabled);
+            this.form.${property.name} = pickable.length === 1 ? String(pickable[0].value) : '';
+          }
 #else
-        this.options${property.name} = this.sortOptions((rows || []).map(e => ({
-          value: e.${property.widgetDropDownKey},
-          text: #labelOf($property "e")
-        })), '$!{property.widgetOptionsOrdered}');
-        if (adjust) {
-          this.form.${property.name} = this.options${property.name}.length === 1 ? String(this.options${property.name}[0].value) : '';
-        }
+          this.options${property.name} = this.sortOptions((rows || []).map(e => ({
+            value: e.${property.widgetDropDownKey},
+            text: #labelOf($property "e")
+          })), '$!{property.widgetOptionsOrdered}');
+          if (adjust) {
+            this.form.${property.name} = this.options${property.name}.length === 1 ? String(this.options${property.name}[0].value) : '';
+          }
 #end
+        }
+        // A stored value the narrowing leaves out (the source record changed since it was saved) still
+        // shows its label; the narrowing still governs what may be newly picked.
+        if (!adjust) await this.ensureFilteredCurrent('${property.name}', '${property.widgetDropdownControllerUrl}', '${property.widgetDropDownKey}', '${property.widgetDropDownValue}', #if($property.widgetDropDownDocumentNumber)true#{else}false#end);
 #elseif($property.isDateType)
         this.form.${property.name} = from == null ? '' : this.toDateInput(from, '${property.widgetType}');
 #else
