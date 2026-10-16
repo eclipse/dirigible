@@ -137,6 +137,19 @@ public enum DirigibleConfig {
 
     SNOWFLAKE_DATA_SOURCE_LIFESPAN_SECONDS("DIRIGIBLE_SNOWFLAKE_DATA_SOURCE_LIFESPAN_SECONDS", "540"), // 9 minutes
 
+    /**
+     * The maximum pool size of every tenant's data source ({@code <tenantId>_DefaultDB}), unless that
+     * data source sets {@code <name>_HIKARI_MAXIMUMPOOLSIZE} (#7876).
+     */
+    TENANT_DATASOURCE_MAX_POOL_SIZE("DIRIGIBLE_TENANT_DATASOURCE_MAX_POOL_SIZE", "20"),
+
+    /**
+     * The minimum idle connections of every tenant's data source, unless that data source sets
+     * {@code <name>_HIKARI_MINIMUMIDLE} (#7876). Low by default, so that an idle tenant's pool shrinks
+     * back to almost nothing after the idle timeout.
+     */
+    TENANT_DATASOURCE_MIN_IDLE("DIRIGIBLE_TENANT_DATASOURCE_MIN_IDLE", "1"),
+
     LEAKED_CONNECTIONS_MAX_IN_USE_SECONDS("DIRIGIBLE_LEAKED_CONNECTIONS_MAX_IN_USE_SECONDS", "180"), // 3 min by default
 
     LEAKED_CONNECTIONS_CHECK_INTERVAL_SECONDS("DIRIGIBLE_LEAKED_CONNECTIONS_CHECK_INTERVAL_SECONDS", "30"),
