@@ -178,6 +178,24 @@ class ReportEditorRoundTripTest {
                 String.valueOf(columns(ageing).get(0)));
     }
 
+    /**
+     * An aging report (#7888): its bucket columns are computed SUMs, and the open-item filter, the
+     * as-of bound and the lifecycle scope are all conditions the builder owns - so it opens structured.
+     */
+    @Test
+    void anAgingReportRoundTrips() {
+        Map<String, Object> aging = document("""
+                  - name: AgedReceivables
+                    source: Invoice
+                    dimensions: [Customer.name]
+                    aging: { due: due, date: issuedOn, amount: "total - balance", buckets: [30, 60, 90] }
+                    filter: "Customer.country != 'XX'"
+                """);
+        assertRoundTrips(aging);
+        // the authored filter, the lifecycle scope, the open-amount filter and the as-of bound
+        assertEquals(4, conditions(aging).size(), String.valueOf(conditions(aging)));
+    }
+
     /** A plain listing: no aggregate, no WHERE, nothing computed - the simplest structured report. */
     @Test
     void aPlainListingRoundTrips() {

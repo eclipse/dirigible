@@ -22,6 +22,7 @@ import org.eclipse.dirigible.components.base.tenant.groups.UserTenantAssignments
 import org.eclipse.dirigible.components.security.oauth2.resourceserver.ResourceServerJwtSupport;
 import org.eclipse.dirigible.components.security.oauth2.resourceserver.TokenKind;
 import org.eclipse.dirigible.components.security.oauth2.tenant.TenantSelectionEndpoint.TenantSelectionRefusal;
+import org.eclipse.dirigible.components.tenants.tenant.TenantImpl;
 import org.eclipse.dirigible.components.tenants.tenant.TenantSelectionConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -174,10 +175,18 @@ public class TenantSelectionFilter extends OncePerRequestFilter {
             chain.doFilter(request, response);
             return;
         }
+        boolean revoked = false;
         if (tenantSelectionManager.selectedTenantId(request) != null) {
-            tenantSelectionManager.ensureConsistent(request, response);
-            chain.doFilter(request, response);
-            return;
+            if (tenantSelectionManager.ensureConsistent(request, response)) {
+                chain.doFilter(request, response);
+                return;
+            }
+            // The selection was revoked under this very request, whose tenant scope was opened from it:
+            // continuing would serve it in the tenant the user just lost. It is handled as a request of a
+            // session that has selected nothing - auto-selected into a remaining tenant, or sent to pick.
+            revoked = true;
+            authentication = SecurityContextHolder.getContext()
+                                                  .getAuthentication();
         }
         UserTenantAssignments assignments = tenantSelectionManager.assignmentsOf(authentication);
         if (assignments.hasNoTenants()) {
@@ -188,7 +197,11 @@ public class TenantSelectionFilter extends OncePerRequestFilter {
                 return;
             }
             LOGGER.debug("User [{}] is assigned to no tenant but holds a known global role. Passing through.", authentication.getName());
-            chain.doFilter(request, response);
+            if (revoked) {
+                continueInTenant(TenantImpl.getDefaultTenant(), request, response, chain);
+            } else {
+                chain.doFilter(request, response);
+            }
             return;
         }
         if (assignments.tenantIds()

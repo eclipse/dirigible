@@ -528,6 +528,59 @@ class GlueGeneratorTest {
                          .doesNotContainKey("javaChildPerspective");
     }
 
+    /**
+     * A declared export (#7855) binds its format factory, its field layouts and its role gate as Java.
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    void anExportIsBoundAsTheJavaItsFileAndLayoutsAreBuiltWith() throws IOException {
+        Map<String, Object> field = new LinkedHashMap<>();
+        field.put("name", "Tax\"Base");
+        field.put("width", "12");
+        field.put("alignRight", Boolean.TRUE);
+        field.put("pad", "'");
+        field.put("truncate", Boolean.FALSE);
+        field.put("scale", "2");
+        field.put("decimalSeparator", ",");
+        field.put("attribute", Boolean.FALSE);
+        field.put("reading", Map.of("kind", "column", "owner", "row", "alias", "Sum Tax Base"));
+        Map<String, Object> line = new LinkedHashMap<>();
+        line.put("constant", "LINE_0");
+        line.put("element", "line");
+        line.put("fields", List.of(field));
+        Map<String, Object> export = new LinkedHashMap<>();
+        export.put("name", "VatLedger");
+        export.put("className", "VatLedger");
+        export.put("format", "delimited");
+        export.put("encoding", "windows-1251");
+        export.put("lineEnding", "\r\n");
+        export.put("delimiter", ";");
+        export.put("quote", "\"");
+        export.put("quoteAll", Boolean.TRUE);
+        export.put("ledger", "ExportRun");
+        export.put("ledgerPerspective", "ExportRun");
+        export.put("sourceKind", "report");
+        export.put("report", "PurchasesBySupplier");
+        export.put("lineRecords", List.of(line));
+        export.put("fileNameReading", Map.of("kind", "string", "text", "vat.csv"));
+        export.put("roles", "Accountant,Auditor");
+
+        Map<String, Object> context = boundArrival("exports", export);
+
+        assertThat(context.get("fileFactory")).isEqualTo("ExportFile.delimited(\"windows-1251\", \"\\r\\n\", \";\", \"\\\"\", true)");
+        assertThat(context).containsEntry("reportSource", Boolean.TRUE)
+                           .containsEntry("reportGenFolder", "purchasesbysupplier")
+                           .containsEntry("javaLedgerPerspective", "exportrun")
+                           .containsEntry("fileNameExpression", "\"vat.csv\"")
+                           .containsEntry("rolesAnnotation", "@Roles({\"Accountant\", \"Auditor\"})");
+        Map<String, Object> bound =
+                (Map<String, Object>) ((List<Object>) ((Map<String, Object>) ((List<Object>) context.get("lineRecords")).get(0)).get(
+                        "fields")).get(0);
+        assertThat(bound.get("specExpression")).isEqualTo(
+                "ExportField.named(\"Tax\\\"Base\").width(12).alignRight().pad('\\'').scale(2).decimalSeparator(\",\")");
+        assertThat(bound.get("valueExpression")).isEqualTo("row.get(\"Sum Tax Base\")");
+    }
+
     /** A descriptor without collections - or one from before them - binds them empty. */
     @Test
     void anArrivalWithoutCollectionsBindsThemEmpty() throws IOException {

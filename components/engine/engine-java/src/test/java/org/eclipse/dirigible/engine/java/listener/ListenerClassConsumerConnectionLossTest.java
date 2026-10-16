@@ -31,6 +31,7 @@ import org.eclipse.dirigible.components.base.tenant.Tenant;
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.configurations.tenant.TenantConfigurationService;
 import org.eclipse.dirigible.components.listeners.config.ActiveMQConnectionArtifactsFactory;
+import org.eclipse.dirigible.components.listeners.config.ListenerConnectionMode;
 import org.eclipse.dirigible.components.listeners.service.DestinationNameManager;
 import org.eclipse.dirigible.components.listeners.service.TenantPropertyManager;
 import org.eclipse.dirigible.engine.java.component.ComponentContainer;
@@ -59,6 +60,10 @@ import jakarta.jms.TopicSubscriber;
  * previous socket, was refused, and looped. The connection's exception listener is therefore the
  * only signal that it is gone, and these tests deliver that signal the way the factory does - by
  * invoking the listener it was given.
+ *
+ * <p>
+ * Pinned in the per-listener connection mode, where a loss is one subscription's;
+ * {@link ListenerClassConsumerSharedConnectionTest} covers the loss of a scope's shared connection.
  */
 class ListenerClassConsumerConnectionLossTest {
 
@@ -144,7 +149,12 @@ class ListenerClassConsumerConnectionLossTest {
         ActiveMQConnectionArtifactsFactory connectionFactory = mock(ActiveMQConnectionArtifactsFactory.class);
         when(connectionFactory.createConnection(any(), any())).thenAnswer(invocation -> {
             Connection connection = mock(Connection.class);
-            opened.add(new Opened(connection, invocation.getArgument(0), currentTenantId.get()));
+            String clientId = invocation.getArgument(1);
+            // A scope's client id is the shared mode's: in this mode only a pass reclaiming what that
+            // mode registered opens one (#7890), and it subscribes nothing.
+            if (clientId == null || !clientId.startsWith("dirigible-java-tenant-")) {
+                opened.add(new Opened(connection, invocation.getArgument(0), currentTenantId.get()));
+            }
             return connection;
         });
         when(connectionFactory.createSession(any())).thenReturn(session);
@@ -178,7 +188,7 @@ class ListenerClassConsumerConnectionLossTest {
         when(tenantConfigurationService.resolveInjectableForCurrentTenant()).thenReturn(new HashMap<>());
 
         consumer = new ListenerClassConsumer(componentContainer, connectionFactory, tenantContext, mock(TenantPropertyManager.class),
-                mock(Tenant.class), tenantConfigurationService, destinationNameManager);
+                mock(Tenant.class), tenantConfigurationService, destinationNameManager, ListenerConnectionMode.PER_LISTENER);
     }
 
     @Test
@@ -275,7 +285,7 @@ class ListenerClassConsumerConnectionLossTest {
         Opened lost = openedIn("acme");
         lose(lost);
 
-        consumer.closeConnections();
+        consumer.shutdown();
 
         for (Opened connection : opened) {
             verify(connection.connection(), times(1)).close();

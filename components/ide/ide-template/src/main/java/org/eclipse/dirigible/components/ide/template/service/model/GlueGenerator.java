@@ -51,7 +51,7 @@ class GlueGenerator {
     /** The names of the collections this generator handles. */
     private static final List<String> COLLECTIONS = List.of("triggers", "resolvers", "fieldLoaders", "assignees", "timerLoaders", "waits",
             "aborts", "deleteAborts", "setters", "writers", "notifications", "schedules", "integrations", "inbound", "inboundMessages",
-            "inboundFiles", "imports", "outbound", "stepEvents", "rollups", "expansions", "expansionCleanups", "settlements",
+            "inboundFiles", "imports", "outbound", "exports", "stepEvents", "rollups", "expansions", "expansionCleanups", "settlements",
             "settlementListeners", "settlementCleanups", "generates", "generateEvents", "generateReopens", "transitions", "sends", "posts",
             "aggregates", "postings", "postingReopens", "printFeeders", "snapshots", "numbering", "resolves");
 
@@ -109,6 +109,7 @@ class GlueGenerator {
             case "inboundFiles" -> each(collection, source, content, model, parameters, GlueGenerator::bindInboundFile);
             case "imports" -> each(collection, source, content, model, parameters, GlueGenerator::bindImport);
             case "outbound" -> each(collection, source, content, model, parameters, GlueGenerator::bindOutbound);
+            case "exports" -> each(collection, source, content, model, parameters, GlueGenerator::bindExport);
             case "stepEvents" -> each(collection, source, content, model, parameters, GlueGenerator::bindStepEvent);
             case "expansions" -> each(collection, source, content, model, parameters, GlueGenerator::bindExpansion);
             case "expansionCleanups" -> each(collection, source, content, model, parameters, GlueGenerator::bindExpansionCleanup);
@@ -554,6 +555,151 @@ class GlueGenerator {
         copyJavaLiterals(context, item, "cron");
         context.put("javaPerspective", sanitize(item, "perspective"));
         bindArrival(item, context);
+    }
+
+    /**
+     * Binds a declared export (#7855) - the controller whose download runs it, which is also the bean a
+     * job or custom code calls. The descriptor carries facts and readings; this is where they become
+     * Java: the SDK {@code ExportFile} factory for the format, one {@code ExportField} layout constant
+     * per record, the value expression of every field and total, and the conversion of every filter.
+     *
+     * @param item the descriptor
+     * @param context the template context
+     * @param parameters the generation parameters
+     */
+    private static void bindExport(Map<String, Object> item, Map<String, Object> context, Map<String, Object> parameters) {
+        copy(context, item, "name", "className", "format", "ledger", "sourceKind", "entity", "report", "orderBy");
+        context.put("nameJavaLiteral", JavaLiterals.escape(str(item, "name")));
+        context.put("javaLedgerPerspective", sanitize(item, "ledgerPerspective"));
+        boolean report = "report".equals(str(item, "sourceKind"));
+        context.put("reportSource", report);
+        if (report) {
+            context.put("reportGenFolder", NamingHelper.sanitizeJavaIdentifier(str(item, "report")));
+            context.put("reportPerspective", NamingHelper.sanitizeJavaIdentifier(REPORT_PERSPECTIVE));
+        } else {
+            context.put("javaPerspective", sanitize(item, "perspective"));
+        }
+        context.put("fileFactory", exportFileFactory(item));
+        List<Object> exportParameters = new ArrayList<>();
+        for (Map<String, Object> declared : asMaps(item.get("parameters"))) {
+            Map<String, Object> parameter = ModelValues.copy(declared);
+            parameter.put("nameJavaLiteral", JavaLiterals.escape(str(declared, "name")));
+            if (declared.containsKey("convert")) {
+                parameter.put("convertExpression", JavaExpressions.expression(declared.get("convert")));
+            }
+            exportParameters.add(parameter);
+        }
+        context.put("exportParameters", exportParameters);
+        List<Object> loads = relationLoads(item.get("loads"), parameters);
+        context.put("loads", loads);
+        context.put("hasLoads", !loads.isEmpty());
+        for (String records : List.of("headerRecords", "lineRecords", "trailerRecords")) {
+            List<Object> bound = new ArrayList<>();
+            for (Map<String, Object> declared : asMaps(item.get(records))) {
+                Map<String, Object> record = new LinkedHashMap<>();
+                record.put("constant", str(declared, "constant"));
+                record.put("elementJavaLiteral", JavaLiterals.escape(str(declared, "element")));
+                List<Object> fields = new ArrayList<>();
+                for (Map<String, Object> field : asMaps(declared.get("fields"))) {
+                    Map<String, Object> boundField = new LinkedHashMap<>();
+                    boundField.put("specExpression", exportFieldSpec(field));
+                    boundField.put("valueExpression", JavaExpressions.qualifiedExpression(field.get("reading")));
+                    fields.add(boundField);
+                }
+                record.put("fields", fields);
+                bound.add(record);
+            }
+            context.put(records, bound);
+        }
+        List<Object> aggregates = new ArrayList<>();
+        for (Map<String, Object> declared : asMaps(item.get("aggregates"))) {
+            Map<String, Object> aggregate = new LinkedHashMap<>();
+            aggregate.put("local", str(declared, "local"));
+            aggregate.put("sum", "sum".equals(str(declared, "kind")));
+            if (declared.containsKey("reading")) {
+                aggregate.put("valueExpression", JavaExpressions.qualifiedExpression(declared.get("reading")));
+            }
+            aggregates.add(aggregate);
+        }
+        context.put("aggregates", aggregates);
+        context.put("fileNameExpression", JavaExpressions.qualifiedExpression(item.get("fileNameReading")));
+        String roles = str(item, "roles");
+        List<String> quotedRoles = new ArrayList<>();
+        if (roles != null) {
+            for (String role : roles.split(",")) {
+                if (!role.isBlank()) {
+                    quotedRoles.add(javaString(role.trim()));
+                }
+            }
+        }
+        context.put("rolesAnnotation", quotedRoles.isEmpty() ? "" : "@Roles({" + String.join(", ", quotedRoles) + "})");
+    }
+
+    /** The SDK {@code ExportFile} factory call a descriptor's format and its options spell. */
+    private static String exportFileFactory(Map<String, Object> item) {
+        String encoding = javaString(str(item, "encoding"));
+        return switch (strOr(item, "format", "")) {
+            case "delimited" -> "ExportFile.delimited(" + encoding + ", " + javaString(str(item, "lineEnding")) + ", "
+                    + javaString(str(item, "delimiter")) + ", " + javaString(str(item, "quote")) + ", " + truthy(item, "quoteAll") + ")";
+            case "xml" -> "ExportFile.xml(" + encoding + ", " + javaString(str(item, "root")) + ")";
+            default -> "ExportFile.fixedWidth(" + encoding + ", " + javaString(str(item, "lineEnding")) + ")";
+        };
+    }
+
+    /** One record field's {@code ExportField} layout, as the fluent chain that builds it. */
+    private static String exportFieldSpec(Map<String, Object> field) {
+        StringBuilder spec = new StringBuilder("ExportField.named(").append(javaString(str(field, "name")))
+                                                                    .append(")");
+        if (field.containsKey("width")) {
+            spec.append(".width(")
+                .append(Integer.parseInt(str(field, "width")))
+                .append(")");
+        }
+        if (truthy(field, "alignRight")) {
+            spec.append(".alignRight()");
+        }
+        if (field.containsKey("pad")) {
+            spec.append(".pad('")
+                .append(javaChar(str(field, "pad")))
+                .append("')");
+        }
+        if (truthy(field, "truncate")) {
+            spec.append(".truncate()");
+        }
+        if (field.containsKey("scale")) {
+            spec.append(".scale(")
+                .append(Integer.parseInt(str(field, "scale")))
+                .append(")");
+        }
+        if (field.containsKey("decimalSeparator")) {
+            spec.append(".decimalSeparator(")
+                .append(javaString(str(field, "decimalSeparator")))
+                .append(")");
+        }
+        if (field.containsKey("pattern")) {
+            spec.append(".pattern(")
+                .append(javaString(str(field, "pattern")))
+                .append(")");
+        }
+        if (truthy(field, "attribute")) {
+            spec.append(".attribute()");
+        }
+        return spec.toString();
+    }
+
+    /** A Java string literal. */
+    private static String javaString(String value) {
+        return "\"" + JavaLiterals.escape(value == null ? "" : value) + "\"";
+    }
+
+    /** The body of a Java char literal for one character. */
+    private static String javaChar(String value) {
+        char character = value.charAt(0);
+        return switch (character) {
+            case '\'' -> "\\'";
+            case '\\' -> "\\\\";
+            default -> String.valueOf(character);
+        };
     }
 
     /**

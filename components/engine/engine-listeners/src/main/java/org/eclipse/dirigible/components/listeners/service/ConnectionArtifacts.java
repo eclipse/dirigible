@@ -16,7 +16,9 @@ import jakarta.jms.MessageConsumer;
 import jakarta.jms.Session;
 
 /**
- * The Class ConnectionArtifacts.
+ * What one {@code .listener} subscription holds open, closed in the reverse order it was opened.
+ * The connection is part of it only when the subscription owns one; on a shared connection the
+ * session is the last thing that belongs to the subscription.
  */
 public class ConnectionArtifacts {
 
@@ -35,7 +37,8 @@ public class ConnectionArtifacts {
     /**
      * Instantiates a new connection artifacts.
      *
-     * @param connection the connection
+     * @param connection the connection this subscription owns, or {@code null} when it rides a shared
+     *        one that outlives it
      * @param session the session
      * @param messageConsumer the message consumer
      */
@@ -51,7 +54,9 @@ public class ConnectionArtifacts {
     public void closeAll() {
         close(messageConsumer);
         close(session);
-        close(connection);
+        if (connection != null) {
+            close(connection);
+        }
     }
 
     /**

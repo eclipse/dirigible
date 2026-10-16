@@ -105,6 +105,11 @@ public class ReportIntent {
      * -> the report takes no input beyond the generic per-column filters.
      */
     private List<ReportParameterIntent> parameters = new ArrayList<>();
+    /**
+     * Optional aging shape - open documents bucketed by days past due as of a report date, one column
+     * per bucket beside the dimensions (aged receivables / payables). See {@link ReportAgingIntent}.
+     */
+    private ReportAgingIntent aging;
     private String filter;
     /**
      * Which lifecycle rows of the source this report counts, when the source carries a
@@ -272,13 +277,13 @@ public class ReportIntent {
     }
 
     /**
-     * Whether the report AGGREGATES - a ledger kind, or any declared measure. Its rows are then groups,
-     * not records, which is what a {@code kind: count} dashboard widget must not confuse (dirigible
-     * #7102).
+     * Whether the report AGGREGATES - a ledger kind, an aging report, or any declared measure. Its rows
+     * are then groups, not records, which is what a {@code kind: count} dashboard widget must not
+     * confuse (dirigible #7102).
      */
     public boolean isAggregated() {
-        return isLedgerKind() || measures.stream()
-                                         .anyMatch(measure -> measure != null && !measure.isBlank());
+        return isLedgerKind() || isAging() || measures.stream()
+                                                      .anyMatch(measure -> measure != null && !measure.isBlank());
     }
 
     /**
@@ -325,6 +330,19 @@ public class ReportIntent {
 
     public void setParameters(List<ReportParameterIntent> parameters) {
         this.parameters = parameters == null ? new ArrayList<>() : parameters;
+    }
+
+    public ReportAgingIntent getAging() {
+        return aging;
+    }
+
+    public void setAging(ReportAgingIntent aging) {
+        this.aging = aging;
+    }
+
+    /** Whether this report declares the {@code aging:} shape. */
+    public boolean isAging() {
+        return aging != null;
     }
 
     public String getFilter() {

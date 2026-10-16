@@ -58,6 +58,10 @@ class ListenersManagerTest {
     @Mock
     private ListenerCreator listenerCreator;
 
+    /** The connection the artefacts share. */
+    @Mock
+    private SharedListenerConnection sharedConnection;
+
     /** The listener manager. */
     @Mock
     private ListenerManager listenerManager;
@@ -157,5 +161,7 @@ class ListenersManagerTest {
         // stop is called only once
         verify(listenerManager).stopListener();
         verify(listenerManager2).stopListener();
+        // and the connection they shared goes with them (#7875)
+        verify(sharedConnection, times(2)).close();
     }
 }
