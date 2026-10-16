@@ -492,6 +492,19 @@ public enum DirigibleConfig {
     MESSAGING_USE_DEFAULT_DATABASE("DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE", Boolean.TRUE.toString()),
 
     /**
+     * How the message listeners attach to the broker: {@code shared} (the default) opens one JMS
+     * connection per tenant for the client-Java listeners - plus one for the global destinations - and
+     * one for all {@code .listener} artefacts, every subscription being a session on it, so an instance
+     * holds about {@code tenants + 2} connections however many listeners it declares;
+     * {@code per-listener} opens a connection per subscription per tenant, the shape the platform had
+     * before #7875. The client id a durable topic subscription is registered under differs between the
+     * two modes, so switching an existing deployment leaves the previous mode's durable subscriptions
+     * offline until the broker's offline-subscriber timeout reclaims them (7 days on the embedded
+     * broker; an external broker's own setting).
+     */
+    MESSAGING_LISTENER_CONNECTIONS("DIRIGIBLE_MESSAGING_LISTENER_CONNECTIONS", "shared"),
+
+    /**
      * Seconds an armed act-as (delegated entry) state survives before it expires on its own. The window
      * is absolute - it starts at arming and is never renewed by activity - so a state left armed and
      * forgotten stops hiding the real identity's world on its own.

@@ -12,10 +12,15 @@ package org.eclipse.dirigible.components.listeners.service;
 import jakarta.jms.MessageConsumer;
 import jakarta.jms.*;
 import org.eclipse.dirigible.components.listeners.config.ActiveMQConnectionArtifactsFactory;
+import org.eclipse.dirigible.components.listeners.config.ListenerConnectionMode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InOrder;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.lang.IllegalStateException;
@@ -38,9 +43,12 @@ class ListenerManagerTest {
     /** The Constant QUEUE. */
     private static final String QUEUE = "test-queue";
 
-    /** The manager. */
-    @InjectMocks
+    /** The manager, in the per-listener mode unless a test builds the shared one. */
     private ListenerManager manager;
+
+    /** The connection the shared mode rides. */
+    @Mock
+    private SharedListenerConnection sharedConnection;
 
     /** The listener. */
     @Mock
@@ -93,6 +101,98 @@ class ListenerManagerTest {
     void setUp() {
         lenient().when(asynchronousMessageListenerFactory.create(listenerDescriptor))
                  .thenReturn(asynchronousMessageListener);
+        manager = new ListenerManager(listenerDescriptor, connectionArtifactsFactory, asynchronousMessageListenerFactory,
+                ListenerConnectionMode.PER_LISTENER, sharedConnection);
+    }
+
+    private ListenerManager sharedManager() {
+        return new ListenerManager(listenerDescriptor, connectionArtifactsFactory, asynchronousMessageListenerFactory,
+                ListenerConnectionMode.SHARED, sharedConnection);
+    }
+
+    /**
+     * In the shared mode (#7875) the listener attaches to the one connection every artefact rides and
+     * opens only a session on it - no connection of its own.
+     *
+     * @throws JMSException the JMS exception
+     */
+    @Test
+    void inTheSharedModeTheListenerIsASessionOnTheSharedConnection() throws JMSException {
+        when(sharedConnection.attach(any(ExceptionListener.class))).thenReturn(connection);
+        when(connectionArtifactsFactory.createSession(connection)).thenReturn(session);
+        when(listenerDescriptor.getType()).thenReturn(ListenerType.TOPIC);
+        when(listenerDescriptor.getDestination()).thenReturn(TOPIC);
+        when(session.createTopic(TOPIC)).thenReturn(topic);
+        when(session.createConsumer(topic)).thenReturn(consumer);
+
+        ListenerManager shared = sharedManager();
+        shared.startListener();
+
+        verify(connectionArtifactsFactory, never()).createConnection(any(ExceptionListener.class));
+        verify(sharedConnection).attach(exceptionListenerCaptor.capture());
+        assertThat(exceptionListenerCaptor.getValue()).isInstanceOf(ListenerExceptionHandler.class);
+        verify(connectionArtifactsFactory).configureRedeliveryPolicy(connection, topic);
+        verifyConfiguredMessageListener();
+    }
+
+    /**
+     * Stopping closes what the listener owns - its consumer and session - and detaches its handler; the
+     * shared connection stays up for the other artefacts.
+     *
+     * @throws JMSException the JMS exception
+     */
+    @Test
+    void inTheSharedModeStoppingLeavesTheConnectionToTheOtherListeners() throws JMSException {
+        when(sharedConnection.attach(any(ExceptionListener.class))).thenReturn(connection);
+        when(connectionArtifactsFactory.createSession(connection)).thenReturn(session);
+        when(listenerDescriptor.getType()).thenReturn(ListenerType.QUEUE);
+        when(listenerDescriptor.getDestination()).thenReturn(QUEUE);
+        when(session.createQueue(QUEUE)).thenReturn(queue);
+        when(session.createConsumer(queue)).thenReturn(consumer);
+
+        ListenerManager shared = sharedManager();
+        shared.startListener();
+        shared.stopListener();
+
+        verify(consumer).close();
+        verify(session).close();
+        verify(connection, never()).close();
+        verify(sharedConnection).attach(exceptionListenerCaptor.capture());
+        verify(sharedConnection).detach(exceptionListenerCaptor.getValue());
+    }
+
+    /**
+     * A subscription the broker refuses after the attach must give the attach back, or every retried
+     * pass would leave one more handler listening on the shared connection.
+     *
+     * @throws JMSException the JMS exception
+     */
+    @Test
+    void inTheSharedModeARefusedSubscriptionDetachesItsHandler() throws JMSException {
+        when(sharedConnection.attach(any(ExceptionListener.class))).thenReturn(connection);
+        when(connectionArtifactsFactory.createSession(connection)).thenThrow(JMSException.class);
+
+        ListenerManager shared = sharedManager();
+        assertThrows(IllegalStateException.class, shared::startListener);
+
+        verify(sharedConnection).attach(exceptionListenerCaptor.capture());
+        verify(sharedConnection).detach(exceptionListenerCaptor.getValue());
+        verify(connection, never()).close();
+    }
+
+    /**
+     * In the per-listener mode the same refusal closes the connection the attempt opened (#7264).
+     *
+     * @throws JMSException the JMS exception
+     */
+    @Test
+    void aRefusedSubscriptionClosesTheConnectionItOpened() throws JMSException {
+        when(connectionArtifactsFactory.createConnection(any(ExceptionListener.class))).thenReturn(connection);
+        when(connectionArtifactsFactory.createSession(connection)).thenThrow(JMSException.class);
+
+        assertThrows(IllegalStateException.class, () -> manager.startListener());
+
+        verify(connection).close();
     }
 
     /**

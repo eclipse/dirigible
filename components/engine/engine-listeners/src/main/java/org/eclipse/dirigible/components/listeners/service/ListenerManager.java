@@ -12,13 +12,17 @@ package org.eclipse.dirigible.components.listeners.service;
 import jakarta.jms.MessageConsumer;
 import jakarta.jms.*;
 import org.eclipse.dirigible.components.listeners.config.ActiveMQConnectionArtifactsFactory;
+import org.eclipse.dirigible.components.listeners.config.ListenerConnectionMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.IllegalStateException;
 
 /**
- * The Class BackgroundListenerManager.
+ * Starts and stops the subscription of one {@code .listener} artefact. In the
+ * {@link ListenerConnectionMode#SHARED shared} mode the subscription is a session on the
+ * {@link SharedListenerConnection}; in the {@link ListenerConnectionMode#PER_LISTENER per-listener}
+ * mode it opens, and owns, a connection of its own (#7875).
  */
 public class ListenerManager {
 
@@ -34,8 +38,17 @@ public class ListenerManager {
     /** The asynchronous message listener factory. */
     private final AsynchronousMessageListenerFactory asynchronousMessageListenerFactory;
 
+    /** The connection mode. */
+    private final ListenerConnectionMode connectionMode;
+
+    /** The connection shared by every artefact in the shared mode. */
+    private final SharedListenerConnection sharedConnection;
+
     /** The connection artifacts. */
     private ConnectionArtifacts connectionArtifacts;
+
+    /** The handler attached to the shared connection while this listener runs on it. */
+    private ListenerExceptionHandler attachedExceptionListener;
 
     /**
      * Instantiates a new background listener manager.
@@ -43,12 +56,17 @@ public class ListenerManager {
      * @param listenerDescriptor the listener
      * @param connectionArtifactsFactory the connection artifacts factory
      * @param asynchronousMessageListenerFactory the asynchronous message listener factory
+     * @param connectionMode how the subscription attaches to the broker
+     * @param sharedConnection the connection shared by every artefact in the shared mode
      */
     public ListenerManager(ListenerDescriptor listenerDescriptor, ActiveMQConnectionArtifactsFactory connectionArtifactsFactory,
-            AsynchronousMessageListenerFactory asynchronousMessageListenerFactory) {
+            AsynchronousMessageListenerFactory asynchronousMessageListenerFactory, ListenerConnectionMode connectionMode,
+            SharedListenerConnection sharedConnection) {
         this.listenerDescriptor = listenerDescriptor;
         this.connectionArtifactsFactory = connectionArtifactsFactory;
         this.asynchronousMessageListenerFactory = asynchronousMessageListenerFactory;
+        this.connectionMode = connectionMode;
+        this.sharedConnection = sharedConnection;
     }
 
     /**
@@ -62,11 +80,15 @@ public class ListenerManager {
         }
 
         LOGGER.info("Starting a message listener for {} ...", listenerDescriptor);
+        String handlerPath = listenerDescriptor.getHandlerPath();
+        ListenerExceptionHandler exceptionListener = new ListenerExceptionHandler(handlerPath);
+        boolean shared = connectionMode == ListenerConnectionMode.SHARED;
+        // Held outside the try: a subscription refused after the connection was handed out must give
+        // the connection back - close an owned one, detach from the shared one - or it leaks per pass.
+        Connection connection = null;
         try {
-            String handlerPath = listenerDescriptor.getHandlerPath();
-            ListenerExceptionHandler exceptionListener = new ListenerExceptionHandler(handlerPath);
-
-            Connection connection = connectionArtifactsFactory.createConnection(exceptionListener);
+            connection =
+                    shared ? sharedConnection.attach(exceptionListener) : connectionArtifactsFactory.createConnection(exceptionListener);
             Session session = connectionArtifactsFactory.createSession(connection);
 
             Destination destination = createDestination(session);
@@ -77,9 +99,31 @@ public class ListenerManager {
             AsynchronousMessageListener messageListener = asynchronousMessageListenerFactory.create(listenerDescriptor);
             consumer.setMessageListener(messageListener);
 
-            connectionArtifacts = new ConnectionArtifacts(connection, session, consumer);
-        } catch (JMSException ex) {
-            throw new IllegalStateException("Failed to start listener for " + listenerDescriptor, ex);
+            connectionArtifacts = new ConnectionArtifacts(shared ? null : connection, session, consumer);
+            attachedExceptionListener = shared ? exceptionListener : null;
+        } catch (JMSException | RuntimeException ex) {
+            releaseFailedAttempt(connection, exceptionListener, shared);
+            throw ex instanceof RuntimeException runtime ? runtime
+                    : new IllegalStateException("Failed to start listener for " + listenerDescriptor, ex);
+        }
+    }
+
+    /**
+     * Give back what a refused start took: the owned connection is closed, the shared one is left
+     * running for the other listeners and only this handler is detached from it.
+     */
+    private void releaseFailedAttempt(Connection connection, ListenerExceptionHandler exceptionListener, boolean shared) {
+        if (shared) {
+            sharedConnection.detach(exceptionListener);
+            return;
+        }
+        if (connection == null) {
+            return;
+        }
+        try {
+            connection.close();
+        } catch (JMSException | RuntimeException e) {
+            LOGGER.debug("Failed to close the connection of the refused listener {}: {}", listenerDescriptor, e.getMessage(), e);
         }
     }
 
@@ -114,6 +158,10 @@ public class ListenerManager {
         LOGGER.info("Stopping message listener for {} ...", listenerDescriptor);
         connectionArtifacts.closeAll();
         connectionArtifacts = null;
+        if (attachedExceptionListener != null) {
+            sharedConnection.detach(attachedExceptionListener);
+            attachedExceptionListener = null;
+        }
         LOGGER.info("Stopped message listener for {}", listenerDescriptor);
     }
 }

@@ -80,6 +80,24 @@ class ConnectionArtifactsTest {
      *
      * @throws JMSException the JMS exception
      */
+    /**
+     * On a shared connection (#7875) the subscription owns its consumer and session only; the
+     * connection outlives it and is not its to close.
+     */
+    @Test
+    void aSubscriptionOnASharedConnectionClosesOnlyWhatItOwns() throws JMSException {
+        ConnectionArtifacts shared = new ConnectionArtifacts(null, session, messageConsumer);
+
+        shared.closeAll();
+
+        InOrder inOrder = Mockito.inOrder(messageConsumer, session);
+        inOrder.verify(messageConsumer)
+               .close();
+        inOrder.verify(session)
+               .close();
+        Mockito.verifyNoInteractions(connection);
+    }
+
     private void verifyClosedArtifacts() throws JMSException {
         InOrder inOrder = Mockito.inOrder(messageConsumer, session, connection);
 
