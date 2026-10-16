@@ -2883,6 +2883,44 @@ a cycle. Restrict to posted entries with a `filter`, exactly as for a balance re
 layout stays a hand-authored `.print` template over that result — the platform's standing contract
 for statutory form.
 
+**The cash-flow statement — `cashAccounts:`.** A direct-method cash-flow statement classifies cash
+movements by their *counter-side*: receipts from customers are the credits to the receivable
+accounts in entries that debit cash, payments to suppliers the debits to the payable accounts in
+entries that credit cash. Name the cash accounts with `cashAccounts:` (the same selector grammar as
+`accounts`) and the statement switches to the cash basis, with the same `lines:` / `sum:` / `less:`:
+
+```yaml
+reports:
+  - name: CashFlow
+    kind: statement
+    source: JournalEntryItem
+    date: journalEntry.entryDate          # must go through the entry relation - see below
+    debit: debit
+    credit: credit
+    account: account.code
+    cashAccounts: "50*"                   # the cash and bank accounts
+    filter: "journalEntry.status == 2"
+    lines:
+      - { code: A.1, label: Receipts from customers, accounts: "41*", measure: periodCredit }
+      - { code: A.2, label: Payments to suppliers,   accounts: "40*", measure: periodDebit }
+      - { code: A,   label: Operating activities,    sum: [A.1], less: [A.2] }
+      - { code: B.1, label: Purchases of equipment,  accounts: "20*", measure: periodDebit }
+      - { code: B,   label: Investing activities,    less: [B.1] }
+      - { code: C.1, label: Borrowings,              accounts: "15*", measure: periodCredit }
+      - { code: C,   label: Financing activities,    sum: [C.1] }
+      - { code: N,   label: Net cash flow,           sum: [A, B, C] }
+```
+
+On the cash basis a line's accounts are the **counter-accounts**: `periodCredit` is the cash received
+from them, `periodDebit` the cash paid to them. An entry whose cash covers only part of its counter
+side is spread over it by amount (100 cash against 75 receivable and 25 sales gives the customer 75
+and sales 25), so a complete statement's sections add up exactly to the change in the cash accounts'
+balance over the window. A transfer between two cash accounts is no cash flow, and an entry that
+touches no cash account is not read at all. **Rules:** only the four `period*` measures apply (a cash
+flow is a movement within the window); `date` must be a `<relation>.<field>` path over the source's
+relation to its journal entry, because the cash an entry moved is a fact about the entry; and the
+entries must balance (debits = credits), which is what makes the sections reconcile.
+
 #### reports[].chart - render as a chart
 
 Add `chart:` to render the report page as a chart instead of a table (the page keeps a Table/Chart
