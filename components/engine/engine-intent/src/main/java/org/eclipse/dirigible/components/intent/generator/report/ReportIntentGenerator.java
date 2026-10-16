@@ -378,6 +378,10 @@ public class ReportIntentGenerator implements IntentTargetGenerator {
                 // report already establishes.
                 statementQuery = prepareStatement(context, model, source, baseAlias, baseTable, report, joins, columns);
                 views.add(new ViewArtifact(report.getName() + "Lines.view", statementQuery.viewName(), statementQuery.linesViewSql()));
+                if (statementQuery.cashBasis() != null) {
+                    views.add(statementQuery.cashBasis()
+                                            .totalsView());
+                }
             } else {
                 for (String measure : report.getMeasures()) {
                     if (measure == null || measure.isBlank()) {
@@ -1208,7 +1212,130 @@ public class ReportIntentGenerator implements IntentTargetGenerator {
         AccountSource accounts = account.join != null ? new AccountSource(account.join.table, account.tableAlias, account.physicalColumn)
                 : new AccountSource(baseTable, account.tableAlias, account.physicalColumn);
         String viewName = IntentNaming.tableName(context, report.getName()) + "_LINES";
-        return new StatementQuery(account.qualified(), balanceSums(date, debit, credit), statementLines(report), viewName, accounts);
+        String debitAmount = "COALESCE(" + debit.qualified() + ", 0)";
+        String creditAmount = "COALESCE(" + credit.qualified() + ", 0)";
+        CashBasis cashBasis = null;
+        if (report.isCashBasis()) {
+            cashBasis = cashBasis(context, source, baseAlias, baseTable, report, account, debitAmount, creditAmount);
+            joins.putIfAbsent(CASH_TOTALS_ALIAS, cashBasis.join());
+            debitAmount = cashBasis.cashPaid();
+            creditAmount = cashBasis.cashReceived();
+        }
+        return new StatementQuery(account.qualified(), balanceSums(date, debitAmount, creditAmount), statementLines(report), viewName,
+                accounts, cashBasis);
+    }
+
+    /** The alias the per-entry cash totals view is joined under in a cash-basis statement. */
+    private static final String CASH_TOTALS_ALIAS = "CashTotals";
+
+    /** The columns of the per-entry cash totals view. */
+    private static final String CASH_TOTALS_ENTRY = "ENTRY_ID";
+    private static final String CASH_TOTALS_CASH_DEBIT = "CASH_DEBIT";
+    private static final String CASH_TOTALS_CASH_CREDIT = "CASH_CREDIT";
+    private static final String CASH_TOTALS_TOTAL_DEBIT = "TOTAL_DEBIT";
+    private static final String CASH_TOTALS_TOTAL_CREDIT = "TOTAL_CREDIT";
+
+    /**
+     * The cash basis of a statement ({@code cashAccounts:}, dirigible #7857): the direct-method
+     * cash-flow statement.
+     *
+     * <p>
+     * Every posting of an entry that touches a cash account is attributed its proportional share of
+     * that entry's cash movement - cash received is the cash debited in the entry, spread over the
+     * entry's credit side by amount; cash paid is the cash credited, spread over its debit side. Over a
+     * balanced entry (total debit {@code T} = total credit) the shares of the NON-cash postings add up
+     * to exactly the entry's net cash movement: {@code (Dc * Cn - Cc * Dn) / T = Dc - Cc}, since
+     * {@code Cn = T - Cc} and {@code Dn = T - Dc}. That identity is what makes a complete cash-flow
+     * statement reconcile with the change in the cash accounts' balance, and it is why the share is
+     * taken over the WHOLE counter side, cash postings included: the cash postings' own shares are the
+     * transfers between cash accounts, which are no cash flow and are dropped by excluding the cash
+     * accounts from the ledger the lines read.
+     *
+     * <p>
+     * The per-entry totals are parameter-free, so they are the second structural view of the statement
+     * - {@code <REPORT>_CASH_TOTALS}, beside the {@code _LINES} classification - and carry only the
+     * entries touching cash: the INNER join to it is what restricts the ledger to cash entries. Like
+     * the correspondence denominators they are a fact about the entry, so they take neither the report
+     * filter nor the lifecycle scope.
+     */
+    private static CashBasis cashBasis(IntentGenerationContext context, EntityIntent source, String baseAlias, String baseTable,
+            ReportIntent report, ColumnRef account, String debitAmount, String creditAmount) {
+        // The parser has already reported anything wrong with the selector.
+        StatementSupport.Selector cash = StatementSupport.selector(report.getCashAccounts(), new ArrayList<>(), "");
+        String isCash = cash.sql(account.qualified());
+        String entryColumn = baseAlias + "." + quote(documentColumn(source, report));
+        String cashDebit = "SUM(CASE WHEN " + isCash + " THEN " + debitAmount + " ELSE 0 END)";
+        String cashCredit = "SUM(CASE WHEN " + isCash + " THEN " + creditAmount + " ELSE 0 END)";
+        StringBuilder view = new StringBuilder("SELECT ").append(entryColumn)
+                                                         .append(" as ")
+                                                         .append(quote(CASH_TOTALS_ENTRY))
+                                                         .append(", ")
+                                                         .append(cashDebit)
+                                                         .append(" as ")
+                                                         .append(quote(CASH_TOTALS_CASH_DEBIT))
+                                                         .append(", ")
+                                                         .append(cashCredit)
+                                                         .append(" as ")
+                                                         .append(quote(CASH_TOTALS_CASH_CREDIT))
+                                                         .append(", SUM(")
+                                                         .append(debitAmount)
+                                                         .append(") as ")
+                                                         .append(quote(CASH_TOTALS_TOTAL_DEBIT))
+                                                         .append(", SUM(")
+                                                         .append(creditAmount)
+                                                         .append(") as ")
+                                                         .append(quote(CASH_TOTALS_TOTAL_CREDIT))
+                                                         .append("\nFROM ")
+                                                         .append(quote(baseTable))
+                                                         .append(" as ")
+                                                         .append(baseAlias);
+        if (account.join != null) {
+            view.append('\n')
+                .append(account.join.type)
+                .append(" JOIN ")
+                .append(quote(account.join.table))
+                .append(" as ")
+                .append(account.join.alias)
+                .append(" ON ")
+                .append(account.join.on);
+        }
+        view.append("\nGROUP BY ")
+            .append(entryColumn)
+            .append("\nHAVING ")
+            .append(cashDebit)
+            .append(" <> 0 OR ")
+            .append(cashCredit)
+            .append(" <> 0");
+        String viewName = IntentNaming.tableName(context, report.getName()) + "_CASH_TOTALS";
+        Join join = new Join(viewName, CASH_TOTALS_ALIAS,
+                CASH_TOTALS_ALIAS + "." + quote(CASH_TOTALS_ENTRY) + " = " + entryColumn + " AND NOT " + isCash, "INNER");
+        String cashPaid = cashShare(debitAmount, CASH_TOTALS_CASH_CREDIT, CASH_TOTALS_TOTAL_DEBIT);
+        String cashReceived = cashShare(creditAmount, CASH_TOTALS_CASH_DEBIT, CASH_TOTALS_TOTAL_CREDIT);
+        return new CashBasis(new ViewArtifact(report.getName() + "CashTotals.view", viewName, view.toString()), join, cashPaid,
+                cashReceived);
+    }
+
+    /**
+     * A posting's share of its entry's cash movement: its amount times the entry's cash on the opposite
+     * side over the entry's total on its own side - multiplied before the division so the result
+     * carries no avoidable rounding. An entry whose side totals 0 attributes nothing.
+     */
+    private static String cashShare(String amount, String cashColumn, String totalColumn) {
+        return "COALESCE(CAST(" + amount + " AS " + ALLOCATION_TYPE + ") * " + CASH_TOTALS_ALIAS + "." + quote(cashColumn) + " / NULLIF("
+                + CASH_TOTALS_ALIAS + "." + quote(totalColumn) + ", 0), 0)";
+    }
+
+    /**
+     * A cash-basis statement's additions: the per-entry totals view, the join restricting the ledger to
+     * the non-cash postings of cash entries, and the two allocated amounts the window sums take in
+     * place of the raw debit and credit.
+     *
+     * @param totalsView the generated per-entry cash totals view
+     * @param join the INNER join to it, carrying the cash-account exclusion
+     * @param cashPaid the cash paid to a debited counter-account - the debit side of the sums
+     * @param cashReceived the cash received from a credited counter-account - the credit side
+     */
+    private record CashBasis(ViewArtifact totalsView, Join join, String cashPaid, String cashReceived) {
     }
 
     /**
@@ -1218,18 +1345,17 @@ public class ReportIntentGenerator implements IntentTargetGenerator {
      * - so the two kinds cannot disagree about what a period is.
      *
      * @param date the window-driving date column
-     * @param debit the debit amount column
-     * @param credit the credit amount column
+     * @param debit the debit amount, already coalesced
+     * @param credit the credit amount, already coalesced
      * @return the select terms
      */
-    private static List<String> balanceSums(ColumnRef date, ColumnRef debit, ColumnRef credit) {
+    private static List<String> balanceSums(ColumnRef date, String debit, String credit) {
         Map<String, String> windows = Map.of("opening", date.qualified() + " < :fromDate", "period",
                 date.qualified() + " >= :fromDate AND " + date.qualified() + " <= :toDate", "closing", date.qualified() + " <= :toDate");
         List<String> sums = new ArrayList<>();
         for (StatementSupport.Balance balance : StatementSupport.balanceColumns()) {
-            ColumnRef amount = balance.debit() ? debit : credit;
-            sums.add("SUM(CASE WHEN " + windows.get(balance.window()) + " THEN COALESCE(" + amount.qualified() + ", 0) ELSE 0 END) as "
-                    + balance.column());
+            String amount = balance.debit() ? debit : credit;
+            sums.add("SUM(CASE WHEN " + windows.get(balance.window()) + " THEN " + amount + " ELSE 0 END) as " + balance.column());
         }
         return sums;
     }
@@ -1351,9 +1477,10 @@ public class ReportIntentGenerator implements IntentTargetGenerator {
      * @param lines the statement's lines, already flattened
      * @param viewName the database name of the generated lines view
      * @param accounts where the lines view enumerates account codes from
+     * @param cashBasis the cash-basis additions, or null for a statement on the accrual basis
      */
     private record StatementQuery(String accountColumn, List<String> balanceSums, List<StatementLine> lines, String viewName,
-            AccountSource accounts) {
+            AccountSource accounts, CashBasis cashBasis) {
 
         /**
          * The thin statement SQL: one subquery reducing the ledger to a balance per account, joined to the
@@ -1622,6 +1749,82 @@ public class ReportIntentGenerator implements IntentTargetGenerator {
             widget.put("at", pins);
         }
         return widget;
+    }
+
+    /**
+     * The output columns of a plain (non-ledger) report, keyed by the authored dimension or measure
+     * they come from (compared as {@link #expressionKey(String)} compares them) and valued by the
+     * result-set alias the generated query names them with - what a generated report repository's rows
+     * are keyed by.
+     *
+     * <p>
+     * It is derived here, beside the code that names the columns, from the same patterns and the same
+     * {@code humanize} spelling, so a consumer of the rows (a declared export) never restates the alias
+     * convention. A measure that matches no aggregate produces no column and is absent. A ledger kind's
+     * columns are fixed by its own shape rather than by authored expressions, so it has none here.
+     *
+     * @param report the report
+     * @return authored expression key to column alias, in output order; empty for a ledger kind
+     */
+    public static Map<String, String> outputAliases(ReportIntent report) {
+        Map<String, String> aliases = new LinkedHashMap<>();
+        if (report.isLedgerKind()) {
+            return aliases;
+        }
+        for (String dimension : report.getDimensions()) {
+            if (dimension == null || dimension.isBlank()) {
+                continue;
+            }
+            Matcher bucket = DATE_BUCKET.matcher(dimension.trim());
+            Matcher ageing = AGEING_BUCKET.matcher(dimension.trim());
+            String alias;
+            if (bucket.matches()) {
+                alias = humanize(bucket.group(1)
+                                       .toLowerCase(Locale.ROOT)
+                        + " " + bucket.group(2)
+                                      .trim()
+                                      .replace('.', ' '));
+            } else if (ageing.matches()) {
+                alias = humanize("ageing " + ageing.group(1)
+                                                   .trim()
+                                                   .replace('.', ' '));
+            } else {
+                alias = humanize(dimension.trim());
+            }
+            aliases.put(expressionKey(dimension), alias);
+        }
+        for (String measure : report.getMeasures()) {
+            if (measure == null || measure.isBlank()) {
+                continue;
+            }
+            Matcher matcher = AGGREGATE_EXPRESSION.matcher(measure.trim());
+            if (!matcher.matches()) {
+                continue;
+            }
+            String aggregate = matcher.group(1)
+                                      .toUpperCase(Locale.ROOT);
+            String field = matcher.group(2)
+                                  .trim();
+            if (!KNOWN_AGGREGATES.contains(aggregate)) {
+                continue;
+            }
+            String alias = field.isEmpty() || "*".equals(field) ? aggregate.charAt(0) + aggregate.substring(1)
+                                                                                                 .toLowerCase(Locale.ROOT)
+                    : humanize(aggregate.toLowerCase(Locale.ROOT) + " " + leaf(field));
+            aliases.put(expressionKey(measure), alias);
+        }
+        return aliases;
+    }
+
+    /**
+     * The key {@link #outputAliases(ReportIntent)} is keyed by: an authored dimension or measure
+     * expression with its whitespace removed, lower-cased.
+     *
+     * @param expression the authored expression
+     * @return the key
+     */
+    public static String columnKey(String expression) {
+        return expressionKey(expression);
     }
 
     /** Whitespace/case-insensitive compare key for authored measure and dimension expressions. */

@@ -12,7 +12,6 @@ package org.eclipse.dirigible.components.security.service;
 import org.eclipse.dirigible.components.base.artefact.BaseArtefactService;
 import org.eclipse.dirigible.components.security.domain.Role;
 import org.eclipse.dirigible.components.security.repository.RoleRepository;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class RoleService extends BaseArtefactService<Role, Long> {
 
+    private final RoleRepository roleRepository;
+
     /**
      * Instantiates a new role service.
      *
@@ -31,21 +32,19 @@ public class RoleService extends BaseArtefactService<Role, Long> {
      */
     public RoleService(RoleRepository repository) {
         super(repository);
+        this.roleRepository = repository;
     }
 
     /**
-     * Role exists by name.
+     * Role exists by name. Several projects may declare a role of the same name, so it is an existence
+     * check rather than a lookup of one role.
      *
      * @param name the name
      * @return true, if successful
      */
     @Transactional(readOnly = true)
     public boolean roleExistsByName(String name) {
-        Role filter = new Role();
-        filter.setName(name);
-        Example<Role> example = Example.of(filter);
-        return getRepo().findOne(example)
-                        .isPresent();
+        return roleRepository.existsByName(name);
     }
 
 }

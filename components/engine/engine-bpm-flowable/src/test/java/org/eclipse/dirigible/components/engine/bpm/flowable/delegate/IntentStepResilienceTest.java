@@ -11,7 +11,10 @@ package org.eclipse.dirigible.components.engine.bpm.flowable.delegate;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verifyNoInteractions;
 
+import org.flowable.engine.delegate.DelegateExecution;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -66,5 +69,14 @@ class IntentStepResilienceTest {
         assertFalse(IntentStepResilience.isFinalAttempt("R/PT30S", null, 3));
         // ...while a later failure still follows the retries the engine actually maintains.
         assertTrue(IntentStepResilience.isFinalAttempt("PT30S", "boom", 1));
+    }
+
+    /** The JVM failing is never an error route's business - the engine keeps it, on any attempt. */
+    @Test
+    void aVirtualMachineErrorIsNeverConverted() {
+        DelegateExecution execution = mock(DelegateExecution.class);
+
+        assertFalse(IntentStepResilience.convertFinalFailure(execution, new OutOfMemoryError("heap")));
+        verifyNoInteractions(execution);
     }
 }

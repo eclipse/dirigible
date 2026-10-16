@@ -38,7 +38,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.eclipse.dirigible.components.tenants.tenant.TenantAccessRefusedEvent;
 import org.eclipse.dirigible.components.tenants.tenant.TenantEnteredEvent;
+import org.eclipse.dirigible.components.tenants.tenant.TenantSelectionRevokedEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -154,12 +156,54 @@ class TenantSelectionManagerTest {
     }
 
     @Test
-    void aRefusedSelectionAnnouncesNothing() {
+    void aRefusedSelectionIsAnnouncedAsARefusalAndNotAsAnEntry() {
         authenticate("globex.library.User");
 
         assertThatThrownBy(() -> manager.selectTenant(request, response, ACME)).isInstanceOf(TenantSelectionException.class);
 
-        verify(events, never()).publishEvent(any());
+        ArgumentCaptor<Object> event = ArgumentCaptor.forClass(Object.class);
+        verify(events).publishEvent(event.capture());
+        assertThat(event.getValue()).isInstanceOfSatisfying(TenantAccessRefusedEvent.class, refused -> {
+            assertThat(refused.tenantId()).isEqualTo(ACME);
+            assertThat(refused.principal()).isEqualTo(USER);
+            assertThat(refused.reason()).isEqualTo("NOT_A_MEMBER");
+        });
+    }
+
+    @Test
+    void aBearerRequestForATenantNotGrantedIsAnnouncedAsARefusal() {
+        JwtAuthenticationToken bearer = bearer(Set.of(), "globex.library.User");
+
+        assertThatThrownBy(() -> manager.enterTenant(bearer, ACME)).isInstanceOf(TenantSelectionException.class);
+
+        ArgumentCaptor<TenantAccessRefusedEvent> event = ArgumentCaptor.forClass(TenantAccessRefusedEvent.class);
+        verify(events).publishEvent(event.capture());
+        assertThat(event.getValue()
+                        .tenantId()).isEqualTo(ACME);
+        assertThat(event.getValue()
+                        .principal()).isEqualTo("jane");
+    }
+
+    @Test
+    void aSwitchNamesTheTenantTheSessionCameFrom() {
+        authenticate("acme.library.Owner", "globex.library.User");
+        when(tenantService.findById(ACME)).thenReturn(Optional.of(tenant(ACME, "Acme Ltd", TenantStatus.PROVISIONED)));
+        when(tenantService.findById(GLOBEX)).thenReturn(Optional.of(tenant(GLOBEX, "Globex", TenantStatus.PROVISIONED)));
+
+        manager.selectTenant(request, response, ACME);
+        manager.selectTenant(request, response, GLOBEX);
+
+        ArgumentCaptor<TenantEnteredEvent> event = ArgumentCaptor.forClass(TenantEnteredEvent.class);
+        verify(events, org.mockito.Mockito.times(2)).publishEvent(event.capture());
+        assertThat(event.getAllValues()
+                        .get(0)
+                        .isSwitch()).isFalse();
+        assertThat(event.getAllValues()
+                        .get(1)
+                        .previousTenantId()).isEqualTo(ACME);
+        assertThat(event.getAllValues()
+                        .get(1)
+                        .isSwitch()).isTrue();
     }
 
     @Test
@@ -313,7 +357,7 @@ class TenantSelectionManagerTest {
         // What a refresh leaves behind: the mapper granted the global roles only.
         authenticate(Set.of("DEVELOPER"), "acme.library.Owner", "DEVELOPER");
 
-        manager.ensureConsistent(request, response);
+        assertThat(manager.ensureConsistent(request, response)).isTrue();
 
         assertThat(currentRoleNames()).containsExactlyInAnyOrder("DEVELOPER", "Owner");
     }
@@ -324,7 +368,7 @@ class TenantSelectionManagerTest {
         request.getSession()
                .setAttribute(TenantSelectionConstants.SELECTED_TENANT_ID_SESSION_ATTRIBUTE, ACME);
 
-        manager.ensureConsistent(request, response);
+        assertThat(manager.ensureConsistent(request, response)).isTrue();
 
         verify(securityContextRepository, never()).saveContext(any(SecurityContext.class), any(), any());
     }
@@ -336,11 +380,17 @@ class TenantSelectionManagerTest {
         request.getSession()
                .setAttribute(TenantSelectionConstants.SELECTED_TENANT_ID_SESSION_ATTRIBUTE, ACME);
 
-        manager.ensureConsistent(request, response);
+        assertThat(manager.ensureConsistent(request, response)).isFalse();
 
         assertThat(request.getSession()
                           .getAttribute(TenantSelectionConstants.SELECTED_TENANT_ID_SESSION_ATTRIBUTE)).isNull();
         assertThat(currentRoleNames()).containsExactly("DEVELOPER");
+        ArgumentCaptor<TenantSelectionRevokedEvent> event = ArgumentCaptor.forClass(TenantSelectionRevokedEvent.class);
+        verify(events).publishEvent(event.capture());
+        assertThat(event.getValue()
+                        .tenantId()).isEqualTo(ACME);
+        assertThat(event.getValue()
+                        .principal()).isEqualTo(USER);
     }
 
     @Test

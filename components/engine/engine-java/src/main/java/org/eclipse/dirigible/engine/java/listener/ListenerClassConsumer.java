@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -42,6 +43,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import jakarta.annotation.PreDestroy;
 import jakarta.jms.Connection;
 import jakarta.jms.Destination;
 import jakarta.jms.JMSException;
@@ -103,6 +105,15 @@ import jakarta.jms.Topic;
  * #7217). Retrying is safe because a partial attempt is undone: a tenant is recorded only once all
  * of its subscriptions are open, and what did open in a failed attempt is closed again, so a retry
  * can never end up with two consumers competing on the same destination.
+ *
+ * <p>
+ * <b>A topic subscription that loses its broker connection is re-established by the same pass</b>
+ * (#7851). Its connection carries a client id (it is durable), and the transport does not reconnect
+ * such a connection by itself - over a {@code failover:} URL it would replay the client id while
+ * the broker still holds the previous socket, be refused, and loop. So the connection's exception
+ * listener hands its scope (the tenant, or the global destinations) back: the scope's connections
+ * leave the registration, the next pass closes them and subscribes the scope again, and the durable
+ * subscription keeps what was published to it in between.
  */
 @Component
 @Order(500)
@@ -134,6 +145,13 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
      * so the second one to attach is turned away for good.
      */
     private final Set<String> reportedFailures = ConcurrentHashMap.newKeySet();
+
+    /**
+     * Connections whose broker connection is gone, waiting to be closed by the next pass. Closed there
+     * and not on the JMS exception thread that reported the loss: that thread belongs to the very
+     * connection being closed.
+     */
+    private final ConcurrentLinkedQueue<Connection> lostConnections = new ConcurrentLinkedQueue<>();
 
     @Autowired
     public ListenerClassConsumer(ComponentContainer componentContainer, ActiveMQConnectionArtifactsFactory connectionFactory,
@@ -251,6 +269,7 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
      * per-class fan-out would turn one tick into one query per registered listener.
      */
     private void topUp() {
+        closeLost();
         registrations.forEach(this::subscribeGlobal);
         try {
             tenantContext.executeForEachTenant(() -> {
@@ -282,7 +301,8 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
         List<Connection> opened = new ArrayList<>();
         boolean complete = true;
         for (Subscription subscription : registration.globalSubscriptions()) {
-            Connection connection = subscribe(subscription, "all tenants (global destination)");
+            Connection connection =
+                    subscribe(subscription, "all tenants (global destination)", () -> connectionLost(fqn, registration, null));
             if (connection == null) {
                 complete = false;
             } else {
@@ -325,7 +345,7 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
         List<Connection> opened = new ArrayList<>();
         boolean complete = true;
         for (Subscription subscription : registration.tenantSubscriptions()) {
-            Connection connection = subscribe(subscription, "tenant [" + tenantId + "]");
+            Connection connection = subscribe(subscription, "tenant [" + tenantId + "]", () -> connectionLost(fqn, registration, tenantId));
             if (connection == null) {
                 complete = false;
             } else {
@@ -351,6 +371,55 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
      */
     private boolean isSuperseded(String fqn, Registration registration) {
         return registrations.get(fqn) != registration;
+    }
+
+    /**
+     * A subscription's broker connection is gone for good (#7851): take its whole scope out of the
+     * registration - all or nothing, as {@link #subscribeTenant} and {@link #subscribeGlobal} open it -
+     * so the next pass subscribes it again, and queue the scope's connections for that pass to close.
+     * Called on the JMS exception thread; every connection of a scope may report the same loss, and
+     * only the first one finds anything left to take.
+     *
+     * @param fqn the class the subscription belongs to
+     * @param registration the registration that opened it
+     * @param tenantId the tenant whose subscriptions it is, or {@code null} for the global ones
+     */
+    private void connectionLost(String fqn, Registration registration, String tenantId) {
+        List<Connection> lost;
+        synchronized (this) {
+            if (isSuperseded(fqn, registration)) {
+                // A republish or an unload already closed it with the rest of the old registration.
+                return;
+            }
+            lost = tenantId == null ? registration.globalLost() : registration.lost(tenantId);
+        }
+        if (lost.isEmpty()) {
+            return;
+        }
+        lostConnections.addAll(lost);
+        markIncomplete();
+        LOGGER.warn("Java @Listener [{}] lost its broker connection for {} - subscribing it again on the next reconciliation pass.", fqn,
+                tenantId == null ? "all tenants (global destination)" : "tenant [" + tenantId + "]");
+    }
+
+    /** Close what {@link #connectionLost} took out of the registrations. */
+    private void closeLost() {
+        Connection connection;
+        while ((connection = lostConnections.poll()) != null) {
+            closeQuietly("lost connection", connection);
+        }
+    }
+
+    /**
+     * Close every connection on shutdown, the lost ones included: no pass comes after it to close them,
+     * and a connection left open keeps its executor thread, which holds this consumer and through it
+     * the whole application context (#7868).
+     */
+    @PreDestroy
+    synchronized void closeConnections() {
+        registrations.forEach((fqn, registration) -> closeAll(fqn, registration.openConnections()));
+        registrations.clear();
+        closeLost();
     }
 
     private void markIncomplete() {
@@ -380,9 +449,11 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
      *
      * @param subscription what to subscribe to
      * @param scope what this subscription covers, for the log
+     * @param onLost what to do when a topic subscription's connection is gone for good - its transport
+     *        does not reconnect it (see the class comment)
      * @return the connection it opened, or {@code null} if the broker refused the subscription
      */
-    private Connection subscribe(Subscription subscription, String scope) {
+    private Connection subscribe(Subscription subscription, String scope, Runnable onLost) {
         String label = subscription.label();
         // A queue holds its messages until something consumes them; a topic drops whatever it delivers
         // to nobody. So only a topic subscription needs to be durable - and a durable one needs the
@@ -401,8 +472,13 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
         try {
             String destinationName = destinationNameManager.toTenantName(subscription.destination());
             String subscriptionId = topic ? durableSubscriptionId(label, destinationName) : null;
-            connection = connectionFactory.createConnection(
-                    ex -> LOGGER.error("[java-listener] JMS error for [{}]: {}", label, ex.getMessage(), ex), subscriptionId);
+            connection = connectionFactory.createConnection(ex -> {
+                LOGGER.error("[java-listener] JMS error for [{}]: {}", label, ex.getMessage(), ex);
+                if (topic) {
+                    // A client-id connection the transport no longer reconnects: re-subscribe its scope.
+                    onLost.run();
+                }
+            }, subscriptionId);
             Session session = connectionFactory.createSession(connection);
             Destination destination = topic ? session.createTopic(destinationName) : session.createQueue(destinationName);
             // Bound the retries, exactly as the JavaScript listener path does. Without this the broker
@@ -639,6 +715,23 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
 
         void subscribed(String tenantId, List<Connection> connections) {
             connectionsByTenant.put(tenantId, connections);
+        }
+
+        /** Forget a tenant's subscriptions, so they are opened again; returns their connections. */
+        List<Connection> lost(String tenantId) {
+            List<Connection> connections = connectionsByTenant.remove(tenantId);
+            return connections == null ? List.of() : connections;
+        }
+
+        /** Forget the global subscriptions, so they are opened again; returns their connections. */
+        List<Connection> globalLost() {
+            if (globalSubscriptions.isEmpty() || !globalSubscribed) {
+                return List.of();
+            }
+            List<Connection> connections = globalConnections;
+            globalConnections = List.of();
+            globalSubscribed = false;
+            return connections;
         }
 
         List<Connection> openConnections() {

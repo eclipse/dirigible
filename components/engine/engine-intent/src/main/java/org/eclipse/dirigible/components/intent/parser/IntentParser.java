@@ -24,7 +24,9 @@ import javax.lang.model.SourceVersion;
 
 import org.eclipse.dirigible.components.intent.generator.ArrivalSupport;
 import org.eclipse.dirigible.components.intent.generator.EventBinding;
+import org.eclipse.dirigible.components.intent.generator.ImportSupport;
 import org.eclipse.dirigible.components.intent.generator.IntegrationSupport;
+import org.eclipse.dirigible.components.intent.generator.ExportSupport;
 import org.eclipse.dirigible.components.intent.generator.IntentEntities;
 import org.eclipse.dirigible.components.intent.generator.FileNameSupport;
 import org.eclipse.dirigible.components.intent.generator.NotificationSupport;
@@ -419,7 +421,9 @@ public final class IntentParser {
         validateSchedules(model, entityNames, usesAliases, issues);
         validateIntegrations(model, entityNames, issues);
         validateInbound(model, entityNames, issues);
+        ImportSupport.validate(model, issues);
         validateOutbound(model, entityNames, issues);
+        ExportSupport.validate(model, issues);
         validateRollups(model, usesAliases, issues);
         validateExpansions(model, issues);
         validateSettlements(model, issues);
@@ -11456,8 +11460,8 @@ public final class IntentParser {
     private static void validateBalanceReport(IntentModel model, ReportIntent report, List<String> issues) {
         boolean balanceInputs =
                 report.getDate() != null || report.getDebit() != null || report.getCredit() != null || report.getCorrespondence() != null;
-        boolean statementInputs = report.getAccount() != null || !report.getLines()
-                                                                        .isEmpty();
+        boolean statementInputs = report.getAccount() != null || report.getCashAccounts() != null || !report.getLines()
+                                                                                                            .isEmpty();
         if (report.getKind() == null || report.getKind()
                                               .isBlank()) {
             if (balanceInputs) {
@@ -11465,7 +11469,7 @@ public final class IntentParser {
                         + "] declares date/debit/credit/correspondence but is not kind: balance or kind: statement");
             }
             if (statementInputs) {
-                issues.add("report [" + report.getName() + "] declares account/lines but is not kind: statement");
+                issues.add("report [" + report.getName() + "] declares account/lines/cashAccounts but is not kind: statement");
             }
             return;
         }
@@ -11499,7 +11503,7 @@ public final class IntentParser {
                 issues.add(prefix + " needs at least one dimension to balance by");
             }
             if (statementInputs) {
-                issues.add(prefix + " declares account/lines - those belong to kind: statement");
+                issues.add(prefix + " declares account/lines/cashAccounts - those belong to kind: statement");
             }
         }
         EntityIntent source = null;
@@ -11521,6 +11525,45 @@ public final class IntentParser {
         if (report.isStatement()) {
             validateStatementAccount(model, source, report, issues, prefix);
             validateStatementLines(report, issues, prefix);
+            validateStatementCashBasis(source, report, issues, prefix);
+        }
+    }
+
+    /**
+     * {@code cashAccounts} - the cash basis of a statement, the direct-method cash-flow statement. Its
+     * lines read the cash each counter-account's postings carried, which is a fact about the ENTRY the
+     * posting belongs to, so the source must reach that entry: the first hop of {@code date}, as for a
+     * balance report's correspondence. The selector is the line selectors' own grammar, and every leaf
+     * line takes a {@code period} measure - an opening or a closing cash flow does not exist, and
+     * accepting one would render a figure nobody can reconcile.
+     */
+    private static void validateStatementCashBasis(EntityIntent source, ReportIntent report, List<String> issues, String prefix) {
+        String cashAccounts = report.getCashAccounts();
+        if (cashAccounts == null) {
+            return;
+        }
+        if (cashAccounts.isBlank()) {
+            issues.add(
+                    prefix + " cashAccounts is empty - name the cash accounts the cash-flow statement reads, e.g. cashAccounts: \"50*\"");
+            return;
+        }
+        StatementSupport.selector(cashAccounts, issues, prefix + " cashAccounts:");
+        String date = report.getDate() == null ? ""
+                : report.getDate()
+                        .trim();
+        int dot = date.indexOf('.');
+        if (dot <= 0 || toOneRelation(source, date.substring(0, dot)) == null) {
+            issues.add(prefix + " cashAccounts needs the entry its lines share, which is the first hop of date - so date ["
+                    + report.getDate() + "] must be a <relation>.<field> path over a to-one relation of [" + source.getName()
+                    + "] to its journal entry / voucher");
+        }
+        for (StatementLineIntent line : report.getLines()) {
+            StatementSupport.Measure measure = line.isLeaf() ? StatementSupport.measure(line.getMeasure()) : null;
+            if (measure != null && !measure.isPeriod()) {
+                issues.add(prefix + " line [" + line.getCode() + "] takes [" + measure.authored()
+                        + "], but a cash-basis statement reads movements within the window - expected one of "
+                        + StatementSupport.periodMeasureNames());
+            }
         }
     }
 

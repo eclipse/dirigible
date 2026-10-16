@@ -177,13 +177,32 @@ jobs:
           platforms: ${{ matrix.platform }}
           push: false
 
-  smoke-tests:
+  # The gate selects every HTTP-level IT plus the smoke-tagged journeys - 173 classes on run
+  # 38875134464, 90.6 min of test time with a median of ~30 s a class, almost all of it the Spring
+  # context each class boots - and running them in one job took 96-134 min. No class is a long
+  # pole (the slowest is ~3 min), so the set is split by the same hash partition as the master and
+  # nightly "api" shard (-Dit.partition=k/n, ClassPartitionFilter - see the note in build.yml):
+  # disjoint and complete by construction, nothing to tag. Simulated on that run's class times,
+  # the four partitions carry 16.5 / 26.2 / 28.5 / 19.4 min. When one nears the cap, go to /5
+  # rather than shrinking the smoke set.
+  smoke-tests-shard:
+    name: smoke-tests (${{ matrix.shard.partition }})
     runs-on: ubuntu-latest
-    # ~91 min green (measured on runs 34489811133 / 34490597976 / 34491967246): the gate selects
-    # every HTTP-level IT plus the smoke-tagged journeys, and each IT class boots its own Spring
-    # context. The cap only has to be out of a healthy run's way - it exists so a hang costs one
-    # job instead of the 6h GitHub default (#7283).
-    timeout-minutes: 150
+    strategy:
+      fail-fast: false
+      matrix:
+        shard:
+          - name: 1-of-4
+            partition: "1/4"
+          - name: 2-of-4
+            partition: "2/4"
+          - name: 3-of-4
+            partition: "3/4"
+          - name: 4-of-4
+            partition: "4/4"
+    # The cap only has to be out of a healthy run's way - it exists so a hang costs one job
+    # instead of the 6h GitHub default (#7283).
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
         with:
@@ -223,7 +242,7 @@ jobs:
       # (including two full clone -> generate -> validate app lifecycles). The heavy Selenide
       # suite (@Tag "ui") runs nightly and on master push - see nightly.yml and build.yml.
       - name: Smoke integration tests (H2)
-        run: mvn clean install -P integration-tests -Dit.groups="(!ui | smoke) & !upgrade & !perf"
+        run: mvn clean install -P integration-tests -Dit.groups="(!ui | smoke) & !upgrade & !perf" -Dit.partition='${{ matrix.shard.partition }}'
 
       # Guards #7215: a tag expression that discovers nothing leaves the reports directory absent
       # and the build green, so what ran is asserted by count instead of by the job's colour.
@@ -238,7 +257,7 @@ jobs:
         if: always()
         with:
           retention-days: 3
-          name: failsafe-reports-smoke-${{ github.run_attempt }}
+          name: failsafe-reports-smoke-${{ matrix.shard.name }}-${{ github.run_attempt }}
           path: |
             tests/tests-integrations/target/failsafe-reports
             tests/tests-integrations/target/surefire-reports
@@ -258,7 +277,7 @@ jobs:
         id: generate_name
         run: |
           TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
-          echo "ARTIFACT_NAME=selenide-screenshots-${TIMESTAMP}.zip" >> $GITHUB_ENV
+          echo "ARTIFACT_NAME=selenide-screenshots-smoke-${{ matrix.shard.name }}-${TIMESTAMP}.zip" >> $GITHUB_ENV
 
       - name: Upload selenide screenshots
         uses: actions/upload-artifact@v4
@@ -267,3 +286,17 @@ jobs:
           retention-days: 3
           name: ${{ env.ARTIFACT_NAME }}
           path: tests/tests-integrations/build/reports/tests
+
+  # One check that answers for the whole gate, whatever the partition count: it fails unless
+  # every shard passed, a cancelled or skipped one included.
+  smoke-tests:
+    needs: smoke-tests-shard
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: All smoke shards passed
+        run: |
+          if [ "${{ needs.smoke-tests-shard.result }}" != "success" ]; then
+            echo "::error::A smoke shard did not pass (${{ needs.smoke-tests-shard.result }})"
+            exit 1
+          fi

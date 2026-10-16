@@ -67,6 +67,20 @@ public class ReportIntent {
      */
     private String account;
     /**
+     * {@code kind: statement}: switches the statement to the CASH BASIS - the direct-method cash-flow
+     * statement. The value is an account selector over the {@link #account} code, in the line
+     * selectors' own grammar ({@code 50*}, {@code 501-503}, {@code 5010}), naming the cash accounts.
+     * The lines then read not an account's own balance but the cash its postings carried: for every
+     * entry touching a cash account, each NON-cash line of the entry is attributed its proportional
+     * share of the entry's cash movement - a credit to it is cash received from it (its
+     * {@code periodCredit}), a debit is cash paid to it ({@code periodDebit}). Over a balanced entry
+     * the shares add up exactly to the entry's net cash movement, so the lines of a complete statement
+     * reconcile with the change in the cash accounts' balance over the window. Only the {@code period}
+     * measures apply - a cash flow is a movement within the window - and a transfer between two cash
+     * accounts is no cash flow at all.
+     */
+    private String cashAccounts;
+    /**
      * {@code kind: statement}: the statement's fixed lines, in the order they are rendered - each one
      * either reading the ledger through an account selector or computed from other lines.
      */
@@ -194,6 +208,19 @@ public class ReportIntent {
 
     public void setAccount(String account) {
         this.account = account;
+    }
+
+    public String getCashAccounts() {
+        return cashAccounts;
+    }
+
+    public void setCashAccounts(String cashAccounts) {
+        this.cashAccounts = cashAccounts;
+    }
+
+    /** Whether this statement is on the cash basis - a direct-method cash-flow statement. */
+    public boolean isCashBasis() {
+        return isStatement() && cashAccounts != null && !cashAccounts.isBlank();
     }
 
     public List<StatementLineIntent> getLines() {

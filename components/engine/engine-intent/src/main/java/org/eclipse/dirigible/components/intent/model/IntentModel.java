@@ -55,8 +55,12 @@ public class IntentModel {
     private List<ScheduleIntent> schedules = new ArrayList<>();
     private List<IntegrationIntent> integrations = new ArrayList<>();
     private List<InboundIntent> inbound = new ArrayList<>();
+    /** File imports: an uploaded file (CSV, MT940, camt.053) read into the rows of an entity. */
+    private List<ImportIntent> imports = new ArrayList<>();
     /** Outbound departures: a record emitted on a queue or a topic when an event fires. */
     private List<OutboundIntent> outbound = new ArrayList<>();
+    /** Declared exports: a file in an exacting format over a query, recorded on a ledger per run. */
+    private List<ExportIntent> exports = new ArrayList<>();
     private List<RollupIntent> rollups = new ArrayList<>();
     /** Period expansions: a master's date span generated into child rows (days / weeks / months). */
     private List<ExpansionIntent> expansions = new ArrayList<>();
@@ -272,6 +276,22 @@ public class IntentModel {
 
     public void setInbound(List<InboundIntent> inbound) {
         this.inbound = inbound == null ? new ArrayList<>() : inbound;
+    }
+
+    public List<ExportIntent> getExports() {
+        return exports;
+    }
+
+    public void setExports(List<ExportIntent> exports) {
+        this.exports = exports == null ? new ArrayList<>() : exports;
+    }
+
+    public List<ImportIntent> getImports() {
+        return imports;
+    }
+
+    public void setImports(List<ImportIntent> imports) {
+        this.imports = imports == null ? new ArrayList<>() : imports;
     }
 
     public List<OutboundIntent> getOutbound() {

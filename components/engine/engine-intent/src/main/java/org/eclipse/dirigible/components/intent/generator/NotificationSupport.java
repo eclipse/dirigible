@@ -54,23 +54,24 @@ public final class NotificationSupport {
     /**
      * The reserved {@code {appUrl}} placeholder name - a config-backed token, not an entity field or
      * relation. Resolves to the application's external base URL ({@link DirigibleConfig#APP_BASE_URL},
-     * tenant-overridable), so a body can compose a deep link by hand, e.g. {@code "Review it here:
-     * {appUrl}/orders/{id}"}. Deliberately supplies only the origin - the concrete per-entity route is
-     * the template layer's knowledge, not the intent layer's (see the engine-intent guide's
-     * path-agnostic rule), so the author appends the rest of the path as plain text and other
-     * placeholders.
+     * tenant-overridable, else {@link DirigibleConfig#HOST}; see the SDK's
+     * {@code Configurations.appBaseUrl()}), so a body can compose a deep link by hand, e.g.
+     * {@code "Review it here: {appUrl}/orders/{id}"}. Deliberately supplies only the origin - the
+     * concrete per-entity route is the template layer's knowledge, not the intent layer's (see the
+     * engine-intent guide's path-agnostic rule), so the author appends the rest of the path as plain
+     * text and other placeholders.
      * <p>
      * Resolved per dispatch inside the sending tenant's own configuration scope - the generated
      * listener (via {@code ListenerClassConsumer}) loads that tenant's overrides before invoking the
      * handler, the same way {@code TenantConfigurationInitFilter} does for HTTP requests, so a tenant
-     * override of {@code DIRIGIBLE_APP_BASE_URL} takes effect here, falling back to the global
-     * environment/default value when the tenant has not set one.
+     * override of {@code DIRIGIBLE_APP_BASE_URL} takes effect here, falling back to the global value
+     * and then to {@code DIRIGIBLE_HOST} (#7843) - an instance that sets only its host still mails
+     * absolute links.
      */
     static final String APP_URL_TOKEN = "appUrl";
 
     /** The Java expression {@link #APP_URL_TOKEN} resolves to. */
-    private static final String APP_URL_EXPRESSION =
-            "org.eclipse.dirigible.sdk.core.Configurations.get(\"" + DirigibleConfig.APP_BASE_URL.getKey() + "\", \"\")";
+    private static final String APP_URL_EXPRESSION = "org.eclipse.dirigible.sdk.core.Configurations.appBaseUrl()";
 
     /**
      * The reserved {@code {recordUrl}} placeholder name - the ready-made deep link to the record the

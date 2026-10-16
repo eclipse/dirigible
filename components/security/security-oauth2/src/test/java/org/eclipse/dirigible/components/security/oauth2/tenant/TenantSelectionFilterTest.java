@@ -32,6 +32,7 @@ import org.eclipse.dirigible.components.base.tenant.groups.UserTenantAssignments
 import org.eclipse.dirigible.components.base.util.AuthoritiesUtil;
 import org.eclipse.dirigible.components.security.oauth2.resourceserver.ResourceServerJwtSettings;
 import org.eclipse.dirigible.components.security.oauth2.resourceserver.ResourceServerJwtSupport;
+import org.eclipse.dirigible.components.tenants.tenant.TenantImpl;
 import org.eclipse.dirigible.components.tenants.tenant.TenantSelectionConstants;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,10 +62,12 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 /**
  * The decision the filter makes on every request. For an interactive session: one tenant is entered
  * silently, several send the user to the picker (a browser by redirect, a programmatic caller by a
- * conflict), none is fine for staff and refused for everyone else, and a selection that already
- * exists is kept consistent. For a bearer request: the tenant named in the header is entered for
- * that request, one that cannot be entered is refused with its reason, and a request naming none
- * stays in the default tenant - unless an ID token holds no global role, which is refused.
+ * conflict), none is fine for staff - a global role the instance knows - and is told it has no
+ * access otherwise (a browser by the picker, a programmatic caller by a forbidden), and a selection
+ * that already exists is kept consistent. For a bearer request: the tenant named in the header is
+ * entered for that request, one that cannot be entered is refused with its reason, and a request
+ * naming none stays in the default tenant - unless an ID token holds no known global role, which is
+ * refused.
  */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -72,6 +75,9 @@ class TenantSelectionFilterTest {
 
     private static final String ACME = "acme";
     private static final String GLOBEX = "globex";
+
+    /** A group Cognito manages itself: it carries no tenant, so it reads as a global role. */
+    private static final String FEDERATION_GROUP = "eu-central-1_AbCdEf123_Google";
 
     @Mock
     private TenantSelectionManager tenantSelectionManager;
@@ -86,6 +92,9 @@ class TenantSelectionFilterTest {
     private ResourceServerJwtSupport resourceServerJwtSupport;
 
     @Mock
+    private KnownGlobalRoles knownGlobalRoles;
+
+    @Mock
     private Tenant acmeTenant;
 
     private TenantSelectionFilter filter;
@@ -96,7 +105,7 @@ class TenantSelectionFilterTest {
     @BeforeEach
     void setUp() {
         DirigibleConfig.TENANT_RESOLUTION_STRATEGY.setStringValue("TOKEN_GROUPS");
-        filter = new TenantSelectionFilter(tenantSelectionManager, tenantContext, bearerTokenSupport);
+        filter = new TenantSelectionFilter(tenantSelectionManager, tenantContext, bearerTokenSupport, knownGlobalRoles);
         // The real one opens the tenant scope around the callable; here it just runs it.
         try {
             when(tenantContext.execute(anyString(), any(CallableResultAndException.class))).thenAnswer(
@@ -110,6 +119,8 @@ class TenantSelectionFilterTest {
         when(bearerTokenSupport.getIfAvailable()).thenReturn(resourceServerJwtSupport);
         when(resourceServerJwtSupport.settings()).thenReturn(ResourceServerJwtSettings.keycloak("http://localhost/certs",
                 "http://localhost/realms/it", "the-client", "preferred_username"));
+        // Staff of the instance; every other set of global roles is unknown.
+        when(knownGlobalRoles.anyKnown(Set.of("DEVELOPER"))).thenReturn(true);
         request = new MockHttpServletRequest("GET", "/services/web/home/index.html");
         request.setSession(new MockHttpSession());
         response = new MockHttpServletResponse();
@@ -212,19 +223,107 @@ class TenantSelectionFilterTest {
 
         filter.doFilter(request, response, chain);
 
-        assertThat(response.getStatus()).isEqualTo(403);
-        assertThat(response.getErrorMessage()).contains("not assigned to any tenant");
+        assertNoTenantAssigned();
+    }
+
+    @Test
+    void aBrowserWithNeitherTenantsNorGlobalRolesIsSentToThePicker() throws Exception {
+        authenticate();
+        request.addHeader(HttpHeaders.ACCEPT, MediaType.TEXT_HTML_VALUE);
+        when(tenantSelectionManager.assignmentsOf(any())).thenReturn(assignments(Map.of(), Set.of()));
+
+        filter.doFilter(request, response, chain);
+
+        assertThat(response.getStatus()).isEqualTo(302);
+        assertThat(response.getRedirectedUrl()).isEqualTo(TenantSelectionFilter.TENANT_SELECTION_PAGE);
         assertThat(chain.getRequest()).isNull();
+    }
+
+    /**
+     * The regression this guards: a group the identity provider manages itself carries no tenant, so it
+     * reads as a global role - and used to be enough to serve the default tenant's shell to a user who
+     * could do nothing in it.
+     */
+    @Test
+    void aBrowserWithOnlyUnknownGroupsIsSentToThePicker() throws Exception {
+        authenticate();
+        request.addHeader(HttpHeaders.ACCEPT, MediaType.TEXT_HTML_VALUE);
+        when(tenantSelectionManager.assignmentsOf(any())).thenReturn(assignments(Map.of(), Set.of(FEDERATION_GROUP)));
+
+        filter.doFilter(request, response, chain);
+
+        assertThat(response.getStatus()).isEqualTo(302);
+        assertThat(response.getRedirectedUrl()).isEqualTo(TenantSelectionFilter.TENANT_SELECTION_PAGE);
+        assertThat(chain.getRequest()).isNull();
+        verify(knownGlobalRoles).anyKnown(Set.of(FEDERATION_GROUP));
+    }
+
+    @Test
+    void aProgrammaticCallerWithOnlyUnknownGroupsIsRefusedWithTheReason() throws Exception {
+        authenticate();
+        request.addHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+        when(tenantSelectionManager.assignmentsOf(any())).thenReturn(assignments(Map.of(), Set.of(FEDERATION_GROUP)));
+
+        filter.doFilter(request, response, chain);
+
+        assertNoTenantAssigned();
     }
 
     @Test
     void anExistingSelectionIsKeptConsistent() throws Exception {
         authenticate();
         when(tenantSelectionManager.selectedTenantId(request)).thenReturn(ACME);
+        when(tenantSelectionManager.ensureConsistent(request, response)).thenReturn(true);
 
         filter.doFilter(request, response, chain);
 
         verify(tenantSelectionManager).ensureConsistent(request, response);
+        assertThat(chain.getRequest()).isNotNull();
+    }
+
+    /**
+     * The regression this guards: the tenant scope of the request was opened from a selection the
+     * consistency check then dropped, so passing the request on would serve it in the tenant the user
+     * just lost.
+     */
+    @Test
+    void aRequestWhoseSelectionWasRevokedIsNotServedInTheRevokedTenant() throws Exception {
+        authenticate();
+        request.addHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+        when(tenantSelectionManager.selectedTenantId(request)).thenReturn(ACME);
+        when(tenantSelectionManager.ensureConsistent(request, response)).thenReturn(false);
+        when(tenantSelectionManager.assignmentsOf(any())).thenReturn(assignments(Map.of(), Set.of()));
+
+        filter.doFilter(request, response, chain);
+
+        assertThat(chain.getRequest()).isNull();
+        assertThat(response.getStatus()).isEqualTo(403);
+    }
+
+    @Test
+    void aRequestWhoseSelectionWasRevokedMovesIntoTheOnlyTenantLeft() throws Exception {
+        authenticate();
+        when(tenantSelectionManager.selectedTenantId(request)).thenReturn(ACME);
+        when(tenantSelectionManager.ensureConsistent(request, response)).thenReturn(false);
+        when(tenantSelectionManager.assignmentsOf(any())).thenReturn(assignments(Map.of(GLOBEX, Set.of("User")), Set.of()));
+
+        filter.doFilter(request, response, chain);
+
+        verify(tenantSelectionManager).selectTenant(any(), any(), eq(GLOBEX));
+        verify(tenantContext).execute(eq(GLOBEX), any(CallableResultAndException.class));
+        assertThat(chain.getRequest()).isNotNull();
+    }
+
+    @Test
+    void aStaffMemberWhoseSelectionWasRevokedContinuesInTheDefaultTenant() throws Exception {
+        authenticate();
+        when(tenantSelectionManager.selectedTenantId(request)).thenReturn(ACME);
+        when(tenantSelectionManager.ensureConsistent(request, response)).thenReturn(false);
+        when(tenantSelectionManager.assignmentsOf(any())).thenReturn(assignments(Map.of(), Set.of("DEVELOPER")));
+
+        filter.doFilter(request, response, chain);
+
+        verify(tenantContext).execute(eq(TenantImpl.getDefaultTenant()), any(CallableResultAndException.class));
         assertThat(chain.getRequest()).isNotNull();
     }
 
@@ -334,6 +433,18 @@ class TenantSelectionFilterTest {
     }
 
     @Test
+    void anIdTokenWithOnlyUnknownGroupsHasToNameATenant() throws Exception {
+        JwtAuthenticationToken bearer = authenticateBearer("ID", FEDERATION_GROUP);
+        when(tenantSelectionManager.assignmentsOf(bearer)).thenReturn(assignments(Map.of(ACME, Set.of("Owner")), Set.of(FEDERATION_GROUP)));
+
+        filter.doFilter(request, response, chain);
+
+        assertThat(response.getStatus()).isEqualTo(403);
+        assertThat(response.getErrorMessage()).contains(TenantSelectionConstants.TENANT_HEADER);
+        assertThat(chain.getRequest()).isNull();
+    }
+
+    @Test
     void aBlankTenantHeaderCountsAsNone() throws Exception {
         JwtAuthenticationToken bearer = authenticateBearer("ID", "DEVELOPER");
         request.addHeader(TenantSelectionConstants.TENANT_HEADER, "   ");
@@ -377,6 +488,11 @@ class TenantSelectionFilterTest {
         assertThat(filter.shouldNotFilter(new MockHttpServletRequest("GET", "/services/security/tenant-selection/current"))).isTrue();
         assertThat(filter.shouldNotFilter(new MockHttpServletRequest("GET", "/webjars/codbex__harmonia/dist/harmonia.css"))).isTrue();
         assertThat(filter.shouldNotFilter(new MockHttpServletRequest("GET", "/services/js/platform-branding/branding.js"))).isTrue();
+        // the images branding.js names - the picker's logo and favicon
+        assertThat(
+                filter.shouldNotFilter(new MockHttpServletRequest("GET", "/services/web/platform-branding/images/dirigible.svg"))).isTrue();
+        assertThat(
+                filter.shouldNotFilter(new MockHttpServletRequest("GET", "/services/web/platform-branding/images/favicon.ico"))).isTrue();
         assertThat(filter.shouldNotFilter(new MockHttpServletRequest("GET", "/logout"))).isTrue();
         assertThat(filter.shouldNotFilter(new MockHttpServletRequest("GET", "/services/web/home/index.html"))).isFalse();
     }
@@ -384,9 +500,18 @@ class TenantSelectionFilterTest {
     @Test
     void theFilterIsInertWhereTenantsAreNotSelected() {
         Configuration.remove(DirigibleConfig.TENANT_RESOLUTION_STRATEGY.getKey());
-        TenantSelectionFilter subdomainFilter = new TenantSelectionFilter(tenantSelectionManager, tenantContext, bearerTokenSupport);
+        TenantSelectionFilter subdomainFilter =
+                new TenantSelectionFilter(tenantSelectionManager, tenantContext, bearerTokenSupport, knownGlobalRoles);
 
         assertThat(subdomainFilter.shouldNotFilter(new MockHttpServletRequest("GET", "/services/web/home/index.html"))).isTrue();
+    }
+
+    private void assertNoTenantAssigned() throws Exception {
+        assertThat(response.getStatus()).isEqualTo(403);
+        assertThat(response.getContentType()).isEqualTo(MediaType.APPLICATION_JSON_VALUE);
+        assertThat(response.getContentAsString()).contains("\"error\":\"NO_TENANT_ASSIGNED\"")
+                                                 .contains("not assigned to any tenant");
+        assertThat(chain.getRequest()).isNull();
     }
 
     private void authenticate() {

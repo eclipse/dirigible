@@ -10,6 +10,7 @@
 package org.eclipse.dirigible.integration.tests.api;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.everyItem;
@@ -1973,6 +1974,26 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                   - { code: CASH,  label: Vault cash, accounts: "Vault*",   measure: closingNetDebit }
                   - { code: MISS,  label: Missing,    accounts: "Nothing*", measure: closingNetDebit }
                   - { code: TOTAL, label: Total,      sum: [CASH, MISS] }
+              # kind: statement on the CASH BASIS (#7857) - the direct-method cash-flow statement.
+              # The lines read the cash each counter-account's postings carried in entries touching
+              # 50*, and the per-entry cash totals are a second generated .view beside the _LINES one.
+              - name: CashFlow
+                kind: statement
+                source: CashVoucherLine
+                date: CashVoucher.bookedOn
+                debit: debit
+                credit: credit
+                account: LedgerAccount.code
+                cashAccounts: "50*"
+                lines:
+                  - { code: OP.IN,    label: Receipts from customers, accounts: "41*", measure: periodCredit }
+                  - { code: OP.SALES, label: Cash sales,              accounts: "70*", measure: periodCredit }
+                  - { code: OP.OUT,   label: Payments to suppliers,   accounts: "40*", measure: periodDebit }
+                  - { code: OP,       label: Operating,               sum: [OP.IN, OP.SALES], less: [OP.OUT] }
+                  - { code: INV,      label: Investing,               less: [INV.OUT] }
+                  - { code: INV.OUT,  label: Equipment bought,        accounts: "20*", measure: periodDebit }
+                  - { code: FIN,      label: Financing,               accounts: "15*", measure: periodCredit }
+                  - { code: NET,      label: Net cash flow,           sum: [OP, INV, FIN] }
 
             seeds:
               - name: people
@@ -2083,6 +2104,44 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                 rows:
                   - { id: 901, date: "2026-01-10", debit: 100, Account: 3, Status: 2 }
                   - { id: 902, date: "2026-01-11", credit: 40, Account: 3, Status: 2 }
+              # The CashFlow ledger: the cash accounts (50*) move by +300 -120 -200 +1000 +0 +100 =
+              # 1080 - which the three sections must add up to. Voucher 5 is a desk-to-bank transfer
+              # (no cash flow), voucher 6 spreads 100 cash over 75 receivable and 25 sales by amount.
+              - name: ledger-accounts
+                entity: LedgerAccount
+                rows:
+                  - { id: 1, code: "5010" }
+                  - { id: 2, code: "5030" }
+                  - { id: 3, code: "4110" }
+                  - { id: 4, code: "4010" }
+                  - { id: 5, code: "2040" }
+                  - { id: 6, code: "1510" }
+                  - { id: 7, code: "7010" }
+              - name: cash-vouchers
+                entity: CashVoucher
+                rows:
+                  - { id: 1, bookedOn: "2026-02-01" }
+                  - { id: 2, bookedOn: "2026-02-05" }
+                  - { id: 3, bookedOn: "2026-02-10" }
+                  - { id: 4, bookedOn: "2026-02-12" }
+                  - { id: 5, bookedOn: "2026-02-15" }
+                  - { id: 6, bookedOn: "2026-02-20" }
+              - name: cash-voucher-lines
+                entity: CashVoucherLine
+                rows:
+                  - { id: 11, debit: 300,   CashVoucher: 1, LedgerAccount: 1 }
+                  - { id: 12, credit: 300,  CashVoucher: 1, LedgerAccount: 3 }
+                  - { id: 21, debit: 120,   CashVoucher: 2, LedgerAccount: 4 }
+                  - { id: 22, credit: 120,  CashVoucher: 2, LedgerAccount: 2 }
+                  - { id: 31, debit: 200,   CashVoucher: 3, LedgerAccount: 5 }
+                  - { id: 32, credit: 200,  CashVoucher: 3, LedgerAccount: 1 }
+                  - { id: 41, debit: 1000,  CashVoucher: 4, LedgerAccount: 2 }
+                  - { id: 42, credit: 1000, CashVoucher: 4, LedgerAccount: 6 }
+                  - { id: 51, debit: 50,    CashVoucher: 5, LedgerAccount: 2 }
+                  - { id: 52, credit: 50,   CashVoucher: 5, LedgerAccount: 1 }
+                  - { id: 61, debit: 100,   CashVoucher: 6, LedgerAccount: 1 }
+                  - { id: 62, credit: 75,   CashVoucher: 6, LedgerAccount: 3 }
+                  - { id: 63, credit: 25,   CashVoucher: 6, LedgerAccount: 7 }
             """;
 
     /** The whole fixture, as the two halves above spell it. */
@@ -2110,6 +2169,24 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                   - { name: amount, type: decimal, precision: 18, scale: 2 }
                 relations:
                   - { name: FreightEntry, kind: manyToOne, to: FreightEntry, composition: true, required: true }
+              # The voucher ledger the CashFlow statement reads (#7857) - its own entities, so no
+              # other fixture's postings can drift the cash-flow figures.
+              - name: CashVoucher
+                fields:
+                  - { name: id,       type: integer, primaryKey: true, generated: true }
+                  - { name: bookedOn, type: date, required: true }
+              - name: LedgerAccount
+                fields:
+                  - { name: id,   type: integer, primaryKey: true, generated: true }
+                  - { name: code, type: string, required: true, length: 20 }
+              - name: CashVoucherLine
+                fields:
+                  - { name: id,     type: integer, primaryKey: true, generated: true }
+                  - { name: debit,  type: decimal, precision: 18, scale: 2 }
+                  - { name: credit, type: decimal, precision: 18, scale: 2 }
+                relations:
+                  - { name: CashVoucher,   kind: manyToOne, to: CashVoucher, composition: true, required: true }
+                  - { name: LedgerAccount, kind: manyToOne, to: LedgerAccount, required: true }
             """;
 
     private static final String INTENT_YAML = INTENT_YAML_ENTITIES.concat(INTENT_YAML_FILES)
@@ -2865,6 +2942,10 @@ class IntentEmissionCoverageIT extends IntegrationTest {
         assertTrue(entrySheetView.contains("LIKE 'Vault%'"), "the line selectors must live in the view: " + entrySheetView);
         assertTrue(entrySheetView.contains("CAST(NULL AS VARCHAR(255)) as \\\"ACCOUNT_CODE\\\""),
                 "every line must carry a head arm, so an unmatched line still renders: " + entrySheetView);
+        // ...and on the cash basis (#7857) the per-entry cash totals are a second structural view.
+        String cashTotalsView = contentOf("CashFlowCashTotals.view");
+        assertTrue(cashTotalsView.contains("\"name\": \"EMISSION_CASH_FLOW_CASH_TOTALS\""),
+                "the cash-flow statement's entry totals must be a named database object: " + cashTotalsView);
         String entrySheetReport = contentOf("EntrySheet.report");
         assertTrue(entrySheetReport.contains("FROM \\\"EMISSION_ENTRY_SHEET_LINES\\\""),
                 "the .report query must read the generated view: " + entrySheetReport);
@@ -2942,27 +3023,36 @@ class IntentEmissionCoverageIT extends IntegrationTest {
         assertTrue(billHeaderRepository.contains("totals.put(\"BalanceDue\", entity.BalanceDue)"),
                 "the totals recompute must persist the refreshed calculated field: " + billHeaderRepository);
 
-        // Frozen header card (#7501): Bill is the fixture's only MANAGE_DOCUMENT master carrying
-        // immutableWhen (function: Document + Status == 2), power-only (its Person relation carries
-        // no personal: true, so it has no my-surface). The card must render (not merely disable the
-        // edit form) and format each value through the shared fieldDisplay() rather than the raw form
-        // value - a DATE field (dueOn) is the one the review's "raw model values" finding named.
+        // Read-only header (#7501, reworked by #7770): Bill is the fixture's only MANAGE_DOCUMENT
+        // master carrying immutableWhen (function: Document + Status == 2), power-only (its Person
+        // relation carries no personal: true, so it has no my-surface). An immutable document opens in
+        // preview, and preview renders every header field as its VALUE through the shared
+        // fieldDisplay() - never a disabled input, never the raw form value. A DATE field (dueOn) is
+        // the one the #7501 review's "raw model values" finding named.
         String billDocumentView = contentOf("gen/emission/views/Bill/Bill-document.html");
-        assertTrue(billDocumentView.contains("x-show=\"!mutable\""),
-                "immutableWhen on a MANAGE_DOCUMENT master must render the frozen header card, not only disable the edit form");
-        assertTrue(billDocumentView.contains("x-text=\"fieldDisplay(form.DueOn, 'DATE', '', null)\""),
-                "the frozen header card must read a DATE field through fieldDisplay(), not print the raw form value: " + billDocumentView);
+        assertTrue(billDocumentView.contains("x-text=\"fieldDisplay(form.DueOn, 'DATE', '', null) || '\\u2014'\""),
+                "the preview must read a DATE field through fieldDisplay(), not print the raw form value: " + billDocumentView);
         // ...and a DROPDOWN relation through its option label (#7576): the options travel as the Alpine
-        // scope's options<Prop>, which an x-text expression resolves, so the card cannot drop the relation.
-        assertTrue(billDocumentView.contains("x-text=\"fieldDisplay(form.Person, 'DROPDOWN', '', optionsPerson)\""),
-                "the frozen header card must show a DROPDOWN relation's option label through fieldDisplay(): " + billDocumentView);
-        // ...and so must the Details card beside it, the one the read-only fields live in (#7522):
-        // both cards share the helper, neither prints a raw form value.
+        // scope's options<Prop>, which an x-text expression resolves, so the preview cannot drop the
+        // relation.
+        assertTrue(billDocumentView.contains("x-text=\"fieldDisplay(form.Person, 'DROPDOWN', '', optionsPerson) || '\\u2014'\""),
+                "the preview must show a DROPDOWN relation's option label through fieldDisplay(): " + billDocumentView);
+        // ...and so must the rail's Details, the section the read-only fields live in (#7522).
         assertTrue(billDocumentView.contains("fieldDisplay(form.SendOutcome, "),
-                "the Details card must read a read-only field through fieldDisplay(): " + billDocumentView);
-        assertFalse(billDocumentView.contains("x-text=\"form."), "no read-only card may print a raw form value: " + billDocumentView);
-        assertTrue(billDocumentView.contains("class=\"vbox gap-4 w-full\" x-show=\"mutable\""),
-                "immutableWhen on a MANAGE_DOCUMENT master must hide the header edit form once the record is immutable");
+                "the Details rail must read a read-only field through fieldDisplay(): " + billDocumentView);
+        assertFalse(billDocumentView.contains("x-text=\"form."), "no read-only value may print a raw form value: " + billDocumentView);
+        // One read-only rendering: the separate frozen-header card and the form it swapped out are gone,
+        // and the editable controls exist only outside preview.
+        assertFalse(billDocumentView.contains("x-show=\"mutable\""),
+                "the header form must not be swapped for a frozen card any more - preview is the read-only header");
+        assertTrue(billDocumentView.contains("<template x-if=\"!isPreview\">"),
+                "the header controls must render only in the editable modes");
+        // The document follows the manage form's bar (#7770): one primary chosen by the page, no Back to
+        // list beside Close/Cancel, and the workflow task as the primary rather than in its own banner.
+        assertTrue(billDocumentView.contains("primaryAction === 'save' ? 'primary' : 'outline'"),
+                "Save must step down to outlined while a clean document's task holds the primary slot");
+        assertFalse(billDocumentView.contains("Back to list"), "the document bar must not carry Back to list beside its dismiss");
+        assertFalse(billDocumentView.contains("x-h-card"), "the document's groups are headings and rules, not cards");
         // The page's status stepper is chosen and ordered by status id, never by the label it renders
         // (#7592): the picker's options arrive sorted by their TRANSLATED label - here Bulgarian, which
         // the English terminal heuristic cannot read either - and the stepper read off them listed
@@ -5120,6 +5210,24 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                                                  .body("[1].Amount", equalTo(0.0F))
                                                  .body("[2].Code", equalTo("TOTAL"))
                                                  .body("[2].Amount", equalTo(60.0F)));
+
+        // kind: statement on the cash basis, end to end (#7857): both generated views provisioned, the
+        // thin query joining them. The sections reconcile with the change in the cash accounts (+1080):
+        // the transfer between two cash accounts is no flow, and the compound voucher's cash is spread
+        // over its credit side by amount (75 to the customer, 25 to sales).
+        restAssuredExecutor.execute(() -> given().when()
+                                                 .get("/services/java/" + PROJECT + "/gen/cashflow/api/reports/CashFlowController")
+                                                 .then()
+                                                 .statusCode(200)
+                                                 .body("Code",
+                                                         contains("OP.IN", "OP.SALES", "OP.OUT", "OP", "INV", "INV.OUT", "FIN", "NET"))
+                                                 .body("[0].Amount", equalTo(375.0F))
+                                                 .body("[1].Amount", equalTo(25.0F))
+                                                 .body("[2].Amount", equalTo(120.0F))
+                                                 .body("[3].Amount", equalTo(280.0F))
+                                                 .body("[4].Amount", equalTo(-200.0F))
+                                                 .body("[6].Amount", equalTo(1000.0F))
+                                                 .body("[7].Amount", equalTo(1080.0F)));
 
         // calculatedActionOnCreate on a to-one relation, end to end: a create that OMITS the FK comes
         // back carrying the one the action resolved. Tariff 2 is the row flagged `base` - not the first

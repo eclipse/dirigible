@@ -121,11 +121,14 @@
         <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
         <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <maven-jacoco-plugin.version>0.8.15</maven-jacoco-plugin.version>
-        <maven-spotbugs-plugin.version>4.10.4.1</maven-spotbugs-plugin.version>
+        <maven-spotbugs-plugin.version>4.10.5.0</maven-spotbugs-plugin.version>
         <maven-formatter-plugin.version>2.29.0</maven-formatter-plugin.version>
         <maven-exec-plugin.version>3.6.4</maven-exec-plugin.version>
         <maven-git-commit-id-plugin.version>4.9.10</maven-git-commit-id-plugin.version>
         <maven-download-plugin.version>1.13.0</maven-download-plugin.version>
+        <maven-dependency-plugin.version>3.11.0</maven-dependency-plugin.version>
+        <maven-jar-plugin.version>3.5.1</maven-jar-plugin.version>
+        <maven-build-helper-plugin.version>3.6.2</maven-build-helper-plugin.version>
 
         <!-- JDT Language Server bundled at build time.
              Served from our own mirror (dirigiblelabs/jdtls-mirror releases) because
@@ -164,7 +167,6 @@
         <okhttp.version>5.5.0</okhttp.version>
 
         <jaxb.version>2.3.1</jaxb.version>
-        <jaxws-rt.version>4.0.5</jaxws-rt.version>
 
         <!-- Lucene -->
         <lucene.version>10.5.1</lucene.version>
@@ -203,7 +205,6 @@
         <flexmark.version>0.64.8</flexmark.version>
 
         <!-- JDBC -->
-        <mongodb.version>3.12.14</mongodb.version>
         <ngdbc.version>2.30.11</ngdbc.version>
         <snowflake.version>4.4.0</snowflake.version>
         <mssql.version>13.6.0.jre11</mssql.version>
@@ -211,7 +212,7 @@
 
         <!-- AWS SDK v2 - the single line every software.amazon.awssdk artifact in the fat jar
              carries, imported as a BOM below so no consumer pins its own. -->
-        <awssdk.version>2.55.11</awssdk.version>
+        <awssdk.version>2.55.15</awssdk.version>
 
         <!-- QLDB -->
         <qldb.driver.version>2.3.1</qldb.driver.version>
@@ -227,7 +228,7 @@
         <!-- Various -->
         <c3p0.version>0.14.2</c3p0.version>
         <guava.version>33.7.2-jre</guava.version>
-        <classgraph.version>4.8.196</classgraph.version>
+        <classgraph.version>4.8.198</classgraph.version>
         <logcaptor.version>2.12.7</logcaptor.version>
 
         <!-- UI -->
@@ -252,15 +253,15 @@
         <bpmn-visualization.version>0.47.0</bpmn-visualization.version>
         <i18next.version>26.3.6</i18next.version>
         <alpinejs.version>3.17.4</alpinejs.version>
-        <harmonia.version>3.6.0</harmonia.version>
+        <harmonia.version>3.6.1</harmonia.version>
         <opensans.version>5.3.0</opensans.version>
         <lucide.version>1.48.0</lucide.version>
         <pinecone-router.version>7.6.0</pinecone-router.version>
         <!-- Tests -->
         <testcontainers.version>2.0.5</testcontainers.version>
-        <selenide.version>7.18.2</selenide.version>
+        <selenide.version>7.19.0</selenide.version>
         <axe-core-selenium.version>4.13.0</axe-core-selenium.version>
-        <rest-assured.version>6.0.1</rest-assured.version>
+        <rest-assured.version>6.1.0</rest-assured.version>
 
         <antlr4-maven-plugin.version>4.13.2</antlr4-maven-plugin.version>
         <antlr4-runtime.version>4.13.2</antlr4-runtime.version>
@@ -375,6 +376,26 @@
                     <groupId>com.googlecode.maven-download-plugin</groupId>
                     <artifactId>download-maven-plugin</artifactId>
                     <version>${maven-download-plugin.version}</version>
+                </plugin>
+                <!-- Declared in <build><plugins> (or a module's) without a version, these three were
+                     resolved from Maven Central's metadata on every build: a job without a warm local
+                     repository failed whenever that one download did (the PR code-style job, run
+                     38895231529), and the build silently picked up whatever release came next. The
+                     versions are the ones that resolution was picking. -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>${maven-dependency-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${maven-jar-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>${maven-build-helper-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>com.mycila</groupId>
@@ -511,7 +532,17 @@
                         <includeLicenseText>false</includeLicenseText>
 
                         <outputReactorProjects>true</outputReactorProjects>
-                        <outputFormat>all</outputFormat>
+                        <!-- JSON only (#7788). `all` wrote the same bill of materials twice into
+                             ${project.build.outputDirectory}/META-INF/sbom - bom.json (3.6 MB) AND
+                             bom.xml (3.5 MB) - so 7 MB of the executable was a description of the
+                             artefact, in two formats, shipped inside the artefact it describes.
+                             The JSON copy STAYS INSIDE the jar and the path stays META-INF/sbom:
+                             Spring Boot's SbomEndpoint auto-detects classpath:META-INF/sbom/bom.json
+                             and serves it as /actuator/sbom/application, which SecurityIT asserts
+                             (an earlier revision of this change moved the file out of the jar and
+                             turned both /actuator/sbom and /actuator/sbom/application into 404s).
+                             Only the unread XML duplicate goes. -->
+                        <outputFormat>json</outputFormat>
                         <outputName>bom</outputName>
                         <outputDirectory>${project.build.outputDirectory}/META-INF/sbom</outputDirectory>
                     </configuration>
@@ -683,7 +714,7 @@
                             <dependency>
                                 <groupId><![CDATA[com.github.spotbugs]]></groupId>
                                 <artifactId>spotbugs</artifactId>
-                                <version>4.10.4</version>
+                                <version>4.10.5</version>
                             </dependency>
                         </dependencies>
                     </plugin>
@@ -962,33 +993,17 @@
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
         </dependency>
-        <dependency>
-            <groupId>jakarta.xml.ws</groupId>
-            <artifactId>jakarta.xml.ws-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.xml.ws</groupId>
-            <artifactId>jaxws-rt</artifactId>
-            <version>${jaxws-rt.version}</version>
-        </dependency>
+        <!-- Kept here on purpose: 8 modules import com.google.common (api-etcd, api-utils,
+             core-repository, data-core, data-management, data-sources, engine-security,
+             database-persistence), so declaring it per module would be 8 declarations of the same
+             3 MB jar rather than a saving. jaxws-rt / jakarta.xml.ws-api, byte-buddy and the two
+             okhttp artifacts were here with ZERO imports anywhere and are gone (#7785) - the only
+             SOAP consumer, sdk/net/Soap.java, declares the two artifacts it needs in
+             api-modules-java, and Hibernate brings its own byte-buddy transitively. -->
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.bytebuddy</groupId>
-            <artifactId>byte-buddy</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>${okhttp.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp-urlconnection</artifactId>
-            <version>${okhttp.version}</version>
         </dependency>
 
         <!-- Test Dependencies -->
@@ -1062,10 +1077,30 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+            <!-- SOAP for sdk/net/Soap.java, declared in api-modules-java (#7785). Both used to
+                 arrive transitively through the root pom's jaxws-rt; these are the versions that
+                 reactor resolved (jakarta.xml.soap-api 3.0.2, saaj-impl 3.0.6). -->
             <dependency>
-                <groupId>commons-collections</groupId>
-                <artifactId>commons-collections</artifactId>
-                <version>3.2.2</version>
+                <groupId>jakarta.xml.soap</groupId>
+                <artifactId>jakarta.xml.soap-api</artifactId>
+                <version>3.0.2</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.xml.messaging.saaj</groupId>
+                <artifactId>saaj-impl</artifactId>
+                <version>3.0.6</version>
+            </dependency>
+            <!-- joda-time is still needed - flowable-json-converter uses it - but only
+                 transitively, at the 2.10.13 it declares. Until this change the version was
+                 decided by the removed jackson-datatype-joda, a DIRECT dependency of
+                 build/application and therefore the nearest declaration, which carried
+                 2.12.7. Dropping the unused Jackson binding would otherwise have silently
+                 taken joda-time back to a 2021 build - three years of tzdata - so the
+                 version the platform ships today is pinned here instead. -->
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>2.15.0</version>
             </dependency>
             <dependency>
                 <groupId>org.dom4j</groupId>

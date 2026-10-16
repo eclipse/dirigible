@@ -34,6 +34,7 @@ import org.eclipse.dirigible.components.data.store.config.CurrentTenantIdentifie
 import org.eclipse.dirigible.components.data.store.config.MultiTenantConnectionProviderImpl;
 import org.eclipse.dirigible.components.database.DirigibleDataSource;
 import org.eclipse.dirigible.components.initializers.SynchronousSpringEventsConfig;
+import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -547,6 +548,28 @@ public class DataStoreTest {
         } finally {
             cleanupCustomers();
         }
+    }
+
+    /**
+     * A session factory left open stays in Hibernate's static registry and keeps the Spring context
+     * reachable after it is closed (#7868).
+     */
+    @Test
+    public void recreateAndDestroyCloseTheFactoriesTheyRelease() {
+        SessionFactory replaced = dataStore.getSessionFactory();
+        dataStore.incrementCounter();
+        dataStore.recreate();
+        SessionFactory current = dataStore.getSessionFactory();
+
+        assertThat(replaced.isClosed()).isTrue();
+        assertThat(current.isClosed()).isFalse();
+
+        dataStore.destroy();
+
+        assertThat(current.isClosed()).isTrue();
+        // rebuilt on demand, so the other tests of this class still have a store
+        assertThat(dataStore.getSessionFactory()
+                            .isClosed()).isFalse();
     }
 
     static Optional<JsonElement> parseOptionalJson(String json) {

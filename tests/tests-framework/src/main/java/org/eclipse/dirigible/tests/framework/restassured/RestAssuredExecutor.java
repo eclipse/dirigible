@@ -13,6 +13,8 @@ import io.restassured.RestAssured;
 import io.restassured.authentication.AuthenticationScheme;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
+import io.restassured.specification.ProxySpecification;
+import jakarta.annotation.PreDestroy;
 import org.eclipse.dirigible.components.base.callable.CallableNoResultAndNoException;
 import org.eclipse.dirigible.components.base.callable.CallableResultAndNoException;
 import org.eclipse.dirigible.tests.framework.tenant.DirigibleTestTenant;
@@ -39,10 +41,22 @@ public class RestAssuredExecutor {
 
     private final int port;
 
+    private final ProxySpecification replacedProxy;
+
     public RestAssuredExecutor(@LocalServerPort int port) {
         this.port = port;
 
+        replacedProxy = RestAssured.proxy;
         RestAssured.proxy = host("127.0.0.1").withPort(port);
+    }
+
+    /**
+     * The proxy is this context's server, and the IT classes share one JVM (#7868): left in place, it
+     * sends every request of a later class to a port nothing listens on any more.
+     */
+    @PreDestroy
+    void restoreProxy() {
+        RestAssured.proxy = replacedProxy;
     }
 
     /**

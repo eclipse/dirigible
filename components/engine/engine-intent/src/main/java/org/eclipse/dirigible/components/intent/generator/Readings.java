@@ -66,6 +66,18 @@ final class Readings {
     }
 
     /**
+     * A column read off a result row held as a map, {@code owner.get("alias")} - a report row, which
+     * the generated report repository returns keyed by the query's column aliases.
+     *
+     * @param owner the local holding the row
+     * @param alias the column alias
+     * @return the reading
+     */
+    static Map<String, Object> column(String owner, String alias) {
+        return of(KIND, "column", "owner", owner, "alias", alias);
+    }
+
+    /**
      * A local the generated code declares itself (a snapshot copy's {@code version}).
      *
      * @param name the local's name

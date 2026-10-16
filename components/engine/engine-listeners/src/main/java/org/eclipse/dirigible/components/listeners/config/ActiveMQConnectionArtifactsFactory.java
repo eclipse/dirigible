@@ -14,6 +14,9 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.RedeliveryPolicy;
 import org.apache.activemq.broker.region.policy.RedeliveryPolicyMap;
 import org.apache.activemq.command.ActiveMQDestination;
+import org.apache.activemq.transport.failover.FailoverTransport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import jakarta.jms.Connection;
@@ -27,6 +30,8 @@ import jakarta.jms.Session;
  */
 @Component
 public class ActiveMQConnectionArtifactsFactory {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ActiveMQConnectionArtifactsFactory.class);
 
     /** The Constant INITIAL_REDELIVERY_DELAY. */
     private static final int INITIAL_REDELIVERY_DELAY = 1000;
@@ -81,14 +86,32 @@ public class ActiveMQConnectionArtifactsFactory {
      * among live connections, since the broker refuses a second connection claiming an id already in
      * use.
      *
-     * @param exceptionListener the exception listener
+     * <p>
+     * <b>Such a connection is never reconnected by the transport</b> (#7851). Over a {@code failover:}
+     * URL, ActiveMQ's {@code FailoverTransport} would reconnect it by itself after an interruption,
+     * within milliseconds, replaying the same client id while the broker still holds the previous,
+     * half-open socket under that id - so the broker refuses it ("already connected"), the refusal is
+     * another failure, and the transport reconnects again, every subscription at once, until the extra
+     * load on the broker keeps the loop going for good. So once it is connected, a client-id connection
+     * gives up on the first interruption instead: the failure reaches the {@code exceptionListener},
+     * and the caller re-establishes it at its own pace, by which time the broker has reaped the stale
+     * socket. The first connect keeps the transport's own retries.
+     *
+     * @param exceptionListener the exception listener - for a client-id connection, also what learns
+     *        that it is gone for good
      * @param clientId the client id to identify the connection by, or {@code null} for an anonymous one
      * @return the connection
      * @throws IllegalStateException the illegal state exception
      */
     public Connection createConnection(ExceptionListener exceptionListener, String clientId) throws IllegalStateException {
+        // Held outside the try: once created, the connection owns a started transport, and a failure
+        // after that - the broker refusing the client id at start() above all - must not leave it behind.
+        // The caller never receives it, so nobody else could close it, and over a failover: URL its
+        // transport would keep reconnecting and replaying the client id for the life of the process,
+        // refused against the instance's own later subscription (#7853).
+        Connection connection = null;
         try {
-            Connection connection = connectionFactory.createConnection();
+            connection = connectionFactory.createConnection();
             connection.setExceptionListener(exceptionListener);
             if (clientId != null) {
                 // Must precede start() - JMS forbids setting the client id on a started connection.
@@ -97,9 +120,53 @@ public class ActiveMQConnectionArtifactsFactory {
 
             connection.start();
 
+            if (clientId != null) {
+                disableTransportReconnect(connection);
+            }
+
             return connection;
         } catch (JMSException ex) {
+            closeQuietly(connection);
             throw new IllegalStateException("Failed to create connection to ActiveMQ", ex);
+        } catch (RuntimeException ex) {
+            closeQuietly(connection);
+            throw ex;
+        }
+    }
+
+    /**
+     * Close a connection that failed to start. Quietly: the broker that just refused it may refuse the
+     * close too, and the failure that brought us here is the one the caller has to see.
+     *
+     * @param connection the connection, or {@code null} if it was never created
+     */
+    private static void closeQuietly(Connection connection) {
+        if (connection == null) {
+            return;
+        }
+        try {
+            connection.close();
+        } catch (JMSException | RuntimeException e) {
+            LOGGER.debug("Failed to close a JMS connection that did not start: {}", e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Stop a started connection's {@code FailoverTransport} from reconnecting it. Only after
+     * {@code start()}: the transport applies {@code maxReconnectAttempts} to the first connect as well
+     * (unless {@code startupMaxReconnectAttempts} is set), and that one must keep retrying a broker
+     * that is still coming up. A connection without a failover transport ({@code vm://}, a plain
+     * {@code tcp://} or {@code ssl://} URL) has no such reconnect to stop.
+     *
+     * @param connection the started connection
+     */
+    static void disableTransportReconnect(Connection connection) {
+        if (connection instanceof ActiveMQConnection activeMQConnection) {
+            FailoverTransport failover = activeMQConnection.getTransport()
+                                                           .narrow(FailoverTransport.class);
+            if (failover != null) {
+                failover.setMaxReconnectAttempts(0);
+            }
         }
     }
 
