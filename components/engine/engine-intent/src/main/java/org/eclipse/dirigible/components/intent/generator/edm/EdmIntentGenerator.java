@@ -31,6 +31,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.intent.LoggedValue;
+import org.eclipse.dirigible.components.intent.generator.ExportSupport;
 import org.eclipse.dirigible.components.intent.generator.IntentEntities;
 import org.eclipse.dirigible.components.intent.generator.IntentGenerationContext;
 import org.eclipse.dirigible.components.intent.generator.CheckSupport;
@@ -196,6 +197,8 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
         Map<String, String> compositionParents = computeCompositionParents(entities);
         Set<String> settingEntities = settingEntities(entities);
         Set<String> triggerTargets = TriggerSupport.triggerTargetEntities(model);
+        // The entities declared exports record their runs on (#7855): their columns are injected below.
+        Set<String> exportLedgers = ExportSupport.ledgerEntities(model);
         Map<String, List<String>> displacedStatuses = displacedStatusProperties(model, byName);
         // The status ids a button or a workflow step moves each entity to - what an ungated, status-
         // conditioned requiredWhen takes its gate from (#7595), read through the same rule the BPMN
@@ -484,6 +487,15 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
                     entityMap.put("attachmentReadOnly", "true");
                 }
             }
+            // An export ledger stores each run's file the way a snapshot stores its copy - written by the
+            // generated export, never uploaded - so it takes the same read-only download surface, and it
+            // is append-only: a run record is the evidence of what was filed, not an editable row.
+            boolean exportLedger = exportLedgers.contains(name);
+            if (exportLedger) {
+                entityMap.put("attachmentEntity", "true");
+                entityMap.put("attachmentReadOnly", "true");
+                entityMap.put("immutableAlways", "true");
+            }
             // A child collection that does NOT freeze with its master. The master's immutability locks
             // the document's own content; this child is a different entity with its own controller,
             // which already accepts the writes - only the generated UI was extending the master's lock
@@ -524,9 +536,9 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
             // A file-child (function: Attachment or Snapshot) is a first-class entity, but the author
             // declares no fields at all (the file-metadata columns are injected below), so synthesize
             // the generated integer primary key it still needs.
-            if (entity.isFileChild() && entity.getFields()
-                                              .stream()
-                                              .noneMatch(FieldIntent::isPrimaryKey)) {
+            if ((entity.isFileChild() || exportLedger) && entity.getFields()
+                                                                .stream()
+                                                                .noneMatch(FieldIntent::isPrimaryKey)) {
                 FieldIntent id = new FieldIntent();
                 id.setName("id");
                 id.setType("integer");
@@ -574,6 +586,13 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
                 if (entity.isSnapshot()) {
                     properties.add(versionProperty(name));
                 }
+                audited = true;
+            }
+            // An export ledger: what ran, with which inputs, how it ended, and the file it produced.
+            // Implicitly audited, so every run says who started it and when.
+            if (exportLedger) {
+                properties.addAll(exportLedgerProperties(name));
+                properties.addAll(attachmentProperties(name));
                 audited = true;
             }
             // The four standard audit columns, populated by the platform's audit annotations downstream.
@@ -3833,6 +3852,23 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
         p.put("widgetLength", length > 0 ? Integer.toString(length) : "20");
         p.put("widgetIsMajor", major ? "true" : "false");
         return p;
+    }
+
+    /**
+     * The run columns injected into an export ledger (#7855), ahead of the stored file's metadata. The
+     * generated export sets every one of them, so all are read-only; the list shows which export ran,
+     * how it ended and how many rows it wrote.
+     */
+    private static List<Map<String, Object>> exportLedgerProperties(String entityName) {
+        List<Map<String, Object>> props = new ArrayList<>();
+        props.add(attachmentProperty(entityName, "Export", "VARCHAR", 128, true));
+        props.add(attachmentProperty(entityName, "Format", "VARCHAR", 32, false));
+        props.add(attachmentProperty(entityName, "Parameters", "VARCHAR", 4000, false));
+        props.add(attachmentProperty(entityName, "Outcome", "VARCHAR", 16, true));
+        props.add(attachmentProperty(entityName, "RecordCount", "INTEGER", 0, true));
+        props.add(attachmentProperty(entityName, "Checksum", "VARCHAR", 64, false));
+        props.add(attachmentProperty(entityName, "ErrorMessage", "VARCHAR", 2000, false));
+        return props;
     }
 
     /**
