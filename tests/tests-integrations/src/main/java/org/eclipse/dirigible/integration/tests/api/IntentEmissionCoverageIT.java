@@ -1957,6 +1957,13 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                 measures: ["count(*)"]
                 parameters:
                   - { name: search, target: note, op: like, initial: 'O''Neil "the" note' }
+              # aging (#7888): the open amount (debit - credit) of every live entry, bucketed by days
+              # past its date as of the report's own asOf parameter - which defaults to the day the
+              # report is run, resolved per request by the generated repository.
+              - name: EntryAging
+                source: Entry
+                dimensions: [Account.name]
+                aging: { due: date, amount: "debit - credit", buckets: [30, 60, 90] }
               # kind: statement (#6938): the line classification is emitted as a generated
               # <REPORT>_LINES .view artifact - published with the project and provisioned by the
               # ViewsSynchronizer AFTER the tables - and the .report keeps a thin windowed join over
@@ -2932,6 +2939,14 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                 "the summed column must be validated as numeric - a total over a text column is a client error");
         assertTrue(contentOf("gen/claimsbyunit/api/reports/ClaimsByUnitController.java").contains("@Post(\"/sum\")"),
                 "the report controller must expose the server-side sum the count tile reads");
+
+        // aging (#7888): the as-of date is the report's own DATE parameter, and its CURRENT_DATE initial
+        // is resolved per request - never baked in as the day the module was generated.
+        String entryAgingRepository = contentOf("gen/entryaging/data/reports/EntryAgingRepository.java");
+        assertTrue(
+                entryAgingRepository.contains(
+                        "parameter(\"asOf\", \"DATE\", value(filter, \"asOf\", java.time.LocalDate.now().toString()))"),
+                "the aging report must bind its as-of date to today when the request carries none: " + entryAgingRepository);
 
         // kind: statement (#6938): the line classification is a generated .view artifact next to the
         // .report - the selectors and labels live THERE, as data the ViewsSynchronizer provisions,
@@ -5191,6 +5206,26 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                                                  .body("[4].Amount", equalTo(-200.0F))
                                                  .body("[6].Amount", equalTo(1000.0F))
                                                  .body("[7].Amount", equalTo(1080.0F)));
+
+        // aging, end to end (#7888): Vault holds 100 debit (2026-01-10) against 40 credit (2026-01-11).
+        // As of today both are long past 90 days; as of 2026-01-10 the debit is due that very day (0
+        // days past due) and the credit is not yet due - and either way the buckets add up to 60.
+        restAssuredExecutor.execute(() -> given().when()
+                                                 .get("/services/java/" + PROJECT + "/gen/entryaging/api/reports/EntryAgingController")
+                                                 .then()
+                                                 .statusCode(200)
+                                                 .body("find { it.'Account Name' == 'Vault' }.'Overdue 90+'", equalTo(60.0F))
+                                                 .body("find { it.'Account Name' == 'Vault' }.'Not Yet Due'", equalTo(0.0F))
+                                                 .body("find { it.'Account Name' == 'Vault' }.'Open Amount'", equalTo(60.0F)));
+        restAssuredExecutor.execute(() -> given().queryParam("asOf", "2026-01-10")
+                                                 .when()
+                                                 .get("/services/java/" + PROJECT + "/gen/entryaging/api/reports/EntryAgingController")
+                                                 .then()
+                                                 .statusCode(200)
+                                                 .body("find { it.'Account Name' == 'Vault' }.'Overdue 0-30'", equalTo(100.0F))
+                                                 .body("find { it.'Account Name' == 'Vault' }.'Not Yet Due'", equalTo(-40.0F))
+                                                 .body("find { it.'Account Name' == 'Vault' }.'Overdue 90+'", equalTo(0.0F))
+                                                 .body("find { it.'Account Name' == 'Vault' }.'Open Amount'", equalTo(60.0F)));
 
         // calculatedActionOnCreate on a to-one relation, end to end: a create that OMITS the FK comes
         // back carrying the one the action resolved. Tariff 2 is the row flagged `base` - not the first

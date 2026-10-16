@@ -39,6 +39,7 @@ import org.eclipse.dirigible.components.intent.model.FieldIntent;
 import org.eclipse.dirigible.components.intent.model.IntentModel;
 import org.eclipse.dirigible.components.intent.model.LifecycleStages;
 import org.eclipse.dirigible.components.intent.model.RelationIntent;
+import org.eclipse.dirigible.components.intent.model.ReportAgingIntent;
 import org.eclipse.dirigible.components.intent.model.UsesIntent;
 import org.eclipse.dirigible.components.intent.model.ReportIntent;
 import org.eclipse.dirigible.components.intent.model.ReportParameterIntent;
@@ -212,6 +213,17 @@ public class ReportIntentGenerator implements IntentTargetGenerator {
 
     private static final String LIKE_OPERATION = "LIKE";
 
+    /**
+     * The initial value that binds a date parameter to the day the report is run - resolved per request
+     * by the generated report repository, never a fixed date baked into the generated code.
+     */
+    private static final String CURRENT_DATE_INITIAL = "CURRENT_DATE";
+
+    /** The aging report's column labels - see {@link #addAgingMeasures}. */
+    private static final String AGING_NOT_YET_DUE = "Not Yet Due";
+    private static final String AGING_OVERDUE = "Overdue";
+    private static final String AGING_OPEN_AMOUNT = "Open Amount";
+
     /** The report types a parameter binds as a number. */
     private static final Set<String> NUMERIC_TYPES = Set.of("INTEGER", "BIGINT", "DECIMAL");
 
@@ -325,9 +337,9 @@ public class ReportIntentGenerator implements IntentTargetGenerator {
 
         boolean balance = report.isBalance();
         boolean statement = report.isStatement();
-        boolean aggregated = balance || statement || report.getMeasures()
-                                                           .stream()
-                                                           .anyMatch(m -> m != null && !m.isBlank());
+        boolean aggregated = balance || statement || report.isAging() || report.getMeasures()
+                                                                               .stream()
+                                                                               .anyMatch(m -> m != null && !m.isBlank());
 
         Map<String, Join> joins = new LinkedHashMap<>();
         List<Map<String, Object>> columns = new ArrayList<>();
@@ -394,14 +406,19 @@ public class ReportIntentGenerator implements IntentTargetGenerator {
                     }
                 }
             }
+            AgingQuery aging = report.isAging() ? addAgingMeasures(context, model, source, baseAlias, report, joins, columns) : null;
 
             String filter = buildWhere(context, model, source, baseAlias, joins, report.getFilter());
             Map<String, Object> scope = scopeCondition(context, model, source, baseAlias, report, aggregated);
             // A statement takes the balance window too: its ledger reduction is the balance report's,
             // and the authored `parameters:` are appended to the same list below.
             parameters = report.isLedgerKind() ? balanceParameters() : new ArrayList<>();
-            List<Map<String, Object>> parameterConditions =
-                    parameterConditions(context, model, source, baseAlias, report, joins, parameters);
+            List<Map<String, Object>> parameterConditions = new ArrayList<>();
+            if (aging != null) {
+                parameters.add(reportParameter(aging.asOfName(), DATE_TYPE, CURRENT_DATE_INITIAL));
+                parameterConditions.addAll(aging.conditions());
+            }
+            parameterConditions.addAll(parameterConditions(context, model, source, baseAlias, report, joins, parameters));
             conditions = conditions(filter, scope);
             String where;
             if (conditions == null) {
@@ -635,6 +652,92 @@ public class ReportIntentGenerator implements IntentTargetGenerator {
                          .append(previous)
                          .append("+' END")
                          .toString();
+    }
+
+    /**
+     * What an aging report adds to the query besides its bucket columns: the as-of parameter it
+     * declares on its own behalf, and the conditions that keep only the documents open on that date.
+     */
+    private record AgingQuery(String asOfName, List<Map<String, Object>> conditions) {
+    }
+
+    /**
+     * The aging buckets (dirigible #7888) - one {@code SUM} column per bucket of days past due as of
+     * the {@code :asOf} date, then the {@code Open Amount} they add up to. Every document lands in
+     * exactly one bucket, so the buckets of each row reconcile with its open amount:
+     * <ul>
+     * <li>{@code Not Yet Due} - due AFTER the as-of date, or with no due date at all (it cannot be past
+     * one). A document due tomorrow is never {@code 0-30} (base-sales-invoices#27).</li>
+     * <li>{@code Overdue a-b} - {@code a} to {@code b} days past due, inclusive; due ON the as-of date
+     * is zero days past due.</li>
+     * <li>{@code Overdue n+} - more than the last threshold.</li>
+     * </ul>
+     * The day arithmetic is expressed as DATE BOUNDARIES ({@code due >= asOf - INTERVAL 'n' DAY}), like
+     * the {@code ageing(...)} dimension, because {@code asOf - due} is an integer on PostgreSQL but an
+     * INTERVAL on H2. A timestamp due is compared as its date.
+     *
+     * @return the parameter and conditions the query binds besides the columns
+     */
+    private static AgingQuery addAgingMeasures(IntentGenerationContext context, IntentModel model, EntityIntent source, String baseAlias,
+            ReportIntent report, Map<String, Join> joins, List<Map<String, Object>> columns) {
+        ReportAgingIntent aging = report.getAging();
+        ColumnRef due = resolve(context, model, source, baseAlias, aging.getDue()
+                                                                        .trim());
+        registerJoin(joins, due);
+        ColumnRef amountColumn = null;
+        StringBuilder amount = new StringBuilder();
+        for (ReportAgingIntent.AmountTerm term : aging.getAmountTerms()) {
+            ColumnRef ref = resolve(context, model, source, baseAlias, term.path());
+            registerJoin(joins, ref);
+            if (amountColumn == null) {
+                amountColumn = ref;
+                amount.append(term.sign() < 0 ? "-" : "");
+            } else {
+                amount.append(term.sign() < 0 ? " - " : " + ");
+            }
+            // A missing paid / credited amount is nothing paid, not an unknown open amount.
+            amount.append("COALESCE(")
+                  .append(ref.qualified())
+                  .append(", 0)");
+        }
+        String open = amount.toString();
+        String asOfName = aging.getAsOfName();
+        String asOf = "CAST(:" + asOfName + " AS DATE)";
+        String dueDate = "TIMESTAMP".equals(due.reportType) ? "CAST(" + due.qualified() + " AS DATE)" : due.qualified();
+
+        addAgingColumn(columns, amountColumn, AGING_NOT_YET_DUE, dueDate + " IS NULL OR " + dueDate + " > " + asOf, open);
+        int previous = -1;
+        String newerBound = dueDate + " <= " + asOf;
+        for (Integer threshold : aging.getThresholds()) {
+            String olderBound = dueDate + " >= " + asOf + " - INTERVAL '" + threshold + "' DAY";
+            addAgingColumn(columns, amountColumn, AGING_OVERDUE + " " + (previous + 1) + "-" + threshold, newerBound + " AND " + olderBound,
+                    open);
+            newerBound = dueDate + " < " + asOf + " - INTERVAL '" + threshold + "' DAY";
+            previous = threshold;
+        }
+        addAgingColumn(columns, amountColumn, AGING_OVERDUE + " " + previous + "+", newerBound, open);
+        columns.add(column(amountColumn.tableAlias, AGING_OPEN_AMOUNT, amountColumn.physicalColumn, "DECIMAL", "SUM", false, open));
+
+        // Only the documents open on the as-of date: a settled one adds nothing to any bucket, and a
+        // counterparty with nothing open would otherwise list as a row of zeros. A credit balance
+        // (overpaid) is open too - it is the opposite sign, not zero.
+        List<Map<String, Object>> conditions = new ArrayList<>();
+        conditions.add(condition("(" + open + ")", "<>", "0"));
+        if (aging.getDate() != null && !aging.getDate()
+                                             .isBlank()) {
+            ColumnRef date = resolve(context, model, source, baseAlias, aging.getDate()
+                                                                             .trim());
+            registerJoin(joins, date);
+            String documentDate = "TIMESTAMP".equals(date.reportType) ? "CAST(" + date.qualified() + " AS DATE)" : date.qualified();
+            // A document issued after the as-of date was not open on it yet.
+            conditions.add(condition(documentDate, "<=", asOf));
+        }
+        return new AgingQuery(asOfName, conditions);
+    }
+
+    private static void addAgingColumn(List<Map<String, Object>> columns, ColumnRef amount, String alias, String bucket, String open) {
+        String expression = "CASE WHEN " + bucket + " THEN " + open + " ELSE 0 END";
+        columns.add(column(amount.tableAlias, alias, amount.physicalColumn, "DECIMAL", "SUM", false, expression));
     }
 
     private static void addBalanceMeasures(IntentGenerationContext context, IntentModel model, EntityIntent source, String baseAlias,

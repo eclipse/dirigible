@@ -87,6 +87,7 @@ import org.eclipse.dirigible.components.intent.model.RelationIntent;
 import org.eclipse.dirigible.components.intent.model.ResolveIntent;
 import org.eclipse.dirigible.components.intent.model.SlotsIntent;
 import org.eclipse.dirigible.components.intent.model.ReportIntent;
+import org.eclipse.dirigible.components.intent.model.ReportAgingIntent;
 import org.eclipse.dirigible.components.intent.model.ReportParameterIntent;
 import org.eclipse.dirigible.components.intent.model.StatementLineIntent;
 import org.eclipse.dirigible.components.intent.model.ExpansionIntent;
@@ -10974,6 +10975,7 @@ public final class IntentParser {
             validateAgeingDimensions(model, report, issues);
             validateReportParameters(model, report, issues);
             validateBalanceReport(model, report, issues);
+            validateAgingReport(model, report, issues);
             validateReportScope(model, report, issues);
             validateSubsetReportReferences(model, report, issues);
         }
@@ -11448,6 +11450,104 @@ public final class IntentParser {
             issues.add(subject + " declares type [" + declared + "] but [" + target + "] is a [" + field.getType() + "] field");
         }
         return family;
+    }
+
+    /** The field types an aging report's open amount may sum. */
+    private static final Set<String> AGING_AMOUNT_TYPES = Set.of("integer", "int", "long", "decimal", "double");
+
+    /**
+     * A report's {@code aging:} block (dirigible #7888) - open documents bucketed by days past due as
+     * of a report date. The {@code due} (and optional document {@code date}) field must be a
+     * {@code date}/{@code timestamp}, the {@code amount} a sum and difference of numeric fields, the
+     * {@code buckets} ascending positive day counts, and the as-of parameter a free plain identifier:
+     * the report declares it on its own behalf, so an authored parameter of the same name would bind
+     * twice. A ledger kind computes its own fixed columns and cannot be aged.
+     */
+    private static void validateAgingReport(IntentModel model, ReportIntent report, List<String> issues) {
+        ReportAgingIntent aging = report.getAging();
+        if (aging == null) {
+            return;
+        }
+        String subject = "report [" + report.getName() + "] aging";
+        if (report.isLedgerKind()) {
+            issues.add(subject + " cannot be combined with kind [" + report.getKind()
+                                                                           .trim()
+                    + "] - an aging report sums open documents, a ledger kind computes its own columns");
+        }
+        EntityIntent source = reportSource(model, report);
+        if (aging.getDue() == null || aging.getDue()
+                                           .isBlank()) {
+            issues.add(subject + " has no due field - name the date the document falls due on");
+        } else if (source != null) {
+            validateAgingDate(model, source, subject + " due", aging.getDue()
+                                                                    .trim(),
+                    issues);
+        }
+        if (aging.getDate() != null && !aging.getDate()
+                                             .isBlank()
+                && source != null) {
+            validateAgingDate(model, source, subject + " date", aging.getDate()
+                                                                     .trim(),
+                    issues);
+        }
+        List<ReportAgingIntent.AmountTerm> terms = aging.getAmountTerms();
+        if (aging.getAmount() == null || aging.getAmount()
+                                              .isBlank()) {
+            issues.add(subject + " has no amount - name the document's open amount, e.g. \"total - paid\"");
+        } else if (terms == null) {
+            issues.add(subject + " amount [" + aging.getAmount()
+                    + "] must be a numeric field or numeric fields joined by + and - (e.g. \"total - paid\")");
+        } else if (source != null) {
+            for (ReportAgingIntent.AmountTerm term : terms) {
+                FieldIntent field = reportPathField(model, source, subject + " amount", term.path(), issues);
+                if (field != null && !AGING_AMOUNT_TYPES.contains(fieldType(field))) {
+                    issues.add(subject + " amount sums [" + term.path() + "], a [" + field.getType() + "] field - it must be numeric");
+                }
+            }
+        }
+        if (aging.getBuckets()
+                 .contains(null)) {
+            issues.add(subject + " buckets must be whole day counts");
+        }
+        List<Integer> thresholds = aging.getThresholds();
+        if (thresholds.isEmpty()) {
+            issues.add(subject + " needs at least one bucket threshold in days, e.g. buckets: [30, 60, 90]");
+        }
+        int previous = 0;
+        for (Integer threshold : thresholds) {
+            if (threshold <= 0) {
+                issues.add(subject + " buckets must be positive day counts - got [" + threshold + "]");
+            } else if (threshold <= previous) {
+                issues.add(subject + " buckets must ascend - got [" + threshold + "] after [" + previous + "]");
+            } else {
+                previous = threshold;
+            }
+        }
+        String asOf = aging.getAsOfName();
+        if (!REPORT_PARAMETER_NAME.matcher(asOf)
+                                  .matches()
+                || SourceVersion.isKeyword(asOf) || RESERVED_REPORT_PARAMETERS.contains(asOf)) {
+            issues.add(subject + " asOf [" + asOf + "] must name the as-of parameter as a plain identifier that is not reserved");
+        }
+        for (ReportParameterIntent parameter : report.getParameters()) {
+            if (parameter.getName() != null && asOf.equals(parameter.getName()
+                                                                    .trim())) {
+                issues.add(subject + " declares the as-of parameter [" + asOf
+                        + "] on its own behalf - remove the parameter of the same name from parameters:");
+            }
+        }
+    }
+
+    /** An aging date: an own {@code date}/{@code timestamp} of the source, or a one-hop relation's. */
+    private static void validateAgingDate(IntentModel model, EntityIntent source, String subject, String path, List<String> issues) {
+        FieldIntent field = reportPathField(model, source, subject, path, issues);
+        if (field == null) {
+            return;
+        }
+        String type = fieldType(field);
+        if (!"date".equals(type) && !"timestamp".equals(type)) {
+            issues.add(subject + " [" + path + "] must be a date/timestamp field - got [" + field.getType() + "]");
+        }
     }
 
     /**
