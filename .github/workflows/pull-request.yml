@@ -182,9 +182,11 @@ jobs:
   # context each class boots - and running them in one job took 96-134 min. No class is a long
   # pole (the slowest is ~3 min), so the set is split by the same hash partition as the master and
   # nightly "api" shard (-Dit.partition=k/n, ClassPartitionFilter - see the note in build.yml):
-  # disjoint and complete by construction, nothing to tag. Simulated on that run's class times,
-  # the four partitions carry 16.5 / 26.2 / 28.5 / 19.4 min. When one nears the cap, go to /5
-  # rather than shrinking the smoke set.
+  # disjoint and complete by construction, nothing to tag. Four partitions (#7860) measured
+  # 24 / 35 / 46 / 31 min on run 38895231529, the hash giving two of them 49-50 classes against 37;
+  # simulated on run 38875134464's class times, five carry 15.2 / 23.5 / 15.5 / 20.6 / 15.8 min of
+  # tests against four's 16.5 / 26.2 / 28.5 / 19.4. When one nears the cap, add a partition rather
+  # than shrinking the smoke set.
   smoke-tests-shard:
     name: smoke-tests (${{ matrix.shard.partition }})
     runs-on: ubuntu-latest
@@ -192,14 +194,16 @@ jobs:
       fail-fast: false
       matrix:
         shard:
-          - name: 1-of-4
-            partition: "1/4"
-          - name: 2-of-4
-            partition: "2/4"
-          - name: 3-of-4
-            partition: "3/4"
-          - name: 4-of-4
-            partition: "4/4"
+          - name: 1-of-5
+            partition: "1/5"
+          - name: 2-of-5
+            partition: "2/5"
+          - name: 3-of-5
+            partition: "3/5"
+          - name: 4-of-5
+            partition: "4/5"
+          - name: 5-of-5
+            partition: "5/5"
     # The cap only has to be out of a healthy run's way - it exists so a hang costs one job
     # instead of the 6h GitHub default (#7283).
     timeout-minutes: 60
