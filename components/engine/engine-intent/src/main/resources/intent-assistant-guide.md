@@ -2628,6 +2628,53 @@ generates:
   in the generated controller only and are not part of a repository write; express the refusal the link must honour as a roll-up capacity
   (`capacity:`) or a status-gated check.
 
+### reversals - reverse a booked document by hand (red storno)
+
+**Use when:** a POSTED document must be corrected and there is no source event to void - the
+hand-written journal entry. `postings: reverses:` reverses a document a posting created, on its
+source's void; a manual entry has no source, so the accountant reverses it and books the right one.
+`reversals:` is that click: it creates the document's **negated twin** - every line copied onto the
+SAME side with the declared amounts negated - and links the two both ways, so the pair nets to zero.
+
+```yaml
+reversals:
+  - name: reverseEntry
+    forEntity: JournalEntry
+    when: "Status == POSTED"            # offered and accepted only here (409 elsewhere)
+    label: Reverse
+    icon: undo-2
+    link: Storno                        # the twin's to-one to the original
+    backLink: ReversedBy                # optional: the original's to-one to its twin
+    negate: [debit, credit, currencyAmount]   # decimal fields of the header and/or its lines
+    defaults: { date: now }             # header values set instead of copied
+    refuse:                             # conditions over the ORIGINAL, each with its message (409)
+      - { when: "ReversedBy != null", message: "This entry is already reversed" }
+      - { when: "Storno != null",     message: "A reversal cannot be reversed - reverse the original entry" }
+```
+
+- It IS a create-from of the entity onto itself (the parser expands it into a `generates` entry), so
+  the twin is saved through the generated repositories: checks, numbering, the init status, the
+  entity's process trigger and the `immutableInPeriod` lock all apply - a twin dated into a CLOSED
+  period is refused (400) and nothing is written. It is created at the init status (a DRAFT), so the
+  accountant can still change its date before posting it through the entity's normal flow.
+- **Copied:** every field and to-one of the header and of its line items as it stands. **Not copied:**
+  the primary key, `unique` fields, a `number:` field (the twin draws its own), calculated and
+  `aggregate` fields (recomputed), the `function: EntityStatus` relation, a `personal` owner, the
+  `link`/`backLink`, the line's composition foreign key (re-pointed at the twin), and every `defaults:`
+  key. A field that must not travel to the twin gets a `defaults:` value instead.
+- `link` / `backLink` are to-ones of `forEntity` to itself (local). The back-link is written on the
+  original in the same transaction as a targeted system write, past `immutableWhen` (which guards
+  user writes).
+- `when` is one comparison of the entity's `function: EntityStatus` relation with one status (a
+  seeded name or its id) - it also hides the button in other statuses. Any other precondition is a
+  `refuse:` entry: one comparison or an ANDed list over the entity's own fields/to-ones
+  (`<field> ==|!= <value | null>`), decided under a row lock on the original, so two concurrent clicks
+  cannot both reverse it.
+- `negate` names only `decimal` fields; a rate or a quantity that multiplies an amount is copied, not
+  negated. The name shares the action namespace with `generates:` names.
+- The endpoint is `/services/java/<project>/gen/events/<module>/<Name>Generate/run` (body `{"id": n}`),
+  answering the created twin.
+
 ### reports - read-only aggregations
 
 **Use when:** the user needs a read-only view, list, or aggregation across records.

@@ -971,6 +971,36 @@ class GlueGenerator {
         copy(context, item, "hasLink", "linkEntity", "linkParentFk", "linkTargetFk");
         context.put("linkJavaPerspective", sanitize(item, "linkPerspective"));
         context.put("linkAssignments", asMaps(item.get("linkAssignments")));
+        // A declared reversal (issue #7886): the refusals decided over the original under its row lock,
+        // each rendered from its neutral terms with the message as a Java literal, and the back-link the
+        // original receives. A .glue written before the keys existed carries no booleans and renders the
+        // create-from it always had.
+        copy(context, item, "hasRefusals", "hasBackLink", "backLinkProperty");
+        context.put("refusals", refusals(item.get("refusals")));
+    }
+
+    /**
+     * A reversal's refusals (issue #7886), each its condition over the loaded original and the message
+     * as a Java string literal's content.
+     *
+     * @param raw the declared refusals, may be absent
+     * @return the refusals the template renders
+     */
+    static List<Map<String, Object>> refusals(Object raw) {
+        List<Map<String, Object>> refusals = new ArrayList<>();
+        for (Map<String, Object> declared : asMaps(raw)) {
+            String condition = JavaLiterals.conditionExpression(asMaps(declared.get("terms")));
+            if (condition == null) {
+                // A refusal that does not render must never become no refusal at all - the generator
+                // refuses an unreadable condition, so only a hand-edited .glue reaches this.
+                throw new IllegalArgumentException("A reversal refusal carries no renderable condition: " + declared);
+            }
+            Map<String, Object> refusal = new LinkedHashMap<>();
+            refusal.put("condition", condition);
+            refusal.put("message", JavaLiterals.escape(str(declared, "message")));
+            refusals.add(refusal);
+        }
+        return refusals;
     }
 
     /**

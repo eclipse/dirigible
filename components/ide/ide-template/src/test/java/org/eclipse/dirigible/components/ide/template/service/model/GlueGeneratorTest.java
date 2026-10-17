@@ -30,6 +30,30 @@ import org.junit.jupiter.api.Test;
 class GlueGeneratorTest {
 
     @Test
+    void aReversalRefusalRendersItsConditionOverTheOriginalAndEscapesItsMessage() {
+        // #7886: the neutral terms of a refusal read the loaded original, null-guarded, and the authored
+        // message becomes the content of a Java string literal.
+        Map<String, Object> term = new LinkedHashMap<>();
+        term.put("owner", "source");
+        term.put("property", "ReversedBy");
+        term.put("equal", Boolean.FALSE);
+        term.put("type", "null");
+        term.put("numericKey", Boolean.FALSE);
+        Map<String, Object> refusal = new LinkedHashMap<>();
+        refusal.put("terms", List.of(term));
+        refusal.put("message", "Entry \"7\" is already reversed");
+
+        List<Map<String, Object>> rendered = GlueGenerator.refusals(List.of(refusal));
+
+        assertThat(rendered).hasSize(1);
+        assertThat(rendered.get(0)
+                           .get("condition")).isEqualTo("((source == null ? null : source.ReversedBy) != null)");
+        assertThat(rendered.get(0)
+                           .get("message")).isEqualTo("Entry \\\"7\\\" is already reversed");
+        assertThat(GlueGenerator.refusals(null)).isEmpty();
+    }
+
+    @Test
     void theRenamedCompareOnlyWhenDerivedKeyIsReadUnderItsFormerSpelling() {
         // #7188 renamed the #7163 key `expressionDefault`; the template reads only the new one, so a
         // .glue from between the two rendered a CURRENT_DATE-default cell with a plain same() - every
