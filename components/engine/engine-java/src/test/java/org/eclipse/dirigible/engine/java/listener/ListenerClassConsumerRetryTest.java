@@ -31,6 +31,7 @@ import org.eclipse.dirigible.components.base.tenant.Tenant;
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.configurations.tenant.TenantConfigurationService;
 import org.eclipse.dirigible.components.listeners.config.ActiveMQConnectionArtifactsFactory;
+import org.eclipse.dirigible.components.listeners.config.ListenerConnectionMode;
 import org.eclipse.dirigible.components.listeners.service.DestinationNameManager;
 import org.eclipse.dirigible.components.listeners.service.TenantPropertyManager;
 import org.eclipse.dirigible.engine.java.component.ComponentContainer;
@@ -56,6 +57,10 @@ import jakarta.jms.Session;
  * The refusal is reproduced the way it really arrives: {@code ActiveMQConnectionArtifactsFactory}
  * wraps the broker's {@code JMSException} in an {@link IllegalStateException}, which the consumer
  * used not to catch at all.
+ *
+ * <p>
+ * Pinned in the per-listener connection mode, where every attempt opens a connection of its own;
+ * {@link ListenerClassConsumerSharedConnectionTest} covers the retry of a shared connection.
  */
 class ListenerClassConsumerRetryTest {
 
@@ -164,7 +169,7 @@ class ListenerClassConsumerRetryTest {
         when(tenantConfigurationService.resolveInjectableForCurrentTenant()).thenReturn(new HashMap<>());
 
         consumer = new ListenerClassConsumer(componentContainer, connectionFactory, tenantContext, mock(TenantPropertyManager.class),
-                mock(Tenant.class), tenantConfigurationService, destinationNameManager);
+                mock(Tenant.class), tenantConfigurationService, destinationNameManager, ListenerConnectionMode.PER_LISTENER);
     }
 
     @Test

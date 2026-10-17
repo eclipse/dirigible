@@ -765,6 +765,113 @@ class ReportIntentGeneratorTest {
                 error.getMessage());
     }
 
+    /**
+     * A ledger's rows are one account's lines, so the aggregating constructs are refused, the account
+     * must be the RELATION the lines are selected by (it binds as the account's key), and every column
+     * must resolve like a dimension.
+     */
+    @Test
+    void ledgerReportRefusesWhatItCannotRender() {
+        IntentValidationException error = assertThrows(IntentValidationException.class, () -> IntentParser.parse("""
+                name: ledger
+                entities:
+                  - name: Account
+                    fields:
+                      - { name: id, type: integer, primaryKey: true, generated: true }
+                      - { name: code, type: string }
+                  - name: JournalEntryItem
+                    fields:
+                      - { name: id, type: integer, primaryKey: true, generated: true }
+                      - { name: debit, type: decimal }
+                      - { name: credit, type: decimal }
+                      - { name: entryDate, type: date }
+                    relations:
+                      - { name: account, kind: manyToOne, to: Account, required: true }
+                reports:
+                  - name: AccountCard
+                    kind: ledger
+                    source: JournalEntryItem
+                    date: entryDate
+                    debit: debit
+                    credit: credit
+                    account: account.code
+                    dimensions: [account.code]
+                    measures: ["sum(debit)"]
+                    columns: [nothing, account.nope]
+                    chart: bar
+                    parameters:
+                      - { name: account, target: debit, op: ge, initial: "0" }
+                """));
+        String message = error.getMessage();
+        assertTrue(message.contains("ledger report [AccountCard] must not declare measures"), message);
+        assertTrue(message.contains("ledger report [AccountCard] must not declare dimensions"), message);
+        assertTrue(message.contains("account [account.code] is not a to-one relation of [JournalEntryItem]"), message);
+        assertTrue(message.contains("column [nothing] field [nothing] is not a field of [JournalEntryItem]"), message);
+        assertTrue(message.contains("column [account.nope] field [account.nope] is not a field of [Account]"), message);
+        assertTrue(message.contains("must not declare widget/chart"), message);
+        assertTrue(message.contains("collides with the account parameter a ledger report declares on its own behalf"), message);
+    }
+
+    @Test
+    void ledgerColumnsWithoutTheKindAreRejected() {
+        IntentValidationException error = assertThrows(IntentValidationException.class, () -> IntentParser.parse("""
+                name: ledger
+                entities:
+                  - name: JournalEntryItem
+                    fields:
+                      - { name: id, type: integer, primaryKey: true, generated: true }
+                      - { name: note, type: string }
+                reports:
+                  - name: Totals
+                    source: JournalEntryItem
+                    dimensions: [note]
+                    measures: ["count(*)"]
+                    columns: [note]
+                """));
+        assertTrue(error.getMessage()
+                        .contains("declares columns but is not kind: ledger"),
+                error.getMessage());
+    }
+
+    /**
+     * Without a {@code hierarchy} on the account entity there is no tree to walk: the account is
+     * matched by its key and no closure view is emitted.
+     */
+    @Test
+    void aLedgerOverAFlatChartMatchesTheAccountByKey() {
+        IntentModel model = IntentParser.parse("""
+                name: ledger
+                entities:
+                  - name: Account
+                    fields:
+                      - { name: id, type: integer, primaryKey: true, generated: true }
+                      - { name: code, type: string }
+                  - name: JournalEntryItem
+                    fields:
+                      - { name: id, type: integer, primaryKey: true, generated: true }
+                      - { name: debit, type: decimal }
+                      - { name: credit, type: decimal }
+                      - { name: entryDate, type: date }
+                    relations:
+                      - { name: account, kind: manyToOne, to: Account, required: true }
+                reports:
+                  - name: AccountCard
+                    kind: ledger
+                    source: JournalEntryItem
+                    date: entryDate
+                    debit: debit
+                    credit: credit
+                    account: account
+                """);
+        ReportIntent report = model.getReports()
+                                   .get(0);
+        String query = (String) ReportIntentGenerator.buildForTest(TestContexts.context(model), report)
+                                                     .get("query");
+        assertTrue(query.contains("JournalEntryItem.\"JOURNAL_ENTRY_ITEM_ACCOUNT\" = :account"), query);
+        assertTrue(ReportIntentGenerator.buildViewsForTest(TestContexts.context(model), report)
+                                        .isEmpty());
+    }
+
     private static final String AGEING_INTENT = """
             name: billing
             entities:

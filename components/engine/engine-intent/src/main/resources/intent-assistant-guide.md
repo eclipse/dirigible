@@ -465,6 +465,15 @@ a `required` text field is refused when it is blank after that trim - spaces alo
   `dimensions: ["ageing(due, [30, 60, 90])"]` with `measures: ["sum(balance)"]` is the standard receivables report.
   The field may be an own `date`/`timestamp` or a one-hop `relation.field`; thresholds must ascend and be positive.
   Prefer equal-digit thresholds - the bucket is a text label and sorts lexicographically.
+- `aging:` (on a report) - **aged receivables / payables**: one row per dimension (the counterparty), one
+  COLUMN per bucket of days past due, summing each open document's open amount as of a report date:
+  `aging: { due: due, amount: "total - paid", buckets: [30, 60, 90], date: issuedOn }` yields `Not Yet Due` /
+  `Overdue 0-30` / `Overdue 31-60` / `Overdue 61-90` / `Overdue 90+` and the `Open Amount` they add up to. A document
+  due after the as-of date (or with no due date) is `Not Yet Due`, never `0-30`; one due ON it is 0 days past due.
+  `amount` is a numeric field or numeric fields joined by `+`/`-` (a missing value reads as 0); fully settled documents
+  drop out. The report declares the date parameter `asOf` itself (rename it with `asOf: <name>`), defaulting to the day
+  the report is run - do not declare it under `parameters:`. The optional `date` (the document date) leaves out
+  documents issued after the as-of date. Prefer this over the `ageing(...)` dimension for an AR/AP ageing report.
 - `where` (on a user-picked to-one relation) - **a static option filter**: a single
   `<target property>: <literal>` pair that permanently narrows the dropdown's option list to matching
   target rows. Unlike `dependsOn` (which reacts to a sibling selection) the condition is constant.
@@ -2619,6 +2628,53 @@ generates:
   in the generated controller only and are not part of a repository write; express the refusal the link must honour as a roll-up capacity
   (`capacity:`) or a status-gated check.
 
+### reversals - reverse a booked document by hand (red storno)
+
+**Use when:** a POSTED document must be corrected and there is no source event to void - the
+hand-written journal entry. `postings: reverses:` reverses a document a posting created, on its
+source's void; a manual entry has no source, so the accountant reverses it and books the right one.
+`reversals:` is that click: it creates the document's **negated twin** - every line copied onto the
+SAME side with the declared amounts negated - and links the two both ways, so the pair nets to zero.
+
+```yaml
+reversals:
+  - name: reverseEntry
+    forEntity: JournalEntry
+    when: "Status == POSTED"            # offered and accepted only here (409 elsewhere)
+    label: Reverse
+    icon: undo-2
+    link: Storno                        # the twin's to-one to the original
+    backLink: ReversedBy                # optional: the original's to-one to its twin
+    negate: [debit, credit, currencyAmount]   # decimal fields of the header and/or its lines
+    defaults: { date: now }             # header values set instead of copied
+    refuse:                             # conditions over the ORIGINAL, each with its message (409)
+      - { when: "ReversedBy != null", message: "This entry is already reversed" }
+      - { when: "Storno != null",     message: "A reversal cannot be reversed - reverse the original entry" }
+```
+
+- It IS a create-from of the entity onto itself (the parser expands it into a `generates` entry), so
+  the twin is saved through the generated repositories: checks, numbering, the init status, the
+  entity's process trigger and the `immutableInPeriod` lock all apply - a twin dated into a CLOSED
+  period is refused (400) and nothing is written. It is created at the init status (a DRAFT), so the
+  accountant can still change its date before posting it through the entity's normal flow.
+- **Copied:** every field and to-one of the header and of its line items as it stands. **Not copied:**
+  the primary key, `unique` fields, a `number:` field (the twin draws its own), calculated and
+  `aggregate` fields (recomputed), the `function: EntityStatus` relation, a `personal` owner, the
+  `link`/`backLink`, the line's composition foreign key (re-pointed at the twin), and every `defaults:`
+  key. A field that must not travel to the twin gets a `defaults:` value instead.
+- `link` / `backLink` are to-ones of `forEntity` to itself (local). The back-link is written on the
+  original in the same transaction as a targeted system write, past `immutableWhen` (which guards
+  user writes).
+- `when` is one comparison of the entity's `function: EntityStatus` relation with one status (a
+  seeded name or its id) - it also hides the button in other statuses. Any other precondition is a
+  `refuse:` entry: one comparison or an ANDed list over the entity's own fields/to-ones
+  (`<field> ==|!= <value | null>`), decided under a row lock on the original, so two concurrent clicks
+  cannot both reverse it.
+- `negate` names only `decimal` fields; a rate or a quantity that multiplies an amount is copied, not
+  negated. The name shares the action namespace with `generates:` names.
+- The endpoint is `/services/java/<project>/gen/events/<module>/<Name>Generate/run` (body `{"id": n}`),
+  answering the created twin.
+
 ### reports - read-only aggregations
 
 **Use when:** the user needs a read-only view, list, or aggregation across records.
@@ -2675,8 +2731,9 @@ target is compared as a date, so a `le` bound includes the chosen day. The targe
 - a relation itself is not one (name a field of it: `Customer.name`), `boolean` and `text` fields are
 not parameterizable, and the name must be a plain, non-keyword identifier that is not one the
 platform already binds (`language`) or the generated controller declares (`filter`, `limit`,
-`offset`, `repository`). `kind: balance` and `kind: statement` declare their own
-`fromDate`/`toDate`, so either may add further parameters but not redeclare those two.
+`offset`, `repository`). `kind: balance`, `kind: statement` and `kind: ledger` declare their own
+`fromDate`/`toDate` (a ledger also its `account`), so each may add further parameters but not
+redeclare those.
 
 #### reports[].scope - which lifecycle rows an aggregate counts
 
@@ -2925,6 +2982,48 @@ touches no cash account is not read at all. **Rules:** only the four `period*` m
 flow is a movement within the window); `date` must be a `<relation>.<field>` path over the source's
 relation to its journal entry, because the cash an entry moved is a fact about the entry; and the
 entries must balance (debits = credits), which is what makes the sections reconcile.
+
+#### reports[].kind: ledger - the account analysis (account card)
+
+**Use when:** the user needs the *lines* of one account - the account card an accountant reconciles
+with: the opening balance at the window start, each posted line in date order with its own debit,
+credit and a running balance, and the closing balance at the end. A `kind: balance` report sums per
+account; a ledger lists what makes up one account's figure.
+
+```yaml
+reports:
+  - name: AccountAnalysis
+    kind: ledger
+    source: JournalEntryItem              # the ledger line items (same as a balance report)
+    date: journalEntry.entryDate          # the date driving the window
+    debit: debit
+    credit: credit
+    account: account                      # the to-one RELATION to the account - bound at runtime
+    columns: [journalEntry.number, journalEntry.reason, Customer, note]
+    correspondence: account.code          # optional - each line's counter-side accounts
+    filter: "journalEntry.status == 2"
+```
+
+The rows are: an **Opening balance** row (everything strictly before `fromDate`), the lines of the
+window ordered by date, entry and line, each with `Balance` = opening + running `debit - credit`, and a
+**Closing balance** row carrying the window's debit and credit turnover and the closing balance. The
+window is the balance report's, so opening + debit - credit = closing, equal to what a `kind: balance`
+report shows for the same account and window. The report declares `fromDate`, `toDate` and
+`account` (the account's key) on its own behalf; until an account is chosen it binds `0` and renders
+an empty card. When the account entity declares `hierarchy:`, choosing a **group account** lists the
+lines of every account below it (a generated `<REPORT>_ACCOUNT_TREE` view walks the tree), so a
+group's closing balance is the sum of its leaves'. The query pages in the database, so an account
+with tens of thousands of lines loads one page at a time and every page carries the running balance
+of the whole window.
+
+`columns` are the per-line columns between the date and the amounts - a field of the source, a
+one-hop `relation.field`, or a bare to-one relation (shown by its label). `correspondence` names the
+account path read off the entry's opposite-side lines, listed distinct per line (`411, 453`) - a
+compound entry shows every account a line faced.
+
+**Rules:** `account` must be a to-one relation of the source, not one of its fields; the source needs
+a `primaryKey` (the running balance accumulates line by line in key order); no `dimensions`,
+`measures`, `lines`, `cashAccounts`, `widget` or `chart` - the rows are the account's lines.
 
 #### reports[].chart - render as a chart
 

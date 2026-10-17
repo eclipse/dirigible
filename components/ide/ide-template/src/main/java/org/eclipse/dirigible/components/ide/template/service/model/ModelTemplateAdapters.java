@@ -56,6 +56,9 @@ final class ModelTemplateAdapters {
     record PreparedModel(Map<String, Object> model, boolean entityShaped) {
     }
 
+    /** The template rendering a standalone report. */
+    private static final String REPORT_FILE_TEMPLATE = "template-application-ui-harmonia-java/template/template-report-file.js";
+
     /** The preparation of each supported template, keyed by its module path. */
     private static final Map<String, Adapter> ADAPTERS = Map.of(//
             "template-application-schema/template/template.js", ModelTemplateAdapters::entityModel, //
@@ -63,7 +66,7 @@ final class ModelTemplateAdapters {
             "template-application-rest-java/template/template.js", ModelTemplateAdapters::entityModel, //
             "template-application-ui-harmonia-java/template/template.js", ModelTemplateAdapters::harmoniaApplication, //
             "template-application-events-java/template/template.js", ModelTemplateAdapters::glue, //
-            "template-application-ui-harmonia-java/template/template-report-file.js", ModelTemplateAdapters::report, //
+            REPORT_FILE_TEMPLATE, ModelTemplateAdapters::report, //
             "template-form-builder-harmonia/template/template.js", (modelText, parameters) -> form(modelText), //
             "template-mapping-javascript/template/template.js", (modelText, parameters) -> mapping(modelText), //
             "template-mapping-java/template/template.js", ModelTemplateAdapters::javaMapping);
@@ -93,6 +96,28 @@ final class ModelTemplateAdapters {
      */
     static boolean supports(String templateId) {
         return ADAPTERS.containsKey(templateId);
+    }
+
+    /**
+     * The paths, relative to the generation folder, where an earlier version of a template wrote output
+     * it now writes elsewhere - for a regeneration to remove, so the old copy does not outlive the
+     * move.
+     *
+     * <p>
+     * A standalone report's page went to the case-preserved {@code gen/<Report>/reports/<Report>/},
+     * beside its Java in the sanitized {@code gen/<report>/} (#7889). On a case-sensitive filesystem
+     * those are two folders, and the reports store listed the report twice.
+     *
+     * @param templateId the template's module path
+     * @param parameters the generation parameters, as {@link #prepare} left them
+     * @return the retired paths; empty for a template that moved nothing
+     */
+    static List<String> retiredOutputs(String templateId, Map<String, Object> parameters) {
+        String genFolder = str(parameters, "genFolderName");
+        if (!REPORT_FILE_TEMPLATE.equals(templateId) || genFolder.equals(str(parameters, "javaGenFolderName"))) {
+            return List.of();
+        }
+        return List.of(genFolder + "/reports/" + str(parameters, "name"));
     }
 
     /**

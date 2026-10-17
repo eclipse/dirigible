@@ -69,6 +69,11 @@ public class IntentModel {
     private List<ActionIntent> actions = new ArrayList<>();
     /** Create-from (document generation) actions - clone a source record into a new target record. */
     private List<GeneratesIntent> generates = new ArrayList<>();
+    /**
+     * Manual Reverse actions - a booked document's negated twin, linked both ways (issue #7886). The
+     * parser expands each into a {@link #generates} entry.
+     */
+    private List<ReversalIntent> reversals = new ArrayList<>();
     /** Declarative postings: source-document status → generated local document + items. */
     private List<PostingIntent> postings = new ArrayList<>();
     /** Declarative on-demand status transitions - guarded per-record buttons (void/cancel/close). */
@@ -140,6 +145,14 @@ public class IntentModel {
 
     public void setGenerates(List<GeneratesIntent> generates) {
         this.generates = generates == null ? new ArrayList<>() : generates;
+    }
+
+    public List<ReversalIntent> getReversals() {
+        return reversals;
+    }
+
+    public void setReversals(List<ReversalIntent> reversals) {
+        this.reversals = reversals == null ? new ArrayList<>() : reversals;
     }
 
     public List<SettlementIntent> getSettlements() {

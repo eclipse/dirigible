@@ -42,18 +42,24 @@ public class ListenersManager {
     /** The listener creator. */
     private final ListenerCreator listenerCreator;
 
+    /** The connection the artefacts share, closed once every listener is stopped. */
+    private final SharedListenerConnection sharedConnection;
+
     /**
      * Instantiates a new listeners manager.
      *
      * @param repository the repository
      * @param messageListenerManagerFactory the message listener manager factory
      * @param listenerCreator the listener creator
+     * @param sharedConnection the connection the artefacts share in the shared mode
      */
     @Autowired
-    public ListenersManager(IRepository repository, ListenerManagerFactory messageListenerManagerFactory, ListenerCreator listenerCreator) {
+    public ListenersManager(IRepository repository, ListenerManagerFactory messageListenerManagerFactory, ListenerCreator listenerCreator,
+            SharedListenerConnection sharedConnection) {
         this.repository = repository;
         this.messageListenerManagerFactory = messageListenerManagerFactory;
         this.listenerCreator = listenerCreator;
+        this.sharedConnection = sharedConnection;
     }
 
     /**
@@ -114,6 +120,7 @@ public class ListenersManager {
             }
         });
         LISTENERS.clear();
+        sharedConnection.close();
     }
 
     /**

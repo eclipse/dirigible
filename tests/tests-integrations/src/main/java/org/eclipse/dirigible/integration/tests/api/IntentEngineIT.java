@@ -4637,17 +4637,18 @@ class IntentEngineIT extends IntegrationTest {
         assertTrue(controller.contains("exportCsv(@Body Map<String, Object> filter)"), "export should honor the active filters");
 
         // Frontend: the generated report page carries typed column metadata and the filter machinery.
-        // NB the case split: the UI files use the RAW genFolderName (the report file name,
-        // "OrdersByCustomer"), while the Java files use the sanitized javaGenFolderName
-        // ("ordersbycustomer") - two distinct folders on a case-sensitive filesystem.
-        String page = contentOf("gen/OrdersByCustomer/reports/OrdersByCustomer/report.js");
+        // It shares the Java's sanitized folder ("ordersbycustomer"), never the report file's own
+        // case-preserved name - two folders on a case-sensitive filesystem, so the reports store
+        // listed the report twice (#7889).
+        assertFalse(generationFolders().contains("OrdersByCustomer"), "the report page must not get a case-preserved folder of its own");
+        String page = contentOf("gen/ordersbycustomer/reports/OrdersByCustomer/report.js");
         assertTrue(page.contains("reportColumns"), "the report page should embed the typed column metadata");
         assertTrue(page.contains("{ key: 'Customer', kind: 'text', align: 'left'"),
                 "the joined dimension should be a left-aligned text column");
         assertTrue(page.contains("kind: 'number'"), "the aggregate measures should be number columns");
         assertTrue(page.contains("operator: 'GTE'") && page.contains("operator: 'LIKE'"),
                 "the page should build range and contains conditions");
-        String view = contentOf("gen/OrdersByCustomer/reports/OrdersByCustomer/index.html");
+        String view = contentOf("gen/ordersbycustomer/reports/OrdersByCustomer/index.html");
         assertTrue(view.contains("applyFilters()") && view.contains("data-lucide=\"filter\""),
                 "the report view should carry the filter panel and toolbar toggle");
         assertTrue(view.contains("alignClass(col)") && view.contains("cellText(col, row)"),
@@ -4666,6 +4667,11 @@ class IntentEngineIT extends IntegrationTest {
         assertTrue(page.contains("shareLabels(labels, data[0])"), "doughnut legend entries should carry the slice share");
         assertTrue(page.contains("shell.report.true"), "a boolean dimension should read Yes/No in the chart, not true/false");
 
+        // A project generated before #7889 holds the statement's page in the case-preserved folder;
+        // the regeneration removes it, and the folders it leaves empty, rather than keep a duplicate.
+        this.repository.createResource(PROJECT_PATH + "/gen/OrderStatement/reports/OrderStatement/index.html",
+                "<html></html>".getBytes(StandardCharsets.UTF_8));
+
         // A statement's rows ARE its structure, so its page fetches the whole statement rather than
         // splitting a balance sheet across pages.
         restAssuredExecutor.execute(() -> given().contentType("application/json")
@@ -4675,7 +4681,9 @@ class IntentEngineIT extends IntegrationTest {
                                                          + "?path=OrderStatement.report")
                                                  .then()
                                                  .statusCode(201));
-        String statementPage = contentOf("gen/OrderStatement/reports/OrderStatement/report.js");
+        assertFalse(generationFolders().contains("OrderStatement"),
+                "the regeneration should remove the retired case-preserved page folder");
+        String statementPage = contentOf("gen/orderstatement/reports/OrderStatement/report.js");
         assertTrue(statementPage.contains("limit: 500"), "a statement page should fetch the whole line structure at once");
         assertTrue(statementPage.contains("{ key: 'Code', kind: 'text'") && statementPage.contains("{ key: 'Amount', kind: 'number'"),
                 "the statement page should carry the Code / Label / Amount column metadata");
@@ -5351,6 +5359,15 @@ class IntentEngineIT extends IntegrationTest {
 
     private IResource resource(String fileName) {
         return repository.getResource(PROJECT_PATH + "/" + fileName);
+    }
+
+    /**
+     * The folder names under the test project's {@code gen/}, as stored - compared by exact name, so a
+     * case-only difference counts on a case-insensitive filesystem too.
+     */
+    private List<String> generationFolders() {
+        return repository.getCollection(PROJECT_PATH + "/gen")
+                         .getCollectionsNames();
     }
 
     /** A repository-absolute resource - {@link #resource(String)} is relative to the test project. */

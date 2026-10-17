@@ -160,6 +160,18 @@ instantiate client classes.
   `offlineDurableSubscriberTimeout` (7 days, set in `MessagingConfig`) — the consumer cannot
   unsubscribe on its own, because `onClassUnloaded` fires for a *replaced* class as well as a deleted
   one, and a class deleted while the server was down is never reported at all.
+  **The subscriptions of a scope share one connection** (#7875, `DIRIGIBLE_MESSAGING_LISTENER_CONNECTIONS`,
+  default `shared`): one client-id connection per tenant plus one for the global destinations, every
+  subscription a session on it, so an instance holds `tenants + 2` connections however many handlers
+  the generation declares - a suite of 130 handlers used to need `130 x (tenants + 1)`, past a small
+  broker's quota. The durable subscription name still derives from the handler and the physical
+  destination; only the client id moved from the subscription to its scope. A refused shared
+  connection is reported once per scope (not once per handler), a refused session closes the session
+  and keeps the connection, and the loss of the connection is the loss of the whole scope, which the
+  next reconciliation pass closes and subscribes again. `per-listener` restores a connection per
+  subscription. The modes' durable identities differ, so once a scope is subscribed the reconciliation
+  pass unsubscribes the other mode's identity of each of its durable subscriptions (#7890), retrying a
+  client id still held by the previous instance of a rolling deploy. See `.claude/docs/messaging.md`.
 - **A subscription (or a job registration) that could not be established is retried on a JVM-local
   timer.** `JavaConsumersReconciler` calls `JavaClassConsumer.reconcile()` on every consumer every
   `DIRIGIBLE_JAVA_RECONCILE_INTERVAL_SECONDS` (30), and `ListenerClassConsumer` /

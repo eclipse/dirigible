@@ -31,6 +31,8 @@ import org.eclipse.dirigible.components.intent.model.FieldIntent;
 import org.eclipse.dirigible.components.intent.model.GenerateChildIntent;
 import org.eclipse.dirigible.components.intent.model.GeneratesIntent;
 import org.eclipse.dirigible.components.intent.model.GeneratesItemsIntent;
+import org.eclipse.dirigible.components.intent.model.ReversalIntent;
+import org.eclipse.dirigible.components.intent.model.ReversalRefusalIntent;
 import org.eclipse.dirigible.components.intent.model.InboundIntent;
 import org.eclipse.dirigible.components.intent.model.InboundSourceIntent;
 import org.eclipse.dirigible.components.intent.model.IntegrationIntent;
@@ -1295,9 +1297,72 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
             e.put("hasPrompt", g.hasPrompt());
             e.put("promptFields", promptFields(g, crossModel ? null : byName.get(g.getTo()), target, source));
             putLink(g, e, byName, compositionParents, model, target);
+            putReversal(g, e, source, byName);
             out.add(e);
         }
         return out;
+    }
+
+    /**
+     * The half of a create-from only a declared reversal has (issue #7886), onto its glue entry: the
+     * declared amounts copied NEGATED (a line keeps its side - red storno), the refusals decided over
+     * the original under a row lock, and the back-link written on the original once the twin exists. An
+     * authored create-from carries none of it, and neither does a {@code .glue} written before the keys
+     * existed - the template gates every part on its boolean.
+     *
+     * @param g the create-from, possibly expanded from a {@code reversals:} entry
+     * @param e the glue entry being built
+     * @param source the reversed entity (a reversal is always local)
+     * @param byName the local entities by name
+     */
+    private static void putReversal(GeneratesIntent g, Map<String, Object> e, EntityIntent source, Map<String, EntityIntent> byName) {
+        ReversalIntent reversal = g.getReversal();
+        if (reversal == null) {
+            e.put("hasRefusals", false);
+            e.put("hasBackLink", false);
+            e.put("backLinkProperty", "");
+            e.put("refusals", new ArrayList<>());
+            return;
+        }
+        java.util.Set<String> negated = new java.util.HashSet<>();
+        for (String name : reversal.getNegate()) {
+            negated.add(IntentNaming.pascalCase(name));
+        }
+        negate(e, "fieldAssignments", negated, "source");
+        negate(e, "itemFieldAssignments", negated, "srcItem");
+        List<Map<String, Object>> refusals = new ArrayList<>();
+        for (ReversalRefusalIntent refusal : reversal.getRefuse()) {
+            List<Map<String, Object>> terms = new ArrayList<>();
+            // The terms read the record being written ("entity"); here that record is the loaded original.
+            for (Map<String, Object> term : CheckSupport.conditionTerms(source, byName, refusal.getWhen())) {
+                Map<String, Object> onSource = new LinkedHashMap<>(term);
+                onSource.put("owner", "source");
+                terms.add(onSource);
+            }
+            Map<String, Object> entry = new LinkedHashMap<>();
+            entry.put("terms", terms);
+            entry.put("message", refusal.getMessage());
+            refusals.add(entry);
+        }
+        e.put("hasRefusals", !refusals.isEmpty());
+        e.put("refusals", refusals);
+        boolean backLink = reversal.getBackLink() != null && !reversal.getBackLink()
+                                                                      .isBlank();
+        e.put("hasBackLink", backLink);
+        e.put("backLinkProperty", backLink ? IntentNaming.pascalCase(reversal.getBackLink()) : "");
+    }
+
+    /**
+     * Replaces the copy of every negated property in the named assignments with its null-safe negation.
+     */
+    @SuppressWarnings("unchecked")
+    private static void negate(Map<String, Object> e, String key, java.util.Set<String> negated, String owner) {
+        for (Map<String, Object> assignment : (List<Map<String, Object>>) e.get(key)) {
+            String property = String.valueOf(assignment.get("targetProp"));
+            if (negated.contains(property)) {
+                assignment.put("reading", Readings.negate(owner, property));
+            }
+        }
     }
 
     /**

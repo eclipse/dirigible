@@ -137,6 +137,19 @@ public enum DirigibleConfig {
 
     SNOWFLAKE_DATA_SOURCE_LIFESPAN_SECONDS("DIRIGIBLE_SNOWFLAKE_DATA_SOURCE_LIFESPAN_SECONDS", "540"), // 9 minutes
 
+    /**
+     * The maximum pool size of every tenant's data source ({@code <tenantId>_DefaultDB}), unless that
+     * data source sets {@code <name>_HIKARI_MAXIMUMPOOLSIZE} (#7876).
+     */
+    TENANT_DATASOURCE_MAX_POOL_SIZE("DIRIGIBLE_TENANT_DATASOURCE_MAX_POOL_SIZE", "20"),
+
+    /**
+     * The minimum idle connections of every tenant's data source, unless that data source sets
+     * {@code <name>_HIKARI_MINIMUMIDLE} (#7876). Low by default, so that an idle tenant's pool shrinks
+     * back to almost nothing after the idle timeout.
+     */
+    TENANT_DATASOURCE_MIN_IDLE("DIRIGIBLE_TENANT_DATASOURCE_MIN_IDLE", "1"),
+
     LEAKED_CONNECTIONS_MAX_IN_USE_SECONDS("DIRIGIBLE_LEAKED_CONNECTIONS_MAX_IN_USE_SECONDS", "180"), // 3 min by default
 
     LEAKED_CONNECTIONS_CHECK_INTERVAL_SECONDS("DIRIGIBLE_LEAKED_CONNECTIONS_CHECK_INTERVAL_SECONDS", "30"),
@@ -490,6 +503,18 @@ public enum DirigibleConfig {
      * is ignored when {@link #MESSAGING_BROKER_URL} is set.
      */
     MESSAGING_USE_DEFAULT_DATABASE("DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE", Boolean.TRUE.toString()),
+
+    /**
+     * How the message listeners attach to the broker: {@code shared} (the default) opens one JMS
+     * connection per tenant for the client-Java listeners - plus one for the global destinations - and
+     * one for all {@code .listener} artefacts, every subscription being a session on it, so an instance
+     * holds about {@code tenants + 2} connections however many listeners it declares;
+     * {@code per-listener} opens a connection per subscription per tenant, the shape the platform had
+     * before #7875. The client id a durable topic subscription is registered under differs between the
+     * two modes, so after a switch the reconciliation pass unsubscribes the previous mode's durable
+     * subscriptions of the handlers it subscribes, retrying a client id another instance still holds.
+     */
+    MESSAGING_LISTENER_CONNECTIONS("DIRIGIBLE_MESSAGING_LISTENER_CONNECTIONS", "shared"),
 
     /**
      * Seconds an armed act-as (delegated entry) state survives before it expires on its own. The window

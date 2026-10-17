@@ -70,12 +70,12 @@ class DependsOnScenariosHarmoniaTestProject extends BaseTestProject {
      * Java controller URL and kept the Java-sanitized gen folder, so it 404'd for any hyphenated model
      * name (here {@code sales-order} -> {@code sales_order}). UoM is a non-setting association on
      * SalesOrderItem; clicking its "New UoM" opens the UoM create form (its "Name" field label proves
-     * the form loaded rather than a 404 page). "UoM" matches only that button - the sidebar entry is
-     * the humanized "Uo M".
+     * the form loaded rather than a 404 page). The button shows only "New"; the target entity is named
+     * in its accessible label.
      */
     private void verifyRelatedCreateOpens() {
         browser.openPath(BASE_URI + "/SalesOrderItem/create");
-        browser.clickOnElementContainingText(HtmlElementType.BUTTON, "UoM");
+        browser.clickOnElementByAttributeValue(HtmlElementType.BUTTON, HtmlAttribute.ARIA_LABEL, "New UoM");
         browser.assertElementExistsByTypeAndContainsText(HtmlElementType.SPAN, "Name");
     }
 
