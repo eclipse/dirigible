@@ -145,6 +145,11 @@ The three categories, and the extension point that carries each:
    generated scaffold already carries an `<image src="Templates/Print/logo.png"/>` slot and the answer
    is to upload the file there (Documents perspective), or ship a default as
    `doc/Templates/Print/logo.png`. A missing file prints nothing.
+   A statutory FILE is not this category: a VAT ledger in fixed-width windows-1251, a CSV for a
+   bank, an XML declaration over a report are `exports:`. What stays outside an export is a structure
+   beyond header / line / trailer records (nested XML hierarchies, several row sets in one file,
+   validation against an XSD) and the signed submission to an authority - not implemented yet; say
+   so, and propose the export plus a `custom/` component that signs and delivers its file.
 
 Also outside: a bespoke screen (an `actions:` custom page), a bespoke dashboard number (a `widgets:`
 tile backed by a developer endpoint).
@@ -460,6 +465,15 @@ a `required` text field is refused when it is blank after that trim - spaces alo
   `dimensions: ["ageing(due, [30, 60, 90])"]` with `measures: ["sum(balance)"]` is the standard receivables report.
   The field may be an own `date`/`timestamp` or a one-hop `relation.field`; thresholds must ascend and be positive.
   Prefer equal-digit thresholds - the bucket is a text label and sorts lexicographically.
+- `aging:` (on a report) - **aged receivables / payables**: one row per dimension (the counterparty), one
+  COLUMN per bucket of days past due, summing each open document's open amount as of a report date:
+  `aging: { due: due, amount: "total - paid", buckets: [30, 60, 90], date: issuedOn }` yields `Not Yet Due` /
+  `Overdue 0-30` / `Overdue 31-60` / `Overdue 61-90` / `Overdue 90+` and the `Open Amount` they add up to. A document
+  due after the as-of date (or with no due date) is `Not Yet Due`, never `0-30`; one due ON it is 0 days past due.
+  `amount` is a numeric field or numeric fields joined by `+`/`-` (a missing value reads as 0); fully settled documents
+  drop out. The report declares the date parameter `asOf` itself (rename it with `asOf: <name>`), defaulting to the day
+  the report is run - do not declare it under `parameters:`. The optional `date` (the document date) leaves out
+  documents issued after the as-of date. Prefer this over the `ageing(...)` dimension for an AR/AP ageing report.
 - `where` (on a user-picked to-one relation) - **a static option filter**: a single
   `<target property>: <literal>` pair that permanently narrows the dropdown's option list to matching
   target rows. Unlike `dependsOn` (which reacts to a sibling selection) the condition is constant.
@@ -2717,8 +2731,9 @@ target is compared as a date, so a `le` bound includes the chosen day. The targe
 - a relation itself is not one (name a field of it: `Customer.name`), `boolean` and `text` fields are
 not parameterizable, and the name must be a plain, non-keyword identifier that is not one the
 platform already binds (`language`) or the generated controller declares (`filter`, `limit`,
-`offset`, `repository`). `kind: balance` and `kind: statement` declare their own
-`fromDate`/`toDate`, so either may add further parameters but not redeclare those two.
+`offset`, `repository`). `kind: balance`, `kind: statement` and `kind: ledger` declare their own
+`fromDate`/`toDate` (a ledger also its `account`), so each may add further parameters but not
+redeclare those.
 
 #### reports[].scope - which lifecycle rows an aggregate counts
 
@@ -2967,6 +2982,48 @@ touches no cash account is not read at all. **Rules:** only the four `period*` m
 flow is a movement within the window); `date` must be a `<relation>.<field>` path over the source's
 relation to its journal entry, because the cash an entry moved is a fact about the entry; and the
 entries must balance (debits = credits), which is what makes the sections reconcile.
+
+#### reports[].kind: ledger - the account analysis (account card)
+
+**Use when:** the user needs the *lines* of one account - the account card an accountant reconciles
+with: the opening balance at the window start, each posted line in date order with its own debit,
+credit and a running balance, and the closing balance at the end. A `kind: balance` report sums per
+account; a ledger lists what makes up one account's figure.
+
+```yaml
+reports:
+  - name: AccountAnalysis
+    kind: ledger
+    source: JournalEntryItem              # the ledger line items (same as a balance report)
+    date: journalEntry.entryDate          # the date driving the window
+    debit: debit
+    credit: credit
+    account: account                      # the to-one RELATION to the account - bound at runtime
+    columns: [journalEntry.number, journalEntry.reason, Customer, note]
+    correspondence: account.code          # optional - each line's counter-side accounts
+    filter: "journalEntry.status == 2"
+```
+
+The rows are: an **Opening balance** row (everything strictly before `fromDate`), the lines of the
+window ordered by date, entry and line, each with `Balance` = opening + running `debit - credit`, and a
+**Closing balance** row carrying the window's debit and credit turnover and the closing balance. The
+window is the balance report's, so opening + debit - credit = closing, equal to what a `kind: balance`
+report shows for the same account and window. The report declares `fromDate`, `toDate` and
+`account` (the account's key) on its own behalf; until an account is chosen it binds `0` and renders
+an empty card. When the account entity declares `hierarchy:`, choosing a **group account** lists the
+lines of every account below it (a generated `<REPORT>_ACCOUNT_TREE` view walks the tree), so a
+group's closing balance is the sum of its leaves'. The query pages in the database, so an account
+with tens of thousands of lines loads one page at a time and every page carries the running balance
+of the whole window.
+
+`columns` are the per-line columns between the date and the amounts - a field of the source, a
+one-hop `relation.field`, or a bare to-one relation (shown by its label). `correspondence` names the
+account path read off the entry's opposite-side lines, listed distinct per line (`411, 453`) - a
+compound entry shows every account a line faced.
+
+**Rules:** `account` must be a to-one relation of the source, not one of its fields; the source needs
+a `primaryKey` (the running balance accumulates line by line in key order); no `dimensions`,
+`measures`, `lines`, `cashAccounts`, `widget` or `chart` - the rows are the account's lines.
 
 #### reports[].chart - render as a chart
 
@@ -4251,6 +4308,80 @@ else. Mark that one `global:` (`to: { topic: "global:codbex.orders" }`) and the 
 plain name it was given. What the marker costs: the destination no longer carries the tenant, so a
 business tenant that matters downstream must travel in the payload - a `tenantId: "{tenant}"` key in
 the declared envelope is exactly that.
+
+### exports - a file in an exacting format over a query
+
+**Use when:** the app must produce a FILE someone else reads - a statutory filing (a VAT ledger, a
+payroll declaration, an intrastat return), a bank bulk-transfer file, the feed of a third-party
+ledger. Use a `report` for a screen and `attach: print` for a document a person reads; an export is
+for a machine that rejects the file over one shifted column.
+
+```yaml
+entities:
+  - name: ExportRun              # the ledger: declared with NO fields - its columns are injected
+exports:
+  - name: VatPurchaseLedger
+    source: PurchaseInvoice      # an entity, or a plain report of this intent
+    format: fixedWidth           # fixedWidth | delimited | xml
+    encoding: windows-1251       # UTF-8 when omitted
+    ledger: ExportRun
+    fileName: "VAT-{fromDate}.txt"
+    orderBy: [documentDate, number]
+    parameters:
+      - { name: fromDate, field: documentDate, op: ge, required: true }
+      - { name: toDate,   field: documentDate, op: le }
+    records:
+      - type: header             # once, first
+        fields:
+          - { literal: 'H', width: 1 }
+          - { param: fromDate, width: 8, pattern: ddMMyyyy }
+      - type: line               # once per row
+        fields:
+          - { from: supplier.vatNumber, width: 15 }
+          - { from: documentDate, width: 8, pattern: ddMMyyyy }
+          - { from: taxBase, width: 15, scale: 2, align: right, pad: '0' }
+      - type: trailer            # once, last
+        fields:
+          - { literal: 'TOTAL', width: 5 }
+          - { from: count(), width: 6, align: right, pad: '0' }
+          - { from: sum(taxBase), width: 15, scale: 2, align: right }
+```
+
+**What it generates:** one Java class per export that is both the download
+(`GET .../gen/events/<module>/<Export>Export/download?<parameters>` answers the file) and a bean any
+job or `custom/` code injects and calls (`run(Map.of("fromDate", "2026-03-01"))` returns the ledger
+row). Every run is recorded on the ledger entity - `Export`, `Format`, `Parameters` (JSON),
+`Outcome` (SUCCEEDED / FAILED), `RecordCount`, `Checksum` (SHA-256), `ErrorMessage`, the stored file
+(`FileName`, `ContentType`, `FileSize`, `StoragePath`) and who ran it when. A ledger row is
+append-only and serves its file at its own `/{id}/download`.
+
+**Rules - each refused at parse with the reason:**
+- A field takes exactly one of `from:` (a field, a one-hop `relation.field`, or a total `sum(x)` /
+  `count()`), `literal:` or `param:` (a declared parameter). A header or trailer is written once, so
+  it reads literals, parameters and totals - never a row.
+- `fixedWidth`: every field needs a `width:`; `align: left|right`, `pad:` (one character) and
+  `truncate: true` (cut instead of refusing a wider value) are positional-only. `lineEnding: crlf|lf`
+  (CRLF by default).
+- `delimited`: `delimiter:` (`,`), `quote:` (`"`, empty for none), `quoting: minimal|all`.
+- `xml`: `root:` (the export name by default), a record's `element:` (its type by default), a field's
+  `name:` (required when it cannot be derived from `from:`/`param:`) and `attribute: true`.
+- `scale:` writes a decimal rounded half-up, with `decimalSeparator:` (empty = implied point);
+  `pattern:` writes a date in a `DateTimeFormatter` pattern - never both on one field.
+- A **report** source: `from:` names one of the report's `dimensions` / `measures` exactly as declared
+  (`supplier.name`, `count(*)`), a total over a measure is `sum(sum(taxBase))`, and a parameter names
+  one of the report's own parameters. A `kind: balance` / `statement` report is refused.
+- An **entity** source: a parameter filters `field:` (its name by default, a field or a to-one
+  relation) by `op:` `eq|ne|gt|ge|lt|le`; a timestamp field is refused. `orderBy:` lists its fields;
+  the primary key orders the rows otherwise. A hop into another model is refused - export over a
+  report that joins it.
+- `ledger:` names an entity with no fields and no relations. `<Export>:read` in `permissions` is who
+  may run it; with no token naming it, any signed-in user may.
+
+**Say these out loud:** nothing is written approximately. A value wider than its field, a character
+the encoding cannot represent or one XML does not allow FAILS the run (422, recorded FAILED with the
+reason) - a filing with a silently replaced character is rejected by its recipient long after. A
+missing or unreadable parameter is refused (400) and records nothing. `submit:` - the signed delivery
+to an authority - is reserved and refused until it ships.
 
 ### rollups - maintain a count on a parent
 

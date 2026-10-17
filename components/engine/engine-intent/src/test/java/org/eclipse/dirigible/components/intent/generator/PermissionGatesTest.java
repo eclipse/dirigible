@@ -131,6 +131,26 @@ class PermissionGatesTest {
     }
 
     /**
+     * A report's page is generated into the same sanitized folder as its controller, so that is the
+     * path its constraint must cover - one under the report's case-preserved name gated nothing on a
+     * case-sensitive filesystem (dirigible #7889).
+     */
+    @Test
+    void aReportsConstraintsCoverItsControllerAndPageInOneFolder() {
+        String yaml = YAML + """
+                reports:
+                  - name: OrderTotals
+                    source: Order
+                    dimensions: [id]
+                    measures: ["sum(total)"]
+                """;
+        String access = written(yaml.replace("can: [Order:read]", "can: [Order:read, OrderTotals:read]"), settings(true), "/sales.access");
+        assertTrue(access.contains("/services/java/proj/gen/ordertotals/api/reports/OrderTotalsController/**"), access);
+        assertTrue(access.contains("/services/web/proj/gen/ordertotals/reports/OrderTotals/**"), access);
+        assertFalse(access.contains("/gen/OrderTotals/"), access);
+    }
+
+    /**
      * The roles {@code .settings} {@code access.extraRoles} appends to every gate are declared in
      * {@code <intent>.roles} - also when the intent authors no {@code permissions:} at all, which is
      * the multitenant case the setting exists for (dirigible #7652).

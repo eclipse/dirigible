@@ -10,6 +10,7 @@
 package org.eclipse.dirigible.components.listeners.service;
 
 import org.eclipse.dirigible.components.listeners.config.ActiveMQConnectionArtifactsFactory;
+import org.eclipse.dirigible.components.listeners.config.ListenerConnectionMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,17 +26,28 @@ public class ListenerManagerFactory {
     /** The asynchronous message listener factory. */
     private final AsynchronousMessageListenerFactory asynchronousMessageListenerFactory;
 
+    /** The connection mode. */
+    private final ListenerConnectionMode connectionMode;
+
+    /** The connection shared by every artefact in the shared mode. */
+    private final SharedListenerConnection sharedConnection;
+
     /**
      * Instantiates a new listener manager factory.
      *
      * @param connectionArtifactsFactory the connection artifacts factory
      * @param asynchronousMessageListenerFactory the asynchronous message listener factory
+     * @param connectionMode how a subscription attaches to the broker
+     * @param sharedConnection the connection shared by every artefact in the shared mode
      */
     @Autowired
     public ListenerManagerFactory(ActiveMQConnectionArtifactsFactory connectionArtifactsFactory,
-            AsynchronousMessageListenerFactory asynchronousMessageListenerFactory) {
+            AsynchronousMessageListenerFactory asynchronousMessageListenerFactory, ListenerConnectionMode connectionMode,
+            SharedListenerConnection sharedConnection) {
         this.connectionArtifactsFactory = connectionArtifactsFactory;
         this.asynchronousMessageListenerFactory = asynchronousMessageListenerFactory;
+        this.connectionMode = connectionMode;
+        this.sharedConnection = sharedConnection;
     }
 
     /**
@@ -45,6 +57,7 @@ public class ListenerManagerFactory {
      * @return the listener manager
      */
     public ListenerManager create(ListenerDescriptor listenerDescriptor) {
-        return new ListenerManager(listenerDescriptor, connectionArtifactsFactory, asynchronousMessageListenerFactory);
+        return new ListenerManager(listenerDescriptor, connectionArtifactsFactory, asynchronousMessageListenerFactory, connectionMode,
+                sharedConnection);
     }
 }

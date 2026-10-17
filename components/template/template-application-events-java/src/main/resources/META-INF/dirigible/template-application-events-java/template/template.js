@@ -137,6 +137,13 @@ export function getTemplate(parameters) {
                 collection: "outbound"
             },
             {
+                location: "/template-application-events-java/events/Export.java.template",
+                action: "generate",
+                rename: "gen/events/{{javaGenFolderName}}/{{className}}Export.java",
+                engine: "velocity",
+                collection: "exports"
+            },
+            {
                 location: "/template-application-events-java/events/StepEvent.java.template",
                 action: "generate",
                 rename: "gen/events/{{javaGenFolderName}}/{{className}}.java",

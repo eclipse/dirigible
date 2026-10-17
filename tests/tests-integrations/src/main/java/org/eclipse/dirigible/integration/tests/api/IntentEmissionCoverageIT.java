@@ -1957,6 +1957,13 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                 measures: ["count(*)"]
                 parameters:
                   - { name: search, target: note, op: like, initial: 'O''Neil "the" note' }
+              # aging (#7888): the open amount (debit - credit) of every live entry, bucketed by days
+              # past its date as of the report's own asOf parameter - which defaults to the day the
+              # report is run, resolved per request by the generated repository.
+              - name: EntryAging
+                source: Entry
+                dimensions: [Account.name]
+                aging: { due: date, amount: "debit - credit", buckets: [30, 60, 90] }
               # kind: statement (#6938): the line classification is emitted as a generated
               # <REPORT>_LINES .view artifact - published with the project and provisioned by the
               # ViewsSynchronizer AFTER the tables - and the .report keeps a thin windowed join over
@@ -1994,6 +2001,18 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                   - { code: INV.OUT,  label: Equipment bought,        accounts: "20*", measure: periodDebit }
                   - { code: FIN,      label: Financing,               accounts: "15*", measure: periodCredit }
                   - { code: NET,      label: Net cash flow,           sum: [OP, INV, FIN] }
+              # kind: ledger (#7887) - the account card over the same voucher ledger. LedgerAccount is
+              # a tree, and the group 50 holds the desk 5010 and the bank 5030: its card lists both
+              # accounts' lines, with the running balance carried across them and across pages.
+              - name: CashCard
+                kind: ledger
+                source: CashVoucherLine
+                date: CashVoucher.bookedOn
+                debit: debit
+                credit: credit
+                account: LedgerAccount
+                columns: [LedgerAccount.code]
+                correspondence: LedgerAccount.code
 
             seeds:
               - name: people
@@ -2110,8 +2129,9 @@ class IntentEmissionCoverageIT extends IntegrationTest {
               - name: ledger-accounts
                 entity: LedgerAccount
                 rows:
-                  - { id: 1, code: "5010" }
-                  - { id: 2, code: "5030" }
+                  - { id: 8, code: "50" }
+                  - { id: 1, code: "5010", Parent: 8 }
+                  - { id: 2, code: "5030", Parent: 8 }
                   - { id: 3, code: "4110" }
                   - { id: 4, code: "4010" }
                   - { id: 5, code: "2040" }
@@ -2175,10 +2195,14 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                 fields:
                   - { name: id,       type: integer, primaryKey: true, generated: true }
                   - { name: bookedOn, type: date, required: true }
+              # A tree (#7887): the CashCard ledger of a group account lists its leaves' lines.
               - name: LedgerAccount
+                hierarchy: Parent
                 fields:
                   - { name: id,   type: integer, primaryKey: true, generated: true }
                   - { name: code, type: string, required: true, length: 20 }
+                relations:
+                  - { name: Parent, kind: manyToOne, to: LedgerAccount }
               - name: CashVoucherLine
                 fields:
                   - { name: id,     type: integer, primaryKey: true, generated: true }
@@ -2933,6 +2957,14 @@ class IntentEmissionCoverageIT extends IntegrationTest {
         assertTrue(contentOf("gen/claimsbyunit/api/reports/ClaimsByUnitController.java").contains("@Post(\"/sum\")"),
                 "the report controller must expose the server-side sum the count tile reads");
 
+        // aging (#7888): the as-of date is the report's own DATE parameter, and its CURRENT_DATE initial
+        // is resolved per request - never baked in as the day the module was generated.
+        String entryAgingRepository = contentOf("gen/entryaging/data/reports/EntryAgingRepository.java");
+        assertTrue(
+                entryAgingRepository.contains(
+                        "parameter(\"asOf\", \"DATE\", value(filter, \"asOf\", java.time.LocalDate.now().toString()))"),
+                "the aging report must bind its as-of date to today when the request carries none: " + entryAgingRepository);
+
         // kind: statement (#6938): the line classification is a generated .view artifact next to the
         // .report - the selectors and labels live THERE, as data the ViewsSynchronizer provisions,
         // never inside the generated repository.
@@ -2946,6 +2978,14 @@ class IntentEmissionCoverageIT extends IntegrationTest {
         String cashTotalsView = contentOf("CashFlowCashTotals.view");
         assertTrue(cashTotalsView.contains("\"name\": \"EMISSION_CASH_FLOW_CASH_TOTALS\""),
                 "the cash-flow statement's entry totals must be a named database object: " + cashTotalsView);
+        // kind: ledger (#7887): a group account's subtree is the parameter-free closure of the chart,
+        // so it is a generated .view too, and the .report binds the account as a parameter over it.
+        String accountTreeView = contentOf("CashCardAccountTree.view");
+        assertTrue(accountTreeView.contains("\"name\": \"EMISSION_CASH_CARD_ACCOUNT_TREE\"") && accountTreeView.contains("WITH RECURSIVE"),
+                "the ledger's account closure must be a named recursive view: " + accountTreeView);
+        String cashCardReport = contentOf("CashCard.report");
+        assertTrue(cashCardReport.contains("\"kind\": \"ledger\"") && cashCardReport.contains("\"name\": \"account\""),
+                "the ledger report must carry its kind and declare the account parameter: " + cashCardReport);
         String entrySheetReport = contentOf("EntrySheet.report");
         assertTrue(entrySheetReport.contains("FROM \\\"EMISSION_ENTRY_SHEET_LINES\\\""),
                 "the .report query must read the generated view: " + entrySheetReport);
@@ -5191,6 +5231,57 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                                                  .body("[4].Amount", equalTo(-200.0F))
                                                  .body("[6].Amount", equalTo(1000.0F))
                                                  .body("[7].Amount", equalTo(1080.0F)));
+
+        // aging, end to end (#7888): Vault holds 100 debit (2026-01-10) against 40 credit (2026-01-11).
+        // As of today both are long past 90 days; as of 2026-01-10 the debit is due that very day (0
+        // days past due) and the credit is not yet due - and either way the buckets add up to 60.
+        restAssuredExecutor.execute(() -> given().when()
+                                                 .get("/services/java/" + PROJECT + "/gen/entryaging/api/reports/EntryAgingController")
+                                                 .then()
+                                                 .statusCode(200)
+                                                 .body("find { it.'Account Name' == 'Vault' }.'Overdue 90+'", equalTo(60.0F))
+                                                 .body("find { it.'Account Name' == 'Vault' }.'Not Yet Due'", equalTo(0.0F))
+                                                 .body("find { it.'Account Name' == 'Vault' }.'Open Amount'", equalTo(60.0F)));
+        restAssuredExecutor.execute(() -> given().queryParam("asOf", "2026-01-10")
+                                                 .when()
+                                                 .get("/services/java/" + PROJECT + "/gen/entryaging/api/reports/EntryAgingController")
+                                                 .then()
+                                                 .statusCode(200)
+                                                 .body("find { it.'Account Name' == 'Vault' }.'Overdue 0-30'", equalTo(100.0F))
+                                                 .body("find { it.'Account Name' == 'Vault' }.'Not Yet Due'", equalTo(-40.0F))
+                                                 .body("find { it.'Account Name' == 'Vault' }.'Overdue 90+'", equalTo(0.0F))
+                                                 .body("find { it.'Account Name' == 'Vault' }.'Open Amount'", equalTo(60.0F)));
+
+        // kind: ledger, end to end (#7887): the card of the GROUP 50 over [2026-02-06, 2026-12-31].
+        // Before the window the desk took +300 and the bank -120, so the card opens at 180; the five
+        // lines of the window run it to 1080 - the cash accounts' total change - which is also what the
+        // closing row reports, with the window's turnover (1150 debit, 250 credit) beside it.
+        String cashCard = "/services/java/" + PROJECT + "/gen/cashcard/api/reports/CashCardController";
+        restAssuredExecutor.execute(() -> given().queryParam("fromDate", "2026-02-06")
+                                                 .queryParam("toDate", "2026-12-31")
+                                                 .queryParam("account", 8)
+                                                 .when()
+                                                 .get(cashCard)
+                                                 .then()
+                                                 .statusCode(200)
+                                                 .body("Line", contains("Opening balance", null, null, null, null, null, "Closing balance"))
+                                                 .body("Balance", contains(180.0F, -20.0F, 980.0F, 1030.0F, 980.0F, 1080.0F, 1080.0F))
+                                                 .body("[1].\"Ledger Account Code\"", equalTo("5010"))
+                                                 .body("[1].\"Correspondent Accounts\"", equalTo("2040"))
+                                                 .body("[5].\"Correspondent Accounts\"", equalTo("4110, 7010"))
+                                                 .body("[6].Debit", equalTo(1150.0F))
+                                                 .body("[6].Credit", equalTo(250.0F)));
+        // ... and a later page carries the running balance of the whole window rather than restarting.
+        restAssuredExecutor.execute(() -> given().queryParam("fromDate", "2026-02-06")
+                                                 .queryParam("toDate", "2026-12-31")
+                                                 .queryParam("account", 8)
+                                                 .queryParam("$limit", 2)
+                                                 .queryParam("$offset", 3)
+                                                 .when()
+                                                 .get(cashCard)
+                                                 .then()
+                                                 .statusCode(200)
+                                                 .body("Balance", contains(1030.0F, 980.0F)));
 
         // calculatedActionOnCreate on a to-one relation, end to end: a create that OMITS the FK comes
         // back carrying the one the action resolved. Tariff 2 is the row flagged `base` - not the first

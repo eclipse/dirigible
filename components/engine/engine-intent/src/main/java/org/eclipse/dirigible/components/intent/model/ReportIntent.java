@@ -29,8 +29,10 @@ public class ReportIntent {
      * the report declares the two date parameters on the generated {@code .report}. {@code statement}
      * is the statutory statement shape over the same signed ledger: the same window and amount fields,
      * but the output is the fixed {@link #lines} of a balance sheet or an income statement rather than
-     * one row per dimension value. Absent (the default) -> a plain aggregation report from
-     * {@link #measures}.
+     * one row per dimension value. {@code ledger} is the account analysis (account card) over the same
+     * ledger: the posted lines of ONE {@link #account} in date order with a running balance, framed by
+     * the opening balance at the window start and the closing balance at its end. Absent (the default)
+     * -> a plain aggregation report from {@link #measures}.
      */
     private String kind;
     /**
@@ -60,6 +62,11 @@ public class ReportIntent {
      */
     private String correspondence;
     /**
+     * {@code kind: ledger}: the source's to-one relation to the account whose lines the report lists -
+     * bound at runtime as the {@code account} report parameter (the account's key). When the account
+     * entity declares a {@code hierarchy}, a group account lists the lines of every account below it.
+     *
+     * <p>
      * {@code kind: statement}: the account-code field the statement groups the ledger by - a
      * {@code string} field of the source or a one-hop {@code relation.field} path to it (e.g.
      * {@code account.code}). It is the code the {@link StatementLineIntent#getAccounts() line
@@ -86,6 +93,11 @@ public class ReportIntent {
      */
     private List<StatementLineIntent> lines = new ArrayList<>();
     private List<String> dimensions = new ArrayList<>();
+    /**
+     * {@code kind: ledger}: the per-line columns shown between the date and the amounts - fields of the
+     * source, one-hop {@code relation.field} paths, or bare to-one relations (shown by their label).
+     */
+    private List<String> columns = new ArrayList<>();
     private List<String> measures = new ArrayList<>();
     /**
      * User-set parameters rendered as inputs above the report and bound into the generated query's
@@ -93,6 +105,11 @@ public class ReportIntent {
      * -> the report takes no input beyond the generic per-column filters.
      */
     private List<ReportParameterIntent> parameters = new ArrayList<>();
+    /**
+     * Optional aging shape - open documents bucketed by days past due as of a report date, one column
+     * per bucket beside the dimensions (aged receivables / payables). See {@link ReportAgingIntent}.
+     */
+    private ReportAgingIntent aging;
     private String filter;
     /**
      * Which lifecycle rows of the source this report counts, when the source carries a
@@ -149,12 +166,17 @@ public class ReportIntent {
         return kind != null && "statement".equalsIgnoreCase(kind.trim());
     }
 
+    /** Whether this is a line-level account analysis ({@code kind: ledger}). */
+    public boolean isLedger() {
+        return kind != null && "ledger".equalsIgnoreCase(kind.trim());
+    }
+
     /**
-     * Whether this report reads the signed ledger - the two kinds sharing {@link #date} /
-     * {@link #debit} / {@link #credit}.
+     * Whether this report reads the signed ledger - the three kinds sharing {@link #date} /
+     * {@link #debit} / {@link #credit} and the {@code fromDate}/{@code toDate} window.
      */
     public boolean isLedgerKind() {
-        return isBalance() || isStatement();
+        return isBalance() || isStatement() || isLedger();
     }
 
     public String getKind() {
@@ -197,9 +219,12 @@ public class ReportIntent {
         this.correspondence = correspondence;
     }
 
-    /** Whether this balance report groups by the correspondent accounts of the same document. */
+    /**
+     * Whether this report reads the correspondent accounts of the same document - a balance report's
+     * grouping axis, or a ledger's per-line counter-account column.
+     */
     public boolean hasCorrespondence() {
-        return isBalance() && correspondence != null && !correspondence.isBlank();
+        return (isBalance() || isLedger()) && correspondence != null && !correspondence.isBlank();
     }
 
     public String getAccount() {
@@ -239,18 +264,26 @@ public class ReportIntent {
         this.dimensions = dimensions == null ? new ArrayList<>() : dimensions;
     }
 
+    public List<String> getColumns() {
+        return columns;
+    }
+
+    public void setColumns(List<String> columns) {
+        this.columns = columns == null ? new ArrayList<>() : columns;
+    }
+
     public List<String> getMeasures() {
         return measures;
     }
 
     /**
-     * Whether the report AGGREGATES - a ledger kind, or any declared measure. Its rows are then groups,
-     * not records, which is what a {@code kind: count} dashboard widget must not confuse (dirigible
-     * #7102).
+     * Whether the report AGGREGATES - a ledger kind, an aging report, or any declared measure. Its rows
+     * are then groups, not records, which is what a {@code kind: count} dashboard widget must not
+     * confuse (dirigible #7102).
      */
     public boolean isAggregated() {
-        return isLedgerKind() || measures.stream()
-                                         .anyMatch(measure -> measure != null && !measure.isBlank());
+        return isLedgerKind() || isAging() || measures.stream()
+                                                      .anyMatch(measure -> measure != null && !measure.isBlank());
     }
 
     /**
@@ -297,6 +330,19 @@ public class ReportIntent {
 
     public void setParameters(List<ReportParameterIntent> parameters) {
         this.parameters = parameters == null ? new ArrayList<>() : parameters;
+    }
+
+    public ReportAgingIntent getAging() {
+        return aging;
+    }
+
+    public void setAging(ReportAgingIntent aging) {
+        this.aging = aging;
+    }
+
+    /** Whether this report declares the {@code aging:} shape. */
+    public boolean isAging() {
+        return aging != null;
     }
 
     public String getFilter() {

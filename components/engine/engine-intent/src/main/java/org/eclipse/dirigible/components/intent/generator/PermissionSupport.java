@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.dirigible.components.intent.model.EntityIntent;
+import org.eclipse.dirigible.components.intent.model.ExportIntent;
 import org.eclipse.dirigible.components.intent.model.FormIntent;
 import org.eclipse.dirigible.components.intent.model.IntentModel;
 import org.eclipse.dirigible.components.intent.model.PermissionIntent;
@@ -239,7 +240,7 @@ public final class PermissionSupport {
         }
         if (!gateBearing.contains(resource)) {
             advisories.add("permission [" + role + "] can [" + token + "] names [" + resource
-                    + "], which publishes no generated read/write gate - only entities and reports do");
+                    + "], which publishes no generated read/write gate - only entities, reports and exports do");
             return;
         }
         if (writable) {
@@ -253,7 +254,9 @@ public final class PermissionSupport {
             .add(role);
     }
 
-    /** The resources whose generated surfaces carry a read/write gate: entities and reports. */
+    /**
+     * The resources whose generated surfaces carry a read/write gate: entities, reports and exports.
+     */
     private static Set<String> gateBearingResources(IntentModel model) {
         Set<String> resources = new LinkedHashSet<>();
         for (EntityIntent entity : model.getEntities()) {
@@ -264,6 +267,13 @@ public final class PermissionSupport {
         for (ReportIntent report : model.getReports()) {
             if (report.getName() != null) {
                 resources.add(report.getName());
+            }
+        }
+        // An export's download is a generated read surface of its own (#7855): `<Export>:read` is who
+        // may run it and take the file.
+        for (ExportIntent export : model.getExports()) {
+            if (export.getName() != null) {
+                resources.add(export.getName());
             }
         }
         return resources;

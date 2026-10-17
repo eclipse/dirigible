@@ -39,6 +39,7 @@ import org.eclipse.dirigible.components.intent.model.FieldIntent;
 import org.eclipse.dirigible.components.intent.model.IntentModel;
 import org.eclipse.dirigible.components.intent.model.LifecycleStages;
 import org.eclipse.dirigible.components.intent.model.RelationIntent;
+import org.eclipse.dirigible.components.intent.model.ReportAgingIntent;
 import org.eclipse.dirigible.components.intent.model.UsesIntent;
 import org.eclipse.dirigible.components.intent.model.ReportIntent;
 import org.eclipse.dirigible.components.intent.model.ReportParameterIntent;
@@ -212,6 +213,17 @@ public class ReportIntentGenerator implements IntentTargetGenerator {
 
     private static final String LIKE_OPERATION = "LIKE";
 
+    /**
+     * The initial value that binds a date parameter to the day the report is run - resolved per request
+     * by the generated report repository, never a fixed date baked into the generated code.
+     */
+    private static final String CURRENT_DATE_INITIAL = "CURRENT_DATE";
+
+    /** The aging report's column labels - see {@link #addAgingMeasures}. */
+    private static final String AGING_NOT_YET_DUE = "Not Yet Due";
+    private static final String AGING_OVERDUE = "Overdue";
+    private static final String AGING_OPEN_AMOUNT = "Open Amount";
+
     /** The report types a parameter binds as a number. */
     private static final Set<String> NUMERIC_TYPES = Set.of("INTEGER", "BIGINT", "DECIMAL");
 
@@ -325,9 +337,9 @@ public class ReportIntentGenerator implements IntentTargetGenerator {
 
         boolean balance = report.isBalance();
         boolean statement = report.isStatement();
-        boolean aggregated = balance || statement || report.getMeasures()
-                                                           .stream()
-                                                           .anyMatch(m -> m != null && !m.isBlank());
+        boolean aggregated = balance || statement || report.isAging() || report.getMeasures()
+                                                                               .stream()
+                                                                               .anyMatch(m -> m != null && !m.isBlank());
 
         Map<String, Join> joins = new LinkedHashMap<>();
         List<Map<String, Object>> columns = new ArrayList<>();
@@ -357,7 +369,18 @@ public class ReportIntentGenerator implements IntentTargetGenerator {
         List<Map<String, Object>> conditions;
         List<Map<String, Object>> joinRows;
         String query;
-        if (correspondence != null) {
+        if (report.isLedger()) {
+            // The account analysis is a union of the opening row, the lines and the closing row - a
+            // shape the editor's visual builder cannot own, so, like a statement, it carries neither
+            // joins nor conditions and opens free-style with the query as its source of truth.
+            LedgerPrepared ledger = prepareLedger(context, model, source, baseAlias, baseTable, report);
+            columns = ledger.columns();
+            joinRows = List.of();
+            parameters = ledger.parameters();
+            conditions = null;
+            query = ledger.query();
+            views.addAll(ledger.views());
+        } else if (correspondence != null) {
             columns = correspondence.columns();
             dimensionColumns = correspondence.dimensionColumns();
             joinRows = correspondence.joinRows();
@@ -394,14 +417,19 @@ public class ReportIntentGenerator implements IntentTargetGenerator {
                     }
                 }
             }
+            AgingQuery aging = report.isAging() ? addAgingMeasures(context, model, source, baseAlias, report, joins, columns) : null;
 
             String filter = buildWhere(context, model, source, baseAlias, joins, report.getFilter());
             Map<String, Object> scope = scopeCondition(context, model, source, baseAlias, report, aggregated);
             // A statement takes the balance window too: its ledger reduction is the balance report's,
             // and the authored `parameters:` are appended to the same list below.
             parameters = report.isLedgerKind() ? balanceParameters() : new ArrayList<>();
-            List<Map<String, Object>> parameterConditions =
-                    parameterConditions(context, model, source, baseAlias, report, joins, parameters);
+            List<Map<String, Object>> parameterConditions = new ArrayList<>();
+            if (aging != null) {
+                parameters.add(reportParameter(aging.asOfName(), DATE_TYPE, CURRENT_DATE_INITIAL));
+                parameterConditions.addAll(aging.conditions());
+            }
+            parameterConditions.addAll(parameterConditions(context, model, source, baseAlias, report, joins, parameters));
             conditions = conditions(filter, scope);
             String where;
             if (conditions == null) {
@@ -452,6 +480,8 @@ public class ReportIntentGenerator implements IntentTargetGenerator {
             document.put("kind", "balance");
         } else if (statement) {
             document.put("kind", "statement");
+        } else if (report.isLedger()) {
+            document.put("kind", "ledger");
         }
         document.put("columns", columns);
         // A statement's joins and filter live inside its own subquery, not in a SELECT the report
@@ -635,6 +665,92 @@ public class ReportIntentGenerator implements IntentTargetGenerator {
                          .append(previous)
                          .append("+' END")
                          .toString();
+    }
+
+    /**
+     * What an aging report adds to the query besides its bucket columns: the as-of parameter it
+     * declares on its own behalf, and the conditions that keep only the documents open on that date.
+     */
+    private record AgingQuery(String asOfName, List<Map<String, Object>> conditions) {
+    }
+
+    /**
+     * The aging buckets (dirigible #7888) - one {@code SUM} column per bucket of days past due as of
+     * the {@code :asOf} date, then the {@code Open Amount} they add up to. Every document lands in
+     * exactly one bucket, so the buckets of each row reconcile with its open amount:
+     * <ul>
+     * <li>{@code Not Yet Due} - due AFTER the as-of date, or with no due date at all (it cannot be past
+     * one). A document due tomorrow is never {@code 0-30} (base-sales-invoices#27).</li>
+     * <li>{@code Overdue a-b} - {@code a} to {@code b} days past due, inclusive; due ON the as-of date
+     * is zero days past due.</li>
+     * <li>{@code Overdue n+} - more than the last threshold.</li>
+     * </ul>
+     * The day arithmetic is expressed as DATE BOUNDARIES ({@code due >= asOf - INTERVAL 'n' DAY}), like
+     * the {@code ageing(...)} dimension, because {@code asOf - due} is an integer on PostgreSQL but an
+     * INTERVAL on H2. A timestamp due is compared as its date.
+     *
+     * @return the parameter and conditions the query binds besides the columns
+     */
+    private static AgingQuery addAgingMeasures(IntentGenerationContext context, IntentModel model, EntityIntent source, String baseAlias,
+            ReportIntent report, Map<String, Join> joins, List<Map<String, Object>> columns) {
+        ReportAgingIntent aging = report.getAging();
+        ColumnRef due = resolve(context, model, source, baseAlias, aging.getDue()
+                                                                        .trim());
+        registerJoin(joins, due);
+        ColumnRef amountColumn = null;
+        StringBuilder amount = new StringBuilder();
+        for (ReportAgingIntent.AmountTerm term : aging.getAmountTerms()) {
+            ColumnRef ref = resolve(context, model, source, baseAlias, term.path());
+            registerJoin(joins, ref);
+            if (amountColumn == null) {
+                amountColumn = ref;
+                amount.append(term.sign() < 0 ? "-" : "");
+            } else {
+                amount.append(term.sign() < 0 ? " - " : " + ");
+            }
+            // A missing paid / credited amount is nothing paid, not an unknown open amount.
+            amount.append("COALESCE(")
+                  .append(ref.qualified())
+                  .append(", 0)");
+        }
+        String open = amount.toString();
+        String asOfName = aging.getAsOfName();
+        String asOf = "CAST(:" + asOfName + " AS DATE)";
+        String dueDate = "TIMESTAMP".equals(due.reportType) ? "CAST(" + due.qualified() + " AS DATE)" : due.qualified();
+
+        addAgingColumn(columns, amountColumn, AGING_NOT_YET_DUE, dueDate + " IS NULL OR " + dueDate + " > " + asOf, open);
+        int previous = -1;
+        String newerBound = dueDate + " <= " + asOf;
+        for (Integer threshold : aging.getThresholds()) {
+            String olderBound = dueDate + " >= " + asOf + " - INTERVAL '" + threshold + "' DAY";
+            addAgingColumn(columns, amountColumn, AGING_OVERDUE + " " + (previous + 1) + "-" + threshold, newerBound + " AND " + olderBound,
+                    open);
+            newerBound = dueDate + " < " + asOf + " - INTERVAL '" + threshold + "' DAY";
+            previous = threshold;
+        }
+        addAgingColumn(columns, amountColumn, AGING_OVERDUE + " " + previous + "+", newerBound, open);
+        columns.add(column(amountColumn.tableAlias, AGING_OPEN_AMOUNT, amountColumn.physicalColumn, "DECIMAL", "SUM", false, open));
+
+        // Only the documents open on the as-of date: a settled one adds nothing to any bucket, and a
+        // counterparty with nothing open would otherwise list as a row of zeros. A credit balance
+        // (overpaid) is open too - it is the opposite sign, not zero.
+        List<Map<String, Object>> conditions = new ArrayList<>();
+        conditions.add(condition("(" + open + ")", "<>", "0"));
+        if (aging.getDate() != null && !aging.getDate()
+                                             .isBlank()) {
+            ColumnRef date = resolve(context, model, source, baseAlias, aging.getDate()
+                                                                             .trim());
+            registerJoin(joins, date);
+            String documentDate = "TIMESTAMP".equals(date.reportType) ? "CAST(" + date.qualified() + " AS DATE)" : date.qualified();
+            // A document issued after the as-of date was not open on it yet.
+            conditions.add(condition(documentDate, "<=", asOf));
+        }
+        return new AgingQuery(asOfName, conditions);
+    }
+
+    private static void addAgingColumn(List<Map<String, Object>> columns, ColumnRef amount, String alias, String bucket, String open) {
+        String expression = "CASE WHEN " + bucket + " THEN " + open + " ELSE 0 END";
+        columns.add(column(amount.tableAlias, alias, amount.physicalColumn, "DECIMAL", "SUM", false, expression));
     }
 
     private static void addBalanceMeasures(IntentGenerationContext context, IntentModel model, EntityIntent source, String baseAlias,
@@ -1157,6 +1273,427 @@ public class ReportIntentGenerator implements IntentTargetGenerator {
         parameter.put("type", type);
         parameter.put("initial", initial);
         return parameter;
+    }
+
+    /** The account a {@code kind: ledger} report lists - its runtime parameter, bound by key. */
+    private static final String LEDGER_ACCOUNT_PARAMETER = "account";
+
+    /**
+     * What the account parameter binds when the request names no account: a key no row carries, so an
+     * unparameterized call renders an empty ledger (zero opening, zero closing) instead of guessing an
+     * account.
+     */
+    private static final String LEDGER_NO_ACCOUNT = "0";
+
+    /** The alias of the derived table the three ledger arms are unioned into. */
+    private static final String LEDGER_ALIAS = "LEDGER";
+
+    /** The ordering keys every ledger row carries: its arm, its entry and its line. */
+    private static final String LEDGER_ROW = "LEDGER_ROW";
+    private static final String LEDGER_ENTRY = "LEDGER_ENTRY";
+    private static final String LEDGER_LINE = "LEDGER_LINE";
+
+    /** The fixed output columns of a ledger, around the authored per-line ones. */
+    private static final String LEDGER_LABEL_COLUMN = "Line";
+    private static final String LEDGER_DATE_COLUMN = "Date";
+    private static final String LEDGER_DEBIT_COLUMN = "Debit";
+    private static final String LEDGER_CREDIT_COLUMN = "Credit";
+    private static final String LEDGER_BALANCE_COLUMN = "Balance";
+    private static final String LEDGER_CORRESPONDENCE_COLUMN = "Correspondent Accounts";
+
+    /** The labels of the two framing rows. */
+    private static final String LEDGER_OPENING_LABEL = "Opening balance";
+    private static final String LEDGER_CLOSING_LABEL = "Closing balance";
+
+    /** The alias the account closure view is joined under. */
+    private static final String ACCOUNT_TREE_ALIAS = "AccountTree";
+
+    /** The columns of the account closure view: every account paired with itself and each ancestor. */
+    private static final String ACCOUNT_TREE_ANCESTOR = "ANCESTOR_ID";
+    private static final String ACCOUNT_TREE_ACCOUNT = "ACCOUNT_ID";
+    private static final String ACCOUNT_TREE_DEPTH = "DEPTH";
+
+    /**
+     * How deep the closure walks a chart of accounts. A real chart is a handful of levels; the bound
+     * exists so a cycle in the data (an account made its own ancestor) ends the recursion instead of
+     * running the view until the database gives up.
+     */
+    private static final int ACCOUNT_TREE_MAX_DEPTH = 64;
+
+    /** The type every text cell of a ledger's union is cast to, so the arms agree on it. */
+    private static final String LEDGER_TEXT_TYPE = "VARCHAR(255)";
+
+    /**
+     * Everything a {@code kind: ledger} report emits besides its document's fixed keys.
+     *
+     * @param columns the emitted column rows, in output order
+     * @param parameters the declared parameters - the window, the account, the authored ones
+     * @param query the materialised query
+     * @param views the structural views it reads - the account closure, when the account has a tree
+     */
+    private record LedgerPrepared(List<Map<String, Object>> columns, List<Map<String, Object>> parameters, String query,
+            List<ViewArtifact> views) {
+    }
+
+    /**
+     * How the ledger selects the account's lines: an extra INNER join (the closure view, when the
+     * account entity declares a hierarchy) or a plain predicate on the foreign key.
+     */
+    private record AccountMatch(Join treeJoin, String predicate, ViewArtifact treeView) {
+    }
+
+    /**
+     * The account analysis ({@code kind: ledger}, dirigible #7887): the posted lines of ONE account in
+     * date order with a running balance, framed by its opening and closing balance.
+     *
+     * <p>
+     * The query is the union of three arms over the same restricted ledger - the account's lines that
+     * pass the filter, the lifecycle scope and the authored parameters:
+     * <ol>
+     * <li>the OPENING row: the balance of everything strictly before {@code :fromDate};</li>
+     * <li>the LINES of the window, each carrying the opening balance plus the running
+     * {@code SUM(debit - credit) OVER (ORDER BY date, entry, line)} - the line key last, so two lines
+     * of one entry never share a running total;</li>
+     * <li>the CLOSING row: the window's debit and credit turnover and the balance up to and including
+     * {@code :toDate}.</li>
+     * </ol>
+     * The windows are the balance report's to the token, so opening + debit - credit = closing for the
+     * account, and equals what {@code kind: balance} shows for it over the same window. The union is
+     * ordered by arm, date, entry and line in a trailing {@code ORDER BY}: the generated repository
+     * APPENDS its {@code LIMIT}/{@code OFFSET}, so the database pages the ordered result and a 50k-line
+     * account is never loaded whole - and the window function, inside the derived table, is computed
+     * over the whole window before the page is cut, so a page's running balance is correct.
+     *
+     * <p>
+     * When the account entity declares a {@code hierarchy}, a group account lists the lines of every
+     * account below it through the generated {@code <REPORT>_ACCOUNT_TREE} closure view - see
+     * {@link #accountMatch}.
+     */
+    private static LedgerPrepared prepareLedger(IntentGenerationContext context, IntentModel model, EntityIntent source, String baseAlias,
+            String baseTable, ReportIntent report) {
+        RelationIntent accountRelation = source == null || report.getAccount() == null ? null
+                : relationByName(source, report.getAccount()
+                                               .trim());
+        if (accountRelation == null || !isToOne(accountRelation)) {
+            // The parser refuses both; reaching here means generation was called on an unvalidated model.
+            throw new IllegalStateException("Ledger report [" + report.getName() + "] account [" + report.getAccount()
+                    + "] is not a to-one relation of its source [" + report.getSource() + "]");
+        }
+        Map<String, Join> joins = new LinkedHashMap<>();
+        List<ViewArtifact> views = new ArrayList<>();
+        String accountKey = baseAlias + "." + quote(column(source.getName(), accountRelation.getName()));
+        AccountMatch account = accountMatch(context, model, accountRelation, accountKey, report);
+        if (account.treeJoin() != null) {
+            joins.put(account.treeJoin().alias, account.treeJoin());
+            views.add(account.treeView());
+        }
+
+        ColumnRef date = resolve(context, model, source, baseAlias, report.getDate()
+                                                                          .trim());
+        registerJoin(joins, date);
+        ColumnRef debit = resolve(context, model, source, baseAlias, report.getDebit()
+                                                                           .trim());
+        ColumnRef credit = resolve(context, model, source, baseAlias, report.getCredit()
+                                                                            .trim());
+        String debitAmount = "COALESCE(" + debit.qualified() + ", 0)";
+        String creditAmount = "COALESCE(" + credit.qualified() + ", 0)";
+
+        Set<String> usedAliases = new LinkedHashSet<>(List.of(LEDGER_LABEL_COLUMN, LEDGER_DATE_COLUMN, LEDGER_DEBIT_COLUMN,
+                LEDGER_CREDIT_COLUMN, LEDGER_BALANCE_COLUMN, LEDGER_ROW, LEDGER_ENTRY, LEDGER_LINE));
+        List<Map<String, Object>> lineColumns = new ArrayList<>();
+        for (String authored : report.getColumns()) {
+            if (authored == null || authored.isBlank()) {
+                continue;
+            }
+            ColumnRef ref = resolve(context, model, source, baseAlias, authored.trim());
+            registerJoin(joins, ref);
+            lineColumns.add(column(ref.tableAlias, uniqueName(usedAliases, ref.displayAlias), ref.physicalColumn, ref.reportType, "NONE",
+                    false, ref.translationExpression()));
+        }
+        if (report.hasCorrespondence()) {
+            lineColumns.add(column(baseAlias, uniqueName(usedAliases, LEDGER_CORRESPONDENCE_COLUMN), LEDGER_CORRESPONDENCE_COLUMN,
+                    "CHARACTER VARYING", "NONE", false,
+                    correspondentAccounts(context, model, source, baseAlias, baseTable, report, debit, credit)));
+        }
+
+        String filter = buildWhere(context, model, source, baseAlias, joins, report.getFilter());
+        Map<String, Object> scope = scopeCondition(context, model, source, baseAlias, report, true);
+        List<Map<String, Object>> parameters = balanceParameters();
+        parameters.add(reportParameter(LEDGER_ACCOUNT_PARAMETER, accountKeyType(context, model, accountRelation), LEDGER_NO_ACCOUNT));
+        List<Map<String, Object>> parameterConditions = parameterConditions(context, model, source, baseAlias, report, joins, parameters);
+        String restriction =
+                rawWhere(filter, scope, and(account.predicate(), parameterConditions.isEmpty() ? null : predicate(parameterConditions)));
+
+        String dateColumn = date.qualified();
+        String documentColumn = documentColumn(source, report);
+        String entryKey = documentColumn == null ? "CAST(NULL AS INTEGER)" : baseAlias + "." + quote(documentColumn);
+        String lineKey = baseAlias + "." + quote(keyColumn(source));
+        String signed = debitAmount + " - " + creditAmount;
+        String opening = "(SELECT COALESCE(SUM(" + signed + "), 0)" + ledgerFrom(baseTable, baseAlias, joins, false) + "\nWHERE "
+                + and(dateColumn + " < :fromDate", restriction) + ")";
+        String period = and(dateColumn + " >= :fromDate AND " + dateColumn + " <= :toDate", restriction);
+
+        List<String> openingCells = new ArrayList<>();
+        List<String> lineCells = new ArrayList<>();
+        List<String> closingCells = new ArrayList<>();
+        for (Map<String, Object> column : lineColumns) {
+            // The framing rows carry no per-line value; an untyped NULL takes the lines arm's type.
+            String alias = quote((String) column.get("alias"));
+            openingCells.add("NULL as " + alias);
+            lineCells.add(columnTerm(column) + " as " + alias);
+            closingCells.add("NULL as " + alias);
+        }
+
+        StringBuilder sql = new StringBuilder("SELECT * FROM (\n");
+        sql.append(ledgerArmHead(0, "NULL", "NULL", sqlLiteral(LEDGER_OPENING_LABEL), "CAST(:fromDate AS DATE)", openingCells))
+           .append(", NULL as ")
+           .append(quote(LEDGER_DEBIT_COLUMN))
+           .append(", NULL as ")
+           .append(quote(LEDGER_CREDIT_COLUMN))
+           .append(", ")
+           .append(opening)
+           .append(" as ")
+           .append(quote(LEDGER_BALANCE_COLUMN))
+           .append("\nUNION ALL\n")
+           .append(ledgerArmHead(1, entryKey, lineKey, "NULL", dateColumn, lineCells))
+           .append(", ")
+           .append(debitAmount)
+           .append(" as ")
+           .append(quote(LEDGER_DEBIT_COLUMN))
+           .append(", ")
+           .append(creditAmount)
+           .append(" as ")
+           .append(quote(LEDGER_CREDIT_COLUMN))
+           .append(", ")
+           .append(opening)
+           .append(" + SUM(")
+           .append(signed)
+           .append(") OVER (ORDER BY ")
+           .append(dateColumn)
+           .append(", ")
+           .append(entryKey)
+           .append(", ")
+           .append(lineKey)
+           .append(") as ")
+           .append(quote(LEDGER_BALANCE_COLUMN))
+           .append(ledgerFrom(baseTable, baseAlias, joins, true))
+           .append("\nWHERE ")
+           .append(period)
+           .append("\nUNION ALL\n")
+           .append(ledgerArmHead(2, "NULL", "NULL", sqlLiteral(LEDGER_CLOSING_LABEL), "CAST(:toDate AS DATE)", closingCells))
+           .append(", COALESCE(SUM(")
+           .append(debitAmount)
+           .append("), 0) as ")
+           .append(quote(LEDGER_DEBIT_COLUMN))
+           .append(", COALESCE(SUM(")
+           .append(creditAmount)
+           .append("), 0) as ")
+           .append(quote(LEDGER_CREDIT_COLUMN))
+           .append(", ")
+           .append(opening)
+           .append(" + COALESCE(SUM(")
+           .append(signed)
+           .append("), 0) as ")
+           .append(quote(LEDGER_BALANCE_COLUMN))
+           .append(ledgerFrom(baseTable, baseAlias, joins, false))
+           .append("\nWHERE ")
+           .append(period)
+           .append("\n) as ")
+           .append(LEDGER_ALIAS)
+           .append("\nORDER BY ")
+           .append(LEDGER_ALIAS + "." + quote(LEDGER_ROW) + ", " + LEDGER_ALIAS + "." + quote(LEDGER_DATE_COLUMN) + ", " + LEDGER_ALIAS
+                   + "." + quote(LEDGER_ENTRY) + ", " + LEDGER_ALIAS + "." + quote(LEDGER_LINE));
+
+        List<Map<String, Object>> columns = new ArrayList<>();
+        columns.add(column(LEDGER_ALIAS, LEDGER_LABEL_COLUMN, LEDGER_LABEL_COLUMN, "CHARACTER VARYING", "NONE", false));
+        columns.add(column(LEDGER_ALIAS, LEDGER_DATE_COLUMN, LEDGER_DATE_COLUMN, "DATE", "NONE", false));
+        for (Map<String, Object> column : lineColumns) {
+            String alias = (String) column.get("alias");
+            columns.add(column(LEDGER_ALIAS, alias, alias, (String) column.get("type"), "NONE", false));
+        }
+        columns.add(column(LEDGER_ALIAS, LEDGER_DEBIT_COLUMN, LEDGER_DEBIT_COLUMN, "DECIMAL", "NONE", false));
+        columns.add(column(LEDGER_ALIAS, LEDGER_CREDIT_COLUMN, LEDGER_CREDIT_COLUMN, "DECIMAL", "NONE", false));
+        columns.add(column(LEDGER_ALIAS, LEDGER_BALANCE_COLUMN, LEDGER_BALANCE_COLUMN, "DECIMAL", "NONE", false));
+        return new LedgerPrepared(columns, parameters, sql.toString(), views);
+    }
+
+    /**
+     * The leading cells every ledger arm shares - its ordering keys, its label, its date and the
+     * per-line columns - up to (not including) the three amounts.
+     */
+    private static String ledgerArmHead(int row, String entryKey, String lineKey, String label, String date, List<String> cells) {
+        StringBuilder head = new StringBuilder("SELECT ").append(row)
+                                                         .append(" as ")
+                                                         .append(quote(LEDGER_ROW))
+                                                         .append(", ")
+                                                         .append(entryKey)
+                                                         .append(" as ")
+                                                         .append(quote(LEDGER_ENTRY))
+                                                         .append(", ")
+                                                         .append(lineKey)
+                                                         .append(" as ")
+                                                         .append(quote(LEDGER_LINE))
+                                                         .append(", CAST(")
+                                                         .append(label)
+                                                         .append(" AS ")
+                                                         .append(LEDGER_TEXT_TYPE)
+                                                         .append(") as ")
+                                                         .append(quote(LEDGER_LABEL_COLUMN))
+                                                         .append(", ")
+                                                         .append(date)
+                                                         .append(" as ")
+                                                         .append(quote(LEDGER_DATE_COLUMN));
+        for (String cell : cells) {
+            head.append(", ")
+                .append(cell);
+        }
+        return head.toString();
+    }
+
+    /**
+     * The FROM clause of one ledger arm. The two framing arms aggregate, so they skip the language
+     * joins - those only translate the per-line columns the lines arm selects.
+     */
+    private static String ledgerFrom(String baseTable, String baseAlias, Map<String, Join> joins, boolean withLanguage) {
+        StringBuilder from = new StringBuilder("\nFROM ").append(quote(baseTable))
+                                                         .append(" as ")
+                                                         .append(baseAlias);
+        for (Join join : joins.values()) {
+            if (join.language && !withLanguage) {
+                continue;
+            }
+            from.append('\n')
+                .append(join.type)
+                .append(" JOIN ")
+                .append(quote(join.table))
+                .append(" as ")
+                .append(join.alias)
+                .append(" ON ")
+                .append(join.on);
+        }
+        return from.toString();
+    }
+
+    /**
+     * How the ledger selects the lines of the bound account.
+     *
+     * <p>
+     * An account entity declaring a {@code hierarchy} is a chart of accounts, and a group account in it
+     * holds no postings of its own - its ledger is the lines of every account below it. That subtree is
+     * the parameter-free closure of the tree, so it is emitted as the {@code <REPORT>_ACCOUNT_TREE}
+     * view (a recursive CTE pairing every account with itself and each of its ancestors) and the ledger
+     * INNER JOINs it on {@code ANCESTOR_ID = :account}: a leaf matches itself alone, a group every leaf
+     * below it, and a line is matched once however deep it sits. Without a hierarchy the account is
+     * matched by its key.
+     */
+    private static AccountMatch accountMatch(IntentGenerationContext context, IntentModel model, RelationIntent accountRelation,
+            String accountKey, ReportIntent report) {
+        String marker = ":" + LEDGER_ACCOUNT_PARAMETER;
+        String table;
+        String keyColumn;
+        String parentColumn;
+        CrossModelSupport.TargetInfo info = crossModelInfo(context, model, accountRelation);
+        if (info != null) {
+            table = info.tableDataName();
+            keyColumn = info.keyColumn();
+            parentColumn = info.hierarchyColumn();
+        } else {
+            EntityIntent target = entityByName(model, accountRelation.getTo());
+            String hierarchy = target == null ? null : target.getHierarchy();
+            FieldIntent primaryKey = target == null ? null : primaryKeyOf(target);
+            table = target == null ? null : IntentNaming.tableName(context, target.getName());
+            keyColumn = target == null ? null : column(target.getName(), primaryKey == null ? "id" : primaryKey.getName());
+            parentColumn = hierarchy == null || hierarchy.isBlank() ? null : column(target.getName(), hierarchy.trim());
+        }
+        if (parentColumn == null) {
+            return new AccountMatch(null, accountKey + " = " + marker, null);
+        }
+        String viewName = IntentNaming.tableName(context, report.getName()) + "_ACCOUNT_TREE";
+        String tree = "ACCOUNT_TREE";
+        String view = "WITH RECURSIVE " + tree + " (" + quote(ACCOUNT_TREE_ANCESTOR) + ", " + quote(ACCOUNT_TREE_ACCOUNT) + ", "
+                + quote(ACCOUNT_TREE_DEPTH) + ") AS (\nSELECT Account." + quote(keyColumn) + ", Account." + quote(keyColumn) + ", 0 FROM "
+                + quote(table) + " as Account\nUNION ALL\nSELECT " + tree + "." + quote(ACCOUNT_TREE_ANCESTOR) + ", Child."
+                + quote(keyColumn) + ", " + tree + "." + quote(ACCOUNT_TREE_DEPTH) + " + 1 FROM " + tree + " INNER JOIN " + quote(table)
+                + " as Child ON Child." + quote(parentColumn) + " = " + tree + "." + quote(ACCOUNT_TREE_ACCOUNT) + " WHERE " + tree + "."
+                + quote(ACCOUNT_TREE_DEPTH) + " < " + ACCOUNT_TREE_MAX_DEPTH + "\n)\nSELECT " + tree + "." + quote(ACCOUNT_TREE_ANCESTOR)
+                + ", " + tree + "." + quote(ACCOUNT_TREE_ACCOUNT) + " FROM " + tree;
+        Join join = new Join(viewName, ACCOUNT_TREE_ALIAS, ACCOUNT_TREE_ALIAS + "." + quote(ACCOUNT_TREE_ACCOUNT) + " = " + accountKey
+                + " AND " + ACCOUNT_TREE_ALIAS + "." + quote(ACCOUNT_TREE_ANCESTOR) + " = " + marker, REQUIRED_JOIN_TYPE);
+        return new AccountMatch(join, null, new ViewArtifact(report.getName() + "AccountTree.view", viewName, view));
+    }
+
+    /** The SQL type the account parameter binds as - the type of the account's key. */
+    private static String accountKeyType(IntentGenerationContext context, IntentModel model, RelationIntent accountRelation) {
+        CrossModelSupport.TargetInfo info = crossModelInfo(context, model, accountRelation);
+        if (info != null) {
+            return info.fkType();
+        }
+        EntityIntent target = entityByName(model, accountRelation.getTo());
+        FieldIntent primaryKey = target == null ? null : primaryKeyOf(target);
+        return reportType(primaryKey == null ? "integer" : primaryKey.getType());
+    }
+
+    /**
+     * A ledger line's correspondent accounts - the {@code correspondence} path of every line on the
+     * OPPOSITE side of the same entry, distinct and ordered, as one text cell. A line faces several
+     * accounts in a compound entry, which is why this is a list rather than the balance report's
+     * proportional allocation: the ledger shows each line's own amount, so there is nothing to split.
+     * The pairing is the balance axis's - same entry, not the line itself, opposite side.
+     */
+    private static String correspondentAccounts(IntentGenerationContext context, IntentModel model, EntityIntent source, String baseAlias,
+            String baseTable, ReportIntent report, ColumnRef debit, ColumnRef credit) {
+        String correspondent = source.getName() + CORRESPONDENT_SUFFIX;
+        String documentColumn = documentColumn(source, report);
+        String keyColumn = keyColumn(source);
+        ColumnRef bucket = resolve(context, model, source, correspondent, report.getCorrespondence()
+                                                                                .trim(),
+                CORRESPONDENT_SUFFIX, REQUIRED_JOIN_TYPE);
+        String value = "CAST(" + bucket.qualified() + " AS " + LEDGER_TEXT_TYPE + ")";
+        StringBuilder sql = new StringBuilder("(SELECT STRING_AGG(DISTINCT ").append(value)
+                                                                             .append(", ', ' ORDER BY ")
+                                                                             .append(value)
+                                                                             .append(") FROM ")
+                                                                             .append(quote(baseTable))
+                                                                             .append(" as ")
+                                                                             .append(correspondent);
+        if (bucket.join != null) {
+            sql.append(' ')
+               .append(bucket.join.type)
+               .append(" JOIN ")
+               .append(quote(bucket.join.table))
+               .append(" as ")
+               .append(bucket.join.alias)
+               .append(" ON ")
+               .append(bucket.join.on);
+        }
+        String counterDebit = "COALESCE(" + correspondent + "." + quote(debit.physicalColumn) + ", 0)";
+        String counterCredit = "COALESCE(" + correspondent + "." + quote(credit.physicalColumn) + ", 0)";
+        return sql.append(" WHERE ")
+                  .append(correspondent)
+                  .append('.')
+                  .append(quote(documentColumn))
+                  .append(" = ")
+                  .append(baseAlias)
+                  .append('.')
+                  .append(quote(documentColumn))
+                  .append(" AND ")
+                  .append(correspondent)
+                  .append('.')
+                  .append(quote(keyColumn))
+                  .append(" <> ")
+                  .append(baseAlias)
+                  .append('.')
+                  .append(quote(keyColumn))
+                  .append(" AND ((COALESCE(")
+                  .append(debit.qualified())
+                  .append(", 0) <> 0 AND ")
+                  .append(counterCredit)
+                  .append(" <> 0) OR (COALESCE(")
+                  .append(credit.qualified())
+                  .append(", 0) <> 0 AND ")
+                  .append(counterDebit)
+                  .append(" <> 0)))")
+                  .toString();
     }
 
     /** The alias of the per-account balance subquery a statement's lines read. */
@@ -1751,6 +2288,82 @@ public class ReportIntentGenerator implements IntentTargetGenerator {
         return widget;
     }
 
+    /**
+     * The output columns of a plain (non-ledger) report, keyed by the authored dimension or measure
+     * they come from (compared as {@link #expressionKey(String)} compares them) and valued by the
+     * result-set alias the generated query names them with - what a generated report repository's rows
+     * are keyed by.
+     *
+     * <p>
+     * It is derived here, beside the code that names the columns, from the same patterns and the same
+     * {@code humanize} spelling, so a consumer of the rows (a declared export) never restates the alias
+     * convention. A measure that matches no aggregate produces no column and is absent. A ledger kind's
+     * columns are fixed by its own shape rather than by authored expressions, so it has none here.
+     *
+     * @param report the report
+     * @return authored expression key to column alias, in output order; empty for a ledger kind
+     */
+    public static Map<String, String> outputAliases(ReportIntent report) {
+        Map<String, String> aliases = new LinkedHashMap<>();
+        if (report.isLedgerKind()) {
+            return aliases;
+        }
+        for (String dimension : report.getDimensions()) {
+            if (dimension == null || dimension.isBlank()) {
+                continue;
+            }
+            Matcher bucket = DATE_BUCKET.matcher(dimension.trim());
+            Matcher ageing = AGEING_BUCKET.matcher(dimension.trim());
+            String alias;
+            if (bucket.matches()) {
+                alias = humanize(bucket.group(1)
+                                       .toLowerCase(Locale.ROOT)
+                        + " " + bucket.group(2)
+                                      .trim()
+                                      .replace('.', ' '));
+            } else if (ageing.matches()) {
+                alias = humanize("ageing " + ageing.group(1)
+                                                   .trim()
+                                                   .replace('.', ' '));
+            } else {
+                alias = humanize(dimension.trim());
+            }
+            aliases.put(expressionKey(dimension), alias);
+        }
+        for (String measure : report.getMeasures()) {
+            if (measure == null || measure.isBlank()) {
+                continue;
+            }
+            Matcher matcher = AGGREGATE_EXPRESSION.matcher(measure.trim());
+            if (!matcher.matches()) {
+                continue;
+            }
+            String aggregate = matcher.group(1)
+                                      .toUpperCase(Locale.ROOT);
+            String field = matcher.group(2)
+                                  .trim();
+            if (!KNOWN_AGGREGATES.contains(aggregate)) {
+                continue;
+            }
+            String alias = field.isEmpty() || "*".equals(field) ? aggregate.charAt(0) + aggregate.substring(1)
+                                                                                                 .toLowerCase(Locale.ROOT)
+                    : humanize(aggregate.toLowerCase(Locale.ROOT) + " " + leaf(field));
+            aliases.put(expressionKey(measure), alias);
+        }
+        return aliases;
+    }
+
+    /**
+     * The key {@link #outputAliases(ReportIntent)} is keyed by: an authored dimension or measure
+     * expression with its whitespace removed, lower-cased.
+     *
+     * @param expression the authored expression
+     * @return the key
+     */
+    public static String columnKey(String expression) {
+        return expressionKey(expression);
+    }
+
     /** Whitespace/case-insensitive compare key for authored measure and dimension expressions. */
     private static String expressionKey(String expression) {
         return expression == null ? ""
@@ -2278,6 +2891,7 @@ public class ReportIntentGenerator implements IntentTargetGenerator {
         }
         List<String> expressions = new ArrayList<>(report.getDimensions());
         expressions.addAll(report.getMeasures());
+        expressions.addAll(report.getColumns());
         expressions.add(report.getFilter());
         expressions.add(report.getDebit());
         expressions.add(report.getCredit());

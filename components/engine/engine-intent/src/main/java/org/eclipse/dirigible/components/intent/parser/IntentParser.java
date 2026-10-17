@@ -26,6 +26,7 @@ import org.eclipse.dirigible.components.intent.generator.ArrivalSupport;
 import org.eclipse.dirigible.components.intent.generator.EventBinding;
 import org.eclipse.dirigible.components.intent.generator.ImportSupport;
 import org.eclipse.dirigible.components.intent.generator.IntegrationSupport;
+import org.eclipse.dirigible.components.intent.generator.ExportSupport;
 import org.eclipse.dirigible.components.intent.generator.IntentEntities;
 import org.eclipse.dirigible.components.intent.generator.FileNameSupport;
 import org.eclipse.dirigible.components.intent.generator.NotificationSupport;
@@ -87,6 +88,7 @@ import org.eclipse.dirigible.components.intent.model.RelationIntent;
 import org.eclipse.dirigible.components.intent.model.ResolveIntent;
 import org.eclipse.dirigible.components.intent.model.SlotsIntent;
 import org.eclipse.dirigible.components.intent.model.ReportIntent;
+import org.eclipse.dirigible.components.intent.model.ReportAgingIntent;
 import org.eclipse.dirigible.components.intent.model.ReportParameterIntent;
 import org.eclipse.dirigible.components.intent.model.StatementLineIntent;
 import org.eclipse.dirigible.components.intent.model.ExpansionIntent;
@@ -425,6 +427,7 @@ public final class IntentParser {
         validateInbound(model, entityNames, issues);
         ImportSupport.validate(model, issues);
         validateOutbound(model, entityNames, issues);
+        ExportSupport.validate(model, issues);
         validateRollups(model, usesAliases, issues);
         validateExpansions(model, issues);
         validateSettlements(model, issues);
@@ -3660,6 +3663,9 @@ public final class IntentParser {
         Set<String> bindable = new LinkedHashSet<>(declared.keySet());
         if (report.isLedgerKind()) {
             bindable.addAll(BALANCE_REPORT_PARAMETERS);
+        }
+        if (report.isLedger()) {
+            bindable.add(LEDGER_ACCOUNT_PARAMETER);
         }
         if (bindable.isEmpty()) {
             issues.add(subject + " attaches report [" + report.getName()
@@ -10977,6 +10983,7 @@ public final class IntentParser {
             validateAgeingDimensions(model, report, issues);
             validateReportParameters(model, report, issues);
             validateBalanceReport(model, report, issues);
+            validateAgingReport(model, report, issues);
             validateReportScope(model, report, issues);
             validateSubsetReportReferences(model, report, issues);
         }
@@ -11339,6 +11346,9 @@ public final class IntentParser {
     /** The window bounds {@code kind: balance} declares on its own behalf. */
     private static final Set<String> BALANCE_REPORT_PARAMETERS = Set.of("fromDate", "toDate");
 
+    /** The account {@code kind: ledger} lists, declared on its own behalf beside the window. */
+    private static final String LEDGER_ACCOUNT_PARAMETER = "account";
+
     /**
      * A report's authored {@code parameters:} - the user-set inputs bound into its {@code WHERE}.
      *
@@ -11389,6 +11399,9 @@ public final class IntentParser {
             if (report.isLedgerKind() && BALANCE_REPORT_PARAMETERS.contains(name)) {
                 // A statement declares the same window on its own behalf as a balance report does.
                 issues.add(subject + " collides with the balance window parameter of the same name");
+            }
+            if (report.isLedger() && LEDGER_ACCOUNT_PARAMETER.equals(name)) {
+                issues.add(subject + " collides with the account parameter a ledger report declares on its own behalf");
             }
             String op = parameter.getNormalizedOp();
             if (op == null) {
@@ -11453,6 +11466,104 @@ public final class IntentParser {
         return family;
     }
 
+    /** The field types an aging report's open amount may sum. */
+    private static final Set<String> AGING_AMOUNT_TYPES = Set.of("integer", "int", "long", "decimal", "double");
+
+    /**
+     * A report's {@code aging:} block (dirigible #7888) - open documents bucketed by days past due as
+     * of a report date. The {@code due} (and optional document {@code date}) field must be a
+     * {@code date}/{@code timestamp}, the {@code amount} a sum and difference of numeric fields, the
+     * {@code buckets} ascending positive day counts, and the as-of parameter a free plain identifier:
+     * the report declares it on its own behalf, so an authored parameter of the same name would bind
+     * twice. A ledger kind computes its own fixed columns and cannot be aged.
+     */
+    private static void validateAgingReport(IntentModel model, ReportIntent report, List<String> issues) {
+        ReportAgingIntent aging = report.getAging();
+        if (aging == null) {
+            return;
+        }
+        String subject = "report [" + report.getName() + "] aging";
+        if (report.isLedgerKind()) {
+            issues.add(subject + " cannot be combined with kind [" + report.getKind()
+                                                                           .trim()
+                    + "] - an aging report sums open documents, a ledger kind computes its own columns");
+        }
+        EntityIntent source = reportSource(model, report);
+        if (aging.getDue() == null || aging.getDue()
+                                           .isBlank()) {
+            issues.add(subject + " has no due field - name the date the document falls due on");
+        } else if (source != null) {
+            validateAgingDate(model, source, subject + " due", aging.getDue()
+                                                                    .trim(),
+                    issues);
+        }
+        if (aging.getDate() != null && !aging.getDate()
+                                             .isBlank()
+                && source != null) {
+            validateAgingDate(model, source, subject + " date", aging.getDate()
+                                                                     .trim(),
+                    issues);
+        }
+        List<ReportAgingIntent.AmountTerm> terms = aging.getAmountTerms();
+        if (aging.getAmount() == null || aging.getAmount()
+                                              .isBlank()) {
+            issues.add(subject + " has no amount - name the document's open amount, e.g. \"total - paid\"");
+        } else if (terms == null) {
+            issues.add(subject + " amount [" + aging.getAmount()
+                    + "] must be a numeric field or numeric fields joined by + and - (e.g. \"total - paid\")");
+        } else if (source != null) {
+            for (ReportAgingIntent.AmountTerm term : terms) {
+                FieldIntent field = reportPathField(model, source, subject + " amount", term.path(), issues);
+                if (field != null && !AGING_AMOUNT_TYPES.contains(fieldType(field))) {
+                    issues.add(subject + " amount sums [" + term.path() + "], a [" + field.getType() + "] field - it must be numeric");
+                }
+            }
+        }
+        if (aging.getBuckets()
+                 .contains(null)) {
+            issues.add(subject + " buckets must be whole day counts");
+        }
+        List<Integer> thresholds = aging.getThresholds();
+        if (thresholds.isEmpty()) {
+            issues.add(subject + " needs at least one bucket threshold in days, e.g. buckets: [30, 60, 90]");
+        }
+        int previous = 0;
+        for (Integer threshold : thresholds) {
+            if (threshold <= 0) {
+                issues.add(subject + " buckets must be positive day counts - got [" + threshold + "]");
+            } else if (threshold <= previous) {
+                issues.add(subject + " buckets must ascend - got [" + threshold + "] after [" + previous + "]");
+            } else {
+                previous = threshold;
+            }
+        }
+        String asOf = aging.getAsOfName();
+        if (!REPORT_PARAMETER_NAME.matcher(asOf)
+                                  .matches()
+                || SourceVersion.isKeyword(asOf) || RESERVED_REPORT_PARAMETERS.contains(asOf)) {
+            issues.add(subject + " asOf [" + asOf + "] must name the as-of parameter as a plain identifier that is not reserved");
+        }
+        for (ReportParameterIntent parameter : report.getParameters()) {
+            if (parameter.getName() != null && asOf.equals(parameter.getName()
+                                                                    .trim())) {
+                issues.add(subject + " declares the as-of parameter [" + asOf
+                        + "] on its own behalf - remove the parameter of the same name from parameters:");
+            }
+        }
+    }
+
+    /** An aging date: an own {@code date}/{@code timestamp} of the source, or a one-hop relation's. */
+    private static void validateAgingDate(IntentModel model, EntityIntent source, String subject, String path, List<String> issues) {
+        FieldIntent field = reportPathField(model, source, subject, path, issues);
+        if (field == null) {
+            return;
+        }
+        String type = fieldType(field);
+        if (!"date".equals(type) && !"timestamp".equals(type)) {
+            issues.add(subject + " [" + path + "] must be a date/timestamp field - got [" + field.getType() + "]");
+        }
+    }
+
     /**
      * {@code kind: balance} - the accounting balance report. Requires {@code date} (the window field),
      * {@code debit} and {@code credit} (the summed amounts) and at least one dimension; forbids ad-hoc
@@ -11463,19 +11574,33 @@ public final class IntentParser {
                 report.getDate() != null || report.getDebit() != null || report.getCredit() != null || report.getCorrespondence() != null;
         boolean statementInputs = report.getAccount() != null || report.getCashAccounts() != null || !report.getLines()
                                                                                                             .isEmpty();
+        boolean ledgerColumns = report.getColumns()
+                                      .stream()
+                                      .anyMatch(column -> column != null && !column.isBlank());
         if (report.getKind() == null || report.getKind()
                                               .isBlank()) {
             if (balanceInputs) {
                 issues.add("report [" + report.getName()
-                        + "] declares date/debit/credit/correspondence but is not kind: balance or kind: statement");
+                        + "] declares date/debit/credit/correspondence but is not kind: balance, statement or ledger");
             }
             if (statementInputs) {
-                issues.add("report [" + report.getName() + "] declares account/lines/cashAccounts but is not kind: statement");
+                issues.add("report [" + report.getName() + "] declares account/lines/cashAccounts but is not kind: statement or ledger");
+            }
+            if (ledgerColumns) {
+                issues.add("report [" + report.getName() + "] declares columns but is not kind: ledger");
             }
             return;
         }
         if (!report.isLedgerKind()) {
-            issues.add("report [" + report.getName() + "] has unknown kind [" + report.getKind() + "] - expected balance or statement");
+            issues.add("report [" + report.getName() + "] has unknown kind [" + report.getKind()
+                    + "] - expected balance, statement or ledger");
+            return;
+        }
+        if (ledgerColumns && !report.isLedger()) {
+            issues.add("report [" + report.getName() + "] declares columns - those are the per-line columns of kind: ledger");
+        }
+        if (report.isLedger()) {
+            validateLedgerReport(model, report, issues);
             return;
         }
         String prefix = (report.isStatement() ? "statement" : "balance") + " report [" + report.getName() + "]";
@@ -11527,6 +11652,69 @@ public final class IntentParser {
             validateStatementAccount(model, source, report, issues, prefix);
             validateStatementLines(report, issues, prefix);
             validateStatementCashBasis(source, report, issues, prefix);
+        }
+    }
+
+    /**
+     * {@code kind: ledger} - the account analysis: the posted lines of ONE account in date order with a
+     * running balance. Its rows are the lines themselves, so it takes neither dimensions nor measures
+     * nor statement lines; it needs the balance report's {@code date}/{@code debit}/{@code credit}, an
+     * {@code account} naming the to-one relation the lines are selected by, and a primary key on the
+     * source - the running balance accumulates in date, entry and LINE order, and without a unique last
+     * key two lines of one entry would share a running total. {@code columns} resolve like a dimension.
+     */
+    private static void validateLedgerReport(IntentModel model, ReportIntent report, List<String> issues) {
+        String prefix = "ledger report [" + report.getName() + "]";
+        if (!report.getMeasures()
+                   .isEmpty()) {
+            issues.add(prefix + " must not declare measures - its rows are the account's lines, with debit, credit and running balance");
+        }
+        if (report.getDimensions()
+                  .stream()
+                  .anyMatch(d -> d != null && !d.isBlank())) {
+            issues.add(
+                    prefix + " must not declare dimensions - its rows are the account's lines; name the per-line columns under columns:");
+        }
+        if (report.getCashAccounts() != null || !report.getLines()
+                                                       .isEmpty()) {
+            issues.add(prefix + " declares lines/cashAccounts - those belong to kind: statement");
+        }
+        if (report.getWidget() != null || (report.getChart() != null && !report.getChart()
+                                                                               .isBlank())) {
+            // Both read the rows as aggregated groups; a ledger's rows are one account's lines framed by
+            // its opening and closing balance, which no tile or chart series can stand for.
+            issues.add(prefix + " must not declare widget/chart - its rows are the account's lines, not aggregated groups");
+        }
+        EntityIntent source = reportSource(model, report);
+        if (source == null) {
+            return; // the missing/unknown source is already reported
+        }
+        validateBalanceDate(model, source, report, issues, prefix);
+        validateBalanceCorrespondence(model, source, report, issues, prefix);
+        requireNumericBalanceField(source, report.getDebit(), "debit", issues, prefix);
+        requireNumericBalanceField(source, report.getCredit(), "credit", issues, prefix);
+        if (source.getFields()
+                  .stream()
+                  .noneMatch(FieldIntent::isPrimaryKey)) {
+            issues.add(prefix + " needs a primaryKey on [" + source.getName()
+                    + "] - the running balance accumulates line by line in key order");
+        }
+        String account = report.getAccount();
+        if (account == null || account.isBlank()) {
+            issues.add(prefix + " needs account: the to-one relation of [" + source.getName() + "] to the account whose lines it lists");
+        } else if (toOneRelation(source, account.trim()) == null) {
+            issues.add(prefix + " account [" + account.trim() + "] is not a to-one relation of [" + source.getName()
+                    + "] - name the relation to the account (e.g. account: Account), not one of its fields");
+        }
+        for (String column : report.getColumns()) {
+            if (column == null || column.isBlank()) {
+                continue;
+            }
+            String path = column.trim();
+            if (path.indexOf('.') < 0 && toOneRelation(source, path) != null) {
+                continue; // a bare to-one relation shows the related row's label
+            }
+            reportPathField(model, source, prefix + " column [" + path + "]", path, issues);
         }
     }
 
