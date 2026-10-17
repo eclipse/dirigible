@@ -17,6 +17,7 @@ public enum HtmlAttribute {
     CLASS("class"), //
     TITLE("title"), //
     LABEL("label"), //
+    ARIA_LABEL("aria-label"), //
     NGCLICK("ng-click"), //
     GLYPH("glyph");
 
