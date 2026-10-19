@@ -103,12 +103,17 @@ public final class CrossModelSupport {
      *        owner's {@code dataName} for it) - what a consumer walking the tree in SQL joins on, as a
      *        {@code kind: ledger} report does to widen a group account to its leaves (issue #7887);
      *        {@code null} when the target declares no hierarchy or the model was not resolved
+     * @param writeRoles the comma-separated write gate the owner model's generated controller enforces
+     *        for the target (the owner's {@code roleWrite}: its {@code can:} grants or convention role,
+     *        its {@code access.extraRoles} appended) - what a create-from in another model must demand
+     *        of a caller who writes the target through it (issue #7913); {@code null} when the model
+     *        was not resolved or records no gate
      */
     public record TargetInfo(boolean resolved, String perspectiveName, String tableDataName, String keyField, String keyColumn,
             String labelField, String fkType, java.util.Set<String> propertyNames, String hierarchyProperty, String identityProperty,
             java.util.Map<String, String> propertyWidgets, String statusProperty, java.util.Map<String, String> propertyRelations,
             java.util.Set<String> translatedProperties, java.util.Map<String, String> propertyTypes,
-            java.util.Set<String> draftNumberProperties, String hierarchyColumn) {
+            java.util.Set<String> draftNumberProperties, String hierarchyColumn, String writeRoles) {
     }
 
     @SuppressWarnings("unchecked")
@@ -539,7 +544,8 @@ public final class CrossModelSupport {
                 return new TargetInfo(true, perspective, tableDataName, keyField, keyColumn, labelField, fkType, propertyNames,
                         hierarchyProperty, identityProperty, propertyWidgets, statusProperty, propertyRelations,
                         translatedProperties("true".equals(String.valueOf(entity.get("multilingual"))), properties), propertyTypes,
-                        draftNumberProperties(properties), hierarchyProperty == null ? null : propertyColumns.get(hierarchyProperty));
+                        draftNumberProperties(properties), hierarchyProperty == null ? null : propertyColumns.get(hierarchyProperty),
+                        str(entity.get("roleWrite"), null));
             }
         } catch (RuntimeException e) {
             LOGGER.warn("Failed to read owner model [{}] for cross-model target [{}]", LoggedValue.of(modelPath),
@@ -624,7 +630,7 @@ public final class CrossModelSupport {
         String table = IntentNaming.upperSnake(alias) + "_" + IntentNaming.upperSnake(targetEntity);
         String keyColumn = IntentNaming.upperSnake(targetEntity) + "_ID";
         return new TargetInfo(false, targetEntity, table, "Id", keyColumn, "Name", "INTEGER", null, null, null, null, null, null,
-                java.util.Set.of(), null, java.util.Set.of(), null);
+                java.util.Set.of(), null, java.util.Set.of(), null, null);
     }
 
     /**

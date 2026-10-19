@@ -1017,6 +1017,10 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
     private static List<Map<String, Object>> buildGenerates(IntentModel model, Map<String, EntityIntent> byName,
             Map<String, String> compositionParents, IntentSettings settings, IntentGenerationContext context) {
         List<Map<String, Object>> out = new ArrayList<>();
+        PermissionSupport.Gates gates = PermissionSupport.gates(model, settings);
+        // The same project name the EDM generator prefixes the entities' convention roles with.
+        String contextProject = context == null ? null : context.getProjectName();
+        String projectName = contextProject != null && !contextProject.isBlank() ? contextProject : model.getName();
         for (GeneratesIntent g : model.getGenerates()) {
             if (g.getName() == null || g.getName()
                                         .isBlank()) {
@@ -1093,6 +1097,13 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
             e.put("toModel", crossModel ? g.getUses() : "");
             e.put("toPerspective", toPerspective);
             e.put("toPk", toPk);
+            // The role gate of the click (issue #7913): run() changes the source (its sourceStatus flip, a
+            // back-link, a link row) and creates the target, so its caller must hold the WRITE gate of
+            // both - exactly the roles their own generated controllers demand for the same writes. Without
+            // it the endpoint was the one generated surface any signed-in user could call, a user holding
+            // no role at all included.
+            e.put("sourceWriteRoles", createFromWriteGate(g.getFrom(), fromUses, sourceInfo, gates, projectName, compositionParents));
+            e.put("targetWriteRoles", createFromWriteGate(g.getTo(), uses, target, gates, projectName, compositionParents));
             // A hop reads the related row, which the create-from must load first: the resolver renders the
             // null-guarded access and accumulates one load per distinct relation, and `relationLoads`
             // hands those to the template - the same pair a notification's relation.field recipient uses.
@@ -1813,6 +1824,9 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
     private static List<Map<String, Object>> buildTransitions(IntentModel model, Map<String, EntityIntent> byName,
             Map<String, String> compositionParents, IntentSettings settings, IntentGenerationContext context) {
         List<Map<String, Object>> out = new ArrayList<>();
+        PermissionSupport.Gates gates = PermissionSupport.gates(model, settings);
+        String contextProject = context == null ? null : context.getProjectName();
+        String projectName = contextProject != null && !contextProject.isBlank() ? contextProject : model.getName();
         for (org.eclipse.dirigible.components.intent.model.TransitionIntent t : model.getTransitions()) {
             if (t.getName() == null || t.getName()
                                         .isBlank()
@@ -1840,6 +1854,9 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
             e.put("perspective", IntentEntities.resolvePerspective(t.getForEntity(), compositionParents, model));
             e.put("statusProperty", statusProperty);
             e.put("setStatus", String.valueOf(t.getSetStatus()));
+            // The role gate of the click (issue #7913): the flip writes the record, so its caller must hold
+            // the record's WRITE gate - the roles its generated controller demands for the same write.
+            e.put("writeRoles", createFromWriteGate(t.getForEntity(), null, null, gates, projectName, compositionParents));
             List<String> terms = new ArrayList<>();
             List<String> fromIds = new ArrayList<>();
             for (Integer from : t.getFrom()) {
@@ -2637,6 +2654,36 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
      */
     static List<Map<String, Object>> buildGeneratesForTest(IntentModel model) {
         return buildGeneratesForTest(model, null);
+    }
+
+    /**
+     * The write gate one end of a create-from demands of the caller who clicks it (issue #7913): for a
+     * local entity the gate its generated controller enforces, as
+     * {@link PermissionSupport.Gates#writeGate} computes it - authored {@code can:} grants or the
+     * convention role, the {@code access.extraRoles} appended. For an entity owned by another model it
+     * is the gate THAT model recorded in its {@code .model} ({@code roleWrite}), because its grants and
+     * extra roles are authored there; an owner model that could not be read, or one generated before
+     * the key existed, falls back to the owner's convention role.
+     *
+     * @param entity the end's entity name
+     * @param owner the {@code uses:} entry owning the entity, or {@code null} for a local entity
+     * @param ownerInfo the entity as read from the owner's {@code .model}, or {@code null}
+     * @param gates this intent's resolved gates
+     * @param projectName the project the local convention roles are prefixed with
+     * @param compositionParents the local composition parents, for a child gated by its root
+     * @return the comma-separated write roles
+     */
+    private static String createFromWriteGate(String entity, UsesIntent owner, CrossModelSupport.TargetInfo ownerInfo,
+            PermissionSupport.Gates gates, String projectName, Map<String, String> compositionParents) {
+        if (owner == null) {
+            return gates.writeGate(projectName, IntentEntities.compositionPerspective(entity, compositionParents), entity);
+        }
+        if (ownerInfo != null && ownerInfo.writeRoles() != null && !ownerInfo.writeRoles()
+                                                                             .isBlank()) {
+            return ownerInfo.writeRoles();
+        }
+        String perspective = ownerInfo != null ? ownerInfo.perspectiveName() : entity;
+        return owner.resolveProject() + "." + perspective + "." + entity + "FullAccess";
     }
 
     /**

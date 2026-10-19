@@ -930,6 +930,13 @@ class GlueGenerator {
         // reference renders as its own literal into a destination nothing ever publishes on. An absent
         // one is the lifecycle suffix that shape implied: none for a create, -transitioned otherwise.
         context.put("topicSuffix", strOr(item, "topicSuffix", truthy(item, "isCreate") ? "" : "-transitioned"));
+        // The role gate of the click (issue #7913): the write gates of the source and the target, each
+        // a comma-separated role list written into a Java string literal. A .glue written before the
+        // keys existed carries neither, and an absent gate renders as an empty one that no caller
+        // satisfies - a run() refused to everyone until the application is regenerated from its intent,
+        // never the ungated one it used to be.
+        context.put("sourceWriteRolesJavaLiteral", JavaLiterals.escape(strOr(item, "sourceWriteRoles", "")));
+        context.put("targetWriteRolesJavaLiteral", JavaLiterals.escape(strOr(item, "targetWriteRoles", "")));
         context.put("fromJavaPerspective", sanitize(item, "fromPerspective"));
         // The SOURCE's gen folder / owning project: this project unless the source belongs to another
         // model (intent `fromUses:`). That is what lets a create-from be authored on the module owning
@@ -1019,6 +1026,9 @@ class GlueGenerator {
         // The `when` guard over the loaded source, spelled with the SDK evaluator fully qualified: the
         // transition controller, unlike the posting and create-from handlers, imports no Calc.
         bindExpression(context, item, "guardReading", "guardExpr", true);
+        // The role gate of the click (issue #7913), as for a create-from: a .glue written before the key
+        // existed renders an empty gate that no caller satisfies, never the ungated run() it used to be.
+        context.put("writeRolesJavaLiteral", JavaLiterals.escape(strOr(item, "writeRoles", "")));
         context.put("javaPerspective", sanitize(item, "perspective"));
         context.put("notifyRelationLoads", relationLoads(item.get("notifyRelationLoads"), parameters));
         context.put("javaForEachPerspective", NamingHelper.sanitizeJavaIdentifier(strOr(item, "forEachPerspective", "")));
