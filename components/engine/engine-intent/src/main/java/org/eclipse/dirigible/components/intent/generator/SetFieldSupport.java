@@ -186,6 +186,20 @@ public final class SetFieldSupport {
         return NOW_JAVA_TYPES.containsKey(type);
     }
 
+    /**
+     * The Java expression for "now" in the type the generated entity declares for a field of this
+     * intent type - {@code java.time.Instant.now()} for a {@code timestamp}, {@code
+     * java.time.LocalDate.now()} for a {@code date}. A {@code stampOn: { status }} field (#7874) is
+     * stamped with it.
+     *
+     * @param type the intent field type
+     * @return the expression, or {@code null} for a type that holds no moment
+     */
+    public static String nowExpression(String type) {
+        String javaType = type == null ? null : NOW_JAVA_TYPES.get(type);
+        return javaType == null ? null : "java.time." + javaType + ".now()";
+    }
+
     private static FieldIntent fieldOf(EntityIntent entity, String name) {
         for (FieldIntent field : entity.getFields()) {
             if (name.equals(field.getName())) {

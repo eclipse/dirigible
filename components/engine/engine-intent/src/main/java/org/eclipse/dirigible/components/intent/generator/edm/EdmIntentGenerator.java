@@ -729,6 +729,7 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
             putProcessDeleteGuards(entityMap, entity, model);
             putWorkflowStatus(entityMap, entity, model, displacedStatuses);
             putLifecycle(entityMap, entity, model);
+            putStatusStamps(entityMap, entity);
             if (entity.getHierarchy() != null && !entity.getHierarchy()
                                                         .isBlank()) {
                 // The tree edge: the FK property of the entity's self-relation named by `hierarchy`.
@@ -1476,8 +1477,10 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
         p.put("dataType", dataType);
         p.put("dataNullable", field.isRequired() || field.isPrimaryKey() ? "false" : "true");
         // Read-only in generated forms (rendered in the read-only details block, not an editable input):
-        // an author-marked field, or a uuid (a system/business key, not user input).
-        if (field.isReadOnly() || "uuid".equalsIgnoreCase(field.getType())) {
+        // an author-marked field, a uuid (a system/business key, not user input), or a status stamp
+        // (#7874), which the repository writes on the status move - the same flag is what drops it from
+        // a REST create and keeps the stored value on a full update.
+        if (field.isReadOnly() || "uuid".equalsIgnoreCase(field.getType()) || field.getStampOn() != null) {
             p.put("isReadOnlyProperty", "true");
         }
         // A uuid field is platform-generated: the generated repository assigns a random UUID on create
@@ -3268,6 +3271,41 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
             ids.add(matcher.group(1));
         }
         return String.join(",", ids);
+    }
+
+    /**
+     * The status stamps ({@code stampOn: { status }}, #7874) the generated repository applies on every
+     * write that moves the record INTO a stamped status: {@code statusStamps} lists one {@code {
+     * property, statusId, nowExpression }} per stamped field and {@code statusStampProperty} names the
+     * status property the moves are read off. Both are absent when no field stamps, so a model without
+     * the key generates byte-identically. The status id travels as a string: the parameter graph types
+     * every JSON number as a {@code Double}, which would render as {@code 2.0}.
+     */
+    private static void putStatusStamps(Map<String, Object> entityMap, EntityIntent entity) {
+        RelationIntent status = entityStatusRelation(entity);
+        if (status == null) {
+            return; // the parser already refused a stamp without a status relation
+        }
+        List<Map<String, Object>> stamps = new ArrayList<>();
+        for (FieldIntent field : entity.getFields()) {
+            String nowExpression = SetFieldSupport.nowExpression(field.getType());
+            if (field.getStampOn() == null || field.getStampOn()
+                                                   .getStatus() == null
+                    || nowExpression == null) {
+                continue;
+            }
+            Map<String, Object> stamp = new LinkedHashMap<>();
+            stamp.put("property", IntentNaming.pascalCase(field.getName()));
+            stamp.put("statusId", String.valueOf(field.getStampOn()
+                                                      .getStatus()));
+            stamp.put("nowExpression", nowExpression);
+            stamps.add(stamp);
+        }
+        if (stamps.isEmpty()) {
+            return;
+        }
+        entityMap.put("statusStampProperty", IntentNaming.pascalCase(status.getName()));
+        entityMap.put("statusStamps", stamps);
     }
 
     private static void putLifecycle(Map<String, Object> entityMap, EntityIntent entity, IntentModel model) {

@@ -1219,6 +1219,29 @@ entities:
 Propose `renamedFrom:` whenever you rename a field of an entity that may already hold rows; propose
 `dropped:` only when the user asks for the data to go, never as part of a rename.
 
+**When the record entered a status (`stampOn: { status: X }`).** For "when was this approved /
+submitted / shipped", declare it on the field instead of adding a step in front of each status write:
+a `timestamp` field (the current instant) or a `date` field (today) with `stampOn: { status: X }`,
+where `X` is a seeded name or id of the entity's own `function: EntityStatus` relation. The generated
+repository writes it in the same statement as every move INTO `X`, whoever makes it - a workflow
+`setRelationField`, a `transitions:` button, a REST update, a create that lands in `X` through
+`init:`. A write that leaves the status where it was does not re-stamp it; leaving `X` and coming
+back records the latest arrival; leaving keeps the value; a move the lifecycle, a check or a guard
+refuses stamps nothing. The field is read-only to callers. Do not add `required: true` (it is empty
+until the status is first reached), a `defaultValue`, `number:`, a calculation, `aggregate:` or
+`dependsOn` to it, and stamp each status on at most one field - all are refused. It needs no
+`setField ... "{now}"` step:
+
+```yaml
+entities:
+  - name: Order
+    fields:
+      - { name: submittedAt, type: timestamp, stampOn: { status: SUBMITTED } }
+      - { name: approvedAt,  type: timestamp, stampOn: { status: APPROVED } }
+    relations:
+      - { name: Status, kind: manyToOne, to: OrderStatus, function: EntityStatus, init: SUBMITTED }
+```
+
 **Custom imports (`imports:` on an entity):** a multi-line string of Java `import ...;` lines injected
 verbatim into that entity's generated repository, so a calculated-field action (or any custom class)
 can be referenced from the calculated fields by simple name. Pair it with `calculatedActionOnCreate`:
@@ -2802,8 +2825,8 @@ is unclassified, Generate reports the aggregate as lifecycle-blind and the total
 
 #### Statuses may be named, not numbered
 
-Everywhere the intent names a status - `transitions[].from` / `setStatus`, a `lifecycle:` edge, a relation's `init:`, a
-`setRelationField` `value:`, `abortOn.status`, a check's `status`/`setStatus`, `immutableWhen`, a
+Everywhere the intent names a status - `transitions[].from` / `setStatus`, a `lifecycle:` edge, a field's
+`stampOn.status`, a relation's `init:`, a `setRelationField` `value:`, `abortOn.status`, a check's `status`/`setStatus`, `immutableWhen`, a
 posting's `event.when`, the `event.when` of a `notifications` / `integrations` / `outbound` entry, a
 report's `filter`, the status condition of a `schedules[].where` row query or of a create-from's
 `items: where:` rule - use the **seeded name** instead of the id:
@@ -4807,6 +4830,7 @@ or a seeded name.
 | serviceTask `onError` | a declared step or `end` - `delegate:` and non-fan-out `notify:` steps only; `{error}` (a whole-value `setField` value) is readable on the route |
 | serviceTask `clearField` | a `string`/`text` field of the trigger entity - erases it; takes no `value`, not combinable with `setField`/`setRelationField` |
 | serviceTask `setField` value | a literal on a `string`/`text` field; exactly `"{now}"` on a `timestamp`/`date` field (the moment the step runs) - `{now}` nowhere else |
+| field `stampOn` | `{ status: <seeded name or id> }` of the entity's `function: EntityStatus` relation, on a `timestamp`/`date` field that is not `required` and has no other writer |
 | process `vars` | `[{ name: <identifier>, clearAfter: <serviceTask/userTask step> }]`; step `produces:`/`uses:` list declared var names |
 | process `abortOn` | `{ status: <id> \| [ids], then: <serviceTask> \| end }` (trigger entity needs a `function: EntityStatus` relation) |
 | relation `whenMasterDeleted` | `cascade` (default - a delete of the master deletes the children it owns), `refuse` (the master's delete is rejected while children exist); composition relations only |

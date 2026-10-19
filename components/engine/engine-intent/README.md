@@ -333,6 +333,27 @@ declared, a record must also be created in that status. At authoring time the gr
 `transitions:`, a status-setting workflow step and a check's rejection are validated against, so the
 buttons and the graph cannot disagree.
 
+## stampOn - when the record entered a status
+
+```yaml
+- name: Order
+  fields:
+    - { name: submittedAt, type: timestamp, stampOn: { status: SUBMITTED } }
+    - { name: approvedOn,  type: date,      stampOn: { status: APPROVED } }
+  relations:
+    - { name: Status, kind: manyToOne, to: OrderStatus, function: EntityStatus, init: SUBMITTED }
+```
+
+A `timestamp` (`Instant.now()`) or `date` (`LocalDate.now()`) field records when the record ENTERED
+the status, a seeded name or id of the entity's `function: EntityStatus` relation. The generated
+**repository** writes it in the same statement as the move, whoever performs it: a workflow
+`setRelationField`, a `transitions:` button, a REST update, a create that lands in the status
+(`init:`). A write that leaves the status where it was does not re-stamp, re-entering it records the
+latest arrival, and leaving it keeps the value. A refused move (lifecycle, check, guard) stamps
+nothing. The field is read-only to callers. Refused at parse: any other field type, `required: true`,
+a `defaultValue` / `number:` / calculation / `aggregate:` / `dependsOn` beside it, two fields stamping
+the same status, and an entity without a status relation.
+
 ## phases - the enrichment channel
 
 An enrichment a listener computes on create - a costing pool, a snapshot column, an external lookup -

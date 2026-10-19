@@ -233,6 +233,13 @@ final class StatusSymbolResolver {
                     rewriteWhen(field, "visibleWhen", statusRelation, status,
                             "entity [" + entityName + "] field [" + text(field, "name") + "] visibleWhen");
                 }
+                // A status stamp (#7874) names the status whose arrival the field records - always one of
+                // the record's own, as for the lifecycle graph.
+                Map<?, ?> stampOn = field == null ? null : asMap(field.get("stampOn"));
+                if (stampOn != null) {
+                    putResolved(stampOn, "status", status,
+                            "entity [" + entityName + "] field [" + text(field, "name") + "] stampOn status");
+                }
             }
             if (entity.get("visibleWhen") != null) {
                 String master = compositionMasterOf(entity);

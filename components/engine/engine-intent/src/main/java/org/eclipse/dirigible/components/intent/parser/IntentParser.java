@@ -98,6 +98,7 @@ import org.eclipse.dirigible.components.intent.model.ScheduleConditionIntent;
 import org.eclipse.dirigible.components.intent.model.SettlementIntent;
 import org.eclipse.dirigible.components.intent.model.ScheduleIntent;
 import org.eclipse.dirigible.components.intent.model.SeedIntent;
+import org.eclipse.dirigible.components.intent.model.StatusStampIntent;
 import org.eclipse.dirigible.components.intent.model.StepIntent;
 import org.eclipse.dirigible.components.intent.model.TransitionIntent;
 import org.eclipse.dirigible.components.intent.model.UniqueIntent;
@@ -417,6 +418,7 @@ public final class IntentParser {
         validateGenerates(model, entityNames, usesAliases, issues);
         validateTransitions(model, entityNames, issues);
         validateLifecycles(model, issues);
+        validateStatusStamps(model, issues);
         validatePostings(model, usesAliases, issues);
         validateReports(model, entityNames, issues);
         validateWidgets(model, issues);
@@ -10386,6 +10388,91 @@ public final class IntentParser {
             validateTransitionsAgainstLifecycle(model, entity, edges, statuses, issues);
             validateStatusWritesAgainstLifecycle(model, entity, status, edges, reachable, statuses, issues);
         }
+    }
+
+    /**
+     * Status stamps ({@code stampOn: { status: X }}, #7874): a field the generated repository writes
+     * with the moment of every move into {@code X}. The repository is then the field's ONLY writer, so
+     * everything else that would write it is refused - a {@code defaultValue}, a {@code number:}, a
+     * calculation, an aggregate footer, a {@code dependsOn} copy - and so is {@code required: true},
+     * since the field is empty until the status is first reached. The status is always one of the
+     * record's own {@code function: EntityStatus} relation, and one field records one arrival: two
+     * fields stamping the same status would be two names for one fact.
+     */
+    private static void validateStatusStamps(IntentModel model, List<String> issues) {
+        for (EntityIntent entity : model.getEntities()) {
+            Map<Integer, String> stampedBy = new LinkedHashMap<>();
+            for (FieldIntent field : entity.getFields()) {
+                StatusStampIntent stamp = field.getStampOn();
+                if (stamp == null) {
+                    continue;
+                }
+                String subject = "entity [" + entity.getName() + "] field [" + field.getName() + "] stampOn";
+                validateStatusStampWriters(field, subject, issues);
+                Integer status = validateStatusStampStatus(model, entity, stamp, subject, issues);
+                String other = status == null ? null : stampedBy.putIfAbsent(status, field.getName());
+                if (other != null) {
+                    issues.add(subject + " stamps the same status as field [" + other + "] - one field records one arrival");
+                }
+            }
+        }
+    }
+
+    /** A stamped field takes the moment of the move and nothing else writes it. */
+    private static void validateStatusStampWriters(FieldIntent field, String subject, List<String> issues) {
+        if (field.getType() == null || !SetFieldSupport.isNowFieldType(field.getType())) {
+            issues.add(subject + " needs a timestamp or date field, not [" + (field.getType() == null ? "string" : field.getType())
+                    + "] - the stamp is the moment the record entered the status");
+        }
+        if (field.isRequired()) {
+            issues.add(subject + " cannot be required: true - the field stays empty until the record first enters the status");
+        }
+        if (field.getDefaultValue() != null) {
+            issues.add(subject + " cannot declare a defaultValue - the status move is the field's only writer");
+        }
+        if (field.getNumber() != null) {
+            issues.add(subject + " cannot declare number: - the status move is the field's only writer");
+        }
+        if (field.isCalculated()) {
+            issues.add(subject + " cannot be calculated - the status move is the field's only writer");
+        }
+        if (field.isAggregate()) {
+            issues.add(subject + " cannot be an aggregate - the status move is the field's only writer");
+        }
+        if (field.getDependsOn() != null) {
+            issues.add(subject + " cannot declare dependsOn - the status move is the field's only writer");
+        }
+    }
+
+    /**
+     * The stamped status: a status of the entity's own {@code function: EntityStatus} relation, and a
+     * seeded one when the nomenclature is seeded in this model (a cross-model one is seeded in its
+     * owner model, where its ids cannot be checked).
+     *
+     * @return the status id when it may be stamped, otherwise {@code null} with the issue recorded
+     */
+    private static Integer validateStatusStampStatus(IntentModel model, EntityIntent entity, StatusStampIntent stamp, String subject,
+            List<String> issues) {
+        Integer id = stamp.getStatus();
+        if (id == null) {
+            issues.add(subject + " names no status - declare stampOn: { status: <seed name | id> }");
+            return null;
+        }
+        RelationIntent relation = LifecycleStages.statusRelation(entity);
+        if (relation == null) {
+            issues.add(subject + " requires the entity to declare a function: EntityStatus relation - the stamp records a move of it");
+            return null;
+        }
+        if (relation.isCrossModel()) {
+            return id;
+        }
+        Map<Integer, String> statuses = LifecycleStages.seededStatuses(model, relation.getTo());
+        if (!statuses.containsKey(id)) {
+            issues.add(subject + " names [" + id + "], which is not a seeded status of [" + relation.getTo() + "] - known: "
+                    + statusNames(statuses));
+            return null;
+        }
+        return id;
     }
 
     /**
