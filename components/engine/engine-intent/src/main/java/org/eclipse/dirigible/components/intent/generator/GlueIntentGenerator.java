@@ -1919,11 +1919,13 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
         EntityIntent anchor = fanOut == null ? null : entity;
         boolean dropped = fanOutRequested && fanOut == null;
         NotificationSupport.Plan plan = notify == null || dropped ? null
-                : NotificationSupport.plan(notify.getTo(), notify.getSubject(), notify.getBody(), notify.getHtml(), null, about, anchor,
-                        byName, compositionParents, crossModelLookup(model, context));
+                : NotificationSupport.plan(notify.getTo(), notify.getCc(), notify.getBcc(), notify.getSubject(), notify.getBody(),
+                        notify.getHtml(), null, about, anchor, byName, compositionParents, crossModelLookup(model, context));
         if (notify != null && plan == null && !dropped) {
-            reportDroppedGlue(context, subject + " recipient [" + notify.getTo() + "] is not a resolvable field or relation.field of ["
-                    + (about == null ? "?" : about.getName()) + "] - the mail was NOT generated");
+            reportDroppedGlue(context,
+                    subject + " recipient [" + notify.getTo() + "]" + copyRecipients(notify)
+                            + " is not a resolvable field or relation.field of [" + (about == null ? "?" : about.getName())
+                            + "] - the mail was NOT generated");
         }
         // `attach: recordPrint` attaches the ANCHOR record's document instead of the row's - one
         // document, many recipients - so it is resolved (and later rendered) against the record.
@@ -1944,6 +1946,19 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
         fields.put("notifyBodyExpression", send ? plan.bodyExpression() : "\"\"");
         if (send) {
             putHtmlExpression(fields, "notifyHtmlExpression", plan);
+            // The copy recipients (#7935) are carried only when authored, so a block without them keeps
+            // its descriptor - and the generated sender - byte-identical.
+            if (plan.ccExpression() != null) {
+                fields.put("notifyCcExpression", plan.ccExpression());
+            }
+            if (plan.bccExpression() != null) {
+                fields.put("notifyBccExpression", plan.bccExpression());
+            }
+            // An @var: recipient reads the process instance, so a fan-out's per-row send method needs the
+            // execution handed in.
+            if (plan.usesVariables()) {
+                fields.put("notifyReadsVariables", "true");
+            }
         }
         // Whether a per-row message quotes the anchor record - the fan-out templates then hand the
         // loaded record to their send method, and only then (an argument nothing reads is noise).
@@ -5141,6 +5156,20 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
      * one is declared, so a block without {@code html:} describes, and renders, exactly what it did
      * before the key existed.
      */
+    /** The authored copy recipients, for a dropped-block report - empty when the block has none. */
+    private static String copyRecipients(NotificationIntent notify) {
+        String copies = "";
+        if (notify.getCc() != null && !notify.getCc()
+                                             .isBlank()) {
+            copies += " / cc [" + notify.getCc() + "]";
+        }
+        if (notify.getBcc() != null && !notify.getBcc()
+                                              .isBlank()) {
+            copies += " / bcc [" + notify.getBcc() + "]";
+        }
+        return copies;
+    }
+
     private static void putHtmlExpression(Map<String, Object> fields, String key, NotificationSupport.Plan plan) {
         if (plan.htmlExpression() != null) {
             fields.put(key, plan.htmlExpression());

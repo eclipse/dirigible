@@ -43,6 +43,18 @@ public class NotificationIntent {
     private Map<String, Object> event = new LinkedHashMap<>();
     private String channel = "email";
     private String to;
+    /**
+     * Optional copy recipient (dirigible #7935), in exactly the forms {@link #to} takes - plus, like
+     * {@link #to} and {@link #bcc}, a process variable through {@code @var:<name>} on a process step. A
+     * value may hold a comma-separated list; it is passed to the mail client as one entry. Generated
+     * only on a process step's notify block for now; elsewhere it is refused at parse.
+     */
+    private String cc;
+    /**
+     * Optional blind-copy recipient (dirigible #7935) - the {@link #cc} rules, delivered without a
+     * header naming it.
+     */
+    private String bcc;
     private String subject;
     private String body;
     /**
@@ -117,8 +129,8 @@ public class NotificationIntent {
      * {@code NotificationIntentTest} pins the two together, since a key added to {@code fromMap} and
      * not to this set would go straight back to being unauthorable.
      */
-    public static final Set<String> BLOCK_KEYS =
-            Set.of("to", "subject", "body", "html", "attach", "language", "languageFrom", "fileName", "forEach", "channel", "outcome");
+    public static final Set<String> BLOCK_KEYS = Set.of("to", "cc", "bcc", "subject", "body", "html", "attach", "language", "languageFrom",
+            "fileName", "forEach", "channel", "outcome");
 
     /**
      * The kind {@link #getAttach()} reports for the map shape {@code attach: { report, bind }}. It is
@@ -144,6 +156,8 @@ public class NotificationIntent {
         }
         NotificationIntent notify = new NotificationIntent();
         notify.setTo(string(map.get("to")));
+        notify.setCc(string(map.get("cc")));
+        notify.setBcc(string(map.get("bcc")));
         notify.setSubject(string(map.get("subject")));
         notify.setBody(string(map.get("body")));
         notify.setHtml(string(map.get("html")));
@@ -202,6 +216,22 @@ public class NotificationIntent {
 
     public void setTo(String to) {
         this.to = to;
+    }
+
+    public String getCc() {
+        return cc;
+    }
+
+    public void setCc(String cc) {
+        this.cc = cc;
+    }
+
+    public String getBcc() {
+        return bcc;
+    }
+
+    public void setBcc(String bcc) {
+        this.bcc = bcc;
     }
 
     public String getSubject() {

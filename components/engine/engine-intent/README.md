@@ -619,6 +619,25 @@ on a string field is refused, since it would store the text `{now}`.
 Decisions may test `relation.field` paths (`customer.creditLimit > 10000`) - resolvers are
 generated. Tasks surface in the Inbox and inline on the record's page.
 
+A `serviceTask` may instead SEND: `args: { notify: { to, subject, body, ... } }`. Its notify block also
+takes `cc:` and `bcc:` (the forms `to:` takes) and, on every recipient key, `@var:<name>` - a process
+variable an earlier step computed, declared under the process `vars:` and listed in the step's `uses:`.
+A value may be a comma-separated list. The step sends when any of `to`/`cc`/`bcc` is non-blank, so it
+may omit `to:`. `cc:`/`bcc:`/`@var:` are refused on every other notify block.
+
+```yaml
+    vars:
+      - { name: approverEmails }
+    steps:
+      - { name: collect, kind: serviceTask, args: { delegate: custom.CollectApprovers, produces: [approverEmails], next: notify } }
+      - name: notify
+        kind: serviceTask
+        args:
+          notify: { to: "@var:approverEmails", cc: requestedBy, bcc: "@config:ARCHIVE_EMAIL", subject: "Closing {name}", body: "Done." }
+          uses: [approverEmails]
+          next: end
+```
+
 ## forms - task UI
 
 ```yaml

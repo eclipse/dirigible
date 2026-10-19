@@ -3397,6 +3397,25 @@ public final class IntentParser {
      */
     private static void validateNotifyBlock(NotificationIntent notify, String subject, String aboutEntity, IntentModel model,
             boolean fanOutSupported, List<String> issues) {
+        validateNotifyBlock(notify, subject, aboutEntity, model, fanOutSupported, null, issues);
+    }
+
+    /**
+     * The notify block of a call site that may read process variables - a process step's, where
+     * {@code vars} names what the step may read through {@code @var:}. Only there are {@code cc:} /
+     * {@code bcc:} generated (#7935), so everywhere else ({@code vars} {@code null}) both are refused
+     * rather than parsed and silently never sent.
+     *
+     * @param notify the block, may be {@code null} (nothing to validate)
+     * @param subject the message prefix identifying the call site
+     * @param aboutEntity the entity the message is about, or {@code null} when it is already unknown
+     * @param model the parsed model (to resolve the document-master shape)
+     * @param fanOutSupported whether this call site generates a {@code forEach} fan-out
+     * @param vars the process variables the step may read, or {@code null} outside a process step
+     * @param issues the collected issues
+     */
+    private static void validateNotifyBlock(NotificationIntent notify, String subject, String aboutEntity, IntentModel model,
+            boolean fanOutSupported, NotifyVars vars, List<String> issues) {
         if (notify == null) {
             return;
         }
@@ -3405,25 +3424,18 @@ public final class IntentParser {
             issues.add(subject + " has unsupported channel [" + channel + "] (supported: email)");
         }
         String to = notify.getTo();
-        if (to == null || to.isBlank()) {
-            issues.add(subject + " has no recipient (to)");
-        } else if (to.trim()
-                     .startsWith(NotificationSupport.CONFIG_PREFIX)) {
-            // An operations mailbox differs per environment, so the address may name a configuration
-            // KEY read at send time (#7385). An empty one is refused here: it would resolve to nothing
-            // on every environment, which reads exactly like a record with nobody to mail.
-            if (to.trim()
-                  .substring(NotificationSupport.CONFIG_PREFIX.length())
-                  .isBlank()) {
-                issues.add(subject + " recipient [" + to.trim()
-                        + "] has an empty @config: key - name the configuration key the address is read from");
-            }
-        } else if (!to.contains("@") && to.chars()
-                                          .filter(c -> c == '.')
-                                          .count() >= 2) {
-            issues.add(subject + " recipient [" + to
-                    + "] uses a multi-hop path, which is not supported - use a direct field, a one-hop relation.field, or a literal address");
+        boolean copies = !isBlank(notify.getCc()) || !isBlank(notify.getBcc());
+        if (copies && vars == null) {
+            issues.add(subject + " declares cc/bcc, which is generated only on a serviceTask's args.notify - send the copy from a"
+                    + " process step");
         }
+        // A copy recipient is enough on a step: a mail to an archive mailbox needs no addressee of its own.
+        if ((to == null || to.isBlank()) && !(copies && vars != null)) {
+            issues.add(subject + " has no recipient (to)");
+        }
+        validateNotifyRecipient(to, subject + " recipient", vars, issues);
+        validateNotifyRecipient(notify.getCc(), subject + " cc", vars, issues);
+        validateNotifyRecipient(notify.getBcc(), subject + " bcc", vars, issues);
         validateNotifyHtml(notify, subject, issues);
         // A fan-out sends one message per row of a related entity instead of one about the record, so
         // from here on every path (the recipient, the placeholders, the attachment) is about the ROW -
@@ -3520,6 +3532,84 @@ public final class IntentParser {
             // so only fields of the anchor itself are readable there, exactly as the `record.` scope is
             // limited to one field of it.
             validateFileNamePattern(notify.getFileName(), documentEntity, subject + " fileName", model, issues, !recordPrint, false);
+        }
+    }
+
+    /**
+     * The process variables a process step's notify block may read through {@code @var:} (#7935): the
+     * names the process declares under {@code vars:}, and the ones the step lists in {@code uses:}.
+     * Both are required - the declaration is what makes step data written down, and {@code uses:} is
+     * what says this step reads it.
+     */
+    private record NotifyVars(Set<String> declared, Set<String> used) {
+
+        static NotifyVars of(ProcessIntent process, StepIntent step) {
+            Set<String> declared = new HashSet<>();
+            for (ProcessVarIntent var : process.getVars()) {
+                if (var.getName() != null) {
+                    declared.add(var.getName()
+                                    .trim());
+                }
+            }
+            Set<String> used = new HashSet<>();
+            if (step.getArgs() != null && step.getArgs()
+                                              .get("uses") instanceof List<?> list) {
+                for (Object entry : list) {
+                    if (entry != null) {
+                        used.add(entry.toString()
+                                      .trim());
+                    }
+                }
+            }
+            return new NotifyVars(declared, used);
+        }
+    }
+
+    /**
+     * One recipient key of a notify block - {@code to}, {@code cc} or {@code bcc}, each taking the same
+     * forms: a literal address, an {@code @config:KEY} reference read at send time, a direct field, a
+     * one-hop {@code relation.field}, or on a process step an {@code @var:<name>} process variable.
+     *
+     * @param value the authored value, may be blank (nothing to check)
+     * @param where the message prefix naming the call site and the key
+     * @param vars the process variables the step may read, or {@code null} outside a process step
+     * @param issues the collected issues
+     */
+    private static void validateNotifyRecipient(String value, String where, NotifyVars vars, List<String> issues) {
+        if (isBlank(value)) {
+            return;
+        }
+        String trimmed = value.trim();
+        if (trimmed.startsWith(NotificationSupport.CONFIG_PREFIX)) {
+            // An operations mailbox differs per environment, so the address may name a configuration
+            // KEY read at send time (#7385). An empty one is refused here: it would resolve to nothing
+            // on every environment, which reads exactly like a record with nobody to mail.
+            if (trimmed.substring(NotificationSupport.CONFIG_PREFIX.length())
+                       .isBlank()) {
+                issues.add(where + " [" + trimmed + "] has an empty @config: key - name the configuration key the address is read from");
+            }
+        } else if (trimmed.startsWith(NotificationSupport.VAR_PREFIX)) {
+            // A list an earlier step computed (#7935) - the approvers of a document - which no field of
+            // the record carries. Only a process step runs inside an instance that holds it.
+            String name = trimmed.substring(NotificationSupport.VAR_PREFIX.length())
+                                 .trim();
+            if (vars == null) {
+                issues.add(where + " [" + trimmed + "] reads a process variable, which only a process step's notify can - this block"
+                        + " runs outside any process instance");
+            } else if (name.isEmpty()) {
+                issues.add(where + " [" + trimmed + "] has an empty @var: name - name the process var the address is read from");
+            } else if (!vars.declared()
+                            .contains(name)) {
+                issues.add(where + " [" + trimmed + "] names undeclared var [" + name + "] - declare it under the process `vars:`");
+            } else if (!vars.used()
+                            .contains(name)) {
+                issues.add(where + " [" + trimmed + "] reads var [" + name + "], which the step does not list in `uses:` - add it there");
+            }
+        } else if (!value.contains("@") && value.chars()
+                                                .filter(c -> c == '.')
+                                                .count() >= 2) {
+            issues.add(where + " [" + value
+                    + "] uses a multi-hop path, which is not supported - use a direct field, a one-hop relation.field, or a literal address");
         }
     }
 
@@ -3773,6 +3863,13 @@ public final class IntentParser {
         if (to.startsWith(RECORD_SCOPE + ".")) {
             issues.add(subject + " recipient [" + to + "] is record-scoped - a fan-out sends to its ROWS, so a record-scoped"
                     + " address would mail the same recipient once per row");
+        }
+        for (String[] copy : new String[][] {{"cc", notify.getCc()}, {"bcc", notify.getBcc()}}) {
+            if (copy[1] != null && copy[1].trim()
+                                          .startsWith(RECORD_SCOPE + ".")) {
+                issues.add(subject + " " + copy[0] + " [" + copy[1].trim() + "] is record-scoped - a copy recipient resolves per ROW"
+                        + " like the recipient, so a record-scoped address would be copied once per row");
+            }
         }
         List<String> paths = new ArrayList<>();
         collectRecordScopedPaths(notify.getSubject(), paths);
@@ -8365,7 +8462,8 @@ public final class IntentParser {
                         issues.add(stepSubject + " cannot be combined with setField/clearField/setRelationField/call/delegate - give the"
                                 + " send its own serviceTask");
                     }
-                    validateNotifyBlock(NotificationIntent.fromMap(notifyArg), stepSubject, triggerEntity, model, true, issues);
+                    validateNotifyBlock(NotificationIntent.fromMap(notifyArg), stepSubject, triggerEntity, model, true,
+                            NotifyVars.of(process, step), issues);
                 }
             }
             String next = stepArg(step, "next");

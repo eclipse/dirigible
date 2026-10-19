@@ -1047,9 +1047,9 @@ class GlueGenerator {
      */
     private static void bindSend(Map<String, Object> item, Map<String, Object> context, Map<String, Object> parameters) {
         copy(context, item, "process", "step", "className", "entity", "perspective", "keyProperty", "keyAccessor", "forEach",
-                "forEachFkProperty", "forEachKeyProperty", "notifyToExpression", "notifySubjectExpression", "notifyBodyExpression",
-                "notifyHtmlExpression", "notifyRecordScoped", "attachKeyProperty", "attach", "attachEntity", "attachLanguageFkProperty",
-                "attachLanguageTargetEntity", "attachReport");
+                "forEachFkProperty", "forEachKeyProperty", "notifyToExpression", "notifyCcExpression", "notifyBccExpression",
+                "notifyReadsVariables", "notifySubjectExpression", "notifyBodyExpression", "notifyHtmlExpression", "notifyRecordScoped",
+                "attachKeyProperty", "attach", "attachEntity", "attachLanguageFkProperty", "attachLanguageTargetEntity", "attachReport");
         context.put("javaPerspective", sanitize(item, "perspective"));
         context.put("notifyRelationLoads", relationLoads(item.get("notifyRelationLoads"), parameters));
         context.put("javaForEachPerspective", NamingHelper.sanitizeJavaIdentifier(strOr(item, "forEachPerspective", "")));

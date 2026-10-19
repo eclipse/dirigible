@@ -124,6 +124,18 @@ public final class NotificationSupport {
     private static final String CONFIG_EXPRESSION = "org.eclipse.dirigible.sdk.core.Configurations.get(";
 
     /**
+     * The {@code @var:<name>} prefix a recipient may carry on a process step's notify block (issue
+     * #7935) - a declared process variable an earlier step computed, such as the approvers of a
+     * document, which no field of the record carries. The parser admits it only there, and only for a
+     * var the step lists in {@code uses:}, so the rendered read always has an {@code execution} to
+     * read.
+     */
+    public static final String VAR_PREFIX = "@var:";
+
+    /** The Java expression a {@link #VAR_PREFIX} recipient resolves to, less the quoted name. */
+    private static final String VAR_EXPRESSION = "(String) execution.getVariable(";
+
+    /**
      * The call an interpolated value of an {@code html:} alternative is wrapped in, less the argument
      * and the closing parenthesis. Fully qualified for the same reason as {@link #CONFIG_EXPRESSION}.
      */
@@ -196,10 +208,14 @@ public final class NotificationSupport {
      * only the links its message actually uses. The guard travels as the NEUTRAL terms the glue carries
      * (issue #7425) - empty for no guard - and the template layer renders the Java boolean.
      * {@code htmlExpression} is the block's marked-up alternative with every interpolated value
-     * HTML-escaped, or {@code null} when none is declared.
+     * HTML-escaped, or {@code null} when none is declared. {@code ccExpression} / {@code bccExpression}
+     * are the copy recipients, {@code null} when not authored, and {@code usesVariables} reports a
+     * recipient read off the process instance ({@link #VAR_PREFIX}), which needs the step's
+     * {@code execution} in scope.
      */
-    public record Plan(List<RelationLoad> loads, List<Map<String, Object>> guardTerms, String toExpression, String subjectExpression,
-            String bodyExpression, String htmlExpression, boolean usesRecordUrl, boolean usesInboxUrl) {
+    public record Plan(List<RelationLoad> loads, List<Map<String, Object>> guardTerms, String toExpression, String ccExpression,
+            String bccExpression, String subjectExpression, String bodyExpression, String htmlExpression, boolean usesRecordUrl,
+            boolean usesInboxUrl, boolean usesVariables) {
     }
 
     /**
@@ -297,8 +313,8 @@ public final class NotificationSupport {
         String subjectExpression = resolver.text(notification.getSubject());
         String bodyExpression = resolver.text(notification.getBody());
         String htmlExpression = resolver.html(notification.getHtml());
-        return new Plan(resolver.loads(), guardTerms(when, eventEntity, byName), recipient, subjectExpression, bodyExpression,
-                htmlExpression, resolver.usesRecordUrl(), resolver.usesInboxUrl());
+        return new Plan(resolver.loads(), guardTerms(when, eventEntity, byName), recipient, null, null, subjectExpression, bodyExpression,
+                htmlExpression, resolver.usesRecordUrl(), resolver.usesInboxUrl(), resolver.usesVariables());
     }
 
     /**
@@ -367,16 +383,46 @@ public final class NotificationSupport {
      */
     public static Plan plan(String to, String subject, String body, String html, Object when, EntityIntent entity, EntityIntent anchor,
             Map<String, EntityIntent> byName, Map<String, String> compositionParents, CrossModelLookup crossModel) {
+        return plan(to, null, null, subject, body, html, when, entity, anchor, byName, compositionParents, crossModel);
+    }
+
+    /**
+     * The fan-out translation plan of a notify block that may also carry copy recipients (issue #7935).
+     * {@code cc} / {@code bcc} resolve exactly like {@code to} - per ROW inside a fan-out - and an
+     * unresolvable one drops the block for the same reason an unresolvable {@code to} does.
+     *
+     * @param to the recipient, may be blank when a copy recipient is authored
+     * @param cc the copy recipient, or {@code null}
+     * @param bcc the blind-copy recipient, or {@code null}
+     * @param subject the subject
+     * @param body the plain-text body
+     * @param html the marked-up alternative, or {@code null} for a plain-text message
+     * @param when an optional guard - a comparison, a list of them, or {@code null} for none
+     * @param entity the entity the message is about (a fan-out's row)
+     * @param anchor the fan-out's anchor record, or {@code null} outside a fan-out
+     * @param byName all LOCAL entities by name (to resolve same-model relation targets)
+     * @param compositionParents composition-parent map (to resolve a target's perspective)
+     * @param crossModel resolver for a cross-model relation's owner facts, or {@code null}
+     * @return the plan, or {@code null} if a recipient cannot be resolved
+     */
+    public static Plan plan(String to, String cc, String bcc, String subject, String body, String html, Object when, EntityIntent entity,
+            EntityIntent anchor, Map<String, EntityIntent> byName, Map<String, String> compositionParents, CrossModelLookup crossModel) {
         Resolver resolver = new Resolver(entity, anchor, null, byName, compositionParents, crossModel);
         String recipient = resolver.value(to);
-        if (recipient == null) {
+        String ccExpression = isBlank(cc) ? null : resolver.value(cc);
+        String bccExpression = isBlank(bcc) ? null : resolver.value(bcc);
+        if (recipient == null || !isBlank(cc) && ccExpression == null || !isBlank(bcc) && bccExpression == null) {
             return null; // an unresolvable recipient relation.field - skip rather than email garbage
         }
         String subjectExpression = resolver.text(subject);
         String bodyExpression = resolver.text(body);
         String htmlExpression = resolver.html(html);
-        return new Plan(resolver.loads(), guardTerms(when, entity, byName), recipient, subjectExpression, bodyExpression, htmlExpression,
-                resolver.usesRecordUrl(), resolver.usesInboxUrl());
+        return new Plan(resolver.loads(), guardTerms(when, entity, byName), recipient, ccExpression, bccExpression, subjectExpression,
+                bodyExpression, htmlExpression, resolver.usesRecordUrl(), resolver.usesInboxUrl(), resolver.usesVariables());
+    }
+
+    private static boolean isBlank(String value) {
+        return value == null || value.isBlank();
     }
 
     /**
@@ -483,6 +529,7 @@ public final class NotificationSupport {
         private final Map<String, RelationLoad> loads = new LinkedHashMap<>();
         private boolean usesRecordUrl;
         private boolean usesInboxUrl;
+        private boolean usesVariables;
 
         Resolver(EntityIntent entity, EntityIntent anchor, EntityIntent escalation, Map<String, EntityIntent> byName,
                 Map<String, String> compositionParents, CrossModelLookup crossModel) {
@@ -507,9 +554,14 @@ public final class NotificationSupport {
             return usesInboxUrl;
         }
 
+        boolean usesVariables() {
+            return usesVariables;
+        }
+
         /**
-         * A single value (the {@code to} recipient): an {@code @config:KEY} reference, a literal, a direct
-         * field, or a relation.field.
+         * A single value (a {@code to} / {@code cc} / {@code bcc} recipient): an {@code @config:KEY}
+         * reference, an {@code @var:<name>} process variable, a literal, a direct field, or a
+         * relation.field.
          */
         String value(String raw) {
             if (raw == null || raw.isBlank()) {
@@ -522,6 +574,14 @@ public final class NotificationSupport {
                 // templates and not all of them import the facade.
                 return CONFIG_EXPRESSION + quote(trimmed.substring(CONFIG_PREFIX.length())
                                                         .trim())
+                        + ")";
+            }
+            if (trimmed.startsWith(VAR_PREFIX)) {
+                // Read off the running process instance - the value an earlier step produced. Matched
+                // before the literal-address rule below, which would otherwise quote it for its `@`.
+                usesVariables = true;
+                return VAR_EXPRESSION + quote(trimmed.substring(VAR_PREFIX.length())
+                                                     .trim())
                         + ")";
             }
             if (trimmed.contains("@") || !PATH.matcher(trimmed)

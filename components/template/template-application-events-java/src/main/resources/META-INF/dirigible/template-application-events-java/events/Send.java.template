@@ -6,6 +6,13 @@ package gen.events.${javaGenFolderName};
 #set($recordArgument = "")
 #set($recordParameter = "")
 #end
+## cc:/bcc: (#7935) - only a block that authors one renders the three-recipient shape, so every
+## other sender stays byte-identical.
+#if($notifyCcExpression || $notifyBccExpression)
+#set($notifyCopies = true)
+#else
+#set($notifyCopies = false)
+#end
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -118,7 +125,7 @@ public class ${className} implements JavaDelegate {
         // against the ROW, exactly as the non-fan-out shape renders against the record.
         for (${forEach}Entity entity : rows) {
             try {
-                if (send(${recordArgument}entity#if($attach == "recordPrint"), document#end)) {
+                if (send(${recordArgument}entity#if($attach == "recordPrint"), document#end#if($notifyReadsVariables == "true"), execution#end)) {
                     sent++;
                 } else {
                     skipped++;
@@ -164,7 +171,7 @@ public class ${className} implements JavaDelegate {
     /**
      * Send about one ${forEach}. Returns false when the row has nobody to mail.
      */
-    private boolean send(${recordParameter}${forEach}Entity entity#if($attach == "recordPrint"), Map document#end) {
+    private boolean send(${recordParameter}${forEach}Entity entity#if($attach == "recordPrint"), Map document#end#if($notifyReadsVariables == "true"), DelegateExecution execution#end) {
 #else
         ${entity}Entity entity = new ${entity}Repository().findById(id);
         if (entity == null) {
@@ -188,7 +195,15 @@ public class ${className} implements JavaDelegate {
                 + "/services/web/${projectName}/gen/${genFolderName}/index.html#/inbox";
 #end
         String to = ${notifyToExpression};
+#if($notifyCopies)
+        String cc = #if($notifyCcExpression)${notifyCcExpression}#{else}null#end;
+        String bcc = #if($notifyBccExpression)${notifyBccExpression}#{else}null#end;
+        // A message goes out when ANY recipient key names someone - a copy to an archive mailbox needs
+        // no addressee of its own.
+        if (isBlank(to) && isBlank(cc) && isBlank(bcc)) {
+#else
         if (to == null || to.isBlank()) {
+#end
 #if($notifyOutcomeProperty != "")
             stampNotifySkipped(entity.${notifyOutcomeKeyProperty});
 #end
@@ -278,7 +293,11 @@ public class ${className} implements JavaDelegate {
         String from = Configurations.get("DIRIGIBLE_MAIL_SENDER", "noreply@dirigible.io");
 #if($forEach != "")
         try {
+#if($notifyCopies)
+            Mail.send(from, recipients(to), recipients(cc), recipients(bcc), ${notifySubjectExpression}, parts);
+#else
             Mail.send(from, new String[] {to}, new String[0], new String[0], ${notifySubjectExpression}, parts);
+#end
 #if($notifyOutcomeProperty != "")
             stampNotifyOutcome(entity.${notifyOutcomeKeyProperty}, null);
 #end
@@ -292,7 +311,11 @@ public class ${className} implements JavaDelegate {
         return true;
 #else
         try {
+#if($notifyCopies)
+            Mail.send(from, recipients(to), recipients(cc), recipients(bcc), ${notifySubjectExpression}, parts);
+#else
             Mail.send(from, new String[] {to}, new String[0], new String[0], ${notifySubjectExpression}, parts);
+#end
 #if($notifyOutcomeProperty != "")
             stampNotifyOutcome(entity.${notifyOutcomeKeyProperty}, null);
 #end
@@ -309,6 +332,20 @@ public class ${className} implements JavaDelegate {
         }
 #end
     }
+#if($notifyCopies)
+
+    private static boolean isBlank(String value) {
+        return value == null || value.isBlank();
+    }
+
+    /**
+     * One recipient key as the mail client takes it: a blank key is no entry at all, and a value is ONE
+     * entry even when it holds a comma-separated list - the client parses each entry as an address list.
+     */
+    private static String[] recipients(String value) {
+        return isBlank(value) ? new String[0] : new String[] {value};
+    }
+#end
 #if($attach == "report")
 
     /**
