@@ -1,0 +1,215 @@
+package gen.events.${javaGenFolderName};
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+#if($hasDuplicateKey)
+import org.eclipse.dirigible.components.data.store.java.repository.Criteria;
+#end
+import org.eclipse.dirigible.components.data.store.java.repository.UnitOfWork;
+import org.eclipse.dirigible.sdk.component.Component;
+import org.eclipse.dirigible.sdk.http.Controller;
+import org.eclipse.dirigible.sdk.http.Post;
+import org.eclipse.dirigible.sdk.http.QueryParam;
+import org.eclipse.dirigible.sdk.http.Response;
+import org.eclipse.dirigible.sdk.imports.Camt053;
+import org.eclipse.dirigible.sdk.imports.DelimitedText;
+import org.eclipse.dirigible.sdk.imports.ImportLedger;
+import org.eclipse.dirigible.sdk.imports.ImportResult;
+import org.eclipse.dirigible.sdk.imports.ImportText;
+import org.eclipse.dirigible.sdk.imports.ImportValues;
+import org.eclipse.dirigible.sdk.imports.Mt940;
+import org.eclipse.dirigible.sdk.imports.UploadedFile;
+import org.eclipse.dirigible.sdk.log.Logger;
+import org.eclipse.dirigible.sdk.log.Logging;
+import org.eclipse.dirigible.sdk.security.Roles;
+import org.eclipse.dirigible.sdk.utils.Json;
+
+import gen.${javaGenFolderName}.data.${javaPerspective}.${entity}Entity;
+import gen.${javaGenFolderName}.data.${javaPerspective}.${entity}Repository;
+
+/**
+ * File import ${className}: reads an uploaded ${format} file into ${entity} rows.
+ *
+ * Generated from the intent imports block - do not edit; it is re-generated with the application.
+ * The upload is served under /services/java/<project>/gen/events/${javaGenFolderName}/${className}Import/upload
+ * (a multipart form with one file, or the raw file as the body with ?fileName=), and a job imports a
+ * file it fetched by injecting this bean and calling importFile.
+ *
+ * A file is imported whole or not at all: an unreadable value rejects it (400)#if($hasDuplicateKey), and a record
+ * repeating the duplicate key of a row already imported - or of another record of the file - refuses it
+ * as a duplicate (409)#end. Every attempt is recorded in the ${table}_IMPORTS ledger. After the rows are
+ * committed, every Hook bean is called with them - the place for matching rules; a failing hook is
+ * logged and reported as a warning, and does not undo the import.
+ */
+@Controller
+@Component("${javaGenFolderName}_${className}Import")
+public class ${className}Import {
+
+    /** A contribution called after an import of ${className} committed its rows. */
+    public interface Hook {
+
+        /**
+         * Called once per imported file, after its rows were committed.
+         *
+         * @param result the import's outcome
+         * @param rows the saved rows, in file order
+         */
+        void afterImport(ImportResult result, List<${entity}Entity> rows);
+    }
+
+    private static final Logger LOG = Logging.getLogger("gen.events.${javaGenFolderName}.${className}Import");
+
+    private static final String NAME = ${nameLiteral};
+
+    private static final String TABLE = "${table}";
+
+    private static final ImportValues VALUES = ${valuesExpression};
+
+    private final List<Hook> hooks;
+
+    public ${className}Import(List<Hook> hooks) {
+        this.hooks = List.copyOf(hooks);
+    }
+
+    @Post("/upload")
+    @Roles({${roles}})
+    public String upload(@QueryParam("fileName") String fileName) {
+        // Every answer below is JSON, so the endpoint says so - a caller must not have to guess.
+        Response.setContentType("application/json");
+        UploadedFile file;
+        try {
+            file = UploadedFile.fromRequest(fileName);
+        } catch (IOException e) {
+            LOG.error("Import {}: cannot read the uploaded file [{}]", NAME, fileName, e);
+            Response.setStatus(400);
+            return Json.stringify(Map.of("error", "the uploaded file cannot be read"));
+        }
+        if (file == null) {
+            Response.setStatus(400);
+            return Json.stringify(Map.of("error", "the upload holds no file"));
+        }
+        ImportResult result = importFile(file.getName(), file.getContent());
+        Response.setStatus(switch (result.getStatus()) {
+            case IMPORTED -> 200;
+            case DUPLICATE -> 409;
+            case REJECTED -> 400;
+        });
+        return Json.stringify(result);
+    }
+
+    /**
+     * Import a file - the same import the upload performs, for a job that fetched the file itself.
+     *
+     * @param fileName the file's name
+     * @param content the file's bytes
+     * @return the outcome; nothing is saved unless it is IMPORTED
+     */
+    public ImportResult importFile(String fileName, byte[] content) {
+        String checksum = ImportText.checksum(content);
+        List<${entity}Entity> rows;
+#if($hasDuplicateKey)
+        String duplicate;
+#end
+        try {
+            rows = read(fileName, content);
+#if($hasDuplicateKey)
+            duplicate = duplicateOf(rows);
+#end
+        } catch (IllegalArgumentException e) {
+            return refused(ImportResult.rejected(NAME, fileName, checksum, e.getMessage()));
+        }
+#if($hasDuplicateKey)
+        if (duplicate != null) {
+            return refused(ImportResult.duplicate(NAME, fileName, checksum, duplicate));
+        }
+#end
+        List<${entity}Entity> saved;
+        try {
+            saved = UnitOfWork.call(() -> {
+                ${entity}Repository repository = new ${entity}Repository();
+                List<${entity}Entity> written = new ArrayList<>(rows.size());
+                for (${entity}Entity row : rows) {
+                    written.add(repository.save(row));
+                }
+                return written;
+            });
+        } catch (RuntimeException e) {
+            LOG.error("Import {}: saving the records of [{}] failed - nothing was saved", NAME, fileName, e);
+            return refused(ImportResult.rejected(NAME, fileName, checksum, "saving the records failed: " + e.getMessage()));
+        }
+        ImportResult result = ImportResult.imported(NAME, fileName, checksum, saved.size());
+        ImportLedger.record(TABLE, result);
+        for (Hook hook : hooks) {
+            try {
+                hook.afterImport(result, saved);
+            } catch (RuntimeException e) {
+                LOG.error("Import {}: the post-import hook [{}] failed on [{}] - the import stays committed", NAME, hook.getClass()
+                                                                                                                       .getName(),
+                        fileName, e);
+                result.addWarning("the post-import hook " + hook.getClass()
+                                                                .getName()
+                        + " failed: " + e.getMessage());
+            }
+        }
+        return result;
+    }
+
+    private ImportResult refused(ImportResult result) {
+        LOG.warn("Import {}: [{}] {} - {}", NAME, result.getFileName(), result.getStatus(), result.getMessage());
+        ImportLedger.record(TABLE, result);
+        return result;
+    }
+
+    private static List<${entity}Entity> read(String fileName, byte[] content) {
+        List<Map<String, String>> records = ${readerExpression};
+        if (records.isEmpty()) {
+            throw new IllegalArgumentException("the file holds no record");
+        }
+        List<${entity}Entity> rows = new ArrayList<>(records.size());
+        for (int index = 0; index < records.size(); index++) {
+            Map<String, String> record = records.get(index);
+            ${entity}Entity row = new ${entity}Entity();
+            try {
+#foreach($field in $mapFields)
+                row.${field.property} = VALUES.${field.conversion}(${field.rawExpression});
+#end
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("record " + (index + 1) + ": " + e.getMessage(), e);
+            }
+            rows.add(row);
+        }
+        return rows;
+    }
+#if($hasDuplicateKey)
+
+    /** The first record repeating the duplicate key, or null when every key is new. */
+    private static String duplicateOf(List<${entity}Entity> rows) {
+        ${entity}Repository repository = new ${entity}Repository();
+        Set<List<Object>> seen = new HashSet<>();
+        for (int index = 0; index < rows.size(); index++) {
+            ${entity}Entity row = rows.get(index);
+#foreach($key in $duplicateKey)
+            if (row.${key.property} == null) {
+                throw new IllegalArgumentException("record " + (index + 1) + " has no ${key.label}, part of the duplicate key");
+            }
+#end
+            List<Object> key = java.util.Arrays.asList(#foreach($key in $duplicateKey)row.${key.property}#if($foreach.hasNext), #end#end);
+            String described = "#foreach($key in $duplicateKey)${key.label} [" + row.${key.property} + "]#if($foreach.hasNext), #end#end";
+            if (!seen.add(key)) {
+                return "record " + (index + 1) + " repeats " + described + " of an earlier record of the file";
+            }
+            if (!repository.findAll(Criteria.create()#foreach($key in $duplicateKey)
+                                            .eq("${key.property}", row.${key.property})#end)
+                           .isEmpty()) {
+                return "record " + (index + 1) + " was already imported: " + described;
+            }
+        }
+        return null;
+    }
+#end
+}

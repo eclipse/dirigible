@@ -30,6 +30,7 @@ import org.eclipse.dirigible.components.base.tenant.Tenant;
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.configurations.tenant.TenantConfigurationService;
 import org.eclipse.dirigible.components.listeners.config.ActiveMQConnectionArtifactsFactory;
+import org.eclipse.dirigible.components.listeners.config.ListenerConnectionMode;
 import org.eclipse.dirigible.components.listeners.service.DestinationNameManager;
 import org.eclipse.dirigible.components.listeners.service.TenantPropertyManager;
 import org.eclipse.dirigible.engine.java.component.ComponentContainer;
@@ -136,7 +137,7 @@ class ListenerClassConsumerTest {
         when(destinationNameManager.toTenantName("notifications")).thenReturn("notifications");
 
         ListenerClassConsumer listenerConsumer = new ListenerClassConsumer(componentContainer, connectionFactory, tenantContext,
-                tenantPropertyManager, defaultTenant, tenantConfigurationService, destinationNameManager);
+                tenantPropertyManager, defaultTenant, tenantConfigurationService, destinationNameManager, ListenerConnectionMode.SHARED);
         listenerConsumer.onClassLoaded(new LoadedClass("sample", RecordingHandler.class.getName(), RecordingHandler.class,
                 RecordingHandler.class.getClassLoader()));
 

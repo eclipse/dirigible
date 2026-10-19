@@ -145,6 +145,11 @@ The three categories, and the extension point that carries each:
    generated scaffold already carries an `<image src="Templates/Print/logo.png"/>` slot and the answer
    is to upload the file there (Documents perspective), or ship a default as
    `doc/Templates/Print/logo.png`. A missing file prints nothing.
+   A statutory FILE is not this category: a VAT ledger in fixed-width windows-1251, a CSV for a
+   bank, an XML declaration over a report are `exports:`. What stays outside an export is a structure
+   beyond header / line / trailer records (nested XML hierarchies, several row sets in one file,
+   validation against an XSD) and the signed submission to an authority - not implemented yet; say
+   so, and propose the export plus a `custom/` component that signs and delivers its file.
 
 Also outside: a bespoke screen (an `actions:` custom page), a bespoke dashboard number (a `widgets:`
 tile backed by a developer endpoint).
@@ -250,7 +255,7 @@ not as an apology.
   the intent layer does not know the generated app's URLs, and a path typed into a body would break
   the day the generated layout changes. In a fan-out (`forEach:`) `{recordUrl}` links the ROW, like
   every other bare path, while `{record.<field>}` reads the anchor record.
-- **`{appUrl}` is the raw origin** (`DIRIGIBLE_APP_BASE_URL`, tenant-overridable) - reach for it only
+- **`{appUrl}` is the raw origin** (`DIRIGIBLE_APP_BASE_URL`, tenant-overridable, else `DIRIGIBLE_HOST`) - reach for it only
   for a link the two above cannot express, e.g. a page of your own: `"{appUrl}/services/web/..."`.
   All three names are reserved, so an entity must not declare a field literally named `appUrl`,
   `recordUrl` or `inboxUrl` (it would be shadowed in every notify block).
@@ -460,6 +465,15 @@ a `required` text field is refused when it is blank after that trim - spaces alo
   `dimensions: ["ageing(due, [30, 60, 90])"]` with `measures: ["sum(balance)"]` is the standard receivables report.
   The field may be an own `date`/`timestamp` or a one-hop `relation.field`; thresholds must ascend and be positive.
   Prefer equal-digit thresholds - the bucket is a text label and sorts lexicographically.
+- `aging:` (on a report) - **aged receivables / payables**: one row per dimension (the counterparty), one
+  COLUMN per bucket of days past due, summing each open document's open amount as of a report date:
+  `aging: { due: due, amount: "total - paid", buckets: [30, 60, 90], date: issuedOn }` yields `Not Yet Due` /
+  `Overdue 0-30` / `Overdue 31-60` / `Overdue 61-90` / `Overdue 90+` and the `Open Amount` they add up to. A document
+  due after the as-of date (or with no due date) is `Not Yet Due`, never `0-30`; one due ON it is 0 days past due.
+  `amount` is a numeric field or numeric fields joined by `+`/`-` (a missing value reads as 0); fully settled documents
+  drop out. The report declares the date parameter `asOf` itself (rename it with `asOf: <name>`), defaulting to the day
+  the report is run - do not declare it under `parameters:`. The optional `date` (the document date) leaves out
+  documents issued after the as-of date. Prefer this over the `ageing(...)` dimension for an AR/AP ageing report.
 - `where` (on a user-picked to-one relation) - **a static option filter**: a single
   `<target property>: <literal>` pair that permanently narrows the dropdown's option list to matching
   target rows. Unlike `dependsOn` (which reacts to a sibling selection) the condition is constant.
@@ -1205,6 +1219,29 @@ entities:
 Propose `renamedFrom:` whenever you rename a field of an entity that may already hold rows; propose
 `dropped:` only when the user asks for the data to go, never as part of a rename.
 
+**When the record entered a status (`stampOn: { status: X }`).** For "when was this approved /
+submitted / shipped", declare it on the field instead of adding a step in front of each status write:
+a `timestamp` field (the current instant) or a `date` field (today) with `stampOn: { status: X }`,
+where `X` is a seeded name or id of the entity's own `function: EntityStatus` relation. The generated
+repository writes it in the same statement as every move INTO `X`, whoever makes it - a workflow
+`setRelationField`, a `transitions:` button, a REST update, a create that lands in `X` through
+`init:`. A write that leaves the status where it was does not re-stamp it; leaving `X` and coming
+back records the latest arrival; leaving keeps the value; a move the lifecycle, a check or a guard
+refuses stamps nothing. The field is read-only to callers. Do not add `required: true` (it is empty
+until the status is first reached), a `defaultValue`, `number:`, a calculation, `aggregate:` or
+`dependsOn` to it, and stamp each status on at most one field - all are refused. It needs no
+`setField ... "{now}"` step:
+
+```yaml
+entities:
+  - name: Order
+    fields:
+      - { name: submittedAt, type: timestamp, stampOn: { status: SUBMITTED } }
+      - { name: approvedAt,  type: timestamp, stampOn: { status: APPROVED } }
+    relations:
+      - { name: Status, kind: manyToOne, to: OrderStatus, function: EntityStatus, init: SUBMITTED }
+```
+
 **Custom imports (`imports:` on an entity):** a multi-line string of Java `import ...;` lines injected
 verbatim into that entity's generated repository, so a calculated-field action (or any custom class)
 can be referenced from the calculated fields by simple name. Pair it with `calculatedActionOnCreate`:
@@ -1758,6 +1795,19 @@ success would otherwise end in a success status still carrying the previous fail
 ```yaml
   steps:
     - { name: resetError, kind: serviceTask, args: { clearField: errorMessage, next: provision } }
+```
+
+**Recording when the flow got there: `value: "{now}"`.** On a `timestamp` or `date` field of the
+trigger entity, `setField` takes the whole value `"{now}"` - and only that - and stamps the moment
+the step runs (the current instant on a `timestamp`, today on a `date`). Quote it: an unquoted
+`{now}` is a YAML map. It is never valid on a `string`/`text` field (it would store the text
+`{now}`), and never inside a larger value (`"at {now}"`). Use it for an `approvedAt` / `shippedAt`
+beside the status the flow sets - no `delegate:` needed:
+
+```yaml
+  steps:
+    - { name: stampApproved, kind: serviceTask, args: { setField: approvedAt, value: "{now}", next: markApproved } }
+    - { name: markApproved,  kind: serviceTask, args: { setRelationField: Status, value: 2, next: end } }
 ```
 
 **Setting a status modelled as a relation: `setRelationField`.** When the status is a plain
@@ -2614,6 +2664,53 @@ generates:
   in the generated controller only and are not part of a repository write; express the refusal the link must honour as a roll-up capacity
   (`capacity:`) or a status-gated check.
 
+### reversals - reverse a booked document by hand (red storno)
+
+**Use when:** a POSTED document must be corrected and there is no source event to void - the
+hand-written journal entry. `postings: reverses:` reverses a document a posting created, on its
+source's void; a manual entry has no source, so the accountant reverses it and books the right one.
+`reversals:` is that click: it creates the document's **negated twin** - every line copied onto the
+SAME side with the declared amounts negated - and links the two both ways, so the pair nets to zero.
+
+```yaml
+reversals:
+  - name: reverseEntry
+    forEntity: JournalEntry
+    when: "Status == POSTED"            # offered and accepted only here (409 elsewhere)
+    label: Reverse
+    icon: undo-2
+    link: Storno                        # the twin's to-one to the original
+    backLink: ReversedBy                # optional: the original's to-one to its twin
+    negate: [debit, credit, currencyAmount]   # decimal fields of the header and/or its lines
+    defaults: { date: now }             # header values set instead of copied
+    refuse:                             # conditions over the ORIGINAL, each with its message (409)
+      - { when: "ReversedBy != null", message: "This entry is already reversed" }
+      - { when: "Storno != null",     message: "A reversal cannot be reversed - reverse the original entry" }
+```
+
+- It IS a create-from of the entity onto itself (the parser expands it into a `generates` entry), so
+  the twin is saved through the generated repositories: checks, numbering, the init status, the
+  entity's process trigger and the `immutableInPeriod` lock all apply - a twin dated into a CLOSED
+  period is refused (400) and nothing is written. It is created at the init status (a DRAFT), so the
+  accountant can still change its date before posting it through the entity's normal flow.
+- **Copied:** every field and to-one of the header and of its line items as it stands. **Not copied:**
+  the primary key, `unique` fields, a `number:` field (the twin draws its own), calculated and
+  `aggregate` fields (recomputed), the `function: EntityStatus` relation, a `personal` owner, the
+  `link`/`backLink`, the line's composition foreign key (re-pointed at the twin), and every `defaults:`
+  key. A field that must not travel to the twin gets a `defaults:` value instead.
+- `link` / `backLink` are to-ones of `forEntity` to itself (local). The back-link is written on the
+  original in the same transaction as a targeted system write, past `immutableWhen` (which guards
+  user writes).
+- `when` is one comparison of the entity's `function: EntityStatus` relation with one status (a
+  seeded name or its id) - it also hides the button in other statuses. Any other precondition is a
+  `refuse:` entry: one comparison or an ANDed list over the entity's own fields/to-ones
+  (`<field> ==|!= <value | null>`), decided under a row lock on the original, so two concurrent clicks
+  cannot both reverse it.
+- `negate` names only `decimal` fields; a rate or a quantity that multiplies an amount is copied, not
+  negated. The name shares the action namespace with `generates:` names.
+- The endpoint is `/services/java/<project>/gen/events/<module>/<Name>Generate/run` (body `{"id": n}`),
+  answering the created twin.
+
 ### reports - read-only aggregations
 
 **Use when:** the user needs a read-only view, list, or aggregation across records.
@@ -2670,8 +2767,9 @@ target is compared as a date, so a `le` bound includes the chosen day. The targe
 - a relation itself is not one (name a field of it: `Customer.name`), `boolean` and `text` fields are
 not parameterizable, and the name must be a plain, non-keyword identifier that is not one the
 platform already binds (`language`) or the generated controller declares (`filter`, `limit`,
-`offset`, `repository`). `kind: balance` and `kind: statement` declare their own
-`fromDate`/`toDate`, so either may add further parameters but not redeclare those two.
+`offset`, `repository`). `kind: balance`, `kind: statement` and `kind: ledger` declare their own
+`fromDate`/`toDate` (a ledger also its `account`), so each may add further parameters but not
+redeclare those.
 
 #### reports[].scope - which lifecycle rows an aggregate counts
 
@@ -2727,8 +2825,8 @@ is unclassified, Generate reports the aggregate as lifecycle-blind and the total
 
 #### Statuses may be named, not numbered
 
-Everywhere the intent names a status - `transitions[].from` / `setStatus`, a `lifecycle:` edge, a relation's `init:`, a
-`setRelationField` `value:`, `abortOn.status`, a check's `status`/`setStatus`, `immutableWhen`, a
+Everywhere the intent names a status - `transitions[].from` / `setStatus`, a `lifecycle:` edge, a field's
+`stampOn.status`, a relation's `init:`, a `setRelationField` `value:`, `abortOn.status`, a check's `status`/`setStatus`, `immutableWhen`, a
 posting's `event.when`, the `event.when` of a `notifications` / `integrations` / `outbound` entry, a
 report's `filter`, the status condition of a `schedules[].where` row query or of a create-from's
 `items: where:` rule - use the **seeded name** instead of the id:
@@ -2882,6 +2980,86 @@ a cycle. Restrict to posted entries with a `filter`, exactly as for a balance re
 **Boundary:** a statement report computes the statement's *numbers*. The legally mandated print
 layout stays a hand-authored `.print` template over that result — the platform's standing contract
 for statutory form.
+
+**The cash-flow statement — `cashAccounts:`.** A direct-method cash-flow statement classifies cash
+movements by their *counter-side*: receipts from customers are the credits to the receivable
+accounts in entries that debit cash, payments to suppliers the debits to the payable accounts in
+entries that credit cash. Name the cash accounts with `cashAccounts:` (the same selector grammar as
+`accounts`) and the statement switches to the cash basis, with the same `lines:` / `sum:` / `less:`:
+
+```yaml
+reports:
+  - name: CashFlow
+    kind: statement
+    source: JournalEntryItem
+    date: journalEntry.entryDate          # must go through the entry relation - see below
+    debit: debit
+    credit: credit
+    account: account.code
+    cashAccounts: "50*"                   # the cash and bank accounts
+    filter: "journalEntry.status == 2"
+    lines:
+      - { code: A.1, label: Receipts from customers, accounts: "41*", measure: periodCredit }
+      - { code: A.2, label: Payments to suppliers,   accounts: "40*", measure: periodDebit }
+      - { code: A,   label: Operating activities,    sum: [A.1], less: [A.2] }
+      - { code: B.1, label: Purchases of equipment,  accounts: "20*", measure: periodDebit }
+      - { code: B,   label: Investing activities,    less: [B.1] }
+      - { code: C.1, label: Borrowings,              accounts: "15*", measure: periodCredit }
+      - { code: C,   label: Financing activities,    sum: [C.1] }
+      - { code: N,   label: Net cash flow,           sum: [A, B, C] }
+```
+
+On the cash basis a line's accounts are the **counter-accounts**: `periodCredit` is the cash received
+from them, `periodDebit` the cash paid to them. An entry whose cash covers only part of its counter
+side is spread over it by amount (100 cash against 75 receivable and 25 sales gives the customer 75
+and sales 25), so a complete statement's sections add up exactly to the change in the cash accounts'
+balance over the window. A transfer between two cash accounts is no cash flow, and an entry that
+touches no cash account is not read at all. **Rules:** only the four `period*` measures apply (a cash
+flow is a movement within the window); `date` must be a `<relation>.<field>` path over the source's
+relation to its journal entry, because the cash an entry moved is a fact about the entry; and the
+entries must balance (debits = credits), which is what makes the sections reconcile.
+
+#### reports[].kind: ledger - the account analysis (account card)
+
+**Use when:** the user needs the *lines* of one account - the account card an accountant reconciles
+with: the opening balance at the window start, each posted line in date order with its own debit,
+credit and a running balance, and the closing balance at the end. A `kind: balance` report sums per
+account; a ledger lists what makes up one account's figure.
+
+```yaml
+reports:
+  - name: AccountAnalysis
+    kind: ledger
+    source: JournalEntryItem              # the ledger line items (same as a balance report)
+    date: journalEntry.entryDate          # the date driving the window
+    debit: debit
+    credit: credit
+    account: account                      # the to-one RELATION to the account - bound at runtime
+    columns: [journalEntry.number, journalEntry.reason, Customer, note]
+    correspondence: account.code          # optional - each line's counter-side accounts
+    filter: "journalEntry.status == 2"
+```
+
+The rows are: an **Opening balance** row (everything strictly before `fromDate`), the lines of the
+window ordered by date, entry and line, each with `Balance` = opening + running `debit - credit`, and a
+**Closing balance** row carrying the window's debit and credit turnover and the closing balance. The
+window is the balance report's, so opening + debit - credit = closing, equal to what a `kind: balance`
+report shows for the same account and window. The report declares `fromDate`, `toDate` and
+`account` (the account's key) on its own behalf; until an account is chosen it binds `0` and renders
+an empty card. When the account entity declares `hierarchy:`, choosing a **group account** lists the
+lines of every account below it (a generated `<REPORT>_ACCOUNT_TREE` view walks the tree), so a
+group's closing balance is the sum of its leaves'. The query pages in the database, so an account
+with tens of thousands of lines loads one page at a time and every page carries the running balance
+of the whole window.
+
+`columns` are the per-line columns between the date and the amounts - a field of the source, a
+one-hop `relation.field`, or a bare to-one relation (shown by its label). `correspondence` names the
+account path read off the entry's opposite-side lines, listed distinct per line (`411, 453`) - a
+compound entry shows every account a line faced.
+
+**Rules:** `account` must be a to-one relation of the source, not one of its fields; the source needs
+a `primaryKey` (the running balance accumulates line by line in key order); no `dimensions`,
+`measures`, `lines`, `cashAccounts`, `widget` or `chart` - the rows are the account's lines.
 
 #### reports[].chart - render as a chart
 
@@ -4068,6 +4246,62 @@ inbound:
   child of `create:` (an arrival creates only rows it owns), a child declared in another model, and
   two collections filling the same child relation.
 
+### imports - a user uploads a file of records (bank statement, CSV)
+
+**Use when:** a person (or a job) brings a **file** whose records become rows: a bank statement to
+reconcile, a price list, a CSV export of another system. `inbound:` is for a JSON record another
+system sends; `imports:` is for a file in a fixed format with locale, encoding and duplicate rules.
+
+```yaml
+imports:
+  - name: bankCsv
+    into: StatementLine            # the entity whose rows the file becomes
+    format: csv                    # csv | mt940 | camt053
+    encoding: windows-1251         # csv / mt940; default UTF-8 (camt053 is XML and declares its own)
+    csv:                           # csv only; every key optional
+      separator: ";"               # default ","
+      decimal: ","                 # default "."
+      grouping: "."                # default none - "1.234,56" needs it
+      dateFormat: dd.MM.yyyy       # default yyyy-MM-dd
+      skipLines: 1                 # lines before the header (a bank's preamble)
+      # header: false              # columns are then named by 1-based position: map: { amount: 4 }
+    map:                           # <entity field>: <source>
+      statementId: _file           # _file = the uploaded file's name, _line = the record's position
+      lineNumber:  _line
+      bookedOn:    Дата            # csv: a column of the header
+      amount:      Сума
+      details:     Основание
+    duplicateKey: [statementId, lineNumber]
+  - name: swift
+    into: StatementLine
+    format: mt940
+    map: { statementId: statementId, lineNumber: lineNumber, bookedOn: valueDate, amount: amount, details: details }
+    duplicateKey: [statementId, lineNumber]
+```
+
+An `mt940` / `camt053` file is read into one record per statement line (`:61:` / `Ntry`) with these
+keys - map from them: `statementId`, `sequence`, `account`, `currency`, `lineNumber` (counts from 1 in
+each statement), `valueDate`, `bookingDate`, `mark` (`C`/`D`), `amount` (signed: a debit is negative),
+`transactionType`, `reference`, `bankReference`, `details` (`:86:` / the remittance text);
+`mt940` adds `supplementary`, `camt053` adds `counterpartyName` and `counterpartyAccount`.
+
+Each import generates `gen/events/<module>/<Name>Import.java`: an **upload** endpoint (`POST
+.../<Name>Import/upload`, a multipart file or the raw body with `?fileName=`), gated by the entity's
+write role, and a bean method `importFile(fileName, bytes)` a job can call. A file is imported **whole
+or not at all**: an unreadable value answers 400, and a record repeating the `duplicateKey` of a row
+already imported (or of another record of the file) answers 409 - so re-uploading a statement saves
+nothing. Every attempt is recorded in the entity's `<TABLE>_IMPORTS` ledger (file name, checksum,
+records, status, who, when). After the rows are committed, every `@Component` implementing
+`<Name>Import.Hook` in `custom/` is called with them - that is where matching rules go (a hook is
+code, not intent; mention it as a boundary when the requirement asks for matching).
+
+**Rules:** unique name; `into` is a local entity that is not a composition child, extends nothing and
+has no required to-one relation (an import fills fields, never relations); `map` names fields only,
+never the primary key, and must cover every required field without a default; a `csv` source without
+a header is a 1-based column number; an `mt940`/`camt053` source is one of the keys above (or
+`_line`/`_file`); `duplicateKey` lists mapped fields. Declare a `unique:` over the same fields too
+when two concurrent uploads of one statement must be impossible - the check runs before the write.
+
 ### outbound - the app raises an event for another system
 
 **Use when:** something **outside the app must be told** that a record happened, and it listens on a
@@ -4110,6 +4344,80 @@ else. Mark that one `global:` (`to: { topic: "global:codbex.orders" }`) and the 
 plain name it was given. What the marker costs: the destination no longer carries the tenant, so a
 business tenant that matters downstream must travel in the payload - a `tenantId: "{tenant}"` key in
 the declared envelope is exactly that.
+
+### exports - a file in an exacting format over a query
+
+**Use when:** the app must produce a FILE someone else reads - a statutory filing (a VAT ledger, a
+payroll declaration, an intrastat return), a bank bulk-transfer file, the feed of a third-party
+ledger. Use a `report` for a screen and `attach: print` for a document a person reads; an export is
+for a machine that rejects the file over one shifted column.
+
+```yaml
+entities:
+  - name: ExportRun              # the ledger: declared with NO fields - its columns are injected
+exports:
+  - name: VatPurchaseLedger
+    source: PurchaseInvoice      # an entity, or a plain report of this intent
+    format: fixedWidth           # fixedWidth | delimited | xml
+    encoding: windows-1251       # UTF-8 when omitted
+    ledger: ExportRun
+    fileName: "VAT-{fromDate}.txt"
+    orderBy: [documentDate, number]
+    parameters:
+      - { name: fromDate, field: documentDate, op: ge, required: true }
+      - { name: toDate,   field: documentDate, op: le }
+    records:
+      - type: header             # once, first
+        fields:
+          - { literal: 'H', width: 1 }
+          - { param: fromDate, width: 8, pattern: ddMMyyyy }
+      - type: line               # once per row
+        fields:
+          - { from: supplier.vatNumber, width: 15 }
+          - { from: documentDate, width: 8, pattern: ddMMyyyy }
+          - { from: taxBase, width: 15, scale: 2, align: right, pad: '0' }
+      - type: trailer            # once, last
+        fields:
+          - { literal: 'TOTAL', width: 5 }
+          - { from: count(), width: 6, align: right, pad: '0' }
+          - { from: sum(taxBase), width: 15, scale: 2, align: right }
+```
+
+**What it generates:** one Java class per export that is both the download
+(`GET .../gen/events/<module>/<Export>Export/download?<parameters>` answers the file) and a bean any
+job or `custom/` code injects and calls (`run(Map.of("fromDate", "2026-03-01"))` returns the ledger
+row). Every run is recorded on the ledger entity - `Export`, `Format`, `Parameters` (JSON),
+`Outcome` (SUCCEEDED / FAILED), `RecordCount`, `Checksum` (SHA-256), `ErrorMessage`, the stored file
+(`FileName`, `ContentType`, `FileSize`, `StoragePath`) and who ran it when. A ledger row is
+append-only and serves its file at its own `/{id}/download`.
+
+**Rules - each refused at parse with the reason:**
+- A field takes exactly one of `from:` (a field, a one-hop `relation.field`, or a total `sum(x)` /
+  `count()`), `literal:` or `param:` (a declared parameter). A header or trailer is written once, so
+  it reads literals, parameters and totals - never a row.
+- `fixedWidth`: every field needs a `width:`; `align: left|right`, `pad:` (one character) and
+  `truncate: true` (cut instead of refusing a wider value) are positional-only. `lineEnding: crlf|lf`
+  (CRLF by default).
+- `delimited`: `delimiter:` (`,`), `quote:` (`"`, empty for none), `quoting: minimal|all`.
+- `xml`: `root:` (the export name by default), a record's `element:` (its type by default), a field's
+  `name:` (required when it cannot be derived from `from:`/`param:`) and `attribute: true`.
+- `scale:` writes a decimal rounded half-up, with `decimalSeparator:` (empty = implied point);
+  `pattern:` writes a date in a `DateTimeFormatter` pattern - never both on one field.
+- A **report** source: `from:` names one of the report's `dimensions` / `measures` exactly as declared
+  (`supplier.name`, `count(*)`), a total over a measure is `sum(sum(taxBase))`, and a parameter names
+  one of the report's own parameters. A `kind: balance` / `statement` report is refused.
+- An **entity** source: a parameter filters `field:` (its name by default, a field or a to-one
+  relation) by `op:` `eq|ne|gt|ge|lt|le`; a timestamp field is refused. `orderBy:` lists its fields;
+  the primary key orders the rows otherwise. A hop into another model is refused - export over a
+  report that joins it.
+- `ledger:` names an entity with no fields and no relations. `<Export>:read` in `permissions` is who
+  may run it; with no token naming it, any signed-in user may.
+
+**Say these out loud:** nothing is written approximately. A value wider than its field, a character
+the encoding cannot represent or one XML does not allow FAILS the run (422, recorded FAILED with the
+reason) - a filing with a silently replaced character is rejected by its recipient long after. A
+missing or unreadable parameter is refused (400) and records nothing. `submit:` - the signed delivery
+to an authority - is reserved and refused until it ships.
 
 ### rollups - maintain a count on a parent
 
@@ -4521,6 +4829,8 @@ or a seeded name.
 | serviceTask `retry` | `{ count: <integer >= 1>, every: <ISO-8601 duration> }` - `delegate:` and non-fan-out `notify:` steps only |
 | serviceTask `onError` | a declared step or `end` - `delegate:` and non-fan-out `notify:` steps only; `{error}` (a whole-value `setField` value) is readable on the route |
 | serviceTask `clearField` | a `string`/`text` field of the trigger entity - erases it; takes no `value`, not combinable with `setField`/`setRelationField` |
+| serviceTask `setField` value | a literal on a `string`/`text` field; exactly `"{now}"` on a `timestamp`/`date` field (the moment the step runs) - `{now}` nowhere else |
+| field `stampOn` | `{ status: <seeded name or id> }` of the entity's `function: EntityStatus` relation, on a `timestamp`/`date` field that is not `required` and has no other writer |
 | process `vars` | `[{ name: <identifier>, clearAfter: <serviceTask/userTask step> }]`; step `produces:`/`uses:` list declared var names |
 | process `abortOn` | `{ status: <id> \| [ids], then: <serviceTask> \| end }` (trigger entity needs a `function: EntityStatus` relation) |
 | relation `whenMasterDeleted` | `cascade` (default - a delete of the master deletes the children it owns), `refuse` (the master's delete is rejected while children exist); composition relations only |
@@ -4536,6 +4846,8 @@ or a seeded name.
 | notify `outcome` | a `string` field (length >= 64) of the record the message is about - a fan-out's ROW - stamped `sent` / `failed: <reason>`; a failure publishes `<Entity>-notifyFailed` |
 | schedule `where` `op` | `eq`, `ne`, `gt`, `ge`, `lt`, `le`, `like` |
 | integration `method` | `GET`, `POST`, `PUT`, `PATCH`, `DELETE` |
+| import `format` | `csv`, `mt940`, `camt053` |
+| import `map` source | `csv`: a header column (or a 1-based position with `header: false`); `mt940`/`camt053`: `statementId`, `sequence`, `account`, `currency`, `lineNumber`, `valueDate`, `bookingDate`, `mark`, `amount`, `transactionType`, `reference`, `bankReference`, `details` (+ `supplementary` for mt940; `counterpartyName`, `counterpartyAccount` for camt053); any format: `_line`, `_file` |
 | entity `function` | `Document`, `DocumentItem`, `Master`, `Detail`, `List`, `Setting`, `Calendar` (reserved-and-rejected: `Board`, `Gantt`, `Timeline`) |
 | field `function` | `DocumentTitle` |
 | relation `function` | `EntityStatus` |
@@ -4593,6 +4905,7 @@ or a seeded name.
 - "let an external system create X" -> **inbound** (`path` for HTTP, `source: { queue | topic }` for a message, `source: { folder, cron }` for dropped files)
 - "the arriving payload is an envelope, not the record" -> **inbound `map:`** (+ `lookup:` to turn a business key into a relation, and `accept:` to ignore the message types this app does not understand)
 - "the arriving payload carries an array - an order with its lines, a request with its items - and each element is a child row" -> **an inbound `map:` collection** (`<oneToMany>: { from, max?, map }` onto a composition child; one arrival = one record + its children in one transaction = one process instance)
+- "upload a bank statement / a CSV / an MT940 or camt.053 file and turn its lines into records" -> **imports** (`format`, `encoding`, `csv:` locale rules, `map:`, `duplicateKey:` so a re-upload is refused; matching rules after the import are a `custom/` `<Name>Import.Hook`)
 - "keep a running count of children on the parent" -> **rollups**
 - "expand a from-to span into day/week/month child rows / loan installments / vacation day items" -> **expansions**
 - "compute days between two dates on the form (working days / months)" -> **calculated field with a date function**

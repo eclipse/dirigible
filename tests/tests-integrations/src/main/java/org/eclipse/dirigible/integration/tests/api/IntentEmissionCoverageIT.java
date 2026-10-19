@@ -10,6 +10,7 @@
 package org.eclipse.dirigible.integration.tests.api;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.everyItem;
@@ -25,9 +26,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -36,6 +39,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +47,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
 
+import io.restassured.config.JsonConfig;
+import io.restassured.config.RestAssuredConfig;
 import io.restassured.path.json.JsonPath;
+import io.restassured.path.json.config.JsonPathConfig.NumberReturnType;
 
 
 import org.eclipse.dirigible.components.api.messaging.MessagingFacade;
@@ -92,17 +99,20 @@ import ch.qos.logback.classic.Level;
  * declaration, {@code transitions} (the guarded on-demand status flip: allowed-status 200,
  * wrong-status/guard 409), {@code lifecycle} (the declarative state machine: the graph walked
  * through its transitions, an unmodeled flip and a create filed mid-lifecycle both refused through
- * the plain REST surface no transition guard covers), {@code postings} with {@code reverses} (post
- * on a transition; red-storno reversal on void - negated amounts, storno link, fail-soft), the
- * {@code notify} block with {@code attach: print} (send the document itself by e-mail - on a
- * transition and on a process step; the fail-soft contract), {@code calculatedActionOnCreate} on a
- * to-one RELATION (the FK resolved server-side by a hand-written {@code custom/} action: assigned
- * in the repository, and at runtime both defaulted when omitted and left alone when the caller
- * supplied one), the event-driven {@code generates} (posting the source mints the whole document
- * with nobody clicking, and a click afterwards returns that same document - the at-most-once
- * back-reference guard), and the personal (my) surface
- * ({@code identity}/{@code personal}/{@code sensitive}: scoped reads, forced owner, stripped
- * fields).
+ * the plain REST surface no transition guard covers), {@code stampOn} (a field recording when its
+ * record entered a status: stamped by a transition button, a full update, a create and a workflow
+ * setter in the same write as the move, kept by a write that stays in the status or leaves it,
+ * never taken from a caller, re-stamped on re-entry, and left empty by a move the lifecycle
+ * refuses), {@code postings} with {@code reverses} (post on a transition; red-storno reversal on
+ * void - negated amounts, storno link, fail-soft), the {@code notify} block with
+ * {@code attach: print} (send the document itself by e-mail - on a transition and on a process
+ * step; the fail-soft contract), {@code calculatedActionOnCreate} on a to-one RELATION (the FK
+ * resolved server-side by a hand-written {@code custom/} action: assigned in the repository, and at
+ * runtime both defaulted when omitted and left alone when the caller supplied one), the
+ * event-driven {@code generates} (posting the source mints the whole document with nobody clicking,
+ * and a click afterwards returns that same document - the at-most-once back-reference guard), and
+ * the personal (my) surface ({@code identity}/{@code personal}/{@code sensitive}: scoped reads,
+ * forced owner, stripped fields).
  */
 @Tag("slow")
 class IntentEmissionCoverageIT extends IntegrationTest {
@@ -124,6 +134,11 @@ class IntentEmissionCoverageIT extends IntegrationTest {
     private static final Pattern HTML_COMMENT = Pattern.compile("(?s)<!--.*?-->");
     /** A live reference to the page's {@code mutable} flag (not the word inside "immutable"). */
     private static final Pattern MUTABLE_REFERENCE = Pattern.compile("\\bmutable\\b");
+    /** An Instant is written as decimal epoch seconds; the default float would lose minutes of it. */
+    private static final RestAssuredConfig EXACT_NUMBERS = RestAssuredConfig.config()
+                                                                            .jsonConfig(JsonConfig.jsonConfig()
+                                                                                                  .numberReturnType(
+                                                                                                          NumberReturnType.BIG_DECIMAL));
 
     private static final String INTENT_YAML_ENTITIES = """
             name: emission
@@ -1499,6 +1514,13 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                   - { name: settle,   kind: serviceTask, args: { setField: note, value: SETTLED, next: end } }
                   - { name: end, kind: end }
 
+              # stampOn (#7874): the setter is the whole step - the repository stamps ApprovedAt with it.
+              - name: PermitApproval
+                trigger: { onCreate: Permit }
+                steps:
+                  - { name: markApproved, kind: serviceTask, args: { setRelationField: Status, value: APPROVED, next: end } }
+                  - { name: end, kind: end }
+
               # abortOn: voiding the approval (CancelApproval -> status 3) cancels the confirm task.
               - name: ApprovalFlow
                 trigger: { onCreate: Approval }
@@ -1695,6 +1717,13 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                 setStatus: 3
                 label: Cancel
                 icon: ban
+              # stampOn (#7874): the button only flips the status - the repository stamps ApprovedAt.
+              - name: ApproveClearance
+                forEntity: Clearance
+                from: [OPEN, REOPENED]
+                setStatus: APPROVED
+                label: Approve
+                icon: check
               # The transition the event-driven create-from below listens for (#6711): posting the slip
               # is what mints the voucher - the test never calls the create-from to get one.
               - name: PostSlip
@@ -1956,6 +1985,13 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                 measures: ["count(*)"]
                 parameters:
                   - { name: search, target: note, op: like, initial: 'O''Neil "the" note' }
+              # aging (#7888): the open amount (debit - credit) of every live entry, bucketed by days
+              # past its date as of the report's own asOf parameter - which defaults to the day the
+              # report is run, resolved per request by the generated repository.
+              - name: EntryAging
+                source: Entry
+                dimensions: [Account.name]
+                aging: { due: date, amount: "debit - credit", buckets: [30, 60, 90] }
               # kind: statement (#6938): the line classification is emitted as a generated
               # <REPORT>_LINES .view artifact - published with the project and provisioned by the
               # ViewsSynchronizer AFTER the tables - and the .report keeps a thin windowed join over
@@ -1973,6 +2009,38 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                   - { code: CASH,  label: Vault cash, accounts: "Vault*",   measure: closingNetDebit }
                   - { code: MISS,  label: Missing,    accounts: "Nothing*", measure: closingNetDebit }
                   - { code: TOTAL, label: Total,      sum: [CASH, MISS] }
+              # kind: statement on the CASH BASIS (#7857) - the direct-method cash-flow statement.
+              # The lines read the cash each counter-account's postings carried in entries touching
+              # 50*, and the per-entry cash totals are a second generated .view beside the _LINES one.
+              - name: CashFlow
+                kind: statement
+                source: CashVoucherLine
+                date: CashVoucher.bookedOn
+                debit: debit
+                credit: credit
+                account: LedgerAccount.code
+                cashAccounts: "50*"
+                lines:
+                  - { code: OP.IN,    label: Receipts from customers, accounts: "41*", measure: periodCredit }
+                  - { code: OP.SALES, label: Cash sales,              accounts: "70*", measure: periodCredit }
+                  - { code: OP.OUT,   label: Payments to suppliers,   accounts: "40*", measure: periodDebit }
+                  - { code: OP,       label: Operating,               sum: [OP.IN, OP.SALES], less: [OP.OUT] }
+                  - { code: INV,      label: Investing,               less: [INV.OUT] }
+                  - { code: INV.OUT,  label: Equipment bought,        accounts: "20*", measure: periodDebit }
+                  - { code: FIN,      label: Financing,               accounts: "15*", measure: periodCredit }
+                  - { code: NET,      label: Net cash flow,           sum: [OP, INV, FIN] }
+              # kind: ledger (#7887) - the account card over the same voucher ledger. LedgerAccount is
+              # a tree, and the group 50 holds the desk 5010 and the bank 5030: its card lists both
+              # accounts' lines, with the running balance carried across them and across pages.
+              - name: CashCard
+                kind: ledger
+                source: CashVoucherLine
+                date: CashVoucher.bookedOn
+                debit: debit
+                credit: credit
+                account: LedgerAccount
+                columns: [LedgerAccount.code]
+                correspondence: LedgerAccount.code
 
             seeds:
               - name: people
@@ -2017,6 +2085,18 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                   - { id: 1, name: OPEN }
                   - { id: 2, name: PARTIAL }
                   - { id: 3, name: SETTLED }
+              - name: clearance-statuses
+                entity: ClearanceStatus
+                rows:
+                  - { id: 1, name: OPEN }
+                  - { id: 2, name: APPROVED }
+                  - { id: 3, name: REOPENED }
+                  - { id: 4, name: CLOSED }
+              - name: permit-statuses
+                entity: PermitStatus
+                rows:
+                  - { id: 1, name: SUBMITTED }
+                  - { id: 2, name: APPROVED }
               - name: pledge-payment-statuses
                 entity: PledgePaymentStatus
                 rows:
@@ -2083,6 +2163,45 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                 rows:
                   - { id: 901, date: "2026-01-10", debit: 100, Account: 3, Status: 2 }
                   - { id: 902, date: "2026-01-11", credit: 40, Account: 3, Status: 2 }
+              # The CashFlow ledger: the cash accounts (50*) move by +300 -120 -200 +1000 +0 +100 =
+              # 1080 - which the three sections must add up to. Voucher 5 is a desk-to-bank transfer
+              # (no cash flow), voucher 6 spreads 100 cash over 75 receivable and 25 sales by amount.
+              - name: ledger-accounts
+                entity: LedgerAccount
+                rows:
+                  - { id: 8, code: "50" }
+                  - { id: 1, code: "5010", Parent: 8 }
+                  - { id: 2, code: "5030", Parent: 8 }
+                  - { id: 3, code: "4110" }
+                  - { id: 4, code: "4010" }
+                  - { id: 5, code: "2040" }
+                  - { id: 6, code: "1510" }
+                  - { id: 7, code: "7010" }
+              - name: cash-vouchers
+                entity: CashVoucher
+                rows:
+                  - { id: 1, bookedOn: "2026-02-01" }
+                  - { id: 2, bookedOn: "2026-02-05" }
+                  - { id: 3, bookedOn: "2026-02-10" }
+                  - { id: 4, bookedOn: "2026-02-12" }
+                  - { id: 5, bookedOn: "2026-02-15" }
+                  - { id: 6, bookedOn: "2026-02-20" }
+              - name: cash-voucher-lines
+                entity: CashVoucherLine
+                rows:
+                  - { id: 11, debit: 300,   CashVoucher: 1, LedgerAccount: 1 }
+                  - { id: 12, credit: 300,  CashVoucher: 1, LedgerAccount: 3 }
+                  - { id: 21, debit: 120,   CashVoucher: 2, LedgerAccount: 4 }
+                  - { id: 22, credit: 120,  CashVoucher: 2, LedgerAccount: 2 }
+                  - { id: 31, debit: 200,   CashVoucher: 3, LedgerAccount: 5 }
+                  - { id: 32, credit: 200,  CashVoucher: 3, LedgerAccount: 1 }
+                  - { id: 41, debit: 1000,  CashVoucher: 4, LedgerAccount: 2 }
+                  - { id: 42, credit: 1000, CashVoucher: 4, LedgerAccount: 6 }
+                  - { id: 51, debit: 50,    CashVoucher: 5, LedgerAccount: 2 }
+                  - { id: 52, credit: 50,   CashVoucher: 5, LedgerAccount: 1 }
+                  - { id: 61, debit: 100,   CashVoucher: 6, LedgerAccount: 1 }
+                  - { id: 62, credit: 75,   CashVoucher: 6, LedgerAccount: 3 }
+                  - { id: 63, credit: 25,   CashVoucher: 6, LedgerAccount: 7 }
             """;
 
     /** The whole fixture, as the two halves above spell it. */
@@ -2110,10 +2229,75 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                   - { name: amount, type: decimal, precision: 18, scale: 2 }
                 relations:
                   - { name: FreightEntry, kind: manyToOne, to: FreightEntry, composition: true, required: true }
+              # The voucher ledger the CashFlow statement reads (#7857) - its own entities, so no
+              # other fixture's postings can drift the cash-flow figures.
+              - name: CashVoucher
+                fields:
+                  - { name: id,       type: integer, primaryKey: true, generated: true }
+                  - { name: bookedOn, type: date, required: true }
+              # A tree (#7887): the CashCard ledger of a group account lists its leaves' lines.
+              - name: LedgerAccount
+                hierarchy: Parent
+                fields:
+                  - { name: id,   type: integer, primaryKey: true, generated: true }
+                  - { name: code, type: string, required: true, length: 20 }
+                relations:
+                  - { name: Parent, kind: manyToOne, to: LedgerAccount }
+              - name: CashVoucherLine
+                fields:
+                  - { name: id,     type: integer, primaryKey: true, generated: true }
+                  - { name: debit,  type: decimal, precision: 18, scale: 2 }
+                  - { name: credit, type: decimal, precision: 18, scale: 2 }
+                relations:
+                  - { name: CashVoucher,   kind: manyToOne, to: CashVoucher, composition: true, required: true }
+                  - { name: LedgerAccount, kind: manyToOne, to: LedgerAccount, required: true }
+            """;
+
+    // Still the entities list, for the same 65535-byte reason. stampOn (#7874): a field records when
+    // its
+    // record ENTERED a status, written by the repository in the same statement as the move. Clearance
+    // is moved by a button (into APPROVED) and by the plain REST surface (into REOPENED and CLOSED);
+    // its lifecycle leads back into APPROVED, so a re-entry re-stamps, and has no edge from OPEN to
+    // CLOSED, so a refused move can be shown to stamp nothing. Permit is the workflow half: a create
+    // lands in SUBMITTED and the flow's setter moves it to APPROVED, each arrival stamped with no step
+    // of its own.
+    private static final String INTENT_YAML_STATUS_STAMPS = """
+              - name: ClearanceStatus
+                kind: setting
+                fields:
+                  - { name: id,   type: integer, primaryKey: true, generated: true }
+                  - { name: name, type: string, required: true, length: 50 }
+              - name: Clearance
+                lifecycle:
+                  edges:
+                    - { from: OPEN,     to: [APPROVED] }
+                    - { from: APPROVED, to: [REOPENED, CLOSED] }
+                    - { from: REOPENED, to: [APPROVED] }
+                fields:
+                  - { name: id,         type: integer, primaryKey: true, generated: true }
+                  - { name: note,       type: string, length: 60 }
+                  - { name: approvedAt, type: timestamp, stampOn: { status: APPROVED } }
+                  - { name: closedOn,   type: date, stampOn: { status: CLOSED } }
+                relations:
+                  - { name: Status, kind: manyToOne, to: ClearanceStatus, function: EntityStatus, init: OPEN }
+              - name: PermitStatus
+                kind: setting
+                fields:
+                  - { name: id,   type: integer, primaryKey: true, generated: true }
+                  - { name: name, type: string, required: true, length: 50 }
+              - name: Permit
+                fields:
+                  - { name: id,          type: integer, primaryKey: true, generated: true }
+                  - { name: note,        type: string, length: 60 }
+                  - { name: submittedAt, type: timestamp, stampOn: { status: SUBMITTED } }
+                  - { name: approvedAt,  type: timestamp, stampOn: { status: APPROVED } }
+                relations:
+                  - { name: Status, kind: manyToOne, to: PermitStatus, function: EntityStatus, init: SUBMITTED }
             """;
 
     private static final String INTENT_YAML = INTENT_YAML_ENTITIES.concat(INTENT_YAML_FILES)
                                                                   .concat(INTENT_YAML_PERIOD_POSTING)
+                                                                  .concat(INTENT_YAML_STATUS_STAMPS)
                                                                   .concat(INTENT_YAML_GLUE);
 
     @Autowired
@@ -2293,6 +2477,135 @@ class IntentEmissionCoverageIT extends IntegrationTest {
         assertRuntimeEnforcement();
         assertNowDefaultRuntime();
         assertAgreeGuardsTheParentsRuntime();
+        assertStatusStampsRuntime();
+    }
+
+    /**
+     * {@code stampOn} (#7874), compiled and running: a field records when its record ENTERED a status,
+     * whoever moved it there - a transition button, the plain REST surface, a create, a workflow setter
+     * - and only then: a write that stays in the status, a move out of it and a refused move into it
+     * leave the field alone, and no caller writes it.
+     */
+    private void assertStatusStampsRuntime() {
+        String clearances = "/clearance/ClearanceController";
+        String approve = "/services/java/" + PROJECT + "/gen/events/emission/ApproveClearanceTransition/run";
+
+        // A move the lifecycle refuses (OPEN has no edge to CLOSED) is never written, so it stamps nothing.
+        int refused = createRecord(clearances, "{\"Note\":\"refused\"}");
+        updateRecord(clearances, refused, "{\"Id\":" + refused + ",\"Note\":\"refused\",\"Status\":4}", 400);
+        Map<String, Object> unmoved = readRecord(clearances, refused);
+        assertEquals(1, ((Number) unmoved.get("Status")).intValue(), "a refused move leaves the status where it was: " + unmoved);
+        assertNull(unmoved.get("ClosedOn"), "a refused move into a stamped status must stamp nothing: " + unmoved);
+
+        // The button moves the record into APPROVED; the repository stamps the arrival in the same write.
+        int clearance = createRecord(clearances, "{\"Note\":\"walked\"}");
+        assertNull(readRecord(clearances, clearance).get("ApprovedAt"), "a create into OPEN enters no stamped status");
+        Instant beforeApproval = Instant.now()
+                                        .truncatedTo(java.time.temporal.ChronoUnit.MILLIS);
+        runTransition(approve, clearance);
+        Instant firstApproval = instantOf(readRecord(clearances, clearance).get("ApprovedAt"));
+        assertFalse(firstApproval.isBefore(beforeApproval),
+                "the button's move must stamp the moment it ran: " + firstApproval + " < " + beforeApproval);
+
+        // The field is the move's alone: a plain PUT carrying a value for it keeps the stored one...
+        updateRecord(clearances, clearance, "{\"Id\":" + clearance + ",\"Note\":\"edited\",\"ApprovedAt\":946684800}", 200);
+        Map<String, Object> edited = readRecord(clearances, clearance);
+        assertEquals("edited", edited.get("Note"));
+        assertEquals(firstApproval, instantOf(edited.get("ApprovedAt")), "a caller must not write a stamped field: " + edited);
+
+        // ...a move OUT of the status keeps it - it is a fact about the past...
+        updateRecord(clearances, clearance, "{\"Id\":" + clearance + ",\"Note\":\"edited\",\"Status\":3}", 200);
+        assertEquals(firstApproval, instantOf(readRecord(clearances, clearance).get("ApprovedAt")), "leaving a status keeps its stamp");
+
+        // ...and coming back records the latest arrival.
+        runTransition(approve, clearance);
+        Instant secondApproval = instantOf(readRecord(clearances, clearance).get("ApprovedAt"));
+        assertTrue(secondApproval.isAfter(firstApproval),
+                "re-entering a status must re-stamp it: " + secondApproval + " <= " + firstApproval);
+
+        // A plain REST move into CLOSED is a full update, and it stamps too - a date, in its own shape.
+        java.time.LocalDate dayBefore = java.time.LocalDate.now();
+        updateRecord(clearances, clearance, "{\"Id\":" + clearance + ",\"Note\":\"edited\",\"Status\":4}", 200);
+        Map<String, Object> closed = readRecord(clearances, clearance);
+        java.time.LocalDate dayAfter = java.time.LocalDate.now();
+        java.time.LocalDate closedOn = dateOf(closed.get("ClosedOn"));
+        assertTrue(closedOn.equals(dayBefore) || closedOn.equals(dayAfter), "a full update into CLOSED must stamp today: " + closed);
+        assertEquals(secondApproval, instantOf(closed.get("ApprovedAt")), "another status's arrival leaves this stamp alone");
+
+        // The workflow half. A create landing in its init: status ENTERS it, so SUBMITTED is stamped on
+        // insert; the flow's setter then moves the permit to APPROVED, and no step of its own stamps it.
+        Instant beforeCreate = Instant.now()
+                                      .truncatedTo(java.time.temporal.ChronoUnit.MILLIS);
+        int permit = createRecord("/permit/PermitController", "{\"Note\":\"flowed\"}");
+        AtomicReference<Map<String, Object>> approved = new AtomicReference<>();
+        restAssuredExecutor.execute(() -> approved.set(given().config(EXACT_NUMBERS)
+                                                              .when()
+                                                              .get(API + "/permit/PermitController/" + permit)
+                                                              .then()
+                                                              .statusCode(200)
+                                                              .body("Status", equalTo(2))
+                                                              .body("ApprovedAt", notNullValue())
+                                                              .extract()
+                                                              .jsonPath()
+                                                              .getMap("")),
+                60);
+        Instant submittedAt = instantOf(approved.get()
+                                                .get("SubmittedAt"));
+        Instant approvedAt = instantOf(approved.get()
+                                               .get("ApprovedAt"));
+        assertFalse(submittedAt.isBefore(beforeCreate), "a create into SUBMITTED must stamp it: " + submittedAt + " < " + beforeCreate);
+        assertFalse(approvedAt.isBefore(submittedAt), "the flow's setter must stamp its own, later arrival: " + approved.get());
+    }
+
+    /** PUTs a record to a generated controller and expects the given status. */
+    private void updateRecord(String controller, int id, String body, int expectedStatus) {
+        restAssuredExecutor.execute(() -> given().contentType("application/json")
+                                                 .body(body)
+                                                 .when()
+                                                 .put(API + controller + "/" + id)
+                                                 .then()
+                                                 .statusCode(expectedStatus));
+    }
+
+    /** GETs a record from a generated controller, its numbers exact. */
+    private Map<String, Object> readRecord(String controller, int id) {
+        AtomicReference<Map<String, Object>> record = new AtomicReference<>();
+        restAssuredExecutor.execute(() -> record.set(given().config(EXACT_NUMBERS)
+                                                            .when()
+                                                            .get(API + controller + "/" + id)
+                                                            .then()
+                                                            .statusCode(200)
+                                                            .extract()
+                                                            .jsonPath()
+                                                            .getMap("")));
+        return record.get();
+    }
+
+    /** Runs a generated {@code transitions:} button on a record. */
+    private void runTransition(String transition, int id) {
+        restAssuredExecutor.execute(() -> given().contentType("application/json")
+                                                 .body("{\"id\":" + id + "}")
+                                                 .when()
+                                                 .post(transition)
+                                                 .then()
+                                                 .statusCode(200));
+    }
+
+    /** An Instant is written as epoch seconds, with its nanoseconds as the fraction. */
+    private static Instant instantOf(Object value) {
+        assertNotNull(value, "expected an instant");
+        BigDecimal epochSeconds = new BigDecimal(String.valueOf(value));
+        return Instant.ofEpochSecond(epochSeconds.longValue(), epochSeconds.remainder(BigDecimal.ONE)
+                                                                           .movePointRight(9)
+                                                                           .longValue());
+    }
+
+    /** A LocalDate is written as its [year, month, day] array. */
+    private static java.time.LocalDate dateOf(Object value) {
+        List<?> parts = (List<?>) value;
+        assertEquals(3, parts.size(), "a date is written as [year, month, day]: " + value);
+        return java.time.LocalDate.of(((Number) parts.get(0)).intValue(), ((Number) parts.get(1)).intValue(),
+                ((Number) parts.get(2)).intValue());
     }
 
     /**
@@ -2856,6 +3169,14 @@ class IntentEmissionCoverageIT extends IntegrationTest {
         assertTrue(contentOf("gen/claimsbyunit/api/reports/ClaimsByUnitController.java").contains("@Post(\"/sum\")"),
                 "the report controller must expose the server-side sum the count tile reads");
 
+        // aging (#7888): the as-of date is the report's own DATE parameter, and its CURRENT_DATE initial
+        // is resolved per request - never baked in as the day the module was generated.
+        String entryAgingRepository = contentOf("gen/entryaging/data/reports/EntryAgingRepository.java");
+        assertTrue(
+                entryAgingRepository.contains(
+                        "parameter(\"asOf\", \"DATE\", value(filter, \"asOf\", java.time.LocalDate.now().toString()))"),
+                "the aging report must bind its as-of date to today when the request carries none: " + entryAgingRepository);
+
         // kind: statement (#6938): the line classification is a generated .view artifact next to the
         // .report - the selectors and labels live THERE, as data the ViewsSynchronizer provisions,
         // never inside the generated repository.
@@ -2865,6 +3186,18 @@ class IntentEmissionCoverageIT extends IntegrationTest {
         assertTrue(entrySheetView.contains("LIKE 'Vault%'"), "the line selectors must live in the view: " + entrySheetView);
         assertTrue(entrySheetView.contains("CAST(NULL AS VARCHAR(255)) as \\\"ACCOUNT_CODE\\\""),
                 "every line must carry a head arm, so an unmatched line still renders: " + entrySheetView);
+        // ...and on the cash basis (#7857) the per-entry cash totals are a second structural view.
+        String cashTotalsView = contentOf("CashFlowCashTotals.view");
+        assertTrue(cashTotalsView.contains("\"name\": \"EMISSION_CASH_FLOW_CASH_TOTALS\""),
+                "the cash-flow statement's entry totals must be a named database object: " + cashTotalsView);
+        // kind: ledger (#7887): a group account's subtree is the parameter-free closure of the chart,
+        // so it is a generated .view too, and the .report binds the account as a parameter over it.
+        String accountTreeView = contentOf("CashCardAccountTree.view");
+        assertTrue(accountTreeView.contains("\"name\": \"EMISSION_CASH_CARD_ACCOUNT_TREE\"") && accountTreeView.contains("WITH RECURSIVE"),
+                "the ledger's account closure must be a named recursive view: " + accountTreeView);
+        String cashCardReport = contentOf("CashCard.report");
+        assertTrue(cashCardReport.contains("\"kind\": \"ledger\"") && cashCardReport.contains("\"name\": \"account\""),
+                "the ledger report must carry its kind and declare the account parameter: " + cashCardReport);
         String entrySheetReport = contentOf("EntrySheet.report");
         assertTrue(entrySheetReport.contains("FROM \\\"EMISSION_ENTRY_SHEET_LINES\\\""),
                 "the .report query must read the generated view: " + entrySheetReport);
@@ -2942,27 +3275,36 @@ class IntentEmissionCoverageIT extends IntegrationTest {
         assertTrue(billHeaderRepository.contains("totals.put(\"BalanceDue\", entity.BalanceDue)"),
                 "the totals recompute must persist the refreshed calculated field: " + billHeaderRepository);
 
-        // Frozen header card (#7501): Bill is the fixture's only MANAGE_DOCUMENT master carrying
-        // immutableWhen (function: Document + Status == 2), power-only (its Person relation carries
-        // no personal: true, so it has no my-surface). The card must render (not merely disable the
-        // edit form) and format each value through the shared fieldDisplay() rather than the raw form
-        // value - a DATE field (dueOn) is the one the review's "raw model values" finding named.
+        // Read-only header (#7501, reworked by #7770): Bill is the fixture's only MANAGE_DOCUMENT
+        // master carrying immutableWhen (function: Document + Status == 2), power-only (its Person
+        // relation carries no personal: true, so it has no my-surface). An immutable document opens in
+        // preview, and preview renders every header field as its VALUE through the shared
+        // fieldDisplay() - never a disabled input, never the raw form value. A DATE field (dueOn) is
+        // the one the #7501 review's "raw model values" finding named.
         String billDocumentView = contentOf("gen/emission/views/Bill/Bill-document.html");
-        assertTrue(billDocumentView.contains("x-show=\"!mutable\""),
-                "immutableWhen on a MANAGE_DOCUMENT master must render the frozen header card, not only disable the edit form");
-        assertTrue(billDocumentView.contains("x-text=\"fieldDisplay(form.DueOn, 'DATE', '', null)\""),
-                "the frozen header card must read a DATE field through fieldDisplay(), not print the raw form value: " + billDocumentView);
+        assertTrue(billDocumentView.contains("x-text=\"fieldDisplay(form.DueOn, 'DATE', '', null) || '\\u2014'\""),
+                "the preview must read a DATE field through fieldDisplay(), not print the raw form value: " + billDocumentView);
         // ...and a DROPDOWN relation through its option label (#7576): the options travel as the Alpine
-        // scope's options<Prop>, which an x-text expression resolves, so the card cannot drop the relation.
-        assertTrue(billDocumentView.contains("x-text=\"fieldDisplay(form.Person, 'DROPDOWN', '', optionsPerson)\""),
-                "the frozen header card must show a DROPDOWN relation's option label through fieldDisplay(): " + billDocumentView);
-        // ...and so must the Details card beside it, the one the read-only fields live in (#7522):
-        // both cards share the helper, neither prints a raw form value.
+        // scope's options<Prop>, which an x-text expression resolves, so the preview cannot drop the
+        // relation.
+        assertTrue(billDocumentView.contains("x-text=\"fieldDisplay(form.Person, 'DROPDOWN', '', optionsPerson) || '\\u2014'\""),
+                "the preview must show a DROPDOWN relation's option label through fieldDisplay(): " + billDocumentView);
+        // ...and so must the rail's Details, the section the read-only fields live in (#7522).
         assertTrue(billDocumentView.contains("fieldDisplay(form.SendOutcome, "),
-                "the Details card must read a read-only field through fieldDisplay(): " + billDocumentView);
-        assertFalse(billDocumentView.contains("x-text=\"form."), "no read-only card may print a raw form value: " + billDocumentView);
-        assertTrue(billDocumentView.contains("class=\"vbox gap-4 w-full\" x-show=\"mutable\""),
-                "immutableWhen on a MANAGE_DOCUMENT master must hide the header edit form once the record is immutable");
+                "the Details rail must read a read-only field through fieldDisplay(): " + billDocumentView);
+        assertFalse(billDocumentView.contains("x-text=\"form."), "no read-only value may print a raw form value: " + billDocumentView);
+        // One read-only rendering: the separate frozen-header card and the form it swapped out are gone,
+        // and the editable controls exist only outside preview.
+        assertFalse(billDocumentView.contains("x-show=\"mutable\""),
+                "the header form must not be swapped for a frozen card any more - preview is the read-only header");
+        assertTrue(billDocumentView.contains("<template x-if=\"!isPreview\">"),
+                "the header controls must render only in the editable modes");
+        // The document follows the manage form's bar (#7770): one primary chosen by the page, no Back to
+        // list beside Close/Cancel, and the workflow task as the primary rather than in its own banner.
+        assertTrue(billDocumentView.contains("primaryAction === 'save' ? 'primary' : 'outline'"),
+                "Save must step down to outlined while a clean document's task holds the primary slot");
+        assertFalse(billDocumentView.contains("Back to list"), "the document bar must not carry Back to list beside its dismiss");
+        assertFalse(billDocumentView.contains("x-h-card"), "the document's groups are headings and rules, not cards");
         // The page's status stepper is chosen and ordered by status id, never by the label it renders
         // (#7592): the picker's options arrive sorted by their TRANSLATED label - here Bulgarian, which
         // the English terminal heuristic cannot read either - and the stepper read off them listed
@@ -4075,10 +4417,30 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                 "the entity's own create/edit form must still be routed");
         assertTrue(shellIndex.contains("x-route=\"/my/Leave/list\" x-template.target.app=\"./views/my/Leave-list.html\""),
                 "the personal list must stay reachable at /my/<Entity>/list");
-        assertTrue(contentOf("gen/emission/views/Leave/Leave-manage-list.html").contains("goCalendar()"),
-                "the entity's browse page must offer the switch to its calendar");
-        assertTrue(contentOf("gen/emission/views/Leave/Leave-calendar.html").contains("goList()"),
-                "the calendar must offer the switch back to the entity's own browse page");
+        // #7837: the switch is one icon-only single-choice x-h-button-group on both pages, and the
+        // page's viewChoice routes the pick.
+        String leaveList = contentOf("gen/emission/views/Leave/Leave-manage-list.html");
+        assertTrue(leaveList.contains("x-model=\"viewChoice\"") && leaveList.contains("x-h-button-group-radio=\"'calendar'\""),
+                "the entity's browse page must offer the switch to its calendar as the view group");
+        assertFalse(leaveList.contains("@click=\"goCalendar()\""), "the calendar is no longer a menu item of the browse page");
+        assertTrue(
+                contentOf("gen/emission/js/components/pages/Leave/LeaveManageListPage.js").contains(
+                        "if (value === 'calendar') return this.goCalendar();"),
+                "picking the calendar in the browse page's view group must open the calendar");
+        String leaveCalendarView = contentOf("gen/emission/views/Leave/Leave-calendar.html");
+        assertTrue(leaveCalendarView.contains("x-model=\"viewChoice\"") && leaveCalendarView.contains("x-h-button-group-radio=\"'table'\""),
+                "the calendar must offer the switch back to the entity's own browse page as the view group");
+        assertTrue(leaveCalendar.contains("if (value === 'table') this.goList();"),
+                "picking the table in the calendar's view group must open the entity's own browse page");
+        // The calendar's own chrome is translated, its events come from the shared mapping, and a
+        // reload hands over the events alone - Harmonia applies `view` on every config, so a config
+        // naming it would snap the calendar back to its initial view.
+        assertTrue(leaveCalendarView.contains(":data-today-label=") && leaveCalendarView.contains(":data-more-label="),
+                "the calendar must hand x-h-calendar its labels translated");
+        assertTrue(leaveCalendar.contains("window.HarmoniaCalendar.events("),
+                "the calendar must map rows through the shared HarmoniaCalendar");
+        assertTrue(leaveCalendar.contains("this.calCfg = { events: this.buildEvents() };"),
+                "a reload must keep the view the user navigated to");
         assertTrue(contentOf("gen/emission/views/my/Leave-list.html").contains("goCalendar()"),
                 "the personal list must offer the switch to the personal calendar");
 
@@ -4086,6 +4448,10 @@ class IntentEmissionCoverageIT extends IntegrationTest {
         // BY must link there. Both of the scope target's record surfaces carry the affordance - the
         // record sheet of its list (selected row) and the entity's own form (open record).
         assertTrue(leaveCalendar.contains("scopeId"), "a scoped calendar must read its scope from the route");
+        assertTrue(
+                leaveCalendarView.contains("x-h-chip-close") && leaveCalendar.contains("clearScope()")
+                        && leaveCalendar.contains("loadScopeText()"),
+                "a scoped calendar must name its scope record in a chip that drops the scope");
         assertTrue(
                 contentOf("gen/emission/views/Campaign/Campaign-manage-list.html").contains(
                         "openScopedCalendar('CampaignEvent', 'Campaign', selectedId)"),
@@ -4104,10 +4470,23 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                 "the document list of a slots entity must stay reachable at /<Entity>/list");
         assertTrue(shellIndex.contains("x-route=\"/Visit/create\" x-template.target.app=\"./views/Visit/Visit-document.html\""),
                 "slot-click must create through the DOCUMENT editor, not a plain form");
-        assertTrue(contentOf("gen/emission/views/Visit/Visit-slots.html").contains("goList()"),
-                "the picker must offer the switch to the entity's own browse page");
-        assertTrue(contentOf("gen/emission/views/Visit/Visit-manage-list.html").contains("goSlots()"),
-                "the document list must offer the switch back to the picker");
+        String visitSlotsView = contentOf("gen/emission/views/Visit/Visit-slots.html");
+        String visitSlots = contentOf("gen/emission/js/components/pages/Visit/VisitSlotsPage.js");
+        assertTrue(
+                visitSlotsView.contains("x-model=\"viewChoice\"") && visitSlotsView.contains("x-h-button-group-radio=\"'table'\"")
+                        && visitSlots.contains("if (value === 'table') this.goList();"),
+                "the picker must offer the switch to the entity's own browse page as the view group");
+        assertTrue(
+                contentOf("gen/emission/views/Visit/Visit-manage-list.html").contains("x-h-button-group-radio=\"'slots'\"")
+                        && contentOf("gen/emission/js/components/pages/Visit/VisitManageListPage.js").contains(
+                                "if (value === 'slots') return this.goSlots();"),
+                "the document list must offer the switch back to the picker as the view group");
+        // #7837: the picker reads the bookings of the days it shows (range-change, a GTE/LT search on
+        // the start column) and a taken slot stays clickable, opening its booking.
+        assertTrue(visitSlotsView.contains("@range-change=\"onRange\""), "the picker must load the days it shows");
+        assertTrue(visitSlots.contains("operator: 'GTE'") && visitSlots.contains("operator: 'LT'"),
+                "the picker must ask the controller for the visible days only");
+        assertTrue(visitSlots.contains("clickable: true"), "a taken slot must stay clickable so it opens its booking");
 
         // #6482: a document whose LINE-ITEMS child declares view: calendar renders the items PANE as
         // the calendar - on the power, personal and partner document surfaces alike. This is the
@@ -4288,6 +4667,19 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                 "a targeted write (transition button, workflow setter) must be validated against the graph too");
         assertTrue(docRepository.contains("enforceLifecycleStart(entity.Status);"),
                 "with a declared init, a record must not be created mid-lifecycle");
+
+        // stampOn (#7874): compiled into the REPOSITORY beside the lifecycle - every status write passes
+        // through it, so every writer stamps, and a targeted write carries the stamp in its own statement.
+        String clearanceRepository = contentOf("gen/emission/data/clearance/ClearanceRepository.java");
+        assertTrue(
+                clearanceRepository.contains("if (\"2\".equals(next) && !\"2\".equals(previous)) {")
+                        && clearanceRepository.contains("entity.ApprovedAt = java.time.Instant.now();"),
+                "an arrival into APPROVED must stamp the timestamp field: " + clearanceRepository);
+        assertTrue(clearanceRepository.contains("entity.ClosedOn = java.time.LocalDate.now();"), "a date field must stamp today's date");
+        assertTrue(clearanceRepository.contains("values.putAll(applyStatusStamps(stampPrevious, entity));"),
+                "a targeted write (transition button, workflow setter) must carry the stamp in its own statement");
+        assertTrue(clearanceRepository.contains("applyStatusStamps(null, entity);"), "a create landing in a stamped status must stamp it");
+        assertFalse(docRepository.contains("applyStatusStamps"), "an entity without stampOn must carry none of it");
 
         // send a document by e-mail: the notify block, at two of its call sites.
         //
@@ -5083,6 +5475,75 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                                                  .body("[1].Amount", equalTo(0.0F))
                                                  .body("[2].Code", equalTo("TOTAL"))
                                                  .body("[2].Amount", equalTo(60.0F)));
+
+        // kind: statement on the cash basis, end to end (#7857): both generated views provisioned, the
+        // thin query joining them. The sections reconcile with the change in the cash accounts (+1080):
+        // the transfer between two cash accounts is no flow, and the compound voucher's cash is spread
+        // over its credit side by amount (75 to the customer, 25 to sales).
+        restAssuredExecutor.execute(() -> given().when()
+                                                 .get("/services/java/" + PROJECT + "/gen/cashflow/api/reports/CashFlowController")
+                                                 .then()
+                                                 .statusCode(200)
+                                                 .body("Code",
+                                                         contains("OP.IN", "OP.SALES", "OP.OUT", "OP", "INV", "INV.OUT", "FIN", "NET"))
+                                                 .body("[0].Amount", equalTo(375.0F))
+                                                 .body("[1].Amount", equalTo(25.0F))
+                                                 .body("[2].Amount", equalTo(120.0F))
+                                                 .body("[3].Amount", equalTo(280.0F))
+                                                 .body("[4].Amount", equalTo(-200.0F))
+                                                 .body("[6].Amount", equalTo(1000.0F))
+                                                 .body("[7].Amount", equalTo(1080.0F)));
+
+        // aging, end to end (#7888): Vault holds 100 debit (2026-01-10) against 40 credit (2026-01-11).
+        // As of today both are long past 90 days; as of 2026-01-10 the debit is due that very day (0
+        // days past due) and the credit is not yet due - and either way the buckets add up to 60.
+        restAssuredExecutor.execute(() -> given().when()
+                                                 .get("/services/java/" + PROJECT + "/gen/entryaging/api/reports/EntryAgingController")
+                                                 .then()
+                                                 .statusCode(200)
+                                                 .body("find { it.'Account Name' == 'Vault' }.'Overdue 90+'", equalTo(60.0F))
+                                                 .body("find { it.'Account Name' == 'Vault' }.'Not Yet Due'", equalTo(0.0F))
+                                                 .body("find { it.'Account Name' == 'Vault' }.'Open Amount'", equalTo(60.0F)));
+        restAssuredExecutor.execute(() -> given().queryParam("asOf", "2026-01-10")
+                                                 .when()
+                                                 .get("/services/java/" + PROJECT + "/gen/entryaging/api/reports/EntryAgingController")
+                                                 .then()
+                                                 .statusCode(200)
+                                                 .body("find { it.'Account Name' == 'Vault' }.'Overdue 0-30'", equalTo(100.0F))
+                                                 .body("find { it.'Account Name' == 'Vault' }.'Not Yet Due'", equalTo(-40.0F))
+                                                 .body("find { it.'Account Name' == 'Vault' }.'Overdue 90+'", equalTo(0.0F))
+                                                 .body("find { it.'Account Name' == 'Vault' }.'Open Amount'", equalTo(60.0F)));
+
+        // kind: ledger, end to end (#7887): the card of the GROUP 50 over [2026-02-06, 2026-12-31].
+        // Before the window the desk took +300 and the bank -120, so the card opens at 180; the five
+        // lines of the window run it to 1080 - the cash accounts' total change - which is also what the
+        // closing row reports, with the window's turnover (1150 debit, 250 credit) beside it.
+        String cashCard = "/services/java/" + PROJECT + "/gen/cashcard/api/reports/CashCardController";
+        restAssuredExecutor.execute(() -> given().queryParam("fromDate", "2026-02-06")
+                                                 .queryParam("toDate", "2026-12-31")
+                                                 .queryParam("account", 8)
+                                                 .when()
+                                                 .get(cashCard)
+                                                 .then()
+                                                 .statusCode(200)
+                                                 .body("Line", contains("Opening balance", null, null, null, null, null, "Closing balance"))
+                                                 .body("Balance", contains(180.0F, -20.0F, 980.0F, 1030.0F, 980.0F, 1080.0F, 1080.0F))
+                                                 .body("[1].\"Ledger Account Code\"", equalTo("5010"))
+                                                 .body("[1].\"Correspondent Accounts\"", equalTo("2040"))
+                                                 .body("[5].\"Correspondent Accounts\"", equalTo("4110, 7010"))
+                                                 .body("[6].Debit", equalTo(1150.0F))
+                                                 .body("[6].Credit", equalTo(250.0F)));
+        // ... and a later page carries the running balance of the whole window rather than restarting.
+        restAssuredExecutor.execute(() -> given().queryParam("fromDate", "2026-02-06")
+                                                 .queryParam("toDate", "2026-12-31")
+                                                 .queryParam("account", 8)
+                                                 .queryParam("$limit", 2)
+                                                 .queryParam("$offset", 3)
+                                                 .when()
+                                                 .get(cashCard)
+                                                 .then()
+                                                 .statusCode(200)
+                                                 .body("Balance", contains(1030.0F, 980.0F)));
 
         // calculatedActionOnCreate on a to-one relation, end to end: a create that OMITS the FK comes
         // back carrying the one the action resolved. Tariff 2 is the row flagged `base` - not the first

@@ -332,7 +332,9 @@ final class UnknownKeyValidator {
     private static Map<String, Field> readKeys(Class<?> type) {
         Map<String, Field> keys = new LinkedHashMap<>();
         for (Field field : type.getDeclaredFields()) {
-            if (field.isSynthetic() || Modifier.isStatic(field.getModifiers())) {
+            if (field.isSynthetic() || Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) {
+                // A transient field is never mapped from YAML (Gson skips it), so it is not a key an
+                // author can spell - accepting it here would let it be dropped without a sound.
                 continue;
             }
             SerializedName serialized = field.getAnnotation(SerializedName.class);

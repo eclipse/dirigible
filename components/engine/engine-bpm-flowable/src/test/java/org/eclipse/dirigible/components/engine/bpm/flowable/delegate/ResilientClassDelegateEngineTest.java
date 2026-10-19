@@ -91,6 +91,29 @@ class ResilientClassDelegateEngineTest {
         }
     }
 
+    /**
+     * Always fails with an {@link Error} - what a delegate whose library left the platform raises
+     * (#7840). Carries the attempt number like {@link DoomedDelegate}.
+     */
+    public static class UnlinkableDelegate implements JavaDelegate {
+
+        static final AtomicInteger ATTEMPTS = new AtomicInteger();
+
+        @Override
+        public void execute(DelegateExecution execution) {
+            throw new NoClassDefFoundError("unlinkable (attempt " + ATTEMPTS.incrementAndGet() + ")");
+        }
+    }
+
+    /** Always fails with a message-less {@link Error}, so the route can only record its class name. */
+    public static class UninitializableDelegate implements JavaDelegate {
+
+        @Override
+        public void execute(DelegateExecution execution) {
+            throw new ExceptionInInitializerError();
+        }
+    }
+
     /** The error route: records what {@code {error}} reads, like the generated setField delegate. */
     public static class RecordFailureDelegate implements JavaDelegate {
 
@@ -136,6 +159,33 @@ class ResilientClassDelegateEngineTest {
                               .createDeadLetterJobQuery()
                               .count(),
                 "the converted failure must never dead-letter");
+    }
+
+    /**
+     * An {@link Error} is a failure like any other to the step (#7840): before, it bypassed the
+     * conversion, the job dead-lettered and the instance stayed parked on the step.
+     */
+    @Test
+    void anErrorOnTheFinalAttemptRoutesThroughTheErrorBoundary() {
+        deploy("unlinkable", UnlinkableDelegate.class.getName(), "R2/PT1S");
+        ProcessInstance instance = engine.getRuntimeService()
+                                         .startProcessInstanceByKey("unlinkable");
+
+        assertEquals("unlinkable (attempt 2)", historicVariable(instance, "recorded"),
+                "the declared cycle must still run, and its final Error must take the error route");
+        assertEquals(0, engine.getManagementService()
+                              .createDeadLetterJobQuery()
+                              .count(),
+                "the converted Error must never dead-letter");
+    }
+
+    @Test
+    void anErrorWithoutAMessagePublishesItsClassName() {
+        deploy("uninitializable", UninitializableDelegate.class.getName(), "R1/PT1S");
+        ProcessInstance instance = engine.getRuntimeService()
+                                         .startProcessInstanceByKey("uninitializable");
+
+        assertEquals(ExceptionInInitializerError.class.getName(), historicVariable(instance, "recorded"));
     }
 
     @Test

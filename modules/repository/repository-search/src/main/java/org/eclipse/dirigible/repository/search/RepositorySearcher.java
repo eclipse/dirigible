@@ -117,6 +117,14 @@ public class RepositorySearcher {
     }
 
     /**
+     * Stops the periodic reindexing. Its timer thread outlives the repository otherwise and keeps
+     * reindexing the folder.
+     */
+    public void close() {
+        timer.cancel();
+    }
+
+    /**
      * The Class ReindexTask.
      */
     class ReindexTask extends TimerTask {

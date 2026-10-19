@@ -30,6 +30,30 @@ import org.junit.jupiter.api.Test;
 class GlueGeneratorTest {
 
     @Test
+    void aReversalRefusalRendersItsConditionOverTheOriginalAndEscapesItsMessage() {
+        // #7886: the neutral terms of a refusal read the loaded original, null-guarded, and the authored
+        // message becomes the content of a Java string literal.
+        Map<String, Object> term = new LinkedHashMap<>();
+        term.put("owner", "source");
+        term.put("property", "ReversedBy");
+        term.put("equal", Boolean.FALSE);
+        term.put("type", "null");
+        term.put("numericKey", Boolean.FALSE);
+        Map<String, Object> refusal = new LinkedHashMap<>();
+        refusal.put("terms", List.of(term));
+        refusal.put("message", "Entry \"7\" is already reversed");
+
+        List<Map<String, Object>> rendered = GlueGenerator.refusals(List.of(refusal));
+
+        assertThat(rendered).hasSize(1);
+        assertThat(rendered.get(0)
+                           .get("condition")).isEqualTo("((source == null ? null : source.ReversedBy) != null)");
+        assertThat(rendered.get(0)
+                           .get("message")).isEqualTo("Entry \\\"7\\\" is already reversed");
+        assertThat(GlueGenerator.refusals(null)).isEmpty();
+    }
+
+    @Test
     void theRenamedCompareOnlyWhenDerivedKeyIsReadUnderItsFormerSpelling() {
         // #7188 renamed the #7163 key `expressionDefault`; the template reads only the new one, so a
         // .glue from between the two rendered a CURRENT_DATE-default cell with a plain same() - every
@@ -528,6 +552,59 @@ class GlueGeneratorTest {
                          .doesNotContainKey("javaChildPerspective");
     }
 
+    /**
+     * A declared export (#7855) binds its format factory, its field layouts and its role gate as Java.
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    void anExportIsBoundAsTheJavaItsFileAndLayoutsAreBuiltWith() throws IOException {
+        Map<String, Object> field = new LinkedHashMap<>();
+        field.put("name", "Tax\"Base");
+        field.put("width", "12");
+        field.put("alignRight", Boolean.TRUE);
+        field.put("pad", "'");
+        field.put("truncate", Boolean.FALSE);
+        field.put("scale", "2");
+        field.put("decimalSeparator", ",");
+        field.put("attribute", Boolean.FALSE);
+        field.put("reading", Map.of("kind", "column", "owner", "row", "alias", "Sum Tax Base"));
+        Map<String, Object> line = new LinkedHashMap<>();
+        line.put("constant", "LINE_0");
+        line.put("element", "line");
+        line.put("fields", List.of(field));
+        Map<String, Object> export = new LinkedHashMap<>();
+        export.put("name", "VatLedger");
+        export.put("className", "VatLedger");
+        export.put("format", "delimited");
+        export.put("encoding", "windows-1251");
+        export.put("lineEnding", "\r\n");
+        export.put("delimiter", ";");
+        export.put("quote", "\"");
+        export.put("quoteAll", Boolean.TRUE);
+        export.put("ledger", "ExportRun");
+        export.put("ledgerPerspective", "ExportRun");
+        export.put("sourceKind", "report");
+        export.put("report", "PurchasesBySupplier");
+        export.put("lineRecords", List.of(line));
+        export.put("fileNameReading", Map.of("kind", "string", "text", "vat.csv"));
+        export.put("roles", "Accountant,Auditor");
+
+        Map<String, Object> context = boundArrival("exports", export);
+
+        assertThat(context.get("fileFactory")).isEqualTo("ExportFile.delimited(\"windows-1251\", \"\\r\\n\", \";\", \"\\\"\", true)");
+        assertThat(context).containsEntry("reportSource", Boolean.TRUE)
+                           .containsEntry("reportGenFolder", "purchasesbysupplier")
+                           .containsEntry("javaLedgerPerspective", "exportrun")
+                           .containsEntry("fileNameExpression", "\"vat.csv\"")
+                           .containsEntry("rolesAnnotation", "@Roles({\"Accountant\", \"Auditor\"})");
+        Map<String, Object> bound =
+                (Map<String, Object>) ((List<Object>) ((Map<String, Object>) ((List<Object>) context.get("lineRecords")).get(0)).get(
+                        "fields")).get(0);
+        assertThat(bound.get("specExpression")).isEqualTo(
+                "ExportField.named(\"Tax\\\"Base\").width(12).alignRight().pad('\\'').scale(2).decimalSeparator(\",\")");
+        assertThat(bound.get("valueExpression")).isEqualTo("row.get(\"Sum Tax Base\")");
+    }
+
     /** A descriptor without collections - or one from before them - binds them empty. */
     @Test
     void anArrivalWithoutCollectionsBindsThemEmpty() throws IOException {
@@ -551,7 +628,37 @@ class GlueGeneratorTest {
         return arrival;
     }
 
+    /**
+     * A file import (#7856) appends to its entity's {@code
+     *
+    <TABLE>
+     * _IMPORTS} ledger, which the schema template names with the deployment's table prefix - so the
+     * import must carry the same prefix, with the separating underscore a hand-authored one may lack,
+     * or the two name different tables.
+     */
+    @Test
+    void anImportsLedgerTableCarriesTheDeploymentsTablePrefix() throws IOException {
+        Map<String, Object> declared = new LinkedHashMap<>();
+        declared.put("name", "bankCsv");
+        declared.put("className", "BankCsv");
+        declared.put("entity", "StatementLine");
+        declared.put("perspective", "Bank Statements");
+        declared.put("table", "BANK_STATEMENT_LINE");
+
+        Map<String, Object> prefixed = bound("imports", declared, Map.of("javaGenFolderName", "bank", "tablePrefix", "ACME"));
+        assertThat(prefixed.get("table")).isEqualTo("ACME_BANK_STATEMENT_LINE");
+        assertThat(prefixed.get("javaPerspective")).isEqualTo("bank_statements");
+
+        Map<String, Object> unprefixed = bound("imports", declared, Map.of("javaGenFolderName", "bank"));
+        assertThat(unprefixed.get("table")).isEqualTo("BANK_STATEMENT_LINE");
+    }
+
     private static Map<String, Object> boundArrival(String collection, Map<String, Object> arrival) throws IOException {
+        return bound(collection, arrival, Map.of("javaGenFolderName", "shop"));
+    }
+
+    private static Map<String, Object> bound(String collection, Map<String, Object> arrival, Map<String, Object> parameters)
+            throws IOException {
         List<Map<String, Object>> contexts = new ArrayList<>();
         ModelTemplateRenderer capturing = new ModelTemplateRenderer(null, null) {
             @Override
@@ -569,7 +676,7 @@ class GlueGeneratorTest {
         source.setLocation("/events/" + collection + ".java.template");
         source.setRename("gen/events/" + collection + ".java");
         new GlueGenerator(capturing).generate(collection, source, "", Map.of(collection, List.of(arrival)),
-                new LinkedHashMap<>(Map.of("javaGenFolderName", "shop")));
+                new LinkedHashMap<>(parameters));
         assertThat(contexts).hasSize(1);
         return contexts.get(0);
     }

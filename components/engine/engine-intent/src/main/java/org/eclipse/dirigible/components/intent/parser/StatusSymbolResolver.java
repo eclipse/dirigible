@@ -100,6 +100,7 @@ final class StatusSymbolResolver {
         resolver.rewriteProcesses(root);
         resolver.rewritePostings(root);
         resolver.rewriteGenerates(root);
+        resolver.rewriteReversals(root);
         resolver.rewriteSchedules(root);
         resolver.rewriteRollups(root);
         resolver.rewriteGlue(root);
@@ -232,6 +233,13 @@ final class StatusSymbolResolver {
                     rewriteWhen(field, "visibleWhen", statusRelation, status,
                             "entity [" + entityName + "] field [" + text(field, "name") + "] visibleWhen");
                 }
+                // A status stamp (#7874) names the status whose arrival the field records - always one of
+                // the record's own, as for the lifecycle graph.
+                Map<?, ?> stampOn = field == null ? null : asMap(field.get("stampOn"));
+                if (stampOn != null) {
+                    putResolved(stampOn, "status", status,
+                            "entity [" + entityName + "] field [" + text(field, "name") + "] stampOn status");
+                }
             }
             if (entity.get("visibleWhen") != null) {
                 String master = compositionMasterOf(entity);
@@ -362,6 +370,29 @@ final class StatusSymbolResolver {
             putResolved(generate, "sourceStatus", status, subject + " sourceStatus");
             putResolved(generate, "sourceStatusOnRetire", status, subject + " sourceStatusOnRetire");
             rewriteGeneratesItemsWhere(generate, subject);
+        }
+    }
+
+    /**
+     * The statuses a reversal (issue #7886) names, all on its entity's own nomenclature: the
+     * {@code when} guard it is offered under and every {@code refuse} condition.
+     */
+    private void rewriteReversals(Map<?, ?> root) {
+        for (Object node : asList(root.get("reversals"))) {
+            Map<?, ?> reversal = asMap(node);
+            if (reversal == null) {
+                continue;
+            }
+            String entity = text(reversal, "forEntity");
+            String subject = "reversal [" + text(reversal, "name") + "]";
+            Target status = statusOf(entity);
+            rewriteWhen(reversal, statusRelationName(entity), status, subject + " when");
+            for (Object refusal : asList(reversal.get("refuse"))) {
+                Map<?, ?> entry = asMap(refusal);
+                if (entry != null) {
+                    rewriteWhen(entry, statusRelationName(entity), status, subject + " refuse when");
+                }
+            }
         }
     }
 

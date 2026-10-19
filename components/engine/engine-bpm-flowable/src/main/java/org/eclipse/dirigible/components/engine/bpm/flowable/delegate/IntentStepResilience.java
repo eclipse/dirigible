@@ -35,10 +35,10 @@ import org.slf4j.LoggerFactory;
  *
  * <p>
  * A BPMN error boundary event fires only on a {@link BpmnError}; a delegate's plain
- * {@code RuntimeException} fails the async job instead (rollback, retry cycle, dead-letter
- * incident), so an {@code onError:} route would never be taken. This helper closes that gap at the
- * one moment the outcome is decided: when an attempt fails AND the task carries an intent error
- * boundary AND no further retry will run, the failure message is published as the
+ * {@code RuntimeException} or {@code Error} fails the async job instead (rollback, retry cycle,
+ * dead-letter incident), so an {@code onError:} route would never be taken. This helper closes that
+ * gap at the one moment the outcome is decided: when an attempt fails AND the task carries an
+ * intent error boundary AND no further retry will run, the failure message is published as the
  * {@link #ERROR_MESSAGE_VARIABLE} process variable (a {@code BpmnError} commits, so the variable
  * persists for the error route's {@code {error}} reads) and the error is propagated to the
  * boundary. Every other failure is left to the engine's own machinery - a task without the boundary
@@ -69,12 +69,22 @@ final class IntentStepResilience {
      * Convert the failure to the caught intent BPMN error when this is the final attempt of a task
      * carrying an intent error boundary.
      *
+     * <p>
+     * Whatever the delegate threw counts, an {@link Error} included (#7840): a
+     * {@code NoClassDefFoundError} from a library that left the platform is exactly when an operator
+     * needs the declared route, and it used to dead-letter the job instead. Only a
+     * {@link VirtualMachineError} is left to the engine - the JVM itself is failing, and running an
+     * error route on top of it would hide that.
+     *
      * @param execution the failing execution
-     * @param exception the delegate's failure
+     * @param failure the delegate's failure
      * @return {@code true} when the failure was converted and routed (the caller must not rethrow);
      *         {@code false} when the engine's own failure handling should proceed
      */
-    static boolean convertFinalFailure(DelegateExecution execution, RuntimeException exception) {
+    static boolean convertFinalFailure(DelegateExecution execution, Throwable failure) {
+        if (failure instanceof VirtualMachineError) {
+            return false;
+        }
         FlowElement element = execution.getCurrentFlowElement();
         if (!(element instanceof ServiceTask serviceTask) || !hasIntentErrorBoundary(execution, serviceTask)) {
             return false;
@@ -84,11 +94,11 @@ final class IntentStepResilience {
                 job == null ? null : job.getRetries())) {
             return false;
         }
-        String message = exception.getMessage() == null || exception.getMessage()
-                                                                    .isBlank() ? exception.getClass()
-                                                                                          .getName()
-                                                                            : exception.getMessage();
-        LOGGER.debug("Routing the final failed attempt of [{}] to its onError boundary: {}", serviceTask.getId(), message, exception);
+        String message = failure.getMessage() == null || failure.getMessage()
+                                                                .isBlank() ? failure.getClass()
+                                                                                    .getName()
+                                                                        : failure.getMessage();
+        LOGGER.debug("Routing the final failed attempt of [{}] to its onError boundary: {}", serviceTask.getId(), message, failure);
         execution.setVariable(ERROR_MESSAGE_VARIABLE, message);
         ErrorPropagation.propagateError(new BpmnError(ERROR_CODE, message), execution);
         return true;

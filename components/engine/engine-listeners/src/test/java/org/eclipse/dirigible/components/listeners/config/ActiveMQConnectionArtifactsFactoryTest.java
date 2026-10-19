@@ -11,6 +11,7 @@ package org.eclipse.dirigible.components.listeners.config;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import jakarta.jms.Connection;
@@ -77,6 +78,61 @@ class ActiveMQConnectionArtifactsFactoryTest {
         when(connectionFactory.createConnection()).thenThrow(JMSException.class);
 
         assertThrows(IllegalStateException.class, () -> connectionArtifactsFactory.createConnection(exceptionListener));
+    }
+
+    /**
+     * A connection whose start() the broker refuses - a client id another connection holds - is closed
+     * before the exception leaves the factory (#7853). The caller never receives it, so nothing else
+     * could close it, and its started transport would keep reconnecting with the same client id.
+     *
+     * @throws JMSException the JMS exception
+     */
+    @Test
+    void aConnectionWhoseStartIsRefusedIsClosed() throws JMSException {
+        when(connectionFactory.createConnection()).thenReturn(connection);
+        doThrow(new JMSException("Broker: x - Client: y already connected")).when(connection)
+                                                                            .start();
+
+        IllegalStateException thrown =
+                assertThrows(IllegalStateException.class, () -> connectionArtifactsFactory.createConnection(exceptionListener, "y"));
+
+        verify(connection).close();
+        assertThat(thrown.getCause()).hasMessageContaining("already connected");
+    }
+
+    /**
+     * Refused before start() - JMS rejects a client id it cannot use - closes the connection too.
+     *
+     * @throws JMSException the JMS exception
+     */
+    @Test
+    void aConnectionWhoseClientIdIsRefusedIsClosed() throws JMSException {
+        when(connectionFactory.createConnection()).thenReturn(connection);
+        doThrow(new JMSException("invalid client id")).when(connection)
+                                                      .setClientID("y");
+
+        assertThrows(IllegalStateException.class, () -> connectionArtifactsFactory.createConnection(exceptionListener, "y"));
+
+        verify(connection).close();
+    }
+
+    /**
+     * A close the broker refuses as well must not hide why the connection failed.
+     *
+     * @throws JMSException the JMS exception
+     */
+    @Test
+    void aFailedCloseDoesNotHideTheRefusal() throws JMSException {
+        when(connectionFactory.createConnection()).thenReturn(connection);
+        doThrow(new JMSException("refused")).when(connection)
+                                            .start();
+        doThrow(new JMSException("close refused too")).when(connection)
+                                                      .close();
+
+        IllegalStateException thrown =
+                assertThrows(IllegalStateException.class, () -> connectionArtifactsFactory.createConnection(exceptionListener, "y"));
+
+        assertThat(thrown.getCause()).hasMessage("refused");
     }
 
     /**

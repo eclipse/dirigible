@@ -8,8 +8,13 @@
  * Sources for a standalone .report — Harmonia variant. The backend (reportFileEntity Repository +
  * Controller + default roles + project.json) is identical to the AngularJS report-file template
  * (it is framework-neutral Java); only the UI differs — a self-contained Alpine.js + Harmonia page
- * (index.html + report.js) under gen/<genFolder>/reports/<name>/, in place of the AngularJS
+ * (index.html + report.js) under gen/<javaGenFolder>/reports/<name>/, in place of the AngularJS
  * perspective. The page queries the generated Java report controller directly.
+ *
+ * The page shares the backend's sanitized javaGenFolderName rather than the case-preserved
+ * genFolderName (the report file's own name): one folder per report, so a generate on a
+ * case-sensitive filesystem and an export from a case-insensitive one produce the same tree, and the
+ * reports store discovers the page once (dirigible #7889).
  */
 export function getSources() {
     return [
@@ -50,14 +55,14 @@ export function getSources() {
             location: "/template-application-ui-harmonia-java/ui/perspective/report-file/index.html.template",
             action: "generate",
             engine: "velocity",
-            rename: "gen/{{genFolderName}}/reports/{{name}}/index.html",
+            rename: "gen/{{javaGenFolderName}}/reports/{{name}}/index.html",
             collection: "generateReportModels"
         },
         {
             location: "/template-application-ui-harmonia-java/ui/perspective/report-file/report.js.template",
             action: "generate",
             engine: "velocity",
-            rename: "gen/{{genFolderName}}/reports/{{name}}/report.js",
+            rename: "gen/{{javaGenFolderName}}/reports/{{name}}/report.js",
             collection: "generateReportModels"
         }
     ];

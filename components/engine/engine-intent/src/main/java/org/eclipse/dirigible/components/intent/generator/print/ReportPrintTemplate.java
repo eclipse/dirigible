@@ -102,6 +102,10 @@ public final class ReportPrintTemplate {
                 appendParameter(template, "fromDate");
                 appendParameter(template, "toDate");
             }
+            if (report.isLedger()) {
+                // An account card without its account is anyone's - the account is part of the slice.
+                appendParameter(template, "account");
+            }
             for (ReportParameterIntent parameter : parameters) {
                 if (parameter.getName() != null && !parameter.getName()
                                                              .isBlank()) {

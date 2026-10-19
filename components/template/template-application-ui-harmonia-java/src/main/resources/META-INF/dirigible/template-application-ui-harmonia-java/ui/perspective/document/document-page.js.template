@@ -217,6 +217,10 @@ document.addEventListener('alpine:init', () => {
     // Print (renders the tenant's active .print template server-side to PDF) - the shared runtime's
     // printActions; the page provides `id`.
     ...printActions({ entity: '${name}', feeder: '/services/java/${projectName}/gen/events/${javaGenFolderName}/${name}PrintFeeder/' }),
+    // Viewport bands (issue #7770, as the manage form): below 768px the action cluster pins to the
+    // bottom of the screen; from 1024px the read-only rail sits beside the document, below it under.
+    isNarrow: false,
+    isWide: true,
 
     apiPath: '/${javaPerspectiveName}/${name}Controller',
 #if($history == "true")
@@ -401,6 +405,7 @@ document.addEventListener('alpine:init', () => {
       // re-read must not overwrite typing, so then only the history, the items and the panels move.
       this.onTasksChanged(() => this.form.ProcessId, () => this.refreshDocument(true));
 #end
+      this.watchViewport();
 
       this.refreshIcons();
     },
@@ -583,24 +588,31 @@ document.addEventListener('alpine:init', () => {
         const from = rec == null ? null : rec.${property.widgetDependsOnValueFrom};
 #end
 #if($property.widgetType == "DROPDOWN")
-        if (from == null || from === '') return;
-        const rows = await App.services.api.post('${property.widgetDropdownControllerUrl}/search', {
-          conditions: [{ propertyName: '${property.widgetDependsOnFilterBy}', operator: 'EQ', value: from }#if($property.widgetOptionsFilterBy),
-            { propertyName: '${property.widgetOptionsFilterBy}', operator: 'EQ', value: ${property.widgetOptionsFilterValueJs} }#end]
-        }, { baseUrl: '' });
+        if (from == null || from === '') {
+          // The source record leaves it empty: nothing to narrow by, so the whole list - as with no trigger.
+          await this.loadAllOptions${property.name}();
+        } else {
+          const rows = await App.services.api.post('${property.widgetDropdownControllerUrl}/search', {
+            conditions: [{ propertyName: '${property.widgetDependsOnFilterBy}', operator: 'EQ', value: from }#if($property.widgetOptionsFilterBy),
+              { propertyName: '${property.widgetOptionsFilterBy}', operator: 'EQ', value: ${property.widgetOptionsFilterValueJs} }#end]
+          }, { baseUrl: '' });
 #if($property.widgetPickable)
-        this.options${property.name} = this.sortOptions(this.pickableOptions(#labelRows($property "rows"), '${property.widgetDropDownKey}', '${property.widgetDropDownValue}', ${property.widgetPickable}), '$!{property.widgetOptionsOrdered}');
-        if (adjust) {
-          // Only a row the picker rule lets the user pick is auto-selected.
-          const pickable = this.options${property.name}.filter(o => !o.disabled);
-          this.form.${property.name} = pickable.length === 1 ? String(pickable[0].value) : '';
-        }
+          this.options${property.name} = this.sortOptions(this.pickableOptions(#labelRows($property "rows"), '${property.widgetDropDownKey}', '${property.widgetDropDownValue}', ${property.widgetPickable}), '$!{property.widgetOptionsOrdered}');
+          if (adjust) {
+            // Only a row the picker rule lets the user pick is auto-selected.
+            const pickable = this.options${property.name}.filter(o => !o.disabled);
+            this.form.${property.name} = pickable.length === 1 ? String(pickable[0].value) : '';
+          }
 #else
-        this.options${property.name} = this.sortOptions((rows || []).map(e => ({ value: e.${property.widgetDropDownKey}, text: #labelOf($property "e")#if($property.widgetType == "DOCUMENT_STATUS"), description: e.description#end })), '$!{property.widgetOptionsOrdered}');
-        if (adjust) {
-          this.form.${property.name} = this.options${property.name}.length === 1 ? String(this.options${property.name}[0].value) : '';
-        }
+          this.options${property.name} = this.sortOptions((rows || []).map(e => ({ value: e.${property.widgetDropDownKey}, text: #labelOf($property "e")#if($property.widgetType == "DOCUMENT_STATUS"), description: e.description#end })), '$!{property.widgetOptionsOrdered}');
+          if (adjust) {
+            this.form.${property.name} = this.options${property.name}.length === 1 ? String(this.options${property.name}[0].value) : '';
+          }
 #end
+        }
+        // A stored value the narrowing leaves out (the source record changed since it was saved) still
+        // shows its label; the narrowing still governs what may be newly picked.
+        if (!adjust) await this.ensureFilteredCurrent('${property.name}', '${property.widgetDropdownControllerUrl}', '${property.widgetDropDownKey}', '${property.widgetDropDownValue}', #if($property.widgetDropDownDocumentNumber)true#{else}false#end);
 #elseif($property.isDateType)
         this.form.${property.name} = from == null ? '' : this.toDateInput(from, '${property.widgetType}');
 #else
@@ -652,7 +664,7 @@ document.addEventListener('alpine:init', () => {
           // Save STAYS on the document (issue #7359): saving and leaving were the same click, so a
           // user who saved a header mid-session was thrown back to the list. Re-read it instead -
           // the server's calculated fields and totals come back with it - and say it was saved. The
-          // way out is Back to list, which is now guarded. Create mode already worked this way.
+          // way out is Cancel, which is guarded. Create mode already worked this way.
           await this.loadHeader();
           await this.loadItems();
           this.state = 'ready';
@@ -1446,6 +1458,156 @@ document.addEventListener('alpine:init', () => {
       } catch (e) {
         this.itemsError = App.services.apiErrors.messageFor(e, 'Could not delete the line.');
       }
+    },
+
+    // ----- Action bar (issue #7770, the manage form's rules from #7491) ------------------------------
+    // The bar carries at most ONE filled button, decided here rather than by competing x-shows in the
+    // markup. Preview: a workflow task the user can act on, else Edit, else nothing. Edit: the task
+    // while the header is clean - a document's Save stays on /edit (#7359), so a clean /edit is where
+    // a user who has just added lines stands when they submit - and Save as soon as there is an
+    // unsaved change, since the task must not run behind an unsaved header. Create: Save.
+#if($hasProcess)
+    // The tasks of THIS document: the store correlates entity.ProcessId with task.processInstanceId.
+    // Alpine.store, not the store magic - in a .js template that spelling is a Velocity reference.
+    get recordTasks() {
+      const store = Alpine.store('processTasks');
+      return (store && this.form && (this.isEdit || this.isPreview)) ? store.getTasks(this.form) : [];
+    },
+
+    // The one the primary button runs: the first the store hands back, which is its oldest.
+    get primaryTask() {
+      const tasks = this.recordTasks;
+      return tasks.length ? tasks[0] : null;
+    },
+
+    openPrimaryTask() {
+      const task = this.primaryTask;
+      if (task) Alpine.store('processTasks').openTask(task);
+    },
+
+    taskButtonLabel() {
+      const task = this.primaryTask;
+      return task ? Alpine.store('processTasks').taskName(task) : '';
+    },
+
+    // " · assigned <when>" for the strip, from the task's own createTime. Empty when the engine did
+    // not report one, so the strip never trails a dangling separator.
+    taskAssignedLine() {
+      const task = this.primaryTask;
+      if (!task || !task.createTime || !window.HarmoniaFormat) return '';
+      return ' · ' + T('$projectName:${tprefix}.messages.workflowAssigned', 'assigned') + ' ' + HarmoniaFormat.value(task.createTime, true);
+    },
+#else
+    get recordTasks() { return []; },
+    get primaryTask() { return null; },
+#end
+
+    // Whether Edit is offerable at all. The server stays authoritative - this only keeps the
+    // affordance honest where the page already knows.
+    get canEdit() {
+#if($immutableStatusProperty || $immutableAlways || $periodLock)
+      return !!this.mutable;
+#else
+      return true;
+#end
+    },
+
+    // 'task' | 'edit' | 'save' | 'none' - the filled slot.
+    get primaryAction() {
+      if (this.isPreview) {
+        if (this.recordTasks.length) return 'task';
+        return this.canEdit ? 'edit' : 'none';
+      }
+      return this.isEdit && this.recordTasks.length && !this.isDirty() ? 'task' : 'save';
+    },
+
+    // Preview: Edit steps down to the outlined slot when a task holds the primary one, and folds
+    // into the overflow menu on a narrow viewport.
+    get showsSecondaryEdit() {
+      return this.isPreview && this.primaryAction === 'task' && this.canEdit && !this.isNarrow;
+    },
+
+    get editInMenu() {
+      return this.isPreview && this.primaryAction === 'task' && this.canEdit && this.isNarrow;
+    },
+
+    // Whether the rail's Details block holds anything. Its properties are the ones the SERVER fills -
+    // audit columns, a process id, a read-only field - so on a document where none is set the heading
+    // would stand alone over an empty column.
+#set($railReadOnly = false)
+#foreach($property in $properties)
+#if(($property.isReadOnlyProperty == "true" || ($property.auditType && $property.auditType != "NONE")) && !$property.isHiddenProperty)#set($railReadOnly = true)#end
+#end
+    get hasDetailValues() {
+#if($railReadOnly)
+      return [
+#foreach($property in $properties)
+#if(($property.isReadOnlyProperty == "true" || ($property.auditType && $property.auditType != "NONE")) && !$property.isHiddenProperty)
+        this.form.${property.name},
+#end
+#end
+      ].some(v => v !== null && v !== undefined && v !== '');
+#else
+      return false;
+#end
+    },
+
+    // The rail is only worth its rule and its column when something inside it renders.
+    get hasRailContent() {
+      return this.hasDetailValues#if($docStatusProp != "") || !!this.statusText()#end#if($history == "true") || (this.history || []).length > 0#end;
+    },
+
+    // The title of a document without a number field: the entity name in preview, else what the
+    // page is doing to it.
+    headerTitle() {
+      const name = T('$projectName:${tprefix}.t.${dataName}', '${documentLabel}');
+      if (this.isPreview) return name;
+      return this.isEdit
+        ? T('$projectName:${tprefix}.defaults.formHeadUpdate', 'Edit {{name}}', { name: name })
+        : T('$projectName:${tprefix}.defaults.formHeadCreate', 'New {{name}}', { name: name });
+    },
+
+    // One line of the document's own identity under the title, from the properties the model marks
+    // as major - the flag that picks the list's columns. The number is the title and the status is
+    // the badge, so both are skipped; every value goes through the shared fieldDisplay.
+    summaryLine() {
+      if (!(this.isEdit || this.isPreview)) return '';
+      const parts = [];
+#foreach($property in $listProperties)
+#if(!$property.dataAutoIncrement && $property.widgetIsMajor && $property.aggregate != "true" && $property.widgetType != "DOCUMENT_STATUS" && $property.widgetType != "DOCUMENT_NUMBER" && $property.widgetType != "CHECKBOX" && !$property.isHiddenProperty)
+#if($property.roleRead)
+      if (this.canSee('${property.name}')) {
+#end
+      parts.push(this.fieldDisplay(this.form.${property.name}, '#if($property.numberStampOnIssue)DOCUMENT_NUMBER#else$!{property.widgetType}#end', '#if($property.isFloatType)$!{property.formatPattern}#end', #if($property.widgetType == "DROPDOWN" || $property.widgetType == "MULTISELECT")this.options${property.name}#{else}null#end));
+#if($property.roleRead)
+      }
+#end
+#end
+#end
+      return parts.filter(p => p !== '').slice(0, 4).join(' · ');
+    },
+
+    // Ctrl/Cmd+S saves from anywhere on the document, under the same guard the Save button carries.
+    saveShortcut() {
+      if (this.isPreview || this.state === 'saving') return;
+      if (this.isEdit && !this.isDirty()) return;
+      this.save();
+    },
+
+    // Escape leaves a preview the way Close does - never while a dialog is what the user means to
+    // dismiss.
+    escapeDismiss() {
+      if (!this.isPreview) return;
+      if (this.leaveOpen || this.deleteOpen || this.rowDialogOpen || this.printLangOpen) return;
+      this.backToList();
+    },
+
+    // The two thresholds above, bound in JS: Harmonia ships md:/lg: variants for display,
+    // flex-direction and width only - the rail's border and padding and the bar's position have none.
+    watchViewport() {
+      if (!window.Harmonia || typeof Harmonia.getBreakpointListener !== 'function') return;
+      Harmonia.getBreakpointListener((narrow) => { this.isNarrow = !!narrow; }, 768);
+      Harmonia.getBreakpointListener((narrow) => { this.isWide = !narrow; }, 1024);
     },
 
     // ----- More actions: the record's per-record actions --------------------------------------------

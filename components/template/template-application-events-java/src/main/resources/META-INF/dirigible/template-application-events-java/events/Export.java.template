@@ -1,0 +1,315 @@
+package gen.events.${javaGenFolderName};
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.math.BigDecimal;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+#if(!$reportSource)
+import org.eclipse.dirigible.components.data.store.java.repository.Criteria;
+#end
+import org.eclipse.dirigible.sdk.cms.Attachments;
+import org.eclipse.dirigible.sdk.component.Component;
+import org.eclipse.dirigible.sdk.export.ExportField;
+import org.eclipse.dirigible.sdk.export.ExportFile;
+import org.eclipse.dirigible.sdk.http.Controller;
+import org.eclipse.dirigible.sdk.http.Get;
+import org.eclipse.dirigible.sdk.http.QueryParam;
+import org.eclipse.dirigible.sdk.http.Response;
+import org.eclipse.dirigible.sdk.log.Logger;
+import org.eclipse.dirigible.sdk.log.Logging;
+#if($rolesAnnotation != "")
+import org.eclipse.dirigible.sdk.security.Roles;
+#end
+import org.eclipse.dirigible.sdk.utils.Json;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.web.server.ResponseStatusException;
+
+import gen.${javaGenFolderName}.data.${javaLedgerPerspective}.${ledger}Entity;
+import gen.${javaGenFolderName}.data.${javaLedgerPerspective}.${ledger}Repository;
+#if(!$reportSource)
+import gen.${javaGenFolderName}.data.${javaPerspective}.${entity}Entity;
+import gen.${javaGenFolderName}.data.${javaPerspective}.${entity}Repository;
+#end
+
+/**
+ * Export ${name}: a ${format} file over the #if($reportSource)rows of report ${report}#{else}${entity} records#end, recorded on ${ledger}.
+ *
+ * Generated from the intent exports block - do not edit; it is re-generated with the application.
+ * Two ways in, one run: GET .../gen/events/${javaGenFolderName}/${className}Export/download answers the
+ * file itself, and run(parameters) is the same run for a job or custom code - inject this bean and
+ * call it. Every run is recorded on ${ledger}, the one that wrote a file and the one that could not:
+ * its parameters, the stored file (downloadable from the ledger row), its SHA-256 checksum and how
+ * it ended. A parameter that is missing or unreadable is refused before anything runs, and records
+ * nothing; a value the format cannot carry exactly (wider than its field, a character the encoding
+ * lacks) fails the run, which is recorded FAILED with the reason.
+ */
+@Controller
+@Component("${javaGenFolderName}_${className}Export")
+public class ${className}Export {
+
+    private static final Logger LOG = Logging.getLogger("gen.events.${javaGenFolderName}.${className}Export");
+
+    private static final String SUCCEEDED = "SUCCEEDED";
+    private static final String FAILED = "FAILED";
+
+    /** The ledger's ErrorMessage column length. */
+    private static final int ERROR_MESSAGE_LENGTH = 2000;
+#foreach($record in $headerRecords)
+
+    private static final ExportField[] ${record.constant} = {
+#foreach($field in $record.fields)
+            ${field.specExpression}#if($foreach.hasNext),#end
+#end
+    };
+#end
+#foreach($record in $lineRecords)
+
+    private static final ExportField[] ${record.constant} = {
+#foreach($field in $record.fields)
+            ${field.specExpression}#if($foreach.hasNext),#end
+#end
+    };
+#end
+#foreach($record in $trailerRecords)
+
+    private static final ExportField[] ${record.constant} = {
+#foreach($field in $record.fields)
+            ${field.specExpression}#if($foreach.hasNext),#end
+#end
+    };
+#end
+
+    /**
+     * Runs the export and answers its file.
+     */
+    @Get("/download")
+#if($rolesAnnotation != "")
+    ${rolesAnnotation}
+#end
+    public void download(#foreach($parameter in $exportParameters)@QueryParam("${parameter.nameJavaLiteral}") String ${parameter.local}#if($foreach.hasNext), #end#end) {
+        Map<String, Object> parameters = new LinkedHashMap<>();
+#foreach($parameter in $exportParameters)
+        parameters.put("${parameter.nameJavaLiteral}", ${parameter.local});
+#end
+        ${ledger}Entity run;
+        try {
+            run = run(parameters);
+        } catch (IllegalArgumentException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
+        } catch (IllegalStateException ex) {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(422), ex.getMessage(), ex);
+        }
+        Response.setContentType(run.ContentType);
+        Response.setHeader("Content-Disposition", disposition(run.FileName));
+        Response.setHeader("X-Export-Run", String.valueOf(run.Id));
+        Response.setHeader("X-Export-Checksum", run.Checksum);
+        try (InputStream in = Attachments.open(run.StoragePath); OutputStream out = Response.getOutputStream()) {
+            in.transferTo(out);
+        } catch (IOException ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "The file of export run " + run.Id + " could not be streamed", ex);
+        }
+    }
+
+    /**
+     * Runs the export: writes the file over the rows the parameters select, stores it and records the
+     * run on ${ledger}.
+     *
+     * @param parameters the declared parameters by name; a blank value counts as absent
+     * @return the recorded run, carrying the stored file
+     * @throws IllegalArgumentException when a parameter is missing or unreadable - nothing is recorded
+     * @throws IllegalStateException when the data cannot be written in the format - the run is
+     *         recorded FAILED
+     */
+    public ${ledger}Entity run(Map<String, ?> parameters) {
+        Map<String, Object> arguments = arguments(parameters);
+#if($reportSource)
+        Map<String, Object> filter = filter(arguments);
+#else
+        Criteria criteria = criteria(arguments);
+#end
+#foreach($parameter in $exportParameters)
+        Object ${parameter.local} = arguments.get("${parameter.nameJavaLiteral}");
+#end
+        ${ledger}Repository ledger = new ${ledger}Repository();
+        ${ledger}Entity run = new ${ledger}Entity();
+        run.Export = "${nameJavaLiteral}";
+        run.Format = "${format}";
+        run.Parameters = Json.stringify(arguments);
+        String storagePath = null;
+        try {
+#if($reportSource)
+            List<Map<String, Object>> rows = new gen.${reportGenFolder}.data.${reportPerspective}.${report}Repository().findAll(null, null, filter);
+#else
+            List<${entity}Entity> rows = new ${entity}Repository().findAll(criteria);
+#end
+#foreach($load in $loads)
+            Map<Object, gen.${load.javaGenFolder}.data.${load.javaTargetPerspective}.${load.targetEntity}Entity> ${load.local}Cache = new java.util.HashMap<>();
+#end
+#foreach($aggregate in $aggregates)
+#if($aggregate.sum)
+            BigDecimal ${aggregate.local} = BigDecimal.ZERO;
+#else
+            int ${aggregate.local} = rows.size();
+#end
+#end
+#set($sums = false)
+#foreach($aggregate in $aggregates)
+#if($aggregate.sum)
+#set($sums = true)
+#end
+#end
+#if($sums)
+#if($reportSource)
+            for (Map<String, Object> row : rows) {
+#else
+            for (${entity}Entity row : rows) {
+#end
+#foreach($load in $loads)
+                gen.${load.javaGenFolder}.data.${load.javaTargetPerspective}.${load.targetEntity}Entity ${load.local} = row.${load.fkProperty} == null ? null
+                        : ${load.local}Cache.computeIfAbsent(row.${load.fkProperty}, key -> new gen.${load.javaGenFolder}.data.${load.javaTargetPerspective}.${load.targetEntity}Repository().findById(key));
+#end
+#foreach($aggregate in $aggregates)
+#if($aggregate.sum)
+                ${aggregate.local} = ExportFile.add(${aggregate.local}, ${aggregate.valueExpression});
+#end
+#end
+            }
+#end
+            ExportFile file = ${fileFactory};
+#foreach($record in $headerRecords)
+            file.record("${record.elementJavaLiteral}", ${record.constant}#foreach($field in $record.fields), ${field.valueExpression}#end);
+#end
+#if($reportSource)
+            for (Map<String, Object> row : rows) {
+#else
+            for (${entity}Entity row : rows) {
+#end
+#foreach($load in $loads)
+                gen.${load.javaGenFolder}.data.${load.javaTargetPerspective}.${load.targetEntity}Entity ${load.local} = row.${load.fkProperty} == null ? null
+                        : ${load.local}Cache.computeIfAbsent(row.${load.fkProperty}, key -> new gen.${load.javaGenFolder}.data.${load.javaTargetPerspective}.${load.targetEntity}Repository().findById(key));
+#end
+#foreach($record in $lineRecords)
+                file.record("${record.elementJavaLiteral}", ${record.constant}#foreach($field in $record.fields), ${field.valueExpression}#end);
+#end
+            }
+#foreach($record in $trailerRecords)
+            file.record("${record.elementJavaLiteral}", ${record.constant}#foreach($field in $record.fields), ${field.valueExpression}#end);
+#end
+            byte[] content = file.content();
+            Attachments.Attachment stored = Attachments.store("${ledger}", ${fileNameExpression}, file.getContentType(), content);
+            storagePath = stored.path();
+            run.FileName = stored.fileName();
+            run.ContentType = stored.contentType();
+            run.FileSize = stored.size();
+            run.StoragePath = stored.path();
+            run.Uuid = stored.uuid();
+            run.Checksum = ExportFile.checksum(content);
+            run.RecordCount = rows.size();
+            run.Outcome = SUCCEEDED;
+            ${ledger}Entity recorded = ledger.save(run);
+            LOG.info("Export ${nameJavaLiteral}: wrote [{}] row(s) into [{}] (run [{}])", rows.size(), recorded.FileName, recorded.Id);
+            return recorded;
+        } catch (RuntimeException ex) {
+            throw failed(ledger, run, storagePath, ex);
+        }
+    }
+
+    /**
+     * Records a run that did not complete and answers what its caller is thrown. A stored file is
+     * removed again - the run it belonged to never completed, and the ledger must not point at it.
+     */
+    private static RuntimeException failed(${ledger}Repository ledger, ${ledger}Entity run, String storagePath, RuntimeException cause) {
+        if (storagePath != null) {
+            try {
+                Attachments.delete(storagePath);
+            } catch (RuntimeException cleanup) {
+                cause.addSuppressed(cleanup);
+            }
+        }
+        String reason = cause.getMessage() == null ? cause.getClass().getName() : cause.getMessage();
+        run.FileName = null;
+        run.ContentType = null;
+        run.FileSize = null;
+        run.StoragePath = null;
+        run.Uuid = null;
+        run.Checksum = null;
+        run.Outcome = FAILED;
+        run.ErrorMessage = reason.length() > ERROR_MESSAGE_LENGTH ? reason.substring(0, ERROR_MESSAGE_LENGTH) : reason;
+        try {
+            ledger.save(run);
+        } catch (RuntimeException unrecorded) {
+            cause.addSuppressed(unrecorded);
+        }
+        LOG.error("Export ${nameJavaLiteral}: the run failed - {}", reason, cause);
+        // A value the format cannot carry is the data's problem, which its owner can fix and re-run:
+        // that is a refusal (422), not a server error. Anything else is thrown as it came.
+        if (cause instanceof IllegalArgumentException) {
+            return new IllegalStateException("Export ${nameJavaLiteral} failed: " + reason, cause);
+        }
+        return cause;
+    }
+
+    /** The declared parameters the caller supplied, a blank value counting as absent. */
+    private static Map<String, Object> arguments(Map<String, ?> parameters) {
+        Map<String, Object> arguments = new LinkedHashMap<>();
+#foreach($parameter in $exportParameters)
+        Object ${parameter.local} = parameters == null ? null : parameters.get("${parameter.nameJavaLiteral}");
+        if (${parameter.local} != null && !String.valueOf(${parameter.local}).isBlank()) {
+            arguments.put("${parameter.nameJavaLiteral}", ${parameter.local});
+#if($parameter.required)
+        } else {
+            throw new IllegalArgumentException("Export ${nameJavaLiteral}: the parameter [${parameter.nameJavaLiteral}] is required");
+#end
+        }
+#end
+        return arguments;
+    }
+#if($reportSource)
+
+    /** The report's parameters, as its generated repository reads them - as text. */
+    private static Map<String, Object> filter(Map<String, Object> arguments) {
+        Map<String, Object> filter = new LinkedHashMap<>();
+        for (Map.Entry<String, Object> argument : arguments.entrySet()) {
+            filter.put(argument.getKey(), String.valueOf(argument.getValue()));
+        }
+        return filter;
+    }
+#else
+
+    /** The rows the arguments select, in the declared order. */
+    private static Criteria criteria(Map<String, Object> arguments) {
+        Criteria criteria = Criteria.create();
+#foreach($parameter in $exportParameters)
+        if (arguments.containsKey("${parameter.nameJavaLiteral}")) {
+            Object raw = arguments.get("${parameter.nameJavaLiteral}");
+            Object value;
+            try {
+                value = ${parameter.convertExpression};
+            } catch (RuntimeException ex) {
+                throw new IllegalArgumentException("Export ${nameJavaLiteral}: the parameter [${parameter.nameJavaLiteral}] value [" + raw
+                        + "] is not a valid ${parameter.property}", ex);
+            }
+            criteria.${parameter.op}("${parameter.property}", value);
+        }
+#end
+#foreach($property in $orderBy)
+        criteria.orderByAsc("${property}");
+#end
+        return criteria;
+    }
+#end
+
+    /** A download disposition that keeps a non-ASCII file name intact (RFC 6266 / RFC 5987). */
+    private static String disposition(String fileName) {
+        String fallback = fileName.replaceAll("[^\\x20-\\x7E]", "_").replace("\"", "_");
+        String encoded = URLEncoder.encode(fileName, StandardCharsets.UTF_8).replace("+", "%20");
+        return "attachment; filename=\"" + fallback + "\"; filename*=UTF-8''" + encoded;
+    }
+}

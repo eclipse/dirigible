@@ -16,6 +16,7 @@ import org.flowable.common.engine.api.delegate.Expression;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.impl.bpmn.behavior.ServiceTaskDelegateExpressionActivityBehavior;
 import org.flowable.engine.impl.bpmn.parser.FieldDeclaration;
+import org.flowable.engine.impl.util.CommandContextUtil;
 
 /**
  * The behaviour every {@code flowable:delegateExpression} service task runs through (created by
@@ -40,6 +41,14 @@ import org.flowable.engine.impl.bpmn.parser.FieldDeclaration;
  * {@code flowable:mapException} on its own, and only rethrows a plain, unmapped failure. That
  * rethrow is exactly the failure destined for the retry cycle / dead-letter path, i.e. the same
  * predicate the {@code flowable:class} twin relies on.
+ *
+ * <p>
+ * The superclass's {@code execute} and {@code trigger} catch {@code Exception} only, so an
+ * {@link Error} the delegate throws (a {@code NoClassDefFoundError} from a library that left the
+ * platform) would never reach the funnel and would dead-letter the job past its {@code onError}
+ * route (#7840). Both are wrapped to hand such an {@code Error} to {@link #handleException} as the
+ * superclass would have handed an exception - a {@link VirtualMachineError} excepted, which stays
+ * the engine's.
  */
 class ResilientServiceTaskDelegateExpressionActivityBehavior extends ServiceTaskDelegateExpressionActivityBehavior {
 
@@ -51,13 +60,39 @@ class ResilientServiceTaskDelegateExpressionActivityBehavior extends ServiceTask
     }
 
     @Override
+    public void execute(DelegateExecution execution) {
+        try {
+            super.execute(execution);
+        } catch (Error error) {
+            handleError(error, execution);
+        }
+    }
+
+    @Override
+    public void trigger(DelegateExecution execution, String signalName, Object signalData) {
+        try {
+            super.trigger(execution, signalName, signalData);
+        } catch (Error error) {
+            handleError(error, execution);
+        }
+    }
+
+    @Override
     protected void handleException(Throwable exception, DelegateExecution execution, boolean loggingSessionEnabled) {
         try {
             super.handleException(exception, execution, loggingSessionEnabled);
-        } catch (RuntimeException unhandled) {
+        } catch (RuntimeException | Error unhandled) {
             if (!IntentStepResilience.convertFinalFailure(execution, unhandled)) {
                 throw unhandled;
             }
         }
+    }
+
+    private void handleError(Error error, DelegateExecution execution) {
+        if (error instanceof VirtualMachineError) {
+            throw error;
+        }
+        handleException(error, execution, CommandContextUtil.getProcessEngineConfiguration()
+                                                            .isLoggingSessionEnabled());
     }
 }

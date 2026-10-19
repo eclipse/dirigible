@@ -235,6 +235,15 @@ public class FieldIntent {
      */
     private NumberIntent number;
 
+    /**
+     * Optional status stamp ({@code stampOn: { status: X }}, dirigible #7874): this {@code timestamp} /
+     * {@code date} field records when the record entered status {@code X}, written by the generated
+     * repository in the same statement as the move. The field is then read-only to callers. Not to be
+     * confused with {@link NumberIntent#getStampOn()}, the moment a document number is allocated; the
+     * two never sit on the same field. See {@link StatusStampIntent}.
+     */
+    private StatusStampIntent stampOn;
+
     public String getFormat() {
         return format;
     }
@@ -566,6 +575,14 @@ public class FieldIntent {
 
     public void setDependsOn(DependsOnIntent dependsOn) {
         this.dependsOn = dependsOn;
+    }
+
+    public StatusStampIntent getStampOn() {
+        return stampOn;
+    }
+
+    public void setStampOn(StatusStampIntent stampOn) {
+        this.stampOn = stampOn;
     }
 
     public boolean isSensitive() {

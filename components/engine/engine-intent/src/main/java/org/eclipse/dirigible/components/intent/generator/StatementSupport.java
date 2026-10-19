@@ -32,6 +32,9 @@ public final class StatementSupport {
     /** The three windows a statement reads, in the order the subquery exposes them. */
     private static final List<String> WINDOWS = List.of("opening", "period", "closing");
 
+    /** The window a cash-basis statement reads: a cash flow is a movement within it. */
+    private static final String PERIOD = "period";
+
     /**
      * One per-account balance the statement subquery exposes: the column it lands in, whether it sums
      * the debit or the credit side, and the window it covers.
@@ -82,8 +85,14 @@ public final class StatementSupport {
      *
      * @param authored the name this measure is authored under
      * @param sql what one account contributes to a line taking it
+     * @param window the window it reads - {@code opening}, {@code period} or {@code closing}
      */
-    public record Measure(String authored, String sql) {
+    public record Measure(String authored, String sql, String window) {
+
+        /** Whether this measure reads the window itself - the only kind a cash-basis statement takes. */
+        public boolean isPeriod() {
+            return PERIOD.equals(window);
+        }
     }
 
     /**
@@ -98,16 +107,16 @@ public final class StatementSupport {
         for (String window : WINDOWS) {
             String debit = column(window, "DEBIT");
             String credit = column(window, "CREDIT");
-            add(measures, window + "Debit", debit);
-            add(measures, window + "Credit", credit);
-            add(measures, window + "NetDebit", net(debit, credit));
-            add(measures, window + "NetCredit", net(credit, debit));
+            add(measures, window + "Debit", debit, window);
+            add(measures, window + "Credit", credit, window);
+            add(measures, window + "NetDebit", net(debit, credit), window);
+            add(measures, window + "NetCredit", net(credit, debit), window);
         }
         return Collections.unmodifiableMap(measures);
     }
 
-    private static void add(Map<String, Measure> measures, String authored, String sql) {
-        measures.put(authored.toLowerCase(Locale.ROOT), new Measure(authored, sql));
+    private static void add(Map<String, Measure> measures, String authored, String sql, String window) {
+        measures.put(authored.toLowerCase(Locale.ROOT), new Measure(authored, sql, window));
     }
 
     /** {@code kept - other}, floored at zero: what is left on the kept side once the two are netted. */
@@ -134,6 +143,15 @@ public final class StatementSupport {
     public static List<String> measureNames() {
         return MEASURES.values()
                        .stream()
+                       .map(Measure::authored)
+                       .toList();
+    }
+
+    /** The authored names of the period measures - all a cash-basis statement accepts. */
+    public static List<String> periodMeasureNames() {
+        return MEASURES.values()
+                       .stream()
+                       .filter(Measure::isPeriod)
                        .map(Measure::authored)
                        .toList();
     }
