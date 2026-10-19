@@ -17,6 +17,7 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.LockModeType;
 
@@ -82,4 +83,14 @@ public interface TenantUserRepository extends JpaRepository<TenantUser, Long> {
      */
     @Query("select max(u.revision) from TenantUser u where u.tenantId = :tenantId")
     Long findMaxRevision(@Param("tenantId") String tenantId);
+
+    /**
+     * Deletes every user row of the tenant, and through the cascade their role rows - the tenant's
+     * deprovisioning.
+     *
+     * @param tenantId the tenant id
+     * @return how many user rows were deleted
+     */
+    @Transactional
+    long deleteByTenantId(String tenantId);
 }

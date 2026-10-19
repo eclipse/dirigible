@@ -124,6 +124,9 @@ class TenantActivationService implements ApplicationListener<ApplicationReadyEve
      * @param tenant the tenant
      */
     void activate(Tenant tenant) {
+        if (TenantStatus.DEPROVISIONING == tenant.getStatus()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Tenant [" + tenant.getId() + "] is being deprovisioned");
+        }
         if (!dataSourceRegistrationService.isRegistered(tenant)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Tenant [" + tenant.getId() + "] cannot be activated before its data source ["

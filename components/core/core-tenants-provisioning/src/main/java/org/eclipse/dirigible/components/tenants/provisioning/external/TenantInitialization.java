@@ -78,6 +78,10 @@ public class TenantInitialization {
         return error;
     }
 
+    Instant getRequestedAt() {
+        return requestedAt;
+    }
+
     /**
      * Whether the initialization has yet to end.
      *

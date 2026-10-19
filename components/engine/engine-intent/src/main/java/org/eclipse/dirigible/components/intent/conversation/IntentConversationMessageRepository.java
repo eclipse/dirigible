@@ -35,4 +35,12 @@ public interface IntentConversationMessageRepository extends JpaRepository<Inten
      * @return the message count
      */
     int countByConversationId(Long conversationId);
+
+    /**
+     * Deletes the messages of a conversation.
+     *
+     * @param conversationId the conversation id
+     * @return how many were deleted
+     */
+    long deleteByConversationId(Long conversationId);
 }

@@ -30,5 +30,16 @@ public enum TenantStatus {
      * {@link #PROVISIONED}; until then it can also be deleted, which is the rollback path when
      * provisioning is abandoned.
      */
-    PENDING_ACTIVATION
+    PENDING_ACTIVATION,
+    /**
+     * Being removed through the tenant provisioning API's deprovisioning.
+     *
+     * <p>
+     * Set and persisted before anything of the tenant is torn down, so it stops new work from that
+     * moment and across a restart: {@code executeForEachTenant} queries {@link #PROVISIONED} only, so
+     * no synchronizer, job, listener or top-up pass reaches the tenant any more, its tenant-users
+     * endpoint answers 409, and an activation is refused. A deprovisioning interrupted half way leaves
+     * the tenant here, and the repeated call resumes it. The tenant row is deleted at the end.
+     */
+    DEPROVISIONING
 }

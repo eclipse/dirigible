@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.dirigible.components.tenants.domain.Tenant;
+import org.eclipse.dirigible.components.tenants.domain.TenantStatus;
 import org.eclipse.dirigible.components.tenants.service.TenantService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -225,6 +226,19 @@ class TenantUserReplicaServiceTest {
         ResponseStatusException refused =
                 assertThrows(ResponseStatusException.class, () -> service.apply("nowhere", changed(user("ann@example.com", 1, "INVITED"))));
         assertEquals(HttpStatus.NOT_FOUND, refused.getStatusCode());
+    }
+
+    @Test
+    void aTenantBeingDeprovisionedIsA409AndNothingIsWritten() {
+        Tenant deprovisioning = mock(Tenant.class);
+        when(deprovisioning.getStatus()).thenReturn(TenantStatus.DEPROVISIONING);
+        when(tenants.findById(TENANT)).thenReturn(Optional.of(deprovisioning));
+
+        ResponseStatusException refused =
+                assertThrows(ResponseStatusException.class, () -> service.apply(TENANT, changed(user("ann@example.com", 1, "INVITED"))));
+
+        assertEquals(HttpStatus.CONFLICT, refused.getStatusCode());
+        verify(users, never()).findForUpdateByTenantIdAndEmail(any(), any());
     }
 
     @Test

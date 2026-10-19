@@ -83,6 +83,16 @@ class TenantInitializationService {
     }
 
     /**
+     * Forgets the initialization of a tenant - its deprovisioning. Nothing to forget is success.
+     *
+     * @param tenantId the tenant id
+     */
+    void delete(String tenantId) {
+        repository.findById(tenantId)
+                  .ifPresent(repository::delete);
+    }
+
+    /**
      * Finds the initializations that have not ended - the ones a restart interrupted.
      *
      * @return the open initializations

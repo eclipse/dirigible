@@ -85,6 +85,16 @@ class CmsProviderInternalFactory implements CmsProviderFactory, DisposableBean {
         return File.separator + tenantId;
     }
 
+    /**
+     * Forgets the provider cached for a root folder, so a folder removed under it is never written to
+     * again through a stale provider.
+     *
+     * @param rootFolder the root folder
+     */
+    static void forget(String rootFolder) {
+        PROVIDERS.remove(rootFolder);
+    }
+
     @Override
     public void destroy() {
         LOGGER.info("Deleting providers...");

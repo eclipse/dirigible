@@ -230,6 +230,14 @@ public enum DirigibleConfig {
     TENANT_PROVISIONING_API_ENABLED("DIRIGIBLE_TENANT_PROVISIONING_API_ENABLED", Boolean.FALSE.toString()),
 
     /**
+     * How long an activation may stay in progress and still hold off a deprovisioning of its tenant.
+     * The tenant provisioning API refuses to deprovision a tenant whose initialization is running
+     * (409), because the teardown would race the initialization it has to undo; an initialization older
+     * than this is taken to be stuck, and no longer blocks the removal.
+     */
+    TENANT_PROVISIONING_DEPROVISION_ACTIVATION_STALE_MINUTES("DIRIGIBLE_TENANT_PROVISIONING_DEPROVISION_ACTIVATION_STALE_MINUTES", "30"),
+
+    /**
      * Whether tenant owners may manage the users of their tenant from the application shell's Settings:
      * list them, see where each one stands, invite a person with one or more roles, change a member's
      * roles and remove a member. Each such action is one change request published to
