@@ -298,7 +298,7 @@ public class BpmnIntentGenerator implements IntentTargetGenerator {
             Map<String, Set<Integer>> statusTargets, Set<String> userTaskKeys, Map<String, String> writerByProcessTask) {
         Map<String, Set<String>> byProcess = new HashMap<>();
         for (SetFieldSupport.Setter setter : setters) {
-            if (!setter.relation() || !gatesACheck(byName.get(setter.entity()), setter.field(), setter.value(), statusTargets)) {
+            if (!setter.relation() || !gatesACheck(byName.get(setter.writtenEntity()), setter.field(), setter.value(), statusTargets)) {
                 continue;
             }
             String key = setter.process() + "/" + setter.step();
@@ -345,7 +345,7 @@ public class BpmnIntentGenerator implements IntentTargetGenerator {
             Map<String, Set<Integer>> statusTargets) {
         Map<String, Set<String>> byProcess = new HashMap<>();
         for (SetFieldSupport.Setter setter : setters) {
-            if (setter.relation() && gatesACheck(byName.get(setter.entity()), setter.field(), setter.value(), statusTargets)) {
+            if (setter.relation() && gatesACheck(byName.get(setter.writtenEntity()), setter.field(), setter.value(), statusTargets)) {
                 byProcess.computeIfAbsent(setter.process(), process -> new HashSet<>())
                          .add(setter.step());
             }
@@ -357,7 +357,8 @@ public class BpmnIntentGenerator implements IntentTargetGenerator {
      * Whether a setter writes the entity's {@code function: EntityStatus} FK to a status one of its
      * document-level {@code checks:} gates on - the only writes whose failure a person is waiting for.
      *
-     * @param entity the trigger entity the setter writes, may be {@code null}
+     * @param entity the entity the setter writes (the trigger, or a one-hop target), may be
+     *        {@code null}
      * @param field the PascalCase property the setter assigns
      * @param value the assigned value (a status seed id for a relation setter)
      * @param statusTargets the status ids a system writer moves each entity to - a check's gate may be

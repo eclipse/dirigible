@@ -52,6 +52,14 @@ import org.slf4j.LoggerFactory;
  * {@code date} field {@code java.time.LocalDate.now()} - the Java types the generated entity
  * declares for those columns - through the same targeted write.
  * <p>
+ * Each of the three may name a member one hop away (#7934): {@code setRelationField: order.Status}
+ * writes the {@code Status} of the {@code Order} the trigger record's {@code order} relation points
+ * at. The step loads the trigger row, reads that FK and writes through the TARGET's repository -
+ * the same targeted write the target's own setter makes, so its {@code lifecycle:}, {@code stampOn}
+ * and history apply - and publishes the target's {@code -transitioned}. The first segment is a
+ * local to-one relation of the trigger entity (parser-enforced); a null FK at run time is a logged
+ * no-op.
+ * <p>
  * Scope: {@code setField} assigns a literal to a {@code string}/{@code text} field, or the
  * whole-value {@code {now}} token to a {@code timestamp}/{@code date} field; any other expression
  * value is out of scope. {@code setRelationField} assigns an integer seed id to a
@@ -96,9 +104,64 @@ public final class SetFieldSupport {
      * @param javaType the {@code java.time} class a {@code now} setter assigns ({@code Instant} for a
      *        {@code timestamp} field, {@code LocalDate} for a {@code date} field); {@code null} for
      *        every other setter
+     * @param via for a one-hop setter ({@code order.Status}), the trigger entity's FK property the
+     *        written record is reached through (e.g. {@code Order}); {@code null} for a setter of the
+     *        trigger record itself
+     * @param targetEntity the entity a one-hop setter writes (e.g. {@code Order}); {@code null}
+     *        otherwise
+     * @param targetPerspective the target entity's resolved perspective; {@code null} otherwise
+     * @param targetKeyAccessor the {@link Number} accessor matching the target's PK type; {@code null}
+     *        otherwise
      */
     public record Setter(String process, String step, String className, String entity, String perspective, String keyProperty,
-            String keyAccessor, String field, String value, boolean relation, boolean clear, boolean now, String javaType) {
+            String keyAccessor, String field, String value, boolean relation, boolean clear, boolean now, String javaType, String via,
+            String targetEntity, String targetPerspective, String targetKeyAccessor) {
+
+        /** The entity whose row the setter writes: the one-hop target, else the trigger entity. */
+        public String writtenEntity() {
+            return via == null ? entity : targetEntity;
+        }
+    }
+
+    /**
+     * A setter path resolved to the record it writes.
+     *
+     * @param via the to-one relation of the trigger entity the path goes through; {@code null} for a
+     *        plain path, which writes the trigger record itself
+     * @param target the entity whose member is written
+     * @param member the member name as authored (a field, or a to-one relation for
+     *        {@code setRelationField})
+     */
+    public record Hop(RelationIntent via, EntityIntent target, String member) {
+    }
+
+    /**
+     * Resolves a setter path against the trigger entity: a plain name is a member of the trigger
+     * itself, {@code <relation>.<member>} a member of the LOCAL entity a to-one relation of the trigger
+     * points at.
+     *
+     * @param trigger the process's trigger entity
+     * @param path the authored path
+     * @param byName the model's entities, by name
+     * @return the resolved hop, or {@code null} when a dotted path does not resolve (more than one dot,
+     *         an empty segment, a first segment that is not a to-one relation, a cross-model or unknown
+     *         target) - the parser names the reason
+     */
+    public static Hop hop(EntityIntent trigger, String path, Map<String, EntityIntent> byName) {
+        int dot = path.indexOf('.');
+        if (dot < 0) {
+            return new Hop(null, trigger, path);
+        }
+        String member = path.substring(dot + 1);
+        if (dot == 0 || member.isEmpty() || member.indexOf('.') >= 0) {
+            return null;
+        }
+        RelationIntent relation = relationOf(trigger, path.substring(0, dot));
+        if (relation == null || relation.isCrossModel()) {
+            return null;
+        }
+        EntityIntent target = byName.get(relation.getTo());
+        return target == null ? null : new Hop(relation, target, member);
     }
 
     /** Every field setter across every process in the model. */
@@ -123,16 +186,16 @@ public final class SetFieldSupport {
                 // serviceTask or a userTask (the BPMN runs the setter right after the user task completes).
                 String relField = stringArg(step, "setRelationField");
                 if (relField != null && !relField.isBlank()) {
-                    if (relationOf(owner, relField) == null) {
+                    Hop hop = hop(owner, relField, byName);
+                    if (hop == null || relationOf(hop.target(), hop.member()) == null) {
                         LOGGER.warn("Step [{}] in process [{}] sets unknown to-one relation [{}] of [{}] - skipping",
                                 LoggedValue.of(step.getName()), LoggedValue.of(process.getName()), LoggedValue.of(relField),
                                 LoggedValue.of(triggerEntity));
                         continue;
                     }
                     String value = stringArg(step, "value");
-                    setters.add(new Setter(process.getName(), step.getName(), className(process.getName(), step.getName()), triggerEntity,
-                            perspective, keyProp, keyAcc, IntentNaming.pascalCase(relField), value == null ? "" : value, true, false, false,
-                            null));
+                    setters.add(setter(process, step, owner, perspective, keyProp, keyAcc, hop, value == null ? "" : value, true, false,
+                            false, null, model, compositionParents));
                     continue;
                 }
                 // setField: set a string/text field to a literal value (serviceTask only).
@@ -152,7 +215,8 @@ public final class SetFieldSupport {
                     value = null;
                     clear = true;
                 }
-                FieldIntent target = fieldOf(owner, field);
+                Hop hop = hop(owner, field, byName);
+                FieldIntent target = hop == null ? null : fieldOf(hop.target(), hop.member());
                 if (target == null) {
                     LOGGER.warn("Step [{}] in process [{}] sets unknown field [{}] of [{}] - skipping", LoggedValue.of(step.getName()),
                             LoggedValue.of(process.getName()), LoggedValue.of(field), LoggedValue.of(triggerEntity));
@@ -161,12 +225,34 @@ public final class SetFieldSupport {
                 // {now} stamps the moment on a timestamp/date field (the parser refuses it anywhere else).
                 boolean now = value != null && NOW_TOKEN.equals(value.trim());
                 String javaType = now ? NOW_JAVA_TYPES.get(target.getType()) : null;
-                setters.add(new Setter(process.getName(), step.getName(), className(process.getName(), step.getName()), triggerEntity,
-                        perspective, keyProp, keyAcc, IntentNaming.pascalCase(field), value == null ? "" : value, false, clear, now,
-                        javaType));
+                setters.add(setter(process, step, owner, perspective, keyProp, keyAcc, hop, value == null ? "" : value, false, clear, now,
+                        javaType, model, compositionParents));
             }
         }
         return setters;
+    }
+
+    /**
+     * One setter, its one-hop target coordinates filled in only when the path goes through a relation.
+     */
+    private static Setter setter(ProcessIntent process, StepIntent step, EntityIntent owner, String perspective, String keyProp,
+            String keyAcc, Hop hop, String value, boolean relation, boolean clear, boolean now, String javaType, IntentModel model,
+            Map<String, String> compositionParents) {
+        String via = null;
+        String targetEntity = null;
+        String targetPerspective = null;
+        String targetKeyAccessor = null;
+        if (hop.via() != null) {
+            via = IntentNaming.pascalCase(hop.via()
+                                             .getName());
+            targetEntity = hop.target()
+                              .getName();
+            targetPerspective = IntentEntities.resolvePerspective(targetEntity, compositionParents, model);
+            targetKeyAccessor = idAccessor(IntentEntities.primaryKeyOf(hop.target()));
+        }
+        return new Setter(process.getName(), step.getName(), className(process.getName(), step.getName()), owner.getName(), perspective,
+                keyProp, keyAcc, IntentNaming.pascalCase(hop.member()), value, relation, clear, now, javaType, via, targetEntity,
+                targetPerspective, targetKeyAccessor);
     }
 
     /**

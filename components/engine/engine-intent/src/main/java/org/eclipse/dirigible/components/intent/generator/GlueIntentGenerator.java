@@ -5952,6 +5952,15 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
                 entry.put("now", "true");
                 entry.put("nowExpression", "java.time." + setter.javaType() + ".now()");
             }
+            // A one-hop setter (#7934) writes the record the trigger's FK points at, through that
+            // record's own repository. Emitted only when used, so every other setter's descriptor stays
+            // byte-identical.
+            if (setter.via() != null) {
+                entry.put("via", setter.via());
+                entry.put("targetEntity", setter.targetEntity());
+                entry.put("targetPerspective", setter.targetPerspective());
+                entry.put("targetKeyAccessor", setter.targetKeyAccessor());
+            }
             setters.add(entry);
         }
         return setters;

@@ -34,6 +34,11 @@ import org.junit.jupiter.api.Test;
  * ...and its stamp - dirigible #7873: a {@code setField} whose value is the whole-value
  * {@code {now}} token carries {@code now: true} and the {@code java.time} expression of the field's
  * Java type, so the template assigns the moment the step runs.
+ *
+ * <p>
+ * ...and its one hop - dirigible #7934: a setter whose path goes through a to-one relation
+ * ({@code plan.Status}) carries {@code via} and the target's coordinates, so the template writes
+ * through the target's repository; a setter of the trigger record gains none of those keys.
  */
 class GlueSettersTest {
 
@@ -46,6 +51,12 @@ class GlueSettersTest {
                         fields:
                           - { name: id, type: integer, primaryKey: true, generated: true }
                           - { name: name, type: string }
+                      - name: Plan
+                        fields:
+                          - { name: id, type: long, primaryKey: true, generated: true }
+                          - { name: label, type: string }
+                        relations:
+                          - { name: Status, kind: manyToOne, to: ProvisioningStatus, function: EntityStatus, init: 1 }
                       - name: TenantApplication
                         fields:
                           - { name: id, type: integer, primaryKey: true, generated: true }
@@ -55,6 +66,7 @@ class GlueSettersTest {
                           - { name: provisionedOn, type: date }
                         relations:
                           - { name: Status, kind: manyToOne, to: ProvisioningStatus, function: EntityStatus, init: 1 }
+                          - { name: plan, kind: manyToOne, to: Plan }
                     processes:
                       - name: TenantProvisioning
                         trigger: { onCreate: TenantApplication }
@@ -66,6 +78,8 @@ class GlueSettersTest {
                           - { name: resetFailure, kind: serviceTask, args: { clearField: failureMessage, next: end } }
                           - { name: stampMoment, kind: serviceTask, args: { setField: provisionedAt, value: "{now}", next: end } }
                           - { name: stampDay, kind: serviceTask, args: { setField: provisionedOn, value: "{now}", next: end } }
+                          - { name: activatePlan, kind: serviceTask, args: { setRelationField: plan.Status, value: 2, next: end } }
+                          - { name: labelPlan, kind: serviceTask, args: { setField: plan.label, value: ACTIVE, next: end } }
                     """;
 
     @Test
@@ -139,6 +153,43 @@ class GlueSettersTest {
 
         assertFalse(setter.containsKey("now"), "a literal setter must stay exactly as before: " + setter);
         assertFalse(setter.containsKey("nowExpression"), "a literal setter must stay exactly as before: " + setter);
+    }
+
+    @Test
+    void aOneHopRelationSetterCarriesTheHopAndTheTargetKeys() {
+        Map<String, Object> setter = setter("TenantProvisioningActivatePlan");
+
+        assertEquals("Plan", setter.get("via"), "the FK the target is reached through: " + setter);
+        assertEquals("Plan", setter.get("targetEntity"));
+        assertEquals("Plan", setter.get("targetPerspective"));
+        assertEquals("longValue", setter.get("targetKeyAccessor"), "the TARGET's key type, not the trigger's: " + setter);
+        assertEquals("TenantApplication", setter.get("entity"), "the trigger row is still the one the key loads: " + setter);
+        assertEquals("intValue", setter.get("keyAccessor"));
+        assertEquals("Status", setter.get("field"));
+        assertEquals("2", setter.get("value"));
+        assertEquals("true", setter.get("relation"));
+    }
+
+    @Test
+    void aOneHopFieldSetterCarriesTheHop() {
+        Map<String, Object> setter = setter("TenantProvisioningLabelPlan");
+
+        assertEquals("Plan", setter.get("via"));
+        assertEquals("Label", setter.get("field"));
+        assertEquals("ACTIVE", setter.get("value"));
+        assertEquals("false", setter.get("relation"));
+    }
+
+    /** A setter of the trigger record gains no key, so pre-existing .glue files render unchanged. */
+    @Test
+    void aPlainSetterCarriesNoHopKeys() {
+        for (String className : List.of("TenantProvisioningMarkDone", "TenantProvisioningMarkFailed", "TenantProvisioningResetFailure",
+                "TenantProvisioningStampMoment")) {
+            Map<String, Object> setter = setter(className);
+            for (String key : List.of("via", "targetEntity", "targetPerspective", "targetKeyAccessor")) {
+                assertFalse(setter.containsKey(key), "a plain setter must stay exactly as before: " + setter);
+            }
+        }
     }
 
     private static Map<String, Object> setter(String className) {

@@ -8214,6 +8214,61 @@ public final class IntentParser {
     }
 
     /**
+     * The record a setter path writes ({@link SetFieldSupport#hop}): the trigger itself for a plain
+     * name, or - for {@code <relation>.<member>} (#7934) - the local target of a to-one relation of the
+     * trigger. A dotted path that does not resolve is refused here, naming why; the member itself is
+     * then held to the plain setter's rules by the caller, with the plain setter's messages.
+     *
+     * @return the resolved hop, or {@code null} when the path is refused
+     */
+    private static SetFieldSupport.Hop setterHop(ProcessIntent process, StepIntent step, String key, String path, EntityIntent trigger,
+            Map<String, EntityIntent> byName, List<String> issues) {
+        SetFieldSupport.Hop hop = SetFieldSupport.hop(trigger, path, byName);
+        if (hop != null) {
+            return hop;
+        }
+        String subject = "process [" + process.getName() + "] step [" + step.getName() + "] " + key + " [" + path + "]";
+        int dot = path.indexOf('.');
+        String via = path.substring(0, dot);
+        String member = path.substring(dot + 1);
+        if (member.indexOf('.') >= 0) {
+            issues.add(subject + " is more than one hop - a setter reaches through at most one to-one relation of [" + trigger.getName()
+                    + "] (<relation>.<member>)");
+            return null;
+        }
+        if (via.isEmpty() || member.isEmpty()) {
+            issues.add(subject + " must be <relation>.<member> - a to-one relation of [" + trigger.getName()
+                    + "] and a member of the record it points at");
+            return null;
+        }
+        RelationIntent relation = toOneRelationByName(trigger, via);
+        if (relation == null) {
+            issues.add(subject + " goes through [" + via + "], " + whatIsNotAToOne(trigger, via)
+                    + " - the first segment must be a manyToOne/oneToOne relation, so the step writes exactly one record");
+        } else if (relation.isCrossModel()) {
+            issues.add(subject + " goes through [" + via + "] to [" + relation.getModel() + ":" + relation.getTo()
+                    + "], an entity of another model - a setter writes through this model's own repositories; move the status from a"
+                    + " process of that model");
+        } else {
+            issues.add(subject + " goes through [" + via + "] to [" + relation.getTo() + "], which is not an entity of this model");
+        }
+        return null;
+    }
+
+    /** What a name that is not a to-one relation of the entity is, for a one-hop setter's refusal. */
+    private static String whatIsNotAToOne(EntityIntent entity, String name) {
+        for (RelationIntent relation : entity.getRelations()) {
+            if (name.equals(relation.getName())) {
+                return "a " + relation.getKind() + " relation of [" + entity.getName() + "]";
+            }
+        }
+        if (fieldByName(entity, name) != null) {
+            return "a field of [" + entity.getName() + "]";
+        }
+        return "which is not a relation of [" + entity.getName() + "]";
+    }
+
+    /**
      * A {@code serviceTask} declaring {@code setField} must name a {@code string}/{@code text} field of
      * the process's trigger entity and carry a {@code value} (the literal to assign), or a
      * {@code timestamp}/{@code date} field with the whole value {@code {now}} (the moment the step
@@ -8244,11 +8299,14 @@ public final class IntentParser {
                     issues.add("process [" + process.getName() + "] step [" + step.getName()
                             + "] uses setField but the process has no trigger entity to set it on");
                 } else {
-                    FieldIntent field = fieldByName(trigger, setField);
-                    if (field == null) {
+                    SetFieldSupport.Hop hop = setterHop(process, step, "setField", setField, trigger, byName, issues);
+                    FieldIntent field = hop == null ? null : fieldByName(hop.target(), hop.member());
+                    if (hop != null && field == null) {
                         issues.add("process [" + process.getName() + "] step [" + step.getName() + "] setField [" + setField
-                                + "] is not a field of [" + triggerEntity + "]");
-                    } else {
+                                + "] is not a field of [" + hop.target()
+                                                               .getName()
+                                + "]");
+                    } else if (field != null) {
                         validateSetFieldValueType(process, step, setField, field, issues);
                     }
                     if (stepArg(step, "value") == null || stepArg(step, "value").isBlank()) {
@@ -8272,11 +8330,15 @@ public final class IntentParser {
                     issues.add("process [" + process.getName() + "] step [" + step.getName()
                             + "] uses clearField but the process has no trigger entity to clear it on");
                 } else {
-                    FieldIntent field = fieldByName(trigger, clearField);
-                    if (field == null) {
+                    SetFieldSupport.Hop hop = setterHop(process, step, "clearField", clearField, trigger, byName, issues);
+                    FieldIntent field = hop == null ? null : fieldByName(hop.target(), hop.member());
+                    if (hop != null && field == null) {
                         issues.add("process [" + process.getName() + "] step [" + step.getName() + "] clearField [" + clearField
-                                + "] is not a field of [" + triggerEntity + "]");
-                    } else if (field.getType() != null && !"string".equals(field.getType()) && !"text".equals(field.getType())) {
+                                + "] is not a field of [" + hop.target()
+                                                               .getName()
+                                + "]");
+                    } else if (field != null && field.getType() != null && !"string".equals(field.getType())
+                            && !"text".equals(field.getType())) {
                         issues.add("process [" + process.getName() + "] step [" + step.getName() + "] clearField [" + clearField
                                 + "] must be a string/text field (an erasure is the counterpart of a literal write)");
                     }
@@ -8300,10 +8362,12 @@ public final class IntentParser {
                     issues.add("process [" + process.getName() + "] step [" + step.getName()
                             + "] uses setRelationField but the process has no trigger entity to set it on");
                 } else {
-                    RelationIntent relation = toOneRelationByName(trigger, setRelationField);
-                    if (relation == null) {
+                    SetFieldSupport.Hop hop = setterHop(process, step, "setRelationField", setRelationField, trigger, byName, issues);
+                    if (hop != null && toOneRelationByName(hop.target(), hop.member()) == null) {
                         issues.add("process [" + process.getName() + "] step [" + step.getName() + "] setRelationField [" + setRelationField
-                                + "] is not a manyToOne/oneToOne relation of [" + triggerEntity + "]");
+                                + "] is not a manyToOne/oneToOne relation of [" + hop.target()
+                                                                                     .getName()
+                                + "]");
                     }
                     String value = stepArg(step, "value");
                     if (value == null || value.isBlank()) {
@@ -10570,15 +10634,24 @@ public final class IntentParser {
      */
     private static void validateStatusWritesAgainstLifecycle(IntentModel model, EntityIntent entity, RelationIntent status,
             Map<Integer, Set<Integer>> edges, Set<Integer> reachable, Map<Integer, String> statuses, List<String> issues) {
+        Map<String, EntityIntent> byName = IntentEntities.byName(model);
         for (ProcessIntent process : model.getProcesses()) {
-            if (!entity.getName()
-                       .equals(triggerEntityName(process))) {
+            EntityIntent trigger = byName.get(triggerEntityName(process));
+            if (trigger == null) {
                 continue;
             }
             for (StepIntent step : process.getSteps()) {
                 String relation = stepArg(step, "setRelationField");
                 Integer target = parseSeedId(stepArg(step, "value"));
-                if (relation == null || !relation.equalsIgnoreCase(status.getName()) || target == null) {
+                // The write may be one hop away (#7934): `order.Status` moves the order, so it faces the
+                // order's graph exactly as the order's own setter does.
+                SetFieldSupport.Hop hop = relation == null ? null : SetFieldSupport.hop(trigger, relation, byName);
+                if (hop == null || !entity.getName()
+                                          .equals(hop.target()
+                                                     .getName())
+                        || !hop.member()
+                               .equalsIgnoreCase(status.getName())
+                        || target == null) {
                     continue; // a non-numeric or unresolvable value is reported by the step's own validation
                 }
                 if (!reachable.contains(target)) {

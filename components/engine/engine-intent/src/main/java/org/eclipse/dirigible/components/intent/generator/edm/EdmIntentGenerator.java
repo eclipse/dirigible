@@ -3171,11 +3171,12 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
 
     /**
      * Whether a declared system writer owns this entity's WHOLE status column: a
-     * {@code setRelationField} step of a process THIS entity triggers, or a capacity roll-up's
-     * {@code status:} (the entity is the roll-up's LOCAL parent). A {@code transitions:} button owns
-     * only the values it sets ({@link #transitionTargets}). The state machine, {@code lifecycle:}, is
-     * unaffected either way - it is enforced in the repository, which every one of these writers still
-     * reaches.
+     * {@code setRelationField} step of a process THIS entity triggers, a one-hop
+     * {@code setRelationField: <relation>.<status>} step of a process another entity triggers, or a
+     * capacity roll-up's {@code status:} (the entity is the roll-up's LOCAL parent). A
+     * {@code transitions:} button owns only the values it sets ({@link #transitionTargets}). The state
+     * machine, {@code lifecycle:}, is unaffected either way - it is enforced in the repository, which
+     * every one of these writers still reaches.
      *
      * @param entity the authored entity
      * @param status its {@code function: EntityStatus} relation
@@ -3199,6 +3200,15 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
                                                                                            .trim()))) {
                     return true;
                 }
+            }
+        }
+        // A step of ANOTHER entity's flow writes it too when it moves this status one hop away (#7934):
+        // `setRelationField: order.Status` in an approval request's process owns the order's status.
+        for (SetFieldSupport.Setter setter : SetFieldSupport.setters(model)) {
+            if (setter.via() != null && setter.relation() && entity.getName()
+                                                                   .equals(setter.targetEntity())
+                    && statusProperty.equals(setter.field())) {
+                return true;
             }
         }
         return rollupOwnedStatuses.getOrDefault(entity.getName(), List.of())
