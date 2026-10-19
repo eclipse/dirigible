@@ -61,6 +61,10 @@ class TenantProvisioningApiDisabledIT extends IntegrationTest {
                    .put(PATHS[0])
                    .then()
                    .statusCode(404);
+            given().when()
+                   .delete(PATHS[0])
+                   .then()
+                   .statusCode(404);
         });
     }
 

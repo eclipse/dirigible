@@ -22,6 +22,7 @@ import java.util.function.Consumer;
 
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.base.tenant.TenantPostProvisioningStep;
+import org.eclipse.dirigible.components.base.tenant.TenantTeardownParticipant;
 import org.eclipse.dirigible.components.jobs.domain.Job;
 import org.eclipse.dirigible.components.jobs.handler.JavaJobExecutor;
 import org.eclipse.dirigible.components.jobs.manager.JobsManager;
@@ -84,7 +85,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(400)
-public class ScheduledClassConsumer implements JavaClassConsumer, DisposableBean, TenantPostProvisioningStep {
+public class ScheduledClassConsumer implements JavaClassConsumer, DisposableBean, TenantPostProvisioningStep, TenantTeardownParticipant {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ScheduledClassConsumer.class);
 
@@ -410,6 +411,25 @@ public class ScheduledClassConsumer implements JavaClassConsumer, DisposableBean
         remove(stale);
     }
 
+    /**
+     * Deprovisioning (participant 100): forgets that this consumer's jobs were registered in the
+     * tenant. The tenant's Quartz entries are removed by the jobs engine's own participant, with every
+     * other {@code <tenantId>###} job; the shared {@code Job} rows stay. Without this, a tenant
+     * registered again under the same id would be skipped by the top-up as already registered, and run
+     * none of its jobs. Its status already keeps the top-up away while it is being removed.
+     */
+    @Override
+    public int order() {
+        return 100;
+    }
+
+    @Override
+    public synchronized void teardown(String tenantId) {
+        registrations.values()
+                     .forEach(registration -> registration.forget(tenantId));
+        reportedFailures.removeIf(key -> key.endsWith(KEY_SEPARATOR + tenantId));
+    }
+
     /** Unschedule + remove the Job rows a class previously registered (per tenant). */
     private void unregister(String fqn) {
         Registration registration = registrations.remove(fqn);
@@ -478,6 +498,10 @@ public class ScheduledClassConsumer implements JavaClassConsumer, DisposableBean
 
         void registered(JobDeclaration declaration, String tenantId) {
             completed.add(key(declaration.name(), tenantId));
+        }
+
+        void forget(String tenantId) {
+            completed.removeIf(key -> key.endsWith(KEY_SEPARATOR + tenantId));
         }
     }
 

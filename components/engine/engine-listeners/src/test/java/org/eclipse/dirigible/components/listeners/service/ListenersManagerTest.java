@@ -164,4 +164,21 @@ class ListenersManagerTest {
         // and the connection they shared goes with them (#7875)
         verify(sharedConnection, times(2)).close();
     }
+
+    /** Deprovisioning stops the tenant's listeners only, and forgets them. */
+    @Test
+    void stopTenantListenersStopsOnlyTheTenantsOwn() {
+        ListenerDescriptor acme = new ListenerDescriptor(ListenerType.QUEUE, "acme###orders", HANDLER);
+        ListenerDescriptor globex = new ListenerDescriptor(ListenerType.QUEUE, "globex###orders", HANDLER);
+        ListenersManager.LISTENERS.put(acme, listenerManager);
+        ListenersManager.LISTENERS.put(globex, listenerManager2);
+
+        org.junit.jupiter.api.Assertions.assertEquals(1, listenersManager.stopTenantListeners("acme"));
+
+        verify(listenerManager).stopListener();
+        verify(listenerManager2, never()).stopListener();
+        org.junit.jupiter.api.Assertions.assertFalse(ListenersManager.LISTENERS.containsKey(acme));
+        org.junit.jupiter.api.Assertions.assertTrue(ListenersManager.LISTENERS.containsKey(globex));
+        org.junit.jupiter.api.Assertions.assertEquals(0, listenersManager.stopTenantListeners("acme"), "a second call finds nothing");
+    }
 }
