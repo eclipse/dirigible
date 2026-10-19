@@ -65,7 +65,7 @@ public final class ConfigGroups {
             new Rule(ConfigGroup.SYNC, "SYNCHRONIZER_", "PUBLISH_", "CSV_", "READINESS_"), //
             new Rule(ConfigGroup.INTEGRATIONS, "DESTINATION", "CONNECTIVITY_", "FTP_", "SFTP_", "SPARK_", "ETCD_"), //
             new Rule(ConfigGroup.INSTANCE, "PRODUCT_", "INSTANCE_", "HOME_URL", "APP_BASE_URL", "SERVER_", "HOST", "TRIAL_", "OPERATIONS_",
-                    "SPRING_ADMIN"));
+                    "ISSUES_", "SPRING_ADMIN"));
 
     private ConfigGroups() {}
 

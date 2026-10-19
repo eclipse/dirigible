@@ -461,6 +461,15 @@ public enum DirigibleConfig {
      */
     JAVA_RECONCILE_INTERVAL_SECONDS("DIRIGIBLE_JAVA_RECONCILE_INTERVAL_SECONDS", "30"),
 
+    /**
+     * Whether an issue report carries the server-side log excerpt of its own requests (#7948); the
+     * reporter sees the excerpt before sending either way.
+     */
+    ISSUES_BUNDLE_LOGS("DIRIGIBLE_ISSUES_BUNDLE_LOGS", Boolean.TRUE.toString()),
+
+    /** The largest file, in bytes, an issue attachment may be (#7948). */
+    ISSUES_ATTACHMENT_MAX_BYTES("DIRIGIBLE_ISSUES_ATTACHMENT_MAX_BYTES", "10485760"),
+
     /** Anthropic API key powering the Intent Editor's AI assistant; blank disables the assistant. */
     INTENT_AI_API_KEY("DIRIGIBLE_INTENT_AI_API_KEY", null, meta().secret()),
 

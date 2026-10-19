@@ -325,6 +325,12 @@ if (window !== top) {
             location.replace("/logout");
           };
 
+          // "Report an issue" (#7948): the report form lives in the Harmonia shells, so the Workbench opens
+          // the application shell's Issues page with the form open, in a tab of its own.
+          scope.reportIssue = () => {
+            window.open("/services/web/application/index.html#/issues?report=1", "_blank", "noopener");
+          };
+
           scope.tenantHint = () => {
             if (scope.tenant.hostBound)
               return LocaleService.t(

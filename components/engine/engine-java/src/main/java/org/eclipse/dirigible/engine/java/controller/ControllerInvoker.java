@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.components.base.http.request.RequestIds;
 import org.eclipse.dirigible.components.base.http.roles.Roles;
 import org.eclipse.dirigible.sdk.db.ConcurrentWriteException;
 import org.eclipse.dirigible.sdk.db.ConfirmationRequiredException;
@@ -289,8 +290,8 @@ public class ControllerInvoker {
     }
 
     /**
-     * Render a failed request as {@code {"status","error","message"}} with the exception's reason. A
-     * committed response is left alone (the controller already wrote something).
+     * Render a failed request as {@code {"status","error","message","requestId"}} with the exception's
+     * reason. A committed response is left alone (the controller already wrote something).
      */
     private void writeError(HttpServletResponse response, ResponseStatusException e) {
         int status = e.getStatusCode()
@@ -307,6 +308,8 @@ public class ControllerInvoker {
         if (e.getReason() != null) {
             body.put("message", e.getReason());
         }
+        RequestIds.current()
+                  .ifPresent(requestId -> body.put(RequestIds.MDC_KEY, requestId));
         if (e.getCause() instanceof ValidationException validation && validation.getMessageKey() != null) {
             // A translated check message (#7611): the key and the parameters ride next to the text
             // resolved for the request's language, so a client can render the message again in another.
@@ -353,6 +356,8 @@ public class ControllerInvoker {
             warnings.add(entry);
         }
         body.put("warnings", warnings);
+        RequestIds.current()
+                  .ifPresent(requestId -> body.put(RequestIds.MDC_KEY, requestId));
         try {
             objectMapper.writeValue(response.getOutputStream(), body);
             response.getOutputStream()

@@ -9,6 +9,8 @@
  */
 package org.eclipse.dirigible.commons.logging;
 
+import org.eclipse.dirigible.components.base.http.request.RequestIds;
+
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
 
@@ -26,7 +28,8 @@ public class ConsoleLoggingAppender extends AppenderBase<ILoggingEvent> {
     protected void append(ILoggingEvent event) {
         ConsoleLogRecord record = new ConsoleLogRecord(event.getLevel()
                                                             .toString(),
-                event.getFormattedMessage(), event.getTimeStamp());
+                event.getFormattedMessage(), event.getTimeStamp(), event.getMDCPropertyMap()
+                                                                        .get(RequestIds.MDC_KEY));
         ConsoleWebsocketHandler.distribute(record);
     }
 

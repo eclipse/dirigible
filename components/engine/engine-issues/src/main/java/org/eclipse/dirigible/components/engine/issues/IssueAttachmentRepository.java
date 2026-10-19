@@ -1,0 +1,38 @@
+/*
+ * Copyright (c) 2010-2026 Eclipse Dirigible contributors
+ *
+ * All rights reserved. This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v2.0 which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-FileCopyrightText: Eclipse Dirigible contributors SPDX-License-Identifier: EPL-2.0
+ */
+package org.eclipse.dirigible.components.engine.issues;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+/** The issue attachments. */
+@Repository("issueAttachmentRepository")
+public interface IssueAttachmentRepository extends JpaRepository<IssueAttachment, Long> {
+
+    /**
+     * An issue's attachments.
+     *
+     * @param issueId the issue
+     * @return the attachments, in upload order
+     */
+    List<IssueAttachment> findByIssueIdOrderByIdAsc(Long issueId);
+
+    /**
+     * One attachment of an issue.
+     *
+     * @param id the attachment
+     * @param issueId the issue
+     * @return the attachment
+     */
+    Optional<IssueAttachment> findByIdAndIssueId(Long id, Long issueId);
+}
