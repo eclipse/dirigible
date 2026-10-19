@@ -36,6 +36,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.cfg.DateTimeFeature;
 import tools.jackson.databind.cfg.MapperBuilder;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -73,10 +74,18 @@ public class ControllerInvoker {
         // (the copy() this used to make), MapperBuilder.findModules() is the ServiceLoader discovery
         // that was findAndRegisterModules(), and the lenient module is added LAST so its per-type
         // deserializers still win.
+        //
+        // WRITE_DATES_AS_TIMESTAMPS is pinned ON because Jackson 3 moved it to DateTimeFeature
+        // and flipped its default to OFF. Left
+        // at the new default, every date / timestamp a generated controller returns changes from the
+        // epoch number clients have always received to an ISO-8601 string - a breaking wire change
+        // that this dependency migration has no business making. IntentSetFieldNowIT caught it on
+        // "ApprovedAt" (String cannot be cast to Number).
         this.objectMapper = objectMapperProvider.getIfAvailable(ObjectMapper::new)
                                                 .rebuild()
                                                 .addModules(MapperBuilder.findModules())
                                                 .addModule(new LenientJavaTimeModule())
+                                                .enable(DateTimeFeature.WRITE_DATES_AS_TIMESTAMPS)
                                                 .build();
     }
 
