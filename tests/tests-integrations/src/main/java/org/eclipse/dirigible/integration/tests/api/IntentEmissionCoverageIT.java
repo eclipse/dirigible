@@ -26,9 +26,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -37,6 +39,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +47,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
 
+import io.restassured.config.JsonConfig;
+import io.restassured.config.RestAssuredConfig;
 import io.restassured.path.json.JsonPath;
+import io.restassured.path.json.config.JsonPathConfig.NumberReturnType;
 
 
 import org.eclipse.dirigible.components.api.messaging.MessagingFacade;
@@ -93,17 +99,20 @@ import ch.qos.logback.classic.Level;
  * declaration, {@code transitions} (the guarded on-demand status flip: allowed-status 200,
  * wrong-status/guard 409), {@code lifecycle} (the declarative state machine: the graph walked
  * through its transitions, an unmodeled flip and a create filed mid-lifecycle both refused through
- * the plain REST surface no transition guard covers), {@code postings} with {@code reverses} (post
- * on a transition; red-storno reversal on void - negated amounts, storno link, fail-soft), the
- * {@code notify} block with {@code attach: print} (send the document itself by e-mail - on a
- * transition and on a process step; the fail-soft contract), {@code calculatedActionOnCreate} on a
- * to-one RELATION (the FK resolved server-side by a hand-written {@code custom/} action: assigned
- * in the repository, and at runtime both defaulted when omitted and left alone when the caller
- * supplied one), the event-driven {@code generates} (posting the source mints the whole document
- * with nobody clicking, and a click afterwards returns that same document - the at-most-once
- * back-reference guard), and the personal (my) surface
- * ({@code identity}/{@code personal}/{@code sensitive}: scoped reads, forced owner, stripped
- * fields).
+ * the plain REST surface no transition guard covers), {@code stampOn} (a field recording when its
+ * record entered a status: stamped by a transition button, a full update, a create and a workflow
+ * setter in the same write as the move, kept by a write that stays in the status or leaves it,
+ * never taken from a caller, re-stamped on re-entry, and left empty by a move the lifecycle
+ * refuses), {@code postings} with {@code reverses} (post on a transition; red-storno reversal on
+ * void - negated amounts, storno link, fail-soft), the {@code notify} block with
+ * {@code attach: print} (send the document itself by e-mail - on a transition and on a process
+ * step; the fail-soft contract), {@code calculatedActionOnCreate} on a to-one RELATION (the FK
+ * resolved server-side by a hand-written {@code custom/} action: assigned in the repository, and at
+ * runtime both defaulted when omitted and left alone when the caller supplied one), the
+ * event-driven {@code generates} (posting the source mints the whole document with nobody clicking,
+ * and a click afterwards returns that same document - the at-most-once back-reference guard), and
+ * the personal (my) surface ({@code identity}/{@code personal}/{@code sensitive}: scoped reads,
+ * forced owner, stripped fields).
  */
 @Tag("slow")
 class IntentEmissionCoverageIT extends IntegrationTest {
@@ -125,6 +134,11 @@ class IntentEmissionCoverageIT extends IntegrationTest {
     private static final Pattern HTML_COMMENT = Pattern.compile("(?s)<!--.*?-->");
     /** A live reference to the page's {@code mutable} flag (not the word inside "immutable"). */
     private static final Pattern MUTABLE_REFERENCE = Pattern.compile("\\bmutable\\b");
+    /** An Instant is written as decimal epoch seconds; the default float would lose minutes of it. */
+    private static final RestAssuredConfig EXACT_NUMBERS = RestAssuredConfig.config()
+                                                                            .jsonConfig(JsonConfig.jsonConfig()
+                                                                                                  .numberReturnType(
+                                                                                                          NumberReturnType.BIG_DECIMAL));
 
     private static final String INTENT_YAML_ENTITIES = """
             name: emission
@@ -1500,6 +1514,13 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                   - { name: settle,   kind: serviceTask, args: { setField: note, value: SETTLED, next: end } }
                   - { name: end, kind: end }
 
+              # stampOn (#7874): the setter is the whole step - the repository stamps ApprovedAt with it.
+              - name: PermitApproval
+                trigger: { onCreate: Permit }
+                steps:
+                  - { name: markApproved, kind: serviceTask, args: { setRelationField: Status, value: APPROVED, next: end } }
+                  - { name: end, kind: end }
+
               # abortOn: voiding the approval (CancelApproval -> status 3) cancels the confirm task.
               - name: ApprovalFlow
                 trigger: { onCreate: Approval }
@@ -1696,6 +1717,13 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                 setStatus: 3
                 label: Cancel
                 icon: ban
+              # stampOn (#7874): the button only flips the status - the repository stamps ApprovedAt.
+              - name: ApproveClearance
+                forEntity: Clearance
+                from: [OPEN, REOPENED]
+                setStatus: APPROVED
+                label: Approve
+                icon: check
               # The transition the event-driven create-from below listens for (#6711): posting the slip
               # is what mints the voucher - the test never calls the create-from to get one.
               - name: PostSlip
@@ -2057,6 +2085,18 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                   - { id: 1, name: OPEN }
                   - { id: 2, name: PARTIAL }
                   - { id: 3, name: SETTLED }
+              - name: clearance-statuses
+                entity: ClearanceStatus
+                rows:
+                  - { id: 1, name: OPEN }
+                  - { id: 2, name: APPROVED }
+                  - { id: 3, name: REOPENED }
+                  - { id: 4, name: CLOSED }
+              - name: permit-statuses
+                entity: PermitStatus
+                rows:
+                  - { id: 1, name: SUBMITTED }
+                  - { id: 2, name: APPROVED }
               - name: pledge-payment-statuses
                 entity: PledgePaymentStatus
                 rows:
@@ -2213,8 +2253,51 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                   - { name: LedgerAccount, kind: manyToOne, to: LedgerAccount, required: true }
             """;
 
+    // Still the entities list, for the same 65535-byte reason. stampOn (#7874): a field records when
+    // its
+    // record ENTERED a status, written by the repository in the same statement as the move. Clearance
+    // is moved by a button (into APPROVED) and by the plain REST surface (into REOPENED and CLOSED);
+    // its lifecycle leads back into APPROVED, so a re-entry re-stamps, and has no edge from OPEN to
+    // CLOSED, so a refused move can be shown to stamp nothing. Permit is the workflow half: a create
+    // lands in SUBMITTED and the flow's setter moves it to APPROVED, each arrival stamped with no step
+    // of its own.
+    private static final String INTENT_YAML_STATUS_STAMPS = """
+              - name: ClearanceStatus
+                kind: setting
+                fields:
+                  - { name: id,   type: integer, primaryKey: true, generated: true }
+                  - { name: name, type: string, required: true, length: 50 }
+              - name: Clearance
+                lifecycle:
+                  edges:
+                    - { from: OPEN,     to: [APPROVED] }
+                    - { from: APPROVED, to: [REOPENED, CLOSED] }
+                    - { from: REOPENED, to: [APPROVED] }
+                fields:
+                  - { name: id,         type: integer, primaryKey: true, generated: true }
+                  - { name: note,       type: string, length: 60 }
+                  - { name: approvedAt, type: timestamp, stampOn: { status: APPROVED } }
+                  - { name: closedOn,   type: date, stampOn: { status: CLOSED } }
+                relations:
+                  - { name: Status, kind: manyToOne, to: ClearanceStatus, function: EntityStatus, init: OPEN }
+              - name: PermitStatus
+                kind: setting
+                fields:
+                  - { name: id,   type: integer, primaryKey: true, generated: true }
+                  - { name: name, type: string, required: true, length: 50 }
+              - name: Permit
+                fields:
+                  - { name: id,          type: integer, primaryKey: true, generated: true }
+                  - { name: note,        type: string, length: 60 }
+                  - { name: submittedAt, type: timestamp, stampOn: { status: SUBMITTED } }
+                  - { name: approvedAt,  type: timestamp, stampOn: { status: APPROVED } }
+                relations:
+                  - { name: Status, kind: manyToOne, to: PermitStatus, function: EntityStatus, init: SUBMITTED }
+            """;
+
     private static final String INTENT_YAML = INTENT_YAML_ENTITIES.concat(INTENT_YAML_FILES)
                                                                   .concat(INTENT_YAML_PERIOD_POSTING)
+                                                                  .concat(INTENT_YAML_STATUS_STAMPS)
                                                                   .concat(INTENT_YAML_GLUE);
 
     @Autowired
@@ -2394,6 +2477,135 @@ class IntentEmissionCoverageIT extends IntegrationTest {
         assertRuntimeEnforcement();
         assertNowDefaultRuntime();
         assertAgreeGuardsTheParentsRuntime();
+        assertStatusStampsRuntime();
+    }
+
+    /**
+     * {@code stampOn} (#7874), compiled and running: a field records when its record ENTERED a status,
+     * whoever moved it there - a transition button, the plain REST surface, a create, a workflow setter
+     * - and only then: a write that stays in the status, a move out of it and a refused move into it
+     * leave the field alone, and no caller writes it.
+     */
+    private void assertStatusStampsRuntime() {
+        String clearances = "/clearance/ClearanceController";
+        String approve = "/services/java/" + PROJECT + "/gen/events/emission/ApproveClearanceTransition/run";
+
+        // A move the lifecycle refuses (OPEN has no edge to CLOSED) is never written, so it stamps nothing.
+        int refused = createRecord(clearances, "{\"Note\":\"refused\"}");
+        updateRecord(clearances, refused, "{\"Id\":" + refused + ",\"Note\":\"refused\",\"Status\":4}", 400);
+        Map<String, Object> unmoved = readRecord(clearances, refused);
+        assertEquals(1, ((Number) unmoved.get("Status")).intValue(), "a refused move leaves the status where it was: " + unmoved);
+        assertNull(unmoved.get("ClosedOn"), "a refused move into a stamped status must stamp nothing: " + unmoved);
+
+        // The button moves the record into APPROVED; the repository stamps the arrival in the same write.
+        int clearance = createRecord(clearances, "{\"Note\":\"walked\"}");
+        assertNull(readRecord(clearances, clearance).get("ApprovedAt"), "a create into OPEN enters no stamped status");
+        Instant beforeApproval = Instant.now()
+                                        .truncatedTo(java.time.temporal.ChronoUnit.MILLIS);
+        runTransition(approve, clearance);
+        Instant firstApproval = instantOf(readRecord(clearances, clearance).get("ApprovedAt"));
+        assertFalse(firstApproval.isBefore(beforeApproval),
+                "the button's move must stamp the moment it ran: " + firstApproval + " < " + beforeApproval);
+
+        // The field is the move's alone: a plain PUT carrying a value for it keeps the stored one...
+        updateRecord(clearances, clearance, "{\"Id\":" + clearance + ",\"Note\":\"edited\",\"ApprovedAt\":946684800}", 200);
+        Map<String, Object> edited = readRecord(clearances, clearance);
+        assertEquals("edited", edited.get("Note"));
+        assertEquals(firstApproval, instantOf(edited.get("ApprovedAt")), "a caller must not write a stamped field: " + edited);
+
+        // ...a move OUT of the status keeps it - it is a fact about the past...
+        updateRecord(clearances, clearance, "{\"Id\":" + clearance + ",\"Note\":\"edited\",\"Status\":3}", 200);
+        assertEquals(firstApproval, instantOf(readRecord(clearances, clearance).get("ApprovedAt")), "leaving a status keeps its stamp");
+
+        // ...and coming back records the latest arrival.
+        runTransition(approve, clearance);
+        Instant secondApproval = instantOf(readRecord(clearances, clearance).get("ApprovedAt"));
+        assertTrue(secondApproval.isAfter(firstApproval),
+                "re-entering a status must re-stamp it: " + secondApproval + " <= " + firstApproval);
+
+        // A plain REST move into CLOSED is a full update, and it stamps too - a date, in its own shape.
+        java.time.LocalDate dayBefore = java.time.LocalDate.now();
+        updateRecord(clearances, clearance, "{\"Id\":" + clearance + ",\"Note\":\"edited\",\"Status\":4}", 200);
+        Map<String, Object> closed = readRecord(clearances, clearance);
+        java.time.LocalDate dayAfter = java.time.LocalDate.now();
+        java.time.LocalDate closedOn = dateOf(closed.get("ClosedOn"));
+        assertTrue(closedOn.equals(dayBefore) || closedOn.equals(dayAfter), "a full update into CLOSED must stamp today: " + closed);
+        assertEquals(secondApproval, instantOf(closed.get("ApprovedAt")), "another status's arrival leaves this stamp alone");
+
+        // The workflow half. A create landing in its init: status ENTERS it, so SUBMITTED is stamped on
+        // insert; the flow's setter then moves the permit to APPROVED, and no step of its own stamps it.
+        Instant beforeCreate = Instant.now()
+                                      .truncatedTo(java.time.temporal.ChronoUnit.MILLIS);
+        int permit = createRecord("/permit/PermitController", "{\"Note\":\"flowed\"}");
+        AtomicReference<Map<String, Object>> approved = new AtomicReference<>();
+        restAssuredExecutor.execute(() -> approved.set(given().config(EXACT_NUMBERS)
+                                                              .when()
+                                                              .get(API + "/permit/PermitController/" + permit)
+                                                              .then()
+                                                              .statusCode(200)
+                                                              .body("Status", equalTo(2))
+                                                              .body("ApprovedAt", notNullValue())
+                                                              .extract()
+                                                              .jsonPath()
+                                                              .getMap("")),
+                60);
+        Instant submittedAt = instantOf(approved.get()
+                                                .get("SubmittedAt"));
+        Instant approvedAt = instantOf(approved.get()
+                                               .get("ApprovedAt"));
+        assertFalse(submittedAt.isBefore(beforeCreate), "a create into SUBMITTED must stamp it: " + submittedAt + " < " + beforeCreate);
+        assertFalse(approvedAt.isBefore(submittedAt), "the flow's setter must stamp its own, later arrival: " + approved.get());
+    }
+
+    /** PUTs a record to a generated controller and expects the given status. */
+    private void updateRecord(String controller, int id, String body, int expectedStatus) {
+        restAssuredExecutor.execute(() -> given().contentType("application/json")
+                                                 .body(body)
+                                                 .when()
+                                                 .put(API + controller + "/" + id)
+                                                 .then()
+                                                 .statusCode(expectedStatus));
+    }
+
+    /** GETs a record from a generated controller, its numbers exact. */
+    private Map<String, Object> readRecord(String controller, int id) {
+        AtomicReference<Map<String, Object>> record = new AtomicReference<>();
+        restAssuredExecutor.execute(() -> record.set(given().config(EXACT_NUMBERS)
+                                                            .when()
+                                                            .get(API + controller + "/" + id)
+                                                            .then()
+                                                            .statusCode(200)
+                                                            .extract()
+                                                            .jsonPath()
+                                                            .getMap("")));
+        return record.get();
+    }
+
+    /** Runs a generated {@code transitions:} button on a record. */
+    private void runTransition(String transition, int id) {
+        restAssuredExecutor.execute(() -> given().contentType("application/json")
+                                                 .body("{\"id\":" + id + "}")
+                                                 .when()
+                                                 .post(transition)
+                                                 .then()
+                                                 .statusCode(200));
+    }
+
+    /** An Instant is written as epoch seconds, with its nanoseconds as the fraction. */
+    private static Instant instantOf(Object value) {
+        assertNotNull(value, "expected an instant");
+        BigDecimal epochSeconds = new BigDecimal(String.valueOf(value));
+        return Instant.ofEpochSecond(epochSeconds.longValue(), epochSeconds.remainder(BigDecimal.ONE)
+                                                                           .movePointRight(9)
+                                                                           .longValue());
+    }
+
+    /** A LocalDate is written as its [year, month, day] array. */
+    private static java.time.LocalDate dateOf(Object value) {
+        List<?> parts = (List<?>) value;
+        assertEquals(3, parts.size(), "a date is written as [year, month, day]: " + value);
+        return java.time.LocalDate.of(((Number) parts.get(0)).intValue(), ((Number) parts.get(1)).intValue(),
+                ((Number) parts.get(2)).intValue());
     }
 
     /**
@@ -4455,6 +4667,19 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                 "a targeted write (transition button, workflow setter) must be validated against the graph too");
         assertTrue(docRepository.contains("enforceLifecycleStart(entity.Status);"),
                 "with a declared init, a record must not be created mid-lifecycle");
+
+        // stampOn (#7874): compiled into the REPOSITORY beside the lifecycle - every status write passes
+        // through it, so every writer stamps, and a targeted write carries the stamp in its own statement.
+        String clearanceRepository = contentOf("gen/emission/data/clearance/ClearanceRepository.java");
+        assertTrue(
+                clearanceRepository.contains("if (\"2\".equals(next) && !\"2\".equals(previous)) {")
+                        && clearanceRepository.contains("entity.ApprovedAt = java.time.Instant.now();"),
+                "an arrival into APPROVED must stamp the timestamp field: " + clearanceRepository);
+        assertTrue(clearanceRepository.contains("entity.ClosedOn = java.time.LocalDate.now();"), "a date field must stamp today's date");
+        assertTrue(clearanceRepository.contains("values.putAll(applyStatusStamps(stampPrevious, entity));"),
+                "a targeted write (transition button, workflow setter) must carry the stamp in its own statement");
+        assertTrue(clearanceRepository.contains("applyStatusStamps(null, entity);"), "a create landing in a stamped status must stamp it");
+        assertFalse(docRepository.contains("applyStatusStamps"), "an entity without stampOn must carry none of it");
 
         // send a document by e-mail: the notify block, at two of its call sites.
         //
