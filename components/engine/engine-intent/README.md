@@ -591,7 +591,10 @@ processes:
 Service-task shapes: `setField` / `clearField` / `setRelationField` (generated handlers), `call` (TS
 handler, deprecated), `delegate` (a reusable hand-written client `JavaDelegate` with injected
 `fields`). `clearField: <field>` is the erasure twin of `setField` - it names a `string`/`text` field
-and takes no `value`, so a flow can take back a failure text it wrote earlier.
+and takes no `value`, so a flow can take back a failure text it wrote earlier. `setField` on a
+`timestamp` or `date` field takes only the whole value `"{now}"`, and records when the flow reached
+the step (`Instant.now()` / `LocalDate.now()`): `{ setField: approvedAt, value: "{now}" }`. `{now}`
+on a string field is refused, since it would store the text `{now}`.
 Decisions may test `relation.field` paths (`customer.creditLimit > 10000`) - resolvers are
 generated. Tasks surface in the Inbox and inline on the record's page.
 
