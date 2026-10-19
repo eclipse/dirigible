@@ -738,7 +738,8 @@ public final class CheckSupport {
         }
         Map<String, EntityIntent> byName = IntentEntities.byName(model);
         for (SetFieldSupport.Setter setter : setters) {
-            EntityIntent entity = byName.get(setter.entity());
+            // A one-hop setter (#7934) moves the TARGET's status, so it is the target's checks it reaches.
+            EntityIntent entity = byName.get(setter.writtenEntity());
             RelationIntent status = entity == null ? null : IntentEntities.entityStatusRelation(entity);
             if (!setter.relation() || status == null || !IntentNaming.pascalCase(status.getName())
                                                                      .equals(setter.field())
@@ -747,7 +748,7 @@ public final class CheckSupport {
                                                         .matches("-?\\d+")) {
                 continue;
             }
-            targets.computeIfAbsent(setter.entity(), name -> new TreeSet<>())
+            targets.computeIfAbsent(setter.writtenEntity(), name -> new TreeSet<>())
                    .add(Integer.valueOf(setter.value()
                                               .trim()));
         }

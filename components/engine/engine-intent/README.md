@@ -616,6 +616,12 @@ and takes no `value`, so a flow can take back a failure text it wrote earlier. `
 `timestamp` or `date` field takes only the whole value `"{now}"`, and records when the flow reached
 the step (`Instant.now()` / `LocalDate.now()`): `{ setField: approvedAt, value: "{now}" }`. `{now}`
 on a string field is refused, since it would store the text `{now}`.
+Each of the three may name a member one hop away, through a `manyToOne`/`oneToOne` relation of the
+trigger entity: `{ setRelationField: order.Status, value: APPROVED }` in an approval request's flow
+moves the request's order. The write goes through the order's own repository, so its `lifecycle:`,
+`stampOn` fields and history apply and its `-transitioned` event is published; the status name is a
+seed of the order's nomenclature. One hop only, local targets only; a request without an order is a
+logged no-op.
 Decisions may test `relation.field` paths (`customer.creditLimit > 10000`) - resolvers are
 generated. Tasks surface in the Inbox and inline on the record's page.
 

@@ -1818,6 +1818,26 @@ the `Status` whose name is `APPROVED`); the relation must be a `manyToOne`/`oneT
 trigger entity. `setRelationField` works on a `serviceTask` (like `setField`) **and** directly on a
 `userTask` (the FK is set the moment the task completes).
 
+**Writing the record the trigger belongs to: `<relation>.<member>`.** A flow triggered by one record
+often has to move the status of ANOTHER - an approval request moving its order to APPROVED, a
+shipment moving its order to SHIPPED. Do not write a `delegate:` for that: `setField`, `clearField`
+and `setRelationField` each accept one hop through a `manyToOne`/`oneToOne` relation of the trigger
+entity - the first segment names the relation, the second a member of the record it points at:
+
+```yaml
+  steps:
+    - { name: markOrderApproved, kind: serviceTask, args: { setRelationField: order.Status, value: APPROVED, next: markDone } }
+    - { name: markDone,          kind: serviceTask, args: { setRelationField: Status, value: DONE, next: end } }
+```
+
+Every rule of the plain setter applies to the member (its type, `{now}`, `{error}`), and a status name
+is a seed of the TARGET's nomenclature. The write goes through the target's own repository, so the
+target's `lifecycle:` judges it (a move it does not model fails the step), its `stampOn` fields and
+history are written, and its `-transitioned` event goes out - which also makes that status the flow's
+column on the target's REST surface. Exactly one dot; the relation must be a local to-one (not a
+collection, not a field, not a cross-model entity). A trigger record whose relation is empty is
+skipped with a warning.
+
 **Where to put the status set - the pattern to follow (and to recommend to users):**
 
 - **A task FOLLOWED BY a decision (Approve/Reject) → set the status on a `serviceTask` on the chosen
@@ -4830,6 +4850,7 @@ or a seeded name.
 | serviceTask `onError` | a declared step or `end` - `delegate:` and non-fan-out `notify:` steps only; `{error}` (a whole-value `setField` value) is readable on the route |
 | serviceTask `clearField` | a `string`/`text` field of the trigger entity - erases it; takes no `value`, not combinable with `setField`/`setRelationField` |
 | serviceTask `setField` value | a literal on a `string`/`text` field; exactly `"{now}"` on a `timestamp`/`date` field (the moment the step runs) - `{now}` nowhere else |
+| `setField` / `clearField` / `setRelationField` path | `<member>` of the trigger entity, or `<relation>.<member>` - one hop through a local `manyToOne`/`oneToOne` relation, written through the target's repository |
 | field `stampOn` | `{ status: <seeded name or id> }` of the entity's `function: EntityStatus` relation, on a `timestamp`/`date` field that is not `required` and has no other writer |
 | process `vars` | `[{ name: <identifier>, clearAfter: <serviceTask/userTask step> }]`; step `produces:`/`uses:` list declared var names |
 | process `abortOn` | `{ status: <id> \| [ids], then: <serviceTask> \| end }` (trigger entity needs a `function: EntityStatus` relation) |

@@ -318,7 +318,20 @@ final class StatusSymbolResolver {
                 if (relationName == null || args.get("value") == null) {
                     continue;
                 }
-                Map<?, ?> relation = toOneRelation(triggerEntity, relationName);
+                // One hop (#7934): `order.Status` writes the status of the record `order` points at, so
+                // its name is a seed of the ORDER's nomenclature. A path that does not reach a local
+                // to-one target is the parser's to refuse, with a message about the path.
+                String writtenEntity = triggerEntity;
+                int dot = relationName.indexOf('.');
+                if (dot >= 0) {
+                    Map<?, ?> via = toOneRelation(triggerEntity, relationName.substring(0, dot));
+                    if (via == null || text(via, "model") != null || !isToOne(via) || !entities.containsKey(text(via, "to"))) {
+                        continue;
+                    }
+                    writtenEntity = text(via, "to");
+                    relationName = relationName.substring(dot + 1);
+                }
+                Map<?, ?> relation = toOneRelation(writtenEntity, relationName);
                 Target target = relation == null ? new Target(null, null) : new Target(text(relation, "to"), text(relation, "model"));
                 putResolved(args, "value", target, stepSubject + " setRelationField [" + relationName + "] value");
             }
@@ -748,6 +761,11 @@ final class StatusSymbolResolver {
             }
         }
         return null;
+    }
+
+    private static boolean isToOne(Map<?, ?> relation) {
+        String kind = lower(text(relation, "kind"));
+        return "manytoone".equals(kind) || "onetoone".equals(kind);
     }
 
     /** Resolve a scalar key in place when it holds a symbol; leave a numeric value untouched. */

@@ -1,6 +1,10 @@
 package gen.events.${javaGenFolderName};
 
 import org.eclipse.dirigible.sdk.bpm.Process;
+#if($via && $via != "")
+import org.eclipse.dirigible.sdk.log.Logger;
+import org.eclipse.dirigible.sdk.log.Logging;
+#end
 import org.eclipse.dirigible.sdk.messaging.Producer;
 import org.eclipse.dirigible.sdk.utils.Json;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -8,9 +12,17 @@ import org.flowable.engine.delegate.JavaDelegate;
 
 import gen.${javaGenFolderName}.data.${javaPerspective}.${entity}Entity;
 import gen.${javaGenFolderName}.data.${javaPerspective}.${entity}Repository;
+#if($via && $via != "")
+import gen.${javaGenFolderName}.data.${javaTargetPerspective}.${targetEntity}Entity;
+import gen.${javaGenFolderName}.data.${javaTargetPerspective}.${targetEntity}Repository;
+#end
 
 /**
+#if($via && $via != "")
+ * Sets ${targetEntity}.${field} on the ${targetEntity} that ${entity}.${via} points at, for the ${process} process (a string field via setField, the moment the
+#else
  * Sets ${entity}.${field} for the ${process} process (a string field via setField, the moment the
+#end
  * step runs on a timestamp/date field via setField {now}, its erasure via clearField, or a to-one
  * relation's FK to a seed id via setRelationField). Generated from the intent
  * .glue file - do not edit;
@@ -23,10 +35,26 @@ import gen.${javaGenFolderName}.data.${javaPerspective}.${entity}Repository;
  * user edit, and must not re-fire onUpdate reactions. It DOES publish the dedicated "-transitioned"
  * topic: the channel for status-reached consumers (posting glue, integrations) that reactions never
  * listen on - so a transition is observable without re-firing onUpdate.
+#if($via && $via != "")
+ * <p>
+ * One hop: the row written is the ${targetEntity} the ${entity}'s ${via} points at, so the write goes
+ * through ${targetEntity}Repository - the ${targetEntity}'s lifecycle, status stamps and history apply
+ * exactly as to its own setter, a move its lifecycle refuses fails this step, and the
+ * "-transitioned" published is the ${targetEntity}'s. A ${entity} whose ${via} is empty is logged and
+ * left alone.
+#end
  */
 public class ${className} implements JavaDelegate {
+#if($via && $via != "")
+
+    private static final Logger LOG = Logging.getLogger("gen.events.${javaGenFolderName}.${className}");
+#end
 
     private final ${entity}Repository repository = new ${entity}Repository();
+#if($via && $via != "")
+
+    private final ${targetEntity}Repository targetRepository = new ${targetEntity}Repository();
+#end
 
     @Override
     public void execute(DelegateExecution execution) {
@@ -34,30 +62,49 @@ public class ${className} implements JavaDelegate {
         if (!(key instanceof Number)) {
             return;
         }
+#if($via && $via != "")
+        ${entity}Entity source = repository.findOne(((Number) key).${keyAccessor}())
+                                           .orElse(null);
+        Object targetKey = source == null ? null : source.${via};
+        if (!(targetKey instanceof Number)) {
+            LOG.warn("Process [{}] step [{}]: ${entity} [{}] has no ${via} - nothing to set", "${process}",
+                    execution.getCurrentActivityId(), key);
+            return;
+        }
+#set($writeRepository = "targetRepository")
+#set($writeKey = "((Number) targetKey).${targetKeyAccessor}()")
+#set($writtenEntity = $targetEntity)
+#set($writtenPerspective = $targetPerspective)
+#else
+#set($writeRepository = "repository")
+#set($writeKey = "((Number) key).${keyAccessor}()")
+#set($writtenEntity = $entity)
+#set($writtenPerspective = $perspective)
+#end
 #if($relation == "true")
-        int updated = repository.updateProperty(((Number) key).${keyAccessor}(), "${field}", ${value});
+        int updated = ${writeRepository}.updateProperty(${writeKey}, "${field}", ${value});
 #elseif($clear == "true")
         // clearField: the erasure twin of setField - the column goes back to empty, so a re-driven
         // instance that now succeeds does not leave the previous failure's explanation standing.
-        int updated = repository.updateProperty(((Number) key).${keyAccessor}(), "${field}", null);
+        int updated = ${writeRepository}.updateProperty(${writeKey}, "${field}", null);
 #elseif($now == "true")
         // The {now} value: the moment the flow reached this step, recorded when it happened.
-        int updated = repository.updateProperty(((Number) key).${keyAccessor}(), "${field}", ${nowExpression});
+        int updated = ${writeRepository}.updateProperty(${writeKey}, "${field}", ${nowExpression});
 #elseif($errorMessage == "true")
         // The {error} value: the failure message the resilience conversion published just before it
         // raised the caught BPMN error that routed the flow here (empty when nothing published it).
         Object errorMessage = execution.getVariable("__errorMessage");
-        int updated = repository.updateProperty(((Number) key).${keyAccessor}(), "${field}",
+        int updated = ${writeRepository}.updateProperty(${writeKey}, "${field}",
                 errorMessage == null ? "" : errorMessage.toString());
 #else
-        int updated = repository.updateProperty(((Number) key).${keyAccessor}(), "${field}", "${valueJavaLiteral}");
+        int updated = ${writeRepository}.updateProperty(${writeKey}, "${field}", "${valueJavaLiteral}");
 #end
         if (updated == 0) {
             return;
         }
         // Re-load AFTER the targeted write so the published payload reflects the committed row
         // (including concurrent writes the old pre-load snapshot would have missed).
-        ${entity}Entity entity = repository.findOne(((Number) key).${keyAccessor}())
+        ${writtenEntity}Entity entity = ${writeRepository}.findOne(${writeKey})
                                            .orElse(null);
         if (entity != null) {
             // Publish the transition AFTER the current BPMN chain commits: service tasks that follow
@@ -67,7 +114,7 @@ public class ${className} implements JavaDelegate {
             // of racing them (an auto-posted entry used to catch the create-time UUID placeholder).
             String transitioned = Json.stringify(entity);
             Process.executeAfterCommit(
-                    () -> Producer.sendToTopicDurable("${projectName}-${perspective}-${entity}-transitioned", transitioned));
+                    () -> Producer.sendToTopicDurable("${projectName}-${writtenPerspective}-${writtenEntity}-transitioned", transitioned));
         }
     }
 }
