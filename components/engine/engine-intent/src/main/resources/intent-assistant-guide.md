@@ -243,6 +243,15 @@ not as an apology.
   reference an integration's `url:` and a payload value take). Prefer it to a hard-coded address for
   anything addressed to "us" rather than to a counterparty, or the model becomes environment-specific.
   The key must not be empty; a key that is unset at run time is simply a row with nobody to mail.
+- **Copies and a recipient a process computed - on a `serviceTask`'s `args.notify` only.** `cc:` and
+  `bcc:` take the forms `to:` takes, and every recipient key there also takes `to: "@var:<name>"`: a
+  process variable an earlier step produced (the approvers of a document, everyone holding a role on the
+  record) that no field carries. The var must be declared under the process `vars:` AND listed in the
+  step's `uses:`. A value may be a comma-separated list. The step sends when any of `to`/`cc`/`bcc` is
+  non-blank, so `bcc: "@config:ARCHIVE_EMAIL"` alone is a valid recipient set. Inside a `forEach`
+  fan-out, `cc`/`bcc` resolve per row like `to`. Use this instead of a `delegate:` that calls
+  `Mail.send` itself - that moves the message out of the model and loses `retry:`/`onError:`.
+  `cc`/`bcc`/`@var:` on a transition, a schedule or a `notifications[]` entry are parse errors.
 - **The notify block is ONE shape reused at four call sites** - a `notifications[]` entry, a
   `schedules[].notify`, a `transitions[].notify`, and a `serviceTask`'s `args.notify`. Everywhere it is
   `to` / `subject` / `body` (+ `channel: email`), with `{field}` / `{relation.field}` interpolation in
@@ -4863,6 +4872,8 @@ or a seeded name.
 | notify `attach` | `print` (the record the block is about - inside a fan-out, the ROW), `recordPrint` (a fan-out's anchor record, rendered once); whichever is rendered must be a document. Or the map form `{ report: <name>, bind: { <parameter>: <field> } }` - a rendered REPORT, scoped to the recipient by its own parameters |
 | notify `forEach` | a declared entity with exactly ONE to-one relation back to the record (one message per row; every bare path resolves against the row, `{record.<field>}` against the anchor record) - on `transitions[].notify` and `serviceTask` `args.notify` only |
 | notify `to` | a literal address, `@config:<KEY>` (read from configuration at send time - use it for an operations mailbox), a direct field, or a one-hop `relation.field` (cross-model allowed); never multi-hop, never `record.`-scoped |
+| notify `cc` / `bcc` | the `to` forms, on `serviceTask` `args.notify` only; the step then sends when any of `to`/`cc`/`bcc` is non-blank |
+| notify `@var:<name>` | any recipient key of a `serviceTask` `args.notify`; `<name>` declared in the process `vars:` and listed in the step's `uses:` |
 | notify block sites | `notifications[]`, `schedules[].notify`, `transitions[].notify`, `serviceTask` `args.notify` |
 | notify `outcome` | a `string` field (length >= 64) of the record the message is about - a fan-out's ROW - stamped `sent` / `failed: <reason>`; a failure publishes `<Entity>-notifyFailed` |
 | schedule `where` `op` | `eq`, `ne`, `gt`, `ge`, `lt`, `le`, `like` |
