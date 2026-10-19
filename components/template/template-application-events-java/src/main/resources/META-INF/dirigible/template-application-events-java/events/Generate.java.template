@@ -6,12 +6,13 @@ import org.eclipse.dirigible.sdk.http.Body;
 import org.eclipse.dirigible.sdk.component.Component;
 import org.eclipse.dirigible.sdk.http.Controller;
 import org.eclipse.dirigible.sdk.http.Post;
+import org.eclipse.dirigible.sdk.security.User;
 #end
 import org.eclipse.dirigible.sdk.utils.Json;
 #if($hasItemLines)
 import org.eclipse.dirigible.sdk.utils.Calc;
 #end
-#if($hasPrompt || $hasStatusGuard || $hasRefusals)
+#if(!$eventOnly || $hasPrompt || $hasStatusGuard || $hasRefusals)
 import org.eclipse.dirigible.sdk.http.Response;
 #end
 
@@ -37,7 +38,9 @@ import org.eclipse.dirigible.sdk.http.Response;
  * Generated from the intent generates block - do not edit; it is re-generated with the application.
  * Entity access goes ONLY through the generated repositories (validations / events / numbering).
 #if(!$eventOnly)
- * The endpoint is served under /services/java/<project>/gen/events/${javaGenFolderName}/${className}Generate/run.
+ * The endpoint is served under /services/java/<project>/gen/events/${javaGenFolderName}/${className}Generate/run,
+ * to a caller holding the write gate of the ${fromEntity} AND of the ${toEntity} (issue #7913) - the roles
+ * their own generated controllers demand for the writes a run makes.
 #else
  * There is no endpoint: this create-from is event-driven only, so ${className}GenerateOnEvent is its
  * single caller.
@@ -117,6 +120,13 @@ public class ${className}Generate {
 
     @Post("/run")
     public String run(@Body Request req) {
+        // The role gate (issue #7913): a run changes the ${fromEntity} and creates a ${toEntity}, so its
+        // caller must hold the write gate of both - the same roles the two generated controllers demand.
+        // Asked before anything is read, so a refused caller cannot probe which ids exist either.
+        if (!isInAnyRole("${sourceWriteRolesJavaLiteral}") || !isInAnyRole("${targetWriteRolesJavaLiteral}")) {
+            Response.setStatus(403);
+            return "{\"error\": \"forbidden\"}";
+        }
         if (req == null || req.id == null) {
             return "{\"error\": \"missing source id\"}";
         }
@@ -163,6 +173,17 @@ public class ${className}Generate {
             return "{\"error\": \"source ${fromEntity} not found\"}";
         }
         return Json.stringify(saved);
+    }
+
+    /** Whether the caller holds ANY role of a comma-separated gate; an empty gate admits nobody. */
+    private static boolean isInAnyRole(String roles) {
+        for (String role : roles.split(",")) {
+            String name = role.trim();
+            if (!name.isEmpty() && User.isInRole(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 #end
 

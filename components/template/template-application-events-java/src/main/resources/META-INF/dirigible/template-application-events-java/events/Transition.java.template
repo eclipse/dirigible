@@ -14,6 +14,7 @@ import org.eclipse.dirigible.sdk.component.Component;
 import org.eclipse.dirigible.sdk.http.Controller;
 import org.eclipse.dirigible.sdk.http.Post;
 import org.eclipse.dirigible.sdk.http.Response;
+import org.eclipse.dirigible.sdk.security.User;
 import org.eclipse.dirigible.sdk.utils.Json;
 
 /**
@@ -28,7 +29,8 @@ import org.eclipse.dirigible.sdk.utils.Json;
  *
  * Generated from the intent transitions block - do not edit; it is re-generated with the application.
  * Entity access goes ONLY through the generated repositories.
- * The endpoint is served under /services/java/<project>/gen/events/${javaGenFolderName}/${className}Transition/run.
+ * The endpoint is served under /services/java/<project>/gen/events/${javaGenFolderName}/${className}Transition/run,
+ * to a caller holding the ${entity}'s write gate (issue #7913) - the roles its generated controller demands.
  */
 @Controller
 @Component("${javaGenFolderName}_${className}Transition")
@@ -52,6 +54,13 @@ public class ${className}Transition {
     public String run(@Body Request req) {
         // Every branch returns a JSON body - the guard errors carry {"error": reason}.
         Response.setContentType("application/json");
+        // The role gate (issue #7913): the flip writes the ${entity}, so its caller must hold the same write
+        // gate its generated controller demands. Asked before anything is read, so a refused caller cannot
+        // probe which ids exist either.
+        if (!isInAnyRole("${writeRolesJavaLiteral}")) {
+            Response.setStatus(403);
+            return "{\"error\": \"forbidden\"}";
+        }
         if (req == null || req.id == null) {
             Response.setStatus(400);
             return "{\"error\": \"missing record id\"}";
@@ -437,4 +446,15 @@ public class ${className}Transition {
         }
     }
 #end
+
+    /** Whether the caller holds ANY role of a comma-separated gate; an empty gate admits nobody. */
+    private static boolean isInAnyRole(String roles) {
+        for (String role : roles.split(",")) {
+            String name = role.trim();
+            if (!name.isEmpty() && User.isInRole(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
