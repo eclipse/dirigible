@@ -629,7 +629,8 @@ A `serviceTask` may instead SEND: `args: { notify: { to, subject, body, ... } }`
 takes `cc:` and `bcc:` (the forms `to:` takes) and, on every recipient key, `@var:<name>` - a process
 variable an earlier step computed, declared under the process `vars:` and listed in the step's `uses:`.
 A value may be a comma-separated list. The step sends when any of `to`/`cc`/`bcc` is non-blank, so it
-may omit `to:`. `cc:`/`bcc:`/`@var:` are refused on every other notify block.
+may omit `to:`. `cc:`/`bcc:` work the same on every notify block - a transition, a schedule, a
+`notifications[]` entry; `@var:` only on a process step, since nothing else runs inside an instance.
 
 ```yaml
     vars:
@@ -932,6 +933,7 @@ notifications:
   - name: welcomeMember
     event: { onCreate: Member }               # exactly one of onCreate/onUpdate/onDelete
     to: email                                 # a field, one-hop relation.field, or a literal
+    cc: support@example.com                   # optional cc / bcc, the same forms
     subject: "Welcome"
     body: "Your membership is active."
 ```

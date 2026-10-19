@@ -1517,6 +1517,8 @@ public final class IntentParser {
         }
         Map<String, String> paths = new LinkedHashMap<>();
         addSourcePath(paths, "recipient", notify.getTo());
+        addSourcePath(paths, "cc", notify.getCc());
+        addSourcePath(paths, "bcc", notify.getBcc());
         addSourcePath(paths, "languageFrom", notify.getLanguageFrom());
         collectNotifyPlaceholders(notify.getSubject(), paths);
         collectNotifyPlaceholders(notify.getBody(), paths);
@@ -3402,9 +3404,8 @@ public final class IntentParser {
 
     /**
      * The notify block of a call site that may read process variables - a process step's, where
-     * {@code vars} names what the step may read through {@code @var:}. Only there are {@code cc:} /
-     * {@code bcc:} generated (#7935), so everywhere else ({@code vars} {@code null}) both are refused
-     * rather than parsed and silently never sent.
+     * {@code vars} names what the step may read through {@code @var:}. Everywhere else ({@code vars}
+     * {@code null}) an {@code @var:} recipient is refused: the block runs outside any process instance.
      *
      * @param notify the block, may be {@code null} (nothing to validate)
      * @param subject the message prefix identifying the call site
@@ -3424,13 +3425,10 @@ public final class IntentParser {
             issues.add(subject + " has unsupported channel [" + channel + "] (supported: email)");
         }
         String to = notify.getTo();
+        // A copy recipient is enough (#7935, #7938): a mail to an archive mailbox needs no addressee of its
+        // own.
         boolean copies = !isBlank(notify.getCc()) || !isBlank(notify.getBcc());
-        if (copies && vars == null) {
-            issues.add(subject + " declares cc/bcc, which is generated only on a serviceTask's args.notify - send the copy from a"
-                    + " process step");
-        }
-        // A copy recipient is enough on a step: a mail to an archive mailbox needs no addressee of its own.
-        if ((to == null || to.isBlank()) && !(copies && vars != null)) {
+        if ((to == null || to.isBlank()) && !copies) {
             issues.add(subject + " has no recipient (to)");
         }
         validateNotifyRecipient(to, subject + " recipient", vars, issues);

@@ -6,6 +6,13 @@ package gen.events.${javaGenFolderName};
 #set($recordArgument = "")
 #set($recordParameter = "")
 #end
+## cc:/bcc: (#7938) - only a block that authors one renders the three-recipient shape, so every
+## other controller stays byte-identical.
+#if($notifyCcExpression || $notifyBccExpression)
+#set($notifyCopies = true)
+#else
+#set($notifyCopies = false)
+#end
 
 import org.eclipse.dirigible.sdk.http.Body;
 import org.eclipse.dirigible.sdk.log.Logger;
@@ -230,7 +237,15 @@ public class ${className}Transition {
                     + "/services/web/${projectName}/gen/${genFolderName}/index.html#/inbox";
 #end
             String to = ${notifyToExpression};
+#if($notifyCopies)
+            String cc = #if($notifyCcExpression)${notifyCcExpression}#{else}null#end;
+            String bcc = #if($notifyBccExpression)${notifyBccExpression}#{else}null#end;
+            // A message goes out when ANY recipient key names someone - a copy to an archive mailbox needs
+            // no addressee of its own.
+            if (isBlank(to) && isBlank(cc) && isBlank(bcc)) {
+#else
             if (to == null || to.isBlank()) {
+#end
 #if($notifyOutcomeProperty != "")
                 stampNotifySkipped(entity.${notifyOutcomeKeyProperty});
 #end
@@ -323,8 +338,13 @@ public class ${className}Transition {
             parts.add(document);
 #end
             String from = org.eclipse.dirigible.sdk.core.Configurations.get("DIRIGIBLE_MAIL_SENDER", "noreply@dirigible.io");
+#if($notifyCopies)
+            org.eclipse.dirigible.sdk.mail.Mail.send(from, recipients(to), recipients(cc), recipients(bcc), ${notifySubjectExpression},
+                    parts);
+#else
             org.eclipse.dirigible.sdk.mail.Mail.send(from, new String[] {to}, new String[0], new String[0], ${notifySubjectExpression},
                     parts);
+#end
 #if($notifyOutcomeProperty != "")
             stampNotifyOutcome(entity.${notifyOutcomeKeyProperty}, null);
 #end
@@ -457,4 +477,18 @@ public class ${className}Transition {
         }
         return false;
     }
+#if($notifyCopies)
+
+    private static boolean isBlank(String value) {
+        return value == null || value.isBlank();
+    }
+
+    /**
+     * One recipient key as the mail client takes it: a blank key is no entry at all, and a value is ONE
+     * entry even when it holds a comma-separated list - the client parses each entry as an address list.
+     */
+    private static String[] recipients(String value) {
+        return isBlank(value) ? new String[0] : new String[] {value};
+    }
+#end
 }

@@ -1,4 +1,11 @@
 package gen.events.${javaGenFolderName};
+## cc:/bcc: (#7938) - only a block that authors one renders the three-recipient shape, so every
+## other listener stays byte-identical.
+#if($ccExpression || $bccExpression)
+#set($notifyCopies = true)
+#else
+#set($notifyCopies = false)
+#end
 
 import java.util.HashMap;
 import java.util.List;
@@ -79,7 +86,15 @@ public class ${className}Notification implements MessageHandler {
                     + "/services/web/${projectName}/gen/${genFolderName}/index.html#/inbox";
 #end
             String to = ${toExpression};
+#if($notifyCopies)
+            String cc = #if($ccExpression)${ccExpression}#{else}null#end;
+            String bcc = #if($bccExpression)${bccExpression}#{else}null#end;
+            // A message goes out when ANY recipient key names someone - a copy to an archive mailbox needs
+            // no addressee of its own.
+            if (isBlank(to) && isBlank(cc) && isBlank(bcc)) {
+#else
             if (to == null || to.isBlank()) {
+#end
 #if($notifyOutcomeProperty != "")
                 stampNotifySkipped(entity.${notifyOutcomeKeyProperty});
 #end
@@ -164,7 +179,11 @@ public class ${className}Notification implements MessageHandler {
             parts.add(document);
 #end
             String from = Configurations.get("DIRIGIBLE_MAIL_SENDER", "noreply@dirigible.io");
+#if($notifyCopies)
+            Mail.send(from, recipients(to), recipients(cc), recipients(bcc), subject, parts);
+#else
             Mail.send(from, new String[] {to}, new String[0], new String[0], subject, parts);
+#end
 #if($notifyOutcomeProperty != "")
             stampNotifyOutcome(entity.${notifyOutcomeKeyProperty}, null);
 #end
@@ -262,6 +281,20 @@ public class ${className}Notification implements MessageHandler {
         return message == null || message.isBlank() ? failure.getClass()
                                                              .getSimpleName()
                 : message;
+    }
+#end
+#if($notifyCopies)
+
+    private static boolean isBlank(String value) {
+        return value == null || value.isBlank();
+    }
+
+    /**
+     * One recipient key as the mail client takes it: a blank key is no entry at all, and a value is ONE
+     * entry even when it holds a comma-separated list - the client parses each entry as an address list.
+     */
+    private static String[] recipients(String value) {
+        return isBlank(value) ? new String[0] : new String[] {value};
     }
 #end
 }

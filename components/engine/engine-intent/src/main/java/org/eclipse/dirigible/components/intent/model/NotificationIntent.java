@@ -46,8 +46,8 @@ public class NotificationIntent {
     /**
      * Optional copy recipient (dirigible #7935), in exactly the forms {@link #to} takes - plus, like
      * {@link #to} and {@link #bcc}, a process variable through {@code @var:<name>} on a process step. A
-     * value may hold a comma-separated list; it is passed to the mail client as one entry. Generated
-     * only on a process step's notify block for now; elsewhere it is refused at parse.
+     * value may hold a comma-separated list; it is passed to the mail client as one entry. Generated on
+     * every notify block (#7938); {@code @var:} only on a process step's.
      */
     private String cc;
     /**
