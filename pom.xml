@@ -175,7 +175,7 @@
         <chemistry.version>1.1.0</chemistry.version>
 
         <!-- FTP -->
-        <mina-core.version>2.2.9</mina-core.version>
+        <mina-core.version>2.2.10</mina-core.version>
         <sshd-core.version>2.20.0</sshd-core.version>
         <ftpserver.version>1.2.1</ftpserver.version>
 
