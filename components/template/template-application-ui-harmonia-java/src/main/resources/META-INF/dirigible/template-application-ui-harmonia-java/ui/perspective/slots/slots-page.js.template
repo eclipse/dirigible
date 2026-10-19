@@ -137,7 +137,8 @@ document.addEventListener('alpine:init', () => {
     // Explicit slots for the days that have a booking: the day's full grid (open..close by step), each
     // booked start taken - coloured, labelled and still clickable, so it opens its booking. A booking
     // off the grid gets a slot of its own. Days with no booking fall back to the shorthand schedule
-    // (fillEmptyDays).
+    // (fillEmptyDays). Harmonia renders a clickable taken slot as a plain button, without
+    // aria-disabled, so it carries data-booking="<id>" as the stable mark of a booked slot (#7919).
     bookedSlots() {
       const booked = {};   // day -> HH:MM -> booking id
       for (const row of this.items) {
@@ -164,7 +165,8 @@ document.addEventListener('alpine:init', () => {
           const slot = { date: date, start: start, end: hhmm(Math.min(sh * 60 + sm + step, 24 * 60 - 1)) };
           if (start in day) {
             const label = entity + ' #' + day[start];
-            Object.assign(slot, { available: false, clickable: true, color: 'blue', description: label, tooltip: label, bookingId: day[start] });
+            Object.assign(slot, { available: false, clickable: true, color: 'blue', description: label, tooltip: label, bookingId: day[start],
+              data: { booking: String(day[start]) } });
           }
           out.push(slot);
         }
