@@ -37,6 +37,7 @@ import org.eclipse.dirigible.components.intent.generator.PostSetSupport;
 import org.eclipse.dirigible.components.intent.generator.ProcessAssigneeSupport;
 import org.eclipse.dirigible.components.intent.generator.ProcessParallelSupport;
 import org.eclipse.dirigible.components.intent.generator.ProcessResilienceSupport;
+import org.eclipse.dirigible.components.intent.generator.SetFieldSupport;
 import org.eclipse.dirigible.components.intent.generator.CheckSupport;
 import org.eclipse.dirigible.components.intent.generator.ResolvePathSupport;
 import org.eclipse.dirigible.components.intent.generator.ProcessWaitSupport;
@@ -8186,12 +8187,38 @@ public final class IntentParser {
     }
 
     /**
+     * The value a {@code setField} may assign depends on the field's type (#7873): a
+     * {@code timestamp}/{@code date} field takes only the {@code {now}} token - a literal would have to
+     * be parsed into a {@code java.time} value - and a {@code string}/{@code text} field takes any
+     * literal except {@code {now}}, which there would store the token's own text, never what was meant.
+     * A value merely containing the token is the whole-value check's to report.
+     */
+    private static void validateSetFieldValueType(ProcessIntent process, StepIntent step, String setField, FieldIntent field,
+            List<String> issues) {
+        String subject = "process [" + process.getName() + "] step [" + step.getName() + "] setField [" + setField + "]";
+        String value = stepArg(step, "value");
+        boolean blank = value == null || value.isBlank();
+        boolean now = !blank && SetFieldSupport.NOW_TOKEN.equals(value.trim());
+        if (SetFieldSupport.isNowFieldType(field.getType())) {
+            if (!blank && !now && !value.contains(SetFieldSupport.NOW_TOKEN)) {
+                issues.add(subject + " on a [" + field.getType() + "] field takes only the value " + SetFieldSupport.NOW_TOKEN);
+            }
+        } else if (field.getType() != null && !"string".equals(field.getType()) && !"text".equals(field.getType())) {
+            issues.add(subject + " must be a string/text field (only literal string values are supported)");
+        } else if (now) {
+            issues.add(subject + " value " + SetFieldSupport.NOW_TOKEN
+                    + " needs a timestamp or date field - a string field would store the text \"" + SetFieldSupport.NOW_TOKEN + "\"");
+        }
+    }
+
+    /**
      * A {@code serviceTask} declaring {@code setField} must name a {@code string}/{@code text} field of
-     * the process's trigger entity and carry a {@code value} (the literal to assign); its erasure twin
-     * {@code clearField} names the same kind of field and takes no value. Any step may carry a
-     * {@code next} that routes its outgoing flow to a declared step or {@code end} (used to make two
-     * decision branches converge). Without these checks a typo would surface only at runtime. A
-     * {@code serviceTask} may instead declare a {@code notify} block - the step SENDS (see
+     * the process's trigger entity and carry a {@code value} (the literal to assign), or a
+     * {@code timestamp}/{@code date} field with the whole value {@code {now}} (the moment the step
+     * runs); its erasure twin {@code clearField} names the same kind of field and takes no value. Any
+     * step may carry a {@code next} that routes its outgoing flow to a declared step or {@code end}
+     * (used to make two decision branches converge). Without these checks a typo would surface only at
+     * runtime. A {@code serviceTask} may instead declare a {@code notify} block - the step SENDS (see
      * {@link #validateNotifyBlock}) - which is its whole work and therefore stands alone.
      */
     private static void validateSetFieldSteps(ProcessIntent process, String triggerEntity, Map<String, EntityIntent> byName,
@@ -8219,9 +8246,8 @@ public final class IntentParser {
                     if (field == null) {
                         issues.add("process [" + process.getName() + "] step [" + step.getName() + "] setField [" + setField
                                 + "] is not a field of [" + triggerEntity + "]");
-                    } else if (field.getType() != null && !"string".equals(field.getType()) && !"text".equals(field.getType())) {
-                        issues.add("process [" + process.getName() + "] step [" + step.getName() + "] setField [" + setField
-                                + "] must be a string/text field (only literal string values are supported)");
+                    } else {
+                        validateSetFieldValueType(process, step, setField, field, issues);
                     }
                     if (stepArg(step, "value") == null || stepArg(step, "value").isBlank()) {
                         issues.add("process [" + process.getName() + "] step [" + step.getName() + "] setField [" + setField
@@ -8595,6 +8621,12 @@ public final class IntentParser {
             // integer record id, so the token can never silently land there.
             String value = stepArg(step, "value");
             String setField = stepArg(step, "setField");
+            // {now} likewise (#7873), and only as the whole value: a stamp is a java.time value, not text.
+            boolean nowInsideValue = value != null && setField != null && !setField.isBlank() && value.contains(SetFieldSupport.NOW_TOKEN)
+                    && !SetFieldSupport.NOW_TOKEN.equals(value.trim());
+            if (nowInsideValue) {
+                issues.add(subject + " setField value [" + value + "] may use " + SetFieldSupport.NOW_TOKEN + " only as the whole value");
+            }
             if (value != null && value.contains(ProcessResilienceSupport.ERROR_TOKEN) && setField != null && !setField.isBlank()) {
                 if (!value.trim()
                           .equals(ProcessResilienceSupport.ERROR_TOKEN)) {

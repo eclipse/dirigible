@@ -5898,6 +5898,13 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
                                                                                         .trim())) {
                 entry.put("errorMessage", "true");
             }
+            // The {now} token (whole-value, timestamp/date only - parser-enforced) stamps the moment
+            // the step runs, in the Java type the entity declares for the column (#7873). Emitted only
+            // when used, so every other setter's descriptor stays byte-identical.
+            if (setter.now()) {
+                entry.put("now", "true");
+                entry.put("nowExpression", "java.time." + setter.javaType() + ".now()");
+            }
             setters.add(entry);
         }
         return setters;

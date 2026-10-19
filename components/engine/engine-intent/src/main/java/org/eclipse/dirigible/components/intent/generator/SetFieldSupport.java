@@ -47,11 +47,26 @@ import org.slf4j.LoggerFactory;
  * it wrote earlier - an error route's failure text that a re-driven, now successful instance would
  * otherwise leave standing on a success status.
  * <p>
- * Scope: {@code setField} assigns a literal to a {@code string}/{@code text} field; an expression
+ * {@code setField: approvedAt, value: "{now}"} records <b>when</b> the flow reached the step
+ * (#7873): on a {@code timestamp} field it assigns {@code java.time.Instant.now()}, on a
+ * {@code date} field {@code java.time.LocalDate.now()} - the Java types the generated entity
+ * declares for those columns - through the same targeted write.
+ * <p>
+ * Scope: {@code setField} assigns a literal to a {@code string}/{@code text} field, or the
+ * whole-value {@code {now}} token to a {@code timestamp}/{@code date} field; any other expression
  * value is out of scope. {@code setRelationField} assigns an integer seed id to a
  * {@code manyToOne}/ {@code oneToOne} relation's FK (validated by the parser).
  */
 public final class SetFieldSupport {
+
+    /**
+     * The whole-value {@code setField} token that stamps the moment the step runs - only on a
+     * {@code timestamp}/{@code date} field, and only as the whole value (both parser-enforced).
+     */
+    public static final String NOW_TOKEN = "{now}";
+
+    /** The {@code java.time} class a {@code {now}} setter assigns, keyed by the intent field type. */
+    private static final Map<String, String> NOW_JAVA_TYPES = Map.of("timestamp", "Instant", "date", "LocalDate");
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SetFieldSupport.class);
 
@@ -76,9 +91,14 @@ public final class SetFieldSupport {
      *        {@code value}, unquoted); {@code false} for a {@code setField} (assign the quoted literal)
      * @param clear {@code true} for a {@code clearField} (assign {@code null} - the erasure), which is
      *        never a relation and carries no value
+     * @param now {@code true} for a {@code setField} whose value is the whole {@link #NOW_TOKEN}
+     *        (assign the moment the step runs instead of a literal)
+     * @param javaType the {@code java.time} class a {@code now} setter assigns ({@code Instant} for a
+     *        {@code timestamp} field, {@code LocalDate} for a {@code date} field); {@code null} for
+     *        every other setter
      */
     public record Setter(String process, String step, String className, String entity, String perspective, String keyProperty,
-            String keyAccessor, String field, String value, boolean relation, boolean clear) {
+            String keyAccessor, String field, String value, boolean relation, boolean clear, boolean now, String javaType) {
     }
 
     /** Every field setter across every process in the model. */
@@ -111,7 +131,8 @@ public final class SetFieldSupport {
                     }
                     String value = stringArg(step, "value");
                     setters.add(new Setter(process.getName(), step.getName(), className(process.getName(), step.getName()), triggerEntity,
-                            perspective, keyProp, keyAcc, IntentNaming.pascalCase(relField), value == null ? "" : value, true, false));
+                            perspective, keyProp, keyAcc, IntentNaming.pascalCase(relField), value == null ? "" : value, true, false, false,
+                            null));
                     continue;
                 }
                 // setField: set a string/text field to a literal value (serviceTask only).
@@ -131,13 +152,18 @@ public final class SetFieldSupport {
                     value = null;
                     clear = true;
                 }
-                if (fieldOf(owner, field) == null) {
+                FieldIntent target = fieldOf(owner, field);
+                if (target == null) {
                     LOGGER.warn("Step [{}] in process [{}] sets unknown field [{}] of [{}] - skipping", LoggedValue.of(step.getName()),
                             LoggedValue.of(process.getName()), LoggedValue.of(field), LoggedValue.of(triggerEntity));
                     continue;
                 }
+                // {now} stamps the moment on a timestamp/date field (the parser refuses it anywhere else).
+                boolean now = value != null && NOW_TOKEN.equals(value.trim());
+                String javaType = now ? NOW_JAVA_TYPES.get(target.getType()) : null;
                 setters.add(new Setter(process.getName(), step.getName(), className(process.getName(), step.getName()), triggerEntity,
-                        perspective, keyProp, keyAcc, IntentNaming.pascalCase(field), value == null ? "" : value, false, clear));
+                        perspective, keyProp, keyAcc, IntentNaming.pascalCase(field), value == null ? "" : value, false, clear, now,
+                        javaType));
             }
         }
         return setters;
@@ -150,6 +176,14 @@ public final class SetFieldSupport {
      */
     public static String className(String process, String step) {
         return IntentNaming.pascalCase(process) + IntentNaming.pascalCase(step);
+    }
+
+    /**
+     * Whether a {@code setField} on a field of this intent type takes the {@link #NOW_TOKEN} (and only
+     * it): the moment-holding types whose generated Java property is a {@code java.time} value.
+     */
+    public static boolean isNowFieldType(String type) {
+        return NOW_JAVA_TYPES.containsKey(type);
     }
 
     private static FieldIntent fieldOf(EntityIntent entity, String name) {

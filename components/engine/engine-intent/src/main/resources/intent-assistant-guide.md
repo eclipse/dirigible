@@ -1774,6 +1774,19 @@ success would otherwise end in a success status still carrying the previous fail
     - { name: resetError, kind: serviceTask, args: { clearField: errorMessage, next: provision } }
 ```
 
+**Recording when the flow got there: `value: "{now}"`.** On a `timestamp` or `date` field of the
+trigger entity, `setField` takes the whole value `"{now}"` - and only that - and stamps the moment
+the step runs (the current instant on a `timestamp`, today on a `date`). Quote it: an unquoted
+`{now}` is a YAML map. It is never valid on a `string`/`text` field (it would store the text
+`{now}`), and never inside a larger value (`"at {now}"`). Use it for an `approvedAt` / `shippedAt`
+beside the status the flow sets - no `delegate:` needed:
+
+```yaml
+  steps:
+    - { name: stampApproved, kind: serviceTask, args: { setField: approvedAt, value: "{now}", next: markApproved } }
+    - { name: markApproved,  kind: serviceTask, args: { setRelationField: Status, value: 2, next: end } }
+```
+
 **Setting a status modelled as a relation: `setRelationField`.** When the status is a plain
 `string`/`text` field, use `setField` as above. When the status is a **to-one relation** (a FK to a
 settings/nomenclature entity like `Status`), use `setRelationField: <Relation>, value: <id>` to set the
@@ -4793,6 +4806,7 @@ or a seeded name.
 | serviceTask `retry` | `{ count: <integer >= 1>, every: <ISO-8601 duration> }` - `delegate:` and non-fan-out `notify:` steps only |
 | serviceTask `onError` | a declared step or `end` - `delegate:` and non-fan-out `notify:` steps only; `{error}` (a whole-value `setField` value) is readable on the route |
 | serviceTask `clearField` | a `string`/`text` field of the trigger entity - erases it; takes no `value`, not combinable with `setField`/`setRelationField` |
+| serviceTask `setField` value | a literal on a `string`/`text` field; exactly `"{now}"` on a `timestamp`/`date` field (the moment the step runs) - `{now}` nowhere else |
 | process `vars` | `[{ name: <identifier>, clearAfter: <serviceTask/userTask step> }]`; step `produces:`/`uses:` list declared var names |
 | process `abortOn` | `{ status: <id> \| [ids], then: <serviceTask> \| end }` (trigger entity needs a `function: EntityStatus` relation) |
 | relation `whenMasterDeleted` | `cascade` (default - a delete of the master deletes the children it owns), `refuse` (the master's delete is rejected while children exist); composition relations only |
