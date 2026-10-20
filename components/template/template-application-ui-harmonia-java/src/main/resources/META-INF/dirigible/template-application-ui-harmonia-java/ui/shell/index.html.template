@@ -250,8 +250,11 @@
             </ul>
 
             <!-- Notifications: the bell carries the unread count as a badge indicator anchored to its
-                 corner (so the count never widens the button into its neighbours); the popover lists them. -->
-            <button x-h-button x-h-popover-trigger data-variant="transparent" data-size="icon-sm" aria-label="Notifications" class="relative">
+                 corner (so the count never widens the button into its neighbours); the popover lists them.
+                 The accessible name repeats the count the badge shows: WCAG 2.5.3 wants the visible text
+                 inside the name, and axe fails the button otherwise (label-content-name-mismatch). -->
+            <button x-h-button x-h-popover-trigger data-variant="transparent" data-size="icon-sm" class="relative"
+                    :aria-label="T('application-core:shell.notifications.title', 'Notifications') + ($store.notifications.unreadCount > 0 ? ', ' + T('application-core:shell.notifications.unread', '{{count}} unread', { count: $store.notifications.unreadCount }) : '')">
               <svg role="presentation" x-h-lucide data-lucide="bell"></svg>
               <template x-if="$store.notifications.unreadCount > 0">
                 <span x-h-badge-indicator data-variant="negative" x-text="$store.notifications.unreadCount"></span>
