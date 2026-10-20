@@ -18,10 +18,14 @@
  * end-user. UI code selects localized text via App.services.apiErrors.
  *
  * Error body contract:
- *   { errorType, errorMessage, errorCauses: [{ errorType, errorMessage, field }] }
+ *   { errorType, errorMessage, errorCauses: [{ errorType, errorMessage, field }], requestId }
+ *
+ * `requestId` is the id the platform gave the failed request (#7948) - from the body, else the
+ * X-Request-Id response header. It is safe to show: a user quotes it, and an issue report carries it
+ * so the operator finds the request's log lines.
  */
 class ApiError extends Error {
-  constructor({ httpStatus, errorType, errorMessage, errorCauses } = {}) {
+  constructor({ httpStatus, errorType, errorMessage, errorCauses, requestId } = {}) {
     super(errorMessage || String(httpStatus || ''));
     this.name = 'ApiError';
     this.isApiError = true;
@@ -29,10 +33,33 @@ class ApiError extends Error {
     this.errorType = errorType || null;
     this.errorMessage = errorMessage || '';     // dev-facing — never shown to user
     this.errorCauses = Array.isArray(errorCauses) ? errorCauses : [];
+    this.requestId = requestId || null;
   }
 }
 
 App.services.ApiError = ApiError;
+
+/**
+ * The last failed requests of this page, newest first (#7948) - what "Report an issue" pre-fills its
+ * report with. The developer message is kept: the reporter sees the bundle before sending, and the
+ * server redacts it.
+ */
+App.services.recentFailures = {
+  max: 10,
+  items: [],
+  record(method, path, err) {
+    this.items.unshift({
+      at: new Date().toISOString(),
+      method: method,
+      path: path,
+      status: err.httpStatus,
+      errorType: err.errorType,
+      errorMessage: err.errorMessage,
+      requestId: err.requestId,
+    });
+    if (this.items.length > this.max) this.items.length = this.max;
+  },
+};
 
 App.services.api = {
   // Base URL for this application's generated REST controllers. Read from the
@@ -126,6 +153,7 @@ App.services.api = {
     } catch (e) {
       const err = new ApiError({ httpStatus: 0, errorType: 'NetworkError', errorMessage: e.message });
       console.error(`[api] ${method} ${baseUrl}${url} failed:`, err.errorMessage);
+      App.services.recentFailures.record(method, `${baseUrl}${url}`, err);
       throw err;
     }
 
@@ -158,6 +186,7 @@ App.services.api = {
       throw new ApiError({ httpStatus: r.status, errorType: 'ConfirmationDeclined', errorMessage: parsed.message || 'Warnings not confirmed' });
     }
 
+    const requestId = (parsed && typeof parsed === 'object' && parsed.requestId) || r.headers.get('X-Request-Id');
     const err = parsed && typeof parsed === 'object'
       ? new ApiError({
           httpStatus: r.status,
@@ -167,14 +196,17 @@ App.services.api = {
           // dropped on the floor and the caller was left with the bare status line.
           errorMessage: parsed.errorMessage || parsed.message || parsed.error || r.statusText,
           errorCauses: parsed.errorCauses,
+          requestId,
         })
       : new ApiError({
           httpStatus: r.status,
           errorType: this.typeFromStatus(r.status),
           errorMessage: raw || r.statusText,
+          requestId,
         });
 
     console.error(`[api] ${method} ${baseUrl}${url} -> ${err.httpStatus} ${err.errorType}:`, err.errorMessage, err.errorCauses);
+    App.services.recentFailures.record(method, `${baseUrl}${url}`, err);
     throw err;
   },
 

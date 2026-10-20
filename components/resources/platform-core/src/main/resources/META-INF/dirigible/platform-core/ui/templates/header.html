@@ -201,6 +201,8 @@
                                 <p class="bk-text--subtitle bk-font--normal fd-margin--none">{{'tenant' | t:'Tenant'}}:</p>
                                 <p class="fd-text">{{tenant.current.name || tenant.current.id}}</p>
                             </div>
+                            <bk-button id="ide-report-issue" label="{{'reportIssue' | t:'Report an issue'}}" state="transparent" glyph="sap-icon--message-warning"
+                                aria-label="{{'reportIssue' | t:'Report an issue'}}" ng-click="reportIssue()"></bk-button>
                             <bk-button label="{{'logout' | t:'Logout'}}" state="transparent" glyph="sap-icon--log" aria-label="{{'logout' | t:'Logout'}}" ng-click="logout()"></bk-button>
                         </div>
                     </bk-popover-body>

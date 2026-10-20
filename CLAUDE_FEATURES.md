@@ -16,7 +16,7 @@ Source-of-truth pointers are included in each section so generated docs can cite
   - **JavaScript** — ES6+ syntax over GraalJS; synchronous programming model (in contrast to Node.js); CommonJS + ESM supported.
   - **TypeScript** — transpiled at the platform; full strong typing via tsconfig at the project root.
   - **Java** — client `.java` compiled in-process by `engine-java`.
-  - **Declarative artefacts** — XML / JSON / YAML / Markdown / Confluence wiki (see §2).
+  - **Declarative artefacts** — XML / JSON / YAML, plus Markdown / Confluence wiki with the `engine-wiki` add-on (see §2).
 - **Default UI.** `http://localhost:8080`, login `admin` / `admin`.
 - **License.** Eclipse Public License 2.0.
 
@@ -60,6 +60,8 @@ Use this table as the canonical list of file extensions and the runtime behavior
 | `*.csvim`, `*.csv` | CSV import model + data files | `CsvimSynchronizer` (data-csvim) |
 
 ### 2.3 Documentation / wiki artefacts
+
+Add-on: provided by `engine-wiki`, which is not in the default bundle (see `components/engine/engine-wiki/README.md`).
 
 | Extension | Purpose | Synchronizer |
 | --------- | ------- | ------------ |
@@ -127,7 +129,7 @@ The platform is composed by what lands on the classpath — `build/application` 
 | `engine-proxy` | HTTP reverse-proxy routes. |
 | `engine-security` | Declarative `.access` / `.roles` enforcement; integrates with Spring Security. |
 | `engine-template`, `engine-template-javascript`, `engine-template-mustache`, `engine-template-velocity` | Template-language runtimes for generation. |
-| `engine-wiki` | Markdown and Confluence rendering. |
+| `engine-wiki` | Markdown and Confluence rendering at `/services/wiki`. An add-on, not in the default bundle — see `components/engine/engine-wiki/README.md`. |
 | `engine-open-telemetry` | OpenTelemetry trace/metric export (Camel-aware). |
 
 ---
@@ -144,8 +146,8 @@ The canonical package is `@aerokit/sdk` — submodules are imported as `@aerokit
 - `@aerokit/sdk/cms` — Content management (CMIS + S3 + SharePoint).
 - `@aerokit/sdk/s3` — Amazon S3 client.
 - `@aerokit/sdk/mongodb` — MongoDB driver.
-- `@aerokit/sdk/qldb` — Amazon QLDB.
-- `@aerokit/sdk/etcd` — etcd client.
+- `@aerokit/sdk/qldb` — Amazon QLDB (the driver is an add-on, not in the default bundle — see `components/api/api-qldb-driver/README.md`).
+- `@aerokit/sdk/etcd` — etcd client (the client library is an add-on, not in the default bundle — see `components/api/api-etcd-client/README.md`).
 - `@aerokit/sdk/redis` — Redis client.
 - `@aerokit/sdk/cache` — In-process / shared cache.
 
@@ -320,7 +322,7 @@ Each facade is a Spring component or a static utility that exposes platform capa
 | `GlobalsFacade` | api-core | `@aerokit/sdk/core/globals` — process-wide variables. |
 | `DatabaseFacade` | api-database | `@aerokit/sdk/db/database` — connections / queries / updates. |
 | `DataStoreFacade` | api-database | `@aerokit/sdk/db/store` — Hibernate-backed entity store (dynamic map mode). |
-| `EtcdFacade` | api-etcd | `@aerokit/sdk/etcd/client` — etcd K/V client. |
+| `EtcdFacade` | api-etcd | `@aerokit/sdk/etcd/client` — etcd K/V client (jetcd is the `api-etcd-client` add-on; without it every call throws `EtcdNotAvailableException`). |
 | `ExtensionsFacade` | api-extensions | `@aerokit/sdk/extensions/*` — discover and call `.extension` providers. |
 | `GitFacade` | api-git | `@aerokit/sdk/git/client` — clone / pull / push / commit / log. |
 | `HttpClientFacade`, `HttpClientAsyncFacade` | api-http | `@aerokit/sdk/http/client` and `client-async`. |
@@ -580,17 +582,13 @@ The IDE chrome (sidebars, dialogs, tabs, menus, toolbars, forms) is built on [Bl
 ### 8.1 Supported databases (`modules/database/`)
 - `database-h2` (default, file-backed at `./target/dirigible/h2/DefaultDB`)
 - `database-sql-postgres`
-- `database-sql-mssql`
-- `database-sql-hana`
-- `database-sql-mariadb`
-- `database-sql-mysql`
-- `database-sql-snowflake` — dialect only; the Snowflake JDBC driver (~99 MB) is not bundled, see `modules/database/database-sql-snowflake/README.md`
+- `database-sql-mssql`, `database-sql-hana`, `database-sql-mariadb`, `database-sql-mysql`, `database-sql-snowflake` - dialects only; their JDBC drivers are **not bundled** (#7804, #7778; Snowflake's alone is ~99 MB, see `modules/database/database-sql-snowflake/README.md`). An edition adds the driver (application pom, `/modules` drop-in, or a project.json `scope: "platform"` dependency); `DataSourceInitializer` refuses a data source whose driver class is missing with a message naming the coordinate (`JdbcDriverAvailability`). Versions stay pinned in `dependencies/pom.xml` / the Spring Boot BOM.
 - `database-sql-h2`
 - `database-sql-mongodb` (NoSQL)
 - `database-mongodb-jdbc`
 - `database-persistence` — JDBC persistence abstraction.
 
-CI runs the integration suite three times (H2, PostgreSQL 16, MSSQL 2022) — when changing SQL/DDL emission, replicate locally on the affected DB.
+CI runs the integration suite on H2 and PostgreSQL 16 (the only bundled drivers) — when changing SQL/DDL emission, replicate locally on the affected DB.
 
 ### 8.2 Data tooling components
 - `data-sources` — JDBC pool registry + `.datasource` synchronizer.

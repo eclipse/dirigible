@@ -7,6 +7,8 @@ package gen.${javaGenFolderName}.data.${javaPerspectiveName};
 #set($entityStatusProperty = "")
 ## The parent side of a junction's `checks: agree` (#7589): the properties a junction row relies on.
 #set($hasAgreeGuards = $agreeGuards && $agreeGuards.size() > 0)
+## The status stamps (#7874): fields written with the moment of every move INTO their status.
+#set($hasStatusStamps = $statusStamps && $statusStamps.size() > 0)
 #foreach ($property in $properties)
     #if($property.dataPrimaryKey)
         #set($pkPropertyName = $property.name)
@@ -488,6 +490,11 @@ public class ${name}Repository extends JavaRepository<${name}Entity>#if($hasTarg
         enforceChecks(entity);
 #end
 #requiredCheck()
+#if($hasStatusStamps)
+        // A create that lands in a stamped status ENTERS it: stamped once every guard has passed and
+        // filed the record where it belongs, so the stamp follows the status actually written.
+        applyStatusStamps(null, entity);
+#end
 ## Allocated LAST, once every guard that can refuse this create has passed: the counter is a SEQUENCE,
 ## incremented in its own transaction so concurrent creates never serialize on it, which means an
 ## allocation cannot be rolled back with the insert - whatever it hands out is spent. A number consumed
@@ -634,6 +641,14 @@ public class ${name}Repository extends JavaRepository<${name}Entity>#if($hasTarg
         enforceChecks(entity);
 #end
 #requiredCheck()
+#if($hasStatusStamps)
+## A stamped field is read-only, so it is preserved and the stored row is already in hand - no second read.
+#if($preservedOnUpdate.size() > 0)
+        applyStatusStamps(existingRow == null ? null : existingRow.${statusStampProperty}, entity);
+#else
+        applyStatusStamps(storedStatus(entity), entity);
+#end
+#end
 #if($documentItem)
         // The document this line belongs to BEFORE the write: a full-row update may re-point the
         // line's FK to another document, and the one it leaves has no write of its own to resum it -
@@ -688,10 +703,19 @@ public class ${name}Repository extends JavaRepository<${name}Entity>#if($hasTarg
 #trimText()
 #normalizeSubsets()
 #normalizeInput()
+#if($hasStatusStamps)
+        // The status the record stands in BEFORE this write: a stamp records an arrival, and the
+        // lifecycle (when declared) judges the same move - one read serves both.
+        Object stampPrevious = storedStatus(entity);
+#end
 #if($lifecycleEdges)
         // A system write is still a status write: the state machine is the ONE place the legal moves
         // are declared, so a workflow setter or glue action gets the same answer a user form gets.
+#if($hasStatusStamps)
+        enforceLifecycleMove(stampPrevious, entity.${lifecycleStatusProperty});
+#else
         enforceLifecycle(entity);
+#end
 #end
 #if($hasAgreeGuards)
         // A system write re-points a parent exactly as a user edit does - a workflow re-opening a
@@ -712,6 +736,9 @@ public class ${name}Repository extends JavaRepository<${name}Entity>#if($hasTarg
         enforceChecks(entity);
 #end
 #requiredCheck()
+#if($hasStatusStamps)
+        applyStatusStamps(stampPrevious, entity);
+#end
 #if($documentItem)
         // The document this line belongs to BEFORE the write - a system write can re-point the FK
         // exactly as a user edit does, and the vacated document has no write of its own to resum it.
@@ -738,7 +765,7 @@ public class ${name}Repository extends JavaRepository<${name}Entity>#if($hasTarg
 #end
         return updated;
     }
-#if(($documentChecks && $documentChecks.size() > 0) || $hasLabel || $lifecycleEdges || $history == "true" || $documentItem || $hasGatedRollupGuards || ($groupingKeys && $groupingKeys.size() > 0) || $hasAgreeGuards)
+#if(($documentChecks && $documentChecks.size() > 0) || $hasLabel || $lifecycleEdges || $history == "true" || $documentItem || $hasGatedRollupGuards || ($groupingKeys && $groupingKeys.size() > 0) || $hasAgreeGuards || $hasStatusStamps)
 
     /**
      * Targeted single-column write with this entity's semantics preserved: routed through
@@ -792,7 +819,7 @@ public class ${name}Repository extends JavaRepository<${name}Entity>#if($hasTarg
         String groupingPrevious = null;
         boolean groupingMoved = false;
 #end
-#if(($documentChecks && $documentChecks.size() > 0) || $hasLabel || $lifecycleEdges || $documentItem || $hasGatedRollupGuards || ($groupingKeys && $groupingKeys.size() > 0) || $hasAgreeGuards)
+#if(($documentChecks && $documentChecks.size() > 0) || $hasLabel || $lifecycleEdges || $documentItem || $hasGatedRollupGuards || ($groupingKeys && $groupingKeys.size() > 0) || $hasAgreeGuards || $hasStatusStamps)
         ${name}Entity entity = findOne(id).orElse(null);
 #if($documentItem)
         // The document this line belongs to as it stands BEFORE the write - a targeted write may also
@@ -801,7 +828,7 @@ public class ${name}Repository extends JavaRepository<${name}Entity>#if($hasTarg
         Object documentBefore = entity == null ? null : entity.${documentItem.fkProperty};
 #end
 #end
-#if(($documentChecks && $documentChecks.size() > 0) || $hasLabel || $lifecycleEdges || $hasGatedRollupGuards || ($groupingKeys && $groupingKeys.size() > 0) || $hasAgreeGuards)
+#if(($documentChecks && $documentChecks.size() > 0) || $hasLabel || $lifecycleEdges || $hasGatedRollupGuards || ($groupingKeys && $groupingKeys.size() > 0) || $hasAgreeGuards || $hasStatusStamps)
         if (entity != null) {
 #if($documentChecks && $documentChecks.size() > 0)
             // What this write is ABOUT, read before the label recompute below may add a column of its
@@ -813,6 +840,10 @@ public class ${name}Repository extends JavaRepository<${name}Entity>#if($hasTarg
             // The status as it stands BEFORE the targeted write - a transition button, a workflow
             // setter and a glue action all arrive here, and all of them are moves in the state machine.
             Object lifecyclePrevious = entity.${lifecycleStatusProperty};
+#end
+#if($hasStatusStamps)
+            // The status before the write, so a stamp fires on an ARRIVAL and not on every write.
+            Object stampPrevious = entity.${statusStampProperty};
 #end
 #if($groupingKeys && $groupingKeys.size() > 0)
             groupingPrevious = Json.stringify(entity);
@@ -866,6 +897,11 @@ public class ${name}Repository extends JavaRepository<${name}Entity>#if($hasTarg
             if (authoredWrite) {
                 enforceChecks(entity);
             }
+#end
+#if($hasStatusStamps)
+            // A move into a stamped status carries its stamp in the SAME statement: a transition button,
+            // a workflow setter and a glue action all arrive here, so none of them can leave it behind.
+            values.putAll(applyStatusStamps(stampPrevious, entity));
 #end
         }
 #end
@@ -1147,6 +1183,42 @@ public class ${name}Repository extends JavaRepository<${name}Entity>#if($hasTarg
         }
     }
 #end
+#end
+#if($hasStatusStamps)
+
+    /**
+     * The status stamps (intent {@code stampOn}): fields recording when this ${name} ENTERED a status,
+     * written with the move itself. It is applied HERE, in the repository, because every status write
+     * passes through it - a user form, a workflow setter, a transition button, a glue action - so no
+     * writer can move the status without the stamp. A write that leaves the status where it was is not
+     * an arrival and stamps nothing; re-entering a status records the latest arrival; leaving one keeps
+     * the value, which is a fact about the past.
+     *
+     * @param previousStatus the status the record stood in before the write, {@code null} for a create
+     * @param entity the row as it will be written, stamped in place
+     * @return the stamped properties with their values, for a targeted write to carry in its statement
+     */
+    private static java.util.Map<String, Object> applyStatusStamps(Object previousStatus, ${name}Entity entity) {
+        java.util.Map<String, Object> stamped = new java.util.LinkedHashMap<>();
+        String previous = previousStatus == null ? null : String.valueOf(previousStatus);
+        String next = entity.${statusStampProperty} == null ? null : String.valueOf(entity.${statusStampProperty});
+#foreach($stamp in $statusStamps)
+        if ("${stamp.statusId}".equals(next) && !"${stamp.statusId}".equals(previous)) {
+            entity.${stamp.property} = ${stamp.nowExpression};
+            stamped.put("${stamp.property}", entity.${stamp.property});
+        }
+#end
+        return stamped;
+    }
+
+    /** The status the stored row stands in, {@code null} for a row not written yet. */
+    private Object storedStatus(${name}Entity entity) {
+        if (entity.${pkPropertyName} == null) {
+            return null;
+        }
+        ${name}Entity stored = findById(entity.${pkPropertyName});
+        return stored == null ? null : stored.${statusStampProperty};
+    }
 #end
 #if($entityStatusProperty != "")
 

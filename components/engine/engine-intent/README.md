@@ -333,6 +333,27 @@ declared, a record must also be created in that status. At authoring time the gr
 `transitions:`, a status-setting workflow step and a check's rejection are validated against, so the
 buttons and the graph cannot disagree.
 
+## stampOn - when the record entered a status
+
+```yaml
+- name: Order
+  fields:
+    - { name: submittedAt, type: timestamp, stampOn: { status: SUBMITTED } }
+    - { name: approvedOn,  type: date,      stampOn: { status: APPROVED } }
+  relations:
+    - { name: Status, kind: manyToOne, to: OrderStatus, function: EntityStatus, init: SUBMITTED }
+```
+
+A `timestamp` (`Instant.now()`) or `date` (`LocalDate.now()`) field records when the record ENTERED
+the status, a seeded name or id of the entity's `function: EntityStatus` relation. The generated
+**repository** writes it in the same statement as the move, whoever performs it: a workflow
+`setRelationField`, a `transitions:` button, a REST update, a create that lands in the status
+(`init:`). A write that leaves the status where it was does not re-stamp, re-entering it records the
+latest arrival, and leaving it keeps the value. A refused move (lifecycle, check, guard) stamps
+nothing. The field is read-only to callers. Refused at parse: any other field type, `required: true`,
+a `defaultValue` / `number:` / calculation / `aggregate:` / `dependsOn` beside it, two fields stamping
+the same status, and an entity without a status relation.
+
 ## phases - the enrichment channel
 
 An enrichment a listener computes on create - a costing pool, a snapshot column, an external lookup -
@@ -591,9 +612,38 @@ processes:
 Service-task shapes: `setField` / `clearField` / `setRelationField` (generated handlers), `call` (TS
 handler, deprecated), `delegate` (a reusable hand-written client `JavaDelegate` with injected
 `fields`). `clearField: <field>` is the erasure twin of `setField` - it names a `string`/`text` field
-and takes no `value`, so a flow can take back a failure text it wrote earlier.
+and takes no `value`, so a flow can take back a failure text it wrote earlier. `setField` on a
+`timestamp` or `date` field takes only the whole value `"{now}"`, and records when the flow reached
+the step (`Instant.now()` / `LocalDate.now()`): `{ setField: approvedAt, value: "{now}" }`. `{now}`
+on a string field is refused, since it would store the text `{now}`.
+Each of the three may name a member one hop away, through a `manyToOne`/`oneToOne` relation of the
+trigger entity: `{ setRelationField: order.Status, value: APPROVED }` in an approval request's flow
+moves the request's order. The write goes through the order's own repository, so its `lifecycle:`,
+`stampOn` fields and history apply and its `-transitioned` event is published; the status name is a
+seed of the order's nomenclature. One hop only, local targets only; a request without an order is a
+logged no-op.
 Decisions may test `relation.field` paths (`customer.creditLimit > 10000`) - resolvers are
 generated. Tasks surface in the Inbox and inline on the record's page.
+
+A `serviceTask` may instead SEND: `args: { notify: { to, subject, body, ... } }`. Its notify block also
+takes `cc:` and `bcc:` (the forms `to:` takes) and, on every recipient key, `@var:<name>` - a process
+variable an earlier step computed, declared under the process `vars:` and listed in the step's `uses:`.
+A value may be a comma-separated list. The step sends when any of `to`/`cc`/`bcc` is non-blank, so it
+may omit `to:`. `cc:`/`bcc:` work the same on every notify block - a transition, a schedule, a
+`notifications[]` entry; `@var:` only on a process step, since nothing else runs inside an instance.
+
+```yaml
+    vars:
+      - { name: approverEmails }
+    steps:
+      - { name: collect, kind: serviceTask, args: { delegate: custom.CollectApprovers, produces: [approverEmails], next: notify } }
+      - name: notify
+        kind: serviceTask
+        args:
+          notify: { to: "@var:approverEmails", cc: requestedBy, bcc: "@config:ARCHIVE_EMAIL", subject: "Closing {name}", body: "Done." }
+          uses: [approverEmails]
+          next: end
+```
 
 ## forms - task UI
 
@@ -883,6 +933,7 @@ notifications:
   - name: welcomeMember
     event: { onCreate: Member }               # exactly one of onCreate/onUpdate/onDelete
     to: email                                 # a field, one-hop relation.field, or a literal
+    cc: support@example.com                   # optional cc / bcc, the same forms
     subject: "Welcome"
     body: "Your membership is active."
 ```

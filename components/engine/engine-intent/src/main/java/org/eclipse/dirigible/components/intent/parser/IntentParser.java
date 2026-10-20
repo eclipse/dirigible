@@ -24,7 +24,9 @@ import javax.lang.model.SourceVersion;
 
 import org.eclipse.dirigible.components.intent.generator.ArrivalSupport;
 import org.eclipse.dirigible.components.intent.generator.EventBinding;
+import org.eclipse.dirigible.components.intent.generator.ImportSupport;
 import org.eclipse.dirigible.components.intent.generator.IntegrationSupport;
+import org.eclipse.dirigible.components.intent.generator.ExportSupport;
 import org.eclipse.dirigible.components.intent.generator.IntentEntities;
 import org.eclipse.dirigible.components.intent.generator.FileNameSupport;
 import org.eclipse.dirigible.components.intent.generator.NotificationSupport;
@@ -35,6 +37,7 @@ import org.eclipse.dirigible.components.intent.generator.PostSetSupport;
 import org.eclipse.dirigible.components.intent.generator.ProcessAssigneeSupport;
 import org.eclipse.dirigible.components.intent.generator.ProcessParallelSupport;
 import org.eclipse.dirigible.components.intent.generator.ProcessResilienceSupport;
+import org.eclipse.dirigible.components.intent.generator.SetFieldSupport;
 import org.eclipse.dirigible.components.intent.generator.CheckSupport;
 import org.eclipse.dirigible.components.intent.generator.ResolvePathSupport;
 import org.eclipse.dirigible.components.intent.generator.ProcessWaitSupport;
@@ -86,6 +89,7 @@ import org.eclipse.dirigible.components.intent.model.RelationIntent;
 import org.eclipse.dirigible.components.intent.model.ResolveIntent;
 import org.eclipse.dirigible.components.intent.model.SlotsIntent;
 import org.eclipse.dirigible.components.intent.model.ReportIntent;
+import org.eclipse.dirigible.components.intent.model.ReportAgingIntent;
 import org.eclipse.dirigible.components.intent.model.ReportParameterIntent;
 import org.eclipse.dirigible.components.intent.model.StatementLineIntent;
 import org.eclipse.dirigible.components.intent.model.ExpansionIntent;
@@ -94,6 +98,7 @@ import org.eclipse.dirigible.components.intent.model.ScheduleConditionIntent;
 import org.eclipse.dirigible.components.intent.model.SettlementIntent;
 import org.eclipse.dirigible.components.intent.model.ScheduleIntent;
 import org.eclipse.dirigible.components.intent.model.SeedIntent;
+import org.eclipse.dirigible.components.intent.model.StatusStampIntent;
 import org.eclipse.dirigible.components.intent.model.StepIntent;
 import org.eclipse.dirigible.components.intent.model.TransitionIntent;
 import org.eclipse.dirigible.components.intent.model.UniqueIntent;
@@ -407,9 +412,13 @@ public final class IntentParser {
         validateProcesses(model, entityNames, issues);
         validateForms(model, entityNames, issues);
         validateActions(model, entityNames, issues);
+        // A reversal IS a create-from of its entity onto itself (issue #7886): expanded before the
+        // create-froms are validated, so its expansion meets every rule an authored one does.
+        ReversalExpander.expand(model, issues);
         validateGenerates(model, entityNames, usesAliases, issues);
         validateTransitions(model, entityNames, issues);
         validateLifecycles(model, issues);
+        validateStatusStamps(model, issues);
         validatePostings(model, usesAliases, issues);
         validateReports(model, entityNames, issues);
         validateWidgets(model, issues);
@@ -419,7 +428,9 @@ public final class IntentParser {
         validateSchedules(model, entityNames, usesAliases, issues);
         validateIntegrations(model, entityNames, issues);
         validateInbound(model, entityNames, issues);
+        ImportSupport.validate(model, issues);
         validateOutbound(model, entityNames, issues);
+        ExportSupport.validate(model, issues);
         validateRollups(model, usesAliases, issues);
         validateExpansions(model, issues);
         validateSettlements(model, issues);
@@ -1506,6 +1517,8 @@ public final class IntentParser {
         }
         Map<String, String> paths = new LinkedHashMap<>();
         addSourcePath(paths, "recipient", notify.getTo());
+        addSourcePath(paths, "cc", notify.getCc());
+        addSourcePath(paths, "bcc", notify.getBcc());
         addSourcePath(paths, "languageFrom", notify.getLanguageFrom());
         collectNotifyPlaceholders(notify.getSubject(), paths);
         collectNotifyPlaceholders(notify.getBody(), paths);
@@ -3386,6 +3399,24 @@ public final class IntentParser {
      */
     private static void validateNotifyBlock(NotificationIntent notify, String subject, String aboutEntity, IntentModel model,
             boolean fanOutSupported, List<String> issues) {
+        validateNotifyBlock(notify, subject, aboutEntity, model, fanOutSupported, null, issues);
+    }
+
+    /**
+     * The notify block of a call site that may read process variables - a process step's, where
+     * {@code vars} names what the step may read through {@code @var:}. Everywhere else ({@code vars}
+     * {@code null}) an {@code @var:} recipient is refused: the block runs outside any process instance.
+     *
+     * @param notify the block, may be {@code null} (nothing to validate)
+     * @param subject the message prefix identifying the call site
+     * @param aboutEntity the entity the message is about, or {@code null} when it is already unknown
+     * @param model the parsed model (to resolve the document-master shape)
+     * @param fanOutSupported whether this call site generates a {@code forEach} fan-out
+     * @param vars the process variables the step may read, or {@code null} outside a process step
+     * @param issues the collected issues
+     */
+    private static void validateNotifyBlock(NotificationIntent notify, String subject, String aboutEntity, IntentModel model,
+            boolean fanOutSupported, NotifyVars vars, List<String> issues) {
         if (notify == null) {
             return;
         }
@@ -3394,25 +3425,15 @@ public final class IntentParser {
             issues.add(subject + " has unsupported channel [" + channel + "] (supported: email)");
         }
         String to = notify.getTo();
-        if (to == null || to.isBlank()) {
+        // A copy recipient is enough (#7935, #7938): a mail to an archive mailbox needs no addressee of its
+        // own.
+        boolean copies = !isBlank(notify.getCc()) || !isBlank(notify.getBcc());
+        if ((to == null || to.isBlank()) && !copies) {
             issues.add(subject + " has no recipient (to)");
-        } else if (to.trim()
-                     .startsWith(NotificationSupport.CONFIG_PREFIX)) {
-            // An operations mailbox differs per environment, so the address may name a configuration
-            // KEY read at send time (#7385). An empty one is refused here: it would resolve to nothing
-            // on every environment, which reads exactly like a record with nobody to mail.
-            if (to.trim()
-                  .substring(NotificationSupport.CONFIG_PREFIX.length())
-                  .isBlank()) {
-                issues.add(subject + " recipient [" + to.trim()
-                        + "] has an empty @config: key - name the configuration key the address is read from");
-            }
-        } else if (!to.contains("@") && to.chars()
-                                          .filter(c -> c == '.')
-                                          .count() >= 2) {
-            issues.add(subject + " recipient [" + to
-                    + "] uses a multi-hop path, which is not supported - use a direct field, a one-hop relation.field, or a literal address");
         }
+        validateNotifyRecipient(to, subject + " recipient", vars, issues);
+        validateNotifyRecipient(notify.getCc(), subject + " cc", vars, issues);
+        validateNotifyRecipient(notify.getBcc(), subject + " bcc", vars, issues);
         validateNotifyHtml(notify, subject, issues);
         // A fan-out sends one message per row of a related entity instead of one about the record, so
         // from here on every path (the recipient, the placeholders, the attachment) is about the ROW -
@@ -3509,6 +3530,84 @@ public final class IntentParser {
             // so only fields of the anchor itself are readable there, exactly as the `record.` scope is
             // limited to one field of it.
             validateFileNamePattern(notify.getFileName(), documentEntity, subject + " fileName", model, issues, !recordPrint, false);
+        }
+    }
+
+    /**
+     * The process variables a process step's notify block may read through {@code @var:} (#7935): the
+     * names the process declares under {@code vars:}, and the ones the step lists in {@code uses:}.
+     * Both are required - the declaration is what makes step data written down, and {@code uses:} is
+     * what says this step reads it.
+     */
+    private record NotifyVars(Set<String> declared, Set<String> used) {
+
+        static NotifyVars of(ProcessIntent process, StepIntent step) {
+            Set<String> declared = new HashSet<>();
+            for (ProcessVarIntent var : process.getVars()) {
+                if (var.getName() != null) {
+                    declared.add(var.getName()
+                                    .trim());
+                }
+            }
+            Set<String> used = new HashSet<>();
+            if (step.getArgs() != null && step.getArgs()
+                                              .get("uses") instanceof List<?> list) {
+                for (Object entry : list) {
+                    if (entry != null) {
+                        used.add(entry.toString()
+                                      .trim());
+                    }
+                }
+            }
+            return new NotifyVars(declared, used);
+        }
+    }
+
+    /**
+     * One recipient key of a notify block - {@code to}, {@code cc} or {@code bcc}, each taking the same
+     * forms: a literal address, an {@code @config:KEY} reference read at send time, a direct field, a
+     * one-hop {@code relation.field}, or on a process step an {@code @var:<name>} process variable.
+     *
+     * @param value the authored value, may be blank (nothing to check)
+     * @param where the message prefix naming the call site and the key
+     * @param vars the process variables the step may read, or {@code null} outside a process step
+     * @param issues the collected issues
+     */
+    private static void validateNotifyRecipient(String value, String where, NotifyVars vars, List<String> issues) {
+        if (isBlank(value)) {
+            return;
+        }
+        String trimmed = value.trim();
+        if (trimmed.startsWith(NotificationSupport.CONFIG_PREFIX)) {
+            // An operations mailbox differs per environment, so the address may name a configuration
+            // KEY read at send time (#7385). An empty one is refused here: it would resolve to nothing
+            // on every environment, which reads exactly like a record with nobody to mail.
+            if (trimmed.substring(NotificationSupport.CONFIG_PREFIX.length())
+                       .isBlank()) {
+                issues.add(where + " [" + trimmed + "] has an empty @config: key - name the configuration key the address is read from");
+            }
+        } else if (trimmed.startsWith(NotificationSupport.VAR_PREFIX)) {
+            // A list an earlier step computed (#7935) - the approvers of a document - which no field of
+            // the record carries. Only a process step runs inside an instance that holds it.
+            String name = trimmed.substring(NotificationSupport.VAR_PREFIX.length())
+                                 .trim();
+            if (vars == null) {
+                issues.add(where + " [" + trimmed + "] reads a process variable, which only a process step's notify can - this block"
+                        + " runs outside any process instance");
+            } else if (name.isEmpty()) {
+                issues.add(where + " [" + trimmed + "] has an empty @var: name - name the process var the address is read from");
+            } else if (!vars.declared()
+                            .contains(name)) {
+                issues.add(where + " [" + trimmed + "] names undeclared var [" + name + "] - declare it under the process `vars:`");
+            } else if (!vars.used()
+                            .contains(name)) {
+                issues.add(where + " [" + trimmed + "] reads var [" + name + "], which the step does not list in `uses:` - add it there");
+            }
+        } else if (!value.contains("@") && value.chars()
+                                                .filter(c -> c == '.')
+                                                .count() >= 2) {
+            issues.add(where + " [" + value
+                    + "] uses a multi-hop path, which is not supported - use a direct field, a one-hop relation.field, or a literal address");
         }
     }
 
@@ -3656,6 +3755,9 @@ public final class IntentParser {
         if (report.isLedgerKind()) {
             bindable.addAll(BALANCE_REPORT_PARAMETERS);
         }
+        if (report.isLedger()) {
+            bindable.add(LEDGER_ACCOUNT_PARAMETER);
+        }
         if (bindable.isEmpty()) {
             issues.add(subject + " attaches report [" + report.getName()
                     + "], which declares no parameters - a report with nothing to bind renders the same PDF for every recipient,"
@@ -3759,6 +3861,13 @@ public final class IntentParser {
         if (to.startsWith(RECORD_SCOPE + ".")) {
             issues.add(subject + " recipient [" + to + "] is record-scoped - a fan-out sends to its ROWS, so a record-scoped"
                     + " address would mail the same recipient once per row");
+        }
+        for (String[] copy : new String[][] {{"cc", notify.getCc()}, {"bcc", notify.getBcc()}}) {
+            if (copy[1] != null && copy[1].trim()
+                                          .startsWith(RECORD_SCOPE + ".")) {
+                issues.add(subject + " " + copy[0] + " [" + copy[1].trim() + "] is record-scoped - a copy recipient resolves per ROW"
+                        + " like the recipient, so a record-scoped address would be copied once per row");
+            }
         }
         List<String> paths = new ArrayList<>();
         collectRecordScopedPaths(notify.getSubject(), paths);
@@ -8175,12 +8284,93 @@ public final class IntentParser {
     }
 
     /**
+     * The value a {@code setField} may assign depends on the field's type (#7873): a
+     * {@code timestamp}/{@code date} field takes only the {@code {now}} token - a literal would have to
+     * be parsed into a {@code java.time} value - and a {@code string}/{@code text} field takes any
+     * literal except {@code {now}}, which there would store the token's own text, never what was meant.
+     * A value merely containing the token is the whole-value check's to report.
+     */
+    private static void validateSetFieldValueType(ProcessIntent process, StepIntent step, String setField, FieldIntent field,
+            List<String> issues) {
+        String subject = "process [" + process.getName() + "] step [" + step.getName() + "] setField [" + setField + "]";
+        String value = stepArg(step, "value");
+        boolean blank = value == null || value.isBlank();
+        boolean now = !blank && SetFieldSupport.NOW_TOKEN.equals(value.trim());
+        if (SetFieldSupport.isNowFieldType(field.getType())) {
+            if (!blank && !now && !value.contains(SetFieldSupport.NOW_TOKEN)) {
+                issues.add(subject + " on a [" + field.getType() + "] field takes only the value " + SetFieldSupport.NOW_TOKEN);
+            }
+        } else if (field.getType() != null && !"string".equals(field.getType()) && !"text".equals(field.getType())) {
+            issues.add(subject + " must be a string/text field (only literal string values are supported)");
+        } else if (now) {
+            issues.add(subject + " value " + SetFieldSupport.NOW_TOKEN
+                    + " needs a timestamp or date field - a string field would store the text \"" + SetFieldSupport.NOW_TOKEN + "\"");
+        }
+    }
+
+    /**
+     * The record a setter path writes ({@link SetFieldSupport#hop}): the trigger itself for a plain
+     * name, or - for {@code <relation>.<member>} (#7934) - the local target of a to-one relation of the
+     * trigger. A dotted path that does not resolve is refused here, naming why; the member itself is
+     * then held to the plain setter's rules by the caller, with the plain setter's messages.
+     *
+     * @return the resolved hop, or {@code null} when the path is refused
+     */
+    private static SetFieldSupport.Hop setterHop(ProcessIntent process, StepIntent step, String key, String path, EntityIntent trigger,
+            Map<String, EntityIntent> byName, List<String> issues) {
+        SetFieldSupport.Hop hop = SetFieldSupport.hop(trigger, path, byName);
+        if (hop != null) {
+            return hop;
+        }
+        String subject = "process [" + process.getName() + "] step [" + step.getName() + "] " + key + " [" + path + "]";
+        int dot = path.indexOf('.');
+        String via = path.substring(0, dot);
+        String member = path.substring(dot + 1);
+        if (member.indexOf('.') >= 0) {
+            issues.add(subject + " is more than one hop - a setter reaches through at most one to-one relation of [" + trigger.getName()
+                    + "] (<relation>.<member>)");
+            return null;
+        }
+        if (via.isEmpty() || member.isEmpty()) {
+            issues.add(subject + " must be <relation>.<member> - a to-one relation of [" + trigger.getName()
+                    + "] and a member of the record it points at");
+            return null;
+        }
+        RelationIntent relation = toOneRelationByName(trigger, via);
+        if (relation == null) {
+            issues.add(subject + " goes through [" + via + "], " + whatIsNotAToOne(trigger, via)
+                    + " - the first segment must be a manyToOne/oneToOne relation, so the step writes exactly one record");
+        } else if (relation.isCrossModel()) {
+            issues.add(subject + " goes through [" + via + "] to [" + relation.getModel() + ":" + relation.getTo()
+                    + "], an entity of another model - a setter writes through this model's own repositories; move the status from a"
+                    + " process of that model");
+        } else {
+            issues.add(subject + " goes through [" + via + "] to [" + relation.getTo() + "], which is not an entity of this model");
+        }
+        return null;
+    }
+
+    /** What a name that is not a to-one relation of the entity is, for a one-hop setter's refusal. */
+    private static String whatIsNotAToOne(EntityIntent entity, String name) {
+        for (RelationIntent relation : entity.getRelations()) {
+            if (name.equals(relation.getName())) {
+                return "a " + relation.getKind() + " relation of [" + entity.getName() + "]";
+            }
+        }
+        if (fieldByName(entity, name) != null) {
+            return "a field of [" + entity.getName() + "]";
+        }
+        return "which is not a relation of [" + entity.getName() + "]";
+    }
+
+    /**
      * A {@code serviceTask} declaring {@code setField} must name a {@code string}/{@code text} field of
-     * the process's trigger entity and carry a {@code value} (the literal to assign); its erasure twin
-     * {@code clearField} names the same kind of field and takes no value. Any step may carry a
-     * {@code next} that routes its outgoing flow to a declared step or {@code end} (used to make two
-     * decision branches converge). Without these checks a typo would surface only at runtime. A
-     * {@code serviceTask} may instead declare a {@code notify} block - the step SENDS (see
+     * the process's trigger entity and carry a {@code value} (the literal to assign), or a
+     * {@code timestamp}/{@code date} field with the whole value {@code {now}} (the moment the step
+     * runs); its erasure twin {@code clearField} names the same kind of field and takes no value. Any
+     * step may carry a {@code next} that routes its outgoing flow to a declared step or {@code end}
+     * (used to make two decision branches converge). Without these checks a typo would surface only at
+     * runtime. A {@code serviceTask} may instead declare a {@code notify} block - the step SENDS (see
      * {@link #validateNotifyBlock}) - which is its whole work and therefore stands alone.
      */
     private static void validateSetFieldSteps(ProcessIntent process, String triggerEntity, Map<String, EntityIntent> byName,
@@ -8204,13 +8394,15 @@ public final class IntentParser {
                     issues.add("process [" + process.getName() + "] step [" + step.getName()
                             + "] uses setField but the process has no trigger entity to set it on");
                 } else {
-                    FieldIntent field = fieldByName(trigger, setField);
-                    if (field == null) {
+                    SetFieldSupport.Hop hop = setterHop(process, step, "setField", setField, trigger, byName, issues);
+                    FieldIntent field = hop == null ? null : fieldByName(hop.target(), hop.member());
+                    if (hop != null && field == null) {
                         issues.add("process [" + process.getName() + "] step [" + step.getName() + "] setField [" + setField
-                                + "] is not a field of [" + triggerEntity + "]");
-                    } else if (field.getType() != null && !"string".equals(field.getType()) && !"text".equals(field.getType())) {
-                        issues.add("process [" + process.getName() + "] step [" + step.getName() + "] setField [" + setField
-                                + "] must be a string/text field (only literal string values are supported)");
+                                + "] is not a field of [" + hop.target()
+                                                               .getName()
+                                + "]");
+                    } else if (field != null) {
+                        validateSetFieldValueType(process, step, setField, field, issues);
                     }
                     if (stepArg(step, "value") == null || stepArg(step, "value").isBlank()) {
                         issues.add("process [" + process.getName() + "] step [" + step.getName() + "] setField [" + setField
@@ -8233,11 +8425,15 @@ public final class IntentParser {
                     issues.add("process [" + process.getName() + "] step [" + step.getName()
                             + "] uses clearField but the process has no trigger entity to clear it on");
                 } else {
-                    FieldIntent field = fieldByName(trigger, clearField);
-                    if (field == null) {
+                    SetFieldSupport.Hop hop = setterHop(process, step, "clearField", clearField, trigger, byName, issues);
+                    FieldIntent field = hop == null ? null : fieldByName(hop.target(), hop.member());
+                    if (hop != null && field == null) {
                         issues.add("process [" + process.getName() + "] step [" + step.getName() + "] clearField [" + clearField
-                                + "] is not a field of [" + triggerEntity + "]");
-                    } else if (field.getType() != null && !"string".equals(field.getType()) && !"text".equals(field.getType())) {
+                                + "] is not a field of [" + hop.target()
+                                                               .getName()
+                                + "]");
+                    } else if (field != null && field.getType() != null && !"string".equals(field.getType())
+                            && !"text".equals(field.getType())) {
                         issues.add("process [" + process.getName() + "] step [" + step.getName() + "] clearField [" + clearField
                                 + "] must be a string/text field (an erasure is the counterpart of a literal write)");
                     }
@@ -8261,10 +8457,12 @@ public final class IntentParser {
                     issues.add("process [" + process.getName() + "] step [" + step.getName()
                             + "] uses setRelationField but the process has no trigger entity to set it on");
                 } else {
-                    RelationIntent relation = toOneRelationByName(trigger, setRelationField);
-                    if (relation == null) {
+                    SetFieldSupport.Hop hop = setterHop(process, step, "setRelationField", setRelationField, trigger, byName, issues);
+                    if (hop != null && toOneRelationByName(hop.target(), hop.member()) == null) {
                         issues.add("process [" + process.getName() + "] step [" + step.getName() + "] setRelationField [" + setRelationField
-                                + "] is not a manyToOne/oneToOne relation of [" + triggerEntity + "]");
+                                + "] is not a manyToOne/oneToOne relation of [" + hop.target()
+                                                                                     .getName()
+                                + "]");
                     }
                     String value = stepArg(step, "value");
                     if (value == null || value.isBlank()) {
@@ -8326,7 +8524,8 @@ public final class IntentParser {
                         issues.add(stepSubject + " cannot be combined with setField/clearField/setRelationField/call/delegate - give the"
                                 + " send its own serviceTask");
                     }
-                    validateNotifyBlock(NotificationIntent.fromMap(notifyArg), stepSubject, triggerEntity, model, true, issues);
+                    validateNotifyBlock(NotificationIntent.fromMap(notifyArg), stepSubject, triggerEntity, model, true,
+                            NotifyVars.of(process, step), issues);
                 }
             }
             String next = stepArg(step, "next");
@@ -8584,6 +8783,12 @@ public final class IntentParser {
             // integer record id, so the token can never silently land there.
             String value = stepArg(step, "value");
             String setField = stepArg(step, "setField");
+            // {now} likewise (#7873), and only as the whole value: a stamp is a java.time value, not text.
+            boolean nowInsideValue = value != null && setField != null && !setField.isBlank() && value.contains(SetFieldSupport.NOW_TOKEN)
+                    && !SetFieldSupport.NOW_TOKEN.equals(value.trim());
+            if (nowInsideValue) {
+                issues.add(subject + " setField value [" + value + "] may use " + SetFieldSupport.NOW_TOKEN + " only as the whole value");
+            }
             if (value != null && value.contains(ProcessResilienceSupport.ERROR_TOKEN) && setField != null && !setField.isBlank()) {
                 if (!value.trim()
                           .equals(ProcessResilienceSupport.ERROR_TOKEN)) {
@@ -10346,6 +10551,91 @@ public final class IntentParser {
     }
 
     /**
+     * Status stamps ({@code stampOn: { status: X }}, #7874): a field the generated repository writes
+     * with the moment of every move into {@code X}. The repository is then the field's ONLY writer, so
+     * everything else that would write it is refused - a {@code defaultValue}, a {@code number:}, a
+     * calculation, an aggregate footer, a {@code dependsOn} copy - and so is {@code required: true},
+     * since the field is empty until the status is first reached. The status is always one of the
+     * record's own {@code function: EntityStatus} relation, and one field records one arrival: two
+     * fields stamping the same status would be two names for one fact.
+     */
+    private static void validateStatusStamps(IntentModel model, List<String> issues) {
+        for (EntityIntent entity : model.getEntities()) {
+            Map<Integer, String> stampedBy = new LinkedHashMap<>();
+            for (FieldIntent field : entity.getFields()) {
+                StatusStampIntent stamp = field.getStampOn();
+                if (stamp == null) {
+                    continue;
+                }
+                String subject = "entity [" + entity.getName() + "] field [" + field.getName() + "] stampOn";
+                validateStatusStampWriters(field, subject, issues);
+                Integer status = validateStatusStampStatus(model, entity, stamp, subject, issues);
+                String other = status == null ? null : stampedBy.putIfAbsent(status, field.getName());
+                if (other != null) {
+                    issues.add(subject + " stamps the same status as field [" + other + "] - one field records one arrival");
+                }
+            }
+        }
+    }
+
+    /** A stamped field takes the moment of the move and nothing else writes it. */
+    private static void validateStatusStampWriters(FieldIntent field, String subject, List<String> issues) {
+        if (field.getType() == null || !SetFieldSupport.isNowFieldType(field.getType())) {
+            issues.add(subject + " needs a timestamp or date field, not [" + (field.getType() == null ? "string" : field.getType())
+                    + "] - the stamp is the moment the record entered the status");
+        }
+        if (field.isRequired()) {
+            issues.add(subject + " cannot be required: true - the field stays empty until the record first enters the status");
+        }
+        if (field.getDefaultValue() != null) {
+            issues.add(subject + " cannot declare a defaultValue - the status move is the field's only writer");
+        }
+        if (field.getNumber() != null) {
+            issues.add(subject + " cannot declare number: - the status move is the field's only writer");
+        }
+        if (field.isCalculated()) {
+            issues.add(subject + " cannot be calculated - the status move is the field's only writer");
+        }
+        if (field.isAggregate()) {
+            issues.add(subject + " cannot be an aggregate - the status move is the field's only writer");
+        }
+        if (field.getDependsOn() != null) {
+            issues.add(subject + " cannot declare dependsOn - the status move is the field's only writer");
+        }
+    }
+
+    /**
+     * The stamped status: a status of the entity's own {@code function: EntityStatus} relation, and a
+     * seeded one when the nomenclature is seeded in this model (a cross-model one is seeded in its
+     * owner model, where its ids cannot be checked).
+     *
+     * @return the status id when it may be stamped, otherwise {@code null} with the issue recorded
+     */
+    private static Integer validateStatusStampStatus(IntentModel model, EntityIntent entity, StatusStampIntent stamp, String subject,
+            List<String> issues) {
+        Integer id = stamp.getStatus();
+        if (id == null) {
+            issues.add(subject + " names no status - declare stampOn: { status: <seed name | id> }");
+            return null;
+        }
+        RelationIntent relation = LifecycleStages.statusRelation(entity);
+        if (relation == null) {
+            issues.add(subject + " requires the entity to declare a function: EntityStatus relation - the stamp records a move of it");
+            return null;
+        }
+        if (relation.isCrossModel()) {
+            return id;
+        }
+        Map<Integer, String> statuses = LifecycleStages.seededStatuses(model, relation.getTo());
+        if (!statuses.containsKey(id)) {
+            issues.add(subject + " names [" + id + "], which is not a seeded status of [" + relation.getTo() + "] - known: "
+                    + statusNames(statuses));
+            return null;
+        }
+        return id;
+    }
+
+    /**
      * The graph's own well-formedness: one entry per source status, every id seeded, no self-edge, no
      * duplicate source.
      *
@@ -10440,15 +10730,24 @@ public final class IntentParser {
      */
     private static void validateStatusWritesAgainstLifecycle(IntentModel model, EntityIntent entity, RelationIntent status,
             Map<Integer, Set<Integer>> edges, Set<Integer> reachable, Map<Integer, String> statuses, List<String> issues) {
+        Map<String, EntityIntent> byName = IntentEntities.byName(model);
         for (ProcessIntent process : model.getProcesses()) {
-            if (!entity.getName()
-                       .equals(triggerEntityName(process))) {
+            EntityIntent trigger = byName.get(triggerEntityName(process));
+            if (trigger == null) {
                 continue;
             }
             for (StepIntent step : process.getSteps()) {
                 String relation = stepArg(step, "setRelationField");
                 Integer target = parseSeedId(stepArg(step, "value"));
-                if (relation == null || !relation.equalsIgnoreCase(status.getName()) || target == null) {
+                // The write may be one hop away (#7934): `order.Status` moves the order, so it faces the
+                // order's graph exactly as the order's own setter does.
+                SetFieldSupport.Hop hop = relation == null ? null : SetFieldSupport.hop(trigger, relation, byName);
+                if (hop == null || !entity.getName()
+                                          .equals(hop.target()
+                                                     .getName())
+                        || !hop.member()
+                               .equalsIgnoreCase(status.getName())
+                        || target == null) {
                     continue; // a non-numeric or unresolvable value is reported by the step's own validation
                 }
                 if (!reachable.contains(target)) {
@@ -10972,6 +11271,7 @@ public final class IntentParser {
             validateAgeingDimensions(model, report, issues);
             validateReportParameters(model, report, issues);
             validateBalanceReport(model, report, issues);
+            validateAgingReport(model, report, issues);
             validateReportScope(model, report, issues);
             validateSubsetReportReferences(model, report, issues);
         }
@@ -11334,6 +11634,9 @@ public final class IntentParser {
     /** The window bounds {@code kind: balance} declares on its own behalf. */
     private static final Set<String> BALANCE_REPORT_PARAMETERS = Set.of("fromDate", "toDate");
 
+    /** The account {@code kind: ledger} lists, declared on its own behalf beside the window. */
+    private static final String LEDGER_ACCOUNT_PARAMETER = "account";
+
     /**
      * A report's authored {@code parameters:} - the user-set inputs bound into its {@code WHERE}.
      *
@@ -11384,6 +11687,9 @@ public final class IntentParser {
             if (report.isLedgerKind() && BALANCE_REPORT_PARAMETERS.contains(name)) {
                 // A statement declares the same window on its own behalf as a balance report does.
                 issues.add(subject + " collides with the balance window parameter of the same name");
+            }
+            if (report.isLedger() && LEDGER_ACCOUNT_PARAMETER.equals(name)) {
+                issues.add(subject + " collides with the account parameter a ledger report declares on its own behalf");
             }
             String op = parameter.getNormalizedOp();
             if (op == null) {
@@ -11448,6 +11754,104 @@ public final class IntentParser {
         return family;
     }
 
+    /** The field types an aging report's open amount may sum. */
+    private static final Set<String> AGING_AMOUNT_TYPES = Set.of("integer", "int", "long", "decimal", "double");
+
+    /**
+     * A report's {@code aging:} block (dirigible #7888) - open documents bucketed by days past due as
+     * of a report date. The {@code due} (and optional document {@code date}) field must be a
+     * {@code date}/{@code timestamp}, the {@code amount} a sum and difference of numeric fields, the
+     * {@code buckets} ascending positive day counts, and the as-of parameter a free plain identifier:
+     * the report declares it on its own behalf, so an authored parameter of the same name would bind
+     * twice. A ledger kind computes its own fixed columns and cannot be aged.
+     */
+    private static void validateAgingReport(IntentModel model, ReportIntent report, List<String> issues) {
+        ReportAgingIntent aging = report.getAging();
+        if (aging == null) {
+            return;
+        }
+        String subject = "report [" + report.getName() + "] aging";
+        if (report.isLedgerKind()) {
+            issues.add(subject + " cannot be combined with kind [" + report.getKind()
+                                                                           .trim()
+                    + "] - an aging report sums open documents, a ledger kind computes its own columns");
+        }
+        EntityIntent source = reportSource(model, report);
+        if (aging.getDue() == null || aging.getDue()
+                                           .isBlank()) {
+            issues.add(subject + " has no due field - name the date the document falls due on");
+        } else if (source != null) {
+            validateAgingDate(model, source, subject + " due", aging.getDue()
+                                                                    .trim(),
+                    issues);
+        }
+        if (aging.getDate() != null && !aging.getDate()
+                                             .isBlank()
+                && source != null) {
+            validateAgingDate(model, source, subject + " date", aging.getDate()
+                                                                     .trim(),
+                    issues);
+        }
+        List<ReportAgingIntent.AmountTerm> terms = aging.getAmountTerms();
+        if (aging.getAmount() == null || aging.getAmount()
+                                              .isBlank()) {
+            issues.add(subject + " has no amount - name the document's open amount, e.g. \"total - paid\"");
+        } else if (terms == null) {
+            issues.add(subject + " amount [" + aging.getAmount()
+                    + "] must be a numeric field or numeric fields joined by + and - (e.g. \"total - paid\")");
+        } else if (source != null) {
+            for (ReportAgingIntent.AmountTerm term : terms) {
+                FieldIntent field = reportPathField(model, source, subject + " amount", term.path(), issues);
+                if (field != null && !AGING_AMOUNT_TYPES.contains(fieldType(field))) {
+                    issues.add(subject + " amount sums [" + term.path() + "], a [" + field.getType() + "] field - it must be numeric");
+                }
+            }
+        }
+        if (aging.getBuckets()
+                 .contains(null)) {
+            issues.add(subject + " buckets must be whole day counts");
+        }
+        List<Integer> thresholds = aging.getThresholds();
+        if (thresholds.isEmpty()) {
+            issues.add(subject + " needs at least one bucket threshold in days, e.g. buckets: [30, 60, 90]");
+        }
+        int previous = 0;
+        for (Integer threshold : thresholds) {
+            if (threshold <= 0) {
+                issues.add(subject + " buckets must be positive day counts - got [" + threshold + "]");
+            } else if (threshold <= previous) {
+                issues.add(subject + " buckets must ascend - got [" + threshold + "] after [" + previous + "]");
+            } else {
+                previous = threshold;
+            }
+        }
+        String asOf = aging.getAsOfName();
+        if (!REPORT_PARAMETER_NAME.matcher(asOf)
+                                  .matches()
+                || SourceVersion.isKeyword(asOf) || RESERVED_REPORT_PARAMETERS.contains(asOf)) {
+            issues.add(subject + " asOf [" + asOf + "] must name the as-of parameter as a plain identifier that is not reserved");
+        }
+        for (ReportParameterIntent parameter : report.getParameters()) {
+            if (parameter.getName() != null && asOf.equals(parameter.getName()
+                                                                    .trim())) {
+                issues.add(subject + " declares the as-of parameter [" + asOf
+                        + "] on its own behalf - remove the parameter of the same name from parameters:");
+            }
+        }
+    }
+
+    /** An aging date: an own {@code date}/{@code timestamp} of the source, or a one-hop relation's. */
+    private static void validateAgingDate(IntentModel model, EntityIntent source, String subject, String path, List<String> issues) {
+        FieldIntent field = reportPathField(model, source, subject, path, issues);
+        if (field == null) {
+            return;
+        }
+        String type = fieldType(field);
+        if (!"date".equals(type) && !"timestamp".equals(type)) {
+            issues.add(subject + " [" + path + "] must be a date/timestamp field - got [" + field.getType() + "]");
+        }
+    }
+
     /**
      * {@code kind: balance} - the accounting balance report. Requires {@code date} (the window field),
      * {@code debit} and {@code credit} (the summed amounts) and at least one dimension; forbids ad-hoc
@@ -11456,21 +11860,35 @@ public final class IntentParser {
     private static void validateBalanceReport(IntentModel model, ReportIntent report, List<String> issues) {
         boolean balanceInputs =
                 report.getDate() != null || report.getDebit() != null || report.getCredit() != null || report.getCorrespondence() != null;
-        boolean statementInputs = report.getAccount() != null || !report.getLines()
-                                                                        .isEmpty();
+        boolean statementInputs = report.getAccount() != null || report.getCashAccounts() != null || !report.getLines()
+                                                                                                            .isEmpty();
+        boolean ledgerColumns = report.getColumns()
+                                      .stream()
+                                      .anyMatch(column -> column != null && !column.isBlank());
         if (report.getKind() == null || report.getKind()
                                               .isBlank()) {
             if (balanceInputs) {
                 issues.add("report [" + report.getName()
-                        + "] declares date/debit/credit/correspondence but is not kind: balance or kind: statement");
+                        + "] declares date/debit/credit/correspondence but is not kind: balance, statement or ledger");
             }
             if (statementInputs) {
-                issues.add("report [" + report.getName() + "] declares account/lines but is not kind: statement");
+                issues.add("report [" + report.getName() + "] declares account/lines/cashAccounts but is not kind: statement or ledger");
+            }
+            if (ledgerColumns) {
+                issues.add("report [" + report.getName() + "] declares columns but is not kind: ledger");
             }
             return;
         }
         if (!report.isLedgerKind()) {
-            issues.add("report [" + report.getName() + "] has unknown kind [" + report.getKind() + "] - expected balance or statement");
+            issues.add("report [" + report.getName() + "] has unknown kind [" + report.getKind()
+                    + "] - expected balance, statement or ledger");
+            return;
+        }
+        if (ledgerColumns && !report.isLedger()) {
+            issues.add("report [" + report.getName() + "] declares columns - those are the per-line columns of kind: ledger");
+        }
+        if (report.isLedger()) {
+            validateLedgerReport(model, report, issues);
             return;
         }
         String prefix = (report.isStatement() ? "statement" : "balance") + " report [" + report.getName() + "]";
@@ -11499,7 +11917,7 @@ public final class IntentParser {
                 issues.add(prefix + " needs at least one dimension to balance by");
             }
             if (statementInputs) {
-                issues.add(prefix + " declares account/lines - those belong to kind: statement");
+                issues.add(prefix + " declares account/lines/cashAccounts - those belong to kind: statement");
             }
         }
         EntityIntent source = null;
@@ -11521,6 +11939,108 @@ public final class IntentParser {
         if (report.isStatement()) {
             validateStatementAccount(model, source, report, issues, prefix);
             validateStatementLines(report, issues, prefix);
+            validateStatementCashBasis(source, report, issues, prefix);
+        }
+    }
+
+    /**
+     * {@code kind: ledger} - the account analysis: the posted lines of ONE account in date order with a
+     * running balance. Its rows are the lines themselves, so it takes neither dimensions nor measures
+     * nor statement lines; it needs the balance report's {@code date}/{@code debit}/{@code credit}, an
+     * {@code account} naming the to-one relation the lines are selected by, and a primary key on the
+     * source - the running balance accumulates in date, entry and LINE order, and without a unique last
+     * key two lines of one entry would share a running total. {@code columns} resolve like a dimension.
+     */
+    private static void validateLedgerReport(IntentModel model, ReportIntent report, List<String> issues) {
+        String prefix = "ledger report [" + report.getName() + "]";
+        if (!report.getMeasures()
+                   .isEmpty()) {
+            issues.add(prefix + " must not declare measures - its rows are the account's lines, with debit, credit and running balance");
+        }
+        if (report.getDimensions()
+                  .stream()
+                  .anyMatch(d -> d != null && !d.isBlank())) {
+            issues.add(
+                    prefix + " must not declare dimensions - its rows are the account's lines; name the per-line columns under columns:");
+        }
+        if (report.getCashAccounts() != null || !report.getLines()
+                                                       .isEmpty()) {
+            issues.add(prefix + " declares lines/cashAccounts - those belong to kind: statement");
+        }
+        if (report.getWidget() != null || (report.getChart() != null && !report.getChart()
+                                                                               .isBlank())) {
+            // Both read the rows as aggregated groups; a ledger's rows are one account's lines framed by
+            // its opening and closing balance, which no tile or chart series can stand for.
+            issues.add(prefix + " must not declare widget/chart - its rows are the account's lines, not aggregated groups");
+        }
+        EntityIntent source = reportSource(model, report);
+        if (source == null) {
+            return; // the missing/unknown source is already reported
+        }
+        validateBalanceDate(model, source, report, issues, prefix);
+        validateBalanceCorrespondence(model, source, report, issues, prefix);
+        requireNumericBalanceField(source, report.getDebit(), "debit", issues, prefix);
+        requireNumericBalanceField(source, report.getCredit(), "credit", issues, prefix);
+        if (source.getFields()
+                  .stream()
+                  .noneMatch(FieldIntent::isPrimaryKey)) {
+            issues.add(prefix + " needs a primaryKey on [" + source.getName()
+                    + "] - the running balance accumulates line by line in key order");
+        }
+        String account = report.getAccount();
+        if (account == null || account.isBlank()) {
+            issues.add(prefix + " needs account: the to-one relation of [" + source.getName() + "] to the account whose lines it lists");
+        } else if (toOneRelation(source, account.trim()) == null) {
+            issues.add(prefix + " account [" + account.trim() + "] is not a to-one relation of [" + source.getName()
+                    + "] - name the relation to the account (e.g. account: Account), not one of its fields");
+        }
+        for (String column : report.getColumns()) {
+            if (column == null || column.isBlank()) {
+                continue;
+            }
+            String path = column.trim();
+            if (path.indexOf('.') < 0 && toOneRelation(source, path) != null) {
+                continue; // a bare to-one relation shows the related row's label
+            }
+            reportPathField(model, source, prefix + " column [" + path + "]", path, issues);
+        }
+    }
+
+    /**
+     * {@code cashAccounts} - the cash basis of a statement, the direct-method cash-flow statement. Its
+     * lines read the cash each counter-account's postings carried, which is a fact about the ENTRY the
+     * posting belongs to, so the source must reach that entry: the first hop of {@code date}, as for a
+     * balance report's correspondence. The selector is the line selectors' own grammar, and every leaf
+     * line takes a {@code period} measure - an opening or a closing cash flow does not exist, and
+     * accepting one would render a figure nobody can reconcile.
+     */
+    private static void validateStatementCashBasis(EntityIntent source, ReportIntent report, List<String> issues, String prefix) {
+        String cashAccounts = report.getCashAccounts();
+        if (cashAccounts == null) {
+            return;
+        }
+        if (cashAccounts.isBlank()) {
+            issues.add(
+                    prefix + " cashAccounts is empty - name the cash accounts the cash-flow statement reads, e.g. cashAccounts: \"50*\"");
+            return;
+        }
+        StatementSupport.selector(cashAccounts, issues, prefix + " cashAccounts:");
+        String date = report.getDate() == null ? ""
+                : report.getDate()
+                        .trim();
+        int dot = date.indexOf('.');
+        if (dot <= 0 || toOneRelation(source, date.substring(0, dot)) == null) {
+            issues.add(prefix + " cashAccounts needs the entry its lines share, which is the first hop of date - so date ["
+                    + report.getDate() + "] must be a <relation>.<field> path over a to-one relation of [" + source.getName()
+                    + "] to its journal entry / voucher");
+        }
+        for (StatementLineIntent line : report.getLines()) {
+            StatementSupport.Measure measure = line.isLeaf() ? StatementSupport.measure(line.getMeasure()) : null;
+            if (measure != null && !measure.isPeriod()) {
+                issues.add(prefix + " line [" + line.getCode() + "] takes [" + measure.authored()
+                        + "], but a cash-basis statement reads movements within the window - expected one of "
+                        + StatementSupport.periodMeasureNames());
+            }
         }
     }
 

@@ -55,10 +55,6 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-components-engine-wiki</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-engine-command</artifactId>
         </dependency>
         <dependency>
@@ -92,6 +88,10 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-engine-intent</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-components-engine-issues</artifactId>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>

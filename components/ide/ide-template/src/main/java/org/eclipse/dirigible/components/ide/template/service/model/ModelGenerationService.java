@@ -185,6 +185,7 @@ public class ModelGenerationService {
         Workspace workspaceObject = requireWorkspace(workspace);
         Project projectObject = requireProject(workspaceObject, workspace, project);
         clearGenerationFolders(projectObject, project, generated);
+        removeRetiredOutputs(projectObject, project, ModelTemplateAdapters.retiredOutputs(templateId, effectiveParameters));
 
         List<File> written = new ArrayList<>(generated.size());
         for (GeneratedFile file : generated) {
@@ -349,6 +350,41 @@ public class ModelGenerationService {
                 generationFolder.deleteFolder(subfolder);
                 publisherService.unpublish(project + "/" + GENERATION_FOLDER + "/" + subfolder);
             }
+        }
+    }
+
+    /**
+     * Removes what an earlier version of the template wrote where it no longer writes, together with
+     * the folders that leaves empty.
+     *
+     * <p>
+     * Runs after the clear and before the write: on a case-insensitive filesystem a retired path can
+     * name the very folder about to be written, and by then the clear has already emptied it.
+     *
+     * @param projectObject the project
+     * @param project the project name
+     * @param retiredPaths the retired paths, relative to the generation folder
+     */
+    private void removeRetiredOutputs(Project projectObject, String project, List<String> retiredPaths) {
+        Folder generationFolder = projectObject.getFolder(GENERATION_FOLDER);
+        if (generationFolder == null || !generationFolder.exists()) {
+            return;
+        }
+        for (String retiredPath : retiredPaths) {
+            if (!generationFolder.existsFolder(retiredPath)) {
+                continue;
+            }
+            String removed = retiredPath;
+            generationFolder.deleteFolder(removed);
+            int slash = removed.lastIndexOf('/');
+            while (slash > 0 && generationFolder.getFolder(removed.substring(0, slash))
+                                                .isEmpty()) {
+                removed = removed.substring(0, slash);
+                generationFolder.deleteFolder(removed);
+                slash = removed.lastIndexOf('/');
+            }
+            publisherService.unpublish(project + "/" + GENERATION_FOLDER + "/" + removed);
+            logger.info("Removed the retired generated output [{}/{}/{}]", project, GENERATION_FOLDER, removed);
         }
     }
 

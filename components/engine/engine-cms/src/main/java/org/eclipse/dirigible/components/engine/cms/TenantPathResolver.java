@@ -9,6 +9,7 @@
  */
 package org.eclipse.dirigible.components.engine.cms;
 
+import org.eclipse.dirigible.commons.api.helpers.LogSanitizer;
 import org.eclipse.dirigible.components.base.tenant.DefaultTenant;
 import org.eclipse.dirigible.components.base.tenant.Tenant;
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
@@ -61,7 +62,7 @@ public class TenantPathResolver {
         }
 
         String tenantPath = prefix + (path.startsWith(PATH_SEPARATOR) ? path.substring(1) : path);
-        logger.debug("Path [{}] is resolved to [{}]", path, tenantPath);
+        logger.debug("Path [{}] is resolved to [{}]", LogSanitizer.sanitize(path), LogSanitizer.sanitize(tenantPath));
         return tenantPath;
     }
 

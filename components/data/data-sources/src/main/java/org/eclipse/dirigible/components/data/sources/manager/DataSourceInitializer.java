@@ -45,6 +45,12 @@ public class DataSourceInitializer implements DisposableBean {
     /** The Constant DATASOURCES. */
     private static final Map<String, DirigibleDataSource> DATASOURCES = Collections.synchronizedMap(new HashMap<>());
     private static final String TRANSACTION_MANAGER_PREFIX = "transactionManager_";
+    /** The pool size of a data source that sets no {@code _HIKARI_MAXIMUMPOOLSIZE}. */
+    static final int DEFAULT_MAX_POOL_SIZE = 20;
+    /** The minimum idle of a data source that sets no {@code _HIKARI_MINIMUMIDLE}. */
+    static final int DEFAULT_MIN_IDLE = 10;
+    /** The lower-cased {@link HikariConfig} property names, mapped to their real spelling. */
+    private static final Map<String, String> HIKARI_PROPERTY_NAMES = hikariPropertyNames();
     /** The application context. */
     private final ApplicationContext applicationContext;
     /** The contributors. */
@@ -130,48 +136,13 @@ public class DataSourceInitializer implements DisposableBean {
 
         String name = dataSource.getName();
         String driver = dataSource.getDriver();
-        String url = dataSource.getUrl();
-        String username = dataSource.getUsername();
-        String password = dataSource.getPassword();
-        String schema = dataSource.getSchema();
 
         logger.info("Initializing a datasource with name: [{}]", name);
+        JdbcDriverAvailability.requireDriver(name, driver);
         if (dbType.isH2()) {
             prepareRootFolder(name);
         }
-        Properties hikariProperties = getHikariProperties(name);
-        HikariConfig config = new HikariConfig(hikariProperties);
-
-        boolean autoCommit = true;
-        logger.info("Setting auto commit to [{}] for data source [{}]", autoCommit, name);
-        config.setAutoCommit(autoCommit);
-
-        setDriverClassName(config, name, driver);
-        config.setJdbcUrl(url);
-        config.setUsername(username);
-        config.setPassword(password);
-        config.addDataSourceProperty("logWriter", new PrintWriter(System.out));
-
-        config.setSchema(schema);
-        config.setPoolName(name);
-        config.setMaximumPoolSize(20);
-
-        config.setMinimumIdle(10);
-
-        // free connections when idle, potentially remove leaked connections
-        config.setIdleTimeout(TimeUnit.MINUTES.toMillis(3));
-
-        // recreate connections after specified time
-        config.setMaxLifetime(TimeUnit.MINUTES.toMillis(Configuration.getAsInt(name + "_MAX_LIFETIME_MINUTES", 15)));
-        config.setConnectionTimeout(TimeUnit.SECONDS.toMillis(15));
-
-        // log message for possible leaked connection
-        config.setLeakDetectionThreshold(TimeUnit.MINUTES.toMillis(Configuration.getAsInt(name + "_LEAK_DETECTION_THRESHOLD_MINUTES", 1)));
-
-        applyDbSpecificConfigurations(dbType, config);
-
-        List<DataSourceProperty> additionalProperties = dataSource.getProperties();
-        addAdditionalProperties(additionalProperties, config);
+        HikariConfig config = createPoolConfig(dataSource, dbType);
 
         DirigibleDataSource managedDataSource = dataSourceFactory.create(name, config, dbType);
 
@@ -194,25 +165,83 @@ public class DataSourceInitializer implements DisposableBean {
     }
 
     /**
-     * Sets the JDBC driver class, failing with a message that says the driver is not on the classpath
-     * when it cannot be loaded. Drivers outside the default bundle (Snowflake, for example) are added
-     * by the application or installed as a {@code scope: "platform"} dependency.
+     * Builds the pool configuration of a data source.
      *
-     * @param config the pool configuration
-     * @param name the data source name
-     * @param driver the driver class name
-     * @throws IllegalStateException when the driver class is not on the classpath
+     * <p>
+     * The {@code <name>_HIKARI_<property>} configurations are applied first and always win. The
+     * settings the platform sizes on its own - pool size, minimum idle, idle timeout, max lifetime,
+     * connection and leak-detection timeouts - are only defaults for the properties those
+     * configurations leave unset (#7876). A tenant's data source ({@code <tenantId>_<DefaultDB>}) takes
+     * its pool size and minimum idle from the instance-wide
+     * {@link DirigibleConfig#TENANT_DATASOURCE_MAX_POOL_SIZE} and
+     * {@link DirigibleConfig#TENANT_DATASOURCE_MIN_IDLE}, so that an idle tenant holds almost no
+     * connections.
+     *
+     * @param dataSource the data source definition
+     * @param dbType the database system
+     * @return the pool configuration
      */
-    static void setDriverClassName(HikariConfig config, String name, String driver) {
-        try {
-            config.setDriverClassName(driver);
-        } catch (RuntimeException ex) {
-            String message = "The JDBC driver [" + driver + "] of data source [" + name
-                    + "] is not on the classpath. Drivers that are not bundled by default (e.g. Snowflake) have to be added to the application"
-                    + " or installed as a platform-scoped dependency.";
-            logger.error(message, ex);
-            throw new IllegalStateException(message, ex);
+    HikariConfig createPoolConfig(DataSource dataSource, DatabaseSystem dbType) {
+        String name = dataSource.getName();
+        Properties hikariProperties = getHikariProperties(name);
+        HikariConfig config = new HikariConfig(hikariProperties);
+
+        boolean autoCommit = true;
+        logger.info("Setting auto commit to [{}] for data source [{}]", autoCommit, name);
+        config.setAutoCommit(autoCommit);
+
+        config.setDriverClassName(dataSource.getDriver());
+        config.setJdbcUrl(dataSource.getUrl());
+        config.setUsername(dataSource.getUsername());
+        config.setPassword(dataSource.getPassword());
+        config.addDataSourceProperty("logWriter", new PrintWriter(System.out));
+
+        config.setSchema(dataSource.getSchema());
+        config.setPoolName(name);
+
+        boolean tenantDataSource = isTenantDataSource(name);
+        if (!hikariProperties.containsKey("maximumPoolSize")) {
+            config.setMaximumPoolSize(
+                    tenantDataSource ? DirigibleConfig.TENANT_DATASOURCE_MAX_POOL_SIZE.getIntValue() : DEFAULT_MAX_POOL_SIZE);
         }
+        if (!hikariProperties.containsKey("minimumIdle")) {
+            config.setMinimumIdle(tenantDataSource ? DirigibleConfig.TENANT_DATASOURCE_MIN_IDLE.getIntValue() : DEFAULT_MIN_IDLE);
+        }
+
+        // free connections when idle, potentially remove leaked connections
+        if (!hikariProperties.containsKey("idleTimeout")) {
+            config.setIdleTimeout(TimeUnit.MINUTES.toMillis(3));
+        }
+
+        // recreate connections after specified time
+        if (!hikariProperties.containsKey("maxLifetime")) {
+            config.setMaxLifetime(TimeUnit.MINUTES.toMillis(Configuration.getAsInt(name + "_MAX_LIFETIME_MINUTES", 15)));
+        }
+        if (!hikariProperties.containsKey("connectionTimeout")) {
+            config.setConnectionTimeout(TimeUnit.SECONDS.toMillis(15));
+        }
+
+        // log message for possible leaked connection
+        if (!hikariProperties.containsKey("leakDetectionThreshold")) {
+            config.setLeakDetectionThreshold(
+                    TimeUnit.MINUTES.toMillis(Configuration.getAsInt(name + "_LEAK_DETECTION_THRESHOLD_MINUTES", 1)));
+        }
+        logger.info("Data source [{}] pool: maximumPoolSize [{}], minimumIdle [{}], idleTimeout [{}] ms", name, config.getMaximumPoolSize(),
+                config.getMinimumIdle(), config.getIdleTimeout());
+
+        applyDbSpecificConfigurations(dbType, config);
+
+        List<DataSourceProperty> additionalProperties = dataSource.getProperties();
+        addAdditionalProperties(additionalProperties, config);
+        return config;
+    }
+
+    /**
+     * A tenant's data source is the default one prefixed with the tenant id, see
+     * {@link TenantDataSourceNameManager#createName}.
+     */
+    private boolean isTenantDataSource(String name) {
+        return defaultDataSourceName != null && !Objects.equals(defaultDataSourceName, name) && name.endsWith("_" + defaultDataSourceName);
     }
 
     /**
@@ -229,9 +258,31 @@ public class DataSourceInitializer implements DisposableBean {
         Arrays.stream(Configuration.getKeys())
               .filter(key -> key.startsWith(databaseKeyPrefix))//
               .map(key -> key.substring(key.lastIndexOf(hikariDelimiter) + hikariDelimiterLength))
-              .forEach(key -> properties.put(key, Configuration.get(databaseKeyPrefix + key)));
+              .forEach(key -> properties.put(toHikariPropertyName(key), Configuration.get(databaseKeyPrefix + key)));
 
         return properties;
+    }
+
+    /**
+     * Maps a configured property name onto the {@link HikariConfig} property it names, ignoring case:
+     * environment variables are upper case ({@code DefaultDB_HIKARI_MAXIMUMPOOLSIZE}), and Hikari
+     * refuses {@code MAXIMUMPOOLSIZE} as an unknown property. A name Hikari does not know is passed
+     * through unchanged, for Hikari to report.
+     */
+    static String toHikariPropertyName(String key) {
+        return HIKARI_PROPERTY_NAMES.getOrDefault(key.toLowerCase(Locale.ROOT), key);
+    }
+
+    private static Map<String, String> hikariPropertyNames() {
+        Map<String, String> names = new HashMap<>();
+        for (java.lang.reflect.Method method : HikariConfig.class.getMethods()) {
+            String methodName = method.getName();
+            if (methodName.length() > 3 && methodName.startsWith("set") && method.getParameterCount() == 1) {
+                String property = Character.toLowerCase(methodName.charAt(3)) + methodName.substring(4);
+                names.put(property.toLowerCase(Locale.ROOT), property);
+            }
+        }
+        return Collections.unmodifiableMap(names);
     }
 
     private void addAdditionalProperties(List<DataSourceProperty> additionalProperties, HikariConfig config) {
@@ -314,6 +365,7 @@ public class DataSourceInitializer implements DisposableBean {
 
     @Override
     public void destroy() {
+        timer.cancel();
         logger.info("Clearing datasources...");
         clear();
     }

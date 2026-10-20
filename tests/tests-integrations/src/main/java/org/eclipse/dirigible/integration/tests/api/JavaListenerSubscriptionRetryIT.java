@@ -35,6 +35,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 import ch.qos.logback.classic.Level;
+import jakarta.jms.Destination;
+import jakarta.jms.JMSException;
+import jakarta.jms.Topic;
 
 /**
  * A client-Java listener whose subscription the broker refuses must end up subscribed anyway.
@@ -48,12 +51,14 @@ import ch.qos.logback.classic.Level;
  * process trigger came to write the row and start nothing (issue #7217).
  *
  * <p>
- * The refusal is injected at the one place it really originates, and in its real shape: the
- * connection factory turns the broker's {@code JMSException} into an {@link IllegalStateException}.
- * It is scoped to this probe listener's own durable subscription id, so the platform's other
- * messaging is untouched. The recovery is then asserted end to end - a message published to the
- * topic has to reach the handler and come back on its queue - with nothing between the deploy and
- * the round trip but the passage of time.
+ * The refusal is injected in the shape the broker really answers with - an unchecked
+ * {@link IllegalStateException} out of the connection factory - at the one per-subscription step
+ * that exists in both connection modes: the redelivery budget set for the probe's own destination,
+ * right after the subscription's session was opened (#7875 shares the connection itself per tenant,
+ * so the connection is no longer the probe's to refuse). It is scoped to this probe's topic, so the
+ * platform's other messaging is untouched. The recovery is then asserted end to end - a message
+ * published to the topic has to reach the handler and come back on its queue - with nothing between
+ * the deploy and the round trip but the passage of time.
  */
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class JavaListenerSubscriptionRetryIT extends IntegrationTest {
@@ -113,16 +118,18 @@ class JavaListenerSubscriptionRetryIT extends IntegrationTest {
         consumerLogs = new LogsAsserter(ListenerClassConsumer.class, Level.WARN);
 
         doAnswer(invocation -> {
-            String clientId = invocation.getArgument(1);
-            // A queue subscription passes no client id at all, and so does the platform's own shared
-            // connection - the one-arg overload delegates here with null, and a spy intercepts even that
-            // self-call. Everything but this probe's durable topic subscription must behave normally.
-            if (refuseProbeSubscription && clientId != null && clientId.contains(HANDLER_CLASS)) {
+            // Everything but this probe's own topic must behave normally - the platform's connection,
+            // the other tests' artefacts, the probe's echo queue included.
+            if (refuseProbeSubscription && isProbeTopic(invocation.getArgument(1))) {
                 throw new IllegalStateException("Failed to create connection to ActiveMQ");
             }
             return invocation.callRealMethod();
         }).when(connectionArtifactsFactory)
-          .createConnection(any(), any());
+          .configureRedeliveryPolicy(any(), any());
+    }
+
+    private static boolean isProbeTopic(Destination destination) throws JMSException {
+        return destination instanceof Topic topic && TOPIC.equals(topic.getTopicName());
     }
 
     @Test

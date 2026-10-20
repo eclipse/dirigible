@@ -103,6 +103,11 @@
                       <svg role="presentation" x-h-lucide data-lucide="inbox"></svg><span x-text="T('application-core:shell.nav.inbox', 'Inbox')"></span>
                     </button>
                   </li>
+                  <li x-h-sidebar-menu-item>
+                    <button id="shell-nav-issues" x-h-sidebar-menu-nav :data-active="isBuiltinActive('/issues')" @click="navigate('/issues')">
+                      <svg role="presentation" x-h-lucide data-lucide="message-square-warning"></svg><span x-text="T('application-core:shell.nav.issues', 'Issues')"></span>
+                    </button>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -138,7 +143,7 @@
           <div x-h-sidebar-footer data-borderless="true">
             <nav :aria-label="T('application-core:shell.nav.settings', 'Settings')">
               <ul x-h-sidebar-menu>
-                <li x-h-sidebar-menu-item x-show="visibleSettingsItems().length > 0">
+                <li x-h-sidebar-menu-item x-show="visibleSettingsItems().length > 0 || ($store.printTemplates && $store.printTemplates.visible)">
                   <button x-h-sidebar-menu-nav :data-active="settingsMode" @click="openSettings()">
                     <svg role="presentation" x-h-lucide data-lucide="settings"></svg><span x-text="T('application-core:shell.nav.settings', 'Settings')"></span>
                   </button>
@@ -242,6 +247,8 @@
                   <span x-text="shell.label"></span>
                 </li>
               </template>
+              <div x-h-menu-separator></div>
+              <li x-h-menu-item id="user-menu-report-issue" @click="$store.issues.report()"><svg role="presentation" x-h-lucide data-lucide="message-square-warning"></svg> <span x-text="T('application-core:shell.user.reportIssue', 'Report an issue')"></span></li>
               <div x-h-menu-separator></div>
               <li x-h-menu-item data-variant="negative" @click="$store.currentUser.logout()"><svg role="presentation" x-h-lucide data-lucide="log-out"></svg> <span x-text="T('application-core:shell.user.logout', 'Log out')"></span></li>
             </ul>
@@ -426,6 +433,9 @@
     </div>
 
     <!-- App-wide transient toasts (raised through Harmonia's notifications magic with this template). -->
+    <!-- "Report an issue" (#7948): the ONE dialog the shared `issues` store renders (shell/views/_report-issue.html). -->
+    <div x-html="$store.issues.markup"></div>
+
     <section x-h-notification-overlay>
       <template id="toast">
         <li x-h-notification.floating data-variant="toast" class="hbox items-center gap-3 min-w-3xs max-w-md">
@@ -451,6 +461,7 @@
     <template x-route="/" x-template.target.app="/services/web/application-core/shell/views/_inbox.html"></template>
     <template x-route="/dashboard" x-template.target.app="./views/_dashboard.html"></template>
     <template x-route="/inbox" x-template.target.app="/services/web/application-core/shell/views/_inbox.html"></template>
+    <template x-route="/issues" x-template.target.app="/services/web/application-core/shell/views/_issues.html"></template>
     <template x-route="/documents" x-template.target.app="/services/web/application-core/shell/views/_documents.html"></template>
     <!-- Settings: list (/settings) or a selected entity (/settings/<perspective-id>). The master-detail
          fragment renders into #app (visible) so its split lays out correctly. -->
@@ -485,6 +496,8 @@
     <script src="/services/web/application-core/shell/js/stores/locale.js" defer></script>
     <script src="/services/web/application-core/shell/js/stores/currentUser.js" defer></script>
     <script src="/services/web/application-core/shell/js/stores/tenant.js" defer></script>
+    <script src="/services/web/application-core/shell/js/stores/issues.js" defer></script>
+    <script src="/services/web/application-core/shell/js/stores/printTemplates.js" defer></script>
     <script src="/services/web/application-core/shell/js/stores/shells.js" defer></script>
     <script src="/services/web/application-core/shell/js/components/pages/inboxPage.js" defer></script>
     <script src="/services/web/application-core/shell/js/components/pages/documentsPage.js" defer></script>

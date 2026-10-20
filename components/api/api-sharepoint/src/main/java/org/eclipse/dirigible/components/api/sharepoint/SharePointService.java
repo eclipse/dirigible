@@ -14,6 +14,7 @@ import com.microsoft.graph.drives.item.items.item.createuploadsession.CreateUplo
 import com.microsoft.graph.models.*;
 import com.microsoft.graph.serviceclient.GraphServiceClient;
 import com.microsoft.kiota.ApiException;
+import org.eclipse.dirigible.commons.api.helpers.LogSanitizer;
 import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -282,12 +283,12 @@ public class SharePointService {
     }
 
     public void updateFileContent(String nameOrId, InputStream content) {
-        logger.debug("Updating file content: {}", nameOrId);
+        logger.debug("Updating file content: {}", LogSanitizer.sanitize(nameOrId));
         putContent(nameOrId, content);
     }
 
     private void putContent(String nameOrId, InputStream content) {
-        logger.debug("Putting file: {}", nameOrId);
+        logger.debug("Putting file: {}", LogSanitizer.sanitize(nameOrId));
         try {
             byte[] bytes = content.readAllBytes();
             if (looksLikeId(nameOrId)) {
@@ -318,7 +319,7 @@ public class SharePointService {
     public void updateFileContent(String nameOrId, InputStream content, String contentType) {
         // Microsoft Graph infers content type from the file extension.
         // If you need to set it explicitly, you can update the file metadata afterward.
-        logger.debug("Updating file content: {} (contentType={})", nameOrId, contentType);
+        logger.debug("Updating file content: {} (contentType={})", LogSanitizer.sanitize(nameOrId), LogSanitizer.sanitize(contentType));
         putContent(nameOrId, content);
     }
 

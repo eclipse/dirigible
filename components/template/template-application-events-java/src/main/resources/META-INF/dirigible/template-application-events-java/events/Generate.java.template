@@ -6,12 +6,13 @@ import org.eclipse.dirigible.sdk.http.Body;
 import org.eclipse.dirigible.sdk.component.Component;
 import org.eclipse.dirigible.sdk.http.Controller;
 import org.eclipse.dirigible.sdk.http.Post;
+import org.eclipse.dirigible.sdk.security.User;
 #end
 import org.eclipse.dirigible.sdk.utils.Json;
 #if($hasItemLines)
 import org.eclipse.dirigible.sdk.utils.Calc;
 #end
-#if($hasPrompt || $hasStatusGuard)
+#if(!$eventOnly || $hasPrompt || $hasStatusGuard || $hasRefusals)
 import org.eclipse.dirigible.sdk.http.Response;
 #end
 
@@ -37,7 +38,9 @@ import org.eclipse.dirigible.sdk.http.Response;
  * Generated from the intent generates block - do not edit; it is re-generated with the application.
  * Entity access goes ONLY through the generated repositories (validations / events / numbering).
 #if(!$eventOnly)
- * The endpoint is served under /services/java/<project>/gen/events/${javaGenFolderName}/${className}Generate/run.
+ * The endpoint is served under /services/java/<project>/gen/events/${javaGenFolderName}/${className}Generate/run,
+ * to a caller holding the write gate of the ${fromEntity} AND of the ${toEntity} (issue #7913) - the roles
+ * their own generated controllers demand for the writes a run makes.
 #else
  * There is no endpoint: this create-from is event-driven only, so ${className}GenerateOnEvent is its
  * single caller.
@@ -74,12 +77,37 @@ import org.eclipse.dirigible.sdk.http.Response;
  * record, so a second click minted a second document - another invoice for a proforma already invoiced.
  * The guard is on the CLICK: an event-driven run carries its own at-most-once back-reference guard.
 #end
+#if($hasRefusals || $hasBackLink)
+ *
+ * A declared reversal (intent `reversals:` - issue #7886): the ${toEntity} created is the original's
+ * negated twin, linked back to it.
+#if($hasRefusals)
+ * The original is locked for the length of the unit before its refusals are read, so two concurrent
+ * Reverse clicks cannot both find it unreversed: the second waits, then reads the first one's
+ * back-link and is refused with 409 like any other refused click.
+#end
+#if($hasBackLink)
+ * The original's ${backLinkProperty} is set to the twin in the same unit - a targeted system write,
+ * which `immutableWhen` (a guard on user writes) does not refuse - so neither record exists without
+ * the other.
+#end
+#end
  */
 #if(!$eventOnly)
 @Controller
 @Component("${javaGenFolderName}_${className}Generate")
 #end
 public class ${className}Generate {
+#if($hasRefusals)
+
+    /** A declared refusal held under the original's row lock - answered with 409 and its message. */
+    static final class Refused extends RuntimeException {
+
+        Refused(String message) {
+            super(message);
+        }
+    }
+#end
 #if(!$eventOnly)
 
     public static class Request {
@@ -92,6 +120,13 @@ public class ${className}Generate {
 
     @Post("/run")
     public String run(@Body Request req) {
+        // The role gate (issue #7913): a run changes the ${fromEntity} and creates a ${toEntity}, so its
+        // caller must hold the write gate of both - the same roles the two generated controllers demand.
+        // Asked before anything is read, so a refused caller cannot probe which ids exist either.
+        if (!isInAnyRole("${sourceWriteRolesJavaLiteral}") || !isInAnyRole("${targetWriteRolesJavaLiteral}")) {
+            Response.setStatus(403);
+            return "{\"error\": \"forbidden\"}";
+        }
         if (req == null || req.id == null) {
             return "{\"error\": \"missing source id\"}";
         }
@@ -122,11 +157,33 @@ public class ${className}Generate {
             return "{\"error\": \"${name} ${guardStatusText} - current status is [" + currentStatus + "]\"}";
         }
 #end
+#if($hasRefusals)
+        gen.${toGenFolder}.data.${toJavaPerspective}.${toEntity}Entity saved;
+        try {
+            saved = create(req.id#if($hasPrompt), req.values#end);
+        } catch (Refused refused) {
+            // Thrown inside the unit, so nothing it wrote survives; the message is the authored one.
+            Response.setStatus(409);
+            return Json.stringify(java.util.Map.of("error", refused.getMessage()));
+        }
+#else
         gen.${toGenFolder}.data.${toJavaPerspective}.${toEntity}Entity saved = create(req.id#if($hasPrompt), req.values#end);
+#end
         if (saved == null) {
             return "{\"error\": \"source ${fromEntity} not found\"}";
         }
         return Json.stringify(saved);
+    }
+
+    /** Whether the caller holds ANY role of a comma-separated gate; an empty gate admits nobody. */
+    private static boolean isInAnyRole(String roles) {
+        for (String role : roles.split(",")) {
+            String name = role.trim();
+            if (!name.isEmpty() && User.isInRole(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 #end
 
@@ -147,11 +204,24 @@ public class ${className}Generate {
         // reads.
         gen.${toGenFolder}.data.${toJavaPerspective}.${toEntity}Entity result =
                 org.eclipse.dirigible.components.data.store.java.repository.UnitOfWork.call(() -> {
+    #if($hasRefusals)
+            // The refusals below read the original, and the back-link this unit writes is what the
+            // first of them reads - so the original is locked BEFORE it is read, for the length of the
+            // unit. Without the lock two concurrent clicks both read it unreversed and both mint a twin.
+            if (!new gen.${fromGenFolder}.data.${fromJavaPerspective}.${fromEntity}Repository().lockForUpdate(sourceId)) {
+                return null;
+            }
+    #end
             gen.${fromGenFolder}.data.${fromJavaPerspective}.${fromEntity}Entity source =
                     new gen.${fromGenFolder}.data.${fromJavaPerspective}.${fromEntity}Repository().findById(sourceId);
             if (source == null) {
                 return null;
             }
+    #foreach($refusal in $refusals)
+            if (${refusal.condition}) {
+                throw new Refused("${refusal.message}");
+            }
+    #end
     #if($hasEvent && !$appendMode)
             // Already generated for this source (an event redelivery, or a click after the event) - hand back
             // the existing document rather than minting a duplicate. Best-effort against two concurrent
@@ -358,6 +428,14 @@ public class ${className}Generate {
             link.${a.linkProp} = saved.${a.targetProp};
     #end
             new gen.${fromGenFolder}.data.${linkJavaPerspective}.${linkEntity}Repository().save(link);
+    #end
+    #if($hasBackLink)
+            // The original's back-link to its reversal (intent `reversals: backLink:` - issue #7886),
+            // written once the twin and its lines exist, in this unit: a refusal of anything above takes
+            // it back with them. A targeted write of the one column, so a concurrent write to any other
+            // column of the original is not reverted, and no "-updated" re-fires every reaction to it.
+            new gen.${fromGenFolder}.data.${fromJavaPerspective}.${fromEntity}Repository().updateProperties(sourceId,
+                    java.util.Map.of("${backLinkProperty}", saved.${toPk}));
     #end
             return saved;
         });

@@ -84,9 +84,11 @@
     <div class="flex-1 overflow-auto" x-cloak>
       <div class="mx-auto w-full px-6" style="max-width: 40rem; padding-top: 8vh; padding-bottom: 4rem;">
 
-        <p class="text-sm text-muted-foreground">Where are you working today</p>
-        <h1 class="text-3xl font-bold leading-tight tracking-tight" style="margin-top: .25rem;">Select a tenant</h1>
-        <p class="text-muted-foreground" style="margin-top: .75rem; max-width: 46ch;">
+        <!-- A user without a tenant lands here too: there is nothing to choose, so the page says so. -->
+        <p x-show="!noAccess" class="text-sm text-muted-foreground">Where are you working today</p>
+        <h1 class="text-3xl font-bold leading-tight tracking-tight" style="margin-top: .25rem;"
+            x-text="noAccess ? 'No access to this application' : 'Select a tenant'">Select a tenant</h1>
+        <p x-show="!noAccess" class="text-muted-foreground" style="margin-top: .75rem; max-width: 46ch;">
           Your account belongs to more than one tenant of this application. Everything you see and
           change afterwards belongs to the one you pick.
         </p>
@@ -138,7 +140,7 @@
           </template>
         </div>
 
-        <p x-show="!loading && !tenants.length && !error" class="text-sm text-muted-foreground" style="margin-top: 2.5rem;">
+        <p x-show="noAccess" class="text-sm text-muted-foreground" style="margin-top: 2.5rem;">
           Your account is not assigned to any tenant of this application yet. Ask an administrator to
           invite you.
         </p>
@@ -166,6 +168,9 @@
               error: '',
               _themeMode: 'auto',   // 'light' | 'dark' | 'auto' - the selection
               themeScheme: 'light', // the scheme applied right now
+
+              // Loaded, nothing went wrong, and still no tenant: the account has none here.
+              get noAccess() { return !this.loading && !this.error && !this.tenants.length; },
 
               async init() {
                   const b = window.PlatformBranding || (window.top && window.top.PlatformBranding) || {};

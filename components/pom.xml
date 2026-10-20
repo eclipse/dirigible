@@ -85,6 +85,7 @@
         <module>engine/engine-security</module>
         <module>engine/engine-listeners</module>
         <module>engine/engine-intent</module>
+        <module>engine/engine-issues</module>
         <module>engine/engine-document</module>
         <module>engine/engine-numbering</module>
         <module>engine/engine-open-telemetry</module>
@@ -130,12 +131,14 @@
         <module>api/api-net</module>
         <module>api/api-git</module>
         <module>api/api-messaging</module>
+        <module>api/api-etcd-client</module>
         <module>api/api-etcd</module>
         <module>api/api-template</module>
         <module>api/api-mail</module>
         <module>api/api-mongodb</module>
         <module>api/api-rabbitmq</module>
         <module>api/api-redis</module>
+        <module>api/api-qldb-driver</module>
         <module>api/api-qldb</module>
         <module>api/api-pdf</module>
         <module>api/api-component</module>
@@ -156,6 +159,7 @@
         <module>ui/perspective-processes</module>
         <module>ui/perspective-tracing</module>
         <module>ui/settings-locale</module>
+        <module>ui/settings-print-templates</module>
         <module>ui/view-welcome</module>
         <module>ui/view-search</module>
         <module>ui/view-projects</module>
@@ -403,11 +407,6 @@
         </dependency>
 
         <!-- Date Type Utils -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-joda</artifactId>
-        </dependency>
-
         <!-- Swagger -->
         <dependency>
             <groupId>org.springdoc</groupId>
@@ -910,6 +909,12 @@
             <dependency>
                 <groupId>org.eclipse.dirigible</groupId>
                 <artifactId>dirigible-components-ui-settings-locale</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.dirigible</groupId>
+                <artifactId>dirigible-components-ui-settings-print-templates</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -1465,6 +1470,12 @@
             </dependency>
             <dependency>
                 <groupId>org.eclipse.dirigible</groupId>
+                <artifactId>dirigible-components-api-etcd-client</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.dirigible</groupId>
                 <artifactId>dirigible-components-api-mongodb</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -1482,6 +1493,12 @@
                 <groupId>org.eclipse.dirigible</groupId>
                 <artifactId>dirigible-components-api-qldb</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.dirigible</groupId>
+                <artifactId>dirigible-components-api-qldb-driver</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.dirigible</groupId>

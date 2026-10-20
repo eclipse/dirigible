@@ -37,9 +37,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
-import org.springframework.test.util.ReflectionTestUtils;
 
-import jakarta.jms.ExceptionListener;
+import jakarta.jms.Destination;
+import jakarta.jms.JMSException;
+import jakarta.jms.Topic;
 
 /**
  * A {@code .listener} artefact whose subscription the broker refuses at startup is retried on every
@@ -109,15 +110,21 @@ class ListenerArtefactSubscriptionRetryIT extends IntegrationTest {
     void armTheBrokerRefusal() {
         MessagesHolder.clearLatestReceivedMessage();
         doAnswer(invocation -> {
-            // The artefact path opens its connection with the listener's own exception handler, which
-            // carries the handler path - the one thing that identifies this probe. Everything else,
-            // the platform's shared connection included, must behave normally.
-            if (refuseProbeSubscription && HANDLER_PATH.equals(handlerPathOf(invocation.getArgument(0)))) {
+            // The refusal lands on the one per-subscription step both connection modes share - the
+            // redelivery budget for the probe's own topic, set right after its session was opened
+            // (#7875 shares the artefacts' connection, so it is no longer the probe's to refuse).
+            // Everything else, the platform's connection and the other artefacts included, must
+            // behave normally.
+            if (refuseProbeSubscription && isProbeTopic(invocation.getArgument(1))) {
                 throw new IllegalStateException("Failed to create connection to ActiveMQ");
             }
             return invocation.callRealMethod();
         }).when(connectionArtifactsFactory)
-          .createConnection(any(), any());
+          .configureRedeliveryPolicy(any(), any());
+    }
+
+    private static boolean isProbeTopic(Destination destination) throws JMSException {
+        return destination instanceof Topic topic && TOPIC.equals(topic.getTopicName());
     }
 
     @Test
@@ -157,14 +164,6 @@ class ListenerArtefactSubscriptionRetryIT extends IntegrationTest {
         List<Listener> listeners = listenerService.findByLocation(LISTENER_LOCATION);
         assertEquals(1, listeners.size(), "exactly one artefact must be recorded for " + LISTENER_LOCATION);
         return listeners.get(0);
-    }
-
-    private static String handlerPathOf(ExceptionListener exceptionListener) {
-        if (exceptionListener == null || !"ListenerExceptionHandler".equals(exceptionListener.getClass()
-                                                                                             .getSimpleName())) {
-            return null;
-        }
-        return (String) ReflectionTestUtils.getField(exceptionListener, "handlerPath");
     }
 
     private void deployProbeListener() {

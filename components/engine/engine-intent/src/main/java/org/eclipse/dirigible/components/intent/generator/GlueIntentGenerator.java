@@ -31,6 +31,8 @@ import org.eclipse.dirigible.components.intent.model.FieldIntent;
 import org.eclipse.dirigible.components.intent.model.GenerateChildIntent;
 import org.eclipse.dirigible.components.intent.model.GeneratesIntent;
 import org.eclipse.dirigible.components.intent.model.GeneratesItemsIntent;
+import org.eclipse.dirigible.components.intent.model.ReversalIntent;
+import org.eclipse.dirigible.components.intent.model.ReversalRefusalIntent;
 import org.eclipse.dirigible.components.intent.model.InboundIntent;
 import org.eclipse.dirigible.components.intent.model.InboundSourceIntent;
 import org.eclipse.dirigible.components.intent.model.IntegrationIntent;
@@ -122,7 +124,9 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
         List<Map<String, Object>> inbound = buildInbound(model, byName, compositionParents, settings, context);
         List<Map<String, Object>> inboundMessages = buildInboundMessages(model, byName, compositionParents, settings, context);
         List<Map<String, Object>> inboundFiles = buildInboundFiles(model, byName, compositionParents, settings, context);
+        List<Map<String, Object>> imports = ImportSupport.buildImports(model, byName, compositionParents, settings, context);
         List<Map<String, Object>> outbound = buildOutbound(model, byName, compositionParents, settings, context);
+        List<Map<String, Object>> exports = ExportSupport.build(model, byName, compositionParents, settings, context);
         List<Map<String, Object>> stepEvents = buildStepEvents(model, compositionParents, settings);
         List<Map<String, Object>> rollups = buildRollups(model, byName, compositionParents, settings, context);
         ExpansionHandlers expansionHandlers = buildExpansions(model, byName, compositionParents, settings);
@@ -147,10 +151,10 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
         if (triggers.isEmpty() && resolvers.isEmpty() && fieldLoaders.isEmpty() && assignees.isEmpty() && timerLoaders.isEmpty()
                 && waits.isEmpty() && aborts.isEmpty() && deleteAborts.isEmpty() && writers.isEmpty() && setters.isEmpty()
                 && notifications.isEmpty() && schedules.isEmpty() && integrations.isEmpty() && inbound.isEmpty()
-                && inboundMessages.isEmpty() && inboundFiles.isEmpty() && outbound.isEmpty() && stepEvents.isEmpty() && rollups.isEmpty()
-                && expansions.isEmpty() && settlements.isEmpty() && generates.isEmpty() && transitions.isEmpty() && printFeeders.isEmpty()
-                && postings.isEmpty() && snapshots.isEmpty() && numbering.isEmpty() && posts.isEmpty() && aggregates.isEmpty()
-                && sends.isEmpty() && resolves.isEmpty()) {
+                && inboundMessages.isEmpty() && inboundFiles.isEmpty() && imports.isEmpty() && outbound.isEmpty() && exports.isEmpty()
+                && stepEvents.isEmpty() && rollups.isEmpty() && expansions.isEmpty() && settlements.isEmpty() && generates.isEmpty()
+                && transitions.isEmpty() && printFeeders.isEmpty() && postings.isEmpty() && snapshots.isEmpty() && numbering.isEmpty()
+                && posts.isEmpty() && aggregates.isEmpty() && sends.isEmpty() && resolves.isEmpty()) {
             // No process glue for this intent - any stale .glue is removed by the post-pass scrub.
             return;
         }
@@ -172,7 +176,9 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
         glue.put("inbound", inbound);
         glue.put("inboundMessages", inboundMessages);
         glue.put("inboundFiles", inboundFiles);
+        glue.put("imports", imports);
         glue.put("outbound", outbound);
+        glue.put("exports", exports);
         // One emitter per observed process-step moment, deduplicated across every notification and
         // integration bound to it: the delegate the BPMN generator inserts at that boundary publishes
         // the trigger entity on the step topic those consumers already bind to.
@@ -483,8 +489,10 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
             }
             NotificationSupport.Plan plan = NotificationSupport.plan(notification, byName.get(entity), byName, compositionParents, lookup);
             if (plan == null) {
-                reportDroppedGlue(context, "Notification [" + notification.getName() + "] recipient [" + notification.getTo()
-                        + "] is not a resolvable field or relation.field of [" + entity + "] - the notification was NOT generated");
+                reportDroppedGlue(context,
+                        "Notification [" + notification.getName() + "] recipient [" + notification.getTo() + "]"
+                                + copyRecipients(notification) + " is not a resolvable field or relation.field of [" + entity
+                                + "] - the notification was NOT generated");
                 continue;
             }
             NotifySupport.PrintAttachment attachment = printAttachment(notification, byName.get(entity), model, byName, compositionParents,
@@ -510,6 +518,7 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
             entry.put("relationLoads", relationLoads(plan, attachment, reportAttachment));
             entry.put("guardTerms", plan.guardTerms());
             entry.put("toExpression", plan.toExpression());
+            putCopyExpressions(entry, "ccExpression", "bccExpression", plan);
             entry.put("subjectExpression", plan.subjectExpression());
             entry.put("bodyExpression", plan.bodyExpression());
             putHtmlExpression(entry, "htmlExpression", plan);
@@ -1011,6 +1020,10 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
     private static List<Map<String, Object>> buildGenerates(IntentModel model, Map<String, EntityIntent> byName,
             Map<String, String> compositionParents, IntentSettings settings, IntentGenerationContext context) {
         List<Map<String, Object>> out = new ArrayList<>();
+        PermissionSupport.Gates gates = PermissionSupport.gates(model, settings);
+        // The same project name the EDM generator prefixes the entities' convention roles with.
+        String contextProject = context == null ? null : context.getProjectName();
+        String projectName = contextProject != null && !contextProject.isBlank() ? contextProject : model.getName();
         for (GeneratesIntent g : model.getGenerates()) {
             if (g.getName() == null || g.getName()
                                         .isBlank()) {
@@ -1087,6 +1100,13 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
             e.put("toModel", crossModel ? g.getUses() : "");
             e.put("toPerspective", toPerspective);
             e.put("toPk", toPk);
+            // The role gate of the click (issue #7913): run() changes the source (its sourceStatus flip, a
+            // back-link, a link row) and creates the target, so its caller must hold the WRITE gate of
+            // both - exactly the roles their own generated controllers demand for the same writes. Without
+            // it the endpoint was the one generated surface any signed-in user could call, a user holding
+            // no role at all included.
+            e.put("sourceWriteRoles", createFromWriteGate(g.getFrom(), fromUses, sourceInfo, gates, projectName, compositionParents));
+            e.put("targetWriteRoles", createFromWriteGate(g.getTo(), uses, target, gates, projectName, compositionParents));
             // A hop reads the related row, which the create-from must load first: the resolver renders the
             // null-guarded access and accumulates one load per distinct relation, and `relationLoads`
             // hands those to the template - the same pair a notification's relation.field recipient uses.
@@ -1291,9 +1311,72 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
             e.put("hasPrompt", g.hasPrompt());
             e.put("promptFields", promptFields(g, crossModel ? null : byName.get(g.getTo()), target, source));
             putLink(g, e, byName, compositionParents, model, target);
+            putReversal(g, e, source, byName);
             out.add(e);
         }
         return out;
+    }
+
+    /**
+     * The half of a create-from only a declared reversal has (issue #7886), onto its glue entry: the
+     * declared amounts copied NEGATED (a line keeps its side - red storno), the refusals decided over
+     * the original under a row lock, and the back-link written on the original once the twin exists. An
+     * authored create-from carries none of it, and neither does a {@code .glue} written before the keys
+     * existed - the template gates every part on its boolean.
+     *
+     * @param g the create-from, possibly expanded from a {@code reversals:} entry
+     * @param e the glue entry being built
+     * @param source the reversed entity (a reversal is always local)
+     * @param byName the local entities by name
+     */
+    private static void putReversal(GeneratesIntent g, Map<String, Object> e, EntityIntent source, Map<String, EntityIntent> byName) {
+        ReversalIntent reversal = g.getReversal();
+        if (reversal == null) {
+            e.put("hasRefusals", false);
+            e.put("hasBackLink", false);
+            e.put("backLinkProperty", "");
+            e.put("refusals", new ArrayList<>());
+            return;
+        }
+        java.util.Set<String> negated = new java.util.HashSet<>();
+        for (String name : reversal.getNegate()) {
+            negated.add(IntentNaming.pascalCase(name));
+        }
+        negate(e, "fieldAssignments", negated, "source");
+        negate(e, "itemFieldAssignments", negated, "srcItem");
+        List<Map<String, Object>> refusals = new ArrayList<>();
+        for (ReversalRefusalIntent refusal : reversal.getRefuse()) {
+            List<Map<String, Object>> terms = new ArrayList<>();
+            // The terms read the record being written ("entity"); here that record is the loaded original.
+            for (Map<String, Object> term : CheckSupport.conditionTerms(source, byName, refusal.getWhen())) {
+                Map<String, Object> onSource = new LinkedHashMap<>(term);
+                onSource.put("owner", "source");
+                terms.add(onSource);
+            }
+            Map<String, Object> entry = new LinkedHashMap<>();
+            entry.put("terms", terms);
+            entry.put("message", refusal.getMessage());
+            refusals.add(entry);
+        }
+        e.put("hasRefusals", !refusals.isEmpty());
+        e.put("refusals", refusals);
+        boolean backLink = reversal.getBackLink() != null && !reversal.getBackLink()
+                                                                      .isBlank();
+        e.put("hasBackLink", backLink);
+        e.put("backLinkProperty", backLink ? IntentNaming.pascalCase(reversal.getBackLink()) : "");
+    }
+
+    /**
+     * Replaces the copy of every negated property in the named assignments with its null-safe negation.
+     */
+    @SuppressWarnings("unchecked")
+    private static void negate(Map<String, Object> e, String key, java.util.Set<String> negated, String owner) {
+        for (Map<String, Object> assignment : (List<Map<String, Object>>) e.get(key)) {
+            String property = String.valueOf(assignment.get("targetProp"));
+            if (negated.contains(property)) {
+                assignment.put("reading", Readings.negate(owner, property));
+            }
+        }
     }
 
     /**
@@ -1744,6 +1827,9 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
     private static List<Map<String, Object>> buildTransitions(IntentModel model, Map<String, EntityIntent> byName,
             Map<String, String> compositionParents, IntentSettings settings, IntentGenerationContext context) {
         List<Map<String, Object>> out = new ArrayList<>();
+        PermissionSupport.Gates gates = PermissionSupport.gates(model, settings);
+        String contextProject = context == null ? null : context.getProjectName();
+        String projectName = contextProject != null && !contextProject.isBlank() ? contextProject : model.getName();
         for (org.eclipse.dirigible.components.intent.model.TransitionIntent t : model.getTransitions()) {
             if (t.getName() == null || t.getName()
                                         .isBlank()
@@ -1771,6 +1857,9 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
             e.put("perspective", IntentEntities.resolvePerspective(t.getForEntity(), compositionParents, model));
             e.put("statusProperty", statusProperty);
             e.put("setStatus", String.valueOf(t.getSetStatus()));
+            // The role gate of the click (issue #7913): the flip writes the record, so its caller must hold
+            // the record's WRITE gate - the roles its generated controller demands for the same write.
+            e.put("writeRoles", createFromWriteGate(t.getForEntity(), null, null, gates, projectName, compositionParents));
             List<String> terms = new ArrayList<>();
             List<String> fromIds = new ArrayList<>();
             for (Integer from : t.getFrom()) {
@@ -1833,11 +1922,13 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
         EntityIntent anchor = fanOut == null ? null : entity;
         boolean dropped = fanOutRequested && fanOut == null;
         NotificationSupport.Plan plan = notify == null || dropped ? null
-                : NotificationSupport.plan(notify.getTo(), notify.getSubject(), notify.getBody(), notify.getHtml(), null, about, anchor,
-                        byName, compositionParents, crossModelLookup(model, context));
+                : NotificationSupport.plan(notify.getTo(), notify.getCc(), notify.getBcc(), notify.getSubject(), notify.getBody(),
+                        notify.getHtml(), null, about, anchor, byName, compositionParents, crossModelLookup(model, context));
         if (notify != null && plan == null && !dropped) {
-            reportDroppedGlue(context, subject + " recipient [" + notify.getTo() + "] is not a resolvable field or relation.field of ["
-                    + (about == null ? "?" : about.getName()) + "] - the mail was NOT generated");
+            reportDroppedGlue(context,
+                    subject + " recipient [" + notify.getTo() + "]" + copyRecipients(notify)
+                            + " is not a resolvable field or relation.field of [" + (about == null ? "?" : about.getName())
+                            + "] - the mail was NOT generated");
         }
         // `attach: recordPrint` attaches the ANCHOR record's document instead of the row's - one
         // document, many recipients - so it is resolved (and later rendered) against the record.
@@ -1858,6 +1949,12 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
         fields.put("notifyBodyExpression", send ? plan.bodyExpression() : "\"\"");
         if (send) {
             putHtmlExpression(fields, "notifyHtmlExpression", plan);
+            putCopyExpressions(fields, "notifyCcExpression", "notifyBccExpression", plan);
+            // An @var: recipient reads the process instance, so a fan-out's per-row send method needs the
+            // execution handed in.
+            if (plan.usesVariables()) {
+                fields.put("notifyReadsVariables", "true");
+            }
         }
         // Whether a per-row message quotes the anchor record - the fan-out templates then hand the
         // loaded record to their send method, and only then (an argument nothing reads is noise).
@@ -2086,6 +2183,12 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
     /** Test hook: build the {@code inboundMessages} glue collection without a repository. */
     static List<Map<String, Object>> buildInboundMessagesForTest(IntentModel model) {
         return buildInboundMessages(model, IntentEntities.byName(model), IntentEntities.compositionParents(model),
+                IntentSettings.parse("{}"), null);
+    }
+
+    /** Test hook: build the {@code exports} glue collection without a repository. */
+    static List<Map<String, Object>> buildExportsForTest(IntentModel model) {
+        return ExportSupport.build(model, IntentEntities.byName(model), IntentEntities.compositionParents(model),
                 IntentSettings.parse("{}"), null);
     }
 
@@ -2562,6 +2665,36 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
      */
     static List<Map<String, Object>> buildGeneratesForTest(IntentModel model) {
         return buildGeneratesForTest(model, null);
+    }
+
+    /**
+     * The write gate one end of a create-from demands of the caller who clicks it (issue #7913): for a
+     * local entity the gate its generated controller enforces, as
+     * {@link PermissionSupport.Gates#writeGate} computes it - authored {@code can:} grants or the
+     * convention role, the {@code access.extraRoles} appended. For an entity owned by another model it
+     * is the gate THAT model recorded in its {@code .model} ({@code roleWrite}), because its grants and
+     * extra roles are authored there; an owner model that could not be read, or one generated before
+     * the key existed, falls back to the owner's convention role.
+     *
+     * @param entity the end's entity name
+     * @param owner the {@code uses:} entry owning the entity, or {@code null} for a local entity
+     * @param ownerInfo the entity as read from the owner's {@code .model}, or {@code null}
+     * @param gates this intent's resolved gates
+     * @param projectName the project the local convention roles are prefixed with
+     * @param compositionParents the local composition parents, for a child gated by its root
+     * @return the comma-separated write roles
+     */
+    private static String createFromWriteGate(String entity, UsesIntent owner, CrossModelSupport.TargetInfo ownerInfo,
+            PermissionSupport.Gates gates, String projectName, Map<String, String> compositionParents) {
+        if (owner == null) {
+            return gates.writeGate(projectName, IntentEntities.compositionPerspective(entity, compositionParents), entity);
+        }
+        if (ownerInfo != null && ownerInfo.writeRoles() != null && !ownerInfo.writeRoles()
+                                                                             .isBlank()) {
+            return ownerInfo.writeRoles();
+        }
+        String perspective = ownerInfo != null ? ownerInfo.perspectiveName() : entity;
+        return owner.resolveProject() + "." + perspective + "." + entity + "FullAccess";
     }
 
     /**
@@ -4790,7 +4923,8 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
                 if (plan == null) {
                     reportDroppedGlue(context, "Schedule [" + schedule.getName() + "] notify recipient [" + schedule.getNotify()
                                                                                                                     .getTo()
-                            + "] is not a resolvable field or relation.field of [" + entity + "] - the schedule was NOT generated");
+                            + "]" + copyRecipients(schedule.getNotify()) + " is not a resolvable field or relation.field of [" + entity
+                            + "] - the schedule was NOT generated");
                     continue;
                 }
                 if (sourceCrossModel && plan.usesRecordUrl()) {
@@ -4829,6 +4963,7 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
                 }
                 allLoads.addAll(mergedLoads(plan, attachment, reportAttachment));
                 entry.put("toExpression", plan.toExpression());
+                putCopyExpressions(entry, "ccExpression", "bccExpression", plan);
                 entry.put("subjectExpression", plan.subjectExpression());
                 entry.put("bodyExpression", plan.bodyExpression());
                 putHtmlExpression(entry, "htmlExpression", plan);
@@ -4985,6 +5120,20 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
         if (to != null && !to.isBlank() && !to.contains("@")) {
             paths.put("notify recipient", to.trim());
         }
+        if (notify.getCc() != null && !notify.getCc()
+                                             .isBlank()
+                && !notify.getCc()
+                          .contains("@")) {
+            paths.put("notify cc", notify.getCc()
+                                         .trim());
+        }
+        if (notify.getBcc() != null && !notify.getBcc()
+                                              .isBlank()
+                && !notify.getBcc()
+                          .contains("@")) {
+            paths.put("notify bcc", notify.getBcc()
+                                          .trim());
+        }
         collectNotifyPlaceholders(notify.getSubject(), paths);
         collectNotifyPlaceholders(notify.getBody(), paths);
         collectNotifyPlaceholders(notify.getHtml(), paths);
@@ -5019,6 +5168,33 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
      * one is declared, so a block without {@code html:} describes, and renders, exactly what it did
      * before the key existed.
      */
+    /** The authored copy recipients, for a dropped-block report - empty when the block has none. */
+    private static String copyRecipients(NotificationIntent notify) {
+        String copies = "";
+        if (notify.getCc() != null && !notify.getCc()
+                                             .isBlank()) {
+            copies += " / cc [" + notify.getCc() + "]";
+        }
+        if (notify.getBcc() != null && !notify.getBcc()
+                                              .isBlank()) {
+            copies += " / bcc [" + notify.getBcc() + "]";
+        }
+        return copies;
+    }
+
+    /**
+     * The copy recipients (#7935, #7938), carried only when authored - so a block without them keeps
+     * its descriptor, and the generated sender, byte-identical.
+     */
+    private static void putCopyExpressions(Map<String, Object> fields, String ccKey, String bccKey, NotificationSupport.Plan plan) {
+        if (plan.ccExpression() != null) {
+            fields.put(ccKey, plan.ccExpression());
+        }
+        if (plan.bccExpression() != null) {
+            fields.put(bccKey, plan.bccExpression());
+        }
+    }
+
     private static void putHtmlExpression(Map<String, Object> fields, String key, NotificationSupport.Plan plan) {
         if (plan.htmlExpression() != null) {
             fields.put(key, plan.htmlExpression());
@@ -5822,6 +5998,22 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
             if (!setter.relation() && ProcessResilienceSupport.ERROR_TOKEN.equals(setter.value()
                                                                                         .trim())) {
                 entry.put("errorMessage", "true");
+            }
+            // The {now} token (whole-value, timestamp/date only - parser-enforced) stamps the moment
+            // the step runs, in the Java type the entity declares for the column (#7873). Emitted only
+            // when used, so every other setter's descriptor stays byte-identical.
+            if (setter.now()) {
+                entry.put("now", "true");
+                entry.put("nowExpression", "java.time." + setter.javaType() + ".now()");
+            }
+            // A one-hop setter (#7934) writes the record the trigger's FK points at, through that
+            // record's own repository. Emitted only when used, so every other setter's descriptor stays
+            // byte-identical.
+            if (setter.via() != null) {
+                entry.put("via", setter.via());
+                entry.put("targetEntity", setter.targetEntity());
+                entry.put("targetPerspective", setter.targetPerspective());
+                entry.put("targetKeyAccessor", setter.targetKeyAccessor());
             }
             setters.add(entry);
         }

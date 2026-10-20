@@ -1,0 +1,201 @@
+<!--
+
+    Copyright (c) 2010-2026 Eclipse Dirigible contributors
+
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v2.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v20.html
+
+    SPDX-FileCopyrightText: Eclipse Dirigible contributors
+    SPDX-License-Identifier: EPL-2.0
+
+-->
+<!-- Issues (#7948): the support desk - every tenant's reported issues, the thread with the internal
+     memos, the decisions that move the issue's lifecycle, and the way from a request id into Logs. -->
+<div id="monitoring-issues-page" class="vbox size-full" x-data="issuesPage">
+  <div x-h-toolbar data-variant="transparent">
+    <span x-h-toolbar-title class="text-2xl font-semibold tracking-tight" x-text="T('monitoring:shell.nav.issues', 'Issues')"></span>
+    <span x-h-badge data-variant="information" x-text="state.items.length"></span>
+    <div x-h-toolbar-spacer></div>
+    <input x-h-input type="search" data-size="sm" class="w-3xs" x-model="state.filters.tenant" @change="state.load()"
+           :placeholder="T('monitoring:issues.tenant', 'Tenant')" :aria-label="T('monitoring:issues.tenant', 'Tenant')" />
+    <input x-h-input type="search" data-size="sm" class="w-3xs" x-model="state.filters.assignee" @change="state.load()"
+           :placeholder="T('monitoring:issues.assignee', 'Assignee')" :aria-label="T('monitoring:issues.assignee', 'Assignee')" />
+    <div x-h-select data-size="sm" data-clearable="true" class="w-3xs">
+      <input x-h-select-input x-model="state.filters.status" @change="state.load()" :placeholder="T('monitoring:issues.anyStatus', 'Any status')"
+             :aria-label="T('monitoring:issues.statusFilter', 'Status')" />
+      <div x-h-select-content>
+        <div x-h-select-list>
+          <template x-for="status in ['NEW', 'OPEN', 'WAITING_FOR_REPORTER', 'RESOLVED', 'REJECTED', 'CANCELLED']" :key="status">
+            <div x-h-select-option="state.statusLabel(status)" :data-value="status"></div>
+          </template>
+        </div>
+      </div>
+    </div>
+    <button x-h-button data-variant="outline" data-size="sm" @click="state.load()">
+      <svg role="presentation" x-h-lucide data-lucide="refresh-cw"></svg><span x-text="T('monitoring:issues.refresh', 'Refresh')"></span>
+    </button>
+  </div>
+
+  <div x-show="state.loadError" x-cloak x-h-alert data-variant="warning" role="alert" class="mx-4">
+    <div x-h-alert-description x-text="state.loadError === 'forbidden'
+        ? T('monitoring:issues.forbidden', 'The issues of every tenant are read by the operators of the instance, in the default tenant.')
+        : T('monitoring:issues.unavailable', 'The issues could not be read.')"></div>
+  </div>
+
+  <div x-h-split class="flex-1" data-orientation="horizontal" data-variant="border">
+    <div x-h-split-panel data-size="35%" data-min="320">
+      <div x-show="state.loaded && !state.loadError && state.items.length === 0" x-h-info-page class="p-4">
+        <div x-h-info-page-header>
+          <div x-h-info-page-media.icon><svg x-h-lucide data-lucide="message-square" role="img" aria-label="issues"></svg></div>
+          <div x-h-info-page-title x-text="T('monitoring:issues.none', 'No issues')"></div>
+          <div x-h-info-page-description x-text="T('monitoring:issues.noneHint', 'Nothing matches the filters.')"></div>
+        </div>
+      </div>
+      <div x-show="state.items.length" x-h-table-container.scroll class="size-full">
+        <table x-h-table data-borders="rows">
+          <thead x-h-table-header>
+            <tr x-h-table-row>
+              <th x-h-table-head x-text="T('monitoring:issues.issue', 'Issue')"></th>
+              <th x-h-table-head x-text="T('monitoring:issues.tenant', 'Tenant')"></th>
+              <th x-h-table-head x-text="T('monitoring:issues.statusFilter', 'Status')"></th>
+            </tr>
+          </thead>
+          <tbody x-h-table-body>
+            <template x-for="issue in state.items" :key="issue.id">
+              <tr x-h-table-row data-hoverable="true" :data-issue="issue.id" :data-state="state.isSelected(issue) ? 'selected' : ''"
+                  @click="state.select(issue.id)" class="cursor-pointer">
+                <td x-h-table-cell>
+                  <div class="vbox gap-1">
+                    <span class="font-medium" x-text="issue.subject"></span>
+                    <span x-h-text.muted class="text-xs"
+                          x-text="'#' + issue.id + ' · ' + (issue.reporterName || issue.reporter) + ' · ' + issue.severity"></span>
+                  </div>
+                </td>
+                <td x-h-table-cell class="text-sm" x-text="issue.tenantId"></td>
+                <td x-h-table-cell>
+                  <span x-h-badge data-size="sm" :data-variant="state.statusVariant(issue.status)" x-text="state.statusLabel(issue.status)"></span>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div x-h-split-panel data-size="65%" data-min="420">
+      <div x-show="!state.selected" x-h-info-page class="p-4">
+        <div x-h-info-page-header>
+          <div x-h-info-page-media.icon><svg x-h-icon data-icon="circle-info" role="img" aria-label="info"></svg></div>
+          <div x-h-info-page-title x-text="T('monitoring:issues.noneSelected', 'No issue selected')"></div>
+          <div x-h-info-page-description x-text="T('monitoring:issues.selectHint', 'Select an issue to read its report and its thread.')"></div>
+        </div>
+      </div>
+
+      <div x-show="state.selected" class="vbox size-full" id="monitoring-issues-detail">
+        <div x-h-toolbar data-variant="transparent">
+          <span x-h-toolbar-title class="truncate" x-text="state.selected ? '#' + state.selected.issue.id + ' ' + state.selected.issue.subject : ''"></span>
+          <span x-h-badge :data-variant="state.statusVariant(state.selected?.issue.status)" x-text="state.statusLabel(state.selected?.issue.status)"></span>
+          <div x-h-toolbar-spacer></div>
+          <template x-for="decision in state.decisions" :key="decision">
+            <button x-h-button data-size="sm" :data-variant="state.decisionVariant(decision)" :data-decision="decision"
+                    :disabled="state.acting || (decision === 'REQUEST' && !state.decisionMessage.trim())"
+                    @click="state.decide(decision)" x-text="state.decisionLabel(decision)"></button>
+          </template>
+        </div>
+
+        <div class="vbox gap-4 p-4 flex-1 overflow-y-auto">
+          <div x-show="state.actionResult" x-cloak x-h-alert :data-variant="state.actionResult?.variant === 'positive' ? 'positive' : 'negative'" role="status">
+            <div x-h-alert-description x-text="state.actionResult?.text || ''"></div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-sm">
+            <div><span x-h-text.muted class="text-xs" x-text="T('monitoring:issues.tenant', 'Tenant')"></span><div x-text="state.selected?.issue.tenantId || ''"></div></div>
+            <div><span x-h-text.muted class="text-xs" x-text="T('monitoring:issues.reporter', 'Reporter')"></span><div x-text="state.selected?.issue.reporter || ''"></div></div>
+            <div><span x-h-text.muted class="text-xs" x-text="T('monitoring:issues.severity', 'Severity')"></span><div x-text="state.selected?.issue.severity || ''"></div></div>
+            <div><span x-h-text.muted class="text-xs" x-text="T('monitoring:issues.filed', 'Filed')"></span><div x-text="state.selected ? window.HarmoniaFormat.value(state.selected.issue.createdAt, true) : ''"></div></div>
+          </div>
+
+          <div class="hbox items-end gap-2" x-show="state.selectedOpen">
+            <div x-h-field class="flex-1">
+              <label x-h-label for="monitoring-issues-assignee" x-text="T('monitoring:issues.assignee', 'Assignee')"></label>
+              <input x-h-input id="monitoring-issues-assignee" type="text" x-model="state.assignee" />
+            </div>
+            <button x-h-button data-variant="outline" :disabled="state.acting" @click="state.assign()" x-text="T('monitoring:issues.assign', 'Assign')"></button>
+          </div>
+
+          <p class="text-sm whitespace-pre-wrap wrap-anywhere" x-show="state.selected?.description" x-text="state.selected?.description || ''"></p>
+
+          <div class="vbox gap-2" x-show="state.requestIds.length">
+            <span x-h-text.muted class="text-xs" x-text="T('monitoring:issues.requests', 'Requests')"></span>
+            <div class="hbox gap-2 flex-wrap">
+              <template x-for="requestId in state.requestIds" :key="requestId">
+                <button x-h-button data-variant="outline" data-size="sm" class="font-mono" @click="openLogs(requestId)"
+                        :title="T('monitoring:issues.openLogs', 'Show in Logs')">
+                  <svg role="presentation" x-h-lucide data-lucide="scroll-text"></svg><span x-text="requestId"></span>
+                </button>
+              </template>
+            </div>
+          </div>
+
+          <div class="vbox gap-1" x-show="state.logExcerpt.length">
+            <span x-h-text.muted class="text-xs" x-text="T('monitoring:issues.logExcerpt', 'Log lines of these requests')"></span>
+            <pre class="font-mono text-xs whitespace-pre-wrap wrap-anywhere overflow-auto p-2 border rounded-md" style="max-height: 16rem"
+                 x-text="state.logExcerpt.map((line) => line.at + ' ' + line.level + ' ' + line.logger + ' - ' + line.message).join('\n')"></pre>
+          </div>
+
+          <details class="vbox gap-1">
+            <summary class="text-sm cursor-pointer" x-text="T('monitoring:issues.context', 'The whole report')"></summary>
+            <pre class="font-mono text-xs whitespace-pre-wrap wrap-anywhere overflow-auto p-2 border rounded-md" style="max-height: 24rem"
+                 x-text="state.contextText"></pre>
+          </details>
+
+          <div class="hbox gap-2 flex-wrap" x-show="state.selected?.attachments?.length">
+            <template x-for="file in (state.selected?.attachments || [])" :key="file.id">
+              <a x-h-button data-variant="outline" data-size="sm" :href="state.attachmentUrl(file)" download>
+                <svg role="presentation" x-h-lucide data-lucide="paperclip"></svg><span x-text="file.fileName"></span>
+              </a>
+            </template>
+          </div>
+
+          <div class="vbox gap-2 w-full" role="log" aria-live="polite" id="monitoring-issues-thread">
+            <template x-for="message in (state.selected?.messages || [])" :key="message.id">
+              <div x-h-bubble style="max-width: 85%" :data-align="message.authorKind === 'ENGINEER' ? 'right' : 'left'"
+                   :data-variant="message.internal ? 'warning' : (message.authorKind === 'ENGINEER' ? 'primary' : 'outline')">
+                <div x-h-bubble-header>
+                  <span x-text="message.author"></span>
+                  <time x-text="window.HarmoniaFormat.value(message.createdAt, true)"></time>
+                  <span x-show="message.internal" x-h-badge data-variant="outline" x-text="T('monitoring:issues.internal', 'Internal')"></span>
+                </div>
+                <div x-h-bubble-content class="whitespace-pre-wrap wrap-anywhere" x-text="message.body"></div>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <div class="vbox gap-2 p-4 border-t">
+          <div x-show="state.decisions.length" x-h-field>
+            <label x-h-label for="monitoring-issues-decision-message"
+                   x-text="T('monitoring:issues.decisionMessage', 'Message to the reporter with the decision (required to ask them something)')"></label>
+            <input x-h-input id="monitoring-issues-decision-message" type="text" x-model="state.decisionMessage" />
+          </div>
+          <div x-h-input-group>
+            <textarea x-h-textarea.group rows="2" id="monitoring-issues-reply" x-model="state.reply" :disabled="state.acting"
+                      :aria-label="T('monitoring:issues.writeReply', 'Write a reply')" :placeholder="T('monitoring:issues.writeReply', 'Write a reply...')"></textarea>
+            <div x-h-input-group-addon data-align="block-end" class="border-t">
+              <label class="hbox items-center gap-2 text-sm">
+                <span x-h-switch data-size="sm"><input type="checkbox" x-model="state.internal" /></span>
+                <span x-text="T('monitoring:issues.internalNote', 'Internal memo (never shown to the reporter)')"></span>
+              </label>
+              <button type="button" x-h-button.addon data-size="icon-sm" data-variant="primary" class="rounded-full ml-auto"
+                      @click="state.send()" :disabled="state.acting || !state.reply.trim()" :aria-label="T('monitoring:issues.send', 'Send')">
+                <svg x-h-lucide role="presentation" data-lucide="arrow-up"></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

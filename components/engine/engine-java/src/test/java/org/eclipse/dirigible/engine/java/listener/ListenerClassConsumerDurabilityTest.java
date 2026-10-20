@@ -30,6 +30,7 @@ import org.eclipse.dirigible.components.base.tenant.Tenant;
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.configurations.tenant.TenantConfigurationService;
 import org.eclipse.dirigible.components.listeners.config.ActiveMQConnectionArtifactsFactory;
+import org.eclipse.dirigible.components.listeners.config.ListenerConnectionMode;
 import org.eclipse.dirigible.components.listeners.service.DestinationNameManager;
 import org.eclipse.dirigible.components.listeners.service.TenantPropertyManager;
 import org.eclipse.dirigible.engine.java.component.ComponentContainer;
@@ -57,6 +58,10 @@ import jakarta.jms.TopicSubscriber;
  * <p>
  * Queues are deliberately left alone: a queue already retains its messages for a consumer that is
  * not there.
+ *
+ * <p>
+ * Pinned in the per-listener connection mode, where the client id is the subscription's own;
+ * {@link ListenerClassConsumerSharedConnectionTest} covers the shared mode's durable identity.
  */
 class ListenerClassConsumerDurabilityTest {
 
@@ -134,7 +139,7 @@ class ListenerClassConsumerDurabilityTest {
         when(destinationNameManager.toTenantName(anyString())).thenAnswer(invocation -> "acme_" + invocation.getArgument(0));
 
         listenerConsumer = new ListenerClassConsumer(componentContainer, connectionFactory, tenantContext, tenantPropertyManager,
-                defaultTenant, tenantConfigurationService, destinationNameManager);
+                defaultTenant, tenantConfigurationService, destinationNameManager, ListenerConnectionMode.PER_LISTENER);
     }
 
     private void load(Class<?> handlerType, Object instance) {

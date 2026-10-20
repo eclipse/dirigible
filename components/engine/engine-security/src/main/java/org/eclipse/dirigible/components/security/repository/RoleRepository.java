@@ -33,4 +33,13 @@ public interface RoleRepository extends ArtefactRepository<Role, Long> {
     @Transactional
     @Query(value = "UPDATE Role SET running = :running")
     void setRunningToAll(@Param("running") boolean running);
+
+    /**
+     * Whether a role of the given name is registered - by any project, since the same name may be
+     * declared by several.
+     *
+     * @param name the role name, matched exactly
+     * @return true if at least one role carries the name
+     */
+    boolean existsByName(String name);
 }

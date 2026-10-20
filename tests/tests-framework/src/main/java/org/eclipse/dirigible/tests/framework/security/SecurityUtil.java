@@ -43,7 +43,10 @@ public class SecurityUtil {
         if (roleService.roleExistsByName(roleName)) {
             return;
         }
-        Role role = new Role("TEST", roleName, "Created by an integration test");
+        // No .roles file stands behind this row, so the synchronization pass deletes it - and the
+        // assignments with it - unless its location is one RolesSynchronizer preserves. With the
+        // first scheduled pass racing the first test (#7868) that pass reaped it mid-test.
+        Role role = new Role("SYSTEM_TEST", roleName, "Created by an integration test");
         role.setPhase(org.eclipse.dirigible.components.base.artefact.ArtefactPhase.CREATE);
         role.updateKey();
         roleService.save(role);

@@ -93,6 +93,11 @@
                     </button>
                   </li>
                   <li x-h-sidebar-menu-item>
+                    <button id="shell-nav-issues" x-h-sidebar-menu-nav :data-active="isActive('/issues')" @click="navigate('/issues')">
+                      <svg role="presentation" x-h-lucide data-lucide="message-square-warning"></svg><span x-text="T('application-core:shell.nav.issues', 'Issues')"></span>
+                    </button>
+                  </li>
+                  <li x-h-sidebar-menu-item>
                     <button x-h-sidebar-menu-nav :data-active="isActive('/documents')" @click="navigate('/documents')">
                       <svg role="presentation" x-h-lucide data-lucide="folder"></svg><span x-text="T('application-core:shell.nav.documents', 'Documents')"></span>
                     </button>
@@ -166,15 +171,16 @@
 #set($hasSettings = false)
 #foreach($entity in $models)#if($entity.type == "SETTING")#set($hasSettings = true)#end#end
           <!-- Settings pinned to the sidebar footer (bottom-left), like codbex-athena-app. Always emitted:
-               a model without SETTING entities still offers Settings to a tenant owner, for the platform's
-               Users section (#7498) - the entry then shows only while that section is offered. -->
+               a model without SETTING entities still offers Settings for the platform's own sections - Users
+               (#7498) for a tenant owner, Print Templates (#7755) for whoever may select the layout a document
+               prints with - so the entry then shows only while one of them is offered. -->
           <div x-h-sidebar-footer data-borderless="true">
             <nav :aria-label="T('application-core:shell.nav.settings', 'Settings')">
               <ul x-h-sidebar-menu>
 #if($hasSettings)
                 <li x-h-sidebar-menu-item>
 #else
-                <li x-h-sidebar-menu-item x-show="$store.tenantUsers && $store.tenantUsers.visible" x-cloak>
+                <li x-h-sidebar-menu-item x-show="($store.tenantUsers && $store.tenantUsers.visible) || ($store.printTemplates && $store.printTemplates.visible)" x-cloak>
 #end
                   <button x-h-sidebar-menu-nav :data-active="isActive('/settings')" @click="navigate('/settings')">
                     <svg role="presentation" x-h-lucide data-lucide="settings"></svg><span x-text="T('application-core:shell.nav.settings', 'Settings')"></span>
@@ -286,6 +292,10 @@
               <div x-h-menu-label>
                 <span x-text="$store.currentUser.name || T('application-core:shell.user.user', 'User')"></span>
               </div>
+              <div x-h-menu-separator></div>
+              <li x-h-menu-item id="user-menu-report-issue" @click="$store.issues.report()">
+                <svg role="presentation" x-h-lucide data-lucide="message-square-warning"></svg> <span x-text="T('application-core:shell.user.reportIssue', 'Report an issue')"></span>
+              </li>
               <div x-h-menu-separator></div>
               <li x-h-menu-item data-variant="negative" @click="$store.currentUser.logout()">
                 <svg role="presentation" x-h-lucide data-lucide="log-out"></svg> <span x-text="T('application-core:shell.user.logout', 'Log out')"></span>
@@ -427,6 +437,9 @@
 
     <!-- App-wide transient toasts. Any component/form/glue raises one through Harmonia's
          notifications magic with the 'toast' template below (data: message + variant). -->
+    <!-- "Report an issue" (#7948): the ONE dialog the shared `issues` store renders (shell/views/_report-issue.html). -->
+    <div x-html="$store.issues.markup"></div>
+
     <section x-h-notification-overlay>
       <template id="toast">
         <li x-h-notification.floating data-variant="toast" class="hbox items-center gap-3 min-w-3xs max-w-md">
@@ -454,6 +467,7 @@
     <template x-route="/dashboard" x-template.target.app="./views/_dashboard.html"></template>
     <!-- Built-in shell sections (always present): Process Inbox + Documents. -->
     <template x-route="/inbox" x-template.target.app="/services/web/application-core/shell/views/_inbox.html"></template>
+    <template x-route="/issues" x-template.target.app="/services/web/application-core/shell/views/_issues.html"></template>
     <template x-route="/documents" x-template.target.app="/services/web/application-core/shell/views/_documents.html"></template>
     <!-- Settings landing: the platform preferences, the Users section for a tenant owner, and the
          setting entities (each still has its own CRUD route below). Always routed. -->
@@ -620,13 +634,16 @@
     <script src="/services/web/application-core/shell/js/components/pages/basePage.js" defer></script>
     <script src="/services/web/application-core/shell/js/components/pages/baseFormPage.js" defer></script>
     <script src="/services/web/application-core/shell/js/components/detailPanel.js" defer></script>
+    <script src="/services/web/application-core/shell/js/components/printActions.js" defer></script>
     <script src="/services/web/application-core/shell/js/components/relatedPanel.js" defer></script>
     <script src="/services/web/application-core/shell/js/stores/processTasks.js" defer></script>
     <script src="/services/web/application-core/shell/js/stores/customActions.js" defer></script>
     <script src="/services/web/application-core/shell/js/stores/reports.js" defer></script>
     <script src="/services/web/application-core/shell/js/stores/currentUser.js" defer></script>
     <script src="/services/web/application-core/shell/js/stores/tenant.js" defer></script>
+    <script src="/services/web/application-core/shell/js/stores/issues.js" defer></script>
     <script src="/services/web/application-core/shell/js/stores/tenantUsers.js" defer></script>
+    <script src="/services/web/application-core/shell/js/stores/printTemplates.js" defer></script>
     <script src="/services/web/application-core/shell/js/stores/notifications.js" defer></script>
     <script src="/services/web/application-core/shell/js/stores/theme.js" defer></script>
     <script src="/services/web/application-core/shell/js/stores/locale.js" defer></script>

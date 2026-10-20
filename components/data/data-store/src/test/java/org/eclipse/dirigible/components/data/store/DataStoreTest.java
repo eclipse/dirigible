@@ -34,6 +34,7 @@ import org.eclipse.dirigible.components.data.store.config.CurrentTenantIdentifie
 import org.eclipse.dirigible.components.data.store.config.MultiTenantConnectionProviderImpl;
 import org.eclipse.dirigible.components.database.DirigibleDataSource;
 import org.eclipse.dirigible.components.initializers.SynchronousSpringEventsConfig;
+import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -95,7 +96,12 @@ public class DataStoreTest {
     @BeforeAll
     public void setup() throws Exception {
         Configuration.set("DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT", "StoreDB");
-        DataSource datasource = new DataSource("/test/StoreDB.datasource", "StoreDB", "", "org.h2.Driver", "jdbc:h2:~/StoreDB", "sa", "");
+        // this runs outside the test transactions, so an earlier run's StoreDB stays in the file-backed
+        // SystemDB and saving it again violates its unique key
+        datasourceRepository.findByName("StoreDB")
+                            .ifPresent(datasourceRepository::delete);
+        DataSource datasource = new DataSource("/test/StoreDB.datasource", "StoreDB", "", "org.h2.Driver",
+                "jdbc:h2:mem:StoreDB;DB_CLOSE_DELAY=-1", "sa", "");
         datasourceRepository.save(datasource);
         dataSource = datasourcesManager.getDataSource("StoreDB");
         assertNotNull(dataSource);
@@ -542,6 +548,28 @@ public class DataStoreTest {
         } finally {
             cleanupCustomers();
         }
+    }
+
+    /**
+     * A session factory left open stays in Hibernate's static registry and keeps the Spring context
+     * reachable after it is closed (#7868).
+     */
+    @Test
+    public void recreateAndDestroyCloseTheFactoriesTheyRelease() {
+        SessionFactory replaced = dataStore.getSessionFactory();
+        dataStore.incrementCounter();
+        dataStore.recreate();
+        SessionFactory current = dataStore.getSessionFactory();
+
+        assertThat(replaced.isClosed()).isTrue();
+        assertThat(current.isClosed()).isFalse();
+
+        dataStore.destroy();
+
+        assertThat(current.isClosed()).isTrue();
+        // rebuilt on demand, so the other tests of this class still have a store
+        assertThat(dataStore.getSessionFactory()
+                            .isClosed()).isFalse();
     }
 
     static Optional<JsonElement> parseOptionalJson(String json) {

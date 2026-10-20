@@ -46,6 +46,7 @@ import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -56,7 +57,7 @@ import com.google.gson.JsonElement;
  */
 @Component
 @Scope("singleton")
-public class DataStore {
+public class DataStore implements DisposableBean {
 
     /** The Constant LOGGER. */
     private static final Logger logger = LoggerFactory.getLogger(DataStore.class);
@@ -77,8 +78,13 @@ public class DataStore {
     /** The default datasource. */
     private final DataSource dataSource;
 
-    /** the session factory. */
-    private SessionFactory sessionFactory;
+    /**
+     * The session factory. Every factory that is not closed stays in Hibernate's static
+     * {@code SessionFactoryRegistry}, and through the connection provider it keeps the whole Spring
+     * context reachable - so a replaced one is closed in {@link #recreate()} and the last one in
+     * {@link #destroy()}.
+     */
+    private volatile SessionFactory sessionFactory;
 
     /**
      * Instantiates a new object store.
@@ -212,11 +218,35 @@ public class DataStore {
 
         StandardServiceRegistry serviceRegistry = serviceRegistryBuilder.build();
 
+        SessionFactory previous = sessionFactory;
         sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+        // closed after the swap, as JavaEntityManager does: no caller keeps a session open across a
+        // synchronization pass
+        close(previous, "replaced");
 
         logger.info("Processed {} changes in mappings", getCounter());
 
         resetCounter();
+    }
+
+    /**
+     * Closes the session factory on shutdown.
+     */
+    @Override
+    public synchronized void destroy() {
+        close(sessionFactory, "current");
+        sessionFactory = null;
+    }
+
+    private static void close(SessionFactory factory, String role) {
+        if (factory == null) {
+            return;
+        }
+        try {
+            factory.close();
+        } catch (RuntimeException ex) {
+            logger.warn("Failed to close the {} session factory", role, ex);
+        }
     }
 
     /**

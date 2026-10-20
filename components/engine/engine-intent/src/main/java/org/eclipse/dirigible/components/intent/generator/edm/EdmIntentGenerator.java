@@ -31,6 +31,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.intent.LoggedValue;
+import org.eclipse.dirigible.components.intent.generator.ExportSupport;
+import org.eclipse.dirigible.components.intent.generator.ImportSupport;
 import org.eclipse.dirigible.components.intent.generator.IntentEntities;
 import org.eclipse.dirigible.components.intent.generator.IntentGenerationContext;
 import org.eclipse.dirigible.components.intent.generator.CheckSupport;
@@ -196,6 +198,8 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
         Map<String, String> compositionParents = computeCompositionParents(entities);
         Set<String> settingEntities = settingEntities(entities);
         Set<String> triggerTargets = TriggerSupport.triggerTargetEntities(model);
+        // The entities declared exports record their runs on (#7855): their columns are injected below.
+        Set<String> exportLedgers = ExportSupport.ledgerEntities(model);
         Map<String, List<String>> displacedStatuses = displacedStatusProperties(model, byName);
         // The status ids a button or a workflow step moves each entity to - what an ungated, status-
         // conditioned requiredWhen takes its gate from (#7595), read through the same rule the BPMN
@@ -233,6 +237,7 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
         // which nothing else in the intent mentions. Every gate, either kind, also admits the roles the
         // project's .settings append for the deployment (access.extraRoles).
         PermissionSupport.Gates gates = PermissionSupport.gates(model, settings);
+        Set<String> importTargets = ImportSupport.targets(model);
         int perspectiveOrder = 1;
 
         for (EntityIntent entity : entities) {
@@ -461,6 +466,12 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
             if (entity.isHistorized()) {
                 entityMap.put("history", "true");
             }
+            // importLedger: a file import writes this entity's rows, and every attempt - imported,
+            // refused as a duplicate, rejected - is recorded in a sibling <TABLE>_IMPORTS table the
+            // schema template generates and the generated import appends to.
+            if (importTargets.contains(name)) {
+                entityMap.put("importLedger", "true");
+            }
             // dropped (#7635): the columns of former fields and relations a publish removes, data
             // included. A field simply deleted from the intent keeps its column and its values; this
             // list is the explicit contract step. Comma-separated, so it survives the scalar-only .edm.
@@ -483,6 +494,15 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
                 if (entity.isSnapshot()) {
                     entityMap.put("attachmentReadOnly", "true");
                 }
+            }
+            // An export ledger stores each run's file the way a snapshot stores its copy - written by the
+            // generated export, never uploaded - so it takes the same read-only download surface, and it
+            // is append-only: a run record is the evidence of what was filed, not an editable row.
+            boolean exportLedger = exportLedgers.contains(name);
+            if (exportLedger) {
+                entityMap.put("attachmentEntity", "true");
+                entityMap.put("attachmentReadOnly", "true");
+                entityMap.put("immutableAlways", "true");
             }
             // A child collection that does NOT freeze with its master. The master's immutability locks
             // the document's own content; this child is a different entity with its own controller,
@@ -524,9 +544,9 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
             // A file-child (function: Attachment or Snapshot) is a first-class entity, but the author
             // declares no fields at all (the file-metadata columns are injected below), so synthesize
             // the generated integer primary key it still needs.
-            if (entity.isFileChild() && entity.getFields()
-                                              .stream()
-                                              .noneMatch(FieldIntent::isPrimaryKey)) {
+            if ((entity.isFileChild() || exportLedger) && entity.getFields()
+                                                                .stream()
+                                                                .noneMatch(FieldIntent::isPrimaryKey)) {
                 FieldIntent id = new FieldIntent();
                 id.setName("id");
                 id.setType("integer");
@@ -574,6 +594,13 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
                 if (entity.isSnapshot()) {
                     properties.add(versionProperty(name));
                 }
+                audited = true;
+            }
+            // An export ledger: what ran, with which inputs, how it ended, and the file it produced.
+            // Implicitly audited, so every run says who started it and when.
+            if (exportLedger) {
+                properties.addAll(exportLedgerProperties(name));
+                properties.addAll(attachmentProperties(name));
                 audited = true;
             }
             // The four standard audit columns, populated by the platform's audit annotations downstream.
@@ -702,6 +729,7 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
             putProcessDeleteGuards(entityMap, entity, model);
             putWorkflowStatus(entityMap, entity, model, displacedStatuses);
             putLifecycle(entityMap, entity, model);
+            putStatusStamps(entityMap, entity);
             if (entity.getHierarchy() != null && !entity.getHierarchy()
                                                         .isBlank()) {
                 // The tree edge: the FK property of the entity's self-relation named by `hierarchy`.
@@ -1231,20 +1259,18 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
         entity.put("perspectiveRole", "");
         entity.put("generateReport", "false");
         String conventionRead = projectName + "." + rolePerspective + "." + name + "ReadOnly";
-        String conventionWrite = projectName + "." + rolePerspective + "." + name + "FullAccess";
         // A composition child is managed under its master, so it is gated by the master's grants when
         // it carries none of its own - otherwise granting write on a document would not extend to its
         // line items and the generated app would refuse the very edits the grant describes.
         String gateName = gates.covers(name) ? name : rolePerspective;
         boolean covered = gates.covers(gateName);
         String authoredRead = covered ? gates.readRoles(gateName) : null;
-        String authoredWrite = covered ? gates.writeRoles(gateName) : null;
         entity.put("generateDefaultRoles", covered ? "false" : "true");
         // The deployment's extra roles (.settings access.extraRoles) are appended AFTER the gate's own
         // roles and never suppress them: a convention gate keeps its roles declared (the template layer
         // declares a gate's first role), so assignments made in the Security perspective keep working.
         entity.put("roleRead", gates.appendRead(authoredRead != null ? authoredRead : conventionRead));
-        entity.put("roleWrite", gates.appendWrite(authoredWrite != null ? authoredWrite : conventionWrite));
+        entity.put("roleWrite", gates.writeGate(projectName, rolePerspective, name));
         return entity;
     }
 
@@ -1451,8 +1477,10 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
         p.put("dataType", dataType);
         p.put("dataNullable", field.isRequired() || field.isPrimaryKey() ? "false" : "true");
         // Read-only in generated forms (rendered in the read-only details block, not an editable input):
-        // an author-marked field, or a uuid (a system/business key, not user input).
-        if (field.isReadOnly() || "uuid".equalsIgnoreCase(field.getType())) {
+        // an author-marked field, a uuid (a system/business key, not user input), or a status stamp
+        // (#7874), which the repository writes on the status move - the same flag is what drops it from
+        // a REST create and keeps the stored value on a full update.
+        if (field.isReadOnly() || "uuid".equalsIgnoreCase(field.getType()) || field.getStampOn() != null) {
             p.put("isReadOnlyProperty", "true");
         }
         // A uuid field is platform-generated: the generated repository assigns a random UUID on create
@@ -3143,11 +3171,12 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
 
     /**
      * Whether a declared system writer owns this entity's WHOLE status column: a
-     * {@code setRelationField} step of a process THIS entity triggers, or a capacity roll-up's
-     * {@code status:} (the entity is the roll-up's LOCAL parent). A {@code transitions:} button owns
-     * only the values it sets ({@link #transitionTargets}). The state machine, {@code lifecycle:}, is
-     * unaffected either way - it is enforced in the repository, which every one of these writers still
-     * reaches.
+     * {@code setRelationField} step of a process THIS entity triggers, a one-hop
+     * {@code setRelationField: <relation>.<status>} step of a process another entity triggers, or a
+     * capacity roll-up's {@code status:} (the entity is the roll-up's LOCAL parent). A
+     * {@code transitions:} button owns only the values it sets ({@link #transitionTargets}). The state
+     * machine, {@code lifecycle:}, is unaffected either way - it is enforced in the repository, which
+     * every one of these writers still reaches.
      *
      * @param entity the authored entity
      * @param status its {@code function: EntityStatus} relation
@@ -3171,6 +3200,15 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
                                                                                            .trim()))) {
                     return true;
                 }
+            }
+        }
+        // A step of ANOTHER entity's flow writes it too when it moves this status one hop away (#7934):
+        // `setRelationField: order.Status` in an approval request's process owns the order's status.
+        for (SetFieldSupport.Setter setter : SetFieldSupport.setters(model)) {
+            if (setter.via() != null && setter.relation() && entity.getName()
+                                                                   .equals(setter.targetEntity())
+                    && statusProperty.equals(setter.field())) {
+                return true;
             }
         }
         return rollupOwnedStatuses.getOrDefault(entity.getName(), List.of())
@@ -3243,6 +3281,41 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
             ids.add(matcher.group(1));
         }
         return String.join(",", ids);
+    }
+
+    /**
+     * The status stamps ({@code stampOn: { status }}, #7874) the generated repository applies on every
+     * write that moves the record INTO a stamped status: {@code statusStamps} lists one {@code {
+     * property, statusId, nowExpression }} per stamped field and {@code statusStampProperty} names the
+     * status property the moves are read off. Both are absent when no field stamps, so a model without
+     * the key generates byte-identically. The status id travels as a string: the parameter graph types
+     * every JSON number as a {@code Double}, which would render as {@code 2.0}.
+     */
+    private static void putStatusStamps(Map<String, Object> entityMap, EntityIntent entity) {
+        RelationIntent status = entityStatusRelation(entity);
+        if (status == null) {
+            return; // the parser already refused a stamp without a status relation
+        }
+        List<Map<String, Object>> stamps = new ArrayList<>();
+        for (FieldIntent field : entity.getFields()) {
+            String nowExpression = SetFieldSupport.nowExpression(field.getType());
+            if (field.getStampOn() == null || field.getStampOn()
+                                                   .getStatus() == null
+                    || nowExpression == null) {
+                continue;
+            }
+            Map<String, Object> stamp = new LinkedHashMap<>();
+            stamp.put("property", IntentNaming.pascalCase(field.getName()));
+            stamp.put("statusId", String.valueOf(field.getStampOn()
+                                                      .getStatus()));
+            stamp.put("nowExpression", nowExpression);
+            stamps.add(stamp);
+        }
+        if (stamps.isEmpty()) {
+            return;
+        }
+        entityMap.put("statusStampProperty", IntentNaming.pascalCase(status.getName()));
+        entityMap.put("statusStamps", stamps);
     }
 
     private static void putLifecycle(Map<String, Object> entityMap, EntityIntent entity, IntentModel model) {
@@ -3833,6 +3906,23 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
         p.put("widgetLength", length > 0 ? Integer.toString(length) : "20");
         p.put("widgetIsMajor", major ? "true" : "false");
         return p;
+    }
+
+    /**
+     * The run columns injected into an export ledger (#7855), ahead of the stored file's metadata. The
+     * generated export sets every one of them, so all are read-only; the list shows which export ran,
+     * how it ended and how many rows it wrote.
+     */
+    private static List<Map<String, Object>> exportLedgerProperties(String entityName) {
+        List<Map<String, Object>> props = new ArrayList<>();
+        props.add(attachmentProperty(entityName, "Export", "VARCHAR", 128, true));
+        props.add(attachmentProperty(entityName, "Format", "VARCHAR", 32, false));
+        props.add(attachmentProperty(entityName, "Parameters", "VARCHAR", 4000, false));
+        props.add(attachmentProperty(entityName, "Outcome", "VARCHAR", 16, true));
+        props.add(attachmentProperty(entityName, "RecordCount", "INTEGER", 0, true));
+        props.add(attachmentProperty(entityName, "Checksum", "VARCHAR", 64, false));
+        props.add(attachmentProperty(entityName, "ErrorMessage", "VARCHAR", 2000, false));
+        return props;
     }
 
     /**

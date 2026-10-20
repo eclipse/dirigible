@@ -15,6 +15,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +34,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.WebDriverConditions;
 
 /**
  * The generated slots page ({@code view: slots}) offers its open/close/step schedule on every day
@@ -39,6 +43,11 @@ import com.codeborne.selenide.Selenide;
  * with {@code fillEmptyDays}, and since Harmonia 3.6.0 (codbex/harmonia#144) an empty {@code slots}
  * array is an empty schedule rather than no configuration at all. Without the option a booking
  * entity offered no free slot until something was booked, and afterwards only on the booked days.
+ *
+ * <p>
+ * A booked slot stays clickable and opens its booking (#7837). Harmonia renders such a slot as a
+ * plain button rather than an {@code aria-disabled} one, so the page marks it {@code data-booking}
+ * (#7919).
  *
  * <p>
  * This needs a real browser because the schedule is laid out by Harmonia from the config the page
@@ -77,8 +86,9 @@ class SlotPickerHarmoniaIT extends UserInterfaceIntegrationTest {
 
     /**
      * The picker's day columns and slots: a first line {@code columns=<n>}, then one line per day that
-     * renders any slot, {@code <date> free=<starts> taken=<starts>} in date order. A free slot is a
-     * button, a taken one carries {@code aria-disabled}; a day with no slot at all has no line.
+     * renders any slot, {@code <date> free=<starts> taken=<starts>} in date order. A taken slot carries
+     * {@code aria-disabled} or, when it is a booking that opens on click, {@code data-booking}; every
+     * other slot is free. A day with no slot at all has no line.
      */
     private static final String SLOT_DAYS = """
             var picker = document.querySelector('[data-slot=slot-picker]');
@@ -87,7 +97,8 @@ class SlotPickerHarmoniaIT extends UserInterfaceIntegrationTest {
             picker.querySelectorAll('[data-slot=slot-picker-cell]').forEach(function (cell) {
               var date = cell.getAttribute('data-date');
               var day = days[date] = days[date] || { free: [], taken: [] };
-              (cell.getAttribute('aria-disabled') === 'true' ? day.taken : day.free).push(cell.getAttribute('data-start'));
+              var taken = cell.getAttribute('aria-disabled') === 'true' || cell.hasAttribute('data-booking');
+              (taken ? day.taken : day.free).push(cell.getAttribute('data-start'));
             });
             var lines = ['columns=' + picker.querySelectorAll('[data-slot=slot-picker-header]').length];
             Object.keys(days).sort().forEach(function (date) {
@@ -118,15 +129,26 @@ class SlotPickerHarmoniaIT extends UserInterfaceIntegrationTest {
         assertTrue(showsSchedule(summary, null),
                 "with nothing booked every visible day must offer the whole schedule, the picker shows:\n" + summary);
 
-        // One booking on the first visible day. The instant is UTC, as the page reads it back.
+        // One booking at 10:00 on the first visible day. The page places a booking in the browser's
+        // local time, and the browser runs on this machine, so the instant is 10:00 in its zone.
         String bookedDate = slotDays(summary).keySet()
                                              .iterator()
                                              .next();
-        book(bookedDate + "T10:00:00Z");
+        int bookingId = book(LocalDate.parse(bookedDate)
+                                      .atTime(10, 0)
+                                      .atZone(ZoneId.systemDefault())
+                                      .toInstant()
+                                      .toString());
         Selenide.refresh();
         summary = poll(current -> showsSchedule(current, bookedDate));
         assertTrue(showsSchedule(summary, bookedDate),
                 "a booking on " + bookedDate + " must take its own slot and leave every other day bookable, the picker shows:\n" + summary);
+
+        // The taken slot is the booking's way in: a click opens it.
+        Selenide.$("[data-slot=slot-picker-cell][data-booking='" + bookingId + "']")
+                .click();
+        Selenide.webdriver()
+                .shouldHave(WebDriverConditions.urlContaining("/Appointment/" + bookingId + "/edit"), Duration.ofSeconds(30));
     }
 
     /**
@@ -175,13 +197,17 @@ class SlotPickerHarmoniaIT extends UserInterfaceIntegrationTest {
         return value == null ? "" : value;
     }
 
-    private void book(String startsAt) {
-        restAssuredExecutor.execute(() -> given().contentType("application/json")
-                                                 .body("{\"StartsAt\":\"" + startsAt + "\",\"Title\":\"Booked\"}")
-                                                 .when()
-                                                 .post(API)
-                                                 .then()
-                                                 .statusCode(200));
+    private int book(String startsAt) {
+        AtomicReference<Integer> id = new AtomicReference<>();
+        restAssuredExecutor.execute(() -> id.set(given().contentType("application/json")
+                                                        .body("{\"StartsAt\":\"" + startsAt + "\",\"Title\":\"Booked\"}")
+                                                        .when()
+                                                        .post(API)
+                                                        .then()
+                                                        .statusCode(200)
+                                                        .extract()
+                                                        .path("Id")));
+        return id.get();
     }
 
     private void generateAndPublish() {

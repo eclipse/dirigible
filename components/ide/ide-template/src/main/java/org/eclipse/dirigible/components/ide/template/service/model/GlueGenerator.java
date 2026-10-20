@@ -51,9 +51,9 @@ class GlueGenerator {
     /** The names of the collections this generator handles. */
     private static final List<String> COLLECTIONS = List.of("triggers", "resolvers", "fieldLoaders", "assignees", "timerLoaders", "waits",
             "aborts", "deleteAborts", "setters", "writers", "notifications", "schedules", "integrations", "inbound", "inboundMessages",
-            "inboundFiles", "outbound", "stepEvents", "rollups", "expansions", "expansionCleanups", "settlements", "settlementListeners",
-            "settlementCleanups", "generates", "generateEvents", "generateReopens", "transitions", "sends", "posts", "aggregates",
-            "postings", "postingReopens", "printFeeders", "snapshots", "numbering", "resolves");
+            "inboundFiles", "imports", "outbound", "exports", "stepEvents", "rollups", "expansions", "expansionCleanups", "settlements",
+            "settlementListeners", "settlementCleanups", "generates", "generateEvents", "generateReopens", "transitions", "sends", "posts",
+            "aggregates", "postings", "postingReopens", "printFeeders", "snapshots", "numbering", "resolves");
 
     /** The renderer. */
     private final ModelTemplateRenderer renderer;
@@ -107,7 +107,9 @@ class GlueGenerator {
             case "inbound" -> each(collection, source, content, model, parameters, GlueGenerator::bindInbound);
             case "inboundMessages" -> each(collection, source, content, model, parameters, GlueGenerator::bindInboundMessage);
             case "inboundFiles" -> each(collection, source, content, model, parameters, GlueGenerator::bindInboundFile);
+            case "imports" -> each(collection, source, content, model, parameters, GlueGenerator::bindImport);
             case "outbound" -> each(collection, source, content, model, parameters, GlueGenerator::bindOutbound);
+            case "exports" -> each(collection, source, content, model, parameters, GlueGenerator::bindExport);
             case "stepEvents" -> each(collection, source, content, model, parameters, GlueGenerator::bindStepEvent);
             case "expansions" -> each(collection, source, content, model, parameters, GlueGenerator::bindExpansion);
             case "expansionCleanups" -> each(collection, source, content, model, parameters, GlueGenerator::bindExpansionCleanup);
@@ -362,9 +364,13 @@ class GlueGenerator {
      */
     private static void bindSetter(Map<String, Object> item, Map<String, Object> context, Map<String, Object> parameters) {
         copy(context, item, "process", "className", "entity", "perspective", "keyProperty", "keyAccessor", "field", "value", "relation",
-                "clear", "errorMessage");
+                "clear", "errorMessage", "now", "nowExpression", "via", "targetEntity", "targetPerspective", "targetKeyAccessor");
         copyJavaLiterals(context, item, "value");
         context.put("javaPerspective", sanitize(item, "perspective"));
+        // A one-hop setter (#7934) writes through its target's repository, in the target's package.
+        if (item.containsKey("targetPerspective")) {
+            context.put("javaTargetPerspective", sanitize(item, "targetPerspective"));
+        }
     }
 
     /**
@@ -387,9 +393,9 @@ class GlueGenerator {
      * @param parameters the generation parameters
      */
     private static void bindNotification(Map<String, Object> item, Map<String, Object> context, Map<String, Object> parameters) {
-        copy(context, item, "name", "className", "entity", "perspective", "topicSuffix", "toExpression", "subjectExpression",
-                "bodyExpression", "htmlExpression", "attachKeyProperty", "attach", "attachEntity", "attachLanguageFkProperty",
-                "attachLanguageTargetEntity", "attachReport");
+        copy(context, item, "name", "className", "entity", "perspective", "topicSuffix", "toExpression", "ccExpression", "bccExpression",
+                "subjectExpression", "bodyExpression", "htmlExpression", "attachKeyProperty", "attach", "attachEntity",
+                "attachLanguageFkProperty", "attachLanguageTargetEntity", "attachReport");
         bindEventGuard(context, item);
         context.put("javaPerspective", sanitize(item, "perspective"));
         context.put("relationLoads", relationLoads(item.get("relationLoads"), parameters));
@@ -413,9 +419,9 @@ class GlueGenerator {
         // job renders exactly what it always did.
         boolean generates = item.containsKey("generates") ? truthy(item, "generates") : "generate".equals(str(item, "action"));
         boolean notifies = item.containsKey("notifies") ? truthy(item, "notifies") : !"generate".equals(str(item, "action"));
-        copy(context, item, "name", "className", "cron", "entity", "perspective", "toExpression", "subjectExpression", "bodyExpression",
-                "htmlExpression", "attachKeyProperty", "attach", "attachEntity", "attachLanguageFkProperty", "attachLanguageTargetEntity",
-                "attachReport", "genToEntity", "genToPk",
+        copy(context, item, "name", "className", "cron", "entity", "perspective", "toExpression", "ccExpression", "bccExpression",
+                "subjectExpression", "bodyExpression", "htmlExpression", "attachKeyProperty", "attach", "attachEntity",
+                "attachLanguageFkProperty", "attachLanguageTargetEntity", "attachReport", "genToEntity", "genToPk",
                 // The scheduled generation's natural key (issue #7070). Absent on a .glue written
                 // before it existed, which `copy` turns into an absent context key - so the guard's
                 // `#if` is false and such a job renders byte-identically to what it always did.
@@ -553,6 +559,174 @@ class GlueGenerator {
         copyJavaLiterals(context, item, "cron");
         context.put("javaPerspective", sanitize(item, "perspective"));
         bindArrival(item, context);
+    }
+
+    /**
+     * Binds a declared export (#7855) - the controller whose download runs it, which is also the bean a
+     * job or custom code calls. The descriptor carries facts and readings; this is where they become
+     * Java: the SDK {@code ExportFile} factory for the format, one {@code ExportField} layout constant
+     * per record, the value expression of every field and total, and the conversion of every filter.
+     *
+     * @param item the descriptor
+     * @param context the template context
+     * @param parameters the generation parameters
+     */
+    private static void bindExport(Map<String, Object> item, Map<String, Object> context, Map<String, Object> parameters) {
+        copy(context, item, "name", "className", "format", "ledger", "sourceKind", "entity", "report", "orderBy");
+        context.put("nameJavaLiteral", JavaLiterals.escape(str(item, "name")));
+        context.put("javaLedgerPerspective", sanitize(item, "ledgerPerspective"));
+        boolean report = "report".equals(str(item, "sourceKind"));
+        context.put("reportSource", report);
+        if (report) {
+            context.put("reportGenFolder", NamingHelper.sanitizeJavaIdentifier(str(item, "report")));
+            context.put("reportPerspective", NamingHelper.sanitizeJavaIdentifier(REPORT_PERSPECTIVE));
+        } else {
+            context.put("javaPerspective", sanitize(item, "perspective"));
+        }
+        context.put("fileFactory", exportFileFactory(item));
+        List<Object> exportParameters = new ArrayList<>();
+        for (Map<String, Object> declared : asMaps(item.get("parameters"))) {
+            Map<String, Object> parameter = ModelValues.copy(declared);
+            parameter.put("nameJavaLiteral", JavaLiterals.escape(str(declared, "name")));
+            if (declared.containsKey("convert")) {
+                parameter.put("convertExpression", JavaExpressions.expression(declared.get("convert")));
+            }
+            exportParameters.add(parameter);
+        }
+        context.put("exportParameters", exportParameters);
+        List<Object> loads = relationLoads(item.get("loads"), parameters);
+        context.put("loads", loads);
+        context.put("hasLoads", !loads.isEmpty());
+        for (String records : List.of("headerRecords", "lineRecords", "trailerRecords")) {
+            List<Object> bound = new ArrayList<>();
+            for (Map<String, Object> declared : asMaps(item.get(records))) {
+                Map<String, Object> record = new LinkedHashMap<>();
+                record.put("constant", str(declared, "constant"));
+                record.put("elementJavaLiteral", JavaLiterals.escape(str(declared, "element")));
+                List<Object> fields = new ArrayList<>();
+                for (Map<String, Object> field : asMaps(declared.get("fields"))) {
+                    Map<String, Object> boundField = new LinkedHashMap<>();
+                    boundField.put("specExpression", exportFieldSpec(field));
+                    boundField.put("valueExpression", JavaExpressions.qualifiedExpression(field.get("reading")));
+                    fields.add(boundField);
+                }
+                record.put("fields", fields);
+                bound.add(record);
+            }
+            context.put(records, bound);
+        }
+        List<Object> aggregates = new ArrayList<>();
+        for (Map<String, Object> declared : asMaps(item.get("aggregates"))) {
+            Map<String, Object> aggregate = new LinkedHashMap<>();
+            aggregate.put("local", str(declared, "local"));
+            aggregate.put("sum", "sum".equals(str(declared, "kind")));
+            if (declared.containsKey("reading")) {
+                aggregate.put("valueExpression", JavaExpressions.qualifiedExpression(declared.get("reading")));
+            }
+            aggregates.add(aggregate);
+        }
+        context.put("aggregates", aggregates);
+        context.put("fileNameExpression", JavaExpressions.qualifiedExpression(item.get("fileNameReading")));
+        String roles = str(item, "roles");
+        List<String> quotedRoles = new ArrayList<>();
+        if (roles != null) {
+            for (String role : roles.split(",")) {
+                if (!role.isBlank()) {
+                    quotedRoles.add(javaString(role.trim()));
+                }
+            }
+        }
+        context.put("rolesAnnotation", quotedRoles.isEmpty() ? "" : "@Roles({" + String.join(", ", quotedRoles) + "})");
+    }
+
+    /** The SDK {@code ExportFile} factory call a descriptor's format and its options spell. */
+    private static String exportFileFactory(Map<String, Object> item) {
+        String encoding = javaString(str(item, "encoding"));
+        return switch (strOr(item, "format", "")) {
+            case "delimited" -> "ExportFile.delimited(" + encoding + ", " + javaString(str(item, "lineEnding")) + ", "
+                    + javaString(str(item, "delimiter")) + ", " + javaString(str(item, "quote")) + ", " + truthy(item, "quoteAll") + ")";
+            case "xml" -> "ExportFile.xml(" + encoding + ", " + javaString(str(item, "root")) + ")";
+            default -> "ExportFile.fixedWidth(" + encoding + ", " + javaString(str(item, "lineEnding")) + ")";
+        };
+    }
+
+    /** One record field's {@code ExportField} layout, as the fluent chain that builds it. */
+    private static String exportFieldSpec(Map<String, Object> field) {
+        StringBuilder spec = new StringBuilder("ExportField.named(").append(javaString(str(field, "name")))
+                                                                    .append(")");
+        if (field.containsKey("width")) {
+            spec.append(".width(")
+                .append(Integer.parseInt(str(field, "width")))
+                .append(")");
+        }
+        if (truthy(field, "alignRight")) {
+            spec.append(".alignRight()");
+        }
+        if (field.containsKey("pad")) {
+            spec.append(".pad('")
+                .append(javaChar(str(field, "pad")))
+                .append("')");
+        }
+        if (truthy(field, "truncate")) {
+            spec.append(".truncate()");
+        }
+        if (field.containsKey("scale")) {
+            spec.append(".scale(")
+                .append(Integer.parseInt(str(field, "scale")))
+                .append(")");
+        }
+        if (field.containsKey("decimalSeparator")) {
+            spec.append(".decimalSeparator(")
+                .append(javaString(str(field, "decimalSeparator")))
+                .append(")");
+        }
+        if (field.containsKey("pattern")) {
+            spec.append(".pattern(")
+                .append(javaString(str(field, "pattern")))
+                .append(")");
+        }
+        if (truthy(field, "attribute")) {
+            spec.append(".attribute()");
+        }
+        return spec.toString();
+    }
+
+    /** A Java string literal. */
+    private static String javaString(String value) {
+        return "\"" + JavaLiterals.escape(value == null ? "" : value) + "\"";
+    }
+
+    /** The body of a Java char literal for one character. */
+    private static String javaChar(String value) {
+        char character = value.charAt(0);
+        return switch (character) {
+            case '\'' -> "\\'";
+            case '\\' -> "\\\\";
+            default -> String.valueOf(character);
+        };
+    }
+
+    /**
+     * Binds a file import - the controller that reads an uploaded file into the rows of an entity, and
+     * the bean method a job calls to import a file it fetched. Its ledger is the entity's {@code
+     *
+    <TABLE>
+     * _IMPORTS} sibling, so the table name carries the deployment's table prefix exactly as the schema
+     * template's does.
+     *
+     * @param item the descriptor
+     * @param context the template context
+     * @param parameters the generation parameters
+     */
+    private static void bindImport(Map<String, Object> item, Map<String, Object> context, Map<String, Object> parameters) {
+        copy(context, item, "name", "nameLiteral", "className", "entity", "perspective", "format", "readerExpression", "valuesExpression",
+                "roles", "mapFields", "hasDuplicateKey", "duplicateKey");
+        context.put("javaPerspective", sanitize(item, "perspective"));
+        String tablePrefix = strOr(parameters, "tablePrefix", "");
+        if (!tablePrefix.isEmpty() && !tablePrefix.endsWith("_")) {
+            tablePrefix = tablePrefix + "_";
+        }
+        context.put("table", tablePrefix + str(item, "table"));
     }
 
     /**
@@ -760,6 +934,13 @@ class GlueGenerator {
         // reference renders as its own literal into a destination nothing ever publishes on. An absent
         // one is the lifecycle suffix that shape implied: none for a create, -transitioned otherwise.
         context.put("topicSuffix", strOr(item, "topicSuffix", truthy(item, "isCreate") ? "" : "-transitioned"));
+        // The role gate of the click (issue #7913): the write gates of the source and the target, each
+        // a comma-separated role list written into a Java string literal. A .glue written before the
+        // keys existed carries neither, and an absent gate renders as an empty one that no caller
+        // satisfies - a run() refused to everyone until the application is regenerated from its intent,
+        // never the ungated one it used to be.
+        context.put("sourceWriteRolesJavaLiteral", JavaLiterals.escape(strOr(item, "sourceWriteRoles", "")));
+        context.put("targetWriteRolesJavaLiteral", JavaLiterals.escape(strOr(item, "targetWriteRoles", "")));
         context.put("fromJavaPerspective", sanitize(item, "fromPerspective"));
         // The SOURCE's gen folder / owning project: this project unless the source belongs to another
         // model (intent `fromUses:`). That is what lets a create-from be authored on the module owning
@@ -801,6 +982,36 @@ class GlueGenerator {
         copy(context, item, "hasLink", "linkEntity", "linkParentFk", "linkTargetFk");
         context.put("linkJavaPerspective", sanitize(item, "linkPerspective"));
         context.put("linkAssignments", asMaps(item.get("linkAssignments")));
+        // A declared reversal (issue #7886): the refusals decided over the original under its row lock,
+        // each rendered from its neutral terms with the message as a Java literal, and the back-link the
+        // original receives. A .glue written before the keys existed carries no booleans and renders the
+        // create-from it always had.
+        copy(context, item, "hasRefusals", "hasBackLink", "backLinkProperty");
+        context.put("refusals", refusals(item.get("refusals")));
+    }
+
+    /**
+     * A reversal's refusals (issue #7886), each its condition over the loaded original and the message
+     * as a Java string literal's content.
+     *
+     * @param raw the declared refusals, may be absent
+     * @return the refusals the template renders
+     */
+    static List<Map<String, Object>> refusals(Object raw) {
+        List<Map<String, Object>> refusals = new ArrayList<>();
+        for (Map<String, Object> declared : asMaps(raw)) {
+            String condition = JavaLiterals.conditionExpression(asMaps(declared.get("terms")));
+            if (condition == null) {
+                // A refusal that does not render must never become no refusal at all - the generator
+                // refuses an unreadable condition, so only a hand-edited .glue reaches this.
+                throw new IllegalArgumentException("A reversal refusal carries no renderable condition: " + declared);
+            }
+            Map<String, Object> refusal = new LinkedHashMap<>();
+            refusal.put("condition", condition);
+            refusal.put("message", JavaLiterals.escape(str(declared, "message")));
+            refusals.add(refusal);
+        }
+        return refusals;
     }
 
     /**
@@ -814,11 +1025,14 @@ class GlueGenerator {
     private static void bindTransition(Map<String, Object> item, Map<String, Object> context, Map<String, Object> parameters) {
         copy(context, item, "name", "className", "entity", "perspective", "attachKeyProperty", "statusProperty", "setStatus", "allowedExpr",
                 "fromStatuses", "guardText", "notify", "forEach", "forEachFkProperty", "forEachKeyProperty", "notifyToExpression",
-                "notifySubjectExpression", "notifyBodyExpression", "notifyHtmlExpression", "notifyRecordScoped", "attach", "attachEntity",
-                "attachLanguageFkProperty", "attachLanguageTargetEntity", "attachReport");
+                "notifyCcExpression", "notifyBccExpression", "notifySubjectExpression", "notifyBodyExpression", "notifyHtmlExpression",
+                "notifyRecordScoped", "attach", "attachEntity", "attachLanguageFkProperty", "attachLanguageTargetEntity", "attachReport");
         // The `when` guard over the loaded source, spelled with the SDK evaluator fully qualified: the
         // transition controller, unlike the posting and create-from handlers, imports no Calc.
         bindExpression(context, item, "guardReading", "guardExpr", true);
+        // The role gate of the click (issue #7913), as for a create-from: a .glue written before the key
+        // existed renders an empty gate that no caller satisfies, never the ungated run() it used to be.
+        context.put("writeRolesJavaLiteral", JavaLiterals.escape(strOr(item, "writeRoles", "")));
         context.put("javaPerspective", sanitize(item, "perspective"));
         context.put("notifyRelationLoads", relationLoads(item.get("notifyRelationLoads"), parameters));
         context.put("javaForEachPerspective", NamingHelper.sanitizeJavaIdentifier(strOr(item, "forEachPerspective", "")));
@@ -837,9 +1051,9 @@ class GlueGenerator {
      */
     private static void bindSend(Map<String, Object> item, Map<String, Object> context, Map<String, Object> parameters) {
         copy(context, item, "process", "step", "className", "entity", "perspective", "keyProperty", "keyAccessor", "forEach",
-                "forEachFkProperty", "forEachKeyProperty", "notifyToExpression", "notifySubjectExpression", "notifyBodyExpression",
-                "notifyHtmlExpression", "notifyRecordScoped", "attachKeyProperty", "attach", "attachEntity", "attachLanguageFkProperty",
-                "attachLanguageTargetEntity", "attachReport");
+                "forEachFkProperty", "forEachKeyProperty", "notifyToExpression", "notifyCcExpression", "notifyBccExpression",
+                "notifyReadsVariables", "notifySubjectExpression", "notifyBodyExpression", "notifyHtmlExpression", "notifyRecordScoped",
+                "attachKeyProperty", "attach", "attachEntity", "attachLanguageFkProperty", "attachLanguageTargetEntity", "attachReport");
         context.put("javaPerspective", sanitize(item, "perspective"));
         context.put("notifyRelationLoads", relationLoads(item.get("notifyRelationLoads"), parameters));
         context.put("javaForEachPerspective", NamingHelper.sanitizeJavaIdentifier(strOr(item, "forEachPerspective", "")));

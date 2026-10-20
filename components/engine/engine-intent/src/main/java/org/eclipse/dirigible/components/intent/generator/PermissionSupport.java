@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.dirigible.components.intent.model.EntityIntent;
+import org.eclipse.dirigible.components.intent.model.ExportIntent;
 import org.eclipse.dirigible.components.intent.model.FormIntent;
 import org.eclipse.dirigible.components.intent.model.IntentModel;
 import org.eclipse.dirigible.components.intent.model.PermissionIntent;
@@ -137,6 +138,24 @@ public final class PermissionSupport {
             return roles;
         }
 
+        /**
+         * The write gate of an entity as every generated surface checks it: the roles a {@code can:} token
+         * authors for the entity (or, for a composition child without its own, for its composition root),
+         * else the convention role {@code <project>.<root>.<Entity>FullAccess} - and the deployment's extra
+         * write roles after either. The entity's REST controller and anything else that writes its rows on
+         * a user's behalf (a file import's upload) must agree on it.
+         *
+         * @param projectName the project the convention role is prefixed with
+         * @param rolePerspective the entity's composition root (the entity itself when it is one)
+         * @param entity the entity's declared name
+         * @return the comma-separated write roles
+         */
+        public String writeGate(String projectName, String rolePerspective, String entity) {
+            String gateName = covers(entity) ? entity : rolePerspective;
+            String authored = covers(gateName) ? writeRoles(gateName) : null;
+            return appendWrite(authored != null ? authored : projectName + "." + rolePerspective + "." + entity + "FullAccess");
+        }
+
         private static List<String> append(Collection<String> roles, List<String> extras) {
             Set<String> gate = new LinkedHashSet<>(roles);
             gate.addAll(extras);
@@ -221,7 +240,7 @@ public final class PermissionSupport {
         }
         if (!gateBearing.contains(resource)) {
             advisories.add("permission [" + role + "] can [" + token + "] names [" + resource
-                    + "], which publishes no generated read/write gate - only entities and reports do");
+                    + "], which publishes no generated read/write gate - only entities, reports and exports do");
             return;
         }
         if (writable) {
@@ -235,7 +254,9 @@ public final class PermissionSupport {
             .add(role);
     }
 
-    /** The resources whose generated surfaces carry a read/write gate: entities and reports. */
+    /**
+     * The resources whose generated surfaces carry a read/write gate: entities, reports and exports.
+     */
     private static Set<String> gateBearingResources(IntentModel model) {
         Set<String> resources = new LinkedHashSet<>();
         for (EntityIntent entity : model.getEntities()) {
@@ -246,6 +267,13 @@ public final class PermissionSupport {
         for (ReportIntent report : model.getReports()) {
             if (report.getName() != null) {
                 resources.add(report.getName());
+            }
+        }
+        // An export's download is a generated read surface of its own (#7855): `<Export>:read` is who
+        // may run it and take the file.
+        for (ExportIntent export : model.getExports()) {
+            if (export.getName() != null) {
+                resources.add(export.getName());
             }
         }
         return resources;

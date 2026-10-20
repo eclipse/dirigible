@@ -141,7 +141,9 @@ class AccessibilityHarmoniaIT extends UserInterfaceIntegrationTest {
                 "list", "table tbody tr", //
                 "form", "#f_Name", //
                 "document", "#f_Note", //
-                "preview", "#f_Note", //
+                // Preview prints values, not inputs (#7770): its body - the General heading first -
+                // renders once the document has loaded.
+                "preview", "h3", //
                 "inbox", "[x-h-split-panel]");
 
         Files.createDirectories(REPORTS);

@@ -55,7 +55,7 @@ default, `strict`, `off` - the accessibility flow).
   columns, in order, and a field left off it must have no header at all; without `list` the columns
   are the fields whose `major` is not `false`.
 - **crud** — UI create → filter → row appears; edit via the row menu → save (a `document` saves in
-  place, so the walk leaves through Back to list); delete via the row menu → confirm → gone. A walk
+  place, so the walk leaves through Cancel); delete via the row menu → confirm → gone. A walk
   that fails halfway still removes its test row over REST. An entity without a `route` (a composition
   child with no page of its own) has no list, crud, multilingual or shell flow.
 - **rest** — the same CRUD over the generated Java controllers via `APIRequestContext` (isolates

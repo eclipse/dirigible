@@ -100,6 +100,7 @@ final class StatusSymbolResolver {
         resolver.rewriteProcesses(root);
         resolver.rewritePostings(root);
         resolver.rewriteGenerates(root);
+        resolver.rewriteReversals(root);
         resolver.rewriteSchedules(root);
         resolver.rewriteRollups(root);
         resolver.rewriteGlue(root);
@@ -232,6 +233,13 @@ final class StatusSymbolResolver {
                     rewriteWhen(field, "visibleWhen", statusRelation, status,
                             "entity [" + entityName + "] field [" + text(field, "name") + "] visibleWhen");
                 }
+                // A status stamp (#7874) names the status whose arrival the field records - always one of
+                // the record's own, as for the lifecycle graph.
+                Map<?, ?> stampOn = field == null ? null : asMap(field.get("stampOn"));
+                if (stampOn != null) {
+                    putResolved(stampOn, "status", status,
+                            "entity [" + entityName + "] field [" + text(field, "name") + "] stampOn status");
+                }
             }
             if (entity.get("visibleWhen") != null) {
                 String master = compositionMasterOf(entity);
@@ -310,7 +318,20 @@ final class StatusSymbolResolver {
                 if (relationName == null || args.get("value") == null) {
                     continue;
                 }
-                Map<?, ?> relation = toOneRelation(triggerEntity, relationName);
+                // One hop (#7934): `order.Status` writes the status of the record `order` points at, so
+                // its name is a seed of the ORDER's nomenclature. A path that does not reach a local
+                // to-one target is the parser's to refuse, with a message about the path.
+                String writtenEntity = triggerEntity;
+                int dot = relationName.indexOf('.');
+                if (dot >= 0) {
+                    Map<?, ?> via = toOneRelation(triggerEntity, relationName.substring(0, dot));
+                    if (via == null || text(via, "model") != null || !isToOne(via) || !entities.containsKey(text(via, "to"))) {
+                        continue;
+                    }
+                    writtenEntity = text(via, "to");
+                    relationName = relationName.substring(dot + 1);
+                }
+                Map<?, ?> relation = toOneRelation(writtenEntity, relationName);
                 Target target = relation == null ? new Target(null, null) : new Target(text(relation, "to"), text(relation, "model"));
                 putResolved(args, "value", target, stepSubject + " setRelationField [" + relationName + "] value");
             }
@@ -362,6 +383,29 @@ final class StatusSymbolResolver {
             putResolved(generate, "sourceStatus", status, subject + " sourceStatus");
             putResolved(generate, "sourceStatusOnRetire", status, subject + " sourceStatusOnRetire");
             rewriteGeneratesItemsWhere(generate, subject);
+        }
+    }
+
+    /**
+     * The statuses a reversal (issue #7886) names, all on its entity's own nomenclature: the
+     * {@code when} guard it is offered under and every {@code refuse} condition.
+     */
+    private void rewriteReversals(Map<?, ?> root) {
+        for (Object node : asList(root.get("reversals"))) {
+            Map<?, ?> reversal = asMap(node);
+            if (reversal == null) {
+                continue;
+            }
+            String entity = text(reversal, "forEntity");
+            String subject = "reversal [" + text(reversal, "name") + "]";
+            Target status = statusOf(entity);
+            rewriteWhen(reversal, statusRelationName(entity), status, subject + " when");
+            for (Object refusal : asList(reversal.get("refuse"))) {
+                Map<?, ?> entry = asMap(refusal);
+                if (entry != null) {
+                    rewriteWhen(entry, statusRelationName(entity), status, subject + " refuse when");
+                }
+            }
         }
     }
 
@@ -717,6 +761,11 @@ final class StatusSymbolResolver {
             }
         }
         return null;
+    }
+
+    private static boolean isToOne(Map<?, ?> relation) {
+        String kind = lower(text(relation, "kind"));
+        return "manytoone".equals(kind) || "onetoone".equals(kind);
     }
 
     /** Resolve a scalar key in place when it holds a symbol; leave a numeric value untouched. */

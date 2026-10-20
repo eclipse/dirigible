@@ -84,13 +84,15 @@ document.addEventListener('alpine:init', () => {
       this.levels[level] = !this.levels[level];
     },
 
-    /** The records the filters let through, newest last (the order they arrived in). */
+    /** The records the filters let through, newest last (the order they arrived in). The search
+     *  matches the message and the id of the request that wrote it (#7948). */
     get visibleRecords() {
       const needle = this.search.trim()
                          .toLowerCase();
       return this.records.filter((record) => this.levels[record.level]
         && (!needle || (record.message || '').toLowerCase()
-                                             .includes(needle)));
+                                             .includes(needle)
+          || (record.requestId || '').toLowerCase() === needle));
     },
 
     async loadFiles() {

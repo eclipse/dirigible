@@ -839,6 +839,14 @@ public abstract class FileSystemRepository implements IRepository {
     }
 
     /**
+     * Stops the background reindexing of the search index. Spring calls it when the context that
+     * declared the repository bean closes (an inferred destroy method).
+     */
+    public void close() {
+        repositorySearcher.close();
+    }
+
+    /**
      * Search refresh.
      *
      * @throws RepositorySearchException the repository search exception

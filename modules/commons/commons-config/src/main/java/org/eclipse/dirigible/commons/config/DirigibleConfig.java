@@ -102,7 +102,8 @@ public enum DirigibleConfig {
 
     /**
      * The application's externally-reachable base URL, used to build absolute links (e.g. in
-     * notification emails). Per tenant, because a tenant may be served from its own host.
+     * notification emails). Per tenant, because a tenant may be served from its own host. Unset, the
+     * links fall back to {@link #HOST}.
      */
     APP_BASE_URL("DIRIGIBLE_APP_BASE_URL", "", meta().type(ConfigType.URL)
                                                      .tenant(12)), //
@@ -135,6 +136,19 @@ public enum DirigibleConfig {
     MAIL_SMTP_PORT("DIRIGIBLE_MAIL_SMTP_PORT", null), MAIL_SMTP_AUTH("DIRIGIBLE_MAIL_SMTP_AUTH", null), //
 
     SNOWFLAKE_DATA_SOURCE_LIFESPAN_SECONDS("DIRIGIBLE_SNOWFLAKE_DATA_SOURCE_LIFESPAN_SECONDS", "540"), // 9 minutes
+
+    /**
+     * The maximum pool size of every tenant's data source ({@code <tenantId>_DefaultDB}), unless that
+     * data source sets {@code <name>_HIKARI_MAXIMUMPOOLSIZE} (#7876).
+     */
+    TENANT_DATASOURCE_MAX_POOL_SIZE("DIRIGIBLE_TENANT_DATASOURCE_MAX_POOL_SIZE", "20"),
+
+    /**
+     * The minimum idle connections of every tenant's data source, unless that data source sets
+     * {@code <name>_HIKARI_MINIMUMIDLE} (#7876). Low by default, so that an idle tenant's pool shrinks
+     * back to almost nothing after the idle timeout.
+     */
+    TENANT_DATASOURCE_MIN_IDLE("DIRIGIBLE_TENANT_DATASOURCE_MIN_IDLE", "1"),
 
     LEAKED_CONNECTIONS_MAX_IN_USE_SECONDS("DIRIGIBLE_LEAKED_CONNECTIONS_MAX_IN_USE_SECONDS", "180"), // 3 min by default
 
@@ -447,6 +461,15 @@ public enum DirigibleConfig {
      */
     JAVA_RECONCILE_INTERVAL_SECONDS("DIRIGIBLE_JAVA_RECONCILE_INTERVAL_SECONDS", "30"),
 
+    /**
+     * Whether an issue report carries the server-side log excerpt of its own requests (#7948); the
+     * reporter sees the excerpt before sending either way.
+     */
+    ISSUES_BUNDLE_LOGS("DIRIGIBLE_ISSUES_BUNDLE_LOGS", Boolean.TRUE.toString()),
+
+    /** The largest file, in bytes, an issue attachment may be (#7948). */
+    ISSUES_ATTACHMENT_MAX_BYTES("DIRIGIBLE_ISSUES_ATTACHMENT_MAX_BYTES", "10485760"),
+
     /** Anthropic API key powering the Intent Editor's AI assistant; blank disables the assistant. */
     INTENT_AI_API_KEY("DIRIGIBLE_INTENT_AI_API_KEY", null, meta().secret()),
 
@@ -489,6 +512,18 @@ public enum DirigibleConfig {
      * is ignored when {@link #MESSAGING_BROKER_URL} is set.
      */
     MESSAGING_USE_DEFAULT_DATABASE("DIRIGIBLE_MESSAGING_USE_DEFAULT_DATABASE", Boolean.TRUE.toString()),
+
+    /**
+     * How the message listeners attach to the broker: {@code shared} (the default) opens one JMS
+     * connection per tenant for the client-Java listeners - plus one for the global destinations - and
+     * one for all {@code .listener} artefacts, every subscription being a session on it, so an instance
+     * holds about {@code tenants + 2} connections however many listeners it declares;
+     * {@code per-listener} opens a connection per subscription per tenant, the shape the platform had
+     * before #7875. The client id a durable topic subscription is registered under differs between the
+     * two modes, so after a switch the reconciliation pass unsubscribes the previous mode's durable
+     * subscriptions of the handlers it subscribes, retrying a client id another instance still holds.
+     */
+    MESSAGING_LISTENER_CONNECTIONS("DIRIGIBLE_MESSAGING_LISTENER_CONNECTIONS", "shared"),
 
     /**
      * Seconds an armed act-as (delegated entry) state survives before it expires on its own. The window

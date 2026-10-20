@@ -1,0 +1,128 @@
+<!--
+
+    Copyright (c) 2010-2026 Eclipse Dirigible contributors
+
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v2.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v20.html
+
+    SPDX-FileCopyrightText: Eclipse Dirigible contributors
+    SPDX-License-Identifier: EPL-2.0
+
+-->
+<!-- Built-in Issues (#7948) - the issues the user reported, the sibling of the Process Inbox: the list on
+     the left, the selected issue's conversation with the support team on the right. Everything is read
+     from the shared `issues` store, which reads /services/issues - the user's own issues in the current
+     tenant, nothing else. -->
+<div id="issues-page" x-data class="vbox size-full" x-init="$store.issues.enterPage()">
+  <div x-h-toolbar data-variant="transparent">
+    <span x-h-toolbar-title class="text-2xl font-semibold tracking-tight" x-text="$store.issues.t('shell.nav.issues', 'Issues')"></span>
+    <span x-h-badge data-variant="information" x-text="$store.issues.items.length"></span>
+    <div x-h-toolbar-spacer></div>
+    <button x-h-button data-variant="outline" data-size="sm" @click="$store.issues.loadList()">
+      <svg role="presentation" x-h-lucide data-lucide="refresh-cw"></svg><span x-text="$store.issues.t('shell.issues.refresh', 'Refresh')"></span>
+    </button>
+    <button x-h-button data-variant="primary" data-size="sm" id="issues-page-report" @click="$store.issues.report()">
+      <svg role="presentation" x-h-lucide data-lucide="message-square-warning"></svg><span x-text="$store.issues.t('shell.issues.reportTitle', 'Report an issue')"></span>
+    </button>
+  </div>
+
+  <div x-h-split class="flex-1" data-orientation="horizontal" data-variant="border">
+    <div x-h-split-panel data-size="30%" data-min="280">
+      <div x-show="$store.issues.loaded && $store.issues.items.length === 0" x-h-info-page class="p-4">
+        <div x-h-info-page-header>
+          <div x-h-info-page-media.icon><svg x-h-lucide data-lucide="message-square" role="img" aria-label="issues"></svg></div>
+          <div x-h-info-page-title x-text="$store.issues.t('shell.issues.none', 'No issues')"></div>
+          <div x-h-info-page-description x-text="$store.issues.t('shell.issues.noneHint', 'When something goes wrong, report it from the user menu. You follow it here.')"></div>
+        </div>
+      </div>
+      <div x-show="$store.issues.items.length" x-h-table-container.scroll class="size-full">
+        <table x-h-table data-borders="rows">
+          <tbody x-h-table-body>
+            <template x-for="issue in $store.issues.items" :key="issue.id">
+              <tr x-h-table-row data-hoverable="true" :data-issue="issue.id" :data-state="$store.issues.isSelected(issue) ? 'selected' : ''"
+                  @click="$store.issues.select(issue.id)" class="cursor-pointer">
+                <td x-h-table-cell>
+                  <div class="vbox gap-1">
+                    <span class="font-medium" x-text="issue.subject"></span>
+                    <span class="hbox items-center gap-2 text-xs">
+                      <span x-h-badge data-size="sm" :data-variant="$store.issues.statusVariant(issue.status)" x-text="$store.issues.statusLabel(issue.status)"></span>
+                      <span x-h-text.muted x-text="'#' + issue.id + ' · ' + window.HarmoniaFormat.value(issue.updatedAt, true)"></span>
+                    </span>
+                  </div>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div x-h-split-panel data-size="70%" data-min="360">
+      <div x-show="!$store.issues.selected" x-h-info-page class="p-4">
+        <div x-h-info-page-header>
+          <div x-h-info-page-media.icon><svg x-h-icon data-icon="circle-info" role="img" aria-label="info"></svg></div>
+          <div x-h-info-page-title x-text="$store.issues.t('shell.issues.noneSelected', 'No issue selected')"></div>
+          <div x-h-info-page-description x-text="$store.issues.t('shell.issues.selectHint', 'Select an issue to read the conversation with the support team.')"></div>
+        </div>
+      </div>
+
+      <div x-show="$store.issues.selected" class="vbox size-full" id="issues-page-detail">
+        <div x-h-toolbar data-variant="transparent">
+          <span x-h-toolbar-title class="truncate" x-text="$store.issues.selected?.issue.subject || ''"></span>
+          <span x-h-badge :data-variant="$store.issues.statusVariant($store.issues.selected?.issue.status)"
+                x-text="$store.issues.statusLabel($store.issues.selected?.issue.status)"></span>
+          <div x-h-toolbar-spacer></div>
+          <button x-h-button data-variant="outline" data-size="sm" x-show="$store.issues.selectedOpen" :disabled="$store.issues.busy"
+                  @click="$store.issues.withdraw()" x-text="$store.issues.t('shell.issues.withdraw', 'Withdraw')"></button>
+        </div>
+        <div class="vbox gap-3 p-4 flex-1 overflow-y-auto">
+          <p class="text-sm whitespace-pre-wrap wrap-anywhere" x-show="$store.issues.selected?.description" x-text="$store.issues.selected?.description || ''"></p>
+          <div class="hbox gap-2 flex-wrap" x-show="$store.issues.attachmentsOf(null).length">
+            <template x-for="file in $store.issues.attachmentsOf(null)" :key="file.id">
+              <a x-h-button data-variant="outline" data-size="sm" :href="$store.issues.downloadUrl(file)" download>
+                <svg role="presentation" x-h-lucide data-lucide="paperclip"></svg><span x-text="file.fileName"></span>
+              </a>
+            </template>
+          </div>
+          <div class="vbox gap-2 w-full" role="log" aria-live="polite" id="issues-page-thread">
+            <template x-for="message in ($store.issues.selected?.messages || [])" :key="message.id">
+              <div x-h-bubble style="max-width: 85%" :data-align="message.authorKind === 'REPORTER' ? 'right' : 'left'"
+                   :data-variant="message.authorKind === 'REPORTER' ? 'primary' : 'outline'">
+                <div x-h-bubble-header>
+                  <span x-text="message.authorKind === 'REPORTER' ? $store.issues.t('shell.issues.you', 'You') : $store.issues.t('shell.issues.support', 'Support')"></span>
+                  <time x-text="window.HarmoniaFormat.value(message.createdAt, true)"></time>
+                </div>
+                <div x-h-bubble-content class="whitespace-pre-wrap wrap-anywhere" x-text="message.body"></div>
+              </div>
+            </template>
+          </div>
+        </div>
+        <div x-show="$store.issues.error" x-cloak x-h-alert data-variant="warning" role="alert" class="mx-4">
+          <div x-h-alert-description x-text="$store.issues.error"></div>
+        </div>
+        <div x-show="$store.issues.selectedOpen" class="p-4">
+          <div x-h-input-group>
+            <textarea x-h-textarea.group rows="2" id="issues-page-answer" x-model="$store.issues.answerDraft" :disabled="$store.issues.busy"
+                      @keydown.enter.prevent="$store.issues.answer()"
+                      :aria-label="$store.issues.t('shell.issues.writeMessage', 'Write a message')"
+                      :placeholder="$store.issues.t('shell.issues.writeMessage', 'Write a message...')"></textarea>
+            <div x-h-input-group-addon data-align="block-end" class="border-t">
+              <label x-h-button data-variant="transparent" data-size="sm" class="cursor-pointer">
+                <svg role="presentation" x-h-lucide data-lucide="paperclip"></svg>
+                <span x-text="$store.issues.t('shell.issues.attach', 'Attach a file')"></span>
+                <input type="file" class="sr-only" @change="$store.issues.attach($event.target.files[0]); $event.target.value = ''" />
+              </label>
+              <button type="button" x-h-button.addon data-size="icon-sm" data-variant="primary" class="rounded-full ml-auto"
+                      @click="$store.issues.answer()" :disabled="$store.issues.busy || !$store.issues.answerDraft.trim()"
+                      :aria-label="$store.issues.t('shell.issues.send', 'Send')">
+                <svg x-h-lucide role="presentation" data-lucide="arrow-up"></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

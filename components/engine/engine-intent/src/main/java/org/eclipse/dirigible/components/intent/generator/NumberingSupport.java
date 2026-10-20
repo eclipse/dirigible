@@ -122,8 +122,8 @@ final class NumberingSupport {
             for (SetFieldSupport.Setter setter : setters) {
                 if (process.getName()
                            .equals(setter.process())
-                        && setter.relation() && statusProperty.equals(setter.field()) && !setter.value()
-                                                                                                .isBlank()) {
+                        && setter.relation() && setter.via() == null && statusProperty.equals(setter.field()) && !setter.value()
+                                                                                                                        .isBlank()) {
                     statusWrites.put(setter.step(), setter.value()
                                                           .trim());
                 }
