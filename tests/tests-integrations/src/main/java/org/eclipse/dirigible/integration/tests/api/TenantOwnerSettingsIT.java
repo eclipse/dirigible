@@ -135,9 +135,9 @@ class TenantOwnerSettingsIT extends IntegrationTest {
                   .atMost(60, TimeUnit.SECONDS)
                   .untilAsserted(() -> {
                       assertEquals("INV-000001", series(ownerOfA(), enter(ownerOfA(), tenantA)).get("example")
-                                                                                               .asText());
+                                                                                               .asString());
                       assertEquals("INV-000001", series(ownerOfB(), enter(ownerOfB(), tenantB)).get("example")
-                                                                                               .asText());
+                                                                                               .asString());
                   });
     }
 
@@ -157,10 +157,10 @@ class TenantOwnerSettingsIT extends IntegrationTest {
                                   .content("{\"series\":\"" + SERIES + "\",\"partition\":\"\",\"next\":1000}"))
            .andExpect(status().isNoContent());
         assertEquals("0000001000", series(owner, session).get("example")
-                                                         .asText());
+                                                         .asString());
 
         assertEquals("INV-000001", series(ownerOfB(), enter(ownerOfB(), tenantB)).get("example")
-                                                                                 .asText(),
+                                                                                 .asString(),
                 "another tenant's series is untouched");
     }
 
@@ -289,7 +289,7 @@ class TenantOwnerSettingsIT extends IntegrationTest {
                          .getContentAsString();
         for (JsonNode row : json.readTree(body)) {
             if (SERIES.equals(row.get("series")
-                                 .asText())) {
+                                 .asString())) {
                 return row;
             }
         }
