@@ -63,7 +63,10 @@ Activating a tenant (`POST services/tenant-provisioning/tenants/{id}/activation`
   - **300**, `TenantUsersTenantTeardown`: the user replica. The role rows cascade, and `TENUSER_TENANT_ID` has no foreign key, so the rows would otherwise be orphaned.
   - **400**, `TenantInitializationTenantTeardown`: the `DIRIGIBLE_TENANT_INITIALIZATIONS` row.
   - **500**, `TenantArtefactLedgerTenantTeardown`: the artefact ledger rows.
-  - **600**, the tenant's content: the internal CMS folder (only with the internal provider; deleted recursively, so it must resolve to a direct child of the CMS root or the participant refuses), the intent conversations, the traced task states.
+  - **600**, the tenant's content: the intent conversations, the traced task states, and the tenant's CMS documents - one participant per provider, each a no-op unless its provider is the configured `DIRIGIBLE_CMS_PROVIDER`:
+    - `CmsInternalTenantTeardown`: the folder `<root>/<id>`, deleted recursively, so it must resolve to a direct child of the CMS root or the participant refuses;
+    - `CmsS3TenantTeardown`: every object under `<id>/` in the shared bucket. The facade prefixes paths with the *current* tenant and the request runs as the default tenant, so it deletes `/` inside `TenantContext.execute(id, …)`; `S3Facade.deleteFolder` deletes in batches of 1,000;
+    - `CmsSharepointTenantTeardown`: the folder `<id>` of the shared document library, the same way. A missing folder is success. The Graph delete moves it to the site's recycle bin, where the site's retention applies.
 - **Last**, the tenant's `DIRIGIBLE_USERS` and the tenant row (`TenantService.delete` evicts the resolution caches).
 - **Answers:**
   - `204` for a removed tenant **and** for an unknown one, so a 404 from this route can only mean the route is missing;
@@ -75,9 +78,9 @@ Activating a tenant (`POST services/tenant-provisioning/tenants/{id}/activation`
   - broker destinations and durable subscriptions;
   - the shared process definitions;
   - `DIRIGIBLE_CROSS_TENANT_AUDIT`, a security audit trail;
-  - CMS content in the S3 and SharePoint providers - S3 resolves its prefix through the *current* tenant, and the call runs as the default tenant, so it needs its own tenant-scoped teardown (follow-up).
+  - the S3 bucket and the SharePoint document library themselves - every tenant shares them; nor is the SharePoint recycle bin purged.
 - **Single instance.** The runtime teardown acts on the instance that answers, so an application is expected to run as one instance.
-- **Tests:** `TenantDeprovisioningServiceTest` (order, unknown, default tenant, 409 and its bound, a failure that resumes), `JobsTenantTeardownTest`, `BpmTenantTeardownTest`, `CmsInternalTenantTeardownTest`, `ListenersManagerTest#stopTenantListenersStopsOnlyTheTenantsOwn`, `TenantActivationServiceTest`, `TenantUserReplicaServiceTest`; `TenantDeprovisioningIT` (two externally provisioned tenants with a table, a job and a process: one is removed, the other keeps everything, and nothing comes back on the next synchronizer pass), `TenantProvisioningApiDisabledIT`.
+- **Tests:** `TenantDeprovisioningServiceTest` (order, unknown, default tenant, 409 and its bound, a failure that resumes), `JobsTenantTeardownTest`, `BpmTenantTeardownTest`, `CmsInternalTenantTeardownTest`, `CmsS3TenantTeardownTest`, `CmsSharepointTenantTeardownTest`, `TenantPathResolverTest`, `S3FacadeDeleteFolderTest` (+ the LocalStack `S3FacadeTest`), `ListenersManagerTest#stopTenantListenersStopsOnlyTheTenantsOwn`, `TenantActivationServiceTest`, `TenantUserReplicaServiceTest`; `TenantDeprovisioningIT` (two externally provisioned tenants with a table, a job and a process: one is removed, the other keeps everything, and nothing comes back on the next synchronizer pass), `TenantProvisioningApiDisabledIT`.
 
 ## Tenant-aware configuration (`commons-config` + `core-configurations`)
 
