@@ -4210,7 +4210,7 @@ class IntentEngineIT extends IntegrationTest {
         // model-catalog translation key (the renderer shows T(translation.key, label)), and the
         // label lands in the generated en catalog's actions section - hardcoded-English Void /
         // Save-as-Template buttons on an otherwise translated app were the reported defect.
-        String descriptor = contentOf("invoice-from-proforma-generate-action.js");
+        String descriptor = contentOf("invoice-from-proforma-generate-action.json");
         // ...and carries the same guard, so the button stops offering itself on an invoiced Proforma
         // instead of leading the user into the 409 (#7068).
         assertTrue(

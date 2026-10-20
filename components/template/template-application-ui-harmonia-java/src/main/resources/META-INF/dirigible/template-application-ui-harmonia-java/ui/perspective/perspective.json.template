@@ -1,0 +1,14 @@
+{
+    "id": "${projectName}-${name}",
+    "label": "${menuLabelJson}",
+    "tkey": "${projectName}:${tprefix}.t.${dataName}_plural",
+    "path": "/services/web/${projectName}/gen/${genFolderName}/index.html?embedded=true#/${name}",
+    "kind": "${type}",
+#if($perspectiveNavId)
+    "groupId": "${perspectiveNavId}",
+#end
+#if($perspectiveOrder)
+    "order": ${perspectiveOrder},
+#end
+    "icon": "${iconName}"
+}

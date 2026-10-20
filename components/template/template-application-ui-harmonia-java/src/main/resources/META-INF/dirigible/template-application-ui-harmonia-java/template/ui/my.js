@@ -76,10 +76,10 @@ export const getSources = () => [
         collection: "personalDocumentModels"
     },
     {
-        location: "/template-application-ui-harmonia-java/ui/my/my-perspective.js.template",
+        location: "/template-application-ui-harmonia-java/ui/my/my-perspective.json.template",
         action: "generate",
         engine: "velocity",
-        rename: "gen/{{genFolderName}}/perspectives/my/{{name}}/perspective.js",
+        rename: "gen/{{genFolderName}}/perspectives/my/{{name}}/perspective.json",
         collection: "personalRootModels"
     },
     {

@@ -1,0 +1,8 @@
+{
+    "id": "databaseShell",
+    "path": "/services/web/database/index.html",
+    "label": "Database",
+    "icon": "database",
+    "description": "Browse the schema, look at the data, run a SQL fix.",
+    "order": 38
+}

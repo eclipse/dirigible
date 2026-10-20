@@ -59,10 +59,10 @@ export const getSources = () => [
         collection: "partnerDocumentModels"
     },
     {
-        location: "/template-application-ui-harmonia-java/ui/partner/partner-perspective.js.template",
+        location: "/template-application-ui-harmonia-java/ui/partner/partner-perspective.json.template",
         action: "generate",
         engine: "velocity",
-        rename: "gen/{{genFolderName}}/perspectives/partner/{{name}}/perspective.js",
+        rename: "gen/{{genFolderName}}/perspectives/partner/{{name}}/perspective.json",
         collection: "partnerRootModels"
     },
     {

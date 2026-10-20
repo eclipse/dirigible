@@ -1,0 +1,8 @@
+{
+    "id": "builderShell",
+    "path": "/services/web/builder/index.html",
+    "label": "Builder",
+    "icon": "sparkles",
+    "description": "Describe an application in plain language and publish it.",
+    "order": 15
+}

@@ -37,10 +37,10 @@ const PERSPECTIVE_COLLECTIONS = [
 
 export const getSources = () => PERSPECTIVE_COLLECTIONS.flatMap(collection => ([
     {
-        location: "/template-application-ui-harmonia-java/ui/perspective/perspective.js.template",
+        location: "/template-application-ui-harmonia-java/ui/perspective/perspective.json.template",
         action: "generate",
         engine: "velocity",
-        rename: "gen/{{genFolderName}}/perspectives/{{name}}/perspective.js",
+        rename: "gen/{{genFolderName}}/perspectives/{{name}}/perspective.json",
         collection
     },
     {

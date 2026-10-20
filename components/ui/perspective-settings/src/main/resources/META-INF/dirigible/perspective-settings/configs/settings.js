@@ -9,6 +9,7 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
+// The page's own global. The extension registry reads the same entry from settings.json beside this file - keep the two in step.
 const perspectiveData = {
 	id: 'platformSettings',
 	label: 'Settings',
@@ -19,6 +20,3 @@ const perspectiveData = {
 	order: 100,
 	icon: '/services/web/perspective-settings/images/settings.svg',
 };
-if (typeof exports !== 'undefined') {
-	exports.getUtilityPerspective = () => perspectiveData;
-}

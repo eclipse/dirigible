@@ -1,5 +1,5 @@
 {
-    "module": "personal/configs/shell.js",
+    "module": "personal/configs/shell.json",
     "extensionPoint": "platform-shells",
     "description": "Personal Shell"
 }

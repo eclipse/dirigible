@@ -9,6 +9,7 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
+// The page's own global. The extension registry reads the same entries from documents.json (perspective) and documents-window.json (window) beside this file - keep the two in step.
 const perspectiveData = {
 	id: 'documentStorage',
 	label: 'Document Storage',
@@ -26,7 +27,3 @@ const viewData = {
 	maxWidth: '640px',
 	...perspectiveData
 };
-if (typeof exports !== 'undefined') {
-	exports.getPerspective = () => perspectiveData;
-	exports.getView = () => viewData;
-}

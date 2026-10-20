@@ -1,5 +1,5 @@
 {
     "description": "Platform Locale - English (US)",
     "extensionPoint": "platform-locales",
-    "module": "resources-locale/configs/en-US.js"
+    "module": "resources-locale/configs/en-US.json"
 }

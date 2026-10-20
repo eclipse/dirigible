@@ -164,6 +164,9 @@ final class ModelTemplateAdapters {
         // The shell's title and sidebar header prefer the model's own title and description over the
         // bare project name.
         parameters.put("appTitle", blankToNull(str(model, "title")) != null ? model.get("title") : parameters.get("projectName"));
+        // The administration perspective descriptor is a JSON document, so the title is written into a JSON
+        // string.
+        parameters.put("appTitleJson", JsonLiterals.escape(String.valueOf(parameters.get("appTitle"))));
         parameters.put("appDescription", strOr(model, "description", ""));
         // An explicit generate-time icon wins over the model's, which wins over a neutral default.
         String appIcon = blankToNull(str(parameters, "appIcon"));

@@ -1,0 +1,7 @@
+{
+    "id": "${projectName}-admin",
+    "label": "${appTitleJson}",
+    "path": "/services/web/${projectName}/gen/${genFolderName}/admin/index.html",
+    "kind": "ADMIN",
+    "icon": "wrench"
+}

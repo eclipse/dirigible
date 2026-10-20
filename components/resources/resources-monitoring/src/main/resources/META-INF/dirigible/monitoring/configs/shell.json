@@ -1,0 +1,8 @@
+{
+    "id": "monitoringShell",
+    "path": "/services/web/monitoring/index.html",
+    "label": "Monitoring",
+    "icon": "activity",
+    "description": "Is the system healthy - and if not, what broke.",
+    "order": 37
+}

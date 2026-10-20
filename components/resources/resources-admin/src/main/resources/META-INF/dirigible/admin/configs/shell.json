@@ -1,0 +1,8 @@
+{
+    "id": "adminShell",
+    "path": "/services/web/admin/index.html",
+    "label": "Administration",
+    "icon": "shield",
+    "description": "The administration surface: every entity as a plain table and form, one level above the database.",
+    "order": 35
+}

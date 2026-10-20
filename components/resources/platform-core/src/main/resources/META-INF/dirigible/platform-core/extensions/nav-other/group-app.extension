@@ -1,5 +1,5 @@
 {
-    "module": "/platform-core/extensions/nav-other/config.js",
+    "module": "/platform-core/extensions/nav-other/config.json",
     "extensionPoint": "application-perspectives",
     "description": "Others/Unknown Navigation Group"
 }
