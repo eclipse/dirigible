@@ -104,6 +104,42 @@ window.MonitoringOps = (() => {
     queueMessages: (name, limit) =>
       get('/services/ide/messaging-monitoring/queues/' + encodeURIComponent(name) + '/messages?limit=' + limit),
 
+    /**
+     * Every tenant's issues, latest change first (#7948): [{ id, tenantId, reporter, subject, severity,
+     * status, assignee, createdAt, updatedAt }]. The desk is the instance operators', in the default tenant.
+     *
+     * @param {object} filters { tenant, status, assignee } - an empty one is not applied
+     */
+    issues: (filters) => {
+      const query = Object.entries(filters || {})
+                          .filter(([, value]) => value)
+                          .map(([key, value]) => key + '=' + encodeURIComponent(value))
+                          .join('&');
+      return get('/services/issues/operator' + (query ? '?' + query : ''));
+    },
+
+    /** One issue with its whole thread, memos included, and its attachments. */
+    issue: (id) => get('/services/issues/operator/' + encodeURIComponent(id)),
+
+    /** The issue a lifecycle process instance belongs to - what an Inbox task link opens. */
+    issueOfProcess: (processInstanceId) => get('/services/issues/operator/process/' + encodeURIComponent(processInstanceId)),
+
+    /** Decide an issue: CONFIRM or REJECT a new one; RESOLVE, REJECT or REQUEST (ask the reporter) an open one. */
+    decideIssue: (id, decision, message) =>
+      App.services.api.post('/services/issues/operator/' + encodeURIComponent(id) + '/decision', { decision, message }, ABSOLUTE),
+
+    /** Reply to the reporter, or leave an internal memo. */
+    replyToIssue: (id, body, internal) =>
+      App.services.api.post('/services/issues/operator/' + encodeURIComponent(id) + '/messages', { body, internal }, ABSOLUTE),
+
+    /** Assign an issue to an engineer; blank unassigns it. */
+    assignIssue: (id, assignee) =>
+      App.services.api.post('/services/issues/operator/' + encodeURIComponent(id) + '/assignee', { assignee }, ABSOLUTE),
+
+    /** Where an attachment of an issue downloads from. */
+    issueAttachmentUrl: (id, attachmentId) =>
+      '/services/issues/operator/' + encodeURIComponent(id) + '/attachments/' + encodeURIComponent(attachmentId),
+
     /** The log files on disk. */
     logFiles: () => get('/services/ide/logs/'),
 

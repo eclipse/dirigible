@@ -12272,6 +12272,586 @@
           }
         ]
       }
+    },
+    {
+      "changeSet": {
+        "id": "create-DIRIGIBLE_ISSUES",
+        "author": "dirigible",
+        "preConditions": [
+          {
+            "onFail": "MARK_RAN"
+          },
+          {
+            "not": [
+              {
+                "tableExists": {
+                  "tableName": "DIRIGIBLE_ISSUES"
+                }
+              }
+            ]
+          }
+        ],
+        "changes": [
+          {
+            "createTable": {
+              "columns": [
+                {
+                  "column": {
+                    "autoIncrement": true,
+                    "constraints": {
+                      "nullable": false,
+                      "primaryKey": true,
+                      "primaryKeyName": "PK_DIRIGIBLE_ISSUES"
+                    },
+                    "name": "ISSUE_ID",
+                    "type": "BIGINT"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "ISSUE_TENANT_ID",
+                    "type": "VARCHAR(255)"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "ISSUE_REPORTER",
+                    "type": "VARCHAR(320)"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "ISSUE_REPORTER_NAME",
+                    "type": "VARCHAR(320)"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "ISSUE_SUBJECT",
+                    "type": "VARCHAR(255)"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "ISSUE_DESCRIPTION",
+                    "type": "CLOB"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "ISSUE_SEVERITY",
+                    "type": "VARCHAR(16)"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "ISSUE_CATEGORY",
+                    "type": "VARCHAR(64)"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "ISSUE_STATUS",
+                    "type": "VARCHAR(32)"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "ISSUE_CONTEXT",
+                    "type": "CLOB"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "ISSUE_ASSIGNEE",
+                    "type": "VARCHAR(320)"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "ISSUE_PROCESS_INSTANCE_ID",
+                    "type": "VARCHAR(64)"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "ISSUE_CREATED_AT",
+                    "type": "TIMESTAMP"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "ISSUE_UPDATED_AT",
+                    "type": "TIMESTAMP"
+                  }
+                }
+              ],
+              "tableName": "DIRIGIBLE_ISSUES"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "IX_DIRIGIBLE_ISSUES_REPORTER",
+        "author": "dirigible",
+        "preConditions": [
+          {
+            "onFail": "MARK_RAN"
+          },
+          {
+            "not": [
+              {
+                "indexExists": {
+                  "indexName": "IX_DIRIGIBLE_ISSUES_REPORTER",
+                  "tableName": "DIRIGIBLE_ISSUES"
+                }
+              }
+            ]
+          }
+        ],
+        "changes": [
+          {
+            "createIndex": {
+              "associatedWith": "",
+              "columns": [
+                {
+                  "column": {
+                    "name": "ISSUE_TENANT_ID"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "ISSUE_REPORTER"
+                  }
+                }
+              ],
+              "indexName": "IX_DIRIGIBLE_ISSUES_REPORTER",
+              "tableName": "DIRIGIBLE_ISSUES"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "IX_DIRIGIBLE_ISSUES_STATUS",
+        "author": "dirigible",
+        "preConditions": [
+          {
+            "onFail": "MARK_RAN"
+          },
+          {
+            "not": [
+              {
+                "indexExists": {
+                  "indexName": "IX_DIRIGIBLE_ISSUES_STATUS",
+                  "tableName": "DIRIGIBLE_ISSUES"
+                }
+              }
+            ]
+          }
+        ],
+        "changes": [
+          {
+            "createIndex": {
+              "associatedWith": "",
+              "columns": [
+                {
+                  "column": {
+                    "name": "ISSUE_STATUS"
+                  }
+                }
+              ],
+              "indexName": "IX_DIRIGIBLE_ISSUES_STATUS",
+              "tableName": "DIRIGIBLE_ISSUES"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "create-DIRIGIBLE_ISSUE_MESSAGES",
+        "author": "dirigible",
+        "preConditions": [
+          {
+            "onFail": "MARK_RAN"
+          },
+          {
+            "not": [
+              {
+                "tableExists": {
+                  "tableName": "DIRIGIBLE_ISSUE_MESSAGES"
+                }
+              }
+            ]
+          }
+        ],
+        "changes": [
+          {
+            "createTable": {
+              "columns": [
+                {
+                  "column": {
+                    "autoIncrement": true,
+                    "constraints": {
+                      "nullable": false,
+                      "primaryKey": true,
+                      "primaryKeyName": "PK_DIRIGIBLE_ISSUE_MESSAGES"
+                    },
+                    "name": "ISSUEMESSAGE_ID",
+                    "type": "BIGINT"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "ISSUEMESSAGE_ISSUE_ID",
+                    "type": "BIGINT"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "ISSUEMESSAGE_SEQUENCE",
+                    "type": "INT"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "ISSUEMESSAGE_AUTHOR_KIND",
+                    "type": "VARCHAR(16)"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "ISSUEMESSAGE_AUTHOR",
+                    "type": "VARCHAR(320)"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "ISSUEMESSAGE_BODY",
+                    "type": "CLOB"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "ISSUEMESSAGE_INTERNAL",
+                    "type": "BOOLEAN"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "ISSUEMESSAGE_CREATED_AT",
+                    "type": "TIMESTAMP"
+                  }
+                }
+              ],
+              "tableName": "DIRIGIBLE_ISSUE_MESSAGES"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "UK_DIRIGIBLE_ISSUE_MESSAGES_SEQUENCE",
+        "author": "dirigible",
+        "preConditions": [
+          {
+            "onFail": "MARK_RAN"
+          },
+          {
+            "not": [
+              {
+                "uniqueConstraintExists": {
+                  "constraintName": "UK_DIRIGIBLE_ISSUE_MESSAGES_SEQUENCE",
+                  "tableName": "DIRIGIBLE_ISSUE_MESSAGES"
+                }
+              }
+            ]
+          }
+        ],
+        "changes": [
+          {
+            "addUniqueConstraint": {
+              "columnNames": "ISSUEMESSAGE_ISSUE_ID, ISSUEMESSAGE_SEQUENCE",
+              "constraintName": "UK_DIRIGIBLE_ISSUE_MESSAGES_SEQUENCE",
+              "tableName": "DIRIGIBLE_ISSUE_MESSAGES"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "FK_DIRIGIBLE_ISSUE_MESSAGES__ISSUE_ID",
+        "author": "dirigible",
+        "preConditions": [
+          {
+            "onFail": "MARK_RAN"
+          },
+          {
+            "not": [
+              {
+                "foreignKeyConstraintExists": {
+                  "foreignKeyName": "FK_DIRIGIBLE_ISSUE_MESSAGES__ISSUE_ID",
+                  "foreignKeyTableName": "DIRIGIBLE_ISSUE_MESSAGES"
+                }
+              }
+            ]
+          }
+        ],
+        "changes": [
+          {
+            "addForeignKeyConstraint": {
+              "baseColumnNames": "ISSUEMESSAGE_ISSUE_ID",
+              "baseTableName": "DIRIGIBLE_ISSUE_MESSAGES",
+              "constraintName": "FK_DIRIGIBLE_ISSUE_MESSAGES__ISSUE_ID",
+              "deferrable": false,
+              "initiallyDeferred": false,
+              "onDelete": "CASCADE",
+              "onUpdate": "RESTRICT",
+              "referencedColumnNames": "ISSUE_ID",
+              "referencedTableName": "DIRIGIBLE_ISSUES",
+              "validate": true
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "create-DIRIGIBLE_ISSUE_ATTACHMENTS",
+        "author": "dirigible",
+        "preConditions": [
+          {
+            "onFail": "MARK_RAN"
+          },
+          {
+            "not": [
+              {
+                "tableExists": {
+                  "tableName": "DIRIGIBLE_ISSUE_ATTACHMENTS"
+                }
+              }
+            ]
+          }
+        ],
+        "changes": [
+          {
+            "createTable": {
+              "columns": [
+                {
+                  "column": {
+                    "autoIncrement": true,
+                    "constraints": {
+                      "nullable": false,
+                      "primaryKey": true,
+                      "primaryKeyName": "PK_DIRIGIBLE_ISSUE_ATTACHMENTS"
+                    },
+                    "name": "ISSUEATTACHMENT_ID",
+                    "type": "BIGINT"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "ISSUEATTACHMENT_ISSUE_ID",
+                    "type": "BIGINT"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "ISSUEATTACHMENT_MESSAGE_ID",
+                    "type": "BIGINT"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "ISSUEATTACHMENT_FILE_NAME",
+                    "type": "VARCHAR(255)"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "ISSUEATTACHMENT_MIME_TYPE",
+                    "type": "VARCHAR(255)"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "ISSUEATTACHMENT_SIZE",
+                    "type": "BIGINT"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "ISSUEATTACHMENT_SHA256",
+                    "type": "CHAR(64)"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "ISSUEATTACHMENT_STORAGE_REF",
+                    "type": "VARCHAR(2000)"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "ISSUEATTACHMENT_UPLOADED_BY",
+                    "type": "VARCHAR(320)"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "ISSUEATTACHMENT_UPLOADED_AT",
+                    "type": "TIMESTAMP"
+                  }
+                }
+              ],
+              "tableName": "DIRIGIBLE_ISSUE_ATTACHMENTS"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "FK_DIRIGIBLE_ISSUE_ATTACHMENTS__ISSUE_ID",
+        "author": "dirigible",
+        "preConditions": [
+          {
+            "onFail": "MARK_RAN"
+          },
+          {
+            "not": [
+              {
+                "foreignKeyConstraintExists": {
+                  "foreignKeyName": "FK_DIRIGIBLE_ISSUE_ATTACHMENTS__ISSUE_ID",
+                  "foreignKeyTableName": "DIRIGIBLE_ISSUE_ATTACHMENTS"
+                }
+              }
+            ]
+          }
+        ],
+        "changes": [
+          {
+            "addForeignKeyConstraint": {
+              "baseColumnNames": "ISSUEATTACHMENT_ISSUE_ID",
+              "baseTableName": "DIRIGIBLE_ISSUE_ATTACHMENTS",
+              "constraintName": "FK_DIRIGIBLE_ISSUE_ATTACHMENTS__ISSUE_ID",
+              "deferrable": false,
+              "initiallyDeferred": false,
+              "onDelete": "CASCADE",
+              "onUpdate": "RESTRICT",
+              "referencedColumnNames": "ISSUE_ID",
+              "referencedTableName": "DIRIGIBLE_ISSUES",
+              "validate": true
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "FK_DIRIGIBLE_ISSUE_ATTACHMENTS__MESSAGE_ID",
+        "author": "dirigible",
+        "preConditions": [
+          {
+            "onFail": "MARK_RAN"
+          },
+          {
+            "not": [
+              {
+                "foreignKeyConstraintExists": {
+                  "foreignKeyName": "FK_DIRIGIBLE_ISSUE_ATTACHMENTS__MESSAGE_ID",
+                  "foreignKeyTableName": "DIRIGIBLE_ISSUE_ATTACHMENTS"
+                }
+              }
+            ]
+          }
+        ],
+        "changes": [
+          {
+            "addForeignKeyConstraint": {
+              "baseColumnNames": "ISSUEATTACHMENT_MESSAGE_ID",
+              "baseTableName": "DIRIGIBLE_ISSUE_ATTACHMENTS",
+              "constraintName": "FK_DIRIGIBLE_ISSUE_ATTACHMENTS__MESSAGE_ID",
+              "deferrable": false,
+              "initiallyDeferred": false,
+              "onDelete": "CASCADE",
+              "onUpdate": "RESTRICT",
+              "referencedColumnNames": "ISSUEMESSAGE_ID",
+              "referencedTableName": "DIRIGIBLE_ISSUE_MESSAGES",
+              "validate": true
+            }
+          }
+        ]
+      }
     }
   ]
 }

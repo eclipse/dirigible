@@ -93,6 +93,11 @@
                     </button>
                   </li>
                   <li x-h-sidebar-menu-item>
+                    <button id="shell-nav-issues" x-h-sidebar-menu-nav :data-active="isActive('/issues')" @click="navigate('/issues')">
+                      <svg role="presentation" x-h-lucide data-lucide="message-square-warning"></svg><span x-text="T('application-core:shell.nav.issues', 'Issues')"></span>
+                    </button>
+                  </li>
+                  <li x-h-sidebar-menu-item>
                     <button x-h-sidebar-menu-nav :data-active="isActive('/documents')" @click="navigate('/documents')">
                       <svg role="presentation" x-h-lucide data-lucide="folder"></svg><span x-text="T('application-core:shell.nav.documents', 'Documents')"></span>
                     </button>
@@ -288,6 +293,10 @@
                 <span x-text="$store.currentUser.name || T('application-core:shell.user.user', 'User')"></span>
               </div>
               <div x-h-menu-separator></div>
+              <li x-h-menu-item id="user-menu-report-issue" @click="$store.issues.report()">
+                <svg role="presentation" x-h-lucide data-lucide="message-square-warning"></svg> <span x-text="T('application-core:shell.user.reportIssue', 'Report an issue')"></span>
+              </li>
+              <div x-h-menu-separator></div>
               <li x-h-menu-item data-variant="negative" @click="$store.currentUser.logout()">
                 <svg role="presentation" x-h-lucide data-lucide="log-out"></svg> <span x-text="T('application-core:shell.user.logout', 'Log out')"></span>
               </li>
@@ -428,6 +437,9 @@
 
     <!-- App-wide transient toasts. Any component/form/glue raises one through Harmonia's
          notifications magic with the 'toast' template below (data: message + variant). -->
+    <!-- "Report an issue" (#7948): the ONE dialog the shared `issues` store renders (shell/views/_report-issue.html). -->
+    <div x-html="$store.issues.markup"></div>
+
     <section x-h-notification-overlay>
       <template id="toast">
         <li x-h-notification.floating data-variant="toast" class="hbox items-center gap-3 min-w-3xs max-w-md">
@@ -455,6 +467,7 @@
     <template x-route="/dashboard" x-template.target.app="./views/_dashboard.html"></template>
     <!-- Built-in shell sections (always present): Process Inbox + Documents. -->
     <template x-route="/inbox" x-template.target.app="/services/web/application-core/shell/views/_inbox.html"></template>
+    <template x-route="/issues" x-template.target.app="/services/web/application-core/shell/views/_issues.html"></template>
     <template x-route="/documents" x-template.target.app="/services/web/application-core/shell/views/_documents.html"></template>
     <!-- Settings landing: the platform preferences, the Users section for a tenant owner, and the
          setting entities (each still has its own CRUD route below). Always routed. -->
@@ -628,6 +641,7 @@
     <script src="/services/web/application-core/shell/js/stores/reports.js" defer></script>
     <script src="/services/web/application-core/shell/js/stores/currentUser.js" defer></script>
     <script src="/services/web/application-core/shell/js/stores/tenant.js" defer></script>
+    <script src="/services/web/application-core/shell/js/stores/issues.js" defer></script>
     <script src="/services/web/application-core/shell/js/stores/tenantUsers.js" defer></script>
     <script src="/services/web/application-core/shell/js/stores/printTemplates.js" defer></script>
     <script src="/services/web/application-core/shell/js/stores/notifications.js" defer></script>

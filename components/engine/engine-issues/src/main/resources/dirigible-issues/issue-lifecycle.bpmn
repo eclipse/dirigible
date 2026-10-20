@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    The lifecycle of an issue (#7948), deployed once into the default tenant of the cross-tenant
+    Flowable engine by IssueLifecycle. The operator tasks land in the Inbox of the instance's
+    operators and open the monitoring shell's Issues page. IssueService is the only writer of the
+    issue's status, and it is the only one that completes these tasks: the completion guard refuses
+    any other completion, so the issue row and its process cannot drift apart.
+-->
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:flowable="http://flowable.org/bpmn"
+             targetNamespace="http://www.eclipse.org/dirigible/issues">
+
+    <process id="dirigible-issue" name="Issue" isExecutable="true">
+
+        <startEvent id="filed" name="Filed"/>
+        <sequenceFlow id="toTriage" sourceRef="filed" targetRef="triage"/>
+
+        <userTask id="triage" name="Triage the issue" flowable:candidateGroups="ADMINISTRATOR,OPERATOR"
+                  flowable:formKey="/services/web/monitoring/index.html#/issues">
+            <extensionElements>
+                <flowable:taskListener event="complete" delegateExpression="${issueTaskCompletionGuard}"/>
+            </extensionElements>
+        </userTask>
+        <sequenceFlow id="toTriageDecision" sourceRef="triage" targetRef="triageDecision"/>
+
+        <exclusiveGateway id="triageDecision" name="Confirmed?"/>
+        <sequenceFlow id="confirmed" sourceRef="triageDecision" targetRef="work">
+            <conditionExpression xsi:type="tFormalExpression" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">${decision == 'CONFIRM'}</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="rejectedAtTriage" sourceRef="triageDecision" targetRef="rejected">
+            <conditionExpression xsi:type="tFormalExpression" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">${decision == 'REJECT'}</conditionExpression>
+        </sequenceFlow>
+
+        <userTask id="work" name="Work on the issue" flowable:candidateGroups="ADMINISTRATOR,OPERATOR"
+                  flowable:formKey="/services/web/monitoring/index.html#/issues">
+            <extensionElements>
+                <flowable:taskListener event="complete" delegateExpression="${issueTaskCompletionGuard}"/>
+            </extensionElements>
+        </userTask>
+        <sequenceFlow id="toWorkDecision" sourceRef="work" targetRef="workDecision"/>
+
+        <exclusiveGateway id="workDecision" name="Outcome?"/>
+        <sequenceFlow id="resolvedByWork" sourceRef="workDecision" targetRef="resolved">
+            <conditionExpression xsi:type="tFormalExpression" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">${decision == 'RESOLVE'}</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="rejectedByWork" sourceRef="workDecision" targetRef="rejected">
+            <conditionExpression xsi:type="tFormalExpression" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">${decision == 'REJECT'}</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="reporterAsked" sourceRef="workDecision" targetRef="awaitReporter">
+            <conditionExpression xsi:type="tFormalExpression" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">${decision == 'REQUEST'}</conditionExpression>
+        </sequenceFlow>
+
+        <!-- The reporter's next message triggers it, and the issue goes back to work -->
+        <receiveTask id="awaitReporter" name="Wait for the reporter"/>
+        <sequenceFlow id="reporterAnswered" sourceRef="awaitReporter" targetRef="work"/>
+
+        <endEvent id="resolved" name="Resolved"/>
+        <endEvent id="rejected" name="Rejected"/>
+    </process>
+</definitions>

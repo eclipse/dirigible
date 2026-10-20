@@ -79,6 +79,12 @@
                     </button>
                   </li>
                   <li x-h-sidebar-menu-item>
+                    <button id="monitoring-nav-issues" x-h-sidebar-menu-nav :data-active="isActive('/issues')" @click="navigate('/issues')">
+                      <svg role="presentation" x-h-lucide data-lucide="message-square-warning"></svg>
+                      <span class="flex-1" x-text="T('monitoring:shell.nav.issues', 'Issues')"></span>
+                    </button>
+                  </li>
+                  <li x-h-sidebar-menu-item>
                     <button id="monitoring-nav-messaging" x-h-sidebar-menu-nav :data-active="isActive('/messaging')" @click="navigate('/messaging')">
                       <svg role="presentation" x-h-lucide data-lucide="mails"></svg>
                       <span class="flex-1" x-text="T('monitoring:shell.nav.messaging', 'Messaging')"></span>
@@ -169,6 +175,8 @@
                 </li>
               </template>
               <div x-h-menu-separator></div>
+              <li x-h-menu-item id="user-menu-report-issue" @click="$store.issues.report()"><svg role="presentation" x-h-lucide data-lucide="message-square-warning"></svg> <span x-text="T('application-core:shell.user.reportIssue', 'Report an issue')"></span></li>
+              <div x-h-menu-separator></div>
               <li x-h-menu-item data-variant="negative" @click="$store.currentUser.logout()">
                 <svg role="presentation" x-h-lucide data-lucide="log-out"></svg>
                 <span x-text="T('application-core:shell.user.logout', 'Log out')"></span>
@@ -190,12 +198,16 @@
       </div>
     </div>
 
+    <!-- "Report an issue" (#7948): the ONE dialog the shared `issues` store renders (shell/views/_report-issue.html). -->
+    <div x-html="$store.issues.markup"></div>
+
     <!-- Routes -->
     <template x-route="/" x-template.target.app="./views/_overview.html"></template>
     <template x-route="/overview" x-template.target.app="./views/_overview.html"></template>
     <template x-route="/processes" x-template.target.app="./views/_processes.html"></template>
     <template x-route="/jobs" x-template.target.app="./views/_jobs.html"></template>
     <template x-route="/logs" x-template.target.app="./views/_logs.html"></template>
+    <template x-route="/issues" x-template.target.app="./views/_issues.html"></template>
     <template x-route="/messaging" x-template.target.app="./views/_messaging.html"></template>
     <template x-route="/system" x-template.target.app="./views/_system.html"></template>
     <template x-route="notfound" x-template.target.app="/services/web/application-core/shell/views/_notfound.html"></template>
@@ -218,6 +230,7 @@
     <script src="/services/web/application-core/shell/js/stores/locale.js" defer></script>
     <script src="/services/web/application-core/shell/js/stores/currentUser.js" defer></script>
     <script src="/services/web/application-core/shell/js/stores/tenant.js" defer></script>
+    <script src="/services/web/application-core/shell/js/stores/issues.js" defer></script>
     <script src="/services/web/application-core/shell/js/stores/shells.js" defer></script>
     <script src="./js/services/ops.js" defer></script>
     <!-- The BPMN visualizer itself is ~1 MB and loads on first use (see processDiagram.js). -->
@@ -227,12 +240,14 @@
     <script src="./js/stores/processes.js" defer></script>
     <script src="./js/stores/jobs.js" defer></script>
     <script src="./js/stores/logs.js" defer></script>
+    <script src="./js/stores/issuesDesk.js" defer></script>
     <script src="./js/stores/messaging.js" defer></script>
     <script src="./js/stores/system.js" defer></script>
     <script src="./js/components/pages/overviewPage.js" defer></script>
     <script src="./js/components/pages/processesPage.js" defer></script>
     <script src="./js/components/pages/jobsPage.js" defer></script>
     <script src="./js/components/pages/logsPage.js" defer></script>
+    <script src="./js/components/pages/issuesPage.js" defer></script>
     <script src="./js/components/pages/messagingPage.js" defer></script>
     <script src="./js/components/pages/systemPage.js" defer></script>
     <script src="./js/appShell.js" defer></script>

@@ -23,18 +23,23 @@ public class ConsoleLogRecord {
     /** The timestamp. */
     private final long timestamp;
 
+    /** The id of the HTTP request that wrote the line, {@code null} outside a request (#7948). */
+    private final String requestId;
+
     /**
      * Instantiates a new console log record.
      *
      * @param level the level
      * @param message the message
      * @param timestamp the timestamp
+     * @param requestId the id of the HTTP request that wrote the line, {@code null} outside a request
      */
-    public ConsoleLogRecord(String level, String message, long timestamp) {
+    public ConsoleLogRecord(String level, String message, long timestamp, String requestId) {
         super();
         this.level = level;
         this.message = message;
         this.timestamp = timestamp;
+        this.requestId = requestId;
     }
 
     /**
@@ -62,6 +67,15 @@ public class ConsoleLogRecord {
      */
     public long getTimestamp() {
         return timestamp;
+    }
+
+    /**
+     * Gets the id of the HTTP request that wrote the line.
+     *
+     * @return the request id, {@code null} outside a request
+     */
+    public String getRequestId() {
+        return requestId;
     }
 
 }

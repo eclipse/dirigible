@@ -17,11 +17,13 @@
       "my": "My",
       "administration": "Administration",
       "partner": "Partner",
-      "partnerPortal": "Partner Portal"
+      "partnerPortal": "Partner Portal",
+      "issues": "Issues"
     },
     "user": {
       "user": "User",
-      "logout": "Log out"
+      "logout": "Log out",
+      "reportIssue": "Report an issue"
     },
     "tenant": {
       "title": "Tenant",
@@ -420,6 +422,47 @@
     "defaults": {
       "cancel": "Cancel",
       "draftNumber": "(draft)"
+    },
+    "issues": {
+      "reportTitle": "Report an issue",
+      "reportDescription": "Tell the support team what happened. The report carries the details below, so they can find what went wrong.",
+      "reference": "Reference",
+      "subject": "Subject",
+      "subjectPlaceholder": "What went wrong, in one line",
+      "expected": "What did you do, and what did you expect?",
+      "severity": "How badly are you affected?",
+      "severities": {
+        "LOW": "A question, or something cosmetic",
+        "MEDIUM": "Something does not work, and I can work around it",
+        "HIGH": "Something does not work, and I cannot work around it",
+        "CRITICAL": "I cannot work at all"
+      },
+      "bundle": "What the report sends",
+      "bundleHint": "Passwords, tokens and cookies are removed before the report is stored.",
+      "cancel": "Cancel",
+      "send": "Send report",
+      "filed": "Issue #{{id}} reported. You can follow it under Issues.",
+      "refresh": "Refresh",
+      "none": "No issues",
+      "noneHint": "When something goes wrong, report it from the user menu. You follow it here.",
+      "noneSelected": "No issue selected",
+      "selectHint": "Select an issue to read the conversation with the support team.",
+      "withdraw": "Withdraw",
+      "you": "You",
+      "support": "Support",
+      "writeMessage": "Write a message...",
+      "attach": "Attach a file",
+      "notFound": "This issue does not exist, or is not yours.",
+      "offline": "The server could not be reached. Try again in a moment.",
+      "failed": "That did not work. Try again in a moment.",
+      "status": {
+        "NEW": "New",
+        "OPEN": "Open",
+        "WAITING_FOR_REPORTER": "Waiting for you",
+        "RESOLVED": "Resolved",
+        "REJECTED": "Rejected",
+        "CANCELLED": "Withdrawn"
+      }
     }
   }
 }

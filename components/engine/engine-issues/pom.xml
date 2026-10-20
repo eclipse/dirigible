@@ -1,0 +1,47 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<parent>
+		<artifactId>dirigible-components-parent</artifactId>
+		<groupId>org.eclipse.dirigible</groupId>
+		<version>15.0.0-SNAPSHOT</version>
+		<relativePath>../../pom.xml</relativePath>
+	</parent>
+
+	<name>Components - Engine - Issues</name>
+	<artifactId>dirigible-components-engine-issues</artifactId>
+	<modelVersion>4.0.0</modelVersion>
+
+	<dependencies>
+		<!-- Components -->
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-core-base</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-core-database</artifactId>
+		</dependency>
+		<!-- The issue lifecycle runs on the platform's Flowable engine -->
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-engine-bpm-flowable</artifactId>
+		</dependency>
+		<!-- The completion guard refuses with the SDK's ValidationException, which the Inbox answers as a 400 -->
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-api-modules-java</artifactId>
+		</dependency>
+		<!-- Attachments are stored in the default tenant's CMS -->
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-api-cms</artifactId>
+		</dependency>
+	</dependencies>
+
+	<properties>
+		<license.header.location>../../../licensing-header.txt</license.header.location>
+		<parent.pom.folder>../../../</parent.pom.folder>
+	</properties>
+</project>

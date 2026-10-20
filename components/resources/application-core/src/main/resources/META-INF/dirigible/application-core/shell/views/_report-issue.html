@@ -1,0 +1,80 @@
+<!--
+
+    Copyright (c) 2010-2026 Eclipse Dirigible contributors
+
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v2.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v20.html
+
+    SPDX-FileCopyrightText: Eclipse Dirigible contributors
+    SPDX-License-Identifier: EPL-2.0
+
+-->
+<!-- "Report an issue" (#7948) - ONE fragment, rendered from the shared `issues` store and mounted with
+     x-html by every shell. It opens pre-filled with the request ids of the page's last failures and
+     shows the whole bundle the report carries before it is sent. -->
+<div x-h-dialog-overlay :data-open="$store.issues.dialogOpen" @click.self="$store.issues.closeReport()"
+     @keydown.escape.window="$store.issues.dialogOpen && $store.issues.closeReport()">
+  <form x-h-dialog id="issues-report-dialog" @submit.prevent="$store.issues.submit()">
+    <div x-h-dialog-header>
+      <h2 x-h-dialog-title x-text="$store.issues.t('shell.issues.reportTitle', 'Report an issue')"></h2>
+      <p x-h-dialog-description
+         x-text="$store.issues.t('shell.issues.reportDescription', 'Tell the support team what happened. The report carries the details below, so they can find what went wrong.')"></p>
+    </div>
+    <div x-h-dialog-content class="vbox gap-4">
+      <div x-show="($store.issues.context.requestIds || []).length" x-cloak class="hbox items-center gap-2 flex-wrap" id="issues-report-reference">
+        <span x-h-text.muted class="text-sm" x-text="$store.issues.t('shell.issues.reference', 'Reference')"></span>
+        <template x-for="requestId in ($store.issues.context.requestIds || [])" :key="requestId">
+          <span x-h-badge data-variant="outline" class="font-mono" x-text="requestId"></span>
+        </template>
+      </div>
+      <div x-h-field>
+        <label x-h-label for="issues-report-subject" x-text="$store.issues.t('shell.issues.subject', 'Subject')"></label>
+        <input x-h-input id="issues-report-subject" type="text" maxlength="255" required x-model="$store.issues.draft.subject"
+               :placeholder="$store.issues.t('shell.issues.subjectPlaceholder', 'What went wrong, in one line')" />
+      </div>
+      <div x-h-field>
+        <label x-h-label for="issues-report-description" x-text="$store.issues.t('shell.issues.expected', 'What did you do, and what did you expect?')"></label>
+        <textarea x-h-textarea id="issues-report-description" rows="4" x-model="$store.issues.draft.description"></textarea>
+      </div>
+      <div x-h-field>
+        <label x-h-label for="issues-report-severity" x-text="$store.issues.t('shell.issues.severity', 'How badly are you affected?')"></label>
+        <div x-h-select>
+          <input x-h-select-input data-id="issues-report-severity" x-model="$store.issues.draft.severity" />
+          <div x-h-select-content>
+            <div x-h-select-list>
+              <div x-h-select-option="$store.issues.t('shell.issues.severities.LOW', 'A question, or something cosmetic')" data-value="LOW"></div>
+              <div x-h-select-option="$store.issues.t('shell.issues.severities.MEDIUM', 'Something does not work, and I can work around it')" data-value="MEDIUM"></div>
+              <div x-h-select-option="$store.issues.t('shell.issues.severities.HIGH', 'Something does not work, and I cannot work around it')" data-value="HIGH"></div>
+              <div x-h-select-option="$store.issues.t('shell.issues.severities.CRITICAL', 'I cannot work at all')" data-value="CRITICAL"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="vbox gap-2">
+        <button x-h-button data-variant="transparent" data-size="sm" type="button" class="self-start" id="issues-report-bundle-toggle"
+                :aria-expanded="$store.issues.showBundle" @click="$store.issues.showBundle = !$store.issues.showBundle">
+          <svg x-h-lucide role="presentation" :data-lucide="$store.issues.showBundle ? 'chevron-down' : 'chevron-right'"></svg>
+          <span x-text="$store.issues.t('shell.issues.bundle', 'What the report sends')"></span>
+        </button>
+        <div x-show="$store.issues.showBundle" x-cloak class="vbox gap-1">
+          <span x-h-text.muted class="text-xs"
+                x-text="$store.issues.t('shell.issues.bundleHint', 'Passwords, tokens and cookies are removed before the report is stored.')"></span>
+          <pre id="issues-report-bundle" class="font-mono text-xs whitespace-pre-wrap wrap-anywhere overflow-auto p-2 border rounded-md"
+               style="max-height: 16rem" x-text="$store.issues.bundleText"></pre>
+        </div>
+      </div>
+      <div x-show="$store.issues.error" x-cloak x-h-alert data-variant="warning" role="alert">
+        <div x-h-alert-description x-text="$store.issues.error"></div>
+      </div>
+    </div>
+    <div x-h-dialog-footer>
+      <button x-h-button data-variant="outline" type="button" @click="$store.issues.closeReport()"
+              x-text="$store.issues.t('shell.issues.cancel', 'Cancel')"></button>
+      <button x-h-button data-variant="primary" type="submit" id="issues-report-submit"
+              :disabled="$store.issues.busy || !$store.issues.draft.subject.trim()"
+              x-text="$store.issues.t('shell.issues.send', 'Send report')"></button>
+    </div>
+  </form>
+</div>
