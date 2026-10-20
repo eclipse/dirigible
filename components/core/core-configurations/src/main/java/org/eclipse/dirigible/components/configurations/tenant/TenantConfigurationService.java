@@ -22,6 +22,7 @@ import org.eclipse.dirigible.commons.config.ConfigGroups;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.config.SensitiveConfigs;
 import org.eclipse.dirigible.components.base.callable.CallableResultAndException;
+import org.eclipse.dirigible.components.base.tenant.TenantConfigurationScope;
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.configurations.domain.TenantConfiguration;
 import org.eclipse.dirigible.components.configurations.domain.TenantConfigurationDescriptor;
@@ -36,7 +37,7 @@ import org.springframework.stereotype.Service;
  * request does once the tenant context filter has run).
  */
 @Service
-public class TenantConfigurationService {
+public class TenantConfigurationService implements TenantConfigurationScope {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TenantConfigurationService.class);
 
@@ -113,6 +114,7 @@ public class TenantConfigurationService {
      * @return the work's result
      * @throws Exc the work's exception
      */
+    @Override
     public <Result, Exc extends Throwable> Result executeWithTenantOverrides(CallableResultAndException<Result, Exc> work) throws Exc {
         if (!Configuration.getThreadConfiguration()
                           .isEmpty()) {

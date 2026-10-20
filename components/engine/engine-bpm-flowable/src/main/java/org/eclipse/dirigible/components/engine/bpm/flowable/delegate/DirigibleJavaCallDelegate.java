@@ -15,8 +15,9 @@ import static org.eclipse.dirigible.components.engine.bpm.flowable.service.BpmSe
 import java.util.Map;
 import java.util.Optional;
 
+import org.eclipse.dirigible.components.base.callable.CallableResultAndException;
+import org.eclipse.dirigible.components.base.tenant.TenantConfigurationScope;
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
-import org.eclipse.dirigible.components.configurations.tenant.TenantConfigurationService;
 import org.eclipse.dirigible.components.open.telemetry.OpenTelemetryProvider;
 import org.eclipse.dirigible.components.tracing.TaskState;
 import org.eclipse.dirigible.components.tracing.TaskStateUtil;
@@ -27,6 +28,7 @@ import org.eclipse.dirigible.engine.java.runtime.ClientClassLoaderHolder;
 import org.flowable.common.engine.impl.el.FixedValue;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,16 +60,16 @@ import io.opentelemetry.context.Scope;
 public class DirigibleJavaCallDelegate implements JavaDelegate {
 
     private final TenantContext tenantContext;
-    private final TenantConfigurationService tenantConfigurationService;
+    private final ObjectProvider<TenantConfigurationScope> tenantConfigurationScope;
     private final ClientClassLoaderHolder clientClassLoaderHolder;
 
     /** The handler. */
     private FixedValue handler;
 
-    DirigibleJavaCallDelegate(TenantContext tenantContext, TenantConfigurationService tenantConfigurationService,
+    DirigibleJavaCallDelegate(TenantContext tenantContext, ObjectProvider<TenantConfigurationScope> tenantConfigurationScope,
             ClientClassLoaderHolder clientClassLoaderHolder) {
         this.tenantContext = tenantContext;
-        this.tenantConfigurationService = tenantConfigurationService;
+        this.tenantConfigurationScope = tenantConfigurationScope;
         this.clientClassLoaderHolder = clientClassLoaderHolder;
     }
 
@@ -161,10 +163,15 @@ public class DirigibleJavaCallDelegate implements JavaDelegate {
         // A step on the async executor is not a request: the tenant's configuration overrides (the
         // sender of a send step's mail, the base URL of its links) are loaded here, or it reads the
         // instance's.
-        tenantContext.execute(tenantId, () -> tenantConfigurationService.executeWithTenantOverrides(() -> {
+        tenantContext.execute(tenantId, () -> withTenantOverrides(() -> {
             executeJavaHandler(fqn, execution);
             return null;
         }));
+    }
+
+    private <Result, Exc extends Throwable> Result withTenantOverrides(CallableResultAndException<Result, Exc> work) throws Exc {
+        TenantConfigurationScope scope = tenantConfigurationScope.getIfAvailable();
+        return scope == null ? work.call() : scope.executeWithTenantOverrides(work);
     }
 
     private void executeJavaHandler(String fqn, DelegateExecution execution) {
