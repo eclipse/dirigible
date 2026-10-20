@@ -64,6 +64,14 @@ public final class CheckSupport {
     public static final Pattern TERM =
             Pattern.compile("\\s*(\\w+(?:\\.\\w+)?)\\s*(==|!=)\\s*('[^']*'|\"[^\"]*\"|-?\\d+|[A-Za-z_][A-Za-z0-9_\\-]*)\\s*");
 
+    /**
+     * One term of the {@code when} guard of a posting item row or a computed line, over the SOURCE
+     * (dirigible #7993): a field against a quoted string ({@code ==} / {@code !=}) or against a number
+     * ({@code ==}, {@code !=}, {@code <}, {@code <=}, {@code >}, {@code >=}).
+     */
+    public static final Pattern SOURCE_TERM =
+            Pattern.compile("\\s*(\\w+)\\s*(?:(==|!=)\\s*('[^']*'|\"[^\"]*\")|(==|!=|<=|>=|<|>)\\s*(-?\\d+(?:\\.\\d+)?))\\s*");
+
     /** The field types a condition may compare - those with an exact, type-safe equality. */
     public static final Set<String> GUARD_TYPES = Set.of("string", "text", "integer", "int", "long", "boolean");
 
@@ -143,6 +151,38 @@ public final class CheckSupport {
             }
         } else {
             terms.add(String.valueOf(when));
+        }
+        return terms;
+    }
+
+    /**
+     * One parsed {@link #SOURCE_TERM}.
+     *
+     * @param property the source field being compared, as authored
+     * @param op the operator
+     * @param literal the compared value - a string unquoted, a number as authored
+     * @param text whether the value is a quoted string rather than a number
+     */
+    public record SourceTerm(String property, String op, String literal, boolean text) {
+    }
+
+    /**
+     * Reads the {@code when} guard of a posting item row or a computed line: one {@link #SOURCE_TERM},
+     * or several ANDed. A row's cells are strings, so the list form is joined with {@code &&} on the
+     * raw tree before the typed mapping, and terms an author joins with {@code &&} read the same.
+     *
+     * @param when the guard
+     * @return the terms, in order, or {@code null} when one does not read - never a partial guard
+     */
+    public static List<SourceTerm> sourceTerms(String when) {
+        List<SourceTerm> terms = new ArrayList<>();
+        for (String term : when.split("&&", -1)) {
+            Matcher matcher = SOURCE_TERM.matcher(term);
+            if (!matcher.matches()) {
+                return null;
+            }
+            terms.add(matcher.group(2) != null ? new SourceTerm(matcher.group(1), matcher.group(2), unquote(matcher.group(3)), true)
+                    : new SourceTerm(matcher.group(1), matcher.group(4), matcher.group(5), false));
         }
         return terms;
     }

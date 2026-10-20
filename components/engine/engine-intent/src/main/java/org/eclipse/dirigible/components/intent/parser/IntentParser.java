@@ -341,6 +341,7 @@ public final class IntentParser {
         rejectCheckOn(tree);
         rejectMessageMaps(tree);
         moveGeneratesItemLines(tree);
+        joinRowGuardLists(tree);
         expandUniqueShorthand(tree);
         normalizeDuplicable(tree);
         normalizeSettlementOrder(tree);
@@ -6749,6 +6750,40 @@ public final class IntentParser {
         }
     }
 
+    /**
+     * The {@code when} of a posting item row or a computed line may be a LIST of terms, ANDed
+     * (dirigible #7993). A row is typed as a map of strings, so a list there would fail the typed
+     * mapping; it is joined with {@code &&} on the raw tree instead, and read back by
+     * {@link CheckSupport#sourceTerms}.
+     *
+     * @param tree the SnakeYAML-loaded raw tree
+     */
+    @SuppressWarnings("unchecked")
+    private static void joinRowGuardLists(Object tree) {
+        if (!(tree instanceof Map<?, ?> root)) {
+            return;
+        }
+        List<Object> rowLists = new ArrayList<>();
+        if (root.get("postings") instanceof List<?> postings) {
+            postings.forEach(posting -> rowLists.add(posting instanceof Map<?, ?> p ? p.get("items") : null));
+        }
+        if (root.get("generates") instanceof List<?> generates) {
+            generates.forEach(generate -> rowLists.add(generate instanceof Map<?, ?> g ? g.get("itemLines") : null));
+        }
+        for (Object rows : rowLists) {
+            if (!(rows instanceof List<?> list)) {
+                continue;
+            }
+            for (Object row : list) {
+                if (row instanceof Map<?, ?> cells && cells.get("when") instanceof List<?> terms) {
+                    ((Map<Object, Object>) cells).put("when", String.join(" && ", terms.stream()
+                                                                                       .map(String::valueOf)
+                                                                                       .toList()));
+                }
+            }
+        }
+    }
+
     @SuppressWarnings("unchecked")
     private static void rehomeItemLines(Object generateNode) {
         if (!(generateNode instanceof Map<?, ?> generate) || !(generate.get("items") instanceof List<?> itemLines)) {
@@ -9416,14 +9451,14 @@ public final class IntentParser {
                              .get("model");
             EntityIntent postingSource =
                     eventAlias == null ? byName.get(String.valueOf(onTransition != null ? onTransition : onCreate)) : null;
+            int itemNumber = 0;
             for (java.util.Map<String, String> row : posting.getItems()) {
+                itemNumber++;
                 for (java.util.Map.Entry<String, String> cell : row.entrySet()) {
                     String key = cell.getKey();
                     String value = cell.getValue() == null ? "" : cell.getValue();
                     if ("when".equals(key)) {
-                        if (!value.matches("\\s*\\w+\\s*[!=]=\\s*\\d+(\\.\\d+)?\\s*")) {
-                            issues.add(subject + " item when [" + value + "] must be `<SourceField> ==|!= <number>`");
-                        }
+                        validateRowGuard(subject + " item " + itemNumber, value, postingSource, issues);
                         continue;
                     }
                     if (!hasPropertyIgnoreCase(itemsEntity, key)) {
@@ -9504,6 +9539,42 @@ public final class IntentParser {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    /**
+     * The {@code when} of a posting item row or a computed line (dirigible #7993): one
+     * {@link CheckSupport#SOURCE_TERM} or several ANDed. A guard that does not read is refused - the
+     * generator has nothing to render for it. Over a LOCAL source each term must also read a field or a
+     * to-one of it, and a string term a string field, because both mistakes would be silent: the
+     * arithmetic evaluator reads a missing field as zero, and a string never equals a number. A
+     * cross-model source is resolved at generation, where only the shape is known.
+     *
+     * @param subject the message prefix naming the posting (or the generate) and the row
+     * @param when the authored guard
+     * @param source the local source entity, or {@code null} when it is not resolvable here
+     * @param issues the issues, appended to
+     */
+    private static void validateRowGuard(String subject, String when, EntityIntent source, List<String> issues) {
+        List<CheckSupport.SourceTerm> terms = CheckSupport.sourceTerms(when);
+        if (terms == null) {
+            issues.add(subject + " when [" + when + "] must be `<SourceField> <op> <value>` or a list of them (ANDed) - `==`/`!=`"
+                    + " against a quoted string, or `==`/`!=`/`<`/`<=`/`>`/`>=` against a number");
+            return;
+        }
+        if (source == null) {
+            return;
+        }
+        for (CheckSupport.SourceTerm term : terms) {
+            FieldIntent field = CheckSupport.field(source, term.property());
+            if (field == null && CheckSupport.toOne(source, term.property()) == null) {
+                issues.add(subject + " when [" + when + "] reads [" + term.property() + "], which is not a field or to-one relation of the"
+                        + " source [" + source.getName() + "]");
+            } else if (term.text() && (field == null || !Set.of("string", "text")
+                                                            .contains(CheckSupport.guardType(field.getType())))) {
+                issues.add(subject + " when [" + when + "] compares [" + term.property() + "] with a string, but it is not a string field"
+                        + " of the source [" + source.getName() + "]");
             }
         }
     }
@@ -10443,7 +10514,9 @@ public final class IntentParser {
                 }
             }
         }
+        int lineNumber = 0;
         for (Map<String, String> row : itemLines) {
+            lineNumber++;
             boolean hasCell = false;
             for (Map.Entry<String, String> cell : row.entrySet()) {
                 String key = cell.getKey();
@@ -10451,9 +10524,7 @@ public final class IntentParser {
                         : cell.getValue()
                               .trim();
                 if ("when".equalsIgnoreCase(key)) {
-                    if (!value.matches("\\s*\\w+\\s*[!=]=\\s*\\d+(\\.\\d+)?\\s*")) {
-                        issues.add(subject + " item line when [" + value + "] must be `<SourceField> ==|!= <number>`");
-                    }
+                    validateRowGuard(subject + " item line " + lineNumber, value, source, issues);
                     continue;
                 }
                 hasCell = true;
