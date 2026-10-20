@@ -582,8 +582,7 @@ The IDE chrome (sidebars, dialogs, tabs, menus, toolbars, forms) is built on [Bl
 ### 8.1 Supported databases (`modules/database/`)
 - `database-h2` (default, file-backed at `./target/dirigible/h2/DefaultDB`)
 - `database-sql-postgres`
-- `database-sql-mssql`, `database-sql-hana`, `database-sql-mariadb`, `database-sql-mysql` - dialects only; their JDBC drivers are **not bundled** (#7804). An edition adds the driver (application pom, `/modules` drop-in, or a project.json `scope: "platform"` dependency); `DataSourceInitializer` refuses a data source whose driver class is missing with a message naming the coordinate (`JdbcDriverAvailability`). Versions stay pinned in `dependencies/pom.xml` / the Spring Boot BOM.
-- `database-sql-snowflake`
+- `database-sql-mssql`, `database-sql-hana`, `database-sql-mariadb`, `database-sql-mysql`, `database-sql-snowflake` - dialects only; their JDBC drivers are **not bundled** (#7804, #7778; Snowflake's alone is ~99 MB, see `modules/database/database-sql-snowflake/README.md`). An edition adds the driver (application pom, `/modules` drop-in, or a project.json `scope: "platform"` dependency); `DataSourceInitializer` refuses a data source whose driver class is missing with a message naming the coordinate (`JdbcDriverAvailability`). Versions stay pinned in `dependencies/pom.xml` / the Spring Boot BOM.
 - `database-sql-h2`
 - `database-sql-mongodb` (NoSQL)
 - `database-mongodb-jdbc`
@@ -603,7 +602,7 @@ CI runs the integration suite on H2 and PostgreSQL 16 (the only bundled drivers)
 - `data-anonymize` — column-level anonymization endpoint.
 - `data-processes` — process-data helpers.
 - `data-core` — shared helpers.
-- `data-source-snowpark` — Snowflake Snowpark integration.
+- `data-source-snowpark` — Snowflake Snowpark integration (needs the Snowflake JDBC driver added by the application).
 
 ### 8.3 Repository (`modules/repository/`)
 - `repository-api`, `repository-local`, `repository-master`, `repository-cache`, `repository-search`, `repository-zip` — pluggable storage abstraction backing the registry (file-system local is the default).
