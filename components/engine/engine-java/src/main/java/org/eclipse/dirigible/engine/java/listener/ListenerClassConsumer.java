@@ -23,6 +23,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.eclipse.dirigible.commons.api.helpers.LogSanitizer;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.base.tenant.DefaultTenant;
 import org.eclipse.dirigible.components.base.tenant.Tenant;
@@ -787,7 +788,8 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
         try {
             handle.close();
         } catch (Exception e) {
-            LOGGER.debug("Failed to close the JMS handle of the refused subscription [{}]: {}", label, e.getMessage(), e);
+            LOGGER.debug("Failed to close the JMS handle of the refused subscription [{}]: {}", LogSanitizer.sanitize(label),
+                    e.getMessage(), e);
         }
     }
 
@@ -861,7 +863,8 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
             closeQuietly("deprovisioned tenant [" + tenantId + "]", handle);
         }
         if (!open.isEmpty()) {
-            LOGGER.info("Closed [{}] Java listener subscription handle(s) of deprovisioned tenant [{}].", open.size(), tenantId);
+            LOGGER.info("Closed [{}] Java listener subscription handle(s) of deprovisioned tenant [{}].", open.size(),
+                    LogSanitizer.sanitize(tenantId));
         }
     }
 

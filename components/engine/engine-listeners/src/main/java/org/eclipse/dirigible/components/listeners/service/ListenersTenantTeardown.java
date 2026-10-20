@@ -9,6 +9,7 @@
  */
 package org.eclipse.dirigible.components.listeners.service;
 
+import org.eclipse.dirigible.commons.api.helpers.LogSanitizer;
 import org.eclipse.dirigible.components.base.tenant.TenantTeardownParticipant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +49,7 @@ class ListenersTenantTeardown implements TenantTeardownParticipant {
     public void teardown(String tenantId) {
         int stopped = listenersManager.stopTenantListeners(tenantId);
         if (stopped > 0) {
-            LOGGER.info("Stopped [{}] listener(s) of tenant [{}].", stopped, tenantId);
+            LOGGER.info("Stopped [{}] listener(s) of tenant [{}].", stopped, LogSanitizer.sanitize(tenantId));
         }
     }
 }

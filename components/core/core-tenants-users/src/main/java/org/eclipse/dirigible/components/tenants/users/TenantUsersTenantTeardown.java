@@ -9,6 +9,7 @@
  */
 package org.eclipse.dirigible.components.tenants.users;
 
+import org.eclipse.dirigible.commons.api.helpers.LogSanitizer;
 import org.eclipse.dirigible.components.base.tenant.TenantTeardownParticipant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +53,6 @@ class TenantUsersTenantTeardown implements TenantTeardownParticipant {
     @Override
     public void teardown(String tenantId) {
         long deleted = users.deleteByTenantId(tenantId);
-        LOGGER.info("Deleted [{}] replica user(s) of tenant [{}].", deleted, tenantId);
+        LOGGER.info("Deleted [{}] replica user(s) of tenant [{}].", deleted, LogSanitizer.sanitize(tenantId));
     }
 }

@@ -11,6 +11,7 @@ package org.eclipse.dirigible.components.jobs.manager;
 
 import java.util.Set;
 
+import org.eclipse.dirigible.commons.api.helpers.LogSanitizer;
 import org.eclipse.dirigible.components.base.tenant.TenantTeardownParticipant;
 import org.eclipse.dirigible.components.jobs.repository.JobLogRepository;
 import org.quartz.JobKey;
@@ -77,6 +78,6 @@ class JobsTenantTeardown implements TenantTeardownParticipant {
             throw new IllegalStateException("Could not delete the scheduled jobs of tenant [" + tenantId + "]: " + ex.getMessage(), ex);
         }
         long logs = jobLogs.deleteByTenantId(tenantId);
-        LOGGER.info("Deleted [{}] scheduled job(s) and [{}] job log(s) of tenant [{}].", deleted, logs, tenantId);
+        LOGGER.info("Deleted [{}] scheduled job(s) and [{}] job log(s) of tenant [{}].", deleted, logs, LogSanitizer.sanitize(tenantId));
     }
 }

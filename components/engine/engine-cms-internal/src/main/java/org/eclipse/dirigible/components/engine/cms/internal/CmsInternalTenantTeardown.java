@@ -18,6 +18,7 @@ import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.stream.Stream;
 
+import org.eclipse.dirigible.commons.api.helpers.LogSanitizer;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.eclipse.dirigible.components.base.tenant.TenantTeardownParticipant;
@@ -68,7 +69,7 @@ class CmsInternalTenantTeardown implements TenantTeardownParticipant {
         } catch (IOException ex) {
             throw new UncheckedIOException("Could not delete the CMS folder [" + folder + "] of tenant [" + tenantId + "]", ex);
         }
-        LOGGER.info("Deleted the CMS folder [{}] of tenant [{}].", folder, tenantId);
+        LOGGER.info("Deleted the CMS folder [{}] of tenant [{}].", LogSanitizer.sanitize(folder), LogSanitizer.sanitize(tenantId));
     }
 
     /**
