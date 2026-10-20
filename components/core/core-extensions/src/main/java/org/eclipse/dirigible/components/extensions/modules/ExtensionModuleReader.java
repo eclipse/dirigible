@@ -107,16 +107,25 @@ public class ExtensionModuleReader {
     private Optional<ExtensionModule> readJsonModule(String module, String extensionPoint) {
         IResource resource = repository.getResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/" + stripLeadingSlash(module));
         if (!resource.exists()) {
-            LOGGER.warn("Extension module [{}] of extension point [{}] does not exist in the registry, consider publishing it.", module,
-                    extensionPoint);
+            LOGGER.warn("Extension module [{}] of extension point [{}] does not exist in the registry, consider publishing it.",
+                    loggable(module), loggable(extensionPoint));
             return Optional.empty();
         }
         try {
             return Optional.of(new ExtensionModule(module, null, JSON.readValue(resource.getContent(), OBJECT)));
         } catch (JacksonException e) {
-            LOGGER.warn("Extension module [{}] of extension point [{}] is not a JSON object and is skipped.", module, extensionPoint, e);
+            LOGGER.warn("Extension module [{}] of extension point [{}] is not a JSON object and is skipped.", loggable(module),
+                    loggable(extensionPoint), e);
             return Optional.empty();
         }
+    }
+
+    /**
+     * Collapses the line breaks in a value that may come from the request (an extension point names
+     * what the caller asked for), so it cannot forge a second log entry.
+     */
+    private static String loggable(String value) {
+        return value == null ? null : value.replaceAll("\\R", "_");
     }
 
     private static String stripLeadingSlash(String module) {
@@ -145,12 +154,13 @@ public class ExtensionModuleReader {
             try {
                 Optional<ExtensionModuleExport> export = current.evaluate(module, exportNames);
                 if (export.isEmpty()) {
-                    LOGGER.warn("Extension module [{}] of extension point [{}] provides none of the exports {} and is skipped.", module,
-                            extensionPoint, exportNames);
+                    LOGGER.warn("Extension module [{}] of extension point [{}] provides none of the exports {} and is skipped.",
+                            loggable(module), loggable(extensionPoint), exportNames);
                 }
                 return export.map(found -> new ExtensionModule(module, found.name(), found.value()));
             } catch (RuntimeException e) {
-                LOGGER.warn("Extension module [{}] of extension point [{}] failed to evaluate and is skipped.", module, extensionPoint, e);
+                LOGGER.warn("Extension module [{}] of extension point [{}] failed to evaluate and is skipped.", loggable(module),
+                        loggable(extensionPoint), e);
                 return Optional.empty();
             }
         }
@@ -170,10 +180,10 @@ public class ExtensionModuleReader {
                 LOGGER.warn(
                         "Extension module [{}] of extension point [{}] is a script module and no script engine is deployed, so it is skipped."
                                 + " Convert it to a .json module, or regenerate the application that contributes it.",
-                        module, extensionPoint);
+                        loggable(module), loggable(extensionPoint));
             } else {
-                LOGGER.debug("Extension module [{}] of extension point [{}] is a script module and is skipped again.", module,
-                        extensionPoint);
+                LOGGER.debug("Extension module [{}] of extension point [{}] is a script module and is skipped again.", loggable(module),
+                        loggable(extensionPoint));
             }
         }
 
