@@ -12,11 +12,14 @@ package org.eclipse.dirigible.components.engine.typescript.transpilation;
 import org.eclipse.dirigible.components.base.publisher.PublisherHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+// Same switch as TscWatcherService: without the watcher there is nothing to restart.
 @Order(30)
 @Component
+@ConditionalOnExpression("'${DIRIGIBLE_TSC_WATCH_SERVICE_ENABLED:true}'.toLowerCase() != 'false'")
 class TscWatcherServicePublisherHandler implements PublisherHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TscWatcherServicePublisherHandler.class);
