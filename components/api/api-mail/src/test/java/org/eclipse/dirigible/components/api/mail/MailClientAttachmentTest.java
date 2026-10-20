@@ -63,8 +63,8 @@ class MailClientAttachmentTest {
         List<Map> parts = new java.util.ArrayList<>();
         parts.add(Map.of("type", "text", "contentType", "text/plain", "text", "see attached"));
         parts.add(attachmentPart);
-        return MailClient.createMimeMessage(Session.getInstance(new Properties()), "from@example.com", new String[] {"to@example.com"},
-                new String[0], new String[0], "Invoice", parts);
+        return MailClient.createMimeMessage(Session.getInstance(new Properties()), "from@example.com", null,
+                new String[] {"to@example.com"}, new String[0], new String[0], "Invoice", parts);
     }
 
     private static jakarta.mail.Part attachment(MimeMessage message) throws Exception {

@@ -3581,8 +3581,9 @@ silently dropped a token would produce archive names nobody can tell apart, whic
 exists to fix. On a notify block, `fileName:` requires `attach:` (a plain-text message has no file to
 name), and with `attach: recordPrint` only fields of the anchor itself are readable - that document is
 rendered once, before the per-row loop.
-- Per-tenant SMTP comes from the platform mail configuration; the sender address is
-  `DIRIGIBLE_MAIL_SENDER`.
+- SMTP comes from the platform mail configuration (one account per instance); the sender address is
+  `DIRIGIBLE_MAIL_SENDER` and the Reply-To `DIRIGIBLE_MAIL_REPLY_TO` (none when blank). Both are
+  tenant configuration, so each tenant mails in its own name - never put a sender into the intent.
 
 A sending `serviceTask` stands alone: `notify` cannot be combined with `setField` /
 `setRelationField` / `call` / `delegate` on the same step (give the send its own step, and route to it

@@ -855,7 +855,7 @@ class IntentEngineIT extends IntegrationTest {
                 "the notification should be a message-handling listener (PascalCased class name)");
         assertTrue(notification.contains("@Component") && notification.contains("return \"intent-test-Order-Order-updated\""),
                 "an onUpdate notification (self-describing @Component MessageHandler) should bind the entity's -updated topic via destination()");
-        assertTrue(notification.contains("Mail.send("), "the notification should send via the SDK Mail API");
+        assertTrue(notification.contains("Mail.sendAsApplication("), "the notification should send via the SDK Mail API");
         assertTrue(notification.contains("String to = \"ops@example.com\""), "a literal recipient should be emitted as a literal");
         assertTrue(notification.contains("import gen.orders.data.order.OrderEntity"),
                 "the notification should import the event entity from its real (lowercased) Java package");
@@ -902,7 +902,7 @@ class IntentEngineIT extends IntegrationTest {
                 job.contains(
                         "CustomerEntity customer = entity.Customer == null ? null : new CustomerRepository().findById(entity.Customer)"),
                 "the per-row notify should load the one-hop related entity");
-        assertTrue(job.contains("Mail.send("), "the job should notify per row via the SDK Mail API");
+        assertTrue(job.contains("Mail.sendAsApplication("), "the job should notify per row via the SDK Mail API");
         // Both links at the second call site: the per-row record link and the Inbox link, each declared
         // only because the body names it.
         assertTrue(job.contains("\"/services/web/intent-test/gen/orders/index.html#/Order/\" + entity.Id"),
@@ -2462,7 +2462,7 @@ class IntentEngineIT extends IntegrationTest {
         int load = job.indexOf("new CustomerRepository().findById(entity.Customer)");
         int language = job.indexOf("attachLanguageSource =");
         int render = job.indexOf("Print.render(\"Invoice\",");
-        int send = job.indexOf("Mail.send(");
+        int send = job.indexOf("Mail.sendAsApplication(");
         int catches = job.indexOf("} catch (Exception ex) {");
         assertTrue(loop > 0 && recipient > 0 && tryOpens > 0 && load > 0 && language > 0 && render > 0 && send > 0 && catches > 0,
                 "got: " + job);
@@ -2564,7 +2564,7 @@ class IntentEngineIT extends IntegrationTest {
         int create = job.indexOf("UnitOfWork.run(", loop);
         // #7365: the send is the unit of work's last act, so it is the unchecked `mail(...)` call
         // inside the lambda - `Mail.send` itself lives in that helper, below the loop.
-        int send = job.indexOf("mail(from, recipient, subject, parts);", loop);
+        int send = job.indexOf("mail(recipient, subject, parts);", loop);
         assertTrue(loop > 0 && ladder > 0 && days > 0 && notDue > 0 && guard > 0 && recipient > 0 && create > 0 && send > 0, "got: " + job);
         // The ladder is read first: which level a row is at decides both what is written and what is
         // said, so it cannot be resolved after either.
@@ -2670,7 +2670,7 @@ class IntentEngineIT extends IntegrationTest {
         int tryOpens = notification.indexOf("try {", method);
         int load = notification.indexOf("new CustomerRepository().findById(entity.Customer)");
         int render = notification.indexOf("Print.render(\"Invoice\",");
-        int send = notification.indexOf("Mail.send(");
+        int send = notification.indexOf("Mail.sendAsApplication(");
         int catches = notification.indexOf("} catch (Exception ex) {");
         assertTrue(method > 0 && tryOpens > 0 && load > 0 && render > 0 && send > 0 && catches > 0, "got: " + notification);
         // The ordering is the whole fix: the try must open before the relation load.

@@ -40,12 +40,18 @@ class TenantConfigurationKeyPolicyTest {
         assertTrue(policy.isInjectable("DIRIGIBLE_CMS_ROLES_ENABLED"));
         // The app's external base URL (the {appUrl} notify token) is per-tenant overridable.
         assertTrue(policy.isInjectable("DIRIGIBLE_APP_BASE_URL"));
+        // The sender and reply-to of an application's own mail, so each tenant mails in its own name.
+        assertTrue(policy.isInjectable("DIRIGIBLE_MAIL_SENDER"));
+        assertTrue(policy.isInjectable("DIRIGIBLE_MAIL_REPLY_TO"));
     }
 
     @Test
     void nonWhitelistedKeysAreNotInjectable() {
         assertFalse(policy.isInjectable("DIRIGIBLE_TENANT_FEATURE_X"));
         assertFalse(policy.isInjectable("DIRIGIBLE_MAIL_SMTPS_HOST"));
+        // The SMTP account itself stays the instance's.
+        assertFalse(policy.isInjectable("DIRIGIBLE_MAIL_USERNAME"));
+        assertFalse(policy.isInjectable("DIRIGIBLE_MAIL_PASSWORD"));
         assertFalse(policy.isInjectable("DIRIGIBLE_DATABASE_H2_URL"));
         assertFalse(policy.isInjectable("SOME_RANDOM_KEY"));
     }
@@ -98,7 +104,7 @@ class TenantConfigurationKeyPolicyTest {
     @Test
     void allowedKeysAreTheTenantOverridableCatalogueEntriesInOrder() {
         assertEquals(DirigibleConfig.tenantOverridableKeys(), policy.allowedKeys());
-        assertEquals(13, policy.allowedKeys()
+        assertEquals(15, policy.allowedKeys()
                                .size());
         assertEquals("DIRIGIBLE_BRANDING_NAME", policy.allowedKeys()
                                                       .get(0));

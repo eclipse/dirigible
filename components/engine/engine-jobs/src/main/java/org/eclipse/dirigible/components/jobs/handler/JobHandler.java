@@ -13,6 +13,7 @@ import java.util.Map;
 
 import org.eclipse.dirigible.components.base.tenant.Tenant;
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
+import org.eclipse.dirigible.components.configurations.tenant.TenantConfigurationService;
 import org.eclipse.dirigible.components.tracing.TaskState;
 import org.eclipse.dirigible.components.tracing.TaskStateUtil;
 import org.eclipse.dirigible.components.tracing.TaskType;
@@ -38,6 +39,10 @@ public class JobHandler implements Job {
     /** The tenant context. */
     @Autowired
     private TenantContext tenantContext;
+
+    /** The tenant configuration service. */
+    @Autowired
+    private TenantConfigurationService tenantConfigurationService;
 
     /**
      * Execute.
@@ -70,10 +75,12 @@ public class JobHandler implements Job {
 
         }
         try {
-            tenantContext.execute(tenant, () -> {
+            // A fire is not a request: the tenant's configuration overrides (the sender of a job's
+            // notify mail, the base URL of its links) are loaded here, or the job reads the instance's.
+            tenantContext.execute(tenant, () -> tenantConfigurationService.executeWithTenantOverrides(() -> {
                 jobExecutionService.executeJob(context);
                 return null;
-            });
+            }));
 
             if (TracingFacade.isTracingEnabled()) {
                 Map<String, String> output = TaskStateUtil.getVariables(context.getMergedJobDataMap()

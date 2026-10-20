@@ -21,7 +21,12 @@ public class TestConfig {
 
     @Bean
     TenantContext tenantContext() {
-        return Mockito.mock(TenantContext.class);
+        // A request of this slice runs in no tenant scope, as with the real context before its
+        // filter has run - the tenant configuration filter then leaves the request alone.
+        TenantContext tenantContext = Mockito.mock(TenantContext.class);
+        Mockito.when(tenantContext.isNotInitialized())
+               .thenReturn(true);
+        return tenantContext;
     }
 
     @Bean

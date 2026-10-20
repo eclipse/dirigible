@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
+import org.eclipse.dirigible.components.configurations.tenant.TenantConfigurationService;
 import org.eclipse.dirigible.components.open.telemetry.OpenTelemetryProvider;
 import org.eclipse.dirigible.components.tracing.TaskState;
 import org.eclipse.dirigible.components.tracing.TaskStateUtil;
@@ -57,13 +58,16 @@ import io.opentelemetry.context.Scope;
 public class DirigibleJavaCallDelegate implements JavaDelegate {
 
     private final TenantContext tenantContext;
+    private final TenantConfigurationService tenantConfigurationService;
     private final ClientClassLoaderHolder clientClassLoaderHolder;
 
     /** The handler. */
     private FixedValue handler;
 
-    DirigibleJavaCallDelegate(TenantContext tenantContext, ClientClassLoaderHolder clientClassLoaderHolder) {
+    DirigibleJavaCallDelegate(TenantContext tenantContext, TenantConfigurationService tenantConfigurationService,
+            ClientClassLoaderHolder clientClassLoaderHolder) {
         this.tenantContext = tenantContext;
+        this.tenantConfigurationService = tenantConfigurationService;
         this.clientClassLoaderHolder = clientClassLoaderHolder;
     }
 
@@ -154,10 +158,13 @@ public class DirigibleJavaCallDelegate implements JavaDelegate {
 
     @Transactional
     private void executeJavaHandlerInTenantContext(String tenantId, String fqn, DelegateExecution execution) {
-        tenantContext.execute(tenantId, () -> {
+        // A step on the async executor is not a request: the tenant's configuration overrides (the
+        // sender of a send step's mail, the base URL of its links) are loaded here, or it reads the
+        // instance's.
+        tenantContext.execute(tenantId, () -> tenantConfigurationService.executeWithTenantOverrides(() -> {
             executeJavaHandler(fqn, execution);
             return null;
-        });
+        }));
     }
 
     private void executeJavaHandler(String fqn, DelegateExecution execution) {

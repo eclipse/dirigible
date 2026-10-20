@@ -4282,7 +4282,7 @@ class IntentEmissionCoverageIT extends IntegrationTest {
         int escalatingGuard = escalating.indexOf("BillReminderRepository().findAll(Criteria.create()");
         int escalatingRecipient = escalating.indexOf("if (to == null || to.isBlank())");
         int escalatingUnit = escalating.indexOf("UnitOfWork.run(");
-        int escalatingSend = escalating.indexOf("mail(from, recipient, subject, parts);");
+        int escalatingSend = escalating.indexOf("mail(recipient, subject, parts);");
         int escalatingCreated = escalating.indexOf("created++;");
         assertTrue(
                 escalatingGuard > 0 && escalatingRecipient > escalatingGuard && escalatingUnit > escalatingRecipient
@@ -4688,7 +4688,7 @@ class IntentEmissionCoverageIT extends IntegrationTest {
         // server-side print renderer (never a hand-rolled payload), and the whole send must be
         // wrapped so a mail failure cannot fail the already-committed transition.
         String sendBill = contentOf("gen/events/emission/SendBillTransition.java");
-        assertTrue(sendBill.contains("Mail.send("), "a transition's notify must emit the actual send call");
+        assertTrue(sendBill.contains("Mail.sendAsApplication("), "a transition's notify must emit the actual send call");
         // #7488: the html alternative is a second text part, every interpolated value escaped - the
         // deep link included - while the authored markup stays literal.
         assertTrue(
@@ -4782,7 +4782,7 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                 "a one-hop recipient must load the related record by FK before reading the address");
         assertTrue(billSend.contains("(Person == null ? null : Person.Email)"),
                 "the recipient expression must be null-safe on an unset relation");
-        assertTrue(billSend.contains("Mail.send("), "the sender must emit the actual send call");
+        assertTrue(billSend.contains("Mail.sendAsApplication("), "the sender must emit the actual send call");
         assertTrue(billSend.contains("no recipient"), "a record with nobody to mail must be a logged no-op, not a failure");
         // attach: { report, bind } (#6931) - the report runs through its OWN generated repository,
         // which lives in the report's gen folder rather than this one, and each declared parameter is

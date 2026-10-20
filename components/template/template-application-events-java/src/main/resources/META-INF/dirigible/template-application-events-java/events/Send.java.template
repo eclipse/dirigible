@@ -56,7 +56,8 @@ import gen.${attachLanguageJavaGenFolder}.data.${attachLanguageJavaTargetPerspec
  * Generated from the intent sends glue - do not edit; it is re-generated with the application. Runs as
  * a BPMN service task (flowable:delegateExpression="\${JavaTask}"). Entity access goes ONLY through
  * the generated repositories, so the mail sees the same validated, translated row a user would, and
- * the sender address comes from the DIRIGIBLE_MAIL_SENDER configuration.
+ * the sender and reply-to addresses come from the tenant's DIRIGIBLE_MAIL_SENDER /
+ * DIRIGIBLE_MAIL_REPLY_TO.
 #if($attach == "print")
  *
  * The document rides along as a PDF attachment: the generated ${attachEntity}PrintFeeder assembles the
@@ -290,13 +291,12 @@ public class ${className} implements JavaDelegate {
         document.put("data", data);
         parts.add(document);
 #end
-        String from = Configurations.get("DIRIGIBLE_MAIL_SENDER", "noreply@dirigible.io");
 #if($forEach != "")
         try {
 #if($notifyCopies)
-            Mail.send(from, recipients(to), recipients(cc), recipients(bcc), ${notifySubjectExpression}, parts);
+            Mail.sendAsApplication(recipients(to), recipients(cc), recipients(bcc), ${notifySubjectExpression}, parts);
 #else
-            Mail.send(from, new String[] {to}, new String[0], new String[0], ${notifySubjectExpression}, parts);
+            Mail.sendAsApplication(new String[] {to}, new String[0], new String[0], ${notifySubjectExpression}, parts);
 #end
 #if($notifyOutcomeProperty != "")
             stampNotifyOutcome(entity.${notifyOutcomeKeyProperty}, null);
@@ -312,9 +312,9 @@ public class ${className} implements JavaDelegate {
 #else
         try {
 #if($notifyCopies)
-            Mail.send(from, recipients(to), recipients(cc), recipients(bcc), ${notifySubjectExpression}, parts);
+            Mail.sendAsApplication(recipients(to), recipients(cc), recipients(bcc), ${notifySubjectExpression}, parts);
 #else
-            Mail.send(from, new String[] {to}, new String[0], new String[0], ${notifySubjectExpression}, parts);
+            Mail.sendAsApplication(new String[] {to}, new String[0], new String[0], ${notifySubjectExpression}, parts);
 #end
 #if($notifyOutcomeProperty != "")
             stampNotifyOutcome(entity.${notifyOutcomeKeyProperty}, null);

@@ -19,7 +19,9 @@ import java.util.Map;
 import org.eclipse.dirigible.commons.config.ConfigDescriptors;
 import org.eclipse.dirigible.commons.config.ConfigGroup;
 import org.eclipse.dirigible.commons.config.ConfigGroups;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.config.SensitiveConfigs;
+import org.eclipse.dirigible.components.base.callable.CallableResultAndException;
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.configurations.domain.TenantConfiguration;
 import org.eclipse.dirigible.components.configurations.domain.TenantConfigurationDescriptor;
@@ -94,6 +96,33 @@ public class TenantConfigurationService {
                         ex);
             }
             return Map.of();
+        }
+    }
+
+    /**
+     * Runs work of the current tenant scope with the tenant's overrides in the thread-scoped
+     * configuration - for work that is not a request, such as a job fire or a process step, which would
+     * otherwise read the instance value of every tenant-overridable key (the sender of the mail it
+     * sends, the base URL of its links). The overrides are loaded only when the thread carries none
+     * yet, so a step running inside a request or a listener dispatch keeps the ones already loaded, and
+     * they are cleared afterwards so they never leak onto a pooled thread.
+     *
+     * @param <Result> the result type
+     * @param <Exc> the exception type
+     * @param work the work
+     * @return the work's result
+     * @throws Exc the work's exception
+     */
+    public <Result, Exc extends Throwable> Result executeWithTenantOverrides(CallableResultAndException<Result, Exc> work) throws Exc {
+        if (!Configuration.getThreadConfiguration()
+                          .isEmpty()) {
+            return work.call();
+        }
+        Configuration.setThreadConfiguration(resolveInjectableForCurrentTenant());
+        try {
+            return work.call();
+        } finally {
+            Configuration.removeThreadConfiguration();
         }
     }
 
