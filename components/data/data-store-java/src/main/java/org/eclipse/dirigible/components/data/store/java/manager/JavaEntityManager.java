@@ -13,9 +13,11 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.locks.ReentrantLock;
@@ -47,6 +49,15 @@ import org.springframework.stereotype.Component;
  * thread can be reconfiguring at any time. Reads against {@link #getSessionFactory()} block briefly
  * during a rebuild, which is acceptable because rebuilds run only on the synchronization thread and
  * are bounded by the number of registered entities.
+ *
+ * <p>
+ * A rebuild re-maps every registered entity and runs {@code hbm2ddl} over all their tables, so
+ * installing a whole generation one rebuild per entity is quadratic. {@code EntityClassConsumer}
+ * therefore installs a generation inside {@link #beginBatch()} / {@link #endBatch()}: within a
+ * batch {@link #register} and {@link #unregister} only change the registrations, and the batch ends
+ * with a single rebuild, during which the previous {@link SessionFactory} keeps serving. Should
+ * that rebuild fail, the entities that break it are found and dropped, so one broken entity does
+ * not take the others down with it.
  *
  * <p>
  * Schema management is delegated to Hibernate's {@code hbm2ddl.auto = update} — the same default
@@ -90,6 +101,12 @@ public class JavaEntityManager implements DisposableBean {
 
     private final ReentrantLock rebuildLock = new ReentrantLock();
 
+    /** Open {@link #beginBatch()} calls not yet closed by {@link #endBatch()}; guarded by the lock. */
+    private int batchDepth;
+
+    /** Whether a registration changed inside the open batch; guarded by the lock. */
+    private boolean batchDirty;
+
     private volatile SessionFactory sessionFactory;
 
     /**
@@ -108,30 +125,81 @@ public class JavaEntityManager implements DisposableBean {
     }
 
     /**
-     * Register (or re-register) an entity class. Triggers a {@link SessionFactory} rebuild.
-     *
-     * @param key the registration key (typically {@code <project>::<fqn>})
-     * @param entityClass the loaded entity class
-     * @return the resolved {@link RegisteredEntity} metadata after the rebuild
+     * Open a batch: until the matching {@link #endBatch()}, {@link #register} and {@link #unregister}
+     * change the registrations without rebuilding the {@link SessionFactory}. Batches nest; only the
+     * outermost {@link #endBatch()} rebuilds.
      */
-    public RegisteredEntity register(String key, Class<?> entityClass) {
+    public void beginBatch() {
         rebuildLock.lock();
         try {
-            JavaEntityToHbmMapper.Result mapped = JavaEntityToHbmMapper.map(key, entityClass);
-            registered.put(key, mapped.registered());
-            rebuildSessionFactory();
-            LOGGER.info("Registered Java entity [{}] → table [{}]", mapped.registered()
-                                                                          .entityName(),
-                    mapped.registered()
-                          .tableName());
-            return mapped.registered();
+            batchDepth++;
         } finally {
             rebuildLock.unlock();
         }
     }
 
     /**
-     * Drop an entity from the runtime registry. The table itself is left in place.
+     * Close a batch opened by {@link #beginBatch()}. Closing the outermost one rebuilds the
+     * {@link SessionFactory} once if any registration changed inside it. An entity that breaks that
+     * rebuild is dropped from the registrations and logged, and the others are installed without it.
+     *
+     * @throws IllegalStateException if no batch is open
+     */
+    public void endBatch() {
+        rebuildLock.lock();
+        try {
+            if (batchDepth == 0) {
+                throw new IllegalStateException("endBatch() called without a matching beginBatch()");
+            }
+            batchDepth--;
+            if (batchDepth == 0 && batchDirty) {
+                batchDirty = false;
+                rebuildDroppingBrokenEntities();
+            }
+        } finally {
+            rebuildLock.unlock();
+        }
+    }
+
+    /**
+     * Register (or re-register) an entity class. Outside a batch this rebuilds the
+     * {@link SessionFactory}, and a failed rebuild leaves the registrations as they were; inside a
+     * batch the rebuild is left to {@link #endBatch()}.
+     *
+     * @param key the registration key (typically {@code <project>::<fqn>})
+     * @param entityClass the loaded entity class
+     * @return the resolved {@link RegisteredEntity} metadata
+     */
+    public RegisteredEntity register(String key, Class<?> entityClass) {
+        rebuildLock.lock();
+        try {
+            RegisteredEntity entity = JavaEntityToHbmMapper.map(key, entityClass)
+                                                           .registered();
+            RegisteredEntity previous = registered.put(key, entity);
+            if (batchDepth > 0) {
+                batchDirty = true;
+            } else {
+                try {
+                    rebuildSessionFactory();
+                } catch (RuntimeException e) {
+                    if (previous == null) {
+                        registered.remove(key);
+                    } else {
+                        registered.put(key, previous);
+                    }
+                    throw e;
+                }
+            }
+            LOGGER.info("Registered Java entity [{}] → table [{}]", entity.entityName(), entity.tableName());
+            return entity;
+        } finally {
+            rebuildLock.unlock();
+        }
+    }
+
+    /**
+     * Drop an entity from the runtime registry. The table itself is left in place. Outside a batch this
+     * rebuilds the {@link SessionFactory}; inside a batch the rebuild is left to {@link #endBatch()}.
      *
      * @param key the registration key to remove
      * @return the removed entry, or empty if no entry was registered under {@code key}
@@ -141,7 +209,11 @@ public class JavaEntityManager implements DisposableBean {
         try {
             RegisteredEntity removed = registered.remove(key);
             if (removed != null) {
-                rebuildSessionFactory();
+                if (batchDepth > 0) {
+                    batchDirty = true;
+                } else {
+                    rebuildSessionFactory();
+                }
                 LOGGER.info("Unregistered Java entity [{}] (table [{}] kept in place)", removed.entityName(), removed.tableName());
             }
             return Optional.ofNullable(removed);
@@ -241,12 +313,80 @@ public class JavaEntityManager implements DisposableBean {
         // metadata views now: each strongly references a caller class from an older generation, so
         // leaving them in place would pin that generation's ClientClassLoader indefinitely.
         staleGenerationViews.clear();
+        install(buildSessionFactory(List.copyOf(registered.values())));
+    }
 
-        // Capture for close-after-swap; Hibernate sessions in flight can finish against the old
-        // factory before it's released — but for our hot-reload use case we don't have long-lived
-        // open sessions, so closing here is safe.
+    /**
+     * Rebuild over every registration; should that fail, find the entities that break it. The factory
+     * is built again from nothing, adding one entity at a time, and an entity whose addition fails is
+     * dropped from the registrations. That costs one build per entity - what every generation install
+     * cost before batching - and only after a failed rebuild. If not even an empty factory can be
+     * built, the database rather than an entity is at fault: the registrations are kept for the next
+     * rebuild and the previous factory keeps serving.
+     */
+    private void rebuildDroppingBrokenEntities() {
+        RuntimeException failure;
+        try {
+            rebuildSessionFactory();
+            return;
+        } catch (RuntimeException e) {
+            failure = e;
+        }
+        LOGGER.warn("Building the SessionFactory over all [{}] registered Java entities failed - isolating the entities that break it",
+                registered.size(), failure);
+
+        SessionFactory current;
+        try {
+            current = buildSessionFactory(List.of());
+        } catch (RuntimeException e) {
+            failure.addSuppressed(e);
+            throw failure;
+        }
+        List<RegisteredEntity> accepted = new ArrayList<>();
+        for (RegisteredEntity candidate : List.copyOf(registered.values())) {
+            accepted.add(candidate);
+            try {
+                SessionFactory next = buildSessionFactory(List.copyOf(accepted));
+                close(current);
+                current = next;
+            } catch (RuntimeException e) {
+                accepted.remove(accepted.size() - 1);
+                registered.remove(candidate.key());
+                LOGGER.error("Java entity [{}] (table [{}]) breaks the SessionFactory and is dropped until its class is published again",
+                        candidate.entityName(), candidate.tableName(), e);
+            }
+        }
+        install(current);
+    }
+
+    /** Swap in {@code next} and close the factory it replaces. */
+    private void install(SessionFactory next) {
+        // Close-after-swap: for our hot-reload use case there are no long-lived open sessions, so
+        // closing the replaced factory right away is safe.
         SessionFactory old = sessionFactory;
+        sessionFactory = next;
+        close(old);
+    }
 
+    private static void close(SessionFactory factory) {
+        if (factory == null) {
+            return;
+        }
+        try {
+            factory.close();
+        } catch (RuntimeException e) {
+            LOGGER.warn("Failed to close a replaced SessionFactory cleanly", e);
+        }
+    }
+
+    /**
+     * Build a {@link SessionFactory} mapping exactly {@code entities}; {@code hbm2ddl} creates or
+     * extends their tables. Package-private as a test seam.
+     *
+     * @param entities the entities to map
+     * @return the new factory; the caller owns it
+     */
+    SessionFactory buildSessionFactory(List<RegisteredEntity> entities) {
         Configuration configuration = new Configuration().setProperty(Environment.HBM2DDL_AUTO, "update")
                                                          .setProperty(Environment.SHOW_SQL, "false");
 
@@ -260,7 +400,7 @@ public class JavaEntityManager implements DisposableBean {
             configuration.setProperty("hibernate.dialect", dialect);
         }
 
-        for (RegisteredEntity entity : registered.values()) {
+        for (RegisteredEntity entity : entities) {
             // Re-map fresh through JavaEntityToHbmMapper rather than reusing reflection-derived
             // descriptors — keeps Java reflection objects out of the Hibernate metadata layer.
             JavaEntityToHbmMapper.Result mapped = JavaEntityToHbmMapper.map(entity.key(), entity.entityClass());
@@ -286,15 +426,12 @@ public class JavaEntityManager implements DisposableBean {
         builder.applySettings(configuration.getProperties());
 
         StandardServiceRegistry serviceRegistry = builder.build();
-        SessionFactory next = configuration.buildSessionFactory(serviceRegistry);
-        sessionFactory = next;
-
-        if (old != null) {
-            try {
-                old.close();
-            } catch (RuntimeException e) {
-                LOGGER.warn("Failed to close prior SessionFactory cleanly: {}", e.getMessage());
-            }
+        try {
+            return configuration.buildSessionFactory(serviceRegistry);
+        } catch (RuntimeException e) {
+            // A built factory owns its registry and releases it on close; a failed build does not.
+            StandardServiceRegistryBuilder.destroy(serviceRegistry);
+            throw e;
         }
     }
 
