@@ -26,6 +26,7 @@ import org.eclipse.dirigible.components.data.sources.manager.TenantDataSourceNam
 import org.eclipse.dirigible.components.data.sources.service.DataSourceService;
 import org.eclipse.dirigible.components.database.DirigibleDataSource;
 import org.eclipse.dirigible.components.tenants.domain.Tenant;
+import org.eclipse.dirigible.components.tenants.domain.TenantStatus;
 import org.eclipse.dirigible.components.tenants.tenant.TenantFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,6 +116,10 @@ class TenantDataSourceRegistrationService {
      * @return true when the data source was created rather than updated
      */
     boolean register(Tenant tenant, TenantDataSourceParameter parameter) {
+        if (TenantStatus.DEPROVISIONING == tenant.getStatus()) {
+            // a pool built now would hold connections into a schema that is about to be dropped
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Tenant [" + tenant.getId() + "] is being deprovisioned");
+        }
         String name = tenantDataSourceName(tenant);
         Optional<DataSource> existing = dataSourceService.findOptionalByName(name);
 
@@ -131,6 +136,28 @@ class TenantDataSourceRegistrationService {
 
         LOGGER.info("Data source [{}] of tenant [{}] has been {}.", name, tenant.getId(), existing.isPresent() ? "updated" : "registered");
         return existing.isEmpty();
+    }
+
+    /**
+     * Removes the tenant's data source - its deprovisioning. Deleting the definition closes the
+     * connection pool on the tenant's schema synchronously (the data source lifecycle listener evicts
+     * it), which is what lets the caller drop that schema afterwards. A tenant without a registered
+     * data source is success.
+     *
+     * @param tenant the tenant
+     * @return true when a data source was removed
+     */
+    boolean deregister(Tenant tenant) {
+        String name = tenantDataSourceName(tenant);
+        Optional<DataSource> existing = dataSourceService.findOptionalByName(name);
+        if (existing.isEmpty()) {
+            // a pool may still be live without a definition, e.g. after a half-finished earlier run
+            dataSourceInitializer.removeInitializedDataSource(name);
+            return false;
+        }
+        dataSourceService.delete(existing.get());
+        LOGGER.info("Data source [{}] of tenant [{}] has been removed, and its connection pool closed.", name, tenant.getId());
+        return true;
     }
 
     /**

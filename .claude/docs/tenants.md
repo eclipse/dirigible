@@ -47,6 +47,38 @@ Activating a tenant (`POST services/tenant-provisioning/tenants/{id}/activation`
 - **Status.** `DIRIGIBLE_TENANT_INITIALIZATIONS` (`TenantInitialization`, core-tenants-provisioning) is opened `REQUESTED` in the request thread, before the 202. That makes the tenant read `IN_PROGRESS` on every node until its own run ends (`RUNNING`, then `FINISHED` with the run's error, if any). An open record is resumed on `ApplicationReadyEvent`. `TenantInitializationStatusCalculator` reads that record, the tenant's ledger failures and the global `BROKEN` definitions, and never another tenant's rows. Tenants activated together are initialized one after the other, each on its own.
 - **Guards:** `SynchronizationProcessorTenantInitializationTest`, `BaseSynchronizerTenantOutcomesTest`, `TenantContextImplTest`, `TenantActivationServiceTest`, `TenantInitializationStatusCalculatorTest`, `TenantsProvisionerTest`. `TenantScopedInitializationIT` (three externally provisioned tenants: a deleted seed row stays deleted while another tenant activates, and a broken tenant's `FAILED` is neither spread nor hidden).
 
+## Deprovisioning a tenant (`core-tenants-provisioning`, #7933)
+
+`DELETE services/tenant-provisioning/tenants/{id}` (`TenantProvisioningEndpoint` → `TenantDeprovisioningService`, the API's roles) removes a tenant and everything this application holds of it, **synchronously and idempotently**:
+
+- **Status first.** The tenant is moved to `TenantStatus.DEPROVISIONING` and saved before anything is torn down. `executeForEachTenant` reads `PROVISIONED` tenants only, so from that moment no synchronizer fan-out, client-Java top-up or reconciliation pass, outbox relay or job reaches it - across a restart too. No in-memory marker exists, by design. `TenantUserReplicaService` answers **409** for such a tenant. `TenantActivationService.activate` and `TenantDataSourceRegistrationService.register` refuse it with 409.
+- **Then every `TenantTeardownParticipant`** (core-base, `order()` + `teardown(tenantId)`, idempotent - finding nothing is success), lower order first:
+  - **100**, what runs for the tenant:
+    - `JobsTenantTeardown` deletes the Quartz jobs `<id>###*` of group `defined` and the tenant's job logs;
+    - `ScheduledClassConsumer` forgets its `(job, tenant)` bookkeeping, so a tenant re-registered under the same id is topped up again;
+    - `ListenerClassConsumer` closes the tenant's `@Listener` handles and its shared connection;
+    - `ListenersTenantTeardown` stops the `.listener` consumers on `<id>###*`;
+    - `BpmTenantTeardown` cancels the tenant's process instances, then deletes their history.
+  - **200**, `TenantDataSourceTenantTeardown`: the `<id>_DefaultDB` data source. `DataSourceService.delete` → the lifecycle listener → `removeInitializedDataSource` closes the pool synchronously.
+  - **300**, `TenantUsersTenantTeardown`: the user replica. The role rows cascade, and `TENUSER_TENANT_ID` has no foreign key, so the rows would otherwise be orphaned.
+  - **400**, `TenantInitializationTenantTeardown`: the `DIRIGIBLE_TENANT_INITIALIZATIONS` row.
+  - **500**, `TenantArtefactLedgerTenantTeardown`: the artefact ledger rows.
+  - **600**, the tenant's content: the internal CMS folder (only with the internal provider; deleted recursively, so it must resolve to a direct child of the CMS root or the participant refuses), the intent conversations, the traced task states.
+- **Last**, the tenant's `DIRIGIBLE_USERS` and the tenant row (`TenantService.delete` evicts the resolution caches).
+- **Answers:**
+  - `204` for a removed tenant **and** for an unknown one, so a 404 from this route can only mean the route is missing;
+  - `409` while the tenant's initialization is open, bounded by `DIRIGIBLE_TENANT_PROVISIONING_DEPROVISION_ACTIVATION_STALE_MINUTES` (default 30);
+  - `400` for an invalid id or the default tenant;
+  - `500` naming the participant that failed. The tenant stays `DEPROVISIONING` and the repeated call resumes it.
+- **Not touched:**
+  - the tenant's data schema and its database user - the provisioner's, dropped by it after the 204;
+  - broker destinations and durable subscriptions;
+  - the shared process definitions;
+  - `DIRIGIBLE_CROSS_TENANT_AUDIT`, a security audit trail;
+  - CMS content in the S3 and SharePoint providers - S3 resolves its prefix through the *current* tenant, and the call runs as the default tenant, so it needs its own tenant-scoped teardown (follow-up).
+- **Single instance.** The runtime teardown acts on the instance that answers, so an application is expected to run as one instance.
+- **Tests:** `TenantDeprovisioningServiceTest` (order, unknown, default tenant, 409 and its bound, a failure that resumes), `JobsTenantTeardownTest`, `BpmTenantTeardownTest`, `CmsInternalTenantTeardownTest`, `ListenersManagerTest#stopTenantListenersStopsOnlyTheTenantsOwn`, `TenantActivationServiceTest`, `TenantUserReplicaServiceTest`; `TenantDeprovisioningIT` (two externally provisioned tenants with a table, a job and a process: one is removed, the other keeps everything, and nothing comes back on the next synchronizer pass), `TenantProvisioningApiDisabledIT`.
+
 ## Tenant-aware configuration (`commons-config` + `core-configurations`)
 
 Each tenant can override selected configuration values; overrides are resolved **per request**, scoped to the current tenant. Added on PR [#6205](https://github.com/eclipse-dirigible/dirigible/pull/6205).

@@ -18,4 +18,13 @@ import org.springframework.stereotype.Repository;
 @Repository("taskStateRepository")
 public interface TaskStateRepository extends JpaRepository<TaskState, Long> {
 
+    /**
+     * Deletes the task states traced in a tenant - its deprovisioning.
+     *
+     * @param tenant the tenant id
+     * @return how many were deleted
+     */
+    @org.springframework.transaction.annotation.Transactional
+    long deleteByTenant(String tenant);
+
 }

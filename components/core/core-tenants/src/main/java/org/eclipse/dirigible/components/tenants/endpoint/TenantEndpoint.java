@@ -22,6 +22,7 @@ import org.eclipse.dirigible.components.tenants.domain.TenantStatus;
 import org.eclipse.dirigible.components.tenants.service.TenantService;
 import org.eclipse.dirigible.components.tenants.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
@@ -157,7 +159,8 @@ public class TenantEndpoint {
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteTenant(@PathVariable("id") String id) throws URISyntaxException {
         Tenant tenant = tenantService.findById(id)
-                                     .get();
+                                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                             "There is no tenant with id [" + id + "]"));
         if (DELETABLE_STATUSES.contains(tenant.getStatus())) {
             userService.findUsersByTenantId(tenant.getId())
                        .forEach(user -> userService.deleteUser(user.getId()));

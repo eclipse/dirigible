@@ -64,6 +64,18 @@ class TenantActivationServiceTest {
     }
 
     @Test
+    void aTenantBeingDeprovisionedCannotBeActivated() {
+        Tenant tenant = tenant("acme", TenantStatus.DEPROVISIONING);
+
+        ResponseStatusException refused = assertThrows(ResponseStatusException.class, () -> service.activate(tenant));
+
+        assertEquals(HttpStatus.CONFLICT, refused.getStatusCode());
+        assertEquals(TenantStatus.DEPROVISIONING, tenant.getStatus());
+        verify(tenantService, never()).save(any());
+        verify(initializationService, never()).request(anyString());
+    }
+
+    @Test
     void activationMakesTheTenantProvisioned() {
         Tenant tenant = tenant("acme", TenantStatus.PENDING_ACTIVATION);
 

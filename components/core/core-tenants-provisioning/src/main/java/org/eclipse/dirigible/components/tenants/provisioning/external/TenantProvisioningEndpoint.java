@@ -17,6 +17,7 @@ import org.eclipse.dirigible.components.tenants.provisioning.external.TenantRegi
 import org.springframework.context.annotation.Conditional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,15 +48,21 @@ class TenantProvisioningEndpoint extends BaseEndpoint {
     /** The activation service. */
     private final TenantActivationService activationService;
 
+    /** The deprovisioning service. */
+    private final TenantDeprovisioningService deprovisioningService;
+
     /**
      * Instantiates a new tenant provisioning endpoint.
      *
      * @param registrationService the registration service
      * @param activationService the activation service
+     * @param deprovisioningService the deprovisioning service
      */
-    TenantProvisioningEndpoint(TenantRegistrationService registrationService, TenantActivationService activationService) {
+    TenantProvisioningEndpoint(TenantRegistrationService registrationService, TenantActivationService activationService,
+            TenantDeprovisioningService deprovisioningService) {
         this.registrationService = registrationService;
         this.activationService = activationService;
+        this.deprovisioningService = deprovisioningService;
     }
 
     /**
@@ -71,6 +78,26 @@ class TenantProvisioningEndpoint extends BaseEndpoint {
         RegistrationResult result = registrationService.register(tenantId, parameter);
         return ResponseEntity.status(result.created() ? HttpStatus.CREATED : HttpStatus.OK)
                              .body(result.state());
+    }
+
+    /**
+     * Removes the tenant and everything this application holds of it - its deprovisioning.
+     *
+     * <p>
+     * Synchronous: when it answers, nothing runs for the tenant any more and its data source,
+     * connection pool and system database rows are gone. A tenant that does not exist answers 204 as
+     * well, so a caller retrying after a timeout converges; a 404 from this route can therefore only
+     * mean that the route does not exist. The tenant's data schema is the caller's: drop it after this
+     * call.
+     *
+     * @param tenantId the tenant id
+     * @return 204; 409 while the tenant is being activated, 400 for an invalid id or the default tenant
+     */
+    @DeleteMapping("/{tenantId}")
+    ResponseEntity<Void> deprovisionTenant(@PathVariable("tenantId") String tenantId) {
+        deprovisioningService.deprovision(tenantId);
+        return ResponseEntity.noContent()
+                             .build();
     }
 
     /**

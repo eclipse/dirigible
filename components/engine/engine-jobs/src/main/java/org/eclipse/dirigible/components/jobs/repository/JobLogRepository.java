@@ -33,4 +33,13 @@ public interface JobLogRepository extends ArtefactRepository<JobLog, Long> {
     @Transactional
     @Query(value = "UPDATE JobLog SET running = :running")
     void setRunningToAll(@Param("running") boolean running);
+
+    /**
+     * Deletes the job logs of a tenant - its deprovisioning.
+     *
+     * @param tenantId the tenant id
+     * @return how many were deleted
+     */
+    @Transactional
+    long deleteByTenantId(String tenantId);
 }

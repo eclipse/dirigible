@@ -9,6 +9,7 @@
  */
 package org.eclipse.dirigible.components.intent.conversation;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -31,4 +32,12 @@ public interface IntentConversationRepository extends JpaRepository<IntentConver
      * @return the conversation, when there is one
      */
     Optional<IntentConversation> findByTenantIdAndProjectAndSurfaceAndPath(String tenantId, String project, String surface, String path);
+
+    /**
+     * The conversations of a tenant.
+     *
+     * @param tenantId the tenant id
+     * @return the conversations
+     */
+    List<IntentConversation> findByTenantId(String tenantId);
 }

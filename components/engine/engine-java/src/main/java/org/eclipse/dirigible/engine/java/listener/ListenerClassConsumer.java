@@ -28,6 +28,7 @@ import org.eclipse.dirigible.components.base.tenant.DefaultTenant;
 import org.eclipse.dirigible.components.base.tenant.Tenant;
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.base.tenant.TenantPostProvisioningStep;
+import org.eclipse.dirigible.components.base.tenant.TenantTeardownParticipant;
 import org.eclipse.dirigible.components.configurations.tenant.TenantConfigurationService;
 import org.eclipse.dirigible.components.listeners.config.ActiveMQConnectionArtifactsFactory;
 import org.eclipse.dirigible.components.listeners.config.ListenerConnectionMode;
@@ -142,7 +143,7 @@ import jakarta.jms.Topic;
  */
 @Component
 @Order(500)
-public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvisioningStep {
+public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvisioningStep, TenantTeardownParticipant {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ListenerClassConsumer.class);
 
@@ -832,6 +833,36 @@ public class ListenerClassConsumer implements JavaClassConsumer, TenantPostProvi
         // Keep it within the broker's column width without letting two long ids collapse into one.
         String digest = Integer.toHexString(id.hashCode());
         return id.substring(0, MAX_SUBSCRIPTION_ID_LENGTH - digest.length() - 1) + "-" + digest;
+    }
+
+    /**
+     * Deprovisioning (participant 100): closes every subscription open for the tenant, and the tenant's
+     * shared connection in the shared mode. Its status already keeps the top-up and the reconciliation
+     * pass from opening them again. The closing happens outside the monitor, as in {@link #shutdown()}.
+     * The broker's durable subscriptions and destinations stay.
+     */
+    @Override
+    public int order() {
+        return 100;
+    }
+
+    @Override
+    public void teardown(String tenantId) {
+        List<AutoCloseable> open = new ArrayList<>();
+        synchronized (this) {
+            registrations.values()
+                         .forEach(registration -> open.addAll(registration.lost(tenantId)));
+            Connection shared = sharedConnections.remove(sharedClientId(tenantId));
+            if (shared != null) {
+                open.add(shared);
+            }
+        }
+        for (AutoCloseable handle : open) {
+            closeQuietly("deprovisioned tenant [" + tenantId + "]", handle);
+        }
+        if (!open.isEmpty()) {
+            LOGGER.info("Closed [{}] Java listener subscription handle(s) of deprovisioned tenant [{}].", open.size(), tenantId);
+        }
     }
 
     private synchronized void stopExisting(String fqn) {

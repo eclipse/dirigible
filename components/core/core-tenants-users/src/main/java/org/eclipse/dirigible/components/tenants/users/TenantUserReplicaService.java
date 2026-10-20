@@ -15,6 +15,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.dirigible.commons.api.helpers.LogSanitizer;
+import org.eclipse.dirigible.components.tenants.domain.Tenant;
+import org.eclipse.dirigible.components.tenants.domain.TenantStatus;
 import org.eclipse.dirigible.components.tenants.service.TenantService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -272,9 +274,14 @@ class TenantUserReplicaService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Tenant id [" + tenantId + "] is not valid - letters, digits and hyphens, not starting or ending with a hyphen");
         }
-        if (tenants.findById(tenantId)
-                   .isEmpty()) {
+        Optional<Tenant> tenant = tenants.findById(tenantId);
+        if (tenant.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no tenant with id [" + tenantId + "]");
+        }
+        if (TenantStatus.DEPROVISIONING == tenant.get()
+                                                 .getStatus()) {
+            // its replica is being deleted; a snapshot written now would leave orphan rows behind
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Tenant [" + tenantId + "] is being deprovisioned");
         }
     }
 }

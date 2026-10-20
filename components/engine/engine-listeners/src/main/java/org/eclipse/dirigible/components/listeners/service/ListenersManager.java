@@ -17,8 +17,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -128,6 +131,37 @@ public class ListenersManager {
      *
      * @param listenerEntity the listener
      */
+    /**
+     * Stops every listener subscribed to one of the tenant's destinations ({@code <tenantId>###<name>})
+     * - the tenant's deprovisioning. The destinations themselves stay on the broker.
+     *
+     * @param tenantId the tenant id
+     * @return how many listeners were stopped
+     */
+    public int stopTenantListeners(String tenantId) {
+        String prefix = tenantId + "###";
+        List<ListenerManager> stopped = new ArrayList<>();
+        synchronized (LISTENERS) {
+            Iterator<Map.Entry<ListenerDescriptor, ListenerManager>> entries = LISTENERS.entrySet()
+                                                                                        .iterator();
+            while (entries.hasNext()) {
+                Map.Entry<ListenerDescriptor, ListenerManager> entry = entries.next();
+                if (entry.getKey()
+                         .getDestination()
+                         .startsWith(prefix)) {
+                    stopped.add(entry.getValue());
+                    entries.remove();
+                }
+            }
+        }
+        for (ListenerManager manager : stopped) {
+            if (manager != null) {
+                manager.stopListener();
+            }
+        }
+        return stopped.size();
+    }
+
     public void stopListener(org.eclipse.dirigible.components.listeners.domain.Listener listenerEntity) {
         ListenerDescriptor listenerDescriptor = listenerCreator.fromEntity(listenerEntity);
         ListenerManager listenerManager = LISTENERS.get(listenerDescriptor);
