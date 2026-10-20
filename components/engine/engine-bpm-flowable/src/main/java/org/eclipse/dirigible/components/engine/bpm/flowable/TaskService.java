@@ -197,6 +197,31 @@ public interface TaskService {
     List<Task> findTasksWithProcessVariables(PrincipalType type);
 
     /**
+     * One page of {@link #findTasksWithProcessVariables(PrincipalType)}, newest first (issue #7977).
+     * <p>
+     * A production inbox holds thousands of open tasks - an approval-heavy application raises one per
+     * document - and the unpaged listing built every one of them on every 30 s poll: at ~3 000 tasks
+     * the request outlived the load balancer's timeout and the Inbox showed nothing at all. The page is
+     * bounded in the database, and each task comes with its identity links as well as its process
+     * variables, so the page costs a constant number of statements however large the inbox is.
+     *
+     * @param type the principal the tasks are addressed to
+     * @param offset the number of tasks to skip, newest first
+     * @param limit the page size
+     * @return the page, each task carrying its process variables and identity links
+     */
+    List<Task> findTasksWithProcessVariables(PrincipalType type, int offset, int limit);
+
+    /**
+     * How many tasks {@link #findTasksWithProcessVariables(PrincipalType)} would list - one count
+     * statement, so a paged caller still knows the size of the whole inbox (issue #7977).
+     *
+     * @param type the principal the tasks are addressed to
+     * @return the number of tasks addressed to that principal
+     */
+    long countTasks(PrincipalType type);
+
+    /**
      * Counts the tenant's tasks assigned to the given user, whoever is asking - unlike
      * {@link #findTasks(PrincipalType)}, which serves the caller's own (act-as aware) world.
      *

@@ -20,7 +20,6 @@ import org.eclipse.dirigible.components.engine.bpm.flowable.dto.TaskSubject;
 import org.eclipse.dirigible.components.engine.bpm.flowable.service.BpmService;
 import org.eclipse.dirigible.components.engine.bpm.flowable.service.PrincipalType;
 import org.flowable.common.engine.api.FlowableObjectNotFoundException;
-import org.flowable.identitylink.api.IdentityLink;
 import org.flowable.identitylink.api.IdentityLinkInfo;
 import org.flowable.task.api.Task;
 import org.slf4j.Logger;
@@ -65,19 +64,28 @@ public class BpmInboxEndpoint extends BaseEndpoint {
      * ({@code findTasksWithProcessVariables}): every row's subject is derived from them, so no task
      * costs a variable read of its own on a poll (issue #7141).
      * <p>
-     * What a row still costs is ONE statement - its identity links, which Flowable can only be asked
-     * for per task. The process instance is read once per INSTANCE rather than once per task (issue
-     * #7232): an inbox is a handful of processes with many tasks each, and that read was two statements
-     * of its own (the instance query and its activity ids). Together with the label catalogs, resolved
-     * once per definition, a listing of a hundred tasks over a few instances is a hundred-and-a-few
-     * statements rather than three hundred.
+     * A row costs no statement of its own (issue #7977): the identity links ride the listing query
+     * ({@code includeIdentityLinks}), and the process instances of the whole listing are read together
+     * rather than once per instance (#7232) - an approval inbox is mostly ONE open task per instance,
+     * so per instance was still per row. With the label catalogs resolved once per definition, a page
+     * costs the task query, the instance read and a catalog read per process definition, whatever its
+     * size.
      *
      * @param tasks the tasks, with their process variables loaded
      * @return the DTOs, without the tasks completed while the list was being built
      */
     private List<TaskDTO> mapToDTOs(List<Task> tasks) {
         Map<String, Optional<ProcessLabelKeys>> labelKeys = new HashMap<>();
-        Map<String, ProcessInstanceData> instances = new HashMap<>();
+        // Every instance the listing names, in one read (issue #7977): an approval inbox is mostly one
+        // open task per instance, so a per-instance read was still a statement per row. An instance
+        // that ended since the listing query ran is absent here; mapToDTO falls back to the single read
+        // for it, which is what lets the completed-task path below recognise the race.
+        Map<String, ProcessInstanceData> instances = new HashMap<>(bpmService.getListedProcessInstances(tasks.stream()
+                                                                                                             .map(Task::getProcessInstanceId)
+                                                                                                             .filter(Objects::nonNull)
+                                                                                                             .collect(
+                                                                                                                     Collectors.toCollection(
+                                                                                                                             LinkedHashSet::new))));
         List<TaskDTO> dtos = new ArrayList<>(tasks.size());
         for (Task task : tasks) {
             mapListedTask(task, labelKeys, instances).ifPresent(dtos::add);
@@ -124,7 +132,9 @@ public class BpmInboxEndpoint extends BaseEndpoint {
     }
 
     private TaskDTO mapToDTO(Task task, Map<String, Optional<ProcessLabelKeys>> labelKeys, Map<String, ProcessInstanceData> instances) {
-        List<IdentityLink> identityLinks = bpmService.getListedTaskIdentityLinks(task.getId());
+        // Loaded by the listing query itself (includeIdentityLinks) - no statement of its own per row
+        // (issue #7977).
+        List<? extends IdentityLinkInfo> identityLinks = task.getIdentityLinks();
 
         TaskDTO dto = new TaskDTO();
         dto.setId(task.getId());
@@ -188,10 +198,50 @@ public class BpmInboxEndpoint extends BaseEndpoint {
         return TaskSubject.from(variables);
     }
 
-    @GetMapping(value = "/tasks")
-    public ResponseEntity<List<TaskDTO>> getTasks(@RequestParam(value = "type", required = false) String type) {
-        return ResponseEntity.ok(mapToDTOs(bpmService.findTasksWithProcessVariables(extractPrincipalType(type))));
+    /**
+     * The tasks addressed to the caller, every one of them - the unpaged form, for a caller that sends
+     * no {@code limit}.
+     *
+     * @param type the principal type
+     * @return the tasks
+     */
+    public ResponseEntity<List<TaskDTO>> getTasks(String type) {
+        return getTasks(type, null, null);
     }
+
+    /**
+     * The tasks addressed to the caller. With {@code limit} it is one page, newest first, and the
+     * {@value #TOTAL_COUNT_HEADER} header carries the size of the whole inbox (issue #7977): both shell
+     * clients have always asked for {@code limit=100}, and the endpoint ignored it - at a few thousand
+     * open tasks the full listing outlived the load balancer's timeout and the Inbox showed nothing.
+     *
+     * @param type the principal type ({@code assignee} or {@code groups})
+     * @param limit the page size, capped at {@value #MAX_PAGE_SIZE}; absent = every task
+     * @param offset the number of tasks to skip, newest first
+     * @return the tasks
+     */
+    @GetMapping(value = "/tasks")
+    public ResponseEntity<List<TaskDTO>> getTasks(@RequestParam(value = "type", required = false) String type,
+            @RequestParam(value = "limit", required = false) Integer limit,
+            @RequestParam(value = "offset", required = false) Integer offset) {
+        PrincipalType principalType = extractPrincipalType(type);
+        if (limit == null) {
+            return ResponseEntity.ok(mapToDTOs(bpmService.findTasksWithProcessVariables(principalType)));
+        }
+        int pageSize = Math.max(1, Math.min(MAX_PAGE_SIZE, limit));
+        int skip = offset == null ? 0 : Math.max(0, offset);
+        List<TaskDTO> page = mapToDTOs(bpmService.findTasksWithProcessVariables(principalType, skip, pageSize));
+        return ResponseEntity.ok()
+                             .header(TOTAL_COUNT_HEADER, String.valueOf(bpmService.countTasks(principalType)))
+                             .header("Access-Control-Expose-Headers", TOTAL_COUNT_HEADER)
+                             .body(page);
+    }
+
+    /** The response header carrying the number of tasks the whole inbox holds, on a paged listing. */
+    public static final String TOTAL_COUNT_HEADER = "X-Total-Count";
+
+    /** The largest page a listing serves, whatever limit is asked for. */
+    static final int MAX_PAGE_SIZE = 1000;
 
     @GetMapping(value = "/tasks/{taskId}/variables")
     public ResponseEntity<?> getTaskVariables(@PathVariable("taskId") String taskId) {

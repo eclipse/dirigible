@@ -67,6 +67,24 @@ class HarmoniaTaskRefreshIT {
         }
     }
 
+    /**
+     * The store lists the newest page of each queue, and counts the whole inbox from the server's total
+     * - a queue of thousands is neither fetched nor shown as "100" (issue #7977).
+     */
+    @Test
+    void theInboxCountIsTheServersTotalNotThePageLength() {
+        try (Context context = load()) {
+            context.eval("js", "__inbox.assignee = [" + ISSUE_TASK
+                    + "]; __inbox.groups = [{ id: 't2', processInstanceId: 'p2', name: 'Approve' }]; __inbox.totals = { assignee: 1, groups: 2940 }; store.init();");
+            assertEquals(2, context.eval("js", "store.tasks.length")
+                                   .asInt(),
+                    "only the listed page is held");
+            assertEquals(2941, context.eval("js", "store.total")
+                                      .asInt(),
+                    "the count is the size of the whole inbox");
+        }
+    }
+
     @Test
     void aCompletedTaskFormIsFollowedByABoundedSeriesOfReReads() {
         try (Context context = load()) {
@@ -224,9 +242,18 @@ class HarmoniaTaskRefreshIT {
                         function clearInterval() {}
                         var __runTimer = function () { var t = __timers.shift(); if (t) t.fn(); };
                         var console = { log: function () {}, warn: function () {}, error: function () {} };
-                        var __inbox = { assignee: [], groups: [] };
+                        var __inbox = { assignee: [], groups: [], totals: {} };
                         var App = { config: {}, services: { api: {
-                          get: function (url) { return Promise.resolve(__inbox[/type=assignee/.test(url) ? 'assignee' : 'groups']); },
+                          // the real api.get with { withTotal: true }: the page plus the X-Total-Count (#7977)
+                          get: function (url, opts) {
+                            var key = /type=assignee/.test(url) ? 'assignee' : 'groups';
+                            var items = __inbox[key];
+                            if (opts && opts.withTotal) {
+                              var total = __inbox.totals[key];
+                              return Promise.resolve({ items: items, total: total === undefined ? items.length : total });
+                            }
+                            return Promise.resolve(items);
+                          },
                           post: function () { return Promise.resolve({}); }
                         } } };
                         """);

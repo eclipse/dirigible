@@ -211,7 +211,7 @@ class TaskServiceImpl implements TaskService {
         TaskInfoQuery<TaskQuery, Task> taskQuery = prepareQuery(type);
         taskQuery.processInstanceId(processInstanceId);
         if (withProcessVariables) {
-            taskQuery.includeProcessVariables();
+            includeListingData(taskQuery);
         }
         return taskQuery.list();
     }
@@ -258,9 +258,47 @@ class TaskServiceImpl implements TaskService {
         }
         TaskInfoQuery<TaskQuery, Task> taskQuery = prepareQuery(type);
         if (withProcessVariables) {
-            taskQuery.includeProcessVariables();
+            includeListingData(taskQuery);
         }
         return taskQuery.list();
+    }
+
+    @Override
+    public List<Task> findTasksWithProcessVariables(PrincipalType type, int offset, int limit) {
+        if (UserFacade.getUserRoles()
+                      .isEmpty()) {
+            return Collections.emptyList();
+        }
+        TaskInfoQuery<TaskQuery, Task> taskQuery = prepareQuery(type);
+        includeListingData(taskQuery);
+        // newest first: a page of an inbox is the work that just arrived, and a stable order is what
+        // makes offset paging mean anything (the id breaks ties between tasks created in one instant)
+        taskQuery.orderByTaskCreateTime()
+                 .desc()
+                 .orderByTaskId()
+                 .desc();
+        return taskQuery.listPage(Math.max(0, offset), Math.max(1, limit));
+    }
+
+    @Override
+    public long countTasks(PrincipalType type) {
+        if (UserFacade.getUserRoles()
+                      .isEmpty()) {
+            return 0;
+        }
+        return prepareQuery(type).count();
+    }
+
+    /**
+     * What a listing row needs, joined into the task query itself: the process variables the row's
+     * subject is derived from (issue #7141) and the identity links its candidate users and groups are
+     * read from - which used to be one statement per row (issue #7977).
+     *
+     * @param taskQuery the listing query
+     */
+    private static void includeListingData(TaskInfoQuery<TaskQuery, Task> taskQuery) {
+        taskQuery.includeProcessVariables()
+                 .includeIdentityLinks();
     }
 
     @Override
