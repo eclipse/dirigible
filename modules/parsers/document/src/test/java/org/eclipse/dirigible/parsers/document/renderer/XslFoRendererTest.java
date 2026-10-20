@@ -112,6 +112,32 @@ public class XslFoRendererTest {
     }
 
     @Test
+    public void groupedTableRendersTheTaxBaseAndVatPerRate() {
+        // the totals block of an invoice with lines at two VAT rates: one row per rate, VAT per line summed
+        String fo = renderTemplate("""
+                <document>
+                    <table source="items" groupBy="VatRate">
+                        <column label="Rate">{{VatRate:0.##}}%</column>
+                        <column label="Tax base" align="right">{{sum(Net)}}</column>
+                        <column label="VAT" align="right">{{sum(Vat)}}</column>
+                    </table>
+                    <total align="right">{{document.Total}}</total>
+                </document>
+                """, Map.of("document", Map.of("Total", 54.85), "items", List.of(Map.of("VatRate", 20.0, "Net", 10.0, "Vat", 2.0),
+                Map.of("VatRate", 9.0, "Net", 22.8, "Vat", 2.05), Map.of("VatRate", 20.0, "Net", 15.0, "Vat", 3.0))));
+        assertTrue(fo.contains(">9%</fo:block>"));
+        assertTrue(fo.contains(">22.80</fo:block>"));
+        assertTrue(fo.contains(">2.05</fo:block>"));
+        assertTrue(fo.contains(">20%</fo:block>"));
+        assertTrue(fo.contains(">25.00</fo:block>"));
+        assertTrue(fo.contains(">5.00</fo:block>"));
+        assertTrue(fo.contains("54.85"));
+        // one row per rate, ascending, and each line counted once
+        assertTrue(fo.indexOf(">9%</fo:block>") < fo.indexOf(">20%</fo:block>"));
+        assertEquals(1, fo.split(">20%</fo:block>", -1).length - 1);
+    }
+
+    @Test
     public void wideTableScalesTheFontDownSoContentFits() {
         // Three columns keep the body font size; every column beyond that drops it a point (floor 6),
         // so a nine-column financial table renders at 6pt instead of overflowing its narrow columns.

@@ -224,6 +224,30 @@ the data feed:
     </stack>
 </row>
 ```
+**Row grouping** - `groupBy="<path>"` on a `table`/`for` expands one row (or one pass of the
+loop) per distinct value of the path over the rows the filter kept, ordered by that value
+(numerically when every value is a number, else by its text; rows without it come last, and
+numbers group by value, so `20` and `20.0` are one group). Inside a group a plain placeholder
+reads the group's FIRST row, so the key prints as itself, and two aggregates read all of its rows:
+`{{sum(<path>)}}` adds the path's numbers exactly (`BigDecimal`, skipping rows where it is missing
+or not a number) and `{{count()}}` counts the rows. The grouping key and the summed path are read
+from each row itself - a row lacking the field never picks it up from the enclosing context. Both take formats and alternatives like any
+other operand; outside a group they render empty. The totals block of an invoice with lines at
+several VAT rates - a legal requirement wherever rates are mixed - needs nothing on the model:
+
+```xml
+<table source="items" groupBy="VatRate">
+    <column label="Rate">{{VatRate:0.##}}%</column>
+    <column label="Tax base" align="right">{{sum(Net)}}</column>
+    <column label="VAT" align="right">{{sum(Vat)}}</column>
+</table>
+<!-- 9%  | 22.80 | 2.05
+     20% | 25.00 | 5.00 -->
+```
+
+The VAT of each rate is the sum of its lines' VAT, so per-line rounding carries through to the
+cent.
+
 **Floating-point values** (`Double`/`Float`/`BigDecimal`) print in the generated forms' money
 pattern `### ### ### ##0.00` (space-grouped thousands, two decimals, locale-independent);
 integral numbers print unformatted.
