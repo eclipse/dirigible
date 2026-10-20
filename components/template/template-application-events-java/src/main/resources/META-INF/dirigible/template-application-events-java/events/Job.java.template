@@ -1,4 +1,11 @@
 package gen.events.${javaGenFolderName};
+## cc:/bcc: (#7938) - only a block that authors one renders the three-recipient shape, so every
+## other job stays byte-identical.
+#if($ccExpression || $bccExpression)
+#set($notifyCopies = true)
+#else
+#set($notifyCopies = false)
+#end
 
 import java.util.List;
 #if($notifies)
@@ -208,7 +215,16 @@ public class ${className}Job implements JobHandler {
                         + "/services/web/${projectName}/gen/${genFolderName}/index.html#/inbox";
 #end
                 to = ${toExpression};
+#if($notifyCopies)
+                // Assigned once, so the generation's unit-of-work lambda below may close over them.
+                String cc = #if($ccExpression)${ccExpression}#{else}null#end;
+                String bcc = #if($bccExpression)${bccExpression}#{else}null#end;
+                // A row is mailed when ANY recipient key names someone - a copy to an archive mailbox
+                // needs no addressee of its own.
+                if (isBlank(to) && isBlank(cc) && isBlank(bcc)) {
+#else
                 if (to == null || to.isBlank()) {
+#end
                     // A row with nobody to mail is a legitimate no-op, but it is COUNTED: "matched 40,
                     // mailed 12" is the line that says a query is wider than the addresses behind it.
                     skipped++;
@@ -356,13 +372,21 @@ public class ${className}Job implements JobHandler {
                     // combined form claims: a failed send rolls the record back, so the next tick sees an
                     // unsent row and completes it. The remaining window is a commit that fails AFTER a
                     // successful send, which costs a duplicate message rather than a lost one.
+#if($notifyCopies)
+                    mail(from, recipients(recipient), recipients(cc), recipients(bcc), subject, parts);
+#else
                     mail(from, recipient, subject, parts);
+#end
 #end
                 });
                 created++;
 #end
 #if($notifies && !$generates)
+#if($notifyCopies)
+                Mail.send(from, recipients(recipient), recipients(cc), recipients(bcc), subject, parts);
+#else
                 Mail.send(from, new String[] {recipient}, new String[0], new String[0], subject, parts);
+#end
                 sent++;
 #end
 #if($notifyOutcomeProperty != "")
@@ -445,6 +469,17 @@ public class ${className}Job implements JobHandler {
      * row's failure line both report it, and the cause, because the log records the stack.
      *
      * @param from the configured sender
+#if($notifyCopies)
+     * @param to the resolved recipients
+     * @param cc the resolved copy recipients
+     * @param bcc the resolved blind-copy recipients
+     * @param subject the rendered subject
+     * @param parts the rendered body and any attachment
+     */
+    private static void mail(String from, String[] to, String[] cc, String[] bcc, String subject, List<Map> parts) {
+        try {
+            Mail.send(from, to, cc, bcc, subject, parts);
+#else
      * @param to the resolved recipient
      * @param subject the rendered subject
      * @param parts the rendered body and any attachment
@@ -452,6 +487,7 @@ public class ${className}Job implements JobHandler {
     private static void mail(String from, String to, String subject, List<Map> parts) {
         try {
             Mail.send(from, new String[] {to}, new String[0], new String[0], subject, parts);
+#end
         } catch (Exception ex) {
             String reason = ex.getMessage() == null || ex.getMessage()
                                                          .isBlank() ? ex.getClass()
@@ -527,6 +563,20 @@ public class ${className}Job implements JobHandler {
         return message == null || message.isBlank() ? failure.getClass()
                                                              .getSimpleName()
                 : message;
+    }
+#end
+#if($notifyCopies)
+
+    private static boolean isBlank(String value) {
+        return value == null || value.isBlank();
+    }
+
+    /**
+     * One recipient key as the mail client takes it: a blank key is no entry at all, and a value is ONE
+     * entry even when it holds a comma-separated list - the client parses each entry as an address list.
+     */
+    private static String[] recipients(String value) {
+        return isBlank(value) ? new String[0] : new String[] {value};
     }
 #end
 }

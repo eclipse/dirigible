@@ -54,7 +54,8 @@ import jakarta.mail.internet.MimeMessage;
  * runs inside the process and that the SMTP server receives what the model declares: a
  * comma-separated {@code @var:} list reaches every address, {@code cc:} and {@code bcc:} reach
  * their mailboxes with the blind copy named in no delivered header, and a step whose {@code to:}
- * resolves blank still sends to its {@code bcc:}.
+ * resolves blank still sends to its {@code bcc:}. The other three notify blocks (#7938) - a
+ * lifecycle notification, a transition and a schedule tick - deliver their copies the same way.
  */
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class IntentNotifyRecipientsIT extends IntegrationTest {
@@ -77,6 +78,10 @@ class IntentNotifyRecipientsIT extends IntegrationTest {
     private static final String APPROVER_ONE = "approver.one@notify-recipients.test";
     private static final String APPROVER_TWO = "approver.two@notify-recipients.test";
     private static final String REQUESTER = "requester@notify-recipients.test";
+    private static final String OWNER = "owner@notify-recipients.test";
+    private static final String WATCHER = "watcher@notify-recipients.test";
+    private static final String TICKETS = API + "/ticket/TicketController";
+    private static final String CLOSE_TICKET = "/services/java/" + PROJECT + "/gen/events/" + PROJECT + "/CloseTicketTransition/run";
 
     private static final String INTENT_YAML =
             """
@@ -93,6 +98,18 @@ class IntentNotifyRecipientsIT extends IntegrationTest {
                         fields:
                           - { name: id,   type: integer, primaryKey: true, generated: true }
                           - { name: name, type: string, required: true, length: 100 }
+                      - name: TicketStatus
+                        function: Setting
+                        fields:
+                          - { name: id,   type: integer, primaryKey: true, generated: true }
+                          - { name: name, type: string, length: 50 }
+                      - name: Ticket
+                        fields:
+                          - { name: id,    type: integer, primaryKey: true, generated: true }
+                          - { name: name,  type: string, required: true, length: 100 }
+                          - { name: owner, type: string, length: 200 }
+                        relations:
+                          - { name: Status, kind: manyToOne, to: TicketStatus, function: EntityStatus, init: 1 }
 
                     processes:
                       - name: Closing
@@ -132,8 +149,49 @@ class IntentNotifyRecipientsIT extends IntegrationTest {
                               uses: [approverEmails]
                               next: done
                           - { name: done, kind: end }
+
+                    # The other three notify blocks (#7938) - a lifecycle notification, a transition and a schedule -
+                    # each copy a watcher and blind-copy the archive.
+                    notifications:
+                      - name: ticketOpened
+                        event: { onCreate: Ticket }
+                        to: owner
+                        cc: %s
+                        bcc: "@config:%s"
+                        subject: "Ticket {name} opened"
+                        body: "Ticket {name} opened."
+
+                    transitions:
+                      - name: CloseTicket
+                        forEntity: Ticket
+                        from: [1]
+                        setStatus: 2
+                        notify:
+                          to: owner
+                          cc: %s
+                          bcc: "@config:%s"
+                          subject: "Ticket {name} closed"
+                          body: "Ticket {name} closed."
+
+                    schedules:
+                      - name: ticketReminder
+                        cron: "0/5 * * * * ?"
+                        entity: Ticket
+                        notify:
+                          to: owner
+                          cc: %s
+                          bcc: "@config:%s"
+                          subject: "Ticket {name} reminder"
+                          body: "Ticket {name} is still open."
+
+                    seeds:
+                      - name: ticket-statuses
+                        entity: TicketStatus
+                        rows:
+                          - { id: 1, name: Open }
+                          - { id: 2, name: Closed }
                     """.formatted(
-                    ARCHIVE_KEY, ARCHIVE_KEY);
+                    ARCHIVE_KEY, ARCHIVE_KEY, WATCHER, ARCHIVE_KEY, WATCHER, ARCHIVE_KEY, WATCHER, ARCHIVE_KEY);
 
     /** The list an earlier step computes - one comma-separated value, as the issue specifies. */
     private static final String COLLECT_APPROVERS_JAVA = """
@@ -212,6 +270,36 @@ class IntentNotifyRecipientsIT extends IntegrationTest {
         assertThat(withSubject(notice)).hasSize(1);
         assertThat(inbox(ARCHIVE, notice).get(0)
                                          .getRecipients(Message.RecipientType.TO)).isNull();
+
+        // #7938: a lifecycle notification, a transition and a schedule tick each reach their copies.
+        int ticket = create(TICKETS, "{\"Name\":\"T1\",\"Owner\":\"" + OWNER + "\"}");
+        assertCopies("Ticket T1 opened", OWNER);
+        create(CLOSE_TICKET, "{\"id\":" + ticket + "}");
+        assertCopies("Ticket T1 closed", OWNER);
+        assertCopies("Ticket T1 reminder", OWNER);
+        // ...and a listener with nobody to address still mails the copies.
+        create(TICKETS, "{\"Name\":\"T2\"}");
+        assertCopies("Ticket T2 opened", null);
+    }
+
+    /**
+     * Every copy of the message with this subject reached its mailbox - the addressee (when there is
+     * one), the watcher on cc and the archive on bcc - and no delivered header names the blind copy. At
+     * least one copy per mailbox, because the schedule fires every few seconds.
+     */
+    private void assertCopies(String subject, String to) throws MessagingException {
+        List<String> mailboxes = to == null ? List.of(WATCHER, ARCHIVE) : List.of(to, WATCHER, ARCHIVE);
+        await().atMost(MAIL_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+               .until(() -> mailboxes.stream()
+                                     .allMatch(mailbox -> !inbox(mailbox, subject).isEmpty()));
+        for (String mailbox : mailboxes) {
+            for (MimeMessage message : inbox(mailbox, subject)) {
+                assertThat(addresses(message.getRecipients(Message.RecipientType.TO))).isEqualTo(to == null ? List.of() : List.of(to));
+                assertThat(addresses(message.getRecipients(Message.RecipientType.CC))).containsExactly(WATCHER);
+                assertThat(message.getHeader("Bcc")).isNull();
+                assertThat(Collections.list(message.getAllHeaderLines())).noneMatch(line -> line.contains(ARCHIVE));
+            }
+        }
     }
 
     /**
@@ -262,14 +350,18 @@ class IntentNotifyRecipientsIT extends IntegrationTest {
         return result;
     }
 
-    private void create(String controller, String body) {
-        restAssuredExecutor.execute(() -> given().contentType("application/json")
-                                                 .body(body)
-                                                 .when()
-                                                 .post(controller)
-                                                 .then()
-                                                 .statusCode(200),
+    private int create(String controller, String body) {
+        AtomicReference<Object> id = new AtomicReference<>();
+        restAssuredExecutor.execute(() -> id.set(given().contentType("application/json")
+                                                        .body(body)
+                                                        .when()
+                                                        .post(controller)
+                                                        .then()
+                                                        .statusCode(200)
+                                                        .extract()
+                                                        .path("Id")),
                 TIMEOUT_SECONDS);
+        return id.get() instanceof Number number ? number.intValue() : -1;
     }
 
     private void generateProject() {

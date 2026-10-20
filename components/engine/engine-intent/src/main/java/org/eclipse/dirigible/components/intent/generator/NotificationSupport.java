@@ -305,7 +305,10 @@ public final class NotificationSupport {
                                   .get("when");
         Resolver resolver = new Resolver(eventEntity, null, escalation, byName, compositionParents, crossModel);
         String recipient = resolver.value(notification.getTo());
-        if (recipient == null) {
+        String ccExpression = isBlank(notification.getCc()) ? null : resolver.value(notification.getCc());
+        String bccExpression = isBlank(notification.getBcc()) ? null : resolver.value(notification.getBcc());
+        if (recipient == null || !isBlank(notification.getCc()) && ccExpression == null
+                || !isBlank(notification.getBcc()) && bccExpression == null) {
             return null; // an unresolvable recipient relation.field - skip rather than email garbage
         }
         // Rendered BEFORE the loads are read: a placeholder is what registers most one-hop loads, and an
@@ -313,8 +316,8 @@ public final class NotificationSupport {
         String subjectExpression = resolver.text(notification.getSubject());
         String bodyExpression = resolver.text(notification.getBody());
         String htmlExpression = resolver.html(notification.getHtml());
-        return new Plan(resolver.loads(), guardTerms(when, eventEntity, byName), recipient, null, null, subjectExpression, bodyExpression,
-                htmlExpression, resolver.usesRecordUrl(), resolver.usesInboxUrl(), resolver.usesVariables());
+        return new Plan(resolver.loads(), guardTerms(when, eventEntity, byName), recipient, ccExpression, bccExpression, subjectExpression,
+                bodyExpression, htmlExpression, resolver.usesRecordUrl(), resolver.usesInboxUrl(), resolver.usesVariables());
     }
 
     /**

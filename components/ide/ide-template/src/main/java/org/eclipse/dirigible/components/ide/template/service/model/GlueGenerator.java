@@ -393,9 +393,9 @@ class GlueGenerator {
      * @param parameters the generation parameters
      */
     private static void bindNotification(Map<String, Object> item, Map<String, Object> context, Map<String, Object> parameters) {
-        copy(context, item, "name", "className", "entity", "perspective", "topicSuffix", "toExpression", "subjectExpression",
-                "bodyExpression", "htmlExpression", "attachKeyProperty", "attach", "attachEntity", "attachLanguageFkProperty",
-                "attachLanguageTargetEntity", "attachReport");
+        copy(context, item, "name", "className", "entity", "perspective", "topicSuffix", "toExpression", "ccExpression", "bccExpression",
+                "subjectExpression", "bodyExpression", "htmlExpression", "attachKeyProperty", "attach", "attachEntity",
+                "attachLanguageFkProperty", "attachLanguageTargetEntity", "attachReport");
         bindEventGuard(context, item);
         context.put("javaPerspective", sanitize(item, "perspective"));
         context.put("relationLoads", relationLoads(item.get("relationLoads"), parameters));
@@ -419,9 +419,9 @@ class GlueGenerator {
         // job renders exactly what it always did.
         boolean generates = item.containsKey("generates") ? truthy(item, "generates") : "generate".equals(str(item, "action"));
         boolean notifies = item.containsKey("notifies") ? truthy(item, "notifies") : !"generate".equals(str(item, "action"));
-        copy(context, item, "name", "className", "cron", "entity", "perspective", "toExpression", "subjectExpression", "bodyExpression",
-                "htmlExpression", "attachKeyProperty", "attach", "attachEntity", "attachLanguageFkProperty", "attachLanguageTargetEntity",
-                "attachReport", "genToEntity", "genToPk",
+        copy(context, item, "name", "className", "cron", "entity", "perspective", "toExpression", "ccExpression", "bccExpression",
+                "subjectExpression", "bodyExpression", "htmlExpression", "attachKeyProperty", "attach", "attachEntity",
+                "attachLanguageFkProperty", "attachLanguageTargetEntity", "attachReport", "genToEntity", "genToPk",
                 // The scheduled generation's natural key (issue #7070). Absent on a .glue written
                 // before it existed, which `copy` turns into an absent context key - so the guard's
                 // `#if` is false and such a job renders byte-identically to what it always did.
@@ -1025,8 +1025,8 @@ class GlueGenerator {
     private static void bindTransition(Map<String, Object> item, Map<String, Object> context, Map<String, Object> parameters) {
         copy(context, item, "name", "className", "entity", "perspective", "attachKeyProperty", "statusProperty", "setStatus", "allowedExpr",
                 "fromStatuses", "guardText", "notify", "forEach", "forEachFkProperty", "forEachKeyProperty", "notifyToExpression",
-                "notifySubjectExpression", "notifyBodyExpression", "notifyHtmlExpression", "notifyRecordScoped", "attach", "attachEntity",
-                "attachLanguageFkProperty", "attachLanguageTargetEntity", "attachReport");
+                "notifyCcExpression", "notifyBccExpression", "notifySubjectExpression", "notifyBodyExpression", "notifyHtmlExpression",
+                "notifyRecordScoped", "attach", "attachEntity", "attachLanguageFkProperty", "attachLanguageTargetEntity", "attachReport");
         // The `when` guard over the loaded source, spelled with the SDK evaluator fully qualified: the
         // transition controller, unlike the posting and create-from handlers, imports no Calc.
         bindExpression(context, item, "guardReading", "guardExpr", true);

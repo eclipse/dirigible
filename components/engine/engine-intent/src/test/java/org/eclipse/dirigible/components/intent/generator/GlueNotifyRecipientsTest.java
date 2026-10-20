@@ -137,6 +137,115 @@ class GlueNotifyRecipientsTest {
                                       .isEmpty());
     }
 
+    /** The other three notify blocks (#7938): a transition, a lifecycle notification, a schedule. */
+    private static final String COPIES_EVERYWHERE = """
+            name: closing
+            entities:
+              - name: ClosingStatus
+                function: Setting
+                fields:
+                  - { name: id, type: integer, primaryKey: true, generated: true }
+                  - { name: name, type: string }
+              - name: Person
+                fields:
+                  - { name: id, type: integer, primaryKey: true, generated: true }
+                  - { name: email, type: string }
+              - name: ClosingRequest
+                fields:
+                  - { name: id, type: integer, primaryKey: true, generated: true }
+                  - { name: name, type: string }
+                  - { name: requestedBy, type: string }
+                relations:
+                  - { name: Owner, kind: manyToOne, to: Person }
+                  - { name: Status, kind: manyToOne, to: ClosingStatus, function: EntityStatus, init: 1 }
+            transitions:
+              - name: Reopen
+                forEntity: ClosingRequest
+                from: [2]
+                setStatus: 1
+                notify:
+                  to: requestedBy
+                  cc: Owner.email
+                  bcc: "@config:ARCHIVE_EMAIL"
+                  subject: "Closing {name} was reopened"
+                  body: "Reopened."
+            notifications:
+              - name: closingCreated
+                event: { onCreate: ClosingRequest }
+                to: requestedBy
+                cc: Owner.email
+                bcc: "@config:ARCHIVE_EMAIL"
+                subject: "New closing {name}"
+                body: "New closing."
+            schedules:
+              - name: nudge
+                cron: "0 0 8 * * ?"
+                entity: ClosingRequest
+                notify:
+                  to: requestedBy
+                  cc: Owner.email
+                  bcc: "@config:ARCHIVE_EMAIL"
+                  subject: "Pending {name}"
+                  body: "Pending."
+            """;
+
+    private static final String CC = "(Owner == null ? null : Owner.Email)";
+    private static final String BCC = "org.eclipse.dirigible.sdk.core.Configurations.get(\"ARCHIVE_EMAIL\")";
+
+    @Test
+    void aTransitionCarriesItsCopies() {
+        Map<String, Object> t = GlueIntentGenerator.buildTransitionsForTest(IntentParser.parse(COPIES_EVERYWHERE))
+                                                   .get(0);
+        assertEquals("entity.RequestedBy", t.get("notifyToExpression"));
+        assertEquals(CC, t.get("notifyCcExpression"));
+        assertEquals(BCC, t.get("notifyBccExpression"));
+        assertEquals("Owner", ((Map<?, ?>) ((List<?>) t.get("notifyRelationLoads")).get(0)).get("local"),
+                "a relation.field copy recipient registers its load");
+    }
+
+    @Test
+    void aNotificationCarriesItsCopies() {
+        Map<String, Object> n = GlueIntentGenerator.buildNotificationsForTest(IntentParser.parse(COPIES_EVERYWHERE))
+                                                   .get(0);
+        assertEquals("entity.RequestedBy", n.get("toExpression"));
+        assertEquals(CC, n.get("ccExpression"));
+        assertEquals(BCC, n.get("bccExpression"));
+        assertEquals(1, ((List<?>) n.get("relationLoads")).size(), n.toString());
+    }
+
+    @Test
+    void aScheduleCarriesItsCopies() {
+        Map<String, Object> s = GlueIntentGenerator.buildSchedulesForTest(IntentParser.parse(COPIES_EVERYWHERE))
+                                                   .get(0);
+        assertEquals("entity.RequestedBy", s.get("toExpression"));
+        assertEquals(CC, s.get("ccExpression"));
+        assertEquals(BCC, s.get("bccExpression"));
+    }
+
+    /** Byte-identical generation for the other three blocks too, when they author neither key. */
+    @Test
+    void theOtherBlocksWithoutCopiesCarryNothingNew() {
+        String plain = COPIES_EVERYWHERE.replaceAll("(?m)^\\s*(cc|bcc): .*\\R", "");
+        Map<String, Object> t = GlueIntentGenerator.buildTransitionsForTest(IntentParser.parse(plain))
+                                                   .get(0);
+        assertFalse(t.containsKey("notifyCcExpression") || t.containsKey("notifyBccExpression"), t.toString());
+        Map<String, Object> n = GlueIntentGenerator.buildNotificationsForTest(IntentParser.parse(plain))
+                                                   .get(0);
+        assertFalse(n.containsKey("ccExpression") || n.containsKey("bccExpression"), n.toString());
+        Map<String, Object> s = GlueIntentGenerator.buildSchedulesForTest(IntentParser.parse(plain))
+                                                   .get(0);
+        assertFalse(s.containsKey("ccExpression") || s.containsKey("bccExpression"), s.toString());
+    }
+
+    /** An unresolvable copy recipient drops the notification, as an unresolvable to does. */
+    @Test
+    void anUnresolvableCopyRecipientDropsTheNotification() {
+        String yaml = COPIES_EVERYWHERE.replace("    cc: Owner.email\n    bcc: \"@config:ARCHIVE_EMAIL\"\n    subject: \"New closing",
+                "    cc: Owner.phone\n    bcc: \"@config:ARCHIVE_EMAIL\"\n    subject: \"New closing");
+        assertTrue(GlueIntentGenerator.buildNotificationsForTest(IntentParser.parse(yaml))
+                                      .isEmpty());
+    }
+
     private static Map<String, Object> send(String yaml) {
         List<Map<String, Object>> sends = GlueIntentGenerator.buildSendsForTest(IntentParser.parse(yaml));
         assertEquals(1, sends.size(), sends.toString());

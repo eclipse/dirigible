@@ -170,13 +170,77 @@ class NotifyRecipientsIntentTest {
                 """, "schedule [nudge] notify recipient [@var:approverEmails] reads a process variable");
     }
 
+    /** cc/bcc are generated on every notify block (#7938), not only a process step's. */
+    @Test
+    void aTransitionTakesCopyRecipients() {
+        assertDoesNotThrow(() -> IntentParser.parse(YAML.replace("      to: requestedBy\n",
+                "      to: requestedBy\n      cc: Owner.email\n      bcc: \"@config:ARCHIVE_EMAIL\"\n")));
+    }
+
+    /** A copy recipient is enough on any block - the archive mailbox needs no addressee of its own. */
+    @Test
+    void aTransitionWithOnlyABccParses() {
+        assertDoesNotThrow(() -> IntentParser.parse(YAML.replace("      to: requestedBy\n", "      bcc: archive@example.com\n")));
+    }
+
+    @Test
+    void aNotificationEntryTakesCopyRecipients() {
+        assertDoesNotThrow(() -> IntentParser.parse(YAML + """
+                notifications:
+                  - name: closingCreated
+                    event: { onCreate: ClosingRequest }
+                    to: requestedBy
+                    cc: Owner.email
+                    bcc: "@config:ARCHIVE_EMAIL"
+                    subject: "New closing"
+                    body: "New closing."
+                """));
+    }
+
+    @Test
+    void aScheduleTakesCopyRecipients() {
+        assertDoesNotThrow(() -> IntentParser.parse(YAML + """
+                schedules:
+                  - name: nudge
+                    cron: "0 0 8 * * ?"
+                    entity: ClosingRequest
+                    notify:
+                      to: requestedBy
+                      cc: Owner.email
+                      bcc: "@config:ARCHIVE_EMAIL"
+                      subject: "Pending"
+                      body: "Pending."
+                """));
+    }
+
     /**
-     * cc/bcc are generated on a process step only, so elsewhere they are refused rather than dropped.
+     * Outside a process step there is no instance to read, so @var: stays refused - in a copy key too.
      */
     @Test
-    void aCopyRecipientOutsideAProcessStepIsRefused() {
-        assertIssue(YAML.replace("      to: requestedBy\n", "      to: requestedBy\n      bcc: Owner.email\n"),
-                "transition [Reopen] notify declares cc/bcc, which is generated only on a serviceTask's args.notify");
+    void aVarInATransitionCopyRecipientIsRefused() {
+        assertIssue(YAML.replace("      to: requestedBy\n", "      to: requestedBy\n      bcc: \"@var:approverEmails\"\n"),
+                "transition [Reopen] notify bcc [@var:approverEmails] reads a process variable");
+    }
+
+    /**
+     * A fan-out's copy recipient resolves per ROW, so a record-scoped one would be copied once per row.
+     */
+    @Test
+    void aRecordScopedCopyRecipientInAFanOutIsRefused() {
+        String fanOut = YAML.replace("""
+                      - { name: Status, kind: manyToOne, to: ClosingStatus, function: EntityStatus, init: 1 }
+                """, """
+                      - { name: Status, kind: manyToOne, to: ClosingStatus, function: EntityStatus, init: 1 }
+                  - name: ClosingTask
+                    fields:
+                      - { name: id, type: integer, primaryKey: true, generated: true }
+                      - { name: email, type: string }
+                    relations:
+                      - { name: Request, kind: manyToOne, to: ClosingRequest }
+                """)
+                            .replace("      to: requestedBy\n",
+                                    "      forEach: ClosingTask\n      to: email\n      cc: record.requestedBy\n");
+        assertIssue(fanOut, "transition [Reopen] notify cc [record.requestedBy] is record-scoped");
     }
 
     @Test

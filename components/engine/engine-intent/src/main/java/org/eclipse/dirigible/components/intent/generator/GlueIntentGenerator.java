@@ -489,8 +489,10 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
             }
             NotificationSupport.Plan plan = NotificationSupport.plan(notification, byName.get(entity), byName, compositionParents, lookup);
             if (plan == null) {
-                reportDroppedGlue(context, "Notification [" + notification.getName() + "] recipient [" + notification.getTo()
-                        + "] is not a resolvable field or relation.field of [" + entity + "] - the notification was NOT generated");
+                reportDroppedGlue(context,
+                        "Notification [" + notification.getName() + "] recipient [" + notification.getTo() + "]"
+                                + copyRecipients(notification) + " is not a resolvable field or relation.field of [" + entity
+                                + "] - the notification was NOT generated");
                 continue;
             }
             NotifySupport.PrintAttachment attachment = printAttachment(notification, byName.get(entity), model, byName, compositionParents,
@@ -516,6 +518,7 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
             entry.put("relationLoads", relationLoads(plan, attachment, reportAttachment));
             entry.put("guardTerms", plan.guardTerms());
             entry.put("toExpression", plan.toExpression());
+            putCopyExpressions(entry, "ccExpression", "bccExpression", plan);
             entry.put("subjectExpression", plan.subjectExpression());
             entry.put("bodyExpression", plan.bodyExpression());
             putHtmlExpression(entry, "htmlExpression", plan);
@@ -1946,14 +1949,7 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
         fields.put("notifyBodyExpression", send ? plan.bodyExpression() : "\"\"");
         if (send) {
             putHtmlExpression(fields, "notifyHtmlExpression", plan);
-            // The copy recipients (#7935) are carried only when authored, so a block without them keeps
-            // its descriptor - and the generated sender - byte-identical.
-            if (plan.ccExpression() != null) {
-                fields.put("notifyCcExpression", plan.ccExpression());
-            }
-            if (plan.bccExpression() != null) {
-                fields.put("notifyBccExpression", plan.bccExpression());
-            }
+            putCopyExpressions(fields, "notifyCcExpression", "notifyBccExpression", plan);
             // An @var: recipient reads the process instance, so a fan-out's per-row send method needs the
             // execution handed in.
             if (plan.usesVariables()) {
@@ -4927,7 +4923,8 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
                 if (plan == null) {
                     reportDroppedGlue(context, "Schedule [" + schedule.getName() + "] notify recipient [" + schedule.getNotify()
                                                                                                                     .getTo()
-                            + "] is not a resolvable field or relation.field of [" + entity + "] - the schedule was NOT generated");
+                            + "]" + copyRecipients(schedule.getNotify()) + " is not a resolvable field or relation.field of [" + entity
+                            + "] - the schedule was NOT generated");
                     continue;
                 }
                 if (sourceCrossModel && plan.usesRecordUrl()) {
@@ -4966,6 +4963,7 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
                 }
                 allLoads.addAll(mergedLoads(plan, attachment, reportAttachment));
                 entry.put("toExpression", plan.toExpression());
+                putCopyExpressions(entry, "ccExpression", "bccExpression", plan);
                 entry.put("subjectExpression", plan.subjectExpression());
                 entry.put("bodyExpression", plan.bodyExpression());
                 putHtmlExpression(entry, "htmlExpression", plan);
@@ -5122,6 +5120,20 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
         if (to != null && !to.isBlank() && !to.contains("@")) {
             paths.put("notify recipient", to.trim());
         }
+        if (notify.getCc() != null && !notify.getCc()
+                                             .isBlank()
+                && !notify.getCc()
+                          .contains("@")) {
+            paths.put("notify cc", notify.getCc()
+                                         .trim());
+        }
+        if (notify.getBcc() != null && !notify.getBcc()
+                                              .isBlank()
+                && !notify.getBcc()
+                          .contains("@")) {
+            paths.put("notify bcc", notify.getBcc()
+                                          .trim());
+        }
         collectNotifyPlaceholders(notify.getSubject(), paths);
         collectNotifyPlaceholders(notify.getBody(), paths);
         collectNotifyPlaceholders(notify.getHtml(), paths);
@@ -5168,6 +5180,19 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
             copies += " / bcc [" + notify.getBcc() + "]";
         }
         return copies;
+    }
+
+    /**
+     * The copy recipients (#7935, #7938), carried only when authored - so a block without them keeps
+     * its descriptor, and the generated sender, byte-identical.
+     */
+    private static void putCopyExpressions(Map<String, Object> fields, String ccKey, String bccKey, NotificationSupport.Plan plan) {
+        if (plan.ccExpression() != null) {
+            fields.put(ccKey, plan.ccExpression());
+        }
+        if (plan.bccExpression() != null) {
+            fields.put(bccKey, plan.bccExpression());
+        }
     }
 
     private static void putHtmlExpression(Map<String, Object> fields, String key, NotificationSupport.Plan plan) {
