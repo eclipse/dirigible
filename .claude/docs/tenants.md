@@ -63,7 +63,7 @@ Activating a tenant (`POST services/tenant-provisioning/tenants/{id}/activation`
   - **300**, `TenantUsersTenantTeardown`: the user replica. The role rows cascade, and `TENUSER_TENANT_ID` has no foreign key, so the rows would otherwise be orphaned.
   - **400**, `TenantInitializationTenantTeardown`: the `DIRIGIBLE_TENANT_INITIALIZATIONS` row.
   - **500**, `TenantArtefactLedgerTenantTeardown`: the artefact ledger rows.
-  - **600**, the tenant's content: the internal CMS folder (only with the internal provider), the intent conversations, the traced task states.
+  - **600**, the tenant's content: the internal CMS folder (only with the internal provider; deleted recursively, so it must resolve to a direct child of the CMS root or the participant refuses), the intent conversations, the traced task states.
 - **Last**, the tenant's `DIRIGIBLE_USERS` and the tenant row (`TenantService.delete` evicts the resolution caches).
 - **Answers:**
   - `204` for a removed tenant **and** for an unknown one, so a 404 from this route can only mean the route is missing;
@@ -77,7 +77,7 @@ Activating a tenant (`POST services/tenant-provisioning/tenants/{id}/activation`
   - `DIRIGIBLE_CROSS_TENANT_AUDIT`, a security audit trail;
   - CMS content in the S3 and SharePoint providers - S3 resolves its prefix through the *current* tenant, and the call runs as the default tenant, so it needs its own tenant-scoped teardown (follow-up).
 - **Single instance.** The runtime teardown acts on the instance that answers, so an application is expected to run as one instance.
-- **Tests:** `TenantDeprovisioningServiceTest` (order, unknown, default tenant, 409 and its bound, a failure that resumes), `JobsTenantTeardownTest`, `BpmTenantTeardownTest`, `ListenersManagerTest#stopTenantListenersStopsOnlyTheTenantsOwn`, `TenantActivationServiceTest`, `TenantUserReplicaServiceTest`; `TenantDeprovisioningIT` (two externally provisioned tenants with a table, a job and a process: one is removed, the other keeps everything, and nothing comes back on the next synchronizer pass), `TenantProvisioningApiDisabledIT`.
+- **Tests:** `TenantDeprovisioningServiceTest` (order, unknown, default tenant, 409 and its bound, a failure that resumes), `JobsTenantTeardownTest`, `BpmTenantTeardownTest`, `CmsInternalTenantTeardownTest`, `ListenersManagerTest#stopTenantListenersStopsOnlyTheTenantsOwn`, `TenantActivationServiceTest`, `TenantUserReplicaServiceTest`; `TenantDeprovisioningIT` (two externally provisioned tenants with a table, a job and a process: one is removed, the other keeps everything, and nothing comes back on the next synchronizer pass), `TenantProvisioningApiDisabledIT`.
 
 ## Tenant-aware configuration (`commons-config` + `core-configurations`)
 

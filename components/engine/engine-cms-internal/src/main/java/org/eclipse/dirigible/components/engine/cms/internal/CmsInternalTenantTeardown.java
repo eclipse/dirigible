@@ -56,13 +56,9 @@ class CmsInternalTenantTeardown implements TenantTeardownParticipant {
         if (!PROVIDER.equals(Configuration.get("DIRIGIBLE_CMS_PROVIDER", PROVIDER))) {
             return;
         }
-        String rootFolder = DirigibleConfig.CMS_INTERNAL_ROOT_FOLDER.getStringValue() + File.separator + tenantId;
-        CmsProviderInternalFactory.forget(rootFolder);
-        // resolved the way the repository resolves it: a relative root lives under the working directory
-        Path folder = Paths.get(rootFolder);
-        if (!folder.isAbsolute()) {
-            folder = Paths.get(System.getProperty("user.dir"), rootFolder);
-        }
+        String root = DirigibleConfig.CMS_INTERNAL_ROOT_FOLDER.getStringValue();
+        Path folder = tenantFolder(root, tenantId, System.getProperty("user.dir"));
+        CmsProviderInternalFactory.forget(root + File.separator + tenantId);
         if (!Files.exists(folder)) {
             return;
         }
@@ -73,6 +69,34 @@ class CmsInternalTenantTeardown implements TenantTeardownParticipant {
             throw new UncheckedIOException("Could not delete the CMS folder [" + folder + "] of tenant [" + tenantId + "]", ex);
         }
         LOGGER.info("Deleted the CMS folder [{}] of tenant [{}].", folder, tenantId);
+    }
+
+    /**
+     * The tenant's folder, resolved the way the repository resolves it: a relative root lives under the
+     * working directory. The folder is deleted recursively, so it must be a direct child of the root -
+     * an id that would resolve anywhere else (a separator, {@code ..}, an absolute path) is refused.
+     *
+     * @param root the internal CMS root folder
+     * @param tenantId the tenant id
+     * @param workingDirectory the directory a relative root is resolved against
+     * @return the tenant's folder
+     * @throws IllegalArgumentException if the tenant id does not name a direct child of the root
+     */
+    static Path tenantFolder(String root, String tenantId, String workingDirectory) {
+        if (tenantId == null || tenantId.isBlank()) {
+            throw new IllegalArgumentException("A tenant id is required to resolve its CMS folder");
+        }
+        Path rootPath = Paths.get(root);
+        if (!rootPath.isAbsolute()) {
+            rootPath = Paths.get(workingDirectory, root);
+        }
+        rootPath = rootPath.normalize();
+        Path folder = rootPath.resolve(tenantId)
+                              .normalize();
+        if (!rootPath.equals(folder.getParent())) {
+            throw new IllegalArgumentException("The tenant id [" + tenantId + "] does not name a folder directly under the CMS root");
+        }
+        return folder;
     }
 
     private static void delete(Path path) {
