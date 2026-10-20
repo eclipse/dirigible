@@ -21,11 +21,12 @@ import org.springframework.stereotype.Component;
 
 /**
  * Plugs the {@code data-store-java} runtime into {@code engine-java}'s class-loaded events: every
- * class annotated with {@link Entity} is registered with the {@link JavaEntityManager} (and the
- * Hibernate {@code SessionFactory} is rebuilt to include it).
+ * class annotated with {@link Entity} is registered with the {@link JavaEntityManager}. A
+ * generation is installed as one entity-manager batch, so the Hibernate {@code SessionFactory} is
+ * rebuilt once per generation rather than once per entity class.
  */
 @Component
-@Order(100) // Run first so entity tables exist before any repository / controller binds to them.
+@Order(100) // Run first so entity registrations exist before any repository / controller binds to them.
 public class EntityClassConsumer implements JavaClassConsumer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EntityClassConsumer.class);
@@ -44,6 +45,16 @@ public class EntityClassConsumer implements JavaClassConsumer {
     @Override
     public boolean accepts(Class<?> clazz) {
         return clazz.isAnnotationPresent(Entity.class);
+    }
+
+    @Override
+    public void beginGeneration() {
+        entityManager.beginBatch();
+    }
+
+    @Override
+    public void endGeneration() {
+        entityManager.endBatch();
     }
 
     @Override

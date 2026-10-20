@@ -155,6 +155,36 @@ class JavaLoaderTest {
     }
 
     @Test
+    void generation_hooks_bracket_the_unload_and_load_passes_once_per_install() {
+        GenerationConsumer generation = new GenerationConsumer(false);
+        JavaLoader localLoader = loaderWith(List.of(generation));
+
+        localLoader.rebuild(List.of(handlerSource(FQN, "v1")));
+        localLoader.rebuild(List.of(handlerSource(FQN, "v2")));
+
+        assertEquals(List.of("begin", "load:" + FQN, "end", "begin", "unload:" + FQN, "load:" + FQN, "end"), generation.events);
+    }
+
+    @Test
+    void consumer_throwing_on_begin_generation_is_skipped_and_the_others_still_run() {
+        GenerationConsumer throwing = new GenerationConsumer(true);
+        GenerationConsumer generation = new GenerationConsumer(false);
+        JavaLoader localLoader = loaderWith(List.of(throwing, generation));
+
+        localLoader.rebuild(List.of(handlerSource(FQN, "v1")));
+
+        assertFalse(throwing.events.contains("end"), "a consumer whose begin threw is not ended");
+        assertEquals(List.of("begin", "load:" + FQN, "end"), generation.events);
+    }
+
+    private JavaLoader loaderWith(List<JavaClassConsumer> consumers) {
+        JavaCompiledOutputDirectory outputDirectory = mock(JavaCompiledOutputDirectory.class);
+        when(outputDirectory.get()).thenReturn(tempDir);
+        return new JavaLoader(new JavaSourceCompiler(), new ClientClassLoaderHolder(), new ModulesClassLoaderHolder(),
+                new ComponentContainer(new ClientBeansHolder()), consumers, outputDirectory, NOOP_PUBLISHER);
+    }
+
+    @Test
     void consumer_throwing_linkage_error_does_not_abort_rebuild_for_other_classes() {
         // Reproduces the bug: ControllerClassConsumer.injectDependencies() walks getDeclaredFields()
         // on a controller whose @Inject field type failed to compile, the JVM throws
@@ -413,6 +443,44 @@ class JavaLoaderTest {
 
         @Override
         public void onClassUnloaded(LoadedClass info) {}
+    }
+
+    /** Test consumer that records its generation hooks and every load/unload, in order. */
+    private static final class GenerationConsumer implements JavaClassConsumer {
+        final List<String> events = new ArrayList<>();
+        private final boolean throwOnBegin;
+
+        GenerationConsumer(boolean throwOnBegin) {
+            this.throwOnBegin = throwOnBegin;
+        }
+
+        @Override
+        public boolean accepts(Class<?> clazz) {
+            return true;
+        }
+
+        @Override
+        public void beginGeneration() {
+            if (throwOnBegin) {
+                throw new IllegalStateException("simulated begin failure");
+            }
+            events.add("begin");
+        }
+
+        @Override
+        public void endGeneration() {
+            events.add("end");
+        }
+
+        @Override
+        public void onClassLoaded(LoadedClass info) {
+            events.add("load:" + info.fqn());
+        }
+
+        @Override
+        public void onClassUnloaded(LoadedClass info) {
+            events.add("unload:" + info.fqn());
+        }
     }
 
     /** Test consumer that records every load/unload — accepts every class. */

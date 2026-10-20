@@ -207,9 +207,23 @@ public class JavaLoader {
      * path) or, for AOT-packaged {@code compiled} modules, from classes discovered on the application
      * classpath. Both drive the identical consumer/container dispatch here.
      *
+     * <p>
+     * The whole install is bracketed by {@link JavaClassConsumer#beginGeneration()} /
+     * {@link JavaClassConsumer#endGeneration()}, so a consumer can collapse the unload and load passes
+     * of one generation into a single rebuild of its shared state.
+     *
      * @return the FQNs removed from the generation (present before, absent now)
      */
     private Set<String> applyGeneration(Map<String, LoadedClass> nextGeneration, ClientClassLoader nextLoader) {
+        List<JavaClassConsumer> begun = beginGeneration(consumers);
+        try {
+            return installGeneration(nextGeneration, nextLoader);
+        } finally {
+            endGeneration(begun);
+        }
+    }
+
+    private Set<String> installGeneration(Map<String, LoadedClass> nextGeneration, ClientClassLoader nextLoader) {
         // Diff against the previous generation: notify consumers of removals first, then additions.
         Set<String> previousFqns = new HashSet<>(currentGeneration.keySet());
         Set<String> nextFqns = new HashSet<>(nextGeneration.keySet());
@@ -365,6 +379,42 @@ public class JavaLoader {
                                                                                    .getSimpleName(),
                             loaded ? "onClassLoaded" : "onClassUnloaded", info.fqn(), e.getMessage(), e);
                 }
+            }
+        }
+    }
+
+    /**
+     * Open a generation on every consumer, in {@code @Order} sequence. A consumer that throws is logged
+     * and left out, as {@code notifyAll} does for a class, and is then not closed either.
+     *
+     * @return the consumers whose {@code beginGeneration} returned normally
+     */
+    private static List<JavaClassConsumer> beginGeneration(List<JavaClassConsumer> consumers) {
+        List<JavaClassConsumer> begun = new ArrayList<>(consumers.size());
+        for (JavaClassConsumer consumer : consumers) {
+            try {
+                consumer.beginGeneration();
+                begun.add(consumer);
+            } catch (Exception | LinkageError e) {
+                LOGGER.error("Consumer [{}] threw on beginGeneration: {}", consumer.getClass()
+                                                                                   .getSimpleName(),
+                        e.getMessage(), e);
+            }
+        }
+        return begun;
+    }
+
+    /**
+     * Close the generation on every consumer that opened it; one that throws does not skip the rest.
+     */
+    private static void endGeneration(List<JavaClassConsumer> begun) {
+        for (JavaClassConsumer consumer : begun) {
+            try {
+                consumer.endGeneration();
+            } catch (Exception | LinkageError e) {
+                LOGGER.error("Consumer [{}] threw on endGeneration: {}", consumer.getClass()
+                                                                                 .getSimpleName(),
+                        e.getMessage(), e);
             }
         }
     }

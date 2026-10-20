@@ -51,6 +51,24 @@ public interface JavaClassConsumer {
     void onClassUnloaded(LoadedClass info);
 
     /**
+     * Called once before a generation is installed, ahead of the {@link #onClassUnloaded} pass for its
+     * removed and replaced classes. A consumer whose per-class work rebuilds shared state (the
+     * Hibernate {@code SessionFactory} of {@code data-store-java}) defers that work here and does it
+     * once in {@link #endGeneration()}, instead of once per class.
+     */
+    default void beginGeneration() {
+        // Nothing to defer by default.
+    }
+
+    /**
+     * Called once after the {@link #onClassLoaded} pass of a generation - also when installing it
+     * failed half way - on every consumer whose {@link #beginGeneration()} returned normally.
+     */
+    default void endGeneration() {
+        // Nothing deferred by default.
+    }
+
+    /**
      * Re-attempt runtime state this consumer wanted but could not establish - a JMS subscription the
      * broker refused while it was still starting, a job registration that threw. Called periodically by
      * {@code JavaConsumersReconciler} on a JVM-local timer, deliberately independent of a rebuild and
