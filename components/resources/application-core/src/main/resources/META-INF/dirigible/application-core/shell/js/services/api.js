@@ -227,9 +227,20 @@ App.services.api = {
     const pageSize = 1000;
     const sep = url.includes('?') ? '&' : '?';
     const all = [];
+    let previousFirst = null;
     for (let offset = 0;; offset += pageSize) {
       const page = await this.get(`${url}${sep}$limit=${pageSize}&$offset=${offset}`, opts);
       if (!Array.isArray(page) || page.length === 0) break;
+      // An endpoint that ignores $limit/$offset answers every page with the whole set, so a set of
+      // pageSize or more rows never ends the walk (dirigible #7982). A page larger than asked for IS
+      // the whole set; a page that starts where the last one started is the same page again.
+      const first = JSON.stringify(page[0]);
+      if (offset > 0 && first === previousFirst) break;
+      previousFirst = first;
+      if (page.length > pageSize) {
+        if (offset === 0) all.push(...page);
+        break;
+      }
       all.push(...page);
       if (page.length < pageSize) break;
     }

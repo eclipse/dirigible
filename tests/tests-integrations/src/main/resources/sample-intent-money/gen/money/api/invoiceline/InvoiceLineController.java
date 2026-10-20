@@ -64,7 +64,10 @@ public class InvoiceLineController {
     @Documentation("Count InvoiceLine with filter")
     public Map<String, Long> countWithFilter(@Body Map<String, Object> filter) {
         checkPermissions("read");
-        return Map.of("count", (long) runFilter(filter).size());
+        // counted in the database, not by loading every matching row (dirigible #7982)
+        Map<String, Object> params = new LinkedHashMap<>();
+        String where = filterWhere(filter, params);
+        return Map.of("count", repository.countQuery("select count(e) from money_InvoiceLineEntity e" + where, params));
     }
 
     @Post("/search")
@@ -143,8 +146,39 @@ public class InvoiceLineController {
     }
 
     private List<InvoiceLineEntity> runFilter(Map<String, Object> filter) {
-        StringBuilder hql = new StringBuilder("from money_InvoiceLineEntity e");
         Map<String, Object> params = new LinkedHashMap<>();
+        StringBuilder hql = new StringBuilder("from money_InvoiceLineEntity e").append(filterWhere(filter, params));
+        // a stable order, so that a page of the result means the same rows on every call
+        hql.append(" order by e.Id");
+        // The page the caller asked for, in the body next to the conditions (dirigible #7982): the
+        // shell's report widgets ask for $limit 1 or 5 and were handed every matching row.
+        return repository.query(hql.toString(), params, pageParameter(filter, "$limit", -1), pageParameter(filter, "$offset", 0));
+    }
+
+    /**
+     * The {@code $limit} / {@code $offset} of a search body - a number or a numeric string.
+     */
+    private static int pageParameter(Map<String, Object> filter, String key, int absent) {
+        Object value = filter == null ? null : filter.get(key);
+        if (value instanceof Number number) {
+            return number.intValue();
+        }
+        if (value instanceof String text && !text.isBlank()) {
+            try {
+                return Integer.parseInt(text.trim());
+            } catch (NumberFormatException e) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid " + key + ": " + text);
+            }
+        }
+        return absent;
+    }
+
+    /**
+     * The {@code where} clause of a search body's {@code equals} and {@code conditions}, binding their
+     * values into {@code params} - shared by the search and its count.
+     */
+    private String filterWhere(Map<String, Object> filter, Map<String, Object> params) {
+        StringBuilder hql = new StringBuilder();
         boolean first = true;
         if (filter != null && filter.get("equals") instanceof Map<?, ?> equals) {
             for (Map.Entry<?, ?> entry : equals.entrySet()) {
@@ -183,7 +217,7 @@ public class InvoiceLineController {
                 first = false;
             }
         }
-        return repository.query(hql.toString(), params);
+        return hql.toString();
     }
 
     private static String requireKnownField(String field) {
