@@ -25,13 +25,16 @@ import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.utility.DockerImageName;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
 
@@ -105,20 +108,70 @@ public class S3FacadeTest {
         assertArrayEquals(expectedContent, actualContent);
     }
 
+    @Test
+    public void deleteFolderRemovesMoreThanOneBatch() {
+        int count = S3Facade.DELETE_BATCH_SIZE + 1;
+        for (int i = 0; i < count; i++) {
+            putDirectly("big/" + i);
+        }
+        putDirectly("big-sibling/kept");
+
+        S3Facade.deleteFolder("big/");
+
+        assertEquals(List.of(), keysUnder("big/"));
+        assertEquals(List.of("big-sibling/kept"), keysUnder("big-sibling/"));
+    }
+
+    @Test
+    public void deleteFolderLeavesAPrefixSharingItsLeadingStringUntouched() {
+        putDirectly("acme/documents/a.txt");
+        putDirectly("acme/b.txt");
+        putDirectly("acme-2/c.txt");
+
+        S3Facade.deleteFolder("acme/");
+
+        assertEquals(List.of(), keysUnder("acme/"));
+        assertEquals(List.of("acme-2/c.txt"), keysUnder("acme-2/"));
+    }
+
+    @Test
+    public void deleteFolderOfAnEmptyPrefixIsANoOp() {
+        assertDoesNotThrow(() -> S3Facade.deleteFolder("nothing-here/"));
+    }
+
+    private static void putDirectly(String key) {
+        s3Client.putObject(PutObjectRequest.builder()
+                                           .bucket(BUCKET_NAME)
+                                           .key(key)
+                                           .build(),
+                RequestBody.fromString(key));
+    }
+
+    private static List<String> keysUnder(String prefix) {
+        return s3Client.listObjectsV2Paginator(ListObjectsV2Request.builder()
+                                                                   .bucket(BUCKET_NAME)
+                                                                   .prefix(prefix)
+                                                                   .build())
+                       .contents()
+                       .stream()
+                       .map(S3Object::key)
+                       .toList();
+    }
+
     private static void deleteBucket(String bucketName) {
         ListObjectsV2Request listObjectsRequest = ListObjectsV2Request.builder()
                                                                       .bucket(bucketName)
                                                                       .build();
 
-        ListObjectsV2Response listObjectsResponse = s3Client.listObjectsV2(listObjectsRequest);
-        listObjectsResponse.contents()
-                           .forEach(object -> {
-                               DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
-                                                                                            .bucket(bucketName)
-                                                                                            .key(object.key())
-                                                                                            .build();
-                               s3Client.deleteObject(deleteObjectRequest);
-                           });
+        s3Client.listObjectsV2Paginator(listObjectsRequest)
+                .contents()
+                .forEach(object -> {
+                    DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                                                                                 .bucket(bucketName)
+                                                                                 .key(object.key())
+                                                                                 .build();
+                    s3Client.deleteObject(deleteObjectRequest);
+                });
 
         DeleteBucketRequest deleteBucketRequest = DeleteBucketRequest.builder()
                                                                      .bucket(bucketName)

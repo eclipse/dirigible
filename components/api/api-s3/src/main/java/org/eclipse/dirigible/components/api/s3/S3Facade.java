@@ -20,7 +20,6 @@ import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
-import software.amazon.awssdk.services.s3.paginators.ListObjectsV2Iterable;
 import software.amazon.awssdk.transfer.s3.S3TransferManager;
 import software.amazon.awssdk.transfer.s3.model.DirectoryUpload;
 import software.amazon.awssdk.transfer.s3.model.UploadDirectoryRequest;
@@ -49,6 +48,9 @@ public class S3Facade {
     private static final String DIRIGIBLE_S3_PROVIDER = Configuration.get("DIRIGIBLE_S3_PROVIDER", "aws");
     /** The Constant LOCALSTACK_URI. */
     private static final String DEFAULT_LOCALSTACK_URI = "https://s3.localhost.localstack.cloud:4566";
+
+    /** The most keys one DeleteObjects request accepts. */
+    static final int DELETE_BATCH_SIZE = 1000;
 
     /** The Constant FOLDER_SUFFIX. */
     private static final String FOLDER_SUFFIX = "/";
@@ -130,38 +132,46 @@ public class S3Facade {
     }
 
     /**
-     * Delete folder.
+     * Deletes every object under the prefix, in batches of at most {@value #DELETE_BATCH_SIZE} keys -
+     * the most one DeleteObjects request accepts. Uses the configured client, the one {@link #put} and
+     * {@link #get} use.
      *
      * @param prefix the prefix
+     * @throws IllegalStateException if S3 reports a key it could not delete - the batches sent before
+     *         stay deleted, so a repeated call deletes the rest
      */
     public static void deleteFolder(String prefix) {
         String tenantPrefix = INSTANCE.tenantPathResolver.resolve(prefix);
         String bucket = getBucketName();
-        try (S3Client s3Client = S3Client.builder()
-                                         .build()) {
-            ListObjectsV2Request request = ListObjectsV2Request.builder()
-                                                               .bucket(bucket)
-                                                               .prefix(tenantPrefix)
-                                                               .build();
-            ListObjectsV2Iterable list = s3Client.listObjectsV2Paginator(request);
-
-            List<ObjectIdentifier> objectIdentifiers = list.stream()
-                                                           .flatMap(r -> r.contents()
-                                                                          .stream())
+        S3Client s3Client = S3Facade.get()
+                                    .getS3Client();
+        ListObjectsV2Request request = ListObjectsV2Request.builder()
+                                                           .bucket(bucket)
+                                                           .prefix(tenantPrefix)
+                                                           .build();
+        List<ObjectIdentifier> objectIdentifiers = s3Client.listObjectsV2Paginator(request)
+                                                           .contents()
+                                                           .stream()
                                                            .map(o -> ObjectIdentifier.builder()
                                                                                      .key(o.key())
                                                                                      .build())
                                                            .collect(Collectors.toList());
-
-            if (objectIdentifiers.isEmpty())
-                return;
+        for (int from = 0; from < objectIdentifiers.size(); from += DELETE_BATCH_SIZE) {
+            List<ObjectIdentifier> batch = objectIdentifiers.subList(from, Math.min(from + DELETE_BATCH_SIZE, objectIdentifiers.size()));
             DeleteObjectsRequest deleteObjectsRequest = DeleteObjectsRequest.builder()
                                                                             .bucket(bucket)
                                                                             .delete(Delete.builder()
-                                                                                          .objects(objectIdentifiers)
+                                                                                          .objects(batch)
+                                                                                          .quiet(true)
                                                                                           .build())
                                                                             .build();
-            s3Client.deleteObjects(deleteObjectsRequest);
+            List<S3Error> errors = s3Client.deleteObjects(deleteObjectsRequest)
+                                           .errors();
+            if (!errors.isEmpty()) {
+                S3Error first = errors.get(0);
+                throw new IllegalStateException("Could not delete [" + errors.size() + "] object(s) under [" + tenantPrefix
+                        + "] in bucket [" + bucket + "], the first one [" + first.key() + "]: " + first.code() + " " + first.message());
+            }
         }
     }
 
