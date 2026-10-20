@@ -16,6 +16,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+import org.eclipse.dirigible.commons.api.helpers.LogSanitizer;
 import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.eclipse.dirigible.components.base.tenant.DefaultTenant;
 import org.eclipse.dirigible.components.base.tenant.TenantTeardownParticipant;
@@ -136,20 +137,20 @@ class TenantDeprovisioningService {
         }
         Optional<Tenant> found = tenantService.findById(tenantId);
         if (found.isEmpty()) {
-            LOGGER.info("There is no tenant [{}] - nothing to deprovision.", tenantId);
+            LOGGER.info("There is no tenant [{}] - nothing to deprovision.", LogSanitizer.sanitize(tenantId));
             return false;
         }
         Tenant tenant = found.get();
         refuseRunningActivation(tenantId);
 
         if (TenantStatus.DEPROVISIONING != tenant.getStatus()) {
-            LOGGER.info("Deprovisioning tenant [{}] - moving it from [{}] to [{}].", tenantId, tenant.getStatus(),
+            LOGGER.info("Deprovisioning tenant [{}] - moving it from [{}] to [{}].", LogSanitizer.sanitize(tenantId), tenant.getStatus(),
                     TenantStatus.DEPROVISIONING);
             tenant.setStatus(TenantStatus.DEPROVISIONING);
             // persisted before anything is torn down, and saving evicts the tenant caches as well
             tenant = tenantService.save(tenant);
         } else {
-            LOGGER.info("Tenant [{}] is already being deprovisioned. Resuming.", tenantId);
+            LOGGER.info("Tenant [{}] is already being deprovisioned. Resuming.", LogSanitizer.sanitize(tenantId));
         }
 
         for (TenantTeardownParticipant participant : participants) {
@@ -158,18 +159,18 @@ class TenantDeprovisioningService {
             try {
                 participant.teardown(tenantId);
             } catch (RuntimeException ex) {
-                LOGGER.error("Deprovisioning tenant [{}] stopped at [{}]. The tenant stays [{}]; repeating the call resumes it.", tenantId,
-                        name, TenantStatus.DEPROVISIONING, ex);
+                LOGGER.error("Deprovisioning tenant [{}] stopped at [{}]. The tenant stays [{}]; repeating the call resumes it.",
+                        LogSanitizer.sanitize(tenantId), name, TenantStatus.DEPROVISIONING, ex);
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Deprovisioning tenant [" + tenantId + "] stopped at ["
                         + name + "]: " + ex.getMessage() + " - the tenant stays DEPROVISIONING, and repeating the call resumes it", ex);
             }
-            LOGGER.info("Deprovisioning tenant [{}]: [{}] done.", tenantId, name);
+            LOGGER.info("Deprovisioning tenant [{}]: [{}] done.", LogSanitizer.sanitize(tenantId), name);
         }
 
         userService.findUsersByTenantId(tenantId)
                    .forEach(user -> userService.deleteUser(user.getId()));
         tenantService.delete(tenant);
-        LOGGER.info("Deprovisioned tenant [{}].", tenantId);
+        LOGGER.info("Deprovisioned tenant [{}].", LogSanitizer.sanitize(tenantId));
         return true;
     }
 
@@ -192,8 +193,8 @@ class TenantDeprovisioningService {
                                             .getRequestedAt();
         if (requestedAt != null && requestedAt.plus(bound)
                                               .isBefore(clock.instant())) {
-            LOGGER.warn("The initialization of tenant [{}] has been open since [{}], longer than {} - deprovisioning it anyway.", tenantId,
-                    requestedAt, bound);
+            LOGGER.warn("The initialization of tenant [{}] has been open since [{}], longer than {} - deprovisioning it anyway.",
+                    LogSanitizer.sanitize(tenantId), requestedAt, bound);
             return;
         }
         throw new ResponseStatusException(HttpStatus.CONFLICT,
