@@ -60,8 +60,8 @@ document.addEventListener('alpine:init', () => {
     appLanguages: [],
     // Tenant Configuration: a built-in settings entry showing the predefined, per-tenant-overridable
     // properties (the branding properties for now). Backed by the platform endpoint
-    // /services/core/configurations/tenant; requires ADMINISTRATOR/OPERATOR (a 403 is surfaced as a
-    // read-only notice). Each entry is { key, value }; an empty value means "not overridden".
+    // /services/core/configurations/tenant; requires the tenant's Owner or ADMINISTRATOR/OPERATOR (a
+    // 403 is surfaced as a read-only notice). Each entry is { key, value }; an empty value means "not overridden".
     tenantConfig: [],
     // The same entries, grouped as /services/core/configurations/tenant/descriptors answers them:
     // [{ group, label, entries: [{ key, value, defaultValue, kind }] }]; defaultValue is the platform

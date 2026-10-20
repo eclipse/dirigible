@@ -19,6 +19,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
+import org.eclipse.dirigible.components.base.http.roles.ApplicationRoles;
+import org.eclipse.dirigible.components.base.http.roles.Roles.RoleNames;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,8 +35,10 @@ import jakarta.annotation.security.RolesAllowed;
 /**
  * Management surface for the current tenant's document-number series, backing the application
  * shell's "Document Numbering" settings page. Lists every series the tenant has - each declared by
- * a {@code .numbers} artefact and provisioned per tenant by its synchronizer - and lets an
- * administrator set its shape (prefix + total width) and the next value it will allocate.
+ * a {@code .numbers} artefact and provisioned per tenant by its synchronizer - and lets the
+ * tenant's {@link ApplicationRoles#OWNER} or platform staff set its shape (prefix + total width)
+ * and the next value it will allocate. Every series here belongs to the current tenant, so an owner
+ * changes only their own tenant's numbering.
  *
  * <p>
  * Configuring the shape here is what lets one application serve jurisdictions with different
@@ -43,7 +47,7 @@ import jakarta.annotation.security.RolesAllowed;
  */
 @RestController
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "numbering")
-@RolesAllowed({"ADMINISTRATOR", "OPERATOR"})
+@RolesAllowed({ApplicationRoles.OWNER, RoleNames.ADMINISTRATOR, RoleNames.OPERATOR})
 public class DocumentNumberEndpoint extends BaseEndpoint {
 
     private final DocumentNumberService service;

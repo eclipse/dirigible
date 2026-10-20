@@ -60,8 +60,8 @@ document.addEventListener('alpine:init', () => {
     appLanguages: [],
     // Tenant Configuration: a built-in settings entry showing the predefined, per-tenant-overridable
     // properties (the branding properties for now). Backed by the platform endpoint
-    // /services/core/configurations/tenant; requires ADMINISTRATOR/OPERATOR (a 403 is surfaced as a
-    // read-only notice). Each entry is { key, value }; an empty value means "not overridden".
+    // /services/core/configurations/tenant; requires the tenant's Owner or ADMINISTRATOR/OPERATOR (a
+    // 403 is surfaced as a read-only notice). Each entry is { key, value }; an empty value means "not overridden".
     tenantConfig: [],
     // The same entries, grouped as /services/core/configurations/tenant/descriptors answers them:
     // [{ group, label, entries: [{ key, value, defaultValue, kind }] }]; defaultValue is the platform
@@ -185,8 +185,8 @@ document.addEventListener('alpine:init', () => {
     },
 
     // Document Numbering: the current tenant's number series (engine-numbering), read from and
-    // written to /services/core/numbering (ADMINISTRATOR/OPERATOR - a 403 is surfaced read-only). Each
-    // row is { series, partition, prefix, size, next } - a series declared by a published module's
+    // written to /services/core/numbering (the tenant's Owner or ADMINISTRATOR/OPERATOR - a 403 is
+    // surfaced read-only). Each row is { series, partition, prefix, size, next } - a series declared by a published module's
     // .numbers artefact, one row per partition (e.g. per company) when the intent partitions it. The
     // tenant edits the SHAPE (prefix + total width) and the NEXT value here; only what the user
     // actually changed is written, so a counter that advanced since load is never clobbered. An

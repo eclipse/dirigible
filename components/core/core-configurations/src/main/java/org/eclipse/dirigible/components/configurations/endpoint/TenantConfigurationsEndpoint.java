@@ -14,6 +14,8 @@ import java.util.List;
 
 import org.eclipse.dirigible.commons.config.ConfigDescriptors;
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
+import org.eclipse.dirigible.components.base.http.roles.ApplicationRoles;
+import org.eclipse.dirigible.components.base.http.roles.Roles.RoleNames;
 import org.eclipse.dirigible.components.configurations.domain.TenantConfiguration;
 import org.eclipse.dirigible.components.configurations.domain.TenantConfigurationGroup;
 import org.eclipse.dirigible.components.configurations.service.SensitiveConfigurations;
@@ -30,16 +32,22 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Manages the configuration entries of the current tenant, stored in the tenant's own
  * DIRIGIBLE_CONFIGURATIONS table. Only the allow-listed keys among them are actually injected into
  * the runtime configuration for the tenant's requests; the rest are stored but inert. Values of
  * sensitive keys are returned masked (see {@link SensitiveConfigurations}).
+ *
+ * <p>
+ * The tenant's {@link ApplicationRoles#OWNER} manages its tenant settings - the allow-listed keys -
+ * beside platform staff. Every other key is instance-wide and stays with staff: an owner neither
+ * sees it among the stored entries nor writes or deletes it.
  */
 @RestController
 @RequestMapping(BaseEndpoint.PREFIX_ENDPOINT_CORE + "configurations/tenant")
-@RolesAllowed({"ADMINISTRATOR", "OPERATOR"})
+@RolesAllowed({ApplicationRoles.OWNER, RoleNames.ADMINISTRATOR, RoleNames.OPERATOR})
 public class TenantConfigurationsEndpoint extends BaseEndpoint {
 
     private final TenantConfigurationService tenantConfigurationService;
@@ -49,14 +57,22 @@ public class TenantConfigurationsEndpoint extends BaseEndpoint {
     }
 
     /**
-     * Lists the current tenant's configuration entries.
+     * Lists the current tenant's configuration entries - only its tenant settings for a caller who is
+     * not platform staff.
      *
+     * @param request the request, for the caller's roles
      * @return the entries
      */
     @GetMapping
-    public ResponseEntity<List<TenantConfiguration>> findAll() {
+    public ResponseEntity<List<TenantConfiguration>> findAll(HttpServletRequest request) {
         try {
-            return ResponseEntity.ok(masked(tenantConfigurationService.listForCurrentTenant()));
+            List<TenantConfiguration> entries = tenantConfigurationService.listForCurrentTenant();
+            if (!isStaff(request)) {
+                entries = entries.stream()
+                                 .filter(entry -> tenantConfigurationService.isTenantOverridable(entry.key()))
+                                 .toList();
+            }
+            return ResponseEntity.ok(masked(entries));
         } catch (SQLException ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to read tenant configuration", ex);
         }
@@ -119,14 +135,16 @@ public class TenantConfigurationsEndpoint extends BaseEndpoint {
      * sensitive key is an unchanged edit and keeps the stored value.
      *
      * @param configuration the entry to store
+     * @param request the request, for the caller's roles
      * @return an empty 200 response
      */
     @PutMapping
-    public ResponseEntity<Void> set(@RequestBody TenantConfiguration configuration) {
+    public ResponseEntity<Void> set(@RequestBody TenantConfiguration configuration, HttpServletRequest request) {
         if (configuration == null || configuration.key() == null || configuration.key()
                                                                                  .isBlank()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Configuration key must not be blank");
         }
+        requireManageable(configuration.key(), request);
         if (SensitiveConfigurations.isMaskEcho(configuration.key(), configuration.value())) {
             return ResponseEntity.ok()
                                  .build();
@@ -144,13 +162,15 @@ public class TenantConfigurationsEndpoint extends BaseEndpoint {
      * Deletes a configuration entry of the current tenant.
      *
      * @param key the configuration key
+     * @param request the request, for the caller's roles
      * @return an empty 204 response
      */
     @DeleteMapping
-    public ResponseEntity<Void> delete(@RequestParam("key") String key) {
+    public ResponseEntity<Void> delete(@RequestParam("key") String key, HttpServletRequest request) {
         if (key == null || key.isBlank()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Configuration key must not be blank");
         }
+        requireManageable(key, request);
         try {
             tenantConfigurationService.delete(key);
             return ResponseEntity.noContent()
@@ -158,6 +178,17 @@ public class TenantConfigurationsEndpoint extends BaseEndpoint {
         } catch (SQLException ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to delete tenant configuration", ex);
         }
+    }
+
+    private void requireManageable(String key, HttpServletRequest request) {
+        if (!isStaff(request) && !tenantConfigurationService.isTenantOverridable(key)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "[" + key + "] is not a tenant setting - only platform staff manage instance-wide configuration");
+        }
+    }
+
+    private static boolean isStaff(HttpServletRequest request) {
+        return request.isUserInRole(RoleNames.ADMINISTRATOR) || request.isUserInRole(RoleNames.OPERATOR);
     }
 
     private static List<TenantConfiguration> masked(List<TenantConfiguration> configurations) {
