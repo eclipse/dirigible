@@ -631,7 +631,7 @@
     <!-- Instance branding (same DIRIGIBLE_BRANDING_* env vars as the AngularJS shell): the platform
          service sets top.PlatformBranding; the adapter applies the favicon + " | <brand>" title suffix
          and exposes the Alpine `branding` store. Load the source before the adapter. -->
-    <script src="/services/js/platform-branding/branding.js" defer></script>
+    <script src="/services/platform/branding.js" defer></script>
     <script src="/services/web/application-core/shell/js/services/branding.js" defer></script>
     <script src="/services/web/application-core/shell/js/components/layout/appShell.js" defer></script>
     <script src="/services/web/application-core/shell/js/components/pages/basePage.js" defer></script>

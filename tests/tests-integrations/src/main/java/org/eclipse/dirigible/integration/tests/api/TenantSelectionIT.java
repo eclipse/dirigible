@@ -351,6 +351,20 @@ class TenantSelectionIT extends IntegrationTest {
            .andExpect(jsonPath("$.tenants.length()").value(2));
     }
 
+    /**
+     * Home reads the shells, and the picker reads branding.js and the user's name, before a tenant is
+     * chosen - at the canonical paths the pages request as at the script URLs earlier pages still do.
+     */
+    @Test
+    void theShellBootstrapIsAnsweredBeforeATenantIsChosen() throws Exception {
+        for (String path : List.of("/services/platform/extensions/shells", "/services/platform/branding.js", "/services/platform/user-name",
+                "/services/platform/languages", "/services/js/platform-core/extension-services/shells.js",
+                "/services/js/platform-branding/branding.js")) {
+            mvc.perform(get(path).with(authentication(userOf(ownerOf(provisionedTenant), userOf(tenantAwaitingProvisioning)))))
+               .andExpect(status().isOk());
+        }
+    }
+
     @Test
     void thePickerIsReachableForALoggedInUserAndNotForAnyoneElse() throws Exception {
         mvc.perform(get(TenantSelectionFilter.TENANT_SELECTION_PAGE).with(authentication(userOf(ownerOf(provisionedTenant)))))

@@ -25,8 +25,8 @@
  */
 (() => {
   const I18NEXT_WEBJAR = '/webjars/i18next/dist/umd/i18next.min.js';
-  const LOCALES_SERVICE = '/services/js/platform-core/extension-services/locales.js';
-  const COUNTRY_SERVICE = '/services/js/platform-core/services/application-country.js';
+  const LOCALES_SERVICE = '/services/platform/extensions/locales';
+  const COUNTRY_SERVICE = '/services/platform/country';
   const STORAGE_KEY = 'codbex.harmonia.language';
   const DEFAULT_LOCALE = 'en-US';
 

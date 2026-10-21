@@ -107,6 +107,14 @@ public class TenantSelectionFilter extends OncePerRequestFilter {
             "/services/web/platform-core/", //
             "/services/js/platform-core/", //
             "/services/js/platform-branding/", //
+            // the canonical paths of the same shell bootstrap - Home reads the shells and the picker
+            // reads branding.js and the user's name before a tenant is selected
+            "/services/platform/extensions/", //
+            "/services/platform/branding.js", //
+            "/services/platform/user-name", //
+            "/services/platform/languages", //
+            "/services/platform/country", //
+            "/services/platform/clear-cache", //
             // the logo and favicon branding.js points the picker at
             "/services/web/platform-branding/", //
             "/services/core/theme/", //

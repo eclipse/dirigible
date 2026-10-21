@@ -144,6 +144,8 @@ public class CognitoTenantFilter extends OncePerRequestFilter {
                 || request.getRequestURI()
                           .startsWith("/services/js/platform-core/extension-services/themes.js")
                 || request.getRequestURI()
+                          .startsWith("/services/platform/extensions/themes")
+                || request.getRequestURI()
                           .startsWith("/services/js/platform-core/services/loader.js");
     }
 

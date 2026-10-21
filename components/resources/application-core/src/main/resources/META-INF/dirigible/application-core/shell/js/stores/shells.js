@@ -19,7 +19,7 @@
  * does from Home; the listing has never been role-filtered and this store does not invent that.
  */
 document.addEventListener('alpine:init', () => {
-  const SHELLS_URL = '/services/js/platform-core/extension-services/shells.js';
+  const SHELLS_URL = '/services/platform/extensions/shells';
 
   /** Fallback icons for shells registered before they declared their own. */
   const ICONS = {
