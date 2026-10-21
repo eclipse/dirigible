@@ -1,0 +1,6 @@
+{
+    "name": "roles",
+    "label": "Roles Definitions",
+    "extension": "roles",
+    "data": "[\n    {\n        \"name\": \"administrator\",\n        \"description\": \"Administrator Role\"\n    },\n    {\n        \"name\": \"operator\",\n        \"description\": \"Operator Role\"\n    }\n]"
+}

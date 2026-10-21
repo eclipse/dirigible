@@ -21,13 +21,3 @@ export function generate(model, parameters) {
         content: transformer.transform(workspaceName, projectName, filePath)
     }]
 };
-
-export function getTemplate() {
-    return {
-        name: "Entity Data to JSON Model Transformer",
-        description: "Model transformer template",
-        extension: "edm",
-        sources: [],
-        parameters: []
-    }
-}

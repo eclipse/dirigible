@@ -1,0 +1,18 @@
+{
+    "name": "Message Listener (Java)",
+    "description": "Message Listener with a client Java handler",
+    "sources": [
+        {
+            "location": "/template-listener/handler.java.template",
+            "action": "generate",
+            "rename": "{{javaPackageName}}/{{javaClassName}}.java"
+        },
+        {
+            "location": "/template-listener/trigger.java.template",
+            "action": "generate",
+            "rename": "{{javaPackageName}}/{{javaClassName}}Trigger.java"
+        }
+    ],
+    "parameters": [],
+    "order": 51
+}

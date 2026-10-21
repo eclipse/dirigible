@@ -1,0 +1,74 @@
+{
+    "sources": [
+        {
+            "location": "/template-application-ui-harmonia-java/ui/my/my-list-page.js.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/js/components/pages/my/{{name}}MyListPage.js",
+            "collection": "personalListModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/my/my-list-view.html.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/views/my/{{name}}-list.html",
+            "collection": "personalListModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/my/my-calendar-page.js.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/js/components/pages/my/{{name}}MyCalendarPage.js",
+            "collection": "personalCalendarModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/my/my-calendar-view.html.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/views/my/{{name}}-calendar.html",
+            "collection": "personalCalendarModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/my/my-form-page.js.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/js/components/pages/my/{{name}}MyFormPage.js",
+            "collection": "personalFormModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/my/my-form-view.html.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/views/my/{{name}}-form.html",
+            "collection": "personalFormModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/my/my-document-page.js.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/js/components/pages/my/{{name}}MyDocumentPage.js",
+            "collection": "personalDocumentModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/my/my-document-view.html.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/views/my/{{name}}-document.html",
+            "collection": "personalDocumentModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/my/my-perspective.json.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/perspectives/my/{{name}}/perspective.json",
+            "collection": "personalRootModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/my/my-perspective.extension.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/perspectives/my/{{name}}/perspective.extension",
+            "collection": "personalRootModels"
+        }
+    ]
+}

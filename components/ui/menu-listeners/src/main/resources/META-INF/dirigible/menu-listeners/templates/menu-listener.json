@@ -1,0 +1,6 @@
+{
+    "name": "listener",
+    "label": "Message Listener",
+    "extension": "listener",
+    "data": "{\n    \"name\": \"mylistener\",\n    \"kind\": \"Q\",\n    \"handler\": \"myproject/myhandler.js\",\n    \"description\": \"My Listener\"\n}"
+}

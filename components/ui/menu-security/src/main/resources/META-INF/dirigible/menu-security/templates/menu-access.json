@@ -1,0 +1,6 @@
+{
+    "name": "access",
+    "label": "Access Constraints",
+    "extension": "access",
+    "data": "{\n    \"constraints\": [\n        {\n            \"path\": \"/myproject/myfolder/myservice.js\",\n            \"method\": \"GET\",\n            \"scope\": \"HTTP\",\n            \"roles\": [\n                \"administrator\",\n                \"operator\"\n            ]\n        }\n    ]\n}"
+}

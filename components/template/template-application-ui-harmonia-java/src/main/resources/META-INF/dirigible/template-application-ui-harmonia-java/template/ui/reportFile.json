@@ -1,0 +1,50 @@
+{
+    "sources": [
+        {
+            "location": "/template-application-ui-harmonia-java/ui/translations-report.json.template",
+            "action": "translate"
+        },
+        {
+            "location": "/template-application-dao-java/data/reportFileEntity.java.template",
+            "action": "generate",
+            "rename": "gen/{{javaGenFolderName}}/data/{{javaPerspectiveName}}/{{name}}Repository.java",
+            "engine": "velocity",
+            "collection": "reportModels"
+        },
+        {
+            "location": "/template-application-rest-java/api/reportFileEntity.java.template",
+            "action": "generate",
+            "rename": "gen/{{javaGenFolderName}}/api/{{javaPerspectiveName}}/{{name}}Controller.java",
+            "engine": "velocity",
+            "collection": "reportModels"
+        },
+        {
+            "location": "/template-application-rest-java/roles/default-roles.roles.template",
+            "action": "generate",
+            "rename": "gen/{{javaGenFolderName}}/roles/default-roles.roles",
+            "engine": "velocity",
+            "collection": "reportModels"
+        },
+        {
+            "location": "/template-application-rest-java/project.json.template",
+            "action": "generate",
+            "rename": "project.json",
+            "engine": "velocity",
+            "overwrite": false
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/report-file/index.html.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{javaGenFolderName}}/reports/{{name}}/index.html",
+            "collection": "generateReportModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/report-file/report.js.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{javaGenFolderName}}/reports/{{name}}/report.js",
+            "collection": "generateReportModels"
+        }
+    ]
+}

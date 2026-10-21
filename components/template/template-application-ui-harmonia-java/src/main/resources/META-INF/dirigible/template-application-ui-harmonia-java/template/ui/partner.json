@@ -1,0 +1,60 @@
+{
+    "sources": [
+        {
+            "location": "/template-application-ui-harmonia-java/ui/partner/partner-list-page.js.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/js/components/pages/partner/{{name}}PartnerListPage.js",
+            "collection": "partnerRootModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/partner/partner-list-view.html.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/views/partner/{{name}}-list.html",
+            "collection": "partnerRootModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/partner/partner-form-page.js.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/js/components/pages/partner/{{name}}PartnerFormPage.js",
+            "collection": "partnerFormModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/partner/partner-form-view.html.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/views/partner/{{name}}-form.html",
+            "collection": "partnerFormModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/partner/partner-document-page.js.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/js/components/pages/partner/{{name}}PartnerDocumentPage.js",
+            "collection": "partnerDocumentModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/partner/partner-document-view.html.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/views/partner/{{name}}-document.html",
+            "collection": "partnerDocumentModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/partner/partner-perspective.json.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/perspectives/partner/{{name}}/perspective.json",
+            "collection": "partnerRootModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/partner/partner-perspective.extension.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/perspectives/partner/{{name}}/perspective.extension",
+            "collection": "partnerRootModels"
+        }
+    ]
+}

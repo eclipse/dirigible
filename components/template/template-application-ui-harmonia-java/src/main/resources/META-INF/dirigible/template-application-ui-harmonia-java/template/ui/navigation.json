@@ -1,0 +1,89 @@
+{
+    "comment": "Contributes each top-level entity to the shared application shell as a perspective on `application-perspectives`, grouped by its navigation group. One pair per LAYOUT collection - deliberately NOT uiCalendarModels / uiSlotsModels: since #6547 a calendar / slots entity keeps its own layout, so it is already a member of exactly one of the collections below, and listing them as well emitted its perspective twice.",
+    "sources": [
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/perspective.json.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/perspectives/{{name}}/perspective.json",
+            "collection": "uiListModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/perspective.extension.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/perspectives/{{name}}/perspective.extension",
+            "collection": "uiListModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/perspective.json.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/perspectives/{{name}}/perspective.json",
+            "collection": "uiManageModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/perspective.extension.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/perspectives/{{name}}/perspective.extension",
+            "collection": "uiManageModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/perspective.json.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/perspectives/{{name}}/perspective.json",
+            "collection": "uiManageMasterModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/perspective.extension.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/perspectives/{{name}}/perspective.extension",
+            "collection": "uiManageMasterModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/perspective.json.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/perspectives/{{name}}/perspective.json",
+            "collection": "uiListMasterModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/perspective.extension.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/perspectives/{{name}}/perspective.extension",
+            "collection": "uiListMasterModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/perspective.json.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/perspectives/{{name}}/perspective.json",
+            "collection": "uiDocumentModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/perspective.extension.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/perspectives/{{name}}/perspective.extension",
+            "collection": "uiDocumentModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/perspective.json.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/perspectives/{{name}}/perspective.json",
+            "collection": "uiSettingModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/perspective.extension.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/perspectives/{{name}}/perspective.extension",
+            "collection": "uiSettingModels"
+        }
+    ]
+}

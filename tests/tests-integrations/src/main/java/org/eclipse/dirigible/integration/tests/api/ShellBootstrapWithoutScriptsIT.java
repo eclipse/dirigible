@@ -285,9 +285,9 @@ class ShellBootstrapWithoutScriptsIT extends IntegrationTest {
             return new Session() {
 
                 @Override
-                public Optional<ExtensionModuleExport> evaluate(String module, List<String> exportNames) {
+                public Optional<ExtensionModuleExport> evaluate(String module, List<String> exportNames, List<Object> arguments) {
                     evaluatedModules.add(module);
-                    return session.evaluate(module, exportNames);
+                    return session.evaluate(module, exportNames, arguments);
                 }
 
                 @Override

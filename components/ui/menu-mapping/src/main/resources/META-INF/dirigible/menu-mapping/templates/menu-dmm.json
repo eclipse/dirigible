@@ -1,0 +1,6 @@
+{
+    "name": "mapping",
+    "label": "Data Mapping Model",
+    "extension": "dmm",
+    "data": "<mapping><mxGraphModel><root></root></mxGraphModel></mapping>"
+}

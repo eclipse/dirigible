@@ -1,0 +1,6 @@
+{
+    "name": "extensionpoint",
+    "label": "Extension Point",
+    "extension": "extensionpoint",
+    "data": "{\n    \"name\": \"my-extension-point\",\n    \"description\": \"My Extension Point\"\n}"
+}

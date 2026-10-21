@@ -1,0 +1,25 @@
+{
+    "name": "HTTP Route Project Starter",
+    "description": "Apache Camel HTTP Route Project Sample",
+    "sources": [
+        {
+            "location": "/template-camel-http-route/http-route.camel.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "http-route.camel"
+        },
+        {
+            "location": "/template-camel-http-route/Handler.java.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "Handler.java"
+        },
+        {
+            "location": "/template-camel-http-route/project.json",
+            "action": "generate",
+            "rename": "project.json"
+        }
+    ],
+    "parameters": [],
+    "order": 38
+}

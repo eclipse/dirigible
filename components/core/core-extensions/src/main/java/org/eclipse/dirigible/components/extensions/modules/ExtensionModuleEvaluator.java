@@ -39,7 +39,7 @@ public interface ExtensionModuleEvaluator {
     interface Session extends AutoCloseable {
 
         /**
-         * Evaluates the module and calls the first of the given exports it provides.
+         * Evaluates the module and calls the first of the given exports it provides, without arguments.
          *
          * @param module the module path, relative to the public registry, as the extension declares it
          * @param exportNames the export names to try, in order
@@ -47,7 +47,22 @@ public interface ExtensionModuleEvaluator {
          *         the exports
          * @throws RuntimeException when the module fails to load or the export fails to run
          */
-        Optional<ExtensionModuleExport> evaluate(String module, List<String> exportNames);
+        default Optional<ExtensionModuleExport> evaluate(String module, List<String> exportNames) {
+            return evaluate(module, exportNames, List.of());
+        }
+
+        /**
+         * Evaluates the module and calls the first of the given exports it provides with the given
+         * arguments.
+         *
+         * @param module the module path, relative to the public registry, as the extension declares it
+         * @param exportNames the export names to try, in order
+         * @param arguments the arguments the export is called with, handed to the script as they are
+         * @return the export called and the object it returned, or empty when the module provides none of
+         *         the exports
+         * @throws RuntimeException when the module fails to load or the export fails to run
+         */
+        Optional<ExtensionModuleExport> evaluate(String module, List<String> exportNames, List<Object> arguments);
 
         /**
          * Releases the engine resources the session holds.

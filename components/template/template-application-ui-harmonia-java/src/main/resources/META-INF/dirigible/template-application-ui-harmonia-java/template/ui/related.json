@@ -1,0 +1,11 @@
+{
+    "sources": [
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/related/related-register.js.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/js/components/pages/{{perspectiveName}}/{{name}}.related.js",
+            "collection": "uiRelatedModels"
+        }
+    ]
+}

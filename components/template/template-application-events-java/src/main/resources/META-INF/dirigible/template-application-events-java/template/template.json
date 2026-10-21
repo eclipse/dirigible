@@ -1,0 +1,288 @@
+{
+    "name": "Application - Glue Code - Java",
+    "description": "Process glue-code (Java listeners + decision resolvers) generated from the intent .glue file",
+    "extension": "glue",
+    "sources": [
+        {
+            "location": "/template-application-events-java/events/Trigger.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{process}}Trigger.java",
+            "engine": "velocity",
+            "collection": "triggers"
+        },
+        {
+            "location": "/template-application-events-java/events/Resolver.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{handler}}.java",
+            "engine": "velocity",
+            "collection": "resolvers"
+        },
+        {
+            "location": "/template-application-events-java/events/SetField.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{className}}.java",
+            "engine": "velocity",
+            "collection": "setters"
+        },
+        {
+            "location": "/template-application-events-java/events/FieldLoader.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{handler}}.java",
+            "engine": "velocity",
+            "collection": "fieldLoaders"
+        },
+        {
+            "location": "/template-application-events-java/events/Assignee.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{handler}}.java",
+            "engine": "velocity",
+            "collection": "assignees"
+        },
+        {
+            "location": "/template-application-events-java/events/TimerLoader.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{handler}}.java",
+            "engine": "velocity",
+            "collection": "timerLoaders"
+        },
+        {
+            "location": "/template-application-events-java/events/Wait.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{className}}Wait.java",
+            "engine": "velocity",
+            "collection": "waits"
+        },
+        {
+            "location": "/template-application-events-java/events/Abort.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{process}}Abort.java",
+            "engine": "velocity",
+            "collection": "aborts"
+        },
+        {
+            "location": "/template-application-events-java/events/AbortOnDelete.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{process}}AbortOnDelete.java",
+            "engine": "velocity",
+            "collection": "deleteAborts"
+        },
+        {
+            "location": "/template-application-events-java/events/Writer.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{className}}.java",
+            "engine": "velocity",
+            "collection": "writers"
+        },
+        {
+            "location": "/template-application-events-java/events/Notification.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{className}}Notification.java",
+            "engine": "velocity",
+            "collection": "notifications"
+        },
+        {
+            "location": "/template-application-events-java/events/Job.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{className}}Job.java",
+            "engine": "velocity",
+            "collection": "schedules"
+        },
+        {
+            "location": "/template-application-events-java/events/Integration.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{className}}Integration.java",
+            "engine": "velocity",
+            "collection": "integrations"
+        },
+        {
+            "location": "/template-application-events-java/events/Webhook.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{className}}Webhook.java",
+            "engine": "velocity",
+            "collection": "inbound"
+        },
+        {
+            "location": "/template-application-events-java/events/InboundMessage.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{className}}Consumer.java",
+            "engine": "velocity",
+            "collection": "inboundMessages"
+        },
+        {
+            "location": "/template-application-events-java/events/InboundFile.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{className}}FileImport.java",
+            "engine": "velocity",
+            "collection": "inboundFiles"
+        },
+        {
+            "location": "/template-application-events-java/events/Import.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{className}}Import.java",
+            "engine": "velocity",
+            "collection": "imports"
+        },
+        {
+            "location": "/template-application-events-java/events/Outbound.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{className}}Publisher.java",
+            "engine": "velocity",
+            "collection": "outbound"
+        },
+        {
+            "location": "/template-application-events-java/events/Export.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{className}}Export.java",
+            "engine": "velocity",
+            "collection": "exports"
+        },
+        {
+            "location": "/template-application-events-java/events/StepEvent.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{className}}.java",
+            "engine": "velocity",
+            "collection": "stepEvents"
+        },
+        {
+            "location": "/template-application-events-java/events/Rollup.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{className}}.java",
+            "engine": "velocity",
+            "collection": "rollups"
+        },
+        {
+            "location": "/template-application-events-java/events/Expansion.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{className}}.java",
+            "engine": "velocity",
+            "collection": "expansions"
+        },
+        {
+            "location": "/template-application-events-java/events/ExpansionCleanup.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{className}}.java",
+            "engine": "velocity",
+            "collection": "expansionCleanups"
+        },
+        {
+            "location": "/template-application-events-java/events/PrintFeeder.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{className}}PrintFeeder.java",
+            "engine": "velocity",
+            "collection": "printFeeders"
+        },
+        {
+            "location": "/template-application-events-java/events/Snapshot.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{master}}SnapshotGenerator.java",
+            "engine": "velocity",
+            "collection": "snapshots"
+        },
+        {
+            "location": "/template-application-events-java/events/Numbering.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{entity}}NumberStamp.java",
+            "engine": "velocity",
+            "collection": "numbering"
+        },
+        {
+            "location": "/template-application-events-java/events/SettlementOnPayment.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{className}}.java",
+            "engine": "velocity",
+            "collection": "settlementListeners"
+        },
+        {
+            "location": "/template-application-events-java/events/SettlementCleanup.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{className}}.java",
+            "engine": "velocity",
+            "collection": "settlementCleanups"
+        },
+        {
+            "location": "/template-application-events-java/events/SettlementOnInvoice.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{name}}OnInvoice.java",
+            "engine": "velocity",
+            "collection": "settlements"
+        },
+        {
+            "location": "/template-application-events-java/events/Generate.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{className}}Generate.java",
+            "engine": "velocity",
+            "collection": "generates"
+        },
+        {
+            "location": "/template-application-events-java/events/GenerateOnEvent.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{className}}GenerateOnEvent.java",
+            "engine": "velocity",
+            "collection": "generateEvents"
+        },
+        {
+            "location": "/template-application-events-java/events/GenerateReopen.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{className}}GenerateReopen.java",
+            "engine": "velocity",
+            "collection": "generateReopens"
+        },
+        {
+            "location": "/template-application-events-java/events/Transition.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{className}}Transition.java",
+            "engine": "velocity",
+            "collection": "transitions"
+        },
+        {
+            "location": "/template-application-events-java/events/Send.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{className}}.java",
+            "engine": "velocity",
+            "collection": "sends"
+        },
+        {
+            "location": "/template-application-events-java/events/Posting.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{className}}Posting.java",
+            "engine": "velocity",
+            "collection": "postings"
+        },
+        {
+            "location": "/template-application-events-java/events/PostingReopen.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{reopenClassName}}.java",
+            "engine": "velocity",
+            "collection": "postingReopens"
+        },
+        {
+            "location": "/template-application-events-java/events/Posts.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{className}}Post.java",
+            "engine": "velocity",
+            "collection": "posts"
+        },
+        {
+            "location": "/template-application-events-java/events/Aggregate.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{className}}.java",
+            "engine": "velocity",
+            "collection": "aggregates"
+        },
+        {
+            "location": "/template-application-events-java/events/Resolve.java.template",
+            "action": "generate",
+            "rename": "gen/events/{{javaGenFolderName}}/{{className}}Resolve.java",
+            "engine": "velocity",
+            "collection": "resolves"
+        },
+        {
+            "location": "/template-application-events-java/project.json.template",
+            "action": "generate",
+            "rename": "project.json",
+            "engine": "velocity",
+            "overwrite": false
+        }
+    ],
+    "parameters": []
+}

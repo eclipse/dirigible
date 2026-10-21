@@ -1,0 +1,13 @@
+{
+    "name": "WebSocket Service (Java)",
+    "description": "WebSocket Service with a client Java handler",
+    "sources": [
+        {
+            "location": "/template-websocket/handler.java.template",
+            "action": "generate",
+            "rename": "{{javaPackageName}}/{{javaClassName}}.java"
+        }
+    ],
+    "parameters": [],
+    "order": 52
+}

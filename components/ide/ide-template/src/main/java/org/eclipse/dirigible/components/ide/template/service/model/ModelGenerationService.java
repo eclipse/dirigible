@@ -11,7 +11,7 @@ package org.eclipse.dirigible.components.ide.template.service.model;
 
 import org.eclipse.dirigible.components.ide.template.domain.GenerationTemplateMetadata;
 import org.eclipse.dirigible.components.ide.template.domain.GenerationTemplateMetadataSource;
-import org.eclipse.dirigible.components.ide.template.service.GenerationService;
+import org.eclipse.dirigible.components.ide.template.service.TemplateDescriptors;
 import org.eclipse.dirigible.components.ide.workspace.domain.File;
 import org.eclipse.dirigible.components.ide.workspace.domain.Folder;
 import org.eclipse.dirigible.components.ide.workspace.domain.Project;
@@ -75,6 +75,9 @@ public class ModelGenerationService {
     /** The per-generation consumed-attributes manifest. */
     private final ConsumedAttributesAudit consumedAttributesAudit;
 
+    /** The template descriptors. */
+    private final TemplateDescriptors templateDescriptors;
+
     /**
      * Instantiates a new model generation service.
      *
@@ -82,13 +85,15 @@ public class ModelGenerationService {
      * @param publisherService the publisher service
      * @param modelGenerator the model generator
      * @param consumedAttributesAudit the consumed-attributes manifest
+     * @param templateDescriptors the template descriptors
      */
     ModelGenerationService(WorkspaceService workspaceService, PublisherService publisherService, ModelGenerator modelGenerator,
-            ConsumedAttributesAudit consumedAttributesAudit) {
+            ConsumedAttributesAudit consumedAttributesAudit, TemplateDescriptors templateDescriptors) {
         this.workspaceService = workspaceService;
         this.publisherService = publisherService;
         this.modelGenerator = modelGenerator;
         this.consumedAttributesAudit = consumedAttributesAudit;
+        this.templateDescriptors = templateDescriptors;
     }
 
     /**
@@ -120,17 +125,49 @@ public class ModelGenerationService {
         String modelText = augmentWithExtensions(readModel(projectObject, workspace, project, path), workspaceObject, project);
 
         addStandardParameters(parameters, workspace, project, path, templateId);
-        // The descriptor is read before the parameters are derived, which is the order the template
-        // modules themselves use - a composite descriptor assembles its source list from the request's
-        // parameters, never from the derived ones.
+        // The descriptor is read before the parameters are derived: a script descriptor in a user
+        // project may assemble its source list from the request's parameters, never from the derived
+        // ones.
         List<GenerationTemplateMetadataSource> sources = readSources(templateId, parameters);
         ModelTemplateAdapters.PreparedModel prepared = ModelTemplateAdapters.prepare(templateId, modelText, parameters);
         List<GeneratedFile> rendered = prepared.entityShaped() ? modelGenerator.generateFiles(prepared.model(), parameters, sources)
                 : modelGenerator.generateGeneric(prepared.model(), parameters, sources);
 
         List<GeneratedFile> files = new ArrayList<>(rendered.size() + 1);
-        files.addAll(rendered);
+        files.addAll(keepExisting(projectObject, rendered, sources));
         files.add(new GeneratedFile(null, path + DESCRIPTOR_EXTENSION, JavaScriptJson.pretty(parameters)));
+        return files;
+    }
+
+    /**
+     * Keeps the files a source declaring {@code "overwrite": false} would replace: such a file is
+     * rendered only for a project that does not have it yet, or has it blank, and otherwise carries the
+     * content the project already has.
+     *
+     * @param projectObject the project
+     * @param rendered the rendered files
+     * @param sources the template sources they were rendered from
+     * @return the files to write
+     */
+    static List<GeneratedFile> keepExisting(Project projectObject, List<GeneratedFile> rendered,
+            List<GenerationTemplateMetadataSource> sources) {
+        Set<String> kept = new LinkedHashSet<>();
+        for (GenerationTemplateMetadataSource source : sources) {
+            if (!source.isOverwrite()) {
+                kept.add(source.getLocation());
+            }
+        }
+        if (kept.isEmpty()) {
+            return rendered;
+        }
+        List<GeneratedFile> files = new ArrayList<>(rendered.size());
+        for (GeneratedFile file : rendered) {
+            File existing = kept.contains(file.location()) ? projectObject.getFile(file.path()) : null;
+            String existingContent =
+                    existing != null && existing.exists() ? new String(existing.getContent(), StandardCharsets.UTF_8) : null;
+            files.add(existingContent == null || existingContent.isBlank() ? file
+                    : new GeneratedFile(file.location(), file.path(), existingContent));
+        }
         return files;
     }
 
@@ -159,7 +196,7 @@ public class ModelGenerationService {
         Project projectObject = requireProject(workspaceObject, workspace, project);
         String modelText = augmentWithExtensions(readModel(projectObject, workspace, project, path), workspaceObject, project);
         // A copy, and the standard parameters added before the descriptor is read: the order render()
-        // uses, so a composite descriptor assembles the same source list here as it did there.
+        // uses, so a script descriptor assembles the same source list here as it did there.
         Map<String, Object> descriptorParameters = parameters == null ? new LinkedHashMap<>() : new LinkedHashMap<>(parameters);
         addStandardParameters(descriptorParameters, workspace, project, path, templateId);
         return consumedAttributesAudit.audit(path, modelText, templateId, descriptorParameters);
@@ -217,17 +254,15 @@ public class ModelGenerationService {
     }
 
     /**
-     * Reads a template's source list. The descriptors are still authored as template modules, so this
-     * asks the existing generation service for the parsed descriptor.
+     * Reads a template's source list from its descriptor.
      *
      * @param templateId the template's module path
-     * @param parameters the generation parameters the descriptor may branch on
+     * @param parameters the generation parameters a script descriptor may branch on
      * @return the template sources
      * @throws IOException when the descriptor declares no sources
      */
-    private static List<GenerationTemplateMetadataSource> readSources(String templateId, Map<String, Object> parameters)
-            throws IOException {
-        GenerationTemplateMetadata metadata = GenerationService.getTemplateMetadata(templateId, parameters);
+    private List<GenerationTemplateMetadataSource> readSources(String templateId, Map<String, Object> parameters) throws IOException {
+        GenerationTemplateMetadata metadata = templateDescriptors.readMetadata(templateId, parameters);
         List<GenerationTemplateMetadataSource> sources = metadata.getSources();
         if (sources == null || sources.isEmpty()) {
             throw new IOException("Template [" + templateId + "] declares no sources.");

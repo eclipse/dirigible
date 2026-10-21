@@ -20,7 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.dirigible.components.ide.template.domain.GenerationTemplateMetadataSource;
-import org.eclipse.dirigible.components.ide.template.service.GenerationService;
+import org.eclipse.dirigible.components.ide.template.service.TemplateDescriptors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -119,8 +119,12 @@ public class ConsumedAttributesAudit {
     /** Renders/reads the template sources being audited. */
     private final ModelTemplateRenderer renderer;
 
-    ConsumedAttributesAudit(ModelTemplateRenderer renderer) {
+    /** Reads the descriptor listing the template sources. */
+    private final TemplateDescriptors templateDescriptors;
+
+    ConsumedAttributesAudit(ModelTemplateRenderer renderer, TemplateDescriptors templateDescriptors) {
         this.renderer = renderer;
+        this.templateDescriptors = templateDescriptors;
     }
 
     /**
@@ -153,8 +157,8 @@ public class ConsumedAttributesAudit {
     private Set<String> readTemplateTokens(String templateId, Map<String, Object> parameters) {
         List<GenerationTemplateMetadataSource> sources;
         try {
-            sources = GenerationService.getTemplateMetadata(templateId, parameters)
-                                       .getSources();
+            sources = templateDescriptors.readMetadata(templateId, parameters)
+                                         .getSources();
         } catch (RuntimeException e) {
             logger.debug("Consumed-attributes audit skipped: template [{}] could not be read", templateId, e);
             return Set.of();

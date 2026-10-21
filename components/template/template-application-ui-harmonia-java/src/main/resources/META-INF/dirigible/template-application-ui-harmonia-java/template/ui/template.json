@@ -1,0 +1,51 @@
+{
+    "comment": "The per view-type sources of the Harmonia SPA, after its translation catalog. The Harmonia form runtime (.form artifacts incl. BPM task forms) is its own module: template-form-builder-harmonia (the intent recipe's `form` template).",
+    "sources": [
+        {
+            "location": "/template-application-ui-harmonia-java/ui/translations.json.template",
+            "action": "translate"
+        },
+        {
+            "include": "template-application-ui-harmonia-java/template/ui/shell.json"
+        },
+        {
+            "include": "template-application-ui-harmonia-java/template/ui/list.json"
+        },
+        {
+            "include": "template-application-ui-harmonia-java/template/ui/manage.json"
+        },
+        {
+            "include": "template-application-ui-harmonia-java/template/ui/setting.json"
+        },
+        {
+            "include": "template-application-ui-harmonia-java/template/ui/masterDetail.json"
+        },
+        {
+            "include": "template-application-ui-harmonia-java/template/ui/related.json"
+        },
+        {
+            "include": "template-application-ui-harmonia-java/template/ui/document.json"
+        },
+        {
+            "include": "template-application-ui-harmonia-java/template/ui/calendar.json"
+        },
+        {
+            "include": "template-application-ui-harmonia-java/template/ui/slots.json"
+        },
+        {
+            "include": "template-application-ui-harmonia-java/template/ui/report.json"
+        },
+        {
+            "include": "template-application-ui-harmonia-java/template/ui/navigation.json"
+        },
+        {
+            "include": "template-application-ui-harmonia-java/template/ui/my.json"
+        },
+        {
+            "include": "template-application-ui-harmonia-java/template/ui/partner.json"
+        },
+        {
+            "include": "template-application-ui-harmonia-java/template/ui/admin.json"
+        }
+    ]
+}
