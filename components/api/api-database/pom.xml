@@ -61,6 +61,7 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-api-test</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
