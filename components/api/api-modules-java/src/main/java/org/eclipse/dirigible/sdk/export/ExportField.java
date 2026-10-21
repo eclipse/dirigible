@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Pattern;
 
 /**
  * One field of an export record: what the value is called and how it is written - its date pattern
@@ -197,18 +196,59 @@ public final class ExportField {
     }
 
     /**
-     * The same field accepting only the characters of a regular-expression character class, written
-     * without its brackets ({@code А-Я0-9 -}). Any other character fails the run unless the field
-     * strips it or writes a space instead.
+     * The same field accepting only the listed characters: each one as itself, {@code А-Я} the
+     * inclusive range between two, a {@code -} first or last as itself, and {@code \} taking the next
+     * character literally ({@code А-ЯЁ0-9 -}). Nothing in it is a pattern - a {@code .} is a dot. Any
+     * other character fails the run unless the field strips it or writes a space instead.
      *
-     * @param characterClass the class body
+     * @param characters the characters and ranges
      * @return the refined field
+     * @throws IllegalArgumentException when the list is empty, a range runs backwards, or it ends in an
+     *         unfinished escape
      */
-    public ExportField allowed(String characterClass) {
-        if (characterClass == null || characterClass.isEmpty()) {
+    public ExportField allowed(String characters) {
+        return with(text.withAllowed(ranges(characters)));
+    }
+
+    /** The inclusive code-point ranges a list of characters and ranges names. */
+    private List<int[]> ranges(String characters) {
+        if (characters == null || characters.isEmpty()) {
             throw new IllegalArgumentException("Export field [" + name + "] needs the characters it allows");
         }
-        return with(text.withAllowed(Pattern.compile("[" + characterClass + "]")));
+        int[] codePoints = characters.codePoints()
+                                     .toArray();
+        List<int[]> ranges = new ArrayList<>();
+        for (int index = 0; index < codePoints.length; index++) {
+            int first = codePoints[index];
+            if (first == '\\') {
+                index = escaped(codePoints, index, characters);
+                first = codePoints[index];
+            }
+            int last = first;
+            if (index + 2 < codePoints.length && codePoints[index + 1] == '-') {
+                index += 2;
+                last = codePoints[index];
+                if (last == '\\') {
+                    index = escaped(codePoints, index, characters);
+                    last = codePoints[index];
+                }
+                if (last < first) {
+                    throw new IllegalArgumentException("Export field [" + name + "] allows [" + characters + "], which runs the range "
+                            + new String(Character.toChars(first)) + "-" + new String(Character.toChars(last)) + " backwards");
+                }
+            }
+            ranges.add(new int[] {first, last});
+        }
+        return List.copyOf(ranges);
+    }
+
+    /** The index of the character a {@code \} escape at {@code index} takes. */
+    private int escaped(int[] codePoints, int index, String characters) {
+        if (index + 1 == codePoints.length) {
+            throw new IllegalArgumentException(
+                    "Export field [" + name + "] allows [" + characters + "], which ends in an unfinished \\ escape");
+        }
+        return index + 1;
     }
 
     /**
@@ -400,13 +440,13 @@ public final class ExportField {
         }
     }
 
-    /** What a character outside the allowed class becomes. */
+    /** What a character outside the allowed ones becomes. */
     private enum Disallowed {
         FAIL, STRIP, SPACE
     }
 
     /** How a field's text is normalised (#7925); {@link #NONE} when it is written as it is. */
-    private record Text(String textCase, List<String[]> replacements, Pattern allowed, Disallowed disallowed, boolean collapseSpaces,
+    private record Text(String textCase, List<String[]> replacements, List<int[]> allowed, Disallowed disallowed, boolean collapseSpaces,
             boolean failOnLoss) {
 
         static final Text NONE = new Text(null, List.of(), null, Disallowed.FAIL, false, false);
@@ -421,7 +461,7 @@ public final class ExportField {
             return new Text(textCase, List.copyOf(more), allowed, disallowed, collapseSpaces, failOnLoss);
         }
 
-        Text withAllowed(Pattern characters) {
+        Text withAllowed(List<int[]> characters) {
             return new Text(textCase, replacements, characters, disallowed, collapseSpaces, failOnLoss);
         }
 
@@ -464,10 +504,10 @@ public final class ExportField {
         private String allowedOnly(String field, String value, String text) {
             StringBuilder kept = new StringBuilder();
             for (int offset = 0; offset < text.length();) {
-                String character = new String(Character.toChars(text.codePointAt(offset)));
+                int codePoint = text.codePointAt(offset);
+                String character = new String(Character.toChars(codePoint));
                 offset += character.length();
-                if (allowed.matcher(character)
-                           .matches()) {
+                if (allows(codePoint)) {
                     kept.append(character);
                 } else if (disallowed == Disallowed.SPACE) {
                     kept.append(' ');
@@ -477,6 +517,15 @@ public final class ExportField {
                 }
             }
             return kept.toString();
+        }
+
+        private boolean allows(int codePoint) {
+            for (int[] range : allowed) {
+                if (codePoint >= range[0] && codePoint <= range[1]) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         /** The letters and digits of a text, in upper case - what a normalisation must not change. */

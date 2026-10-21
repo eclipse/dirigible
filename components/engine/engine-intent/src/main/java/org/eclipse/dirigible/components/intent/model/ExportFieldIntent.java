@@ -67,8 +67,9 @@ public class ExportFieldIntent {
     private String textCase;
 
     /**
-     * The characters the field accepts, as a regular-expression character class without brackets; any
-     * other is handled by {@link #onDisallowed}.
+     * The characters the field accepts - each as itself, {@code A-Z} a range, a {@code -} first or last
+     * as itself, a backslash escaping the next one, never a pattern; any other is handled by
+     * {@link #onDisallowed}.
      */
     private String allowed;
 

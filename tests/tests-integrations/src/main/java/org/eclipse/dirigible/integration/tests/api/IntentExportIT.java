@@ -266,8 +266,7 @@ class IntentExportIT extends IntegrationTest {
         create(API + "/supplier/SupplierController", "{\"Name\":\"Гама-Трейд, ЕООД / клон №2\",\"VatNumber\":\"BG333\"}");
         Response declaration = download(EXPORTS + "/SupplierDeclarationExport/download?vat=BG333", 200);
         assertEquals("BG333;ГАМА-ТРЕЙД ЕООД КЛОН 2\n", new String(declaration.asByteArray(), StandardCharsets.UTF_8));
-        assertLedgerRun(declaration, "SupplierDeclaration", 1);
-        String normalised = String.valueOf(ledgerRun(Integer.parseInt(declaration.getHeader("X-Export-Run"))).get("Normalised"));
+        String normalised = String.valueOf(assertLedgerRun(declaration, "SupplierDeclaration", 1).get("Normalised"));
         assertTrue(normalised.startsWith("record 1 [line] field [")
                 && normalised.endsWith("]: [Гама-Трейд, ЕООД / клон №2] -> [ГАМА-ТРЕЙД ЕООД КЛОН 2]"), normalised);
 
@@ -308,7 +307,7 @@ class IntentExportIT extends IntegrationTest {
         assertNull(failed.get("StoragePath"), "a failed run stores no file");
     }
 
-    private void assertLedgerRun(Response download, String export, int rows) {
+    private Map<String, Object> assertLedgerRun(Response download, String export, int rows) {
         Map<String, Object> run = ledgerRun(Integer.parseInt(download.getHeader("X-Export-Run")));
         assertEquals(export, run.get("Export"));
         assertEquals("SUCCEEDED", run.get("Outcome"));
@@ -317,6 +316,7 @@ class IntentExportIT extends IntegrationTest {
         assertEquals(download.getHeader("X-Export-Checksum"), run.get("Checksum"));
         // The ledger row serves the very bytes the run answered.
         assertArrayEquals(download.asByteArray(), download(LEDGER + "/" + run.get("Id") + "/download", 200).asByteArray());
+        return run;
     }
 
     private Map<String, Object> ledgerRun(int id) {

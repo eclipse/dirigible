@@ -211,7 +211,8 @@ class ExportIntentTest {
     @Test
     void aNormalisationThatCannotActIsRefused() {
         assertRefused(replace("{ from: number }", "{ from: number, case: title }"), "case [title] must be upper or lower");
-        assertRefused(replace("{ from: number }", "{ from: number, allowed: \"Z-A\" }"), "allowed [Z-A] is not a character class");
+        assertRefused(replace("{ from: number }", "{ from: number, allowed: \"Z-A\" }"),
+                "allows [Z-A], which runs the range Z-A backwards");
         assertRefused(replace("{ from: number }", "{ from: number, onDisallowed: strip }"),
                 "declares onDisallowed without the allowed characters");
         assertRefused(replace("{ from: number }", "{ from: number, allowed: \"A-Z\", onDisallowed: drop }"),

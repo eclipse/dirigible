@@ -251,6 +251,31 @@ class ExportFileTest {
     }
 
     @Test
+    void theAllowedCharactersAreTakenLiterallyNeverAsAPattern() {
+        ExportFile file = ExportFile.delimited("UTF-8", "\n", ";", "\"", false);
+        file.record("line", new ExportField[] {ExportField.named("Dot")
+                                                          .allowed(".")
+                                                          .stripDisallowed(),
+                ExportField.named("Hyphen")
+                           .allowed("a\\-z")
+                           .stripDisallowed()},
+                "a.b", "a-m-z");
+
+        // A dot is a dot, and an escaped hyphen is a hyphen, not the range a-z.
+        assertEquals(".;a--z\n", new String(file.content(), StandardCharsets.UTF_8));
+    }
+
+    @Test
+    void aBackwardsRangeOrAnUnfinishedEscapeIsRefused() {
+        assertEquals("Export field [Code] allows [9-0], which runs the range 9-0 backwards",
+                assertThrows(IllegalArgumentException.class, () -> ExportField.named("Code")
+                                                                              .allowed("9-0")).getMessage());
+        assertEquals("Export field [Code] allows [0-9\\], which ends in an unfinished \\ escape",
+                assertThrows(IllegalArgumentException.class, () -> ExportField.named("Code")
+                                                                              .allowed("0-9\\")).getMessage());
+    }
+
+    @Test
     void aNormalisationSurvivesALaterRefinement() {
         ExportFile file = ExportFile.fixedWidth("UTF-8", "\n");
         file.record("line", new ExportField[] {ExportField.named("Name")

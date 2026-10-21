@@ -35,6 +35,7 @@ import org.eclipse.dirigible.components.intent.model.ProcessIntent;
 import org.eclipse.dirigible.components.intent.model.RelationIntent;
 import org.eclipse.dirigible.components.intent.model.ReportIntent;
 import org.eclipse.dirigible.components.intent.model.ReportParameterIntent;
+import org.eclipse.dirigible.sdk.export.ExportField;
 
 /**
  * The {@code exports:} construct (#7855): a file in an exacting format over a query, recorded on a
@@ -459,10 +460,12 @@ public final class ExportSupport {
             issues.add(at + " replace has an empty key - there is no text to replace");
         }
         if (field.getAllowed() != null) {
+            // Read by the SDK field itself, so what parses here is what the run accepts.
             try {
-                Pattern.compile("[" + field.getAllowed() + "]");
+                ExportField.named(effectiveName(field) == null ? "value" : effectiveName(field))
+                           .allowed(field.getAllowed());
             } catch (IllegalArgumentException ex) {
-                issues.add(at + " allowed [" + field.getAllowed() + "] is not a character class: " + ex.getMessage());
+                issues.add(at + ": " + ex.getMessage());
             }
         }
         if (field.getOnDisallowed() != null && !DISALLOWED.contains(field.getOnDisallowed())) {
