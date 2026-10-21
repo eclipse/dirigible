@@ -1,0 +1,7 @@
+{
+    "id": "bpm-historic-process-instances-view",
+    "label": "Historic Process Instances",
+    "region": "left",
+    "autoFocusTab": false,
+    "path": "/services/web/perspective-processes/views/bpm-historic-process-instances.html"
+}

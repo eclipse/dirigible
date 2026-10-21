@@ -1,5 +1,5 @@
 {
-    "module": "view-jobs/configs/job-trigger-window.js",
+    "module": "view-jobs/configs/job-trigger-window.json",
     "extensionPoint": "platform-windows",
     "description": "Trigger job window"
 }

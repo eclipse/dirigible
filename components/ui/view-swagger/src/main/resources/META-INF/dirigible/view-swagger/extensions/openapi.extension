@@ -1,5 +1,5 @@
 {
-    "module": "view-swagger/configs/openapi-view.js",
+    "module": "view-swagger/configs/openapi-view.json",
     "extensionPoint": "platform-views",
     "description": "OpenAPI View"
 }

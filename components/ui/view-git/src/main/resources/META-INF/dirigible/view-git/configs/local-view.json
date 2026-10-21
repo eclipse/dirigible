@@ -1,0 +1,6 @@
+{
+    "id": "branchesLocal",
+    "label": "Local branches",
+    "region": "left",
+    "path": "/services/web/view-git/local.html"
+}

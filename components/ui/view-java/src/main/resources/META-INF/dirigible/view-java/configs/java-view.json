@@ -1,0 +1,8 @@
+{
+    "id": "java",
+    "label": "Hierarchy",
+    "lazyLoad": true,
+    "autoFocusTab": false,
+    "region": "bottom",
+    "path": "/services/web/view-java/java.html"
+}

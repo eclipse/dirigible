@@ -1,0 +1,8 @@
+{
+    "id": "problems",
+    "region": "bottom",
+    "label": "Problems",
+    "lazyLoad": true,
+    "autoFocusTab": false,
+    "path": "/services/web/view-problems/problems.html"
+}

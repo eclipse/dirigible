@@ -1,5 +1,5 @@
 {
-    "module": "perspective-documents/configs/documents.js",
+    "module": "perspective-documents/configs/documents-view.json",
     "extensionPoint": "platform-windows",
     "description": "Documents Window"
 }

@@ -1,0 +1,9 @@
+{
+    "id": "edm",
+    "label": "Entity Data Modeler",
+    "region": "center",
+    "path": "/services/web/editor-entity/modeler.html",
+    "contentTypes": [
+        "application/entity-data-model+xml"
+    ]
+}

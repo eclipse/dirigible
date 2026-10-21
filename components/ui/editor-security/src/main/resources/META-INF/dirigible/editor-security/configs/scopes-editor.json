@@ -1,0 +1,9 @@
+{
+    "id": "scopes",
+    "label": "Scopes",
+    "region": "center",
+    "path": "/services/web/editor-security/editors/scopes/editor.html",
+    "contentTypes": [
+        "application/json+scopes"
+    ]
+}

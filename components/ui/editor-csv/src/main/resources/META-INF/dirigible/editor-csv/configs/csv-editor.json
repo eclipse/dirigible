@@ -1,0 +1,9 @@
+{
+    "id": "csv-editor",
+    "region": "center",
+    "label": "CSV Editor",
+    "path": "/services/web/editor-csv/editor.html",
+    "contentTypes": [
+        "text/csv"
+    ]
+}

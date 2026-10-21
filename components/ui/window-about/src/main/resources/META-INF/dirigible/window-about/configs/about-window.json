@@ -1,0 +1,8 @@
+{
+    "id": "about",
+    "label": "About",
+    "translation": {
+        "key": "common:about"
+    },
+    "path": "/services/web/window-about/about.html"
+}

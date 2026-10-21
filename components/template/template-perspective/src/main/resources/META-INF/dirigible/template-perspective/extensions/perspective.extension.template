@@ -1,5 +1,5 @@
 {
-    "module": "{{projectName}}/configs/{{fileName}}-perspective.js",
+    "module": "{{projectName}}/configs/{{fileName}}-perspective.json",
     "extensionPoint": "platform-perspectives",
     "description": "{{viewName}} perspective"
 }

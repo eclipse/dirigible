@@ -1,0 +1,7 @@
+{
+    "id": "tracing",
+    "label": "Tracing",
+    "path": "/services/web/perspective-tracing/index.html",
+    "icon": "/services/web/perspective-tracing/images/tracing.svg",
+    "order": 1000
+}

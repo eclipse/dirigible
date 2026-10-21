@@ -1,5 +1,5 @@
 {
-    "module": "view-messaging-browser/configs/messaging-browser-view.js",
+    "module": "view-messaging-browser/configs/messaging-browser-view.json",
     "extensionPoint": "platform-views",
     "description": "Messaging Browser View"
 }

@@ -1,0 +1,9 @@
+{
+    "id": "dmm",
+    "label": "Data Mapping Modeler",
+    "region": "center",
+    "path": "/services/web/editor-mapping/modeler.html",
+    "contentTypes": [
+        "application/data-mapping-model+xml"
+    ]
+}

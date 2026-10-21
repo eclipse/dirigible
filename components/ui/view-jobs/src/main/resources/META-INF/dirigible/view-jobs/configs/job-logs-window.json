@@ -1,0 +1,5 @@
+{
+    "id": "job-logs",
+    "label": "Job Execution Logs",
+    "path": "/services/web/view-jobs/dialogs/job-logs.html"
+}

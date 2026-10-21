@@ -1,0 +1,7 @@
+{
+    "id": "security",
+    "label": "Security",
+    "path": "/services/web/perspective-security/index.html",
+    "order": 600,
+    "icon": "/services/web/perspective-security/images/security.svg"
+}

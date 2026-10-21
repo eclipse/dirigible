@@ -1,0 +1,9 @@
+{
+    "id": "classic-dark",
+    "name": "Classic Dark",
+    "type": "dark",
+    "version": 3,
+    "links": [
+        "/webjars/blimpkit__blimpkit/dist/css/themes/classic-dark.css"
+    ]
+}

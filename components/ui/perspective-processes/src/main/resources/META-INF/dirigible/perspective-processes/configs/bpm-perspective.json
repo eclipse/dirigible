@@ -1,0 +1,7 @@
+{
+    "id": "bpm-workspace",
+    "label": "Processes Workspace",
+    "path": "/services/web/perspective-processes/processes.html",
+    "order": 400,
+    "icon": "/services/web/perspective-processes/images/process.svg"
+}

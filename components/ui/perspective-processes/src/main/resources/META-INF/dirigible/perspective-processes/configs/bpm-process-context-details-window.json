@@ -1,0 +1,7 @@
+{
+    "id": "bpm-process-context-details",
+    "label": "Process Context Details",
+    "path": "/services/web/perspective-processes/dialogs/bpm-process-context-details.html",
+    "maxWidth": "400px",
+    "maxHeight": "574px"
+}

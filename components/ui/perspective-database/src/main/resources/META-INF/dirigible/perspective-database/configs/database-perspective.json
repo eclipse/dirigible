@@ -1,0 +1,7 @@
+{
+    "id": "database",
+    "label": "Database",
+    "path": "/services/web/perspective-database/index.html",
+    "icon": "/services/web/perspective-database/images/database.svg",
+    "order": 200
+}

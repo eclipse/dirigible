@@ -1,5 +1,5 @@
 {
-    "module": "perspective-documents/configs/documents.js",
+    "module": "perspective-documents/configs/documents.json",
     "extensionPoint": "platform-perspectives",
     "description": "Documents perspective"
 }

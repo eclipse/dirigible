@@ -1,0 +1,6 @@
+{
+    "id": "branchesRemote",
+    "label": "Remote branches",
+    "region": "left",
+    "path": "/services/web/view-git/remote.html"
+}

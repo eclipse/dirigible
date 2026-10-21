@@ -1,0 +1,8 @@
+{
+    "id": "messaging-browser",
+    "region": "center",
+    "label": "Messaging",
+    "lazyLoad": true,
+    "autoFocusTab": false,
+    "path": "/services/web/view-messaging-browser/messaging-browser.html"
+}

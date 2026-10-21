@@ -1,5 +1,5 @@
 {
-    "module": "view-security/configs/client-registration-dialog.js",
+    "module": "view-security/configs/client-registration-dialog.json",
     "extensionPoint": "platform-windows",
     "description": "Dialog for creating new or editing an existing client registration"
 }

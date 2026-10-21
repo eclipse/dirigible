@@ -1,0 +1,7 @@
+{
+    "id": "dependencies",
+    "label": "Dependencies",
+    "region": "center",
+    "lazyLoad": true,
+    "path": "/services/web/view-dependencies/dependencies.html"
+}

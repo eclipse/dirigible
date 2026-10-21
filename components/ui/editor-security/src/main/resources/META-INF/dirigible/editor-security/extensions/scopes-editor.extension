@@ -1,5 +1,5 @@
 {
-    "module": "editor-security/configs/scopes-editor.js",
+    "module": "editor-security/configs/scopes-editor.json",
     "extensionPoint": "platform-editors",
     "description": "Scopes Editor"
 }

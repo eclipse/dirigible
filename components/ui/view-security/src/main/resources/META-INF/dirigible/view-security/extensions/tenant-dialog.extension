@@ -1,5 +1,5 @@
 {
-    "module": "view-security/configs/tenant-dialog.js",
+    "module": "view-security/configs/tenant-dialog.json",
     "extensionPoint": "platform-windows",
     "description": "Dialog for creating new or editing an existing tenant"
 }

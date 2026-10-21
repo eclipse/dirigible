@@ -1,5 +1,5 @@
 {
-    "module": "perspective-operations/configs/operations.js",
+    "module": "perspective-operations/configs/operations.json",
     "extensionPoint": "platform-perspectives",
     "description": "Operations Perspective"
 }

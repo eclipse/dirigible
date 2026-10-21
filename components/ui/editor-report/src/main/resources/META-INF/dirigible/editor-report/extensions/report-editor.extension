@@ -1,5 +1,5 @@
 {
-    "module": "editor-report/configs/report-editor.js",
+    "module": "editor-report/configs/report-editor.json",
     "extensionPoint": "platform-editors",
     "description": "Report Editor"
 }

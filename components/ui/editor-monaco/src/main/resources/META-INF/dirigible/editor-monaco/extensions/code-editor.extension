@@ -1,5 +1,5 @@
 {
-    "module": "editor-monaco/configs/editor-view.js",
+    "module": "editor-monaco/configs/editor-view.json",
     "extensionPoint": "platform-editors",
     "description": "Code Editor"
 }

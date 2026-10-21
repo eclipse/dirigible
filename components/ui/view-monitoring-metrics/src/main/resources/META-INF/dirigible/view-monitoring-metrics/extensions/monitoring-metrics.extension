@@ -1,5 +1,5 @@
 {
-    "module": "view-monitoring-metrics/configs/monitoring-metrics-view.js",
+    "module": "view-monitoring-metrics/configs/monitoring-metrics-view.json",
     "extensionPoint": "platform-views",
     "description": "Monitoring Metrics View"
 }

@@ -1,0 +1,5 @@
+{
+    "id": "user-create-edit",
+    "label": "User",
+    "path": "/services/web/view-security/dialogs/user-dialog.html"
+}

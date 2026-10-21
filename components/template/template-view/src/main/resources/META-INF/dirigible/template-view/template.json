@@ -15,9 +15,9 @@
             "rename": "js/{{fileName}}.js"
         },
         {
-            "location": "/template-view/configs/view.js.template",
+            "location": "/template-view/configs/view.json.template",
             "action": "generate",
-            "rename": "configs/{{fileName}}-view.js"
+            "rename": "configs/{{fileName}}-view.json"
         },
         {
             "location": "/template-view/extensions/view.extension.template",

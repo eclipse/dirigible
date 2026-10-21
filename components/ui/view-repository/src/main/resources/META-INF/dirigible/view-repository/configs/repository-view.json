@@ -1,0 +1,7 @@
+{
+    "id": "repository",
+    "label": "Repository",
+    "region": "left",
+    "autoFocusTab": false,
+    "path": "/services/web/view-repository/repository.html"
+}

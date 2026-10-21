@@ -1,0 +1,5 @@
+{
+    "id": "job-assign",
+    "label": "Assign Job",
+    "path": "/services/web/view-jobs/dialogs/job-assign.html"
+}

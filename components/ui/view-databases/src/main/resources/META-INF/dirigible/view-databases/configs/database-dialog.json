@@ -1,0 +1,5 @@
+{
+    "id": "database-create-edit",
+    "label": "Database",
+    "path": "/services/web/view-databases/dialogs/database-dialog.html"
+}

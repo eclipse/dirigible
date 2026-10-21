@@ -100,6 +100,24 @@ public class ExtensionModuleReader {
         return modules;
     }
 
+    /**
+     * Reads a JSON module that an extension the current user may see registers - the descriptor the
+     * module's own page reads.
+     *
+     * @param module the module path, relative to the public registry
+     * @return the module, empty when it is not a JSON module, no such extension registers it, or it
+     *         cannot be read
+     */
+    public Optional<ExtensionModule> readRegisteredJsonModule(String module) {
+        if (!isJsonModule(module)) {
+            return Optional.empty();
+        }
+        return extensionService.findByModule(module)
+                               .stream()
+                               .findFirst()
+                               .flatMap(extension -> readJsonModule(module, extension.getExtensionPoint()));
+    }
+
     private static boolean isJsonModule(String module) {
         return module != null && module.endsWith(JSON_MODULE_SUFFIX);
     }

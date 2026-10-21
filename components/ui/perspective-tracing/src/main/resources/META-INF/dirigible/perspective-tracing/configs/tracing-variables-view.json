@@ -1,0 +1,7 @@
+{
+    "id": "tracing-variables-view",
+    "label": "Task Context",
+    "region": "center",
+    "autoFocusTab": false,
+    "path": "/services/web/perspective-tracing/views/tracing-variables.html"
+}

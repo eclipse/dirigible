@@ -1,0 +1,7 @@
+{
+    "id": "git",
+    "label": "Git",
+    "path": "/services/web/perspective-git/index.html",
+    "icon": "/services/web/perspective-git/images/git.svg",
+    "order": 110
+}

@@ -1,0 +1,8 @@
+{
+    "id": "{{viewId}}",
+    "label": "{{viewName}}",
+    "region": "center",
+    "path": "/services/web/{{projectName}}/{{fileName}}.html",
+    "lazyLoad": true,
+    "autoFocusTab": true
+}

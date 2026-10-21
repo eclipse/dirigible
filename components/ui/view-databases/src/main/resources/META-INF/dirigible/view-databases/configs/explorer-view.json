@@ -1,0 +1,8 @@
+{
+    "id": "database",
+    "label": "Explorer",
+    "region": "left",
+    "lazyLoad": false,
+    "autoFocusTab": false,
+    "path": "/services/web/view-databases/explorer.html"
+}

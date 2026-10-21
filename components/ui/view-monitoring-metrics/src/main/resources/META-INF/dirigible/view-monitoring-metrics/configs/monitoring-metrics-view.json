@@ -1,0 +1,8 @@
+{
+    "id": "monitoring-metrics",
+    "region": "left",
+    "label": "Metrics",
+    "lazyLoad": true,
+    "autoFocusTab": false,
+    "path": "/services/web/view-monitoring-metrics/monitoring-metrics.html"
+}

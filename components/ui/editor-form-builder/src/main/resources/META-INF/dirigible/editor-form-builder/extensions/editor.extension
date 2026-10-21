@@ -1,5 +1,5 @@
 {
-    "module": "editor-form-builder/configs/editor.js",
+    "module": "editor-form-builder/configs/editor.json",
     "extensionPoint": "platform-editors",
     "description": "Form Builder"
 }

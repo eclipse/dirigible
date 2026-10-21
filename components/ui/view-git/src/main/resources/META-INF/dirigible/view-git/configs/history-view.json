@@ -1,0 +1,6 @@
+{
+    "id": "gitHistory",
+    "region": "bottom",
+    "label": "History",
+    "path": "/services/web/view-git/history.html"
+}

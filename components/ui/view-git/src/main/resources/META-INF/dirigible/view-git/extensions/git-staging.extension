@@ -1,5 +1,5 @@
 {
-    "module": "view-git/configs/staging-view.js",
+    "module": "view-git/configs/staging-view.json",
     "extensionPoint": "platform-views",
     "description": "Git Staging View"
 }

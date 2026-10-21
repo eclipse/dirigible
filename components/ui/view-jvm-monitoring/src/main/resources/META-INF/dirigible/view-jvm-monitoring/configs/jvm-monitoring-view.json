@@ -1,0 +1,8 @@
+{
+    "id": "jvm-monitoring",
+    "label": "Monitoring",
+    "region": "center",
+    "lazyLoad": true,
+    "autoFocusTab": false,
+    "path": "/services/web/view-jvm-monitoring/jvm-monitoring.html"
+}

@@ -1,0 +1,8 @@
+{
+    "id": "search",
+    "label": "Search",
+    "lazyLoad": true,
+    "autoFocusTab": false,
+    "region": "left",
+    "path": "/services/web/view-search/search.html"
+}

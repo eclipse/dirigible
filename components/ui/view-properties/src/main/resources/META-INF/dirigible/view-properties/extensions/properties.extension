@@ -1,5 +1,5 @@
 {
-    "module": "view-properties/configs/properties-view.js",
+    "module": "view-properties/configs/properties-view.json",
     "extensionPoint": "platform-views",
     "description": "File properties"
 }

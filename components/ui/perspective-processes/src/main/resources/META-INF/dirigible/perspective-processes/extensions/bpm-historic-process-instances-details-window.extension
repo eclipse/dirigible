@@ -1,5 +1,5 @@
 {
-    "module": "perspective-processes/configs/bpm-historic-process-instances-details-window.js",
+    "module": "perspective-processes/configs/bpm-historic-process-instances-details-window.json",
     "extensionPoint": "platform-windows",
     "description": "Business Historic Process Instances Details"
 }

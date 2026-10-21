@@ -1,0 +1,8 @@
+{
+    "id": "openapi",
+    "label": "OpenAPI",
+    "region": "center",
+    "lazyLoad": true,
+    "autoFocusTab": false,
+    "path": "/services/web/view-swagger/ui/index.html"
+}

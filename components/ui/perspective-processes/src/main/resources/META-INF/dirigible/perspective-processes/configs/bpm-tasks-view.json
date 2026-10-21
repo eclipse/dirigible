@@ -1,0 +1,7 @@
+{
+    "id": "bpm-user-tasks",
+    "region": "bottom",
+    "label": "User Tasks",
+    "autoFocusTab": false,
+    "path": "/services/web/perspective-processes/views/bpm-tasks.html"
+}

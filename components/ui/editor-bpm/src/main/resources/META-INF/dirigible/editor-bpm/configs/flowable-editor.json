@@ -1,0 +1,9 @@
+{
+    "id": "flowable",
+    "region": "center",
+    "label": "Flowable",
+    "path": "/services/web/editor-bpm/index.html#/editor",
+    "contentTypes": [
+        "application/bpmn+xml"
+    ]
+}

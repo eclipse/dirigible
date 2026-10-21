@@ -1,5 +1,5 @@
 {
-    "module": "editor-image/configs/image-editor.js",
+    "module": "editor-image/configs/image-editor.json",
     "extensionPoint": "platform-editors",
     "description": "Image Viewer & Editor"
 }

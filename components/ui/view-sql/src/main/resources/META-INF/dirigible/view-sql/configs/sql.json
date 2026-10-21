@@ -1,0 +1,8 @@
+{
+    "id": "sql",
+    "label": "Statements",
+    "region": "center",
+    "lazyLoad": false,
+    "autoFocusTab": false,
+    "path": "/services/web/view-sql/sql.html"
+}

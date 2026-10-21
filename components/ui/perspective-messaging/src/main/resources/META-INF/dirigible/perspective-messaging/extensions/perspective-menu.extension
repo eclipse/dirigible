@@ -1,5 +1,5 @@
 {
-    "module": "perspective-messaging/configs/perspective-menu.js",
+    "module": "perspective-messaging/configs/perspective-menu.json",
     "extensionPoint": "platform-menus",
     "description": "Messaging perspective menu"
 }

@@ -1,5 +1,5 @@
 {
-    "module": "view-databases/configs/result-view.js",
+    "module": "view-databases/configs/result-view.json",
     "extensionPoint": "platform-views",
     "description": "Results view"
 }

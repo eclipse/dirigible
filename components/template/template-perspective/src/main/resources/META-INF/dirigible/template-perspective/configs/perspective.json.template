@@ -1,0 +1,7 @@
+{
+    "id": "{{perspectiveId}}",
+    "label": "{{perspectiveName}}",
+    "path": "/services/web/{{projectName}}/{{fileName}}.html",
+    "order": 1000,
+    "icon": "/services/web/{{projectName}}/images/{{fileName}}.svg"
+}

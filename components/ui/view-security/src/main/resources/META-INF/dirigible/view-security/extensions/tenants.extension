@@ -1,5 +1,5 @@
 {
-    "module": "view-security/configs/tenants-view.js",
+    "module": "view-security/configs/tenants-view.json",
     "extensionPoint": "platform-views",
     "description": "Tenants View"
 }

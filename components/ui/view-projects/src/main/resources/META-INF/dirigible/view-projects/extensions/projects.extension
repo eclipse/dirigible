@@ -1,5 +1,5 @@
 {
-    "module": "view-projects/configs/projects-view.js",
+    "module": "view-projects/configs/projects-view.json",
     "extensionPoint": "platform-views",
     "description": "Projects View"
 }

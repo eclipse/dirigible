@@ -1,5 +1,5 @@
 {
-    "module": "perspective-database/configs/menu/database-menu.js",
+    "module": "perspective-database/configs/menu/database-menu.json",
     "extensionPoint": "platform-menus",
     "description": "Database perspective menu"
 }

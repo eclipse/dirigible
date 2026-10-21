@@ -1,5 +1,5 @@
 {
-    "module": "view-import/configs/import-view.js",
+    "module": "view-import/configs/import-view.json",
     "extensionPoint": "platform-views",
     "description": "Import View"
 }

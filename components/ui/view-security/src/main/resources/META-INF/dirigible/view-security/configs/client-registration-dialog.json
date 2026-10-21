@@ -1,0 +1,5 @@
+{
+    "id": "client-registration-create-edit",
+    "label": "Client Registration",
+    "path": "/services/web/view-security/dialogs/client-registration-dialog.html"
+}

@@ -1,0 +1,8 @@
+{
+    "id": "java-debug",
+    "region": "left",
+    "label": "Debugger",
+    "lazyLoad": true,
+    "autoFocusTab": false,
+    "path": "/services/web/view-java-debug/debug.html"
+}

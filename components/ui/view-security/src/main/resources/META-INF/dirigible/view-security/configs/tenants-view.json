@@ -1,0 +1,8 @@
+{
+    "id": "tenants",
+    "label": "Tenants",
+    "region": "left",
+    "lazyLoad": false,
+    "autoFocusTab": false,
+    "path": "/services/web/view-security/views/tenants.html"
+}

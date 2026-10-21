@@ -14,25 +14,32 @@ import static org.eclipse.dirigible.components.extensions.aggregation.Modules.st
 import static org.eclipse.dirigible.components.extensions.aggregation.Modules.values;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.dirigible.components.extensions.modules.ExtensionModuleReader;
+import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
- * The main menu: contributed menus, the derived Window menu, the Help menu last.
+ * The main menu: contributed menus, the derived Window menu, the Help menu last, and an item that
+ * requires a project only while that project is published.
  */
 @ExtendWith(MockitoExtension.class)
 class MenusAggregatorTest {
 
     @Mock
     private ExtensionModuleReader reader;
+
+    @Mock
+    private IRepository repository;
 
     @Test
     void pulls_the_help_menu_to_the_end_after_the_window_menu() {
@@ -80,6 +87,31 @@ class MenusAggregatorTest {
                 viewItems.get(0));
     }
 
+    @Test
+    @SuppressWarnings("unchecked")
+    void shows_an_item_requiring_a_project_only_while_the_project_is_published() {
+        stub(reader, "menus", json("""
+                {'id': 'help', 'systemMenu': true, 'menu': {'label': 'Help', 'items': [
+                    {'label': 'Portal'},
+                    {'label': 'OpenAPI', 'requiresProject': 'view-swagger'},
+                    {'label': 'More', 'items': [{'label': 'Removed', 'requiresProject': 'not-published'}, {'label': 'Kept'}]}
+                ]}}"""));
+        stubWindowSources();
+        when(repository.hasResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/view-swagger/project.json")).thenReturn(true);
+        when(repository.hasResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/not-published/project.json")).thenReturn(false);
+
+        Map<String, Object> help = (Map<String, Object>) aggregate().get(1)
+                                                                    .get("menu");
+        List<Map<String, Object>> items = (List<Map<String, Object>>) help.get("items");
+        List<Map<String, Object>> nested = (List<Map<String, Object>>) items.get(2)
+                                                                            .get("items");
+
+        assertEquals(List.of("Portal", "OpenAPI", "More"), values(items, "label"));
+        assertEquals(List.of("Kept"), values(nested, "label"));
+        // The shell receives the item as it renders it: the condition is the aggregator's concern.
+        assertEquals(Map.of("label", "OpenAPI"), items.get(1));
+    }
+
     private void stubWindowSources() {
         stub(reader, "perspectives", json("{'id': 'workbench', 'label': 'Workbench'}"),
                 json("{'id': 'settings', 'label': 'Settings', 'isUtility': true}"));
@@ -88,8 +120,8 @@ class MenusAggregatorTest {
     }
 
     private List<Map<String, Object>> aggregate() {
-        MenusAggregator menus =
-                new MenusAggregator(reader, new PerspectivesAggregator(reader), new ViewsAggregator(reader), new ShellsAggregator(reader));
+        MenusAggregator menus = new MenusAggregator(reader, repository, new PerspectivesAggregator(reader), new ViewsAggregator(reader),
+                new ShellsAggregator(reader));
         return menus.aggregate(List.of("menus"), List.of("perspectives"), List.of("views"), List.of("shells"));
     }
 }

@@ -1,0 +1,15 @@
+{
+    "id": "image-editor",
+    "region": "center",
+    "label": "Image Viewer",
+    "path": "/services/web/editor-image/editor.html",
+    "contentTypes": [
+        "image/jpeg",
+        "image/svg+xml",
+        "image/png",
+        "image/x-icon",
+        "image/gif",
+        "image/bmp",
+        "image/webp"
+    ]
+}

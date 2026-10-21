@@ -1,0 +1,6 @@
+{
+    "id": "gitStaging",
+    "label": "Staging",
+    "region": "right",
+    "path": "/services/web/view-git/staging.html"
+}

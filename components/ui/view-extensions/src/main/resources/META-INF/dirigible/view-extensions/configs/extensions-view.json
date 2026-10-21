@@ -1,0 +1,8 @@
+{
+    "id": "extensions",
+    "label": "Extensions",
+    "region": "center",
+    "lazyLoad": false,
+    "autoFocusTab": true,
+    "path": "/services/web/view-extensions/extensions.html"
+}

@@ -1,5 +1,5 @@
 {
     "description": "Platform Theme - High Contrast Dark",
     "extensionPoint": "platform-themes",
-    "module": "theme-high-contrast/extensions/theme-dark.js"
+    "module": "theme-high-contrast/extensions/theme-dark.json"
 }

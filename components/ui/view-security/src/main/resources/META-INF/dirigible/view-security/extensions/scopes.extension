@@ -1,5 +1,5 @@
 {
-    "module": "view-security/configs/scopes-view.js",
+    "module": "view-security/configs/scopes-view.json",
     "extensionPoint": "platform-views",
     "description": "Scopes View"
 }

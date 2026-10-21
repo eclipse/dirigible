@@ -1,0 +1,8 @@
+{
+    "id": "bpm-process-viewer",
+    "label": "Process Viewer",
+    "lazyLoad": false,
+    "autoFocusTab": false,
+    "region": "center",
+    "path": "/services/web/perspective-processes/views/bpm-process-viewer.html"
+}

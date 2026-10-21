@@ -1,0 +1,9 @@
+{
+    "id": "report",
+    "label": "Report",
+    "region": "center",
+    "path": "/services/web/editor-report/editor.html",
+    "contentTypes": [
+        "application/json+report"
+    ]
+}

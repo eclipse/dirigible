@@ -1,5 +1,5 @@
 {
-    "module": "perspective-processes/configs/bpm-process-context-details-window.js",
+    "module": "perspective-processes/configs/bpm-process-context-details-window.json",
     "extensionPoint": "platform-windows",
     "description": "Business Process Context Details"
 }

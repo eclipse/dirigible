@@ -1,5 +1,5 @@
 {
-    "module": "view-registry/configs/registry-view.js",
+    "module": "view-registry/configs/registry-view.json",
     "extensionPoint": "platform-views",
     "description": "Registry View"
 }

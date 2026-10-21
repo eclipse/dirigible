@@ -1,0 +1,8 @@
+{
+    "id": "websockets",
+    "label": "WebSockets",
+    "region": "bottom",
+    "lazyLoad": true,
+    "autoFocusTab": false,
+    "path": "/services/web/view-websockets/websockets.html"
+}

@@ -1,5 +1,5 @@
 {
-    "module": "view-configurations/configs/tenant-configurations-view.js",
+    "module": "view-configurations/configs/tenant-configurations-view.json",
     "extensionPoint": "platform-views",
     "description": "Tenant Configurations View"
 }

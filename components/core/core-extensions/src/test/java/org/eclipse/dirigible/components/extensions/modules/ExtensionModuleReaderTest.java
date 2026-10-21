@@ -12,6 +12,7 @@ package org.eclipse.dirigible.components.extensions.modules;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -149,6 +150,32 @@ class ExtensionModuleReaderTest {
         assertEquals(1, log.list.stream()
                                 .filter(event -> event.getLevel() == Level.DEBUG)
                                 .count());
+    }
+
+    @Test
+    void reads_a_registered_json_module_for_its_page() {
+        Extension extension = mock(Extension.class);
+        when(extension.getExtensionPoint()).thenReturn(POINT);
+        when(extensionService.findByModule("app/view.json")).thenReturn(List.of(extension));
+        resource("app/view.json", "{\"id\": \"orders\"}");
+
+        Optional<ExtensionModule> module = reader().readRegisteredJsonModule("app/view.json");
+
+        assertEquals(Map.of("id", "orders"), module.orElseThrow()
+                                                   .content());
+        verify(evaluatorProvider, never()).getIfAvailable();
+    }
+
+    @Test
+    void reads_no_module_that_no_visible_extension_registers_nor_a_script_module() {
+        when(extensionService.findByModule("app/data.json")).thenReturn(List.of());
+
+        assertTrue(reader().readRegisteredJsonModule("app/data.json")
+                           .isEmpty());
+        assertTrue(reader().readRegisteredJsonModule("app/view.js")
+                           .isEmpty());
+        verify(extensionService, never()).findByModule("app/view.js");
+        verify(repository, never()).getResource(anyString());
     }
 
     private ExtensionModuleReader reader() {

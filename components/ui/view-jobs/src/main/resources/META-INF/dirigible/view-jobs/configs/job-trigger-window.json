@@ -1,0 +1,5 @@
+{
+    "id": "job-trigger",
+    "label": "Trigger Job",
+    "path": "/services/web/view-jobs/dialogs/job-trigger.html"
+}

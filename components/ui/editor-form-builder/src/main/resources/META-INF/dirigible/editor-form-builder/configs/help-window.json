@@ -1,0 +1,7 @@
+{
+    "id": "formBuilderHelp",
+    "label": "Feeds Help",
+    "path": "/services/web/editor-form-builder/dialogs/help.html",
+    "maxWidth": "540px",
+    "closeButton": true
+}

@@ -1,5 +1,5 @@
 {
-    "module": "view-databases/configs/crud-dialog.js",
+    "module": "view-databases/configs/crud-dialog.json",
     "extensionPoint": "platform-windows",
     "description": "Dialog for editing row in database table"
 }

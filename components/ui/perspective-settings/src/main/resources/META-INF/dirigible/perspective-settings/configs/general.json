@@ -1,0 +1,10 @@
+{
+    "id": "generalSettings",
+    "label": "General",
+    "translation": {
+        "key": "perspective-settings:general"
+    },
+    "order": -1,
+    "glyph": "sap-icon--customize",
+    "path": "/services/web/perspective-settings/settings/general.html"
+}

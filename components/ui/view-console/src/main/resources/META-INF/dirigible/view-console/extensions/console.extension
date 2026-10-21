@@ -1,5 +1,5 @@
 {
-    "module": "view-console/configs/console-view.js",
+    "module": "view-console/configs/console-view.json",
     "extensionPoint": "platform-views",
     "description": "Console View"
 }

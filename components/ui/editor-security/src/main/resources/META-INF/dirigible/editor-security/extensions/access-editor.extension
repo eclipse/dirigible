@@ -1,5 +1,5 @@
 {
-    "module": "editor-security/configs/access-editor.js",
+    "module": "editor-security/configs/access-editor.json",
     "extensionPoint": "platform-editors",
     "description": "Access Editor"
 }

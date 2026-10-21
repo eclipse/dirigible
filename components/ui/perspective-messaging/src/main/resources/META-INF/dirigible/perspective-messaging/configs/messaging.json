@@ -1,0 +1,7 @@
+{
+    "id": "messaging",
+    "label": "Messaging",
+    "path": "/services/web/perspective-messaging/index.html",
+    "order": 1010,
+    "icon": "/services/web/perspective-messaging/images/messaging.svg"
+}

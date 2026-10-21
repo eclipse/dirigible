@@ -1,0 +1,8 @@
+{
+    "id": "assistant",
+    "region": "right",
+    "label": "Assistant",
+    "lazyLoad": true,
+    "autoFocusTab": false,
+    "path": "/services/web/view-assistant/assistant.html"
+}

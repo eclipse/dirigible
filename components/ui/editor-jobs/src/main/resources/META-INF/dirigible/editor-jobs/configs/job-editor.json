@@ -1,0 +1,9 @@
+{
+    "id": "job",
+    "label": "Job Editor",
+    "region": "center",
+    "path": "/services/web/editor-jobs/editor.html",
+    "contentTypes": [
+        "application/json+job"
+    ]
+}

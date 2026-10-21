@@ -1,5 +1,5 @@
 {
-    "module": "view-dependencies/configs/dependencies-view.js",
+    "module": "view-dependencies/configs/dependencies-view.json",
     "extensionPoint": "platform-views",
     "description": "Dependencies View"
 }

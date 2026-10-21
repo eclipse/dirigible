@@ -1,0 +1,5 @@
+{
+    "id": "tenant-create-edit",
+    "label": "Tenant",
+    "path": "/services/web/view-security/dialogs/tenant-dialog.html"
+}
