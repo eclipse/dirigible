@@ -200,6 +200,7 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
         Set<String> triggerTargets = TriggerSupport.triggerTargetEntities(model);
         // The entities declared exports record their runs on (#7855): their columns are injected below.
         Set<String> exportLedgers = ExportSupport.ledgerEntities(model);
+        Set<String> normalisingLedgers = ExportSupport.normalisingLedgers(model);
         Map<String, List<String>> displacedStatuses = displacedStatusProperties(model, byName);
         // The status ids a button or a workflow step moves each entity to - what an ungated, status-
         // conditioned requiredWhen takes its gate from (#7595), read through the same rule the BPMN
@@ -599,7 +600,7 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
             // An export ledger: what ran, with which inputs, how it ended, and the file it produced.
             // Implicitly audited, so every run says who started it and when.
             if (exportLedger) {
-                properties.addAll(exportLedgerProperties(name));
+                properties.addAll(exportLedgerProperties(name, normalisingLedgers.contains(name)));
                 properties.addAll(attachmentProperties(name));
                 audited = true;
             }
@@ -3911,9 +3912,10 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
     /**
      * The run columns injected into an export ledger (#7855), ahead of the stored file's metadata. The
      * generated export sets every one of them, so all are read-only; the list shows which export ran,
-     * how it ended and how many rows it wrote.
+     * how it ended and how many rows it wrote. A ledger of an export that normalises a field's text
+     * also records every value the normalisation changed (#7925).
      */
-    private static List<Map<String, Object>> exportLedgerProperties(String entityName) {
+    private static List<Map<String, Object>> exportLedgerProperties(String entityName, boolean normalises) {
         List<Map<String, Object>> props = new ArrayList<>();
         props.add(attachmentProperty(entityName, "Export", "VARCHAR", 128, true));
         props.add(attachmentProperty(entityName, "Format", "VARCHAR", 32, false));
@@ -3922,6 +3924,9 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
         props.add(attachmentProperty(entityName, "RecordCount", "INTEGER", 0, true));
         props.add(attachmentProperty(entityName, "Checksum", "VARCHAR", 64, false));
         props.add(attachmentProperty(entityName, "ErrorMessage", "VARCHAR", 2000, false));
+        if (normalises) {
+            props.add(attachmentProperty(entityName, "Normalised", "CLOB", 0, false));
+        }
         return props;
     }
 

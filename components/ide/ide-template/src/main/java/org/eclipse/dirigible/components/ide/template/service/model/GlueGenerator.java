@@ -572,7 +572,7 @@ class GlueGenerator {
      * @param parameters the generation parameters
      */
     private static void bindExport(Map<String, Object> item, Map<String, Object> context, Map<String, Object> parameters) {
-        copy(context, item, "name", "className", "format", "ledger", "sourceKind", "entity", "report", "orderBy");
+        copy(context, item, "name", "className", "format", "ledger", "sourceKind", "entity", "report", "orderBy", "normalises");
         context.put("nameJavaLiteral", JavaLiterals.escape(str(item, "name")));
         context.put("javaLedgerPerspective", sanitize(item, "ledgerPerspective"));
         boolean report = "report".equals(str(item, "sourceKind"));
@@ -687,6 +687,35 @@ class GlueGenerator {
         }
         if (truthy(field, "attribute")) {
             spec.append(".attribute()");
+        }
+        // The text normalisation (#7925), in the order the field applies it.
+        for (Map<String, Object> replacement : asMaps(field.get("replace"))) {
+            spec.append(".replace(")
+                .append(javaString(str(replacement, "target")))
+                .append(", ")
+                .append(javaString(str(replacement, "replacement")))
+                .append(")");
+        }
+        if ("upper".equals(str(field, "case"))) {
+            spec.append(".upperCase()");
+        } else if ("lower".equals(str(field, "case"))) {
+            spec.append(".lowerCase()");
+        }
+        if (field.containsKey("allowed")) {
+            spec.append(".allowed(")
+                .append(javaString(str(field, "allowed")))
+                .append(")");
+            if ("strip".equals(str(field, "onDisallowed"))) {
+                spec.append(".stripDisallowed()");
+            } else if ("space".equals(str(field, "onDisallowed"))) {
+                spec.append(".spaceDisallowed()");
+            }
+        }
+        if (truthy(field, "collapseSpaces")) {
+            spec.append(".collapseSpaces()");
+        }
+        if (truthy(field, "failOnLoss")) {
+            spec.append(".failOnLoss()");
         }
         return spec.toString();
     }

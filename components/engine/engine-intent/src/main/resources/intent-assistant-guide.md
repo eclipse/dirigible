@@ -4437,6 +4437,14 @@ append-only and serves its file at its own `/{id}/download`.
   `name:` (required when it cannot be derived from `from:`/`param:`) and `attribute: true`.
 - `scale:` writes a decimal rounded half-up, with `decimalSeparator:` (empty = implied point);
   `pattern:` writes a date in a `DateTimeFormatter` pattern - never both on one field.
+- A text field can be **normalised** for a format that accepts fewer characters than the data holds
+  (a regulator's uppercase-Cyrillic name field), applied in this order: `replace: { "№": "", "/": " " }`
+  (each key by its value), `case: upper|lower`, `allowed: "А-ЯЁ0-9 -"` (the characters themselves,
+  `А-Я` a range, a `-` first or last as itself, `\` escaping the next one - never a regex) with `onDisallowed: strip|space|fail` (`fail` by default), `collapseSpaces: true`
+  (one space for every run, none at the ends). `onLoss: fail` refuses the run, naming the record and
+  the field, when the result lost or changed a letter or a digit - a Latin name in a Cyrillic-only
+  field - instead of writing a value nobody typed. The master data stays as registered; each run
+  records every value it changed, original beside written, in the ledger's `Normalised` column.
 - A **report** source: `from:` names one of the report's `dimensions` / `measures` exactly as declared
   (`supplier.name`, `count(*)`), a total over a measure is `sum(sum(taxBase))`, and a parameter names
   one of the report's own parameters. A `kind: balance` / `statement` report is refused.

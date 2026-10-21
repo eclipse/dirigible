@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -203,5 +204,85 @@ class ExportFileTest {
     @Test
     void anUnknownEncodingIsRefused() {
         assertThrows(IllegalArgumentException.class, () -> ExportFile.fixedWidth("no-such-charset", "\n"));
+    }
+
+    /** A regulator field of uppercase Cyrillic, digits and hyphens (#7925). */
+    private static final ExportField CYRILLIC_NAME = ExportField.named("Name")
+                                                                .replace("№", "")
+                                                                .replace("/", " ")
+                                                                .upperCase()
+                                                                .allowed("А-ЯЁ 0-9-")
+                                                                .stripDisallowed()
+                                                                .collapseSpaces()
+                                                                .failOnLoss();
+
+    @Test
+    void aNameIsReplacedCasedHeldToItsCharactersAndItsSpacesCollapsed() {
+        ExportFile file = ExportFile.delimited("UTF-8", "\n", ";", "\"", false);
+        file.record("line", new ExportField[] {CYRILLIC_NAME}, "№ 5 Иван/Петров, ООД");
+        file.record("line", new ExportField[] {CYRILLIC_NAME}, "ИВАН");
+
+        assertEquals("5 ИВАН ПЕТРОВ ООД\nИВАН\n", new String(file.content(), StandardCharsets.UTF_8));
+        // Only the value the normalisation changed is recorded, the data's spelling beside the file's.
+        assertEquals(List.of("record 1 [line] field [Name]: [№ 5 Иван/Петров, ООД]" + " -> [5 ИВАН ПЕТРОВ ООД]"), file.getNormalised());
+    }
+
+    @Test
+    void aLatinValueIsRefusedWhereOnlyCyrillicIsAllowedAndLossFails() {
+        ExportFile file = ExportFile.delimited("UTF-8", "\n", ";", "\"", false);
+        IllegalArgumentException refused =
+                assertThrows(IllegalArgumentException.class, () -> file.record("line", new ExportField[] {CYRILLIC_NAME}, "Acme 5"));
+        assertEquals("record 1 [line], field [Name]: [Acme 5] would be written as [5], which changes more than case, punctuation and"
+                + " whitespace", refused.getMessage());
+    }
+
+    @Test
+    void aDisallowedCharacterFailsTheRunUnlessTheFieldStripsOrSpacesIt() {
+        ExportField digits = ExportField.named("Code")
+                                        .allowed("0-9");
+        ExportFile file = ExportFile.delimited("UTF-8", "\n", ";", "\"", false);
+        IllegalArgumentException refused =
+                assertThrows(IllegalArgumentException.class, () -> file.record("line", new ExportField[] {digits}, "12-34"));
+        assertEquals("record 1 [line], field [Code]: [12-34] carries [-], which the field does not allow", refused.getMessage());
+
+        ExportFile spaced = ExportFile.delimited("UTF-8", "\n", ";", "\"", false);
+        spaced.record("line", new ExportField[] {digits.spaceDisallowed()}, "12-34");
+        assertEquals("12 34\n", new String(spaced.content(), StandardCharsets.UTF_8));
+    }
+
+    @Test
+    void theAllowedCharactersAreTakenLiterallyNeverAsAPattern() {
+        ExportFile file = ExportFile.delimited("UTF-8", "\n", ";", "\"", false);
+        file.record("line", new ExportField[] {ExportField.named("Dot")
+                                                          .allowed(".")
+                                                          .stripDisallowed(),
+                ExportField.named("Hyphen")
+                           .allowed("a\\-z")
+                           .stripDisallowed()},
+                "a.b", "a-m-z");
+
+        // A dot is a dot, and an escaped hyphen is a hyphen, not the range a-z.
+        assertEquals(".;a--z\n", new String(file.content(), StandardCharsets.UTF_8));
+    }
+
+    @Test
+    void aBackwardsRangeOrAnUnfinishedEscapeIsRefused() {
+        assertEquals("Export field [Code] allows [9-0], which runs the range 9-0 backwards",
+                assertThrows(IllegalArgumentException.class, () -> ExportField.named("Code")
+                                                                              .allowed("9-0")).getMessage());
+        assertEquals("Export field [Code] allows [0-9\\], which ends in an unfinished \\ escape",
+                assertThrows(IllegalArgumentException.class, () -> ExportField.named("Code")
+                                                                              .allowed("0-9\\")).getMessage());
+    }
+
+    @Test
+    void aNormalisationSurvivesALaterRefinement() {
+        ExportFile file = ExportFile.fixedWidth("UTF-8", "\n");
+        file.record("line", new ExportField[] {ExportField.named("Name")
+                                                          .lowerCase()
+                                                          .width(6)},
+                "ACME");
+
+        assertEquals("acme  \n", new String(file.content(), StandardCharsets.UTF_8));
     }
 }
