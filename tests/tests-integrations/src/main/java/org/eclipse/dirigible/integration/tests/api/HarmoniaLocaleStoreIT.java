@@ -130,7 +130,7 @@ class HarmoniaLocaleStoreIT {
                         var __releaseLanguages;
                         var __failLanguages;
                         var fetch = function (url, init) {
-                          if (url.indexOf('application-languages') >= 0) {
+                          if (url.indexOf('/services/platform/languages') >= 0) {
                             return new Promise(function (resolve, reject) {
                               __releaseLanguages = function (codes) { resolve({ ok: true, json: function () { return Promise.resolve(codes); } }); };
                               __failLanguages = function () { reject(new TypeError('Failed to fetch')); };

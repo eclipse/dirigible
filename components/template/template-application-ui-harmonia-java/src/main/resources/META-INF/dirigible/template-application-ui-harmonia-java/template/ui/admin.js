@@ -21,10 +21,10 @@ export const getSources = () => [
         collection: "adminModel"
     },
     {
-        location: "/template-application-ui-harmonia-java/ui/admin/admin-perspective.js.template",
+        location: "/template-application-ui-harmonia-java/ui/admin/admin-perspective.json.template",
         action: "generate",
         engine: "velocity",
-        rename: "gen/{{genFolderName}}/perspectives/admin/perspective.js",
+        rename: "gen/{{genFolderName}}/perspectives/admin/perspective.json",
         collection: "adminModel"
     },
     {

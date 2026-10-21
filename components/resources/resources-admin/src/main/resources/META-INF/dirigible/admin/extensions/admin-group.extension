@@ -1,5 +1,5 @@
 {
-    "module": "admin/configs/admin-group.js",
+    "module": "admin/configs/admin-group.json",
     "extensionPoint": "application-admin-perspectives",
     "description": "Administration Shell - the 'admin' navigation group"
 }

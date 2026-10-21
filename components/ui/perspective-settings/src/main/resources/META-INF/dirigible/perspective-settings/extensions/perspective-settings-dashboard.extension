@@ -1,5 +1,5 @@
 {
-    "module": "perspective-settings/configs/settings.js",
+    "module": "perspective-settings/configs/settings.json",
     "extensionPoint": "application-perspectives",
     "description": "Application settings perspective"
 }

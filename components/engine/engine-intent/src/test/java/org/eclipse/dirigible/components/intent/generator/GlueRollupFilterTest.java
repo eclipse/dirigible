@@ -10,7 +10,6 @@
 package org.eclipse.dirigible.components.intent.generator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -71,7 +70,7 @@ class GlueRollupFilterTest {
     @Test
     void everyHandlerOfAFilteredRollupCarriesTheClauses() {
         List<Map<String, Object>> rollups = GlueIntentGenerator.buildRollupsForTest(IntentParser.parse(YAML));
-        assertEquals(4, rollups.size());
+        assertEquals(5, rollups.size());
         for (Map<String, Object> rollup : rollups) {
             List<Map<String, Object>> filter = (List<Map<String, Object>>) rollup.get("filter");
             assertEquals(1, filter.size(), "every variant recomputes over the same row set: " + rollup);
@@ -85,12 +84,30 @@ class GlueRollupFilterTest {
         }
     }
 
+    /**
+     * A status a transition moves is the column a filter names, and a transition publishes
+     * {@code -transitioned} alone (#7942): a filtered roll-up recomputes on it too.
+     */
+    @Test
+    void aFilteredRollupAlsoRecomputesOnTheChildsTransition() {
+        Map<String, Object> onTransition = GlueIntentGenerator.buildRollupsForTest(IntentParser.parse(YAML))
+                                                              .stream()
+                                                              .filter(r -> "-transitioned".equals(r.get("topicSuffix")))
+                                                              .findFirst()
+                                                              .orElseThrow(() -> new AssertionError("no handler binds -transitioned"));
+        assertEquals("CallOffContractRollupOnTransition", onTransition.get("className"));
+        assertTrue(onTransition.containsKey("filter"), "it recomputes over the same filtered row set");
+    }
+
     /** A roll-up declaring no filter counts every child, exactly as it always did. */
     @Test
     void anUnfilteredRollupCarriesNoClauses() {
         List<Map<String, Object>> rollups = GlueIntentGenerator.buildRollupsForTest(
                 IntentParser.parse(YAML.replace("    where:\n      - { field: Status, op: ne, value: CANCELLED }\n", "")));
-        assertFalse(rollups.isEmpty());
+        assertEquals(List.of("", "-updated", "-deleted", "-rekeyed"), rollups.stream()
+                                                                             .map(r -> r.get("topicSuffix"))
+                                                                             .toList(),
+                "no filter, no status read - no transition handler");
         assertTrue(rollups.stream()
                           .noneMatch(r -> r.containsKey("filter")),
                 "an unfiltered roll-up must render byte-identically: " + rollups);

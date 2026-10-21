@@ -14,9 +14,11 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -631,6 +633,34 @@ public class BpmProviderFlowable implements BpmProvider {
                             .processInstanceTenantId(getTenantId())
                             .singleResult();
     }
+
+    /**
+     * The tenant's running process instances with the given ids, read in a few statements rather than
+     * one per id (issue #7977): an Inbox page names one instance per task, and each used to be read on
+     * its own. The ids are queried in chunks, so no database meets an IN list longer than it allows.
+     *
+     * @param processInstanceIds the ids
+     * @return the instances that still exist; an id whose instance has ended is simply absent
+     */
+    public List<ProcessInstance> getProcessInstances(Collection<String> processInstanceIds) {
+        List<String> ids = new ArrayList<>(new LinkedHashSet<>(processInstanceIds));
+        List<ProcessInstance> found = new ArrayList<>(ids.size());
+        for (int from = 0; from < ids.size(); from += PROCESS_INSTANCE_ID_CHUNK) {
+            Set<String> chunk = new HashSet<>(ids.subList(from, Math.min(ids.size(), from + PROCESS_INSTANCE_ID_CHUNK)));
+            found.addAll(processEngine.getRuntimeService()
+                                      .createProcessInstanceQuery()
+                                      .processInstanceIds(chunk)
+                                      .processInstanceTenantId(getTenantId())
+                                      .list());
+        }
+        return found;
+    }
+
+    /**
+     * The most ids one batched instance read puts into its IN list - below every supported database's
+     * cap.
+     */
+    private static final int PROCESS_INSTANCE_ID_CHUNK = 500;
 
     public void retryDeadLetterJob(String jobId, int retries) {
         processEngine.getManagementService()

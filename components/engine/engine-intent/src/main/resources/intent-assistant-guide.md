@@ -846,7 +846,10 @@ a `required` text field is refused when it is blank after that trim - spaces alo
   complete"; `map` values are a source
   property (copy), a literal, or a `{sourceProperty}` template; item values are `rule(<column>)`
   references, arithmetic over the SOURCE's fields, or - for a to-one relation cell - a bare SOURCE
-  relation name whose FK is copied onto the line; a row `when` is `<SourceField> ==|!= <number>`.
+  relation name whose FK is copied onto the line; a row `when` is one term or a list of terms
+  (ANDed): `<SourceField> ==|!= '<string>'`, or `<SourceField> ==|!=|<|<=|>|>= <number>` -
+  e.g. `when: ["Vat != 0", "VatTransactionCode != 'NOCR'"]`. A null field reads as 0 in a number
+  term and equals no string.
   A missing rule row or null referenced column SKIPS the posting (the unposted worklist = final-status
   documents with no back-referencing target), never throws - and says so in the log naming the rule
   entity, the match value and the source, because nothing else in the system marks the gap (#7649).
@@ -2415,7 +2418,7 @@ amounts:
       - name: "Services for {period}"   # string cell: {field} interpolates a source property
         quantity: 1                     # numeric cell: a Calc arithmetic expression over the source,
         price: BillableAmount           #   rounded to the target field's scale (a literal is trivial)
-        when: "BillableAmount != 0"     # optional guard: `<SourceField> ==|!= <number>` (Calc, null-safe)
+        when: "BillableAmount != 0"     # optional guard: the posting item row's grammar (Calc, null-safe)
 ```
 
 - A **numeric** target field (decimal/double/integer/long) takes a `Calc` arithmetic expression -
@@ -3581,8 +3584,9 @@ silently dropped a token would produce archive names nobody can tell apart, whic
 exists to fix. On a notify block, `fileName:` requires `attach:` (a plain-text message has no file to
 name), and with `attach: recordPrint` only fields of the anchor itself are readable - that document is
 rendered once, before the per-row loop.
-- Per-tenant SMTP comes from the platform mail configuration; the sender address is
-  `DIRIGIBLE_MAIL_SENDER`.
+- SMTP comes from the platform mail configuration (one account per instance); the sender address is
+  `DIRIGIBLE_MAIL_SENDER` and the Reply-To `DIRIGIBLE_MAIL_REPLY_TO` (none when blank). Both are
+  tenant configuration, so each tenant mails in its own name - never put a sender into the intent.
 
 A sending `serviceTask` stands alone: `notify` cannot be combined with `setField` /
 `setRelationField` / `call` / `delegate` on the same step (give the send its own step, and route to it
@@ -4433,6 +4437,14 @@ append-only and serves its file at its own `/{id}/download`.
   `name:` (required when it cannot be derived from `from:`/`param:`) and `attribute: true`.
 - `scale:` writes a decimal rounded half-up, with `decimalSeparator:` (empty = implied point);
   `pattern:` writes a date in a `DateTimeFormatter` pattern - never both on one field.
+- A text field can be **normalised** for a format that accepts fewer characters than the data holds
+  (a regulator's uppercase-Cyrillic name field), applied in this order: `replace: { "№": "", "/": " " }`
+  (each key by its value), `case: upper|lower`, `allowed: "А-ЯЁ0-9 -"` (the characters themselves,
+  `А-Я` a range, a `-` first or last as itself, `\` escaping the next one - never a regex) with `onDisallowed: strip|space|fail` (`fail` by default), `collapseSpaces: true`
+  (one space for every run, none at the ends). `onLoss: fail` refuses the run, naming the record and
+  the field, when the result lost or changed a letter or a digit - a Latin name in a Cyrillic-only
+  field - instead of writing a value nobody typed. The master data stays as registered; each run
+  records every value it changed, original beside written, in the ledger's `Normalised` column.
 - A **report** source: `from:` names one of the report's `dimensions` / `measures` exactly as declared
   (`supplier.name`, `count(*)`), a total over a measure is `sum(sum(taxBase))`, and a parameter names
   one of the report's own parameters. A `kind: balance` / `statement` report is refused.

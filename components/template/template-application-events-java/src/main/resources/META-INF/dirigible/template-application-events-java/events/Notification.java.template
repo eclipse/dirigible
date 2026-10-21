@@ -34,8 +34,8 @@ import gen.${attachLanguageJavaGenFolder}.data.${attachLanguageJavaTargetPerspec
  * Sends the ${name} notification when a ${entity} event fires.
  *
  * Generated from the intent notifications block - do not edit; it is re-generated with the
- * application. Binds to the topic the ${entity} repository publishes the event to. The sender
- * address comes from the DIRIGIBLE_MAIL_SENDER configuration.
+ * application. Binds to the topic the ${entity} repository publishes the event to. The sender and
+ * reply-to addresses come from the tenant's DIRIGIBLE_MAIL_SENDER / DIRIGIBLE_MAIL_REPLY_TO.
  */
 @Component("${javaGenFolderName}_${className}Notification")
 public class ${className}Notification implements MessageHandler {
@@ -178,11 +178,10 @@ public class ${className}Notification implements MessageHandler {
             document.put("data", data);
             parts.add(document);
 #end
-            String from = Configurations.get("DIRIGIBLE_MAIL_SENDER", "noreply@dirigible.io");
 #if($notifyCopies)
-            Mail.send(from, recipients(to), recipients(cc), recipients(bcc), subject, parts);
+            Mail.sendAsApplication(recipients(to), recipients(cc), recipients(bcc), subject, parts);
 #else
-            Mail.send(from, new String[] {to}, new String[0], new String[0], subject, parts);
+            Mail.sendAsApplication(new String[] {to}, new String[0], new String[0], subject, parts);
 #end
 #if($notifyOutcomeProperty != "")
             stampNotifyOutcome(entity.${notifyOutcomeKeyProperty}, null);

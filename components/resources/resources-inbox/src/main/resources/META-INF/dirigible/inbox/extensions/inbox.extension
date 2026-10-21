@@ -1,5 +1,5 @@
 {
-    "module": "inbox/configs/inbox.js",
+    "module": "inbox/configs/inbox.json",
     "extensionPoint": "application-perspectives",
     "description": "Process Inbox Perspective"
 }

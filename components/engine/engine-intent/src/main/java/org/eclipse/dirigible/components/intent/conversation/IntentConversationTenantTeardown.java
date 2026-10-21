@@ -11,6 +11,7 @@ package org.eclipse.dirigible.components.intent.conversation;
 
 import java.util.List;
 
+import org.eclipse.dirigible.commons.api.helpers.LogSanitizer;
 import org.eclipse.dirigible.components.base.tenant.TenantTeardownParticipant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +61,7 @@ class IntentConversationTenantTeardown implements TenantTeardownParticipant {
             conversations.delete(conversation);
         }
         if (!found.isEmpty()) {
-            LOGGER.info("Deleted [{}] intent conversation(s) of tenant [{}].", found.size(), tenantId);
+            LOGGER.info("Deleted [{}] intent conversation(s) of tenant [{}].", found.size(), LogSanitizer.sanitize(tenantId));
         }
     }
 }

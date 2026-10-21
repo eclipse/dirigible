@@ -81,6 +81,21 @@ class JavaExpressionsTest {
                 JavaExpressions.expression(reading("calcCompare", "owner", "source", "property", "Vat", "equal", false, "text", "0")));
     }
 
+    /** A posting item row's guard (#7993): an ordering, a string equality, and their AND. */
+    @Test
+    void rendersARowGuardOfOrderingsStringsAndTheirConjunction() {
+        Map<String, Object> order = reading("calcOrder", "owner", "source", "property", "Vat", "op", ">=", "text", "-1.5");
+        Map<String, Object> text = reading("textCompare", "owner", "source", "property", "Code", "equal", false, "text", "NO\"CR");
+        assertEquals("Calc.eval(\"Vat\", source, 6).compareTo(new java.math.BigDecimal(\"-1.5\")) >= 0", JavaExpressions.expression(order));
+        assertEquals("!java.util.Objects.equals((String) source.Code, \"NO\\\"CR\")", JavaExpressions.expression(text));
+        assertEquals("java.util.Objects.equals((String) source.Code, \"A\")",
+                JavaExpressions.expression(reading("textCompare", "owner", "source", "property", "Code", "equal", true, "text", "A")));
+        assertEquals(JavaExpressions.expression(order) + " && " + JavaExpressions.expression(text),
+                JavaExpressions.expression(reading("all", "parts", List.of(order, text))));
+        // An operator outside the closed set renders nothing rather than code that guesses.
+        assertNull(JavaExpressions.expression(reading("calcOrder", "owner", "source", "property", "Vat", "op", "<>", "text", "0")));
+    }
+
     @Test
     void rendersAConcatenation() {
         Map<String, Object> read = reading("read", "owner", "source", "property", "Number");

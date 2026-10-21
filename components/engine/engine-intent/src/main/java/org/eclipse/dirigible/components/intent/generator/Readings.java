@@ -225,6 +225,43 @@ final class Readings {
     }
 
     /**
+     * The ordering twin of {@link #calcCompare}: the field read through the arithmetic evaluator,
+     * ordered against a number.
+     *
+     * @param owner the local holding the record
+     * @param property the PascalCased property
+     * @param op the operator - {@code <}, {@code <=}, {@code >} or {@code >=}
+     * @param text the number compared with, as authored
+     * @return the reading
+     */
+    static Map<String, Object> calcOrder(String owner, String property, String op, String text) {
+        return of(KIND, "calcOrder", "owner", owner, "property", property, "op", op, "text", text);
+    }
+
+    /**
+     * A null-safe equality of a string property with a string.
+     *
+     * @param owner the local holding the record
+     * @param property the PascalCased property
+     * @param equal whether the comparison is an equality
+     * @param text the string compared with, unquoted
+     * @return the reading
+     */
+    static Map<String, Object> textCompare(String owner, String property, boolean equal, String text) {
+        return of(KIND, "textCompare", "owner", owner, "property", property, "equal", equal, "text", text);
+    }
+
+    /**
+     * Several guards ANDed.
+     *
+     * @param parts the guards, in order
+     * @return the reading
+     */
+    static Map<String, Object> all(List<Map<String, Object>> parts) {
+        return of(KIND, "all", "parts", new ArrayList<>(parts));
+    }
+
+    /**
      * A conditional rule column: the rule row's column chosen by the source's classifier value.
      *
      * @param by the PascalCased classifier property of the source

@@ -19,11 +19,15 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAccessor;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * One field of an export record: what the value is called and how it is written - its date pattern
- * or decimal scale, and in a positional file its width, alignment and padding.
+ * or decimal scale, in a positional file its width, alignment and padding, and how its text is
+ * normalised for a format that accepts fewer characters than the data holds.
  *
  * <p>
  * Immutable: every refinement returns a copy, so a generated export declares its record layouts
@@ -40,9 +44,10 @@ public final class ExportField {
     private final String decimalSeparator;
     private final String pattern;
     private final boolean attribute;
+    private final Text text;
 
     private ExportField(String name, int width, boolean alignRight, char pad, boolean truncate, Integer scale, String decimalSeparator,
-            String pattern, boolean attribute) {
+            String pattern, boolean attribute, Text text) {
         this.name = name;
         this.width = width;
         this.alignRight = alignRight;
@@ -52,6 +57,7 @@ public final class ExportField {
         this.decimalSeparator = decimalSeparator;
         this.pattern = pattern;
         this.attribute = attribute;
+        this.text = text;
     }
 
     /**
@@ -64,7 +70,7 @@ public final class ExportField {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("An export field needs a name");
         }
-        return new ExportField(name, 0, false, ' ', false, null, ".", null, false);
+        return new ExportField(name, 0, false, ' ', false, null, ".", null, false, Text.NONE);
     }
 
     /**
@@ -77,7 +83,7 @@ public final class ExportField {
         if (width < 1) {
             throw new IllegalArgumentException("Export field [" + name + "] width must be at least 1, got " + width);
         }
-        return new ExportField(name, width, alignRight, pad, truncate, scale, decimalSeparator, pattern, attribute);
+        return new ExportField(name, width, alignRight, pad, truncate, scale, decimalSeparator, pattern, attribute, text);
     }
 
     /**
@@ -86,7 +92,7 @@ public final class ExportField {
      * @return the refined field
      */
     public ExportField alignRight() {
-        return new ExportField(name, width, true, pad, truncate, scale, decimalSeparator, pattern, attribute);
+        return new ExportField(name, width, true, pad, truncate, scale, decimalSeparator, pattern, attribute, text);
     }
 
     /**
@@ -97,7 +103,7 @@ public final class ExportField {
      * @return the refined field
      */
     public ExportField pad(char pad) {
-        return new ExportField(name, width, alignRight, pad, truncate, scale, decimalSeparator, pattern, attribute);
+        return new ExportField(name, width, alignRight, pad, truncate, scale, decimalSeparator, pattern, attribute, text);
     }
 
     /**
@@ -107,7 +113,7 @@ public final class ExportField {
      * @return the refined field
      */
     public ExportField truncate() {
-        return new ExportField(name, width, alignRight, pad, true, scale, decimalSeparator, pattern, attribute);
+        return new ExportField(name, width, alignRight, pad, true, scale, decimalSeparator, pattern, attribute, text);
     }
 
     /**
@@ -120,7 +126,7 @@ public final class ExportField {
         if (scale < 0) {
             throw new IllegalArgumentException("Export field [" + name + "] scale must not be negative, got " + scale);
         }
-        return new ExportField(name, width, alignRight, pad, truncate, scale, decimalSeparator, pattern, attribute);
+        return new ExportField(name, width, alignRight, pad, truncate, scale, decimalSeparator, pattern, attribute, text);
     }
 
     /**
@@ -131,7 +137,8 @@ public final class ExportField {
      * @return the refined field
      */
     public ExportField decimalSeparator(String separator) {
-        return new ExportField(name, width, alignRight, pad, truncate, scale, separator == null ? "." : separator, pattern, attribute);
+        return new ExportField(name, width, alignRight, pad, truncate, scale, separator == null ? "." : separator, pattern, attribute,
+                text);
     }
 
     /**
@@ -142,7 +149,7 @@ public final class ExportField {
      */
     public ExportField pattern(String pattern) {
         DateTimeFormatter.ofPattern(pattern);
-        return new ExportField(name, width, alignRight, pad, truncate, scale, decimalSeparator, pattern, attribute);
+        return new ExportField(name, width, alignRight, pad, truncate, scale, decimalSeparator, pattern, attribute, text);
     }
 
     /**
@@ -151,7 +158,139 @@ public final class ExportField {
      * @return the refined field
      */
     public ExportField attribute() {
-        return new ExportField(name, width, alignRight, pad, truncate, scale, decimalSeparator, pattern, true);
+        return new ExportField(name, width, alignRight, pad, truncate, scale, decimalSeparator, pattern, true, text);
+    }
+
+    /**
+     * The same field with its text written in upper case.
+     *
+     * @return the refined field
+     */
+    public ExportField upperCase() {
+        return with(text.withCase("upper"));
+    }
+
+    /**
+     * The same field with its text written in lower case.
+     *
+     * @return the refined field
+     */
+    public ExportField lowerCase() {
+        return with(text.withCase("lower"));
+    }
+
+    /**
+     * The same field with every occurrence of {@code target} in its text replaced by
+     * {@code replacement} - replacements apply in the order they are declared, before the case and the
+     * allowed characters.
+     *
+     * @param target the text to replace, not empty
+     * @param replacement the text written instead, empty to drop it
+     * @return the refined field
+     */
+    public ExportField replace(String target, String replacement) {
+        if (target == null || target.isEmpty()) {
+            throw new IllegalArgumentException("Export field [" + name + "] cannot replace an empty text");
+        }
+        return with(text.withReplacement(target, replacement == null ? "" : replacement));
+    }
+
+    /**
+     * The same field accepting only the listed characters: each one as itself, {@code А-Я} the
+     * inclusive range between two, a {@code -} first or last as itself, and {@code \} taking the next
+     * character literally ({@code А-ЯЁ0-9 -}). Nothing in it is a pattern - a {@code .} is a dot. Any
+     * other character fails the run unless the field strips it or writes a space instead.
+     *
+     * @param characters the characters and ranges
+     * @return the refined field
+     * @throws IllegalArgumentException when the list is empty, a range runs backwards, or it ends in an
+     *         unfinished escape
+     */
+    public ExportField allowed(String characters) {
+        return with(text.withAllowed(ranges(characters)));
+    }
+
+    /** The inclusive code-point ranges a list of characters and ranges names. */
+    private List<int[]> ranges(String characters) {
+        if (characters == null || characters.isEmpty()) {
+            throw new IllegalArgumentException("Export field [" + name + "] needs the characters it allows");
+        }
+        int[] codePoints = characters.codePoints()
+                                     .toArray();
+        List<int[]> ranges = new ArrayList<>();
+        for (int index = 0; index < codePoints.length; index++) {
+            int first = codePoints[index];
+            if (first == '\\') {
+                index = escaped(codePoints, index, characters);
+                first = codePoints[index];
+            }
+            int last = first;
+            if (index + 2 < codePoints.length && codePoints[index + 1] == '-') {
+                index += 2;
+                last = codePoints[index];
+                if (last == '\\') {
+                    index = escaped(codePoints, index, characters);
+                    last = codePoints[index];
+                }
+                if (last < first) {
+                    throw new IllegalArgumentException("Export field [" + name + "] allows [" + characters + "], which runs the range "
+                            + new String(Character.toChars(first)) + "-" + new String(Character.toChars(last)) + " backwards");
+                }
+            }
+            ranges.add(new int[] {first, last});
+        }
+        return List.copyOf(ranges);
+    }
+
+    /** The index of the character a {@code \} escape at {@code index} takes. */
+    private int escaped(int[] codePoints, int index, String characters) {
+        if (index + 1 == codePoints.length) {
+            throw new IllegalArgumentException(
+                    "Export field [" + name + "] allows [" + characters + "], which ends in an unfinished \\ escape");
+        }
+        return index + 1;
+    }
+
+    /**
+     * The same field dropping a character its {@link #allowed} class does not hold.
+     *
+     * @return the refined field
+     */
+    public ExportField stripDisallowed() {
+        return with(text.withDisallowed(Disallowed.STRIP));
+    }
+
+    /**
+     * The same field writing a space for a character its {@link #allowed} class does not hold.
+     *
+     * @return the refined field
+     */
+    public ExportField spaceDisallowed() {
+        return with(text.withDisallowed(Disallowed.SPACE));
+    }
+
+    /**
+     * The same field writing every run of whitespace as one space, and none at either end.
+     *
+     * @return the refined field
+     */
+    public ExportField collapseSpaces() {
+        return with(text.withCollapseSpaces());
+    }
+
+    /**
+     * The same field failing the run when its normalisation changed more than case, punctuation and
+     * whitespace - a letter or a digit dropped, replaced or added - rather than writing a value nobody
+     * typed.
+     *
+     * @return the refined field
+     */
+    public ExportField failOnLoss() {
+        return with(text.withFailOnLoss());
+    }
+
+    private ExportField with(Text normalisation) {
+        return new ExportField(name, width, alignRight, pad, truncate, scale, decimalSeparator, pattern, attribute, normalisation);
     }
 
     /**
@@ -230,6 +369,20 @@ public final class ExportField {
         return padding + text;
     }
 
+    /**
+     * The text as this field writes it: replaced, cased, held to its allowed characters and its spaces
+     * collapsed, in that order. A field that declares none of it writes the text unchanged.
+     *
+     * @param text the formatted value
+     * @return the text to write
+     * @throws IllegalArgumentException when a character is not allowed and the field neither strips nor
+     *         spaces it, or when the field fails on loss and the normalisation changed a letter or a
+     *         digit
+     */
+    String normalise(String text) {
+        return this.text == Text.NONE ? text : this.text.apply(name, text);
+    }
+
     private BigDecimal decimal(Object value) {
         if (value instanceof BigDecimal decimal) {
             return decimal;
@@ -284,6 +437,105 @@ public final class ExportField {
                                  .atZoneSameInstant(ZoneId.systemDefault());
         } catch (DateTimeParseException ex) {
             throw new IllegalArgumentException("field [" + name + "]: [" + text + "] is not a date", ex);
+        }
+    }
+
+    /** What a character outside the allowed ones becomes. */
+    private enum Disallowed {
+        FAIL, STRIP, SPACE
+    }
+
+    /** How a field's text is normalised (#7925); {@link #NONE} when it is written as it is. */
+    private record Text(String textCase, List<String[]> replacements, List<int[]> allowed, Disallowed disallowed, boolean collapseSpaces,
+            boolean failOnLoss) {
+
+        static final Text NONE = new Text(null, List.of(), null, Disallowed.FAIL, false, false);
+
+        Text withCase(String newCase) {
+            return new Text(newCase, replacements, allowed, disallowed, collapseSpaces, failOnLoss);
+        }
+
+        Text withReplacement(String target, String replacement) {
+            List<String[]> more = new ArrayList<>(replacements);
+            more.add(new String[] {target, replacement});
+            return new Text(textCase, List.copyOf(more), allowed, disallowed, collapseSpaces, failOnLoss);
+        }
+
+        Text withAllowed(List<int[]> characters) {
+            return new Text(textCase, replacements, characters, disallowed, collapseSpaces, failOnLoss);
+        }
+
+        Text withDisallowed(Disallowed handling) {
+            return new Text(textCase, replacements, allowed, handling, collapseSpaces, failOnLoss);
+        }
+
+        Text withCollapseSpaces() {
+            return new Text(textCase, replacements, allowed, disallowed, true, failOnLoss);
+        }
+
+        Text withFailOnLoss() {
+            return new Text(textCase, replacements, allowed, disallowed, collapseSpaces, true);
+        }
+
+        String apply(String field, String value) {
+            String written = value;
+            for (String[] replacement : replacements) {
+                written = written.replace(replacement[0], replacement[1]);
+            }
+            if ("upper".equals(textCase)) {
+                written = written.toUpperCase(Locale.ROOT);
+            } else if ("lower".equals(textCase)) {
+                written = written.toLowerCase(Locale.ROOT);
+            }
+            if (allowed != null) {
+                written = allowedOnly(field, value, written);
+            }
+            if (collapseSpaces) {
+                written = written.strip()
+                                 .replaceAll("(?U)\\s+", " ");
+            }
+            if (failOnLoss && !essence(value).equals(essence(written))) {
+                throw new IllegalArgumentException("field [" + field + "]: [" + value + "] would be written as [" + written
+                        + "], which changes more than case, punctuation and whitespace");
+            }
+            return written;
+        }
+
+        private String allowedOnly(String field, String value, String text) {
+            StringBuilder kept = new StringBuilder();
+            for (int offset = 0; offset < text.length();) {
+                int codePoint = text.codePointAt(offset);
+                String character = new String(Character.toChars(codePoint));
+                offset += character.length();
+                if (allows(codePoint)) {
+                    kept.append(character);
+                } else if (disallowed == Disallowed.SPACE) {
+                    kept.append(' ');
+                } else if (disallowed == Disallowed.FAIL) {
+                    throw new IllegalArgumentException(
+                            "field [" + field + "]: [" + value + "] carries [" + character + "], which the field does not allow");
+                }
+            }
+            return kept.toString();
+        }
+
+        private boolean allows(int codePoint) {
+            for (int[] range : allowed) {
+                if (codePoint >= range[0] && codePoint <= range[1]) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /** The letters and digits of a text, in upper case - what a normalisation must not change. */
+        private static String essence(String text) {
+            StringBuilder essence = new StringBuilder();
+            text.toUpperCase(Locale.ROOT)
+                .codePoints()
+                .filter(Character::isLetterOrDigit)
+                .forEach(essence::appendCodePoint);
+            return essence.toString();
         }
     }
 }

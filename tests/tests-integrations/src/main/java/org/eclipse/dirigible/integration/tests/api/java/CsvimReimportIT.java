@@ -270,7 +270,9 @@ class CsvimReimportIT extends IntegrationTest {
                                          .executeQuery("SELECT \"R2\", \"R3\" FROM \"CSV_REIMPORT\" WHERE \"R1\" = 1");
                 assertTrue(rs.next(), "Row with R1 = 1 is missing after the re-import");
                 assertEquals("r2_1_changed", rs.getString("R2"), "The changed value did not reach the row");
-                assertNull(rs.getString("R3"), "A column the CSV does not carry must be set to null, not to the record's id");
+                // An update writes only the columns the header names (#7923): the one it does not carry keeps
+                // its stored value - neither nulled nor set to the record's id.
+                assertEquals("r3_1", rs.getString("R3"), "A column the CSV does not carry must be left as it is");
 
                 rs = connection.createStatement()
                                .executeQuery("SELECT COUNT(*) FROM \"CSV_REIMPORT\"");

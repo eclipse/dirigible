@@ -10,8 +10,10 @@
 package org.eclipse.dirigible.components.security.keycloak;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -131,6 +133,13 @@ class KeycloakTenantFilterTest {
         filter.doFilter(request, response, chain);
 
         assertPassed();
+    }
+
+    @Test
+    void theThemesAreNotFilteredAtTheScriptOrTheCanonicalPath() {
+        assertTrue(filter.shouldNotFilter(new MockHttpServletRequest("GET", "/services/js/platform-core/extension-services/themes.js")));
+        assertTrue(filter.shouldNotFilter(new MockHttpServletRequest("GET", "/services/platform/extensions/themes")));
+        assertFalse(filter.shouldNotFilter(new MockHttpServletRequest("GET", "/services/platform/extensions/perspectives")));
     }
 
     private void assertPassed() {

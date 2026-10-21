@@ -46,17 +46,20 @@ class PrintRenderIT extends IntegrationTest {
     private static final String TEMPLATE_LOCATION = "/" + PROJECT + "/doc/Templates/TestDoc/Print/en/standard.print";
     private static final String BG_TEMPLATE_LOCATION = "/" + PROJECT + "/doc/Templates/LangDoc/Print/bg/standard.print";
     private static final String IMAGE_TEMPLATE_LOCATION = "/" + PROJECT + "/doc/Templates/ImageDoc/Print/en/standard.print";
+    private static final String RATE_TEMPLATE_LOCATION = "/" + PROJECT + "/doc/Templates/RateDoc/Print/en/standard.print";
     private static final String LOGO_LOCATION = "/" + PROJECT + "/doc/Templates/Print/logo.png";
     private static final String CONTROLLER_LOCATION = "/" + PROJECT + "/api/PrintTestController.java";
     private static final String TEMPLATE_PATH = IRepositoryStructure.PATH_REGISTRY_PUBLIC + TEMPLATE_LOCATION;
     private static final String BG_TEMPLATE_PATH = IRepositoryStructure.PATH_REGISTRY_PUBLIC + BG_TEMPLATE_LOCATION;
     private static final String IMAGE_TEMPLATE_PATH = IRepositoryStructure.PATH_REGISTRY_PUBLIC + IMAGE_TEMPLATE_LOCATION;
+    private static final String RATE_TEMPLATE_PATH = IRepositoryStructure.PATH_REGISTRY_PUBLIC + RATE_TEMPLATE_LOCATION;
     private static final String LOGO_PATH = IRepositoryStructure.PATH_REGISTRY_PUBLIC + LOGO_LOCATION;
     private static final String CONTROLLER_PATH = IRepositoryStructure.PATH_REGISTRY_PUBLIC + CONTROLLER_LOCATION;
 
     private static final String ENDPOINT = "/services/java/" + PROJECT + "/api/PrintTestController/render";
     private static final String LANGUAGE_ENDPOINT = "/services/java/" + PROJECT + "/api/PrintTestController/renderDefaultLanguage";
     private static final String IMAGE_ENDPOINT = "/services/java/" + PROJECT + "/api/PrintTestController/renderWithImage";
+    private static final String RATE_ENDPOINT = "/services/java/" + PROJECT + "/api/PrintTestController/renderPerRate";
 
     private static final long ASSERTION_TIMEOUT_SECONDS = 30;
 
@@ -137,10 +140,33 @@ class PrintRenderIT extends IntegrationTest {
                 ASSERTION_TIMEOUT_SECONDS);
     }
 
+    /**
+     * The per-VAT-rate totals block of a mixed-rate invoice (#7924): a table grouped by the lines'
+     * rate, one row per rate with the summed tax base and VAT, renders through the real pipeline - CMS
+     * template lookup, bind, XSL-FO, FOP - into a PDF. The per-rate figures themselves are asserted on
+     * the XSL-FO in the document parser's own tests: the PDF carries its text in an embedded subset
+     * font, so it is not readable here without a PDF text extractor.
+     */
+    @Test
+    void rendersAPerVatRateTotalsBlock() {
+        repository.createResource(RATE_TEMPLATE_PATH, RATE_TEMPLATE.getBytes(StandardCharsets.UTF_8), false, "text/plain", true);
+        repository.createResource(CONTROLLER_PATH, controllerSource().getBytes(StandardCharsets.UTF_8), false, "text/x-java", true);
+        synchronizationProcessor.forceProcessSynchronizers();
+
+        restAssuredExecutor.execute(() -> given().when()
+                                                 .get(RATE_ENDPOINT)
+                                                 .then()
+                                                 .statusCode(200)
+                                                 .body(containsString("\"head\": \"%PDF"))
+                                                 .body(containsString("\"size\":")),
+                ASSERTION_TIMEOUT_SECONDS);
+    }
+
     @AfterEach
     void cleanup() {
         boolean any = false;
-        for (String path : new String[] {TEMPLATE_PATH, BG_TEMPLATE_PATH, IMAGE_TEMPLATE_PATH, LOGO_PATH, CONTROLLER_PATH}) {
+        for (String path : new String[] {TEMPLATE_PATH, BG_TEMPLATE_PATH, IMAGE_TEMPLATE_PATH, RATE_TEMPLATE_PATH, LOGO_PATH,
+                CONTROLLER_PATH}) {
             if (repository.hasResource(path)) {
                 repository.removeResource(path);
                 any = true;
@@ -189,6 +215,25 @@ class PrintRenderIT extends IntegrationTest {
             </document>
             """;
 
+    /** Lines at 20 % and 9 %: one totals row per rate, VAT per line summed. */
+    private static final String RATE_TEMPLATE = """
+            <document id="rate-doc">
+                <page>
+                    <table source="items">
+                        <column width="2*">{{name}}</column>
+                        <column width="*" align="right">{{Net}}</column>
+                        <column width="*" align="right">{{Vat}}</column>
+                    </table>
+                    <table source="items" groupBy="VatRate">
+                        <column label="Rate">{{VatRate:0.##}}%</column>
+                        <column label="Tax base" align="right">{{sum(Net)}}</column>
+                        <column label="VAT" align="right">{{sum(Vat)}}</column>
+                    </table>
+                    <total align="right">{{document.total}}</total>
+                </page>
+            </document>
+            """;
+
     private static String controllerSource() {
         return """
                 package api;
@@ -225,6 +270,18 @@ class PrintRenderIT extends IntegrationTest {
                         int n = Math.min(5, pdf.length);
                         String head = new String(pdf, 0, n, StandardCharsets.ISO_8859_1);
                         return "{\\"images\\": " + images + ", \\"head\\": \\"" + head + "\\"}";
+                    }
+
+                    @Get("/renderPerRate")
+                    public String renderPerRate() {
+                        String data = "{\\"document\\":{\\"total\\":54.85},\\"items\\":["
+                                + "{\\"name\\":\\"Consulting\\",\\"VatRate\\":20,\\"Net\\":10.00,\\"Vat\\":2.00},"
+                                + "{\\"name\\":\\"Books\\",\\"VatRate\\":9,\\"Net\\":22.80,\\"Vat\\":2.05},"
+                                + "{\\"name\\":\\"Licence\\",\\"VatRate\\":20,\\"Net\\":15.00,\\"Vat\\":3.00}]}";
+                        byte[] pdf = Print.render("RateDoc", "en", data);
+                        int n = Math.min(5, pdf.length);
+                        String head = new String(pdf, 0, n, StandardCharsets.ISO_8859_1);
+                        return "{\\"size\\": " + pdf.length + ", \\"head\\": \\"" + head + "\\"}";
                     }
 
                     @Get("/renderDefaultLanguage")

@@ -1,5 +1,5 @@
 {
-    "module": "${projectName}/gen/${genFolderName}/perspectives/${name}/perspective.js",
+    "module": "${projectName}/gen/${genFolderName}/perspectives/${name}/perspective.json",
     "extensionPoint": "application-perspectives",
     "description": "${projectName} - Perspective - ${name}"#if($perspectiveRole || $roleRead || $roleWrite),
     "role": "#if($perspectiveRole)${perspectiveRole},#end#if($roleRead)${roleRead},#end#if($roleWrite)${roleWrite}#end"#end

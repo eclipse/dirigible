@@ -102,7 +102,7 @@ class TransitionActionDescriptorTest {
         return descriptor.replaceAll("\\s+", "");
     }
 
-    /** The written {@code voidInvoice-transition-action.js} descriptor module. */
+    /** The written {@code voidInvoice-transition-action.json} descriptor module. */
     private static String descriptor(String yaml) {
         IntentModel model = IntentParser.parse(yaml);
         IRepository repository = mock(IRepository.class);
@@ -120,12 +120,12 @@ class TransitionActionDescriptorTest {
                                  .size(); i++) {
             if (paths.getAllValues()
                      .get(i)
-                     .endsWith("/voidInvoice-transition-action.js")) {
+                     .endsWith("/voidInvoice-transition-action.json")) {
                 return new String(contents.getAllValues()
                                           .get(i),
                         StandardCharsets.UTF_8);
             }
         }
-        return fail("the transition descriptor module was not written: " + paths.getAllValues());
+        return fail("the transition descriptor was not written: " + paths.getAllValues());
     }
 }

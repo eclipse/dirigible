@@ -99,6 +99,7 @@ document.addEventListener('alpine:init', () => {
   Alpine.store('processTasks', {
     byProcessId: {},
     tasks: [],          // flat list of all the user's tasks (assignee + groups) — the Inbox view
+    total: 0,           // how many tasks the user has in all; tasks holds the newest pages of them (#7977)
     loaded: false,
     formOpen: false,
     formUrl: '',
@@ -136,11 +137,20 @@ document.addEventListener('alpine:init', () => {
         // listing them next to an employee's own Submit tasks made the Personal Inbox a second, wider
         // back office (#7077). The scope is a display choice: the server gates every task either way.
         const personalOnly = (window.App && App.config && App.config.taskScope) === 'assignee';
-        const [mine, groups] = await Promise.all([
-          App.services.api.get('/services/inbox/tasks?type=assignee&limit=100', { baseUrl: '' }),
-          personalOnly ? Promise.resolve([])
-            : App.services.api.get('/services/inbox/tasks?type=groups&limit=100', { baseUrl: '' }),
+        // Each list is the newest page of at most 100 tasks; the server says how many there are in all
+        // (X-Total-Count), so a queue of thousands neither has to travel nor shows as "100" (#7977).
+        const [minePage, groupsPage] = await Promise.all([
+          App.services.api.get('/services/inbox/tasks?type=assignee&limit=100', { baseUrl: '', withTotal: true }),
+          personalOnly ? Promise.resolve({ items: [], total: 0 })
+            : App.services.api.get('/services/inbox/tasks?type=groups&limit=100', { baseUrl: '', withTotal: true }),
         ]);
+        // a page is { items, total }; a bare array (an API without withTotal) is a page of itself
+        const itemsOf = (page) => (Array.isArray(page) ? page : (page && page.items) || []);
+        const mine = itemsOf(minePage);
+        const groups = itemsOf(groupsPage);
+        // A candidate-group query lists unclaimed tasks only, so the two totals do not overlap.
+        const countOf = (page, items) => (page && typeof page.total === 'number' ? page.total : items.length);
+        this.total = countOf(minePage, mine) + countOf(groupsPage, groups);
         const map = {};
         const flat = [];
         const seen = new Set();

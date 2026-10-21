@@ -753,6 +753,14 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
             // one from the targeted writes that publish no "-updated" at all. It is the same recompute
             // keyed on the payload's FK, so one handler repairs whichever side the payload names.
             rollups.add(rollupEntry(base, className + "RollupOnRekey", "-rekeyed"));
+            // A filtered roll-up counts only the rows its where: selects, and a status is what such a
+            // filter names. A transitions: button, a create-from's sourceStatus flip and a process setter
+            // all move it with a targeted write that publishes "-transitioned" alone (#7942), so the same
+            // recompute binds that channel too - otherwise the parent kept counting a row the filter now
+            // excludes until some unrelated write of a sibling fired.
+            if (!filter.isEmpty()) {
+                rollups.add(rollupEntry(base, className + "RollupOnTransition", "-transitioned"));
+            }
         }
         return rollups;
     }
@@ -1295,7 +1303,7 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
                 java.util.Set<String> knownSourceProperties = crossModelSource
                         ? (sourceInfo != null && sourceInfo.propertyNames() != null ? sourceInfo.propertyNames() : java.util.Set.of())
                         : sourceProperties(source);
-                e.put("itemLines", computedItemLines(lineRows, itemMetas, knownSourceProperties));
+                e.put("itemLines", computedItemLines("generates [" + g.getName() + "]", lineRows, itemMetas, knownSourceProperties));
             } else {
                 e.put("fromItemEntity", "");
                 e.put("toItemEntity", "");
@@ -2923,7 +2931,9 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
             // but the original's own lines leaves the ledger off by the difference. Every assigned
             // cell is copied off the stored line, each amount (a cell the reversal negates) negated.
             Map<String, Map<String, Object>> mirrorAssigns = new LinkedHashMap<>();
+            int itemNumber = 0;
             for (Map<String, String> row : effective.getItems() == null ? List.<Map<String, String>>of() : effective.getItems()) {
+                itemNumber++;
                 Map<String, Object> rendered = new LinkedHashMap<>();
                 List<Map<String, Object>> assigns = new ArrayList<>();
                 Map<String, Object> rowGuard = Map.of();
@@ -2937,7 +2947,7 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
                                   .trim();
                     if ("when".equals(cell.getKey())) {
                         // Calc reads the (possibly null) source field as BigDecimal - null-safe.
-                        rowGuard = computedGuard(value);
+                        rowGuard = computedGuard("posting [" + effective.getName() + "] item " + itemNumber, value);
                         continue;
                     }
                     Map<String, Object> assign = new LinkedHashMap<>();
@@ -3923,13 +3933,15 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
      * uses, so the template stays logic-free. Every reading runs over the loaded {@code source} master.
      * A {@code when} cell becomes the row guard.
      */
-    private static List<Map<String, Object>> computedItemLines(List<Map<String, String>> rows, Map<String, CellMeta> metas,
+    private static List<Map<String, Object>> computedItemLines(String subject, List<Map<String, String>> rows, Map<String, CellMeta> metas,
             java.util.Set<String> sourceProps) {
         List<Map<String, Object>> out = new ArrayList<>();
         if (rows == null) {
             return out;
         }
+        int lineNumber = 0;
         for (Map<String, String> row : rows) {
+            lineNumber++;
             Map<String, Object> rendered = new LinkedHashMap<>();
             List<Map<String, Object>> assigns = new ArrayList<>();
             Map<String, Object> guard = Map.of();
@@ -3938,7 +3950,7 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
                         : cell.getValue()
                               .trim();
                 if ("when".equalsIgnoreCase(cell.getKey())) {
-                    guard = computedGuard(value);
+                    guard = computedGuard(subject + " item line " + lineNumber, value);
                     continue;
                 }
                 CellMeta meta = metas.get(IntentNaming.pascalCase(cell.getKey()));
@@ -4035,17 +4047,30 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
     }
 
     /**
-     * A {@code when} row guard - a posting item row's or a computed line's - as the reading of a
-     * null-safe {@code Calc} comparison over {@code source} ({@code <field> ==|!= <n>}); an unparseable
-     * guard yields the empty reading, no guard (the line is always created).
+     * A {@code when} row guard - a posting item row's or a computed line's - as the reading over
+     * {@code source} of its terms, ANDed (dirigible #7993): a number term is a null-safe {@code Calc}
+     * comparison, a string term an equality. A guard that does not read fails the Generate - the parser
+     * refuses one, so reaching here means it was let through, and an unread guard must never become
+     * "always".
+     *
+     * @param subject the message prefix naming the posting (or the generate) and the row
+     * @param value the authored guard
+     * @return the reading
      */
-    private static Map<String, Object> computedGuard(String value) {
-        java.util.regex.Matcher guard = java.util.regex.Pattern.compile("\\s*(\\w+)\\s*([!=]=)\\s*(\\d+(?:\\.\\d+)?)\\s*")
-                                                               .matcher(value);
-        if (guard.matches()) {
-            return Readings.calcCompare("source", IntentNaming.pascalCase(guard.group(1)), "==".equals(guard.group(2)), guard.group(3));
+    private static Map<String, Object> computedGuard(String subject, String value) {
+        List<CheckSupport.SourceTerm> terms = CheckSupport.sourceTerms(value);
+        if (terms == null) {
+            throw new IntentValidationException(List.of(subject + " when [" + value + "] does not read as a guard over the source"));
         }
-        return Map.of();
+        List<Map<String, Object>> readings = new ArrayList<>();
+        for (CheckSupport.SourceTerm term : terms) {
+            String property = IntentNaming.pascalCase(term.property());
+            boolean equality = "==".equals(term.op()) || "!=".equals(term.op());
+            readings.add(term.text() ? Readings.textCompare("source", property, "==".equals(term.op()), term.literal())
+                    : equality ? Readings.calcCompare("source", property, "==".equals(term.op()), term.literal())
+                            : Readings.calcOrder("source", property, term.op(), term.literal()));
+        }
+        return readings.size() == 1 ? readings.get(0) : Readings.all(readings);
     }
 
     /** The logical kinds a {@code now} default renders in the field's own shape. */

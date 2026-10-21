@@ -48,7 +48,12 @@ public class IssueAttachment {
     @Column(name = "ISSUEATTACHMENT_SIZE", columnDefinition = "BIGINT", nullable = false)
     private long size;
 
-    @Column(name = "ISSUEATTACHMENT_SHA256", columnDefinition = "CHAR", length = 64, nullable = false)
+    /**
+     * The definition carries its length: Hibernate's schema update compares the definition string with
+     * the column Liquibase created (CHAR(64)) and, on PostgreSQL, alters a bare {@code CHAR} down to
+     * {@code character(1)}, after which no digest fits (#7948 follow-up).
+     */
+    @Column(name = "ISSUEATTACHMENT_SHA256", columnDefinition = "CHAR(64)", length = 64, nullable = false)
     private String sha256;
 
     @Column(name = "ISSUEATTACHMENT_STORAGE_REF", columnDefinition = "VARCHAR", length = 2000, nullable = false)

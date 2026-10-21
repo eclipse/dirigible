@@ -17,8 +17,8 @@
   const PUBLISHER = '/services/ide/publisher';
   const PROBLEMS = '/services/ide/problems';
   const HEALTHCHECK = '/services/core/healthcheck';
-  const SHELLS = '/services/js/platform-core/extension-services/shells.js?extensionPoints=platform-shells';
-  const PERSPECTIVES = '/services/js/platform-core/extension-services/perspectives.js?extensionPoints=application-perspectives';
+  const SHELLS = '/services/platform/extensions/shells?extensionPoints=platform-shells';
+  const PERSPECTIVES = '/services/platform/extensions/perspectives?extensionPoints=application-perspectives';
 
   // The agent endpoint makes up to five upstream model calls (the first draft plus four server-side
   // repair rounds), each of them streamed and each reasoning over the COMPLETE app.intent it has to

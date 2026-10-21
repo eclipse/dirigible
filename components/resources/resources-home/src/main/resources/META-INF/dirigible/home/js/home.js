@@ -80,7 +80,7 @@ document.addEventListener('alpine:init', () => {
 
         async loadUser() {
             try {
-                const r = await fetch('/services/js/platform-core/services/user-name.js', {
+                const r = await fetch('/services/platform/user-name', {
                     headers: { 'Accept': 'text/plain' }, credentials: 'same-origin',
                 });
                 if (r.ok) this.userName = (await r.text()).trim();
@@ -91,7 +91,7 @@ document.addEventListener('alpine:init', () => {
 
         async loadShells() {
             try {
-                const r = await fetch('/services/js/platform-core/extension-services/shells.js', { credentials: 'same-origin' });
+                const r = await fetch('/services/platform/extensions/shells', { credentials: 'same-origin' });
                 if (!r.ok) return;
                 const list = await r.json();
                 this.shells = (Array.isArray(list) ? list : [])

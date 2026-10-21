@@ -56,6 +56,8 @@ import jakarta.mail.internet.MimeMessage;
  * their mailboxes with the blind copy named in no delivered header, and a step whose {@code to:}
  * resolves blank still sends to its {@code bcc:}. The other three notify blocks (#7938) - a
  * lifecycle notification, a transition and a schedule tick - deliver their copies the same way.
+ * Every one of the four goes out in the tenant's name (#7878): the From and Reply-To the tenant
+ * configuration sets, whether the send runs in a request, a listener, a job fire or a process step.
  */
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class IntentNotifyRecipientsIT extends IntegrationTest {
@@ -82,6 +84,11 @@ class IntentNotifyRecipientsIT extends IntegrationTest {
     private static final String WATCHER = "watcher@notify-recipients.test";
     private static final String TICKETS = API + "/ticket/TicketController";
     private static final String CLOSE_TICKET = "/services/java/" + PROJECT + "/gen/events/" + PROJECT + "/CloseTicketTransition/run";
+    private static final String TENANT_CONFIGURATION = "/services/core/configurations/tenant";
+    private static final String SENDER_KEY = "DIRIGIBLE_MAIL_SENDER";
+    private static final String REPLY_TO_KEY = "DIRIGIBLE_MAIL_REPLY_TO";
+    private static final String TENANT_SENDER = "Notify Recipients <billing@notify-recipients.test>";
+    private static final String TENANT_REPLY_TO = "accounts@notify-recipients.test";
 
     private static final String INTENT_YAML =
             """
@@ -242,6 +249,8 @@ class IntentNotifyRecipientsIT extends IntegrationTest {
         generateProject();
         publishProject();
         synchronizationProcessor.forceProcessSynchronizers();
+        setTenantConfiguration(SENDER_KEY, TENANT_SENDER);
+        setTenantConfiguration(REPLY_TO_KEY, TENANT_REPLY_TO);
 
         create(CLOSINGS, "{\"Name\":\"Q3\",\"RequestedBy\":\"" + REQUESTER + "\"}");
 
@@ -260,6 +269,7 @@ class IntentNotifyRecipientsIT extends IntegrationTest {
             // The blind copy is delivered, but no delivered header may name it.
             assertThat(message.getHeader("Bcc")).isNull();
             assertThat(Collections.list(message.getAllHeaderLines())).noneMatch(line -> line.contains(ARCHIVE));
+            assertSentInTheTenantsName(message);
         }
 
         // A blank to: with a bcc: still sends - to the blind copy alone.
@@ -270,6 +280,7 @@ class IntentNotifyRecipientsIT extends IntegrationTest {
         assertThat(withSubject(notice)).hasSize(1);
         assertThat(inbox(ARCHIVE, notice).get(0)
                                          .getRecipients(Message.RecipientType.TO)).isNull();
+        assertSentInTheTenantsName(inbox(ARCHIVE, notice).get(0));
 
         // #7938: a lifecycle notification, a transition and a schedule tick each reach their copies.
         int ticket = create(TICKETS, "{\"Name\":\"T1\",\"Owner\":\"" + OWNER + "\"}");
@@ -298,8 +309,31 @@ class IntentNotifyRecipientsIT extends IntegrationTest {
                 assertThat(addresses(message.getRecipients(Message.RecipientType.CC))).containsExactly(WATCHER);
                 assertThat(message.getHeader("Bcc")).isNull();
                 assertThat(Collections.list(message.getAllHeaderLines())).noneMatch(line -> line.contains(ARCHIVE));
+                assertSentInTheTenantsName(message);
             }
         }
+    }
+
+    /** The message carries the tenant's own From and Reply-To, not the instance's sender. */
+    private static void assertSentInTheTenantsName(MimeMessage message) throws MessagingException {
+        assertThat(addresses(message.getFrom())).containsExactly(TENANT_SENDER);
+        assertThat(addresses(message.getReplyTo())).containsExactly(TENANT_REPLY_TO);
+    }
+
+    private void setTenantConfiguration(String key, String value) {
+        restAssuredExecutor.execute(() -> given().contentType("application/json")
+                                                 .body("{\"key\":\"" + key + "\",\"value\":\"" + value + "\"}")
+                                                 .when()
+                                                 .put(TENANT_CONFIGURATION)
+                                                 .then()
+                                                 .statusCode(200));
+    }
+
+    private void deleteTenantConfiguration(String key) {
+        restAssuredExecutor.execute(() -> given().when()
+                                                 .delete(TENANT_CONFIGURATION + "?key=" + key)
+                                                 .then()
+                                                 .statusCode(204));
     }
 
     /**
@@ -403,6 +437,8 @@ class IntentNotifyRecipientsIT extends IntegrationTest {
     @AfterEach
     void cleanup() {
         Configuration.remove(ARCHIVE_KEY);
+        deleteTenantConfiguration(SENDER_KEY);
+        deleteTenantConfiguration(REPLY_TO_KEY);
         restAssuredExecutor.execute(() -> given().when()
                                                  .delete("/services/ide/publisher/" + WORKSPACE + "/" + PROJECT)
                                                  .then()

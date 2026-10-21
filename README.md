@@ -297,6 +297,17 @@ docker run --name dirigible --rm -p 8080:8080 `
 4. Optionally you can enhance and customize the Dockerfile
    from [here](https://github.com/eclipse/dirigible/blob/master/build/application/Dockerfile)
 
+#### TypeScript projects
+
+Published TypeScript sources are transpiled by a `tsc --watch` process (`npm i -g typescript`; the Docker image ships it).
+The process starts only when the registry holds TypeScript sources - at startup, after a project is published, or
+within 30 seconds of sources arriving another way - so an instance running only Java projects starts no Node
+process. To keep the watcher off even when TypeScript sources are present, set:
+
+```
+export DIRIGIBLE_TSC_WATCH_SERVICE_ENABLED=false
+```
+
 #### Native image
 
 ##### Prerequisites

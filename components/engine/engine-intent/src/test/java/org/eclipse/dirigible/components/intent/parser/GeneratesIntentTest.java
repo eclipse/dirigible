@@ -450,12 +450,12 @@ class GeneratesIntentTest {
                     from: Quote
                     to: Order
                     items:
-                      - { price: Total, when: "Total > 0" }
+                      - { price: Total, when: "Total <> 0" }
                 """;
         IntentValidationException ex = assertThrows(IntentValidationException.class, () -> IntentParser.parse(yaml));
         assertTrue(ex.getIssues()
                      .stream()
-                     .anyMatch(i -> i.contains("item line when") && i.contains("==|!=")),
+                     .anyMatch(i -> i.contains("item line 1 when [Total <> 0] must be")),
                 "got: " + ex.getIssues());
     }
 

@@ -149,7 +149,7 @@
     </div>
 
     <!-- Instance branding (DIRIGIBLE_BRANDING_*): sets window.PlatformBranding before Alpine starts. -->
-    <script src="/services/js/platform-branding/branding.js" defer></script>
+    <script src="/services/platform/branding.js" defer></script>
 
     <script>
       document.addEventListener('alpine:init', () => {
@@ -187,7 +187,7 @@
 
               async loadUser() {
                   try {
-                      const r = await fetch('/services/js/platform-core/services/user-name.js', {
+                      const r = await fetch('/services/platform/user-name', {
                           headers: { 'Accept': 'text/plain' }, credentials: 'same-origin',
                       });
                       if (r.ok) this.userName = (await r.text()).trim();

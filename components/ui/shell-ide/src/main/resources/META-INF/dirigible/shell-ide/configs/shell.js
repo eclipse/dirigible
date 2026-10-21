@@ -9,6 +9,7 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
+// The page's own global. The extension registry reads the same entry from shell.json beside this file - keep the two in step.
 const shellData = {
 	id: 'shellIde',
 	path: '/services/web/shell-ide/index.html',
@@ -17,6 +18,3 @@ const shellData = {
 	description: 'The development workbench for building on the platform.',
 	order: 40
 };
-if (typeof exports !== 'undefined') {
-	exports.getShell = () => shellData;
-}

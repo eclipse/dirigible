@@ -161,10 +161,18 @@ App.services.api = {
       // A success can carry an empty body (204, or a 200 from an action endpoint such as task
       // claim/complete). Reading r.json() on an empty body throws "Unexpected end of JSON input",
       // so read text first and only parse when there's something to parse.
-      if (r.status === 204) return null;
-      const text = await r.text();
-      if (!text) return null;
-      try { return JSON.parse(text); } catch (_) { return text; }
+      const text = r.status === 204 ? '' : await r.text();
+      let result = null;
+      if (text) {
+        try { result = JSON.parse(text); } catch (_) { result = text; }
+      }
+      // A paged listing names the size of the whole collection in X-Total-Count (the Inbox, #7977);
+      // { withTotal: true } hands it back next to the page, null when the server sent none.
+      if (opts.withTotal) {
+        const header = r.headers.get('X-Total-Count');
+        return { items: result, total: header === null || header === '' ? null : Number(header) };
+      }
+      return result;
     }
 
     // Non-OK: read the body ONCE as text, then attempt to parse the structured error.

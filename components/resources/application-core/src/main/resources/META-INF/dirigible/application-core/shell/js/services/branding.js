@@ -12,7 +12,7 @@
 /*
  * branding — makes the Harmonia shells honour the SAME instance branding as the AngularJS shell,
  * driven by the same DIRIGIBLE_BRANDING_* env vars. The platform service
- * /services/js/platform-branding/branding.js (loaded just before this file) sets the global
+ * /services/platform/branding.js (loaded just before this file) sets the global
  * top.PlatformBranding = { name, subtitle, brand, brandUrl, icons.favicon, logo, theme, prefix }
  * from Configurations.get(...). This adapter reads that global (the AngularJS shell reads the same
  * one via getBrandingInfo()), applies the favicon + document title to the plain HTML head, and

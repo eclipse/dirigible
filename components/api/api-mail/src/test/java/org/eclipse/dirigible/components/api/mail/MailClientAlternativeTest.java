@@ -100,7 +100,7 @@ class MailClientAlternativeTest {
 
     private static MimeMultipart content(Map... parts) throws Exception {
         List<Map> list = new ArrayList<>(List.of(parts));
-        MimeMessage message = MailClient.createMimeMessage(Session.getInstance(new Properties()), "from@example.com",
+        MimeMessage message = MailClient.createMimeMessage(Session.getInstance(new Properties()), "from@example.com", null,
                 new String[] {"to@example.com"}, new String[0], new String[0], "Hello", list);
         message.saveChanges();
         return (MimeMultipart) message.getContent();

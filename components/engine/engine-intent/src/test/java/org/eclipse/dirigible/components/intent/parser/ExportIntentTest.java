@@ -189,6 +189,43 @@ class ExportIntentTest {
         assertRefused(replace("- name: Notes", "- name: Supplier"), "shares its name with an entity, report, process or form");
     }
 
+    /** A regulator field normalised for a narrow character set (#7925). */
+    @Test
+    void aNormalisedFieldParses() {
+        IntentModel model = IntentParser.parse(replace("{ from: number }",
+                "{ from: number, case: upper, replace: { \"/\": \" \" }, allowed: \"A-Z0-9 -\", onDisallowed: strip,"
+                        + " collapseSpaces: true, onLoss: fail }"));
+
+        var field = model.getExports()
+                         .get(2)
+                         .getRecords()
+                         .get(0)
+                         .getFields()
+                         .get(0);
+        assertEquals("upper", field.getTextCase());
+        assertEquals(" ", field.getReplace()
+                               .get("/"));
+        assertEquals("strip", field.getOnDisallowed());
+    }
+
+    @Test
+    void aNormalisationThatCannotActIsRefused() {
+        assertRefused(replace("{ from: number }", "{ from: number, case: title }"), "case [title] must be upper or lower");
+        assertRefused(replace("{ from: number }", "{ from: number, allowed: \"Z-A\" }"),
+                "allows [Z-A], which runs the range Z-A backwards");
+        assertRefused(replace("{ from: number }", "{ from: number, onDisallowed: strip }"),
+                "declares onDisallowed without the allowed characters");
+        assertRefused(replace("{ from: number }", "{ from: number, allowed: \"A-Z\", onDisallowed: drop }"),
+                "onDisallowed [drop] must be strip, space or fail");
+        assertRefused(replace("{ from: number }", "{ from: number, case: upper, onLoss: fail }"),
+                "declares onLoss, but only replace or allowed can change a letter or a digit");
+        assertRefused(replace("{ from: number }", "{ from: number, allowed: \"A-Z\", onLoss: warn }"), "onLoss [warn] must be fail");
+        assertRefused(
+                replace("{ from: taxBase, width: 15, scale: 2, align: right, pad: '0' }",
+                        "{ from: taxBase, width: 15, scale: 2, align: right, pad: '0', case: upper }"),
+                "normalises its text, but it writes a number");
+    }
+
     private static String replace(String target, String replacement) {
         assertTrue(VALID.contains(target), "the fixture must contain [" + target + "]");
         return VALID.replace(target, replacement);

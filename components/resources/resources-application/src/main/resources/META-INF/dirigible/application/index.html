@@ -209,8 +209,11 @@
               </li>
             </ul>
 
-            <!-- Notifications: the bell shows the unread count; the popover lists them. -->
-            <button x-h-button x-h-popover-trigger data-variant="transparent" data-size="icon-sm" aria-label="Notifications" class="relative">
+            <!-- Notifications: the bell shows the unread count; the popover lists them.
+                 The accessible name repeats the count the badge shows: WCAG 2.5.3 wants the visible text
+                 inside the name, and axe fails the button otherwise (label-content-name-mismatch). -->
+            <button x-h-button x-h-popover-trigger data-variant="transparent" data-size="icon-sm" class="relative"
+                    :aria-label="T('application-core:shell.notifications.title', 'Notifications') + ($store.notifications.unreadCount > 0 ? ', ' + T('application-core:shell.notifications.unread', '{{count}} unread', { count: $store.notifications.unreadCount }) : '')">
               <svg role="presentation" x-h-lucide data-lucide="bell"></svg>
               <template x-if="$store.notifications.unreadCount"><span x-h-badge-indicator data-variant="negative" x-text="$store.notifications.unreadCount"></span></template>
             </button>
@@ -513,7 +516,7 @@
     <!-- Instance branding (same DIRIGIBLE_BRANDING_* env vars as the AngularJS shell): the platform
          service sets top.PlatformBranding; the adapter applies the favicon/title and exposes it as the
          Alpine `branding` store. Load the source before the adapter. -->
-    <script src="/services/js/platform-branding/branding.js" defer></script>
+    <script src="/services/platform/branding.js" defer></script>
     <script src="/services/web/application-core/shell/js/services/branding.js" defer></script>
     <script src="/services/web/application-core/shell/js/components/pages/basePage.js" defer></script>
     <script src="/services/web/application-core/shell/js/stores/notifications.js" defer></script>

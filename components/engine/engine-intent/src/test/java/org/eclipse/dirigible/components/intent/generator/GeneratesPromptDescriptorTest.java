@@ -172,7 +172,7 @@ class GeneratesPromptDescriptorTest {
                                  .size(); i++) {
             if (paths.getAllValues()
                      .get(i)
-                     .endsWith("/record-payment-generate-action.js")) {
+                     .endsWith("/record-payment-generate-action.json")) {
                 return new String(contents.getAllValues()
                                           .get(i),
                         StandardCharsets.UTF_8);

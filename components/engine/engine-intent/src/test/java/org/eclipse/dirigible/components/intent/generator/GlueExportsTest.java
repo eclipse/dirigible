@@ -146,6 +146,44 @@ class GlueExportsTest {
         assertEquals("report", parameter.get("kind"));
     }
 
+    /** A normalised field carries its normalisation in the order it applies (#7925). */
+    @Test
+    @SuppressWarnings("unchecked")
+    void aNormalisedFieldCarriesItsNormalisationAndItsExportRecordsIt() {
+        IntentModel model = IntentParser.parse(INTENT.replace("{ from: supplier.vatNumber, width: 15, truncate: true }",
+                "{ from: supplier.vatNumber, width: 15, truncate: true, replace: { \"-\": \"\", \" \": \"\" }, case: upper,"
+                        + " allowed: \"A-Z0-9\", onDisallowed: space, collapseSpaces: true, onLoss: fail }"));
+        Map<String, Object> export = GlueIntentGenerator.buildExportsForTest(model)
+                                                        .get(0);
+
+        assertEquals(Boolean.TRUE, export.get("normalises"));
+        Map<String, Object> field = ((List<Map<String, Object>>) ((List<Map<String, Object>>) export.get("lineRecords")).get(0)
+                                                                                                                        .get("fields")).get(
+                                                                                                                                0);
+        assertEquals(List.of(Map.of("target", "-", "replacement", ""), Map.of("target", " ", "replacement", "")), field.get("replace"));
+        assertEquals("upper", field.get("case"));
+        assertEquals("A-Z0-9", field.get("allowed"));
+        assertEquals("space", field.get("onDisallowed"));
+        assertEquals(Boolean.TRUE, field.get("collapseSpaces"));
+        assertEquals(Boolean.TRUE, field.get("failOnLoss"));
+    }
+
+    /** An export that normalises nothing has the glue it always had. */
+    @Test
+    @SuppressWarnings("unchecked")
+    void anExportWithoutNormalisationCarriesNoneOfItsKeys() {
+        Map<String, Object> export = GlueIntentGenerator.buildExportsForTest(IntentParser.parse(INTENT))
+                                                        .get(0);
+
+        assertFalse(export.containsKey("normalises"));
+        Map<String, Object> field = ((List<Map<String, Object>>) ((List<Map<String, Object>>) export.get("lineRecords")).get(0)
+                                                                                                                        .get("fields")).get(
+                                                                                                                                0);
+        for (String key : List.of("replace", "case", "allowed", "onDisallowed", "collapseSpaces", "failOnLoss")) {
+            assertFalse(field.containsKey(key), key);
+        }
+    }
+
     @Test
     void anOptedOutExportIsNotGenerated() {
         IntentModel model = IntentParser.parse(INTENT);

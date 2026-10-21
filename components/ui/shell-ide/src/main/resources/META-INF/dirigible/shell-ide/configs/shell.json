@@ -1,0 +1,8 @@
+{
+    "id": "shellIde",
+    "path": "/services/web/shell-ide/index.html",
+    "label": "Workbench",
+    "icon": "code",
+    "description": "The development workbench for building on the platform.",
+    "order": 40
+}

@@ -65,6 +65,14 @@ public class HttpSecurityURIConfigurator {
             "/services/js/platform-core/**", //
             "/services/js/application-core/**", //
             "/services/js/platform-branding/**", //
+            // The shell bootstrap's canonical paths - the old script URLs above answer the same. Home
+            // reads the shells before login.
+            "/services/platform/extensions/**", //
+            "/services/platform/user-name", //
+            "/services/platform/languages", //
+            "/services/platform/country", //
+            "/services/platform/clear-cache", //
+            "/services/platform/branding.js", //
             "/actuator/health/liveness", //
             "/actuator/health/readiness", //
             "/actuator/health"};

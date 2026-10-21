@@ -90,18 +90,23 @@ public class CsvProcessor {
         if (null != schema) {
             connection.setSchema(schema);
         }
+        List<ColumnMetadata> insertColumns = columnsCarriedByCsv(tableMetadata.getColumns(), headerNames);
+        if (insertColumns.isEmpty()) {
+            logger.warn("Skipping import - the header of csv file [{}] names none of the columns of table [{}].", csvFile,
+                    tableMetadata.getName());
+            return;
+        }
         logger.info("Will insert [{}] data records into table [{}] in schema [{}]", csvRecords.size(), tableMetadata.getName(), schema);
-        List<ColumnMetadata> availableTableColumns = tableMetadata.getColumns();
         InsertBuilder insertBuilder = new InsertBuilder(SqlFactory.deriveDialect(connection));
         insertBuilder.into(tableMetadata.getName());
 
-        for (ColumnMetadata columnMetadata : availableTableColumns) {
+        for (ColumnMetadata columnMetadata : insertColumns) {
             insertBuilder.column("\"" + columnMetadata.getName() + "\"")
                          .value("?");
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(insertBuilder.generate())) {
             for (CsvRecord next : csvRecords) {
-                populateInsertPreparedStatementValues(next, availableTableColumns, preparedStatement);
+                populateInsertPreparedStatementValues(next, insertColumns, preparedStatement);
                 preparedStatement.addBatch();
             }
             logger.debug("CSV records with Ids [{}] were successfully added in BATCH INSERT for table [{}].", csvRecords.stream()
@@ -152,25 +157,34 @@ public class CsvProcessor {
         if (null != schema) {
             connection.setSchema(schema);
         }
-        logger.info("Will update data into table [{}] in schema [{}]", tableMetadata.getName(), schema);
         List<ColumnMetadata> availableTableColumns = tableMetadata.getColumns();
-        UpdateBuilder updateBuilder = new UpdateBuilder(SqlFactory.deriveDialect(connection));
-        updateBuilder.table(tableMetadata.getName());
 
         // One name for both the skipped SET column and the WHERE column: the statement then always
-        // carries one placeholder per table column - N-1 SET slots plus the WHERE - which is the shape
-        // both binders rely on. Resolving them separately let a null pkName emit a SET for the key
-        // column too, so a headerless CSV produced N+1 placeholders and could never be bound.
+        // carries one placeholder per SET column plus the WHERE, which is the shape both binders rely
+        // on. Resolving them separately let a null pkName emit a SET for the key column too, so a
+        // headerless CSV produced one placeholder too many and could never be bound.
         String pkColumnName = pkName != null ? pkName
                 : availableTableColumns.get(0)
                                        .getName();
+        ColumnMetadata pkColumn = availableTableColumns.stream()
+                                                       .filter(column -> column.getName()
+                                                                               .equals(pkColumnName))
+                                                       .findFirst()
+                                                       .orElseThrow();
+        List<ColumnMetadata> setColumns = columnsCarriedByCsv(availableTableColumns, headerNames).stream()
+                                                                                                 .filter(column -> !column.getName()
+                                                                                                                          .equals(pkColumnName))
+                                                                                                 .toList();
+        if (setColumns.isEmpty()) {
+            logger.debug("Skipping update - csv file [{}] carries no column of table [{}] besides its key.", csvFile,
+                    tableMetadata.getName());
+            return;
+        }
+        logger.info("Will update data into table [{}] in schema [{}]", tableMetadata.getName(), schema);
+        UpdateBuilder updateBuilder = new UpdateBuilder(SqlFactory.deriveDialect(connection));
+        updateBuilder.table(tableMetadata.getName());
 
-        for (ColumnMetadata columnMetadata : availableTableColumns) {
-            if (columnMetadata.getName()
-                              .equals(pkColumnName)) {
-                continue;
-            }
-
+        for (ColumnMetadata columnMetadata : setColumns) {
             updateBuilder.set("\"" + columnMetadata.getName() + "\"", "?");
         }
 
@@ -178,7 +192,7 @@ public class CsvProcessor {
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(updateBuilder.generate())) {
             for (CsvRecord next : csvRecords) {
-                executeUpdatePreparedStatement(next, availableTableColumns, preparedStatement);
+                executeUpdatePreparedStatement(next, availableTableColumns, setColumns, pkColumn, preparedStatement);
                 preparedStatement.addBatch();
             }
             logger.debug("CSV records with Ids [{}] were successfully added in BATCH UPDATED for table [{}].", csvRecords.stream()
@@ -224,14 +238,16 @@ public class CsvProcessor {
      *
      * @param csvRecord the csv record
      * @param tableColumns the table columns
+     * @param setColumns the columns the statement sets, in placeholder order
+     * @param pkColumn the key column the statement's WHERE binds
      * @param statement the statement
      * @throws SQLException the SQL exception
      */
-    private void executeUpdatePreparedStatement(CsvRecord csvRecord, List<ColumnMetadata> tableColumns, PreparedStatement statement)
-            throws SQLException {
+    private void executeUpdatePreparedStatement(CsvRecord csvRecord, List<ColumnMetadata> tableColumns, List<ColumnMetadata> setColumns,
+            ColumnMetadata pkColumn, PreparedStatement statement) throws SQLException {
         if (csvRecord.getHeaderNames()
                      .size() > 0) {
-            updateCsvWithHeader(csvRecord, tableColumns, statement);
+            updateCsvWithHeader(csvRecord, setColumns, pkColumn, statement);
         } else {
             updateCsvWithoutHeader(csvRecord, tableColumns, statement);
         }
@@ -240,17 +256,35 @@ public class CsvProcessor {
     }
 
     /**
+     * The table columns a CSV writes: with a header, only the columns it names, in table order, so the
+     * database default applies to the rest on insert and an update leaves them as they are; without a
+     * header, every column, since values are matched by position.
+     *
+     * @param tableColumns the table columns
+     * @param headerNames the header names, empty for a headerless CSV
+     * @return the columns to write
+     */
+    private static List<ColumnMetadata> columnsCarriedByCsv(List<ColumnMetadata> tableColumns, List<String> headerNames) {
+        if (headerNames.isEmpty()) {
+            return tableColumns;
+        }
+        return tableColumns.stream()
+                           .filter(column -> headerNames.contains(column.getName()))
+                           .toList();
+    }
+
+    /**
      * Insert csv with header.
      *
      * @param csvRecord the csv record
-     * @param tableColumns the table columns
+     * @param insertColumns the columns the statement inserts - the table columns the header names
      * @param statement the statement
      * @throws SQLException the SQL exception
      */
-    private void insertCsvWithHeader(CsvRecord csvRecord, List<ColumnMetadata> tableColumns, PreparedStatement statement)
+    private void insertCsvWithHeader(CsvRecord csvRecord, List<ColumnMetadata> insertColumns, PreparedStatement statement)
             throws SQLException {
-        for (int i = 0; i < tableColumns.size(); i++) {
-            ColumnMetadata columnMetadata = tableColumns.get(i);
+        for (int i = 0; i < insertColumns.size(); i++) {
+            ColumnMetadata columnMetadata = insertColumns.get(i);
             String columnName = columnMetadata.getName();
             String columnType = columnMetadata.getType();
             String value = csvRecord.getCsvValueForColumn(columnName);
@@ -263,8 +297,7 @@ public class CsvProcessor {
     /**
      * Insert csv without header. Values are matched to columns by position. The statement carries one
      * placeholder per table column, so a record with fewer fields than the table has columns binds the
-     * uncovered trailing columns as null - the same outcome the header path produces for a column the
-     * CSV does not carry.
+     * uncovered trailing columns as null.
      *
      * @param csvRecord the csv record
      * @param tableColumns the table columns
@@ -287,37 +320,31 @@ public class CsvProcessor {
 
     /**
      * Update csv with header. The statement built by {@link #update} carries one SET placeholder per
-     * non-primary-key table column followed by the WHERE placeholder, so the primary key is always
-     * bound at the table's column count - never at the CSV record's field count, which is a different
-     * number whenever the CSV does not carry every column of its table.
+     * non-primary-key column the header names, followed by the WHERE placeholder, so a column the CSV
+     * does not carry keeps its stored value and the primary key is bound right after the SET columns.
      *
      * @param csvRecord the csv record
-     * @param tableColumns the table columns
+     * @param setColumns the columns the statement sets, in placeholder order
+     * @param pkColumn the key column the WHERE binds
      * @param statement the statement
      * @throws SQLException the SQL exception
      */
-    private void updateCsvWithHeader(CsvRecord csvRecord, List<ColumnMetadata> tableColumns, PreparedStatement statement)
-            throws SQLException {
-        for (int i = 1; i < tableColumns.size(); i++) {
-            String columnName = tableColumns.get(i)
-                                            .getName();
-            String value = csvRecord.getCsvValueForColumn(columnName);
-            String columnType = tableColumns.get(i)
-                                            .getType();
+    private void updateCsvWithHeader(CsvRecord csvRecord, List<ColumnMetadata> setColumns, ColumnMetadata pkColumn,
+            PreparedStatement statement) throws SQLException {
+        for (int i = 0; i < setColumns.size(); i++) {
+            ColumnMetadata column = setColumns.get(i);
+            String value = csvRecord.getCsvValueForColumn(column.getName());
 
-            setPreparedStatementValue(csvRecord.isDistinguishEmptyFromNull(), statement, i, value, columnType, csvRecord.getLocale());
+            setPreparedStatementValue(csvRecord.isDistinguishEmptyFromNull(), statement, i + 1, value, column.getType(),
+                    csvRecord.getLocale());
         }
 
-        String pkColumnType = tableColumns.get(0)
-                                          .getType();
-
-        setValue(statement, tableColumns.size(), pkColumnType, csvRecord.getCsvRecordPkValue(), csvRecord.getLocale());
+        setValue(statement, setColumns.size() + 1, pkColumn.getType(), csvRecord.getCsvRecordPkValue(), csvRecord.getLocale());
     }
 
     /**
      * Update csv without header. Values are matched to columns by position; columns the record does not
-     * reach are bound as null, mirroring the header path, and the primary key is bound at the table's
-     * column count as in {@link #updateCsvWithHeader}.
+     * reach are bound as null, and the primary key is bound at the table's column count.
      *
      * @param csvRecord the csv record
      * @param tableColumns the table columns

@@ -58,6 +58,8 @@ document.addEventListener('alpine:init', () => {
     },
 
     get tasks() { return Alpine.store('processTasks').tasks; },
+    // the size of the whole inbox, which can exceed the newest tasks listed (#7977)
+    get total() { return Math.max(Alpine.store('processTasks').total || 0, this.tasks.length); },
 
     get filtered() {
       const q = this.searchTerm.trim().toLowerCase();

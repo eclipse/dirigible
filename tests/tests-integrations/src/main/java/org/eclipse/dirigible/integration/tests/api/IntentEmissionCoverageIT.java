@@ -4191,7 +4191,7 @@ class IntentEmissionCoverageIT extends IntegrationTest {
         // point, so the shell owns the placement. A baked-in groupId would be a platform constant this
         // artifact must agree with forever - and the platform-side rename that invalidated it made every
         // personal page vanish silently (#6646).
-        assertFalse(contentOf("gen/emission/perspectives/my/Claim/perspective.js").contains("groupId"),
+        assertFalse(contentOf("gen/emission/perspectives/my/Claim/perspective.json").contains("groupId"),
                 "a personal perspective must not bake in the shell's navigation group id");
 
         // partner: the EXTERNAL-partner surface - an ADDITIONAL scoped controller (identity match +
@@ -4206,7 +4206,7 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                 "the partner perspective must register on the Partner shell's DISJOINT extension point");
         assertTrue(!partnerPerspective.contains("application-personal-perspectives"),
                 "the partner perspective must NOT register on the personal point (disjoint by construction)");
-        assertFalse(contentOf("gen/emission/perspectives/partner/PartnerTicket/perspective.js").contains("groupId"),
+        assertFalse(contentOf("gen/emission/perspectives/partner/PartnerTicket/perspective.json").contains("groupId"),
                 "a partner perspective must not bake in the shell's navigation group id (#6646)");
         String partnerList = contentOf("gen/emission/js/components/pages/partner/PartnerTicketPartnerListPage.js");
         assertTrue(partnerList.contains("PartnerTicketPartnerController"),
@@ -4282,7 +4282,7 @@ class IntentEmissionCoverageIT extends IntegrationTest {
         int escalatingGuard = escalating.indexOf("BillReminderRepository().findAll(Criteria.create()");
         int escalatingRecipient = escalating.indexOf("if (to == null || to.isBlank())");
         int escalatingUnit = escalating.indexOf("UnitOfWork.run(");
-        int escalatingSend = escalating.indexOf("mail(from, recipient, subject, parts);");
+        int escalatingSend = escalating.indexOf("mail(recipient, subject, parts);");
         int escalatingCreated = escalating.indexOf("created++;");
         assertTrue(
                 escalatingGuard > 0 && escalatingRecipient > escalatingGuard && escalatingUnit > escalatingRecipient
@@ -4688,7 +4688,7 @@ class IntentEmissionCoverageIT extends IntegrationTest {
         // server-side print renderer (never a hand-rolled payload), and the whole send must be
         // wrapped so a mail failure cannot fail the already-committed transition.
         String sendBill = contentOf("gen/events/emission/SendBillTransition.java");
-        assertTrue(sendBill.contains("Mail.send("), "a transition's notify must emit the actual send call");
+        assertTrue(sendBill.contains("Mail.sendAsApplication("), "a transition's notify must emit the actual send call");
         // #7488: the html alternative is a second text part, every interpolated value escaped - the
         // deep link included - while the authored markup stays literal.
         assertTrue(
@@ -4782,7 +4782,7 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                 "a one-hop recipient must load the related record by FK before reading the address");
         assertTrue(billSend.contains("(Person == null ? null : Person.Email)"),
                 "the recipient expression must be null-safe on an unset relation");
-        assertTrue(billSend.contains("Mail.send("), "the sender must emit the actual send call");
+        assertTrue(billSend.contains("Mail.sendAsApplication("), "the sender must emit the actual send call");
         assertTrue(billSend.contains("no recipient"), "a record with nobody to mail must be a logged no-op, not a failure");
         // attach: { report, bind } (#6931) - the report runs through its OWN generated repository,
         // which lives in the report's gen folder rather than this one, and each declared parameter is
@@ -5008,8 +5008,8 @@ class IntentEmissionCoverageIT extends IntegrationTest {
         assertTrue(adminPage.contains("App.services.apiErrors.refusalMessageFor("),
                 "the admin banner must go through the shared refusal gate, never the raw response text");
         assertFalse(adminPage.contains("String(e.message"), "the admin surface must never print the developer-facing e.message");
-        String adminPerspective = contentOf("gen/emission/perspectives/admin/perspective.js");
-        assertTrue(adminPerspective.contains("kind: 'ADMIN'"), "the admin perspective must declare the ADMIN kind");
+        String adminPerspective = contentOf("gen/emission/perspectives/admin/perspective.json");
+        assertTrue(adminPerspective.contains("\"kind\": \"ADMIN\""), "the admin perspective must declare the ADMIN kind");
         assertFalse(adminPerspective.contains("groupId"), "an admin perspective must not bake in the shell's navigation group id (#6646)");
         assertTrue(contentOf("gen/emission/perspectives/admin/perspective.extension").contains("application-admin-perspectives"),
                 "the admin perspective must register on the admin extension point (never the application/my/partner ones)");
@@ -5149,7 +5149,7 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                 "a missing required prompt input must answer 400 before anything is written");
         assertTrue(promptedGenerate.contains("new java.math.BigDecimal(String.valueOf(raw))"),
                 "a decimal prompt input must convert to the generated entity's BigDecimal field");
-        String promptedDescriptor = contentOf("add-voucher-line-generate-action.js");
+        String promptedDescriptor = contentOf("add-voucher-line-generate-action.json");
         assertTrue(promptedDescriptor.contains("\"prompt\"") && promptedDescriptor.contains("\"promptEntity\": \"VoucherLine\""),
                 "the action descriptor must carry the prompt and the target entity for the dialog's metadata lookup");
         assertTrue(promptedDescriptor.contains("\"name\": \"Amount\""),

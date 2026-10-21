@@ -11,6 +11,7 @@ package org.eclipse.dirigible.components.engine.bpm.flowable.config;
 
 import java.util.List;
 
+import org.eclipse.dirigible.commons.api.helpers.LogSanitizer;
 import org.eclipse.dirigible.components.base.tenant.TenantTeardownParticipant;
 import org.flowable.engine.HistoryService;
 import org.flowable.engine.ProcessEngine;
@@ -74,6 +75,6 @@ class BpmTenantTeardown implements TenantTeardownParticipant {
             history.deleteHistoricProcessInstance(instance.getId());
         }
         LOGGER.info("Cancelled [{}] running process instance(s) and deleted [{}] historic one(s) of tenant [{}].", running.size(),
-                finished.size(), tenantId);
+                finished.size(), LogSanitizer.sanitize(tenantId));
     }
 }

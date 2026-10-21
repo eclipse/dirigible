@@ -605,6 +605,48 @@ class GlueGeneratorTest {
         assertThat(bound.get("valueExpression")).isEqualTo("row.get(\"Sum Tax Base\")");
     }
 
+    /**
+     * A field's text normalisation (#7925) is bound as its chain, in the order the field applies it.
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    void anExportFieldsNormalisationIsBoundInItsOrder() throws IOException {
+        Map<String, Object> field = new LinkedHashMap<>();
+        field.put("name", "Name");
+        field.put("replace", List.of(Map.of("target", "\u2116", "replacement", ""), Map.of("target", "/", "replacement", " ")));
+        field.put("case", "upper");
+        field.put("allowed", "A-Z0-9 \\-");
+        field.put("onDisallowed", "strip");
+        field.put("collapseSpaces", Boolean.TRUE);
+        field.put("failOnLoss", Boolean.TRUE);
+        field.put("reading", Map.of("kind", "read", "owner", "row", "property", "Name"));
+        Map<String, Object> line = new LinkedHashMap<>();
+        line.put("constant", "LINE_0");
+        line.put("element", "line");
+        line.put("fields", List.of(field));
+        Map<String, Object> export = new LinkedHashMap<>();
+        export.put("name", "Declaration");
+        export.put("className", "Declaration");
+        export.put("format", "delimited");
+        export.put("ledger", "DeclarationRun");
+        export.put("ledgerPerspective", "DeclarationRun");
+        export.put("sourceKind", "entity");
+        export.put("entity", "Employee");
+        export.put("perspective", "Employee");
+        export.put("normalises", Boolean.TRUE);
+        export.put("lineRecords", List.of(line));
+        export.put("fileNameReading", Map.of("kind", "string", "text", "d.csv"));
+
+        Map<String, Object> context = boundArrival("exports", export);
+
+        assertThat(context).containsEntry("normalises", Boolean.TRUE);
+        Map<String, Object> bound =
+                (Map<String, Object>) ((List<Object>) ((Map<String, Object>) ((List<Object>) context.get("lineRecords")).get(0)).get(
+                        "fields")).get(0);
+        assertThat(bound.get("specExpression")).isEqualTo("ExportField.named(\"Name\").replace(\"\u2116\", \"\").replace(\"/\", \" \")"
+                + ".upperCase().allowed(\"A-Z0-9 \\\\-\").stripDisallowed().collapseSpaces().failOnLoss()");
+    }
+
     /** A descriptor without collections - or one from before them - binds them empty. */
     @Test
     void anArrivalWithoutCollectionsBindsThemEmpty() throws IOException {

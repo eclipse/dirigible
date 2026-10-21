@@ -29,13 +29,29 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardOpenOption;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
 
+/**
+ * Runs {@code tsc --watch} over the registry, which transpiles every published TypeScript source to
+ * the JavaScript the engine executes.
+ * <p>
+ * The watcher runs only while the registry holds a source tsc compiles (#8004): a Node process that
+ * watches nothing but the platform's own typings costs a Java-only instance ~150 MiB of memory
+ * outside the JVM. Whether one is needed is decided at startup, after every project publish, and on
+ * every {@link #monitorTscProcess() monitor} run while the watcher is stopped - the last one picks
+ * up sources that reach the registry without a publish, such as content copied in by the first
+ * synchronization after this listener ran.
+ */
 @Order(ApplicationListenersOrder.ApplicationReadyEventListeners.TYPE_SCRIPT_TRANSPILATION_SERVICE)
 @Component
 @ConditionalOnExpression("'${DIRIGIBLE_TSC_WATCH_SERVICE_ENABLED:true}'.toLowerCase() != 'false'")
@@ -90,6 +106,19 @@ public class TscWatcherService implements ApplicationListener<ApplicationReadyEv
                 "exclude": ["modules", "modules-tests"]
             }
             """;
+
+    /** The top-level registry folders the tsconfig above excludes - the prebuilt SDK and its tests. */
+    private static final Set<String> EXCLUDED_REGISTRY_FOLDERS = Set.of("modules", "modules-tests");
+
+    /** Folders tsc never includes through a wildcard, at any depth. */
+    private static final String NODE_MODULES_FOLDER = "node_modules";
+
+    /** The extensions tsc compiles to JavaScript. */
+    private static final List<String> SOURCE_EXTENSIONS = List.of(".ts", ".tsx", ".mts", ".cts");
+
+    /** Declaration files: tsc reads them, but they produce no JavaScript. */
+    private static final List<String> DECLARATION_EXTENSIONS = List.of(".d.ts", ".d.mts", ".d.cts");
+
     private final IRepository repository;
     private ExecutorService executor;
     private Process tscProcess;
@@ -104,21 +133,111 @@ public class TscWatcherService implements ApplicationListener<ApplicationReadyEv
     }
 
     /**
-     * Checks every 30 seconds if the tsc process is alive. If not, restarts it.
+     * Checks every 30 seconds if the tsc process is alive. If not, restarts it - which starts it only
+     * when the registry holds TypeScript sources.
      */
     @Scheduled(initialDelay = 30_000, fixedDelay = 30_000)
-    public void monitorTscProcess() {
-        if (tscProcess == null || !tscProcess.isAlive()) {
-            LOGGER.warn("tsc watch service is not initialized or it is not alive. Will start it again.");
-            restart();
+    public synchronized void monitorTscProcess() {
+        if (isRunning()) {
+            return;
+        }
+        if (tscProcess != null) {
+            LOGGER.warn("tsc watch process is not alive. Will start it again.");
+        }
+        restart();
+    }
+
+    /**
+     * Stops the watcher and starts it again when the registry holds TypeScript sources, so that it
+     * transpiles the current registry content from scratch.
+     */
+    public synchronized void restart() {
+        destroy();
+        startIfTypeScriptSourcesExist();
+    }
+
+    synchronized boolean isRunning() {
+        return tscProcess != null && tscProcess.isAlive();
+    }
+
+    private void startIfTypeScriptSourcesExist() {
+        Path registryFolderPath = getRegistryFolderPath();
+        if (containsTypeScriptSources(registryFolderPath)) {
+            LOGGER.info("Found TypeScript sources in [{}] - starting {}...", registryFolderPath, this);
+            start();
+        } else {
+            LOGGER.debug("No TypeScript sources in [{}] - the tsc watch stays stopped", registryFolderPath);
         }
     }
 
-    public synchronized void restart() {
-        LOGGER.info("Restarting {}...", this);
-        destroy();
+    /**
+     * Tells whether the registry holds a file the watcher's tsconfig would compile: a TypeScript
+     * source, not a declaration file, outside the excluded top-level folders, {@code node_modules} and
+     * the hidden folders and files a tsc wildcard never matches.
+     *
+     * @param registryFolder the registry folder
+     * @return true if tsc has something to transpile there
+     */
+    static boolean containsTypeScriptSources(Path registryFolder) {
+        if (!Files.isDirectory(registryFolder)) {
+            return false;
+        }
+        TypeScriptSourceFinder finder = new TypeScriptSourceFinder(registryFolder);
+        try {
+            Files.walkFileTree(registryFolder, finder);
+        } catch (IOException ex) {
+            throw new IllegalStateException("Failed to look for TypeScript sources in [" + registryFolder + "]", ex);
+        }
+        return finder.found;
+    }
 
-        start();
+    private static boolean isTypeScriptSource(String fileName) {
+        return !fileName.startsWith(".") && SOURCE_EXTENSIONS.stream()
+                                                             .anyMatch(fileName::endsWith)
+                && DECLARATION_EXTENSIONS.stream()
+                                         .noneMatch(fileName::endsWith);
+    }
+
+    /**
+     * Walks the registry until the first TypeScript source, skipping what the tsconfig never includes.
+     */
+    private static final class TypeScriptSourceFinder extends SimpleFileVisitor<Path> {
+
+        private final Path registryFolder;
+        private boolean found;
+
+        private TypeScriptSourceFinder(Path registryFolder) {
+            this.registryFolder = registryFolder;
+        }
+
+        @Override
+        public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
+            if (dir.equals(registryFolder)) {
+                return FileVisitResult.CONTINUE;
+            }
+            String name = dir.getFileName()
+                             .toString();
+            boolean excludedTopLevel = registryFolder.equals(dir.getParent()) && EXCLUDED_REGISTRY_FOLDERS.contains(name);
+            boolean neverIncluded = name.startsWith(".") || NODE_MODULES_FOLDER.equals(name);
+            return excludedTopLevel || neverIncluded ? FileVisitResult.SKIP_SUBTREE : FileVisitResult.CONTINUE;
+        }
+
+        @Override
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+            if (isTypeScriptSource(file.getFileName()
+                                       .toString())) {
+                found = true;
+                return FileVisitResult.TERMINATE;
+            }
+            return FileVisitResult.CONTINUE;
+        }
+
+        @Override
+        public FileVisitResult visitFileFailed(Path file, IOException ex) {
+            // a file removed while the registry is being walked - a concurrent publish or cleanup
+            LOGGER.debug("Skipping [{}] while looking for TypeScript sources", file, ex);
+            return FileVisitResult.CONTINUE;
+        }
     }
 
     private synchronized void start() {
@@ -248,7 +367,10 @@ public class TscWatcherService implements ApplicationListener<ApplicationReadyEv
     }
 
     @Override
-    public void destroy() {
+    public synchronized void destroy() {
+        if (tscProcess == null && executor == null) {
+            return; // never started, or already stopped
+        }
         LOGGER.info("Destroying tsc watch service...");
         if (tscProcess != null) {
             if (tscProcess.isAlive()) {
@@ -270,7 +392,7 @@ public class TscWatcherService implements ApplicationListener<ApplicationReadyEv
     }
 
     @Override
-    public void onApplicationEvent(ApplicationReadyEvent event) {
-        start();
+    public synchronized void onApplicationEvent(ApplicationReadyEvent event) {
+        startIfTypeScriptSourcesExist();
     }
 }
