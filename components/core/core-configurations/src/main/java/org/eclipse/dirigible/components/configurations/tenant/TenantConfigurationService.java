@@ -240,6 +240,17 @@ public class TenantConfigurationService implements TenantConfigurationScope {
     }
 
     /**
+     * Checks whether a key is a tenant setting - one the key policy lets a tenant override - as opposed
+     * to an instance-wide key, which is stored but never injected.
+     *
+     * @param key the configuration key
+     * @return true if the tenant may override the key
+     */
+    public boolean isTenantOverridable(String key) {
+        return keyPolicy.isInjectable(key);
+    }
+
+    /**
      * Inserts or updates a configuration entry of the current tenant.
      *
      * @param key the configuration key

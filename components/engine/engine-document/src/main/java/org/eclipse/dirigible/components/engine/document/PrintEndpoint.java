@@ -16,6 +16,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.eclipse.dirigible.components.base.endpoint.BaseEndpoint;
+import org.eclipse.dirigible.components.base.http.roles.ApplicationRoles;
 import org.eclipse.dirigible.components.base.http.roles.Roles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +54,8 @@ import jakarta.servlet.http.HttpServletRequest;
  * PDF.</li>
  * <li>{@code /services/print/{entity}/templates...} — the entity's template catalogue: list, read,
  * write, duplicate and delete (see {@link PrintTemplateCatalog}). Reading a source and changing the
- * catalogue is an administrator's task, and the CMS access grants of the template's path apply on
+ * catalogue is a task for the tenant's {@link ApplicationRoles#OWNER} or platform staff - the
+ * catalogue is the current tenant's own - and the CMS access grants of the template's path apply on
  * top, as they do in the Documents perspective; which template is active is a tenant configuration,
  * written through {@code PUT /services/core/configurations/tenant}, not here.</li>
  * </ul>
@@ -179,7 +181,7 @@ class PrintEndpoint extends BaseEndpoint {
      * @return the source as plain text
      */
     @GetMapping(value = "/{entity}/templates/{name}", produces = MediaType.TEXT_PLAIN_VALUE)
-    @RolesAllowed({Roles.RoleNames.ADMINISTRATOR, Roles.RoleNames.OPERATOR})
+    @RolesAllowed({ApplicationRoles.OWNER, Roles.RoleNames.ADMINISTRATOR, Roles.RoleNames.OPERATOR})
     ResponseEntity<String> readTemplate(@PathVariable("entity") String entity, @PathVariable("name") String name,
             @RequestParam(name = "lang", defaultValue = DEFAULT_LANGUAGE) String language, HttpServletRequest request) {
         try {
@@ -203,7 +205,7 @@ class PrintEndpoint extends BaseEndpoint {
      * @return an empty 204 response
      */
     @PutMapping(value = "/{entity}/templates/{name}", consumes = MediaType.TEXT_PLAIN_VALUE)
-    @RolesAllowed({Roles.RoleNames.ADMINISTRATOR, Roles.RoleNames.OPERATOR})
+    @RolesAllowed({ApplicationRoles.OWNER, Roles.RoleNames.ADMINISTRATOR, Roles.RoleNames.OPERATOR})
     ResponseEntity<Void> writeTemplate(@PathVariable("entity") String entity, @PathVariable("name") String name,
             @RequestParam(name = "lang", defaultValue = DEFAULT_LANGUAGE) String language, @RequestBody(required = false) String source,
             HttpServletRequest request) {
@@ -229,7 +231,7 @@ class PrintEndpoint extends BaseEndpoint {
      * @return 201 with {@code {"name": "<target>"}}
      */
     @PostMapping(value = "/{entity}/templates/{name}/duplicate", produces = MediaType.APPLICATION_JSON_VALUE)
-    @RolesAllowed({Roles.RoleNames.ADMINISTRATOR, Roles.RoleNames.OPERATOR})
+    @RolesAllowed({ApplicationRoles.OWNER, Roles.RoleNames.ADMINISTRATOR, Roles.RoleNames.OPERATOR})
     ResponseEntity<Map<String, String>> duplicateTemplate(@PathVariable("entity") String entity, @PathVariable("name") String name,
             @RequestParam(name = "lang", defaultValue = DEFAULT_LANGUAGE) String language, @RequestParam("as") String target,
             HttpServletRequest request) {
@@ -254,7 +256,7 @@ class PrintEndpoint extends BaseEndpoint {
      * @return an empty 204 response
      */
     @DeleteMapping(value = "/{entity}/templates/{name}")
-    @RolesAllowed({Roles.RoleNames.ADMINISTRATOR, Roles.RoleNames.OPERATOR})
+    @RolesAllowed({ApplicationRoles.OWNER, Roles.RoleNames.ADMINISTRATOR, Roles.RoleNames.OPERATOR})
     ResponseEntity<Void> deleteTemplate(@PathVariable("entity") String entity, @PathVariable("name") String name,
             @RequestParam(name = "lang", defaultValue = DEFAULT_LANGUAGE) String language, HttpServletRequest request) {
         try {
