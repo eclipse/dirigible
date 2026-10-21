@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
  * Materializes the <b>client half</b> of each {@code transitions} declaration (the guarded
  * on-demand status flip): a contribution to the app's {@code <project>-custom-action} extension
  * point - one {@code <name>-transition-action.extension} plus one
- * {@code <name>-transition-action.js} (the action descriptor). Like a
+ * {@code <name>-transition-action.json} (the action descriptor). Like a
  * {@link org.eclipse.dirigible.components.intent.model.GeneratesIntent generates} action the
  * descriptor carries an {@code endpoint}: the shared {@code customActions} store POSTs the selected
  * record's id to it and toasts the result. A transition declaring a {@code notify:} block
@@ -79,9 +79,9 @@ public class TransitionsIntentGenerator implements IntentTargetGenerator {
                 continue;
             }
             String fileBase = name + "-transition-action";
-            String modulePath = project + "/" + fileBase + ".js";
+            String modulePath = project + "/" + fileBase + ".json";
             context.writeModelFile(fileBase + ".extension", buildExtensionJson(project, modulePath, t));
-            context.writeModelFile(fileBase + ".js", buildDescriptorModule(project, IntentNaming.javaModule(context), t,
+            context.writeModelFile(fileBase + ".json", buildDescriptorModule(project, IntentNaming.javaModule(context), t,
                     IntentNaming.customActionTranslationKey(project, context, name), statusProperty(model, t.getForEntity())));
         }
     }
@@ -156,8 +156,8 @@ public class TransitionsIntentGenerator implements IntentTargetGenerator {
         if (t.getOrder() != null) {
             view.put("order", t.getOrder());
         }
-        // A CommonJS module exporting getView() - the shape the extension-services endpoint loads.
-        return "const viewData = " + JsonHelper.toJson(view) + ";\n" + "if (typeof exports !== 'undefined') {\n"
-                + "    exports.getView = () => viewData;\n" + "}\n";
+        // A JSON extension module: the view object itself, read by the views aggregation without a script
+        // engine.
+        return JsonHelper.toJson(view);
     }
 }

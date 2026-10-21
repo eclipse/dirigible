@@ -208,7 +208,7 @@ class IntentRecordPaymentFromInvoiceIT extends IntegrationTest {
                           .getContent(),
                 StandardCharsets.UTF_8);
         assertTrue(register.contains("entity: 'Payment', creatable: false"), register);
-        String descriptor = new String(repository.getResource(PROJECT_PATH + "/record-payment-generate-action.js")
+        String descriptor = new String(repository.getResource(PROJECT_PATH + "/record-payment-generate-action.json")
                                                  .getContent(),
                 StandardCharsets.UTF_8);
         assertTrue(descriptor.contains("\"default\": \"Balance\"") && descriptor.contains("\"promptColumns\""), descriptor);

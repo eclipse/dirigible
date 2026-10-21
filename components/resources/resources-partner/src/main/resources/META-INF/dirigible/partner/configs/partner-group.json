@@ -1,0 +1,10 @@
+{
+    "id": "partner",
+    "label": "Partner",
+    "translation": {
+        "key": "application-core:shell.nav.partner"
+    },
+    "order": 10,
+    "isDefault": true,
+    "items": []
+}

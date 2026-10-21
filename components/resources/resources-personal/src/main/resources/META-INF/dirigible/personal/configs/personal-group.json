@@ -1,0 +1,10 @@
+{
+    "id": "personal",
+    "label": "Personal",
+    "translation": {
+        "key": "application-core:shell.nav.personal"
+    },
+    "order": 10,
+    "isDefault": true,
+    "items": []
+}

@@ -1,0 +1,11 @@
+{
+    "id": "undefined-group",
+    "label": "Unknown",
+    "translation": {
+        "key": "unknown"
+    },
+    "expanded": false,
+    "order": 9999,
+    "icon": "/services/web/resources/images/unknown.svg",
+    "items": []
+}

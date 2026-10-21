@@ -1,0 +1,11 @@
+{
+    "id": "${projectName}-my-${name}",
+    "label": "My ${menuLabelJson}",
+    "tkey": "${projectName}:${tprefix}.t.${dataName}_plural",
+    "path": "/services/web/${projectName}/gen/${genFolderName}/index.html?embedded=true#/my/${name}",
+    "kind": "PERSONAL",
+#if($perspectiveOrder)
+    "order": ${perspectiveOrder},
+#end
+    "icon": "${iconName}"
+}

@@ -26,12 +26,12 @@ import org.springframework.stereotype.Component;
 /**
  * Materializes each {@code actions} entry into a contribution to the app's
  * {@code <project>-custom-action} extension point - one {@code <name>-action.extension}
- * (registering the point + module) plus one {@code <name>-action.js} (a module exporting
- * {@code getView()} with the action descriptor). The generated Harmonia views load that point
- * through the shared {@code customActions} store (see the Harmonia UI templates) and render the
- * button on the entity named by {@code forEntity}, opening the declared {@code page} in the
- * app-wide dialog. Declaring an action in intent therefore needs no hand-written
- * {@code .extension}/{@code .js}; external projects may still contribute to the same point.
+ * (registering the point + module) plus one {@code <name>-action.json} (a JSON extension module
+ * holding the action descriptor). The generated Harmonia views load that point through the shared
+ * {@code customActions} store (see the Harmonia UI templates) and render the button on the entity
+ * named by {@code forEntity}, opening the declared {@code page} in the app-wide dialog. Declaring
+ * an action in intent therefore needs no hand-written {@code .extension}/{@code .json}; external
+ * projects may still contribute to the same point.
  *
  * <p>
  * Idempotent: identical input always produces byte-identical output. The {@code .extension} files
@@ -65,9 +65,9 @@ public class ActionIntentGenerator implements IntentTargetGenerator {
                 continue;
             }
             String fileBase = name + "-action";
-            String modulePath = project + "/" + fileBase + ".js";
+            String modulePath = project + "/" + fileBase + ".json";
             context.writeModelFile(fileBase + ".extension", buildExtensionJson(project, modulePath, action));
-            context.writeModelFile(fileBase + ".js", buildDescriptorModule(project, action));
+            context.writeModelFile(fileBase + ".json", buildDescriptorModule(project, action));
         }
     }
 
@@ -95,8 +95,8 @@ public class ActionIntentGenerator implements IntentTargetGenerator {
         if (action.getOrder() != null) {
             view.put("order", action.getOrder());
         }
-        // A CommonJS module exporting getView() - the shape the extension-services endpoint loads.
-        return "const viewData = " + JsonHelper.toJson(view) + ";\n" + "if (typeof exports !== 'undefined') {\n"
-                + "    exports.getView = () => viewData;\n" + "}\n";
+        // A JSON extension module: the view object itself, read by the views aggregation without a script
+        // engine.
+        return JsonHelper.toJson(view);
     }
 }

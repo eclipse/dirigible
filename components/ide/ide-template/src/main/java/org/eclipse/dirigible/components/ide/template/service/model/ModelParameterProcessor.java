@@ -115,6 +115,11 @@ final class ModelParameterProcessor {
     private static void processEntity(Map<String, Object> entity, List<Map<String, Object>> entities, Map<String, Object> parameters) {
         resolveDataSource(entity, parameters);
         entity.put("javaPerspectiveName", NamingHelper.sanitizeJavaIdentifier(str(entity, "perspectiveName")));
+        // The perspective descriptors are JSON documents, so the label is written into a JSON string.
+        String menuLabel = str(entity, "menuLabel");
+        if (menuLabel != null) {
+            entity.put("menuLabelJson", JsonLiterals.escape(menuLabel));
+        }
         String tablePrefix = resolveTablePrefix(parameters);
         if (entity.get("dataCount") != null) {
             entity.put("dataCount", str(entity, "dataCount").replace("${tablePrefix}", tablePrefix));

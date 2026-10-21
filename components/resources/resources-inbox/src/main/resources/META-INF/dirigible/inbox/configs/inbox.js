@@ -9,6 +9,7 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
+// The page's own global. The extension registry reads the same entry from inbox.json beside this file - keep the two in step.
 const perspectiveData = {
 	id: 'processInbox',
 	label: 'Process Inbox',
@@ -20,6 +21,3 @@ const perspectiveData = {
 	lazyLoad: true,
 	icon: '/services/web/inbox/images/inbox.svg',
 };
-if (typeof exports !== 'undefined') {
-	exports.getPerspective = () => perspectiveData;
-}

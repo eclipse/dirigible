@@ -1,0 +1,8 @@
+{
+    "id": "partnerShell",
+    "path": "/services/web/partner/index.html",
+    "label": "Partner",
+    "icon": "handshake",
+    "description": "The portal for external partners.",
+    "order": 30
+}

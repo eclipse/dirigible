@@ -1,5 +1,5 @@
 {
-    "module": "partner/configs/partner-group.js",
+    "module": "partner/configs/partner-group.json",
     "extensionPoint": "application-partner-perspectives",
     "description": "Partner Shell - the 'partner' navigation group"
 }

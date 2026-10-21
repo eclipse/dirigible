@@ -1,5 +1,5 @@
 {
-    "module": "documents/configs/documents.js",
+    "module": "documents/configs/documents.json",
     "extensionPoint": "application-perspectives",
     "description": "Dashboard documents perspective"
 }

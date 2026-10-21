@@ -1,0 +1,8 @@
+{
+    "id": "personalShell",
+    "path": "/services/web/personal/index.html",
+    "label": "Personal",
+    "icon": "inbox",
+    "description": "Your tasks and your records - the personal workspace.",
+    "order": 20
+}
