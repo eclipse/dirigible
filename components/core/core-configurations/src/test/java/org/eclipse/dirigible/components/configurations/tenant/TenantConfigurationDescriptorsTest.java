@@ -72,9 +72,9 @@ class TenantConfigurationDescriptorsTest {
     @Test
     void descriptorsGroupTheOverridableKeysWithThePlatformValue() throws Exception {
         List<TenantConfigurationGroup> groups = service.describeForCurrentTenant(null);
-        assertEquals(List.of("instance", "branding", "locale", "documents"), groups.stream()
-                                                                                   .map(TenantConfigurationGroup::group)
-                                                                                   .toList());
+        assertEquals(List.of("instance", "branding", "locale", "documents", "mail"), groups.stream()
+                                                                                           .map(TenantConfigurationGroup::group)
+                                                                                           .toList());
         TenantConfigurationDescriptor name = groups.get(1)
                                                    .entries()
                                                    .get(0);

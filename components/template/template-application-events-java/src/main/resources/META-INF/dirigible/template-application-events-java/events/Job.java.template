@@ -40,8 +40,8 @@ import gen.${attachLanguageJavaGenFolder}.data.${attachLanguageJavaTargetPerspec
  * numbering / status init / calculated fields fire), or BOTH - a tick that records what it sent.
  *
  * Generated from the intent schedules block - do not edit; it is re-generated with the application.
- * Entity access goes ONLY through the generated repositories. The mail sender comes from the
- * DIRIGIBLE_MAIL_SENDER configuration.
+ * Entity access goes ONLY through the generated repositories. The mail sender and reply-to come from
+ * the tenant's DIRIGIBLE_MAIL_SENDER / DIRIGIBLE_MAIL_REPLY_TO.
  */
 @Component("${javaGenFolderName}_${className}Job")
 public class ${className}Job implements JobHandler {
@@ -293,7 +293,6 @@ public class ${className}Job implements JobHandler {
                         org.eclipse.dirigible.sdk.utils.Json.stringify(reportData)));
                 parts.add(document);
 #end
-                String from = Configurations.get("DIRIGIBLE_MAIL_SENDER", "noreply@dirigible.io");
 #end
 #if($generates)
                 org.eclipse.dirigible.components.data.store.java.repository.UnitOfWork.run(() -> {
@@ -373,9 +372,9 @@ public class ${className}Job implements JobHandler {
                     // unsent row and completes it. The remaining window is a commit that fails AFTER a
                     // successful send, which costs a duplicate message rather than a lost one.
 #if($notifyCopies)
-                    mail(from, recipients(recipient), recipients(cc), recipients(bcc), subject, parts);
+                    mail(recipients(recipient), recipients(cc), recipients(bcc), subject, parts);
 #else
-                    mail(from, recipient, subject, parts);
+                    mail(recipient, subject, parts);
 #end
 #end
                 });
@@ -383,9 +382,9 @@ public class ${className}Job implements JobHandler {
 #end
 #if($notifies && !$generates)
 #if($notifyCopies)
-                Mail.send(from, recipients(recipient), recipients(cc), recipients(bcc), subject, parts);
+                Mail.sendAsApplication(recipients(recipient), recipients(cc), recipients(bcc), subject, parts);
 #else
-                Mail.send(from, new String[] {recipient}, new String[0], new String[0], subject, parts);
+                Mail.sendAsApplication(new String[] {recipient}, new String[0], new String[0], subject, parts);
 #end
                 sent++;
 #end
@@ -464,11 +463,11 @@ public class ${className}Job implements JobHandler {
      * A send is the last act of the unit that wrote the record the message is about (#7365), so a
      * delivery that fails has to travel out of the lambda and roll that record back - otherwise the
      * record survives, the `unique:` guard reads it as "already sent" on the next tick, and the message
-     * is lost for good. {@code Mail.send} throws a checked exception, which a {@code Runnable} cannot,
-     * so it is rethrown unchecked - carrying the original message, because the outcome stamp and the
-     * row's failure line both report it, and the cause, because the log records the stack.
+     * is lost for good. {@code Mail.sendAsApplication} throws a checked exception, which a
+     * {@code Runnable} cannot, so it is rethrown unchecked - carrying the original message, because the
+     * outcome stamp and the row's failure line both report it, and the cause, because the log records
+     * the stack.
      *
-     * @param from the configured sender
 #if($notifyCopies)
      * @param to the resolved recipients
      * @param cc the resolved copy recipients
@@ -476,17 +475,17 @@ public class ${className}Job implements JobHandler {
      * @param subject the rendered subject
      * @param parts the rendered body and any attachment
      */
-    private static void mail(String from, String[] to, String[] cc, String[] bcc, String subject, List<Map> parts) {
+    private static void mail(String[] to, String[] cc, String[] bcc, String subject, List<Map> parts) {
         try {
-            Mail.send(from, to, cc, bcc, subject, parts);
+            Mail.sendAsApplication(to, cc, bcc, subject, parts);
 #else
      * @param to the resolved recipient
      * @param subject the rendered subject
      * @param parts the rendered body and any attachment
      */
-    private static void mail(String from, String to, String subject, List<Map> parts) {
+    private static void mail(String to, String subject, List<Map> parts) {
         try {
-            Mail.send(from, new String[] {to}, new String[0], new String[0], subject, parts);
+            Mail.sendAsApplication(new String[] {to}, new String[0], new String[0], subject, parts);
 #end
         } catch (Exception ex) {
             String reason = ex.getMessage() == null || ex.getMessage()

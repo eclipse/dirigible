@@ -135,6 +135,20 @@ public enum DirigibleConfig {
 
     MAIL_SMTP_PORT("DIRIGIBLE_MAIL_SMTP_PORT", null), MAIL_SMTP_AUTH("DIRIGIBLE_MAIL_SMTP_AUTH", null), //
 
+    /**
+     * The From address of the mail an application sends on its own behalf (a generated
+     * {@code notify:}), optionally with a display name ({@code Acme Billing <billing@acme.com>}). Per
+     * tenant, so each tenant's documents are sent in its own name; the SMTP account stays the
+     * instance's, which has to be allowed to send as that address.
+     */
+    MAIL_SENDER("DIRIGIBLE_MAIL_SENDER", "noreply@dirigible.io", meta().tenant(13)), //
+
+    /**
+     * The Reply-To address of the mail an application sends on its own behalf, blank for none. Per
+     * tenant, so a reply reaches the tenant's company rather than the operator of the instance.
+     */
+    MAIL_REPLY_TO("DIRIGIBLE_MAIL_REPLY_TO", "", meta().tenant(14)), //
+
     SNOWFLAKE_DATA_SOURCE_LIFESPAN_SECONDS("DIRIGIBLE_SNOWFLAKE_DATA_SOURCE_LIFESPAN_SECONDS", "540"), // 9 minutes
 
     /**

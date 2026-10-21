@@ -11,7 +11,9 @@ package org.eclipse.dirigible.components.jobs.handler;
 
 import java.util.Map;
 
+import org.eclipse.dirigible.components.base.callable.CallableResultAndException;
 import org.eclipse.dirigible.components.base.tenant.Tenant;
+import org.eclipse.dirigible.components.base.tenant.TenantConfigurationScope;
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.tracing.TaskState;
 import org.eclipse.dirigible.components.tracing.TaskStateUtil;
@@ -21,6 +23,7 @@ import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -38,6 +41,10 @@ public class JobHandler implements Job {
     /** The tenant context. */
     @Autowired
     private TenantContext tenantContext;
+
+    /** The tenant configuration overrides - there wherever the tenant configuration module is. */
+    @Autowired
+    private ObjectProvider<TenantConfigurationScope> tenantConfigurationScope;
 
     /**
      * Execute.
@@ -70,10 +77,12 @@ public class JobHandler implements Job {
 
         }
         try {
-            tenantContext.execute(tenant, () -> {
+            // A fire is not a request: the tenant's configuration overrides (the sender of a job's
+            // notify mail, the base URL of its links) are loaded here, or the job reads the instance's.
+            tenantContext.execute(tenant, () -> withTenantOverrides(() -> {
                 jobExecutionService.executeJob(context);
                 return null;
-            });
+            }));
 
             if (TracingFacade.isTracingEnabled()) {
                 Map<String, String> output = TaskStateUtil.getVariables(context.getMergedJobDataMap()
@@ -88,6 +97,11 @@ public class JobHandler implements Job {
             }
             throw new JobExecutionException("Failed to execute job with details " + context.getJobDetail(), ex);
         }
+    }
+
+    private <Result, Exc extends Throwable> Result withTenantOverrides(CallableResultAndException<Result, Exc> work) throws Exc {
+        TenantConfigurationScope scope = tenantConfigurationScope.getIfAvailable();
+        return scope == null ? work.call() : scope.executeWithTenantOverrides(work);
     }
 
 }

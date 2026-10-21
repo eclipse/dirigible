@@ -13,6 +13,7 @@ import jakarta.mail.MessagingException;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.eclipse.dirigible.components.api.mail.MailClient;
 import org.eclipse.dirigible.components.api.mail.MailFacade;
 
@@ -40,5 +41,24 @@ public final class Mail {
 
     public static Map send(String from, String[] to, String[] cc, String[] bcc, String subject, List<Map> parts) throws MessagingException {
         return getInstance().send(from, to, cc, bcc, subject, parts);
+    }
+
+    /**
+     * Sends a message in the application's own name - what a generated {@code notify:} sends: From is
+     * {@code DIRIGIBLE_MAIL_SENDER} and Reply-To is {@code DIRIGIBLE_MAIL_REPLY_TO} when set. Both are
+     * tenant-overridable and read on every call, so the message goes out in the name of the tenant the
+     * caller runs for.
+     *
+     * @param to the recipients
+     * @param cc the copy recipients, {@code null} for none
+     * @param bcc the blind-copy recipients, {@code null} for none
+     * @param subject the subject
+     * @param parts the MIME bodies, as for {@link #send}
+     * @return the message id and the server's final reply
+     * @throws MessagingException if the message cannot be sent
+     */
+    public static Map sendAsApplication(String[] to, String[] cc, String[] bcc, String subject, List<Map> parts) throws MessagingException {
+        return getInstance().send(DirigibleConfig.MAIL_SENDER.getStringValue(), DirigibleConfig.MAIL_REPLY_TO.getStringValue(), to, cc, bcc,
+                subject, parts);
     }
 }

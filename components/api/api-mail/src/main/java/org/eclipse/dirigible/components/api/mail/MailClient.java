@@ -66,6 +66,25 @@ public class MailClient {
      * @throws MessagingException the messaging exception
      */
     public Map send(String from, String[] to, String[] cc, String[] bcc, String subject, List<Map> parts) throws MessagingException {
+        return send(from, null, to, cc, bcc, subject, parts);
+    }
+
+    /**
+     * Send an email that asks for replies at another address than its sender.
+     *
+     * @param from the sender
+     * @param replyTo the Reply-To address (or comma-separated addresses), {@code null} or blank for
+     *        none
+     * @param to the to receiver
+     * @param cc the cc receiver
+     * @param bcc the bcc receiver
+     * @param subject the subject
+     * @param parts the mail parts
+     * @return the map
+     * @throws MessagingException the messaging exception
+     */
+    public Map send(String from, String replyTo, String[] to, String[] cc, String[] bcc, String subject, List<Map> parts)
+            throws MessagingException {
         try {
             Session session = getSession(this.properties);
             SMTPTransport transport;
@@ -96,7 +115,7 @@ public class MailClient {
                     transport.connect(this.properties.getProperty(MAIL_USER), this.properties.getProperty(MAIL_PASSWORD));
                 }
 
-                MimeMessage mimeMessage = createMimeMessage(session, from, to, cc, bcc, subject, parts);
+                MimeMessage mimeMessage = createMimeMessage(session, from, replyTo, to, cc, bcc, subject, parts);
                 mimeMessage.saveChanges();
                 String messageId = mimeMessage.getMessageID();
                 transport.sendMessage(mimeMessage, mimeMessage.getAllRecipients());
@@ -136,10 +155,12 @@ public class MailClient {
     }
 
     /**
-     * Creates the mime message.
+     * Creates the mime message, with a Reply-To header when one is given.
      *
      * @param smtpSession the smtp session
      * @param from the from
+     * @param replyTo the Reply-To address (or comma-separated addresses), {@code null} or blank for
+     *        none
      * @param to the to
      * @param cc the cc
      * @param bcc the bcc
@@ -148,11 +169,14 @@ public class MailClient {
      * @return the mime message
      * @throws MessagingException the messaging exception
      */
-    static MimeMessage createMimeMessage(Session smtpSession, String from, String[] to, String[] cc, String[] bcc, String subjectText,
-            List<Map> parts) throws MessagingException {
+    static MimeMessage createMimeMessage(Session smtpSession, String from, String replyTo, String[] to, String[] cc, String[] bcc,
+            String subjectText, List<Map> parts) throws MessagingException {
 
         MimeMessage mimeMessage = new MimeMessage(smtpSession);
         mimeMessage.setFrom(InternetAddress.parse(from)[0]);
+        if (replyTo != null && !replyTo.isBlank()) {
+            mimeMessage.setReplyTo(InternetAddress.parse(replyTo));
+        }
         for (String next : to) {
             mimeMessage.addRecipients(Message.RecipientType.TO, InternetAddress.parse(next));
         }

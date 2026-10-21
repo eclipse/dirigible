@@ -337,13 +337,12 @@ public class ${className}Transition {
             document.put("data", data);
             parts.add(document);
 #end
-            String from = org.eclipse.dirigible.sdk.core.Configurations.get("DIRIGIBLE_MAIL_SENDER", "noreply@dirigible.io");
 #if($notifyCopies)
-            org.eclipse.dirigible.sdk.mail.Mail.send(from, recipients(to), recipients(cc), recipients(bcc), ${notifySubjectExpression},
-                    parts);
+            org.eclipse.dirigible.sdk.mail.Mail.sendAsApplication(recipients(to), recipients(cc), recipients(bcc),
+                    ${notifySubjectExpression}, parts);
 #else
-            org.eclipse.dirigible.sdk.mail.Mail.send(from, new String[] {to}, new String[0], new String[0], ${notifySubjectExpression},
-                    parts);
+            org.eclipse.dirigible.sdk.mail.Mail.sendAsApplication(new String[] {to}, new String[0], new String[0],
+                    ${notifySubjectExpression}, parts);
 #end
 #if($notifyOutcomeProperty != "")
             stampNotifyOutcome(entity.${notifyOutcomeKeyProperty}, null);
