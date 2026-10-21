@@ -16,9 +16,9 @@ RUN apk update && \
 # to the latest versions available on the npm registry
 # RUN npm install -g npm@latest # -> Commented, so that the ARM64 build don't timeout the GitHub Action (currently it takes ~6 hours).
 
-# Install global npm packages
-RUN npm i -g esbuild \
-    && npm i -g typescript \
+# Install global npm packages: tsc, for the watcher that transpiles TypeScript projects. It starts
+# only when the registry holds TypeScript sources; DIRIGIBLE_TSC_WATCH_SERVICE_ENABLED=false turns it off.
+RUN npm i -g typescript \
     # Clean up npm cache to reduce image size
     && npm cache clean --force \
     # cleanup of apk cache
