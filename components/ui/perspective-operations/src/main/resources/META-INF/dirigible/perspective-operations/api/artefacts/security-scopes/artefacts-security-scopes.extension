@@ -1,5 +1,0 @@
-{
-    "module": "perspective-operations/api/artefacts/security-scopes/artefacts-security-scopes.mjs",
-    "extensionPoint": "platform-operations-artefacts",
-    "description": "Security Scopes Artefacts Extension"
-}

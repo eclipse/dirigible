@@ -137,8 +137,8 @@ angular.module('page', ['blimpKit', 'platformView', 'platformShortcuts', 'Worksp
 		$scope.state.error = true;
 		$scope.errorMessage = 'The \'contentType\' data parameter is missing.';
 	} else {
-		$http.get('/services/js/service-extensions/extensionPoints.mjs').then((response) => {
-			$scope.optionsExtensionPoints = response.data.map(e => ({ text: e, value: e }));
+		$http.get('/services/core/extensionpoints').then((response) => {
+			$scope.optionsExtensionPoints = response.data.map(e => e.name).sort().map(e => ({ text: e, value: e }));
 			loadFileContents();
 		}, (error) => {
 			console.error(error);

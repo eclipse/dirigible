@@ -1,5 +1,0 @@
-{
-    "module": "perspective-operations/api/artefacts/security-access/artefacts-security-access.mjs",
-    "extensionPoint": "platform-operations-artefacts",
-    "description": "Security Access Artefacts Extension"
-}

@@ -81,8 +81,9 @@
                         }
                     }, 200);
                 };
-                $http.get('/services/js/perspective-operations/api/artefacts/artefacts.mjs').then((response) => {
-                    $scope.artefacts = response.data;
+                $http.get('/services/core/artefacts').then((response) => {
+                    // A job log is a record of one run, not a deployed artefact.
+                    $scope.artefacts = response.data.filter((artefact) => artefact.type !== 'job-log');
                 }, (error) => {
                     console.error(error);
                 });
