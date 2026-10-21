@@ -42,6 +42,7 @@ log.info("file size: {}", Files.size("/users/admin/workspace/proj/foo.txt"));
 | `extensions/extensions`              | `sdk.extensions.Extensions`                                    | Java callers should prefer `List<...>` collection injection or `Extensions.find(Class<T>)`; see "Extension points" below. |
 | `git/client`                         | `sdk.git.Git`                                                  |       |
 | `http/client`                        | `sdk.http.HttpClient`                                          | Options passed as JSON, same shape as TS. |
+| `http/client-async`                  | `sdk.http.HttpAsyncClient`                                     | The `HttpClient` calls, each on a virtual thread of its own, returning a `CompletableFuture<String>` of the same response document instead of taking callback strings. The call sees the caller's configuration (proxy settings included); continuations carry neither the caller's tenant nor its user, so do tenant-scoped work after `join()`. `java.net.http.HttpClient.sendAsync` works too, without the platform's proxy settings. |
 | `http/request`                       | `sdk.http.Request`                                             |       |
 | `http/response`                      | `sdk.http.Response`                                            |       |
 | `http/session`                       | `sdk.http.Session`                                             |       |
@@ -55,7 +56,7 @@ log.info("file size: {}", Files.size("/users/admin/workspace/proj/foo.txt"));
 | `io/image`                           | `sdk.io.Image`                                                 |       |
 | `io/streams`                         | `sdk.io.Streams`                                               |       |
 | `io/zip`                             | `sdk.io.Zip`                                                   |       |
-| `job/scheduler`                      | `sdk.job.Scheduler`                                            | Job creation is annotation-driven; see "Decorators" below. |
+| `job/scheduler`                      | `sdk.job.Scheduler`                                            | `list`, `getJob` (JSON), `enable`, `disable`, `trigger` (with the parameters the job declares) and `log` / `error` / `warn` / `info` to a job's execution log. Job creation is annotation-driven; see "Decorators" below. |
 | `junit`                              | `sdk.junit.Assert`                                             | Plain `AssertionError`s; use real JUnit 5 in test sources. |
 | `log/logging`                        | `sdk.log.Logging` + `sdk.log.Logger`                           |       |
 | `mail/client`                        | `sdk.mail.Mail`                                                |       |
@@ -77,6 +78,8 @@ log.info("file size: {}", Files.size("/users/admin/workspace/proj/foo.txt"));
 | `rabbitmq/producer`                  | `sdk.rabbitmq.Producer`                                        |       |
 | `rabbitmq/consumer`                  | `sdk.rabbitmq.Consumer`                                        |       |
 | `redis/client`                       | `sdk.redis.Client`                                             | Returns the raw `redis.clients.jedis.Jedis`. |
+| `security/oauth`                     | `sdk.security.OAuthClient`                                     | `getToken()` returns the token endpoint's JSON response. The credentials are form-encoded once, as RFC 6749 specifies. |
+| `security/tenants`                   | `sdk.security.Tenants`                                         | Returns the platform's `CrossTenantRunner.GrantedTenant` / `CrossTenantResult` records. Token-groups tenant resolution only; check `isAvailable()` first. |
 | `security/user`                      | `sdk.security.User`                                            |       |
 | `template/engines`                   | `sdk.template.TemplateEngines`                                 |       |
 | `utils/alphanumeric`                 | `sdk.utils.Alphanumeric`                                       | `SecureRandom`-backed. |
@@ -229,9 +232,6 @@ convention is `@Inject CountryRepository` inside a `@Controller`.
 
 ## What is intentionally not mirrored
 
-* `http/client-async` — the TS module is callback-driven via the GraalJS bridge. Java callers
-  should use a `java.util.concurrent.CompletableFuture<>`-style wrapper over the synchronous
-  `HttpClient`, or `org.apache.hc.client5.http.impl.async.HttpAsyncClients` directly.
 * `http/rs/resource` — the JAX-RS-like builder is replaced by `@Controller` + `@Get/@Post/...`
   routing in `engine-java`.
 * `bpm/tracer`, `bpm/values` — `Tracer` is sugar over `Logger`; in Java just use

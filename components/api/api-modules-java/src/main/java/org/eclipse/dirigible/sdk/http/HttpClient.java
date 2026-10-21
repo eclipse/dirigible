@@ -18,9 +18,8 @@ import org.eclipse.dirigible.components.api.http.HttpClientFacade;
  * a JSON document — the same shape the TS / JS surface accepts — so identical option objects can be
  * shared between Java and script-side callers.
  * <p>
- * The client is blocking; for non-trivial latency, wrap calls in a
- * {@link java.util.concurrent.CompletableFuture#supplyAsync(java.util.function.Supplier)} or batch
- * them through a small executor. For long-running streaming downloads, drop down to
+ * The client is blocking; {@link HttpAsyncClient} makes the same calls without blocking the caller.
+ * For long-running streaming downloads, drop down to
  * {@code org.apache.hc.client5.http.impl.classic.HttpClients} directly.
  */
 public final class HttpClient {
