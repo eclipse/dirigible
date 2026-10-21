@@ -13,6 +13,8 @@ import static java.text.MessageFormat.format;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -533,6 +535,50 @@ public class BpmService {
     public List<Task> findTasksWithProcessVariables(PrincipalType type) {
         return bpmProviderFlowable.getTaskService()
                                   .findTasksWithProcessVariables(type);
+    }
+
+    /**
+     * One page of the tasks addressed to the principal, newest first, each carrying its process
+     * variables and identity links (issue #7977).
+     *
+     * @param type the principal the tasks are addressed to
+     * @param offset the number of tasks to skip
+     * @param limit the page size
+     * @return the page
+     */
+    public List<Task> findTasksWithProcessVariables(PrincipalType type, int offset, int limit) {
+        return bpmProviderFlowable.getTaskService()
+                                  .findTasksWithProcessVariables(type, offset, limit);
+    }
+
+    /**
+     * How many tasks are addressed to the principal, without listing them (issue #7977).
+     *
+     * @param type the principal the tasks are addressed to
+     * @return the number of tasks
+     */
+    public long countTasks(PrincipalType type) {
+        return bpmProviderFlowable.getTaskService()
+                                  .countTasks(type);
+    }
+
+    /**
+     * The process instances a task listing names, read together (issue #7977) - keyed by instance id.
+     * Only what a listing row shows is mapped: the activity id, which costs statements of its own, is
+     * left unset. An instance that has ended since the listing was taken is absent from the map.
+     *
+     * @param processInstanceIds the ids the listing's tasks belong to
+     * @return the running instances by id
+     */
+    public Map<String, ProcessInstanceData> getListedProcessInstances(Collection<String> processInstanceIds) {
+        if (processInstanceIds.isEmpty()) {
+            return Map.of();
+        }
+        Map<String, ProcessInstanceData> instances = new HashMap<>();
+        for (ProcessInstance processInstance : bpmProviderFlowable.getProcessInstances(processInstanceIds)) {
+            instances.put(processInstance.getId(), mapProcessInstance(processInstance, List.of()));
+        }
+        return instances;
     }
 
     public long countTasksByAssignee(String assignee) {
