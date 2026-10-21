@@ -64,7 +64,13 @@ public final class TenantsFacade {
         return runner().forEachGrantedTenant(operation, work);
     }
 
-    private static CrossTenantRunner runner() {
+    /**
+     * The runner behind this facade, for typed Java callers such as the Java SDK's {@code Tenants}.
+     *
+     * @return the cross-tenant runner
+     * @throws IllegalStateException if runs across tenants are not available on this instance
+     */
+    public static CrossTenantRunner runner() {
         Collection<CrossTenantRunner> runners = BeanProvider.getBeans(CrossTenantRunner.class);
         if (runners.isEmpty()) {
             throw new IllegalStateException("Runs across tenants need the token-groups tenant resolution, where a user holds roles in"
