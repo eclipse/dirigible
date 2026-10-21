@@ -68,9 +68,11 @@ import org.springframework.stereotype.Component;
  * <li>one {@code <startEvent>} and one {@code <endEvent>} per process</li>
  * <li>{@code userTask} ->
  * {@code <userTask flowable:candidateGroups="..." flowable:formKey="..."/>}</li>
- * <li>{@code serviceTask} / {@code script} ->
- * {@code <serviceTask flowable:delegateExpression="${JSTask}">} with the {@code handler} extension
- * element pointing at {@code args.call}</li>
+ * <li>{@code serviceTask} / {@code script} with a {@code args.call} -> the
+ * {@code <serviceTask flowable:class="...">} a {@code delegate} emits when the call names a Java
+ * class, or the deprecated {@code <serviceTask flowable:delegateExpression="${JSTask}">} with the
+ * {@code handler} extension element pointing at it when it names a TypeScript/JavaScript
+ * handler</li>
  * <li>{@code decision} -> {@code <exclusiveGateway>} with a conditioned outgoing flow to
  * {@code args.then} and a default flow to {@code args.else} (falling back to the next step in the
  * chain when {@code else} is omitted) - so "big orders need CFO review, small ones skip it" is
@@ -97,9 +99,10 @@ import org.springframework.stereotype.Component;
  * {@code <form>.form} this intent produced. This is a deliberate, documented exception to the "no
  * template-engine paths" rule: a user task cannot reference its form without naming where that form
  * is rendered, and this is the canonical Dirigible form-key convention. A service task's
- * {@code args.call} (a project-relative JS handler path such as {@code custom/notify-member.ts}) is
- * likewise qualified with the project name, because the {@code ${JSTask}} delegate resolves it
- * relative to the registry root; it should reference a hand-authored handler under {@code custom/}.
+ * {@code args.call} naming a project-relative JS handler path (such as
+ * {@code custom/notify-member.ts}) is likewise qualified with the project name, because the
+ * {@code ${JSTask}} delegate resolves it relative to the registry root; it should reference a
+ * hand-authored handler under {@code custom/}.
  *
  * <p>
  * A {@code relation.field} of the trigger entity referenced by a {@code decision} condition (e.g.
@@ -124,6 +127,9 @@ public class BpmnIntentGenerator implements IntentTargetGenerator {
 
     private static final String START_ID = "start";
     private static final String END_ID = "end";
+    /** A {@code call:} the {@code ${JSTask}} delegate runs - see {@link #isScriptHandler}. */
+    private static final Pattern SCRIPT_HANDLER = Pattern.compile(".*\\.(?:m?js|ts)(?:/\\w*)?(?:/\\w*)?");
+    private static final String JAVA_SOURCE_EXTENSION = ".java";
 
     @Override
     public String name() {
@@ -217,6 +223,7 @@ public class BpmnIntentGenerator implements IntentTargetGenerator {
                         LoggedValue.of(IntentNaming.baseName(context)));
                 continue;
             }
+            reportScriptCalls(context, process);
             if (!process.getTrigger()
                         .isEmpty()) {
                 LOGGER.info(
@@ -1428,6 +1435,28 @@ public class BpmnIntentGenerator implements IntentTargetGenerator {
         return byForm;
     }
 
+    /**
+     * A {@code call:} naming a TypeScript/JavaScript handler is the one service task an intent still
+     * emits for the JavaScript engine (#8009), so the author is told before that path is ever removed.
+     * Reported as an advisory, not an issue: moving the step to {@code delegate:} needs the Java class
+     * written first, which no change to the document can provide - the assistant's repair loop must not
+     * rewrite the step to a delegate that does not exist.
+     */
+    private static void reportScriptCalls(IntentGenerationContext context, ProcessIntent process) {
+        for (StepIntent step : process.getSteps()) {
+            String call = stringArg(step, "call");
+            if ((!"serviceTask".equals(step.getKind()) && !"script".equals(step.getKind())) || call == null || call.isBlank()
+                    || !isScriptHandler(call)) {
+                continue;
+            }
+            String advisory = "process [" + process.getName() + "] step [" + step.getName() + "] call [" + call.trim()
+                    + "] names a TypeScript/JavaScript handler, which is deprecated - implement it as a Java JavaDelegate and bind it"
+                    + " with `delegate:`";
+            LOGGER.warn("Intent [{}]: {}", LoggedValue.of(IntentNaming.baseName(context)), LoggedValue.of(advisory));
+            context.addAdvisory(advisory);
+        }
+    }
+
     private static void appendServiceTask(StringBuilder sb, StepIntent step, String projectName, String processName, String eventsPackage,
             List<String> clears, boolean async) {
         // `async` is false for every node completingTransactionNodes marked - a check-gated status
@@ -1444,8 +1473,11 @@ public class BpmnIntentGenerator implements IntentTargetGenerator {
         // - an author-declared serviceTask with a `notify` block -> JavaTask bound to the generated
         // <events pkg>.<Process><Step>Send JavaDelegate (mails about the trigger record, optionally
         // attaching its rendered document);
-        // - an author-declared serviceTask with a `call` (a TS handler path) -> JSTask, the path qualified
-        // with the project name (the JSTask delegate resolves relative to the registry root);
+        // - an author-declared serviceTask with a `call` naming a Java class -> exactly what a `delegate`
+        // naming that class emits (#8009), so a Java application needs no JavaScript engine for it;
+        // - an author-declared serviceTask with a `call` naming a TS/JS handler -> JSTask, the path
+        // qualified with the project name (the JSTask delegate resolves relative to the registry root) -
+        // deprecated, and reported as such by generate;
         // - an author-declared serviceTask with none of the above -> JavaTask bound to a custom.<Step> Java
         // handler that ServiceTaskHandlerGenerator scaffolds once under custom/ for the developer.
         // - an author-declared serviceTask with a `delegate` -> a client JavaDelegate FQN bound via
@@ -1478,6 +1510,10 @@ public class BpmnIntentGenerator implements IntentTargetGenerator {
             java = true;
             handlerValue = eventsPackage + "." + NotifySupport.className(processName, step.getName());
         } else if (call != null && !call.isBlank()) {
+            if (!isScriptHandler(call)) {
+                appendDelegateServiceTask(sb, step, moduleScopedDelegate(javaCallClass(call), eventsPackage), clears, async);
+                return;
+            }
             java = false;
             handlerValue = qualifyHandlerPath(projectName, call);
         } else {
@@ -1603,6 +1639,35 @@ public class BpmnIntentGenerator implements IntentTargetGenerator {
             }
         }
         return fields;
+    }
+
+    /**
+     * Whether a {@code call:} names a TypeScript/JavaScript handler - the paths the {@code ${JSTask}}
+     * delegate accepts: a {@code .ts}, {@code .js} or {@code .mjs} module, optionally followed by
+     * {@code /<method>} or {@code /<Class>/<method>}. A string contract with that delegate's own
+     * pattern, like the {@code ${JSTask}} literal - no module dependency.
+     */
+    private static boolean isScriptHandler(String call) {
+        return SCRIPT_HANDLER.matcher(call.trim())
+                             .matches();
+    }
+
+    /**
+     * The client class a Java {@code call:} names, spelled the way {@code delegate:} takes it: a
+     * project-relative source path ({@code custom/ArchiveInvoice.java}, the leading slash and the
+     * extension optional) becomes its fully qualified name ({@code custom.ArchiveInvoice}), the package
+     * mirroring the folder as it does for every client class; a name already written with dots passes
+     * through.
+     */
+    private static String javaCallClass(String call) {
+        String path = call.trim();
+        if (path.startsWith("/")) {
+            path = path.substring(1);
+        }
+        if (path.endsWith(JAVA_SOURCE_EXTENSION)) {
+            path = path.substring(0, path.length() - JAVA_SOURCE_EXTENSION.length());
+        }
+        return path.replace('/', '.');
     }
 
     /**

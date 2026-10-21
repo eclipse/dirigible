@@ -20,11 +20,11 @@ import org.springframework.stereotype.Component;
 
 /**
  * Scaffolds a Java {@code JavaDelegate} stub under {@code custom/} for every author-declared
- * service task with <b>no built-in handler</b> - i.e. one that is NOT a {@code call} (TS handler),
- * NOT a {@code setField} / {@code clearField} / {@code setRelationField} / {@code notify} (which
- * the BPMN binds to the generated {@code gen.events.<Process><Step>} delegate), and NOT a
- * {@code delegate} (an author-named client {@code JavaDelegate} the BPMN binds via
- * {@code flowable:class}). The BPMN binds such a bare task to {@code ${JavaTask}} ->
+ * service task with <b>no built-in handler</b> - i.e. one that is NOT a {@code call} (a named Java
+ * class or TS handler), NOT a {@code setField} / {@code clearField} / {@code setRelationField} /
+ * {@code notify} (which the BPMN binds to the generated {@code gen.events.<Process><Step>}
+ * delegate), and NOT a {@code delegate} (an author-named client {@code JavaDelegate} the BPMN binds
+ * via {@code flowable:class}). The BPMN binds such a bare task to {@code ${JavaTask}} ->
  * {@code custom.<Step>}; this writes {@code custom/<Step>.java} as a minimal logging stub for the
  * developer to implement.
  * <p>
@@ -32,7 +32,8 @@ import org.springframework.stereotype.Component;
  * layer does not own, so the stub is written only when the file is absent (the developer's edits
  * survive regeneration). This is a deliberate one-time scaffold - the same exception the
  * {@code .settings} file makes to the "intent generators emit models, not code" rule - not ongoing
- * code generation. A {@code call} (TS handler) is left to the {@code ${JSTask}} path; a
+ * code generation. A {@code call} names its own handler - a Java class the BPMN binds like a
+ * {@code delegate}, or a (deprecated) TS handler left to the {@code ${JSTask}} path; a
  * {@code setField}/{@code setRelationField} gets the generated setter delegate - neither gets a
  * stub. (Because {@code custom/} is never scrubbed, a stub scaffolded before such a step gained a
  * {@code setField}/{@code setRelationField} stays orphaned and must be deleted by hand.)
@@ -65,7 +66,7 @@ public class ServiceTaskHandlerGenerator implements IntentTargetGenerator {
                                   .get("call");
                 if (call != null && !call.toString()
                                          .isBlank()) {
-                    continue; // external (TS) handler - not a Java stub
+                    continue; // the author's own handler (a Java class or a TS module) - not a stub
                 }
                 // A `delegate` service task is bound by the BPMN to an author-named client JavaDelegate via
                 // flowable:class (a reusable, hand-written or cross-project delegate) - not a scaffolded stub.
