@@ -10,6 +10,9 @@
 package org.eclipse.dirigible.components.api.rabbitmq;
 
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.components.base.script.ScriptEngineUnavailableException;
+import org.eclipse.dirigible.components.base.script.ScriptExecutor;
+import org.eclipse.dirigible.components.base.spring.BeanProvider;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -89,8 +92,11 @@ public class RabbitMQFacade extends Thread {
      *
      * @param queue the queue being used
      * @param handler the destination for the message
+     * @throws ScriptEngineUnavailableException when no script engine is deployed to run the handler
      */
     public static final void startListening(String queue, String handler) {
+        ScriptExecutor scriptExecutor = BeanProvider.getOptionalBean(ScriptExecutor.class)
+                                                    .orElseThrow(() -> new ScriptEngineUnavailableException(handler));
         Connection connection = connect();
         Channel channel = createChannel(connection);
         String location = null;
@@ -100,7 +106,7 @@ public class RabbitMQFacade extends Thread {
         receiverRunner = CONSUMERS.get(location);
 
         if (receiverRunner == null) {
-            receiverRunner = new RabbitMQReceiverRunner(connection, channel, queue, handler);
+            receiverRunner = new RabbitMQReceiverRunner(connection, channel, queue, handler, scriptExecutor);
             Thread receiverThread = new Thread(receiverRunner);
             receiverThread.setDaemon(false);
             receiverThread.start();

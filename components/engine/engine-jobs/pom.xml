@@ -55,12 +55,6 @@
 			<artifactId>dirigible-parsers-typescript</artifactId>
     	</dependency>
 		
-		<!-- Engines -->
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-engine-javascript</artifactId>
-		</dependency>
-		
 		<!-- TODO -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>

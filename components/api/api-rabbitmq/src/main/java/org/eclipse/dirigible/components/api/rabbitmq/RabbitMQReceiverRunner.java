@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
+import org.eclipse.dirigible.components.base.script.ScriptExecutor;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,6 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * The Class RabbitMQReceiverRunner.
@@ -73,8 +72,10 @@ public class RabbitMQReceiverRunner implements Runnable {
      */
     private final AtomicBoolean stopped = new AtomicBoolean(false);
 
-    @Autowired
-    private JavascriptService javascriptService;
+    /**
+     * The executor of the handler's wrapper scripts.
+     */
+    private final ScriptExecutor scriptExecutor;
 
     /**
      * Instantiates a new rabbit MQ receiver runner.
@@ -83,13 +84,15 @@ public class RabbitMQReceiverRunner implements Runnable {
      * @param channel the channel
      * @param queue the queue
      * @param handler the handler
+     * @param scriptExecutor the executor of the handler's wrapper scripts
      */
 
-    public RabbitMQReceiverRunner(Connection connection, Channel channel, String queue, String handler) {
+    public RabbitMQReceiverRunner(Connection connection, Channel channel, String queue, String handler, ScriptExecutor scriptExecutor) {
         this.connection = connection;
         this.channel = channel;
         this.queue = queue;
         this.handler = handler;
+        this.scriptExecutor = scriptExecutor;
     }
 
     /**
@@ -112,8 +115,7 @@ public class RabbitMQReceiverRunner implements Runnable {
                         context.put("message", message);
                         try {
                             RepositoryPath path = new RepositoryPath(DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_MESSAGE);
-                            JavascriptService.get()
-                                             .handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
+                            scriptExecutor.execute(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
                         } catch (RuntimeException e) {
                             if (logger.isErrorEnabled()) {
                                 logger.error(e.getMessage(), e);
@@ -121,7 +123,7 @@ public class RabbitMQReceiverRunner implements Runnable {
                             try {
                                 context.put("error", escapeCodeString(e.getMessage()));
                                 RepositoryPath path = new RepositoryPath(DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_ERROR);
-                                javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
+                                scriptExecutor.execute(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
                             } catch (Exception ex) {
                                 throw new RuntimeException(ex);
                             }

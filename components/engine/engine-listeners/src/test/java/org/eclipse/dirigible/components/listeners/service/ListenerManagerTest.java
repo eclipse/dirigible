@@ -101,6 +101,8 @@ class ListenerManagerTest {
     void setUp() {
         lenient().when(asynchronousMessageListenerFactory.create(listenerDescriptor))
                  .thenReturn(asynchronousMessageListener);
+        lenient().when(asynchronousMessageListenerFactory.createExceptionHandler(listenerDescriptor))
+                 .thenReturn(new ListenerExceptionHandler("test/handler.js", mock(ListenerScriptExecutor.class)));
         manager = new ListenerManager(listenerDescriptor, connectionArtifactsFactory, asynchronousMessageListenerFactory,
                 ListenerConnectionMode.PER_LISTENER, sharedConnection);
     }

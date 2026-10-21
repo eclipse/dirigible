@@ -18,7 +18,8 @@ import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.api.extensions.ExtensionsFacade;
 import org.eclipse.dirigible.components.api.security.UserFacade;
 import org.eclipse.dirigible.components.api.utils.UrlFacade;
-import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
+import org.eclipse.dirigible.components.base.script.ScriptEngineUnavailableException;
+import org.eclipse.dirigible.components.base.script.ScriptExecutor;
 import org.eclipse.dirigible.components.ide.workspace.domain.File;
 import org.eclipse.dirigible.components.ide.workspace.domain.Folder;
 import org.eclipse.dirigible.components.ide.workspace.domain.Project;
@@ -30,6 +31,7 @@ import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -72,28 +74,19 @@ public class WorkspaceService {
     /** The repository. */
     private final IRepository repository;
 
-    /** The javascript service. */
-    private final JavascriptService javascriptService;
+    /** The executor of the on-save extension scripts, absent where no script engine is deployed. */
+    private final ObjectProvider<ScriptExecutor> scriptExecutor;
 
     /**
      * Instantiates a new workspace service.
      *
      * @param repository the repository
-     * @param javascriptService the javascript service
+     * @param scriptExecutor the executor of the on-save extension scripts
      */
     @Autowired
-    public WorkspaceService(IRepository repository, JavascriptService javascriptService) {
+    public WorkspaceService(IRepository repository, ObjectProvider<ScriptExecutor> scriptExecutor) {
         this.repository = repository;
-        this.javascriptService = javascriptService;
-    }
-
-    /**
-     * Gets the javascript service.
-     *
-     * @return the javascript service
-     */
-    public JavascriptService getJavascriptService() {
-        return javascriptService;
+        this.scriptExecutor = scriptExecutor;
     }
 
     /**
@@ -431,8 +424,11 @@ public class WorkspaceService {
                     }
                     if (module != null) {
                         RepositoryPath repositoryPath = new RepositoryPath(module);
-                        javascriptService.handleRequest(repositoryPath.getSegments()[0], repositoryPath.constructPathFrom(1), "", context,
-                                false);
+                        ScriptExecutor executor = scriptExecutor.getIfAvailable();
+                        if (executor == null) {
+                            throw new ScriptEngineUnavailableException(module);
+                        }
+                        executor.execute(repositoryPath.getSegments()[0], repositoryPath.constructPathFrom(1), "", context, false);
                     }
                     if (logger.isTraceEnabled()) {
                         logger.trace("Workspace On Save Extension: {} finshed.", module);

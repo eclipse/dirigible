@@ -12,13 +12,11 @@ package org.eclipse.dirigible.components.websockets.service;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
+import org.eclipse.dirigible.components.base.script.ScriptEngineUnavailableException;
 import org.eclipse.dirigible.components.websockets.domain.Websocket;
-import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
-import org.eclipse.dirigible.graalium.core.javascript.modules.Module;
-import org.graalvm.polyglot.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -38,8 +36,8 @@ public class WebsocketProcessor {
     /** The websocket service. */
     private final WebsocketService websocketService;
 
-    /** The javascript service. */
-    private final JavascriptService javascriptService;
+    /** The dispatcher of the script handlers' events, absent where no script engine is deployed. */
+    private final ObjectProvider<WebsocketScriptDispatcher> scriptDispatcher;
 
     private final ApplicationContext applicationContext;
 
@@ -60,14 +58,14 @@ public class WebsocketProcessor {
      * Instantiates a new websocket handler.
      *
      * @param websocketService the websocket service
-     * @param javascriptService the javascript service
+     * @param scriptDispatcher the dispatcher of the script handlers' events
      * @param applicationContext the Spring application context
      */
     @Autowired
-    public WebsocketProcessor(WebsocketService websocketService, JavascriptService javascriptService,
+    public WebsocketProcessor(WebsocketService websocketService, ObjectProvider<WebsocketScriptDispatcher> scriptDispatcher,
             ApplicationContext applicationContext) {
         this.websocketService = websocketService;
-        this.javascriptService = javascriptService;
+        this.scriptDispatcher = scriptDispatcher;
         this.applicationContext = applicationContext;
     }
 
@@ -98,15 +96,6 @@ public class WebsocketProcessor {
      */
     public WebsocketService getWebsocketService() {
         return websocketService;
-    }
-
-    /**
-     * Gets the javascript service.
-     *
-     * @return the javascript service
-     */
-    public JavascriptService getJavascriptService() {
-        return javascriptService;
     }
 
     /**
@@ -181,44 +170,27 @@ public class WebsocketProcessor {
     }
 
     private String executeOnMessageHandler(String path, Map<Object, Object> context) {
-        try (DirigibleJavascriptCodeRunner runner = createJSCodeRunner(context)) {
-            Module module = runner.run(path);
-            Value result = runner.runMethod(module, "onMessage", context.get("message"), context.get("from"));
-            return result != null ? result.toString() : "";
-        }
+        return scriptDispatcher(path).onMessage(path, context);
     }
 
-    private String executeOnOpenHandler(String path, Map<Object, Object> context) {
-        try (DirigibleJavascriptCodeRunner runner = createJSCodeRunner(context)) {
-            Module module = runner.run(path);
-            Value result = runner.runMethod(module, "onOpen");
-            return result != null ? result.toString() : "";
-        }
+    private void executeOnOpenHandler(String path, Map<Object, Object> context) {
+        scriptDispatcher(path).onOpen(path, context);
     }
 
-    private String executeOnCloseHandler(String path, Map<Object, Object> context) {
-        try (DirigibleJavascriptCodeRunner runner = createJSCodeRunner(context)) {
-            Module module = runner.run(path);
-            Value result = runner.runMethod(module, "onClose");
-            return result != null ? result.toString() : "";
-        }
+    private void executeOnCloseHandler(String path, Map<Object, Object> context) {
+        scriptDispatcher(path).onClose(path, context);
     }
 
-    private String executeOnErrorHandler(String path, Map<Object, Object> context) {
-        try (DirigibleJavascriptCodeRunner runner = createJSCodeRunner(context)) {
-            Module module = runner.run(path);
-            Value result = runner.runMethod(module, "onError", context.get("error"));
-            return result != null ? result.toString() : "";
-        }
+    private void executeOnErrorHandler(String path, Map<Object, Object> context) {
+        scriptDispatcher(path).onError(path, context);
     }
 
-    /**
-     * Creates the JS code runner.
-     *
-     * @return the dirigible javascript code runner
-     */
-    DirigibleJavascriptCodeRunner createJSCodeRunner(Map<Object, Object> context) {
-        return new DirigibleJavascriptCodeRunner(context, false);
+    private WebsocketScriptDispatcher scriptDispatcher(String handler) {
+        WebsocketScriptDispatcher dispatcher = scriptDispatcher.getIfAvailable();
+        if (dispatcher == null) {
+            throw new ScriptEngineUnavailableException(handler);
+        }
+        return dispatcher;
     }
 
 }

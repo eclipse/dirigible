@@ -11,6 +11,7 @@ package org.eclipse.dirigible.components.engine.javascript.service;
 
 import java.util.Map;
 
+import org.eclipse.dirigible.components.base.script.ScriptExecutor;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,7 @@ import org.springframework.stereotype.Service;
  * The Class JavascriptHandler.
  */
 @Service
-public class JavascriptService implements InitializingBean {
+public class JavascriptService implements ScriptExecutor, InitializingBean {
 
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(JavascriptService.class);
@@ -115,6 +116,17 @@ public class JavascriptService implements InitializingBean {
      */
     public Object handleCallback(String filePath, Map<Object, Object> parameters) {
         return handler.handleCallback(filePath, parameters);
+    }
+
+    @Override
+    public Object execute(String projectName, String projectFilePath, String projectFilePathParam, Map<Object, Object> parameters,
+            boolean debug) {
+        return handleRequest(projectName, projectFilePath, projectFilePathParam, parameters, debug);
+    }
+
+    @Override
+    public Object executeCallback(String filePath, Map<Object, Object> parameters) {
+        return handleCallback(filePath, parameters);
     }
 
 }

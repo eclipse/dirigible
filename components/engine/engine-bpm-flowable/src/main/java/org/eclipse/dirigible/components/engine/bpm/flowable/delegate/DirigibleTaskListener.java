@@ -13,22 +13,19 @@ import static org.eclipse.dirigible.components.engine.bpm.flowable.dto.ActionDat
 import static org.eclipse.dirigible.components.engine.bpm.flowable.service.BpmService.DIRIGIBLE_BPM_INTERNAL_SKIP_STEP;
 import java.util.HashMap;
 import java.util.Map;
+import org.eclipse.dirigible.components.base.script.ScriptEngineUnavailableException;
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
-import org.eclipse.dirigible.components.engine.bpm.flowable.delegate.DirigibleCallDelegate.JSTask;
 import org.eclipse.dirigible.components.open.telemetry.OpenTelemetryProvider;
 import org.eclipse.dirigible.components.tracing.TaskState;
 import org.eclipse.dirigible.components.tracing.TaskStateUtil;
 import org.eclipse.dirigible.components.tracing.TaskType;
 import org.eclipse.dirigible.components.tracing.TracingFacade;
-import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.flowable.common.engine.impl.el.FixedValue;
 import org.flowable.engine.delegate.BpmnError;
 import org.flowable.task.service.delegate.DelegateTask;
 import org.flowable.task.service.delegate.TaskListener;
-import org.graalvm.polyglot.PolyglotException;
-import org.graalvm.polyglot.Source;
-import org.graalvm.polyglot.Value;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import io.opentelemetry.api.trace.Span;
@@ -40,6 +37,10 @@ public class DirigibleTaskListener implements TaskListener {
 
     private final TenantContext tenantContext;
     /**
+     * The executor of the script handler, absent where no script engine is deployed.
+     */
+    private final ObjectProvider<BpmScriptExecutor> scriptExecutor;
+    /**
      * The handler.
      */
     private FixedValue handler;
@@ -48,8 +49,9 @@ public class DirigibleTaskListener implements TaskListener {
      */
     private FixedValue type;
 
-    DirigibleTaskListener(TenantContext tenantContext) {
+    DirigibleTaskListener(TenantContext tenantContext, ObjectProvider<BpmScriptExecutor> scriptExecutor) {
         this.tenantContext = tenantContext;
+        this.scriptExecutor = scriptExecutor;
     }
 
     /**
@@ -113,13 +115,8 @@ public class DirigibleTaskListener implements TaskListener {
                 TracingFacade.taskSuccessful(taskState, output);
             }
         } catch (RuntimeException e) {
-            if (e instanceof PolyglotException) {
-                if (((PolyglotException) e).isHostException()) {
-                    Throwable hostException = ((PolyglotException) e).asHostException();
-                    if (hostException instanceof BpmnError) {
-                        throw (BpmnError) hostException;
-                    }
-                }
+            if (e instanceof BpmnError bpmnError) {
+                throw bpmnError;
             }
 
             if (TracingFacade.isTracingEnabled()) {
@@ -193,27 +190,16 @@ public class DirigibleTaskListener implements TaskListener {
      */
     private void executeJSHandler(Map<Object, Object> context) {
         RepositoryPath path = new RepositoryPath(handler.getExpressionText());
-        JSTask task = JSTask.fromRepositoryPath(path);
 
         Span.current()
             .setAttribute("handler", path.toString())
             .setAttribute("tenantId", tenantContext.getCurrentTenant()
                                                    .getId());
 
-        try (DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner(context, false)) {
-            Source source = runner.prepareSource(task.getSourceFilePath());
-            Value value = runner.run(source);
-
-            if (task.hasExportedClassAndMethod()) {
-                value.getMember(task.getClassName())
-                     .newInstance()
-                     .getMember(task.getMethodName())
-                     .executeVoid();
-            } else if (task.hasExportedMethod()) {
-                value.getMember(task.getMethodName())
-                     .executeVoid();
-            }
-
+        BpmScriptExecutor executor = scriptExecutor.getIfAvailable();
+        if (executor == null) {
+            throw new ScriptEngineUnavailableException(path.getPath());
         }
+        executor.execute(path.getPath(), context);
     }
 }

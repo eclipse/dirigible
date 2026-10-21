@@ -10,13 +10,9 @@
 package org.eclipse.dirigible.components.listeners.service;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
-import org.eclipse.dirigible.graalium.core.javascript.modules.Module;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,7 +26,6 @@ import jakarta.jms.TextMessage;
 /**
  * The Class BackgroundMessageListenerTest.
  */
-@SuppressWarnings("resource")
 @ExtendWith(MockitoExtension.class)
 class AsynchronousMessageListenerTest {
 
@@ -46,9 +41,9 @@ class AsynchronousMessageListenerTest {
     /** The background message listener. */
     private AsynchronousMessageListener asyncMessageListener;
 
-    /** The js code runner. */
+    /** The executor of the listener's script handler. */
     @Mock
-    private DirigibleJavascriptCodeRunner jsCodeRunner;
+    private ListenerScriptExecutor scriptExecutor;
 
     /** The text message. */
     @Mock
@@ -62,10 +57,6 @@ class AsynchronousMessageListenerTest {
     @Mock
     private BytesMessage bytesMessage;
 
-    /** The module. */
-    @Mock
-    private Module module;
-
     /** The tenant property manager. */
     @Mock
     private TenantPropertyManager tenantPropertyManager;
@@ -75,7 +66,8 @@ class AsynchronousMessageListenerTest {
      */
     @BeforeEach
     void setUp() {
-        asyncMessageListener = spy(new AsynchronousMessageListener(listenerDescriptor, tenantPropertyManager, new TestTenantContext()));
+        asyncMessageListener =
+                new AsynchronousMessageListener(listenerDescriptor, tenantPropertyManager, new TestTenantContext(), scriptExecutor);
     }
 
     /**
@@ -86,15 +78,12 @@ class AsynchronousMessageListenerTest {
     @Test
     void testOnMessage() throws JMSException {
         when(tenantPropertyManager.getCurrentTenantId(textMessage)).thenReturn(TENANT_ID);
-        doReturn(jsCodeRunner).when(asyncMessageListener)
-                              .createJSCodeRunner();
         when(listenerDescriptor.getHandlerPath()).thenReturn(HANDLER);
         when(textMessage.getText()).thenReturn(MESSAGE);
-        when(jsCodeRunner.run(HANDLER)).thenReturn(module);
 
         asyncMessageListener.onMessage(textMessage);
 
-        verify(jsCodeRunner).runMethod(module, "onMessage", MESSAGE);
+        verify(scriptExecutor).onMessage(HANDLER, MESSAGE);
     }
 
     /**

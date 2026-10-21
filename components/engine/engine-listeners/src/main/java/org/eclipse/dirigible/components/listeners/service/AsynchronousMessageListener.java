@@ -16,8 +16,6 @@ import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.tracing.TaskState;
 import org.eclipse.dirigible.components.tracing.TaskType;
 import org.eclipse.dirigible.components.tracing.TracingFacade;
-import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
-import org.eclipse.dirigible.graalium.core.javascript.modules.Module;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,18 +45,23 @@ class AsynchronousMessageListener implements MessageListener {
     /** The tenant context. */
     private final TenantContext tenantContext;
 
+    /** The executor of the listener's script handler. */
+    private final ListenerScriptExecutor scriptExecutor;
+
     /**
      * Instantiates a new asynchronous message listener.
      *
      * @param listenerDescriptor the listener
      * @param tenantPropertyManager the tenant property manager
      * @param tenantContext the tenant context
+     * @param scriptExecutor the executor of the listener's script handler
      */
     AsynchronousMessageListener(ListenerDescriptor listenerDescriptor, TenantPropertyManager tenantPropertyManager,
-            TenantContext tenantContext) {
+            TenantContext tenantContext, ListenerScriptExecutor scriptExecutor) {
         this.listenerDescriptor = listenerDescriptor;
         this.tenantPropertyManager = tenantPropertyManager;
         this.tenantContext = tenantContext;
+        this.scriptExecutor = scriptExecutor;
     }
 
     /**
@@ -120,11 +123,7 @@ class AsynchronousMessageListener implements MessageListener {
      */
     private void executeOnMessageHandler(TextMessage textMsg) {
         String extractedMsg = extractMessage(textMsg);
-        try (DirigibleJavascriptCodeRunner runner = createJSCodeRunner()) {
-            String handlerPath = listenerDescriptor.getHandlerPath();
-            Module module = runner.run(handlerPath);
-            runner.runMethod(module, "onMessage", extractedMsg);
-        }
+        scriptExecutor.onMessage(listenerDescriptor.getHandlerPath(), extractedMsg);
     }
 
     /**
@@ -139,15 +138,6 @@ class AsynchronousMessageListener implements MessageListener {
         } catch (JMSException ex) {
             throw new IllegalStateException("Failed to extract test message from " + textMsg, ex);
         }
-    }
-
-    /**
-     * Creates the JS code runner.
-     *
-     * @return the dirigible javascript code runner
-     */
-    DirigibleJavascriptCodeRunner createJSCodeRunner() {
-        return new DirigibleJavascriptCodeRunner();
     }
 
 }

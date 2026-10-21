@@ -23,17 +23,19 @@ import org.eclipse.dirigible.components.base.artefact.ArtefactPhase;
 import org.eclipse.dirigible.components.base.artefact.ArtefactService;
 import org.eclipse.dirigible.components.base.artefact.topology.TopologyWrapper;
 import org.eclipse.dirigible.components.base.helpers.JsonHelper;
+import org.eclipse.dirigible.components.base.script.ScriptEngineUnavailableException;
 import org.eclipse.dirigible.components.base.synchronizer.BaseSynchronizer;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizerCallback;
 import org.eclipse.dirigible.components.base.synchronizer.SynchronizersOrder;
 import org.eclipse.dirigible.components.websockets.domain.Websocket;
 import org.eclipse.dirigible.components.websockets.parser.WebsocketMetadata;
 import org.eclipse.dirigible.components.websockets.parser.WebsocketParser;
+import org.eclipse.dirigible.components.websockets.service.WebsocketScriptDispatcher;
 import org.eclipse.dirigible.components.websockets.service.WebsocketService;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -53,13 +55,26 @@ public class WebsocketsSynchronizer extends BaseSynchronizer<Websocket, Long> {
     public static final String[] FILE_EXTENSIONS_WEBSOCKET = new String[] {".websocket", "websocket.ts"};
 
     /** The websocket service. */
-    @Autowired
-    private WebsocketService websocketService;
+    private final WebsocketService websocketService;
+
+    /** The dispatcher of the script handlers' events, absent where no script engine is deployed. */
+    private final ObjectProvider<WebsocketScriptDispatcher> scriptDispatcher;
 
     /** The callback. */
     private SynchronizerCallback callback;
 
     private final WebsocketParser websocketParser = new WebsocketParser();
+
+    /**
+     * Instantiates a new websockets synchronizer.
+     *
+     * @param websocketService the websocket service
+     * @param scriptDispatcher the dispatcher of the script handlers' events
+     */
+    WebsocketsSynchronizer(WebsocketService websocketService, ObjectProvider<WebsocketScriptDispatcher> scriptDispatcher) {
+        this.websocketService = websocketService;
+        this.scriptDispatcher = scriptDispatcher;
+    }
 
     /**
      * Checks if is accepted.
@@ -166,8 +181,21 @@ public class WebsocketsSynchronizer extends BaseSynchronizer<Websocket, Long> {
      */
     @Override
     protected boolean completeImpl(TopologyWrapper<Websocket> wrapper, ArtefactPhase flow) {
+        // A websocket whose script engine is not deployed would accept sessions and fail every event:
+        // it is FAILED, with the missing engine as the reason, and retried like any FAILED artefact.
+        if (isStarting(flow) && scriptDispatcher.getIfAvailable() == null) {
+            ScriptEngineUnavailableException e = new ScriptEngineUnavailableException(wrapper.getArtefact()
+                                                                                             .getHandler());
+            callback.addError(e.getMessage());
+            callback.registerState(this, wrapper, ArtefactLifecycle.FAILED, e);
+            return false;
+        }
         callback.registerState(this, wrapper, ArtefactLifecycle.CREATED);
         return true;
+    }
+
+    private static boolean isStarting(ArtefactPhase flow) {
+        return flow == ArtefactPhase.CREATE || flow == ArtefactPhase.UPDATE || flow == ArtefactPhase.START;
     }
 
     /**

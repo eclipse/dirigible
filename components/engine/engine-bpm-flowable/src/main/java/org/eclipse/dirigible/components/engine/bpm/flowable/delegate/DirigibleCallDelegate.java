@@ -11,31 +11,26 @@ package org.eclipse.dirigible.components.engine.bpm.flowable.delegate;
 
 import static org.eclipse.dirigible.components.engine.bpm.flowable.dto.ActionData.Action.SKIP;
 import static org.eclipse.dirigible.components.engine.bpm.flowable.service.BpmService.DIRIGIBLE_BPM_INTERNAL_SKIP_STEP;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
+import org.eclipse.dirigible.components.base.script.ScriptEngineUnavailableException;
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.open.telemetry.OpenTelemetryProvider;
 import org.eclipse.dirigible.components.tracing.TaskState;
 import org.eclipse.dirigible.components.tracing.TaskStateUtil;
 import org.eclipse.dirigible.components.tracing.TaskType;
 import org.eclipse.dirigible.components.tracing.TracingFacade;
-import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.flowable.common.engine.impl.el.FixedValue;
 import org.flowable.engine.delegate.BpmnError;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
-import org.graalvm.polyglot.PolyglotException;
-import org.graalvm.polyglot.Source;
-import org.graalvm.polyglot.Value;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.Tracer;
 import io.opentelemetry.context.Scope;
-import jakarta.annotation.Nullable;
 
 /**
  * The Class DirigibleCallDelegate.
@@ -45,9 +40,11 @@ import jakarta.annotation.Nullable;
 @Component("JSTask")
 public class DirigibleCallDelegate implements JavaDelegate {
 
-    /** The js expression regex. */
-    private static final Pattern JS_EXPRESSION_REGEX = Pattern.compile("(.*\\.(?:m?js|ts))(?:\\/(\\w*))?(?:\\/(\\w*))?");
     private final TenantContext tenantContext;
+    /**
+     * The executor of the script handler, absent where no script engine is deployed.
+     */
+    private final ObjectProvider<BpmScriptExecutor> scriptExecutor;
     /**
      * The handler.
      */
@@ -57,117 +54,9 @@ public class DirigibleCallDelegate implements JavaDelegate {
      */
     private FixedValue type;
 
-    DirigibleCallDelegate(TenantContext tenantContext) {
+    DirigibleCallDelegate(TenantContext tenantContext, ObjectProvider<BpmScriptExecutor> scriptExecutor) {
         this.tenantContext = tenantContext;
-    }
-
-    /**
-     * The Class JSTask.
-     */
-    static class JSTask {
-
-        /** The source file path. */
-        private final Path sourceFilePath;
-
-        /** The class name. */
-        private final @Nullable String className;
-
-        /** The method name. */
-        private final @Nullable String methodName;
-
-        /** The has exported class and method. */
-        private final boolean hasExportedClassAndMethod;
-
-        /** The has exported method. */
-        private final boolean hasExportedMethod;
-
-        /**
-         * Instantiates a new JS task.
-         *
-         * @param sourceFilePath the source file path
-         * @param className the class name
-         * @param methodName the method name
-         */
-        JSTask(Path sourceFilePath, @Nullable String className, @Nullable String methodName) {
-            this.sourceFilePath = sourceFilePath;
-            this.className = className;
-            this.methodName = methodName;
-            this.hasExportedMethod = className == null && methodName != null;
-            this.hasExportedClassAndMethod = className != null && methodName != null;
-        }
-
-        /**
-         * From repository path.
-         *
-         * @param repositoryPath the repository path
-         * @return the JS task
-         */
-        static JSTask fromRepositoryPath(RepositoryPath repositoryPath) {
-            var matcher = JS_EXPRESSION_REGEX.matcher(repositoryPath.getPath());
-            if (!matcher.matches()) {
-                throw new BpmnRuntimeException("Invalid JS expression provided for task! Path [" + repositoryPath.getPath()
-                        + "] doesn't match " + JS_EXPRESSION_REGEX);
-            }
-
-            String maybeClassName;
-            String maybeMethodName;
-
-            if (matcher.group(2) != null && matcher.group(3) != null) {
-                maybeClassName = matcher.group(2);
-                maybeMethodName = matcher.group(3);
-            } else {
-                maybeClassName = null;
-                maybeMethodName = matcher.group(2);
-            }
-
-            Path sourceFilePath = Path.of(matcher.group(1));
-            return new JSTask(sourceFilePath, maybeClassName, maybeMethodName);
-        }
-
-        /**
-         * Gets the source file path.
-         *
-         * @return the source file path
-         */
-        public Path getSourceFilePath() {
-            return sourceFilePath;
-        }
-
-        /**
-         * Gets the class name.
-         *
-         * @return the class name
-         */
-        public String getClassName() {
-            return className;
-        }
-
-        /**
-         * Gets the method name.
-         *
-         * @return the method name
-         */
-        public String getMethodName() {
-            return methodName;
-        }
-
-        /**
-         * Checks for exported class and method.
-         *
-         * @return true, if successful
-         */
-        public boolean hasExportedClassAndMethod() {
-            return hasExportedClassAndMethod;
-        }
-
-        /**
-         * Checks for exported method.
-         *
-         * @return true, if successful
-         */
-        public boolean hasExportedMethod() {
-            return hasExportedMethod;
-        }
+        this.scriptExecutor = scriptExecutor;
     }
 
     /**
@@ -240,13 +129,8 @@ public class DirigibleCallDelegate implements JavaDelegate {
                 TracingFacade.taskSuccessful(taskState, output);
             }
         } catch (RuntimeException e) {
-            if (e instanceof PolyglotException) {
-                if (((PolyglotException) e).isHostException()) {
-                    Throwable hostException = ((PolyglotException) e).asHostException();
-                    if (hostException instanceof BpmnError) {
-                        throw (BpmnError) hostException;
-                    }
-                }
+            if (e instanceof BpmnError bpmnError) {
+                throw bpmnError;
             }
 
             if (TracingFacade.isTracingEnabled()) {
@@ -323,28 +207,17 @@ public class DirigibleCallDelegate implements JavaDelegate {
      */
     private void executeJSHandler(Map<Object, Object> context) {
         RepositoryPath path = new RepositoryPath(handler.getExpressionText());
-        JSTask task = JSTask.fromRepositoryPath(path);
 
         Span.current()
             .setAttribute("handler", path.toString())
             .setAttribute("tenantId", tenantContext.getCurrentTenant()
                                                    .getId());
 
-        try (DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner(context, false)) {
-            Source source = runner.prepareSource(task.getSourceFilePath());
-            Value value = runner.run(source);
-
-            if (task.hasExportedClassAndMethod()) {
-                value.getMember(task.getClassName())
-                     .newInstance()
-                     .getMember(task.getMethodName())
-                     .executeVoid();
-            } else if (task.hasExportedMethod()) {
-                value.getMember(task.getMethodName())
-                     .executeVoid();
-            }
-
+        BpmScriptExecutor executor = scriptExecutor.getIfAvailable();
+        if (executor == null) {
+            throw new ScriptEngineUnavailableException(path.getPath());
         }
+        executor.execute(path.getPath(), context);
     }
 
 }

@@ -36,10 +36,11 @@ import org.apache.hc.core5.concurrent.FutureCallback;
 import org.apache.hc.client5.http.impl.async.CloseableHttpAsyncClient;
 import org.apache.hc.client5.http.impl.async.HttpAsyncClients;
 import org.eclipse.dirigible.components.api.http.client.HttpClientRequestOptions;
-import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
+import org.eclipse.dirigible.components.base.script.ScriptEngineUnavailableException;
+import org.eclipse.dirigible.components.base.script.ScriptExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
 
 /**
@@ -51,8 +52,8 @@ public final class HttpClientAsyncFacade {
     /** The Constant logger. */
     private static final Logger logger = LoggerFactory.getLogger(HttpClientAsyncFacade.class);
 
-    /** The default engine executor. */
-    private JavascriptService defaultEngineExecutor = null;
+    /** The executor of the callback scripts, absent where no script engine is deployed. */
+    private final ObjectProvider<ScriptExecutor> scriptExecutor;
 
     /** The requests counter. */
     private int requestsCounter = 0;
@@ -63,18 +64,16 @@ public final class HttpClientAsyncFacade {
     /** The count down latch. */
     private CountDownLatch countDownLatch;
 
-    @Autowired
-    public HttpClientAsyncFacade(JavascriptService defaultEngineExecutor) {
-        this.defaultEngineExecutor = defaultEngineExecutor;
+    public HttpClientAsyncFacade(ObjectProvider<ScriptExecutor> scriptExecutor) {
+        this.scriptExecutor = scriptExecutor;
     }
 
-    /**
-     * Gets the default engine executor.
-     *
-     * @return the default engine executor
-     */
-    protected JavascriptService getDefaultEngineExecutor() {
-        return defaultEngineExecutor;
+    private ScriptExecutor scriptExecutor(String callback) {
+        ScriptExecutor executor = scriptExecutor.getIfAvailable();
+        if (executor == null) {
+            throw new ScriptEngineUnavailableException(callback);
+        }
+        return executor;
     }
 
     /**
@@ -399,7 +398,7 @@ public final class HttpClientAsyncFacade {
 
                 private void executeCallback(String completeCallback, Map<Object, Object> executionContext) {
                     try {
-                        getDefaultEngineExecutor().handleCallback(completeCallback, executionContext);
+                        scriptExecutor(completeCallback).executeCallback(completeCallback, executionContext);
                     } catch (Exception e) {
                         if (logger.isErrorEnabled()) {
                             logger.error(e.getMessage(), e);

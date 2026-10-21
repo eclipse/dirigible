@@ -80,8 +80,7 @@ public class ListenerManager {
         }
 
         LOGGER.info("Starting a message listener for {} ...", listenerDescriptor);
-        String handlerPath = listenerDescriptor.getHandlerPath();
-        ListenerExceptionHandler exceptionListener = new ListenerExceptionHandler(handlerPath);
+        ListenerExceptionHandler exceptionListener = asynchronousMessageListenerFactory.createExceptionHandler(listenerDescriptor);
         boolean shared = connectionMode == ListenerConnectionMode.SHARED;
         // Held outside the try: a subscription refused after the connection was handed out must give
         // the connection back - close an owned one, detach from the shared one - or it leaks per pass.

@@ -13,18 +13,15 @@ import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.type.ArrayType;
 import tools.jackson.databind.type.TypeFactory;
-import com.oracle.truffle.js.runtime.GraalJSException;
-import com.oracle.truffle.js.runtime.Strings;
-import com.oracle.truffle.js.runtime.builtins.JSErrorObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.ServiceLoader;
 
 /**
  * The Class LogFacade.
@@ -48,6 +45,13 @@ public class LogFacade {
     // use it, which is also the one whose configuration the type should reflect.
     private static final ArrayType objectArrayType = om.getTypeFactory()
                                                        .constructArrayType(Object.class);
+
+    /** The extractors of the errors scripts hand to the log, one per script engine deployed. */
+    private static final List<ScriptErrorExtractor> SCRIPT_ERROR_EXTRACTORS =
+            ServiceLoader.load(ScriptErrorExtractor.class, LogFacade.class.getClassLoader())
+                         .stream()
+                         .map(ServiceLoader.Provider::get)
+                         .toList();
 
     /**
      * Sets the logging level.
@@ -198,65 +202,16 @@ public class LogFacade {
         }
 
         // in case the error is thrown in a script code
-        Optional<Method> guestObjectMethod = getPublicMethod(rawError, "getGuestObject");
-        if (guestObjectMethod.isPresent()) {
-            Object guestObject = invokeMethod(guestObjectMethod.get(), rawError);
-            if (guestObject instanceof JSErrorObject jsErrorObject) {
-                if (jsErrorObject.isException()) {
-                    GraalJSException graalJSException = jsErrorObject.getException();
-                    GraalJSException.JSStackTraceElement[] jsStackTrace = graalJSException.getJSStackTrace();
-                    StackTraceElement[] jsStackTraceInJavaFormat = toJavaStackTrace(jsStackTrace);
-
-                    LOGGER.debug("A script error occurred (before changing the trace)", graalJSException);
-                    // set js stack trace to be printed when logged
-                    graalJSException.setStackTrace(jsStackTraceInJavaFormat);
-
-                    return graalJSException;
-                }
+        for (ScriptErrorExtractor extractor : SCRIPT_ERROR_EXTRACTORS) {
+            Optional<Throwable> error = extractor.extract(rawError);
+            if (error.isPresent()) {
+                return error.get();
             }
         }
 
         LOGGER.warn("An error cannot be extracted from [{}] of class [{}]", rawError, rawError.getClass());
 
         return null;
-    }
-
-    private static StackTraceElement[] toJavaStackTrace(GraalJSException.JSStackTraceElement[] jsStackTrace) {
-        if (null == jsStackTrace) {
-            return null;
-        }
-
-        return Arrays.stream(jsStackTrace)
-                     .map(LogFacade::toJavaStackTrace)
-                     .toArray(StackTraceElement[]::new);
-    }
-
-    private static StackTraceElement toJavaStackTrace(GraalJSException.JSStackTraceElement jsStackTrace) {
-        String declaringClass = "<js>";
-        String methodName = jsStackTrace.getMethodName();
-        String fileName = Strings.toJavaString(jsStackTrace.getFileName());
-        int lineNumber = jsStackTrace.getLineNumber();
-
-        return new StackTraceElement(declaringClass, methodName, fileName, lineNumber);
-    }
-
-    private static Object invokeMethod(Method method, Object object) {
-        try {
-            method.trySetAccessible();
-            return method.invoke(object);
-        } catch (IllegalAccessException | InvocationTargetException ex) {
-            throw new IllegalStateException("Failed to call method " + method + " in object " + object, ex);
-        }
-    }
-
-    private static Optional<Method> getPublicMethod(Object obj, String methodName) {
-        try {
-            return Optional.of(obj.getClass()
-                                  .getMethod(methodName));
-        } catch (NoSuchMethodException e) {
-            LOGGER.debug("Missing method [{}] in object [{}]", methodName, obj);
-            return Optional.empty();
-        }
     }
 
 }
