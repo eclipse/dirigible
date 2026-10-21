@@ -54,6 +54,7 @@ public final class ExportFile {
     private final String quote;
     private final boolean quoteAll;
     private final StringBuilder text = new StringBuilder();
+    private final List<String> normalised = new ArrayList<>();
     private final StringWriter xmlText;
     private final XMLStreamWriter xml;
     private int records;
@@ -211,6 +212,17 @@ public final class ExportFile {
     }
 
     /**
+     * Every value a field's normalisation changed, in the order written - the record, the field, the
+     * value as the data holds it and as the file carries it - so a value a recipient rejects can be
+     * traced back to its record.
+     *
+     * @return the changed values, one line each
+     */
+    public List<String> getNormalised() {
+        return List.copyOf(normalised);
+    }
+
+    /**
      * The media type of the file.
      *
      * @return the content type, with its charset where the format does not declare one itself
@@ -319,11 +331,19 @@ public final class ExportFile {
         }
     }
 
-    /** The field's text, refused when the encoding or XML cannot carry it exactly. */
+    /**
+     * The field's text, normalised, refused when the encoding or XML cannot carry it exactly. A value
+     * the normalisation changed is recorded, original beside written.
+     */
     private String checked(String element, ExportField field, Object value) {
         String formatted;
         try {
-            formatted = field.text(value);
+            String original = field.text(value);
+            formatted = field.normalise(original);
+            if (!formatted.equals(original)) {
+                normalised.add("record " + records + " [" + element + "] field [" + field.getName() + "]: [" + original + "] -> ["
+                        + formatted + "]");
+            }
         } catch (IllegalArgumentException ex) {
             throw refused(element, ex.getMessage(), ex);
         }

@@ -62,6 +62,7 @@ public final class ExportSupport {
     private static final Set<String> FORMATS = Set.of(FIXED_WIDTH, DELIMITED, XML);
     private static final List<String> RECORD_TYPES = List.of("header", "line", "trailer");
     private static final Set<String> OPS = Set.of("eq", "ne", "gt", "ge", "lt", "le");
+    private static final Set<String> DISALLOWED = Set.of("strip", "space", "fail");
     private static final Set<String> NUMERIC_TYPES = Set.of("integer", "int", "long", "decimal", "double");
 
     /** An identifier the generated code can carry as a Java local and a query parameter. */
@@ -435,6 +436,81 @@ public final class ExportSupport {
                 issues.add(at + " pattern [" + field.getPattern() + "] is not a date/time pattern: " + ex.getMessage());
             }
         }
+        validateNormalisation(field, at, issues);
+    }
+
+    /**
+     * The text normalisation of a field (#7925). Each key is refused where it could not act: on a
+     * number or a date (the field is not text), {@code onDisallowed} without {@code allowed}, and
+     * {@code onLoss} on a field whose normalisation only cases and spaces - neither changes a letter.
+     */
+    private static void validateNormalisation(ExportFieldIntent field, String at, List<String> issues) {
+        if (!normalises(field)) {
+            return;
+        }
+        if (field.getScale() != null || field.getPattern() != null) {
+            issues.add(at + " normalises its text, but it writes a " + (field.getScale() != null ? "number" : "date"));
+        }
+        if (field.getTextCase() != null && !"upper".equals(field.getTextCase()) && !"lower".equals(field.getTextCase())) {
+            issues.add(at + " case [" + field.getTextCase() + "] must be upper or lower");
+        }
+        if (field.getReplace() != null && field.getReplace()
+                                               .containsKey("")) {
+            issues.add(at + " replace has an empty key - there is no text to replace");
+        }
+        if (field.getAllowed() != null) {
+            try {
+                Pattern.compile("[" + field.getAllowed() + "]");
+            } catch (IllegalArgumentException ex) {
+                issues.add(at + " allowed [" + field.getAllowed() + "] is not a character class: " + ex.getMessage());
+            }
+        }
+        if (field.getOnDisallowed() != null && !DISALLOWED.contains(field.getOnDisallowed())) {
+            issues.add(at + " onDisallowed [" + field.getOnDisallowed() + "] must be strip, space or fail");
+        } else if (field.getOnDisallowed() != null && field.getAllowed() == null) {
+            issues.add(at + " declares onDisallowed without the allowed characters");
+        }
+        if (field.getOnLoss() != null && !"fail".equals(field.getOnLoss())) {
+            issues.add(at + " onLoss [" + field.getOnLoss() + "] must be fail");
+        } else if (field.getOnLoss() != null && field.getAllowed() == null && field.getReplace() == null) {
+            issues.add(at + " declares onLoss, but only replace or allowed can change a letter or a digit");
+        }
+    }
+
+    /** Whether a field declares any text normalisation. */
+    private static boolean normalises(ExportFieldIntent field) {
+        return field.getTextCase() != null || field.getAllowed() != null || field.getReplace() != null || field.getOnDisallowed() != null
+                || Boolean.TRUE.equals(field.getCollapseSpaces()) || field.getOnLoss() != null;
+    }
+
+    /**
+     * Whether an export writes any field through a text normalisation - its runs record what it
+     * changed.
+     */
+    private static boolean normalises(ExportIntent export) {
+        return export.getRecords()
+                     .stream()
+                     .flatMap(record -> record.getFields()
+                                              .stream())
+                     .anyMatch(ExportSupport::normalises);
+    }
+
+    /**
+     * The ledgers of the exports that normalise a field's text - the ones the EDM generator gives the
+     * column recording what each run changed (#7925).
+     *
+     * @param model the intent
+     * @return the ledger entity names
+     */
+    public static Set<String> normalisingLedgers(IntentModel model) {
+        Set<String> ledgers = new LinkedHashSet<>();
+        for (ExportIntent export : model.getExports()) {
+            if (!isBlank(export.getLedger()) && normalises(export)) {
+                ledgers.add(export.getLedger()
+                                  .trim());
+            }
+        }
+        return ledgers;
     }
 
     private static void validateAggregate(IntentModel model, Aggregate aggregate, Source source, Map<String, EntityIntent> byName) {
@@ -555,6 +631,10 @@ public final class ExportSupport {
             layout.put("fields", fields);
             ofType.add(layout);
         }
+        if (normalises(export)) {
+            // The runs record what the normalisation changed; without it the glue is as it was.
+            entry.put("normalises", true);
+        }
         entry.put("headerRecords", records.get("header"));
         entry.put("lineRecords", records.get("line"));
         entry.put("trailerRecords", records.get("trailer"));
@@ -621,6 +701,26 @@ public final class ExportSupport {
             descriptor.put("pattern", field.getPattern());
         }
         descriptor.put("attribute", Boolean.TRUE.equals(field.getAttribute()));
+        if (field.getReplace() != null) {
+            List<Map<String, String>> replacements = new ArrayList<>();
+            field.getReplace()
+                 .forEach((target,
+                         replacement) -> replacements.add(Map.of("target", target, "replacement", replacement == null ? "" : replacement)));
+            descriptor.put("replace", replacements);
+        }
+        if (field.getTextCase() != null) {
+            descriptor.put("case", field.getTextCase());
+        }
+        if (field.getAllowed() != null) {
+            descriptor.put("allowed", field.getAllowed());
+            descriptor.put("onDisallowed", field.getOnDisallowed() == null ? "fail" : field.getOnDisallowed());
+        }
+        if (Boolean.TRUE.equals(field.getCollapseSpaces())) {
+            descriptor.put("collapseSpaces", true);
+        }
+        if ("fail".equals(field.getOnLoss())) {
+            descriptor.put("failOnLoss", true);
+        }
         descriptor.put("reading", valueReading(model, field, source, byName, loads, aggregates));
         return descriptor;
     }

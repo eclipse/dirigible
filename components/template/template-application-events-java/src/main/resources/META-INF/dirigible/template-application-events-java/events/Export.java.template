@@ -212,6 +212,10 @@ public class ${className}Export {
             run.Uuid = stored.uuid();
             run.Checksum = ExportFile.checksum(content);
             run.RecordCount = rows.size();
+#if($normalises)
+            // Every value a field's normalisation changed, as the data holds it and as the file carries it.
+            run.Normalised = file.getNormalised().isEmpty() ? null : String.join("\n", file.getNormalised());
+#end
             run.Outcome = SUCCEEDED;
             ${ledger}Entity recorded = ledger.save(run);
             LOG.info("Export ${nameJavaLiteral}: wrote [{}] row(s) into [{}] (run [{}])", rows.size(), recorded.FileName, recorded.Id);

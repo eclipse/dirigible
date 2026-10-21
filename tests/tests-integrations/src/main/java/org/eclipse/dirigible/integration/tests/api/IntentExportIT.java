@@ -149,6 +149,26 @@ class IntentExportIT extends IntegrationTest {
                     fields: [{ literal: Number }, { literal: Note }]
                   - type: line
                     fields: [{ from: number }, { from: note }]
+              # A regulator's field that accepts uppercase Cyrillic, digits and hyphens only (#7925).
+              - name: SupplierDeclaration
+                source: Supplier
+                format: delimited
+                delimiter: ';'
+                lineEnding: lf
+                ledger: ExportRun
+                parameters:
+                  - { name: vat, field: vatNumber, op: eq }
+                records:
+                  - type: line
+                    fields:
+                      - { from: vatNumber }
+                      - from: name
+                        replace: { "№": "" }
+                        case: upper
+                        allowed: "А-ЯЁ0-9 -"
+                        onDisallowed: strip
+                        collapseSpaces: true
+                        onLoss: fail
             """;
 
     /** Hand-written code calling the generated export bean - the job-callable half of the construct. */
@@ -240,6 +260,30 @@ class IntentExportIT extends IntegrationTest {
         Map<String, Object> notesRun = ledgerRun(Integer.parseInt(runId.get()));
         assertEquals(sha256(notes), notesRun.get("Checksum"));
         assertEquals("SUCCEEDED", notesRun.get("Outcome"));
+
+        // A name normalised for a narrow character set: replaced, uppercased, its punctuation stripped and
+        // its spaces collapsed - and the run records the name as the data holds it beside the file's.
+        create(API + "/supplier/SupplierController", "{\"Name\":\"Гама-Трейд, ЕООД / клон №2\",\"VatNumber\":\"BG333\"}");
+        Response declaration = download(EXPORTS + "/SupplierDeclarationExport/download?vat=BG333", 200);
+        assertEquals("BG333;ГАМА-ТРЕЙД ЕООД КЛОН 2\n", new String(declaration.asByteArray(), StandardCharsets.UTF_8));
+        assertLedgerRun(declaration, "SupplierDeclaration", 1);
+        String normalised = String.valueOf(ledgerRun(Integer.parseInt(declaration.getHeader("X-Export-Run"))).get("Normalised"));
+        assertTrue(normalised.startsWith("record 1 [line] field [")
+                && normalised.endsWith("]: [Гама-Трейд, ЕООД / клон №2] -> [ГАМА-ТРЕЙД ЕООД КЛОН 2]"), normalised);
+
+        // A Latin name has no letter the field allows: written, it would be a value nobody typed, so the
+        // run is refused naming the record and recorded FAILED.
+        restAssuredExecutor.execute(() -> given().when()
+                                                 .get(EXPORTS + "/SupplierDeclarationExport/download?vat=BG222")
+                                                 .then()
+                                                 .statusCode(422)
+                                                 .body(containsString("record 1 [line]"))
+                                                 .body(containsString("[Beta] would be written as []")),
+                90);
+        List<Map<String, Object>> declarationRuns = ledgerRuns();
+        Map<String, Object> refusedDeclaration = declarationRuns.get(declarationRuns.size() - 1);
+        assertEquals("SupplierDeclaration", refusedDeclaration.get("Export"));
+        assertEquals("FAILED", refusedDeclaration.get("Outcome"));
 
         // A required parameter left out is refused before anything runs, and records nothing.
         int recorded = ledgerRuns().size();
