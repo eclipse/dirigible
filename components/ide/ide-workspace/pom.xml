@@ -24,6 +24,14 @@
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-core-repository</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-components-core-project</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-commons-process</artifactId>
+        </dependency>
         
         <!-- API -->
         <dependency>
@@ -40,7 +48,7 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-components-engine-typescript</artifactId>
+            <artifactId>dirigible-components-engine-javascript</artifactId>
         </dependency>
         
         <!-- Test -->

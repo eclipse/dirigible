@@ -30,15 +30,29 @@
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-core-base</artifactId>
 		</dependency>
+
+		<!-- Libraries -->
 		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-engine-javascript</artifactId>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-core</artifactId>
+			<version>${lucene.version}</version>
 		</dependency>
-		
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-queryparser</artifactId>
+			<version>${lucene.version}</version>
+		</dependency>
+
 		<!-- Test -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-engine-javascript</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-test</artifactId>
+			<scope>test</scope>
 		</dependency>
 		
 		

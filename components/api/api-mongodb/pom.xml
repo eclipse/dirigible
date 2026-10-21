@@ -28,12 +28,6 @@
 		<!-- Engine -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-engine-javascript</artifactId>
-		</dependency>
-		
-		<!-- Engine -->
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-database-mongodb-jdbc</artifactId>
 		</dependency>
 		

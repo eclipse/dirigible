@@ -41,10 +41,17 @@
 			<artifactId>dirigible-commons-config</artifactId>
 		</dependency>
 
+		<!-- Components -->
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-core-base</artifactId>
+		</dependency>
+
 		<!-- Test -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-api-test</artifactId>
+			<scope>test</scope>
 		</dependency>
 
 	</dependencies>
