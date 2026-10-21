@@ -1542,7 +1542,9 @@ class IntentEmissionCoverageIT extends IntegrationTest {
               # delegate counts invocations, so GeneratedKey == KEY-3 pins the R<count+1> cycle),
               # the produced secret flows through `uses` into the writer and is cleared once it
               # completes, and the doomed call after the hold exhausts its single retry and routes
-              # its FINAL attempt's message into the record via {error}.
+              # its FINAL attempt's message into the record via {error}. The writer is bound with a
+              # `call:` naming its Java source (#8009): it runs on the delegate path, not as a
+              # JavaScript task, so the KEY-3 on the record is also proof that the call ran.
               - name: ProvisionFlow
                 trigger: { onCreate: Provision }
                 vars:
@@ -1558,7 +1560,7 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                       next: storeKey
                   - name: storeKey
                     kind: serviceTask
-                    args: { delegate: custom.ProvisionKeyWriter, uses: [apiKey], next: notifyOwner }
+                    args: { call: custom/ProvisionKeyWriter.java, uses: [apiKey], next: notifyOwner }
                   # a SEND declaring its own resilience (#7056): this instance has no SMTP, so the
                   # delivery cannot succeed - which is the case being asserted. The exhausted retry
                   # routes the FINAL attempt's message onto the record and the flow CARRIES ON to the
@@ -5173,6 +5175,13 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                 "onError must emit the intent error definition, a cancelling boundary per step and the routed flow");
         assertTrue(provisionBpmn.contains("${execution.removeVariable('apiKey')}"),
                 "clearAfter must emit the end-listener removing the produced secret from the instance data");
+        // #8009: a `call:` naming a Java source binds the class the way `delegate:` does - never a
+        // JavaScript task, which would need the JavaScript engine for that one step.
+        assertTrue(
+                provisionBpmn.contains("<serviceTask id=\"storeKey\" name=\"Store Key\"")
+                        && provisionBpmn.contains("flowable:class=\"custom.ProvisionKeyWriter\""),
+                "a Java call must bind its class through flowable:class, as a delegate does");
+        assertFalse(provisionBpmn.contains("${JSTask}"), "a Java call must never emit a JavaScript task");
         String failureSetter = contentOf("gen/events/emission/ProvisionFlowRecordFailure.java");
         assertTrue(failureSetter.contains("execution.getVariable(\"__errorMessage\")"),
                 "the {error} setter must read the failure message the conversion published");

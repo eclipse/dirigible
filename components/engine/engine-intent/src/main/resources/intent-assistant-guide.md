@@ -1909,6 +1909,11 @@ an entity must live in that entity's project** and manage it through the generat
 entity-agnostic helpers (e.g. a number generator over its own repository) belong in a shared project
 and are called from the delegate (client Java compiles across all published projects). `delegate`
 cannot be combined with `setField` / `setRelationField` / `call`; `fields` values must be scalars.
+**Write `delegate:`, never `call:`.** `call:` is the legacy spelling: naming a Java class it is bound
+exactly like `delegate:`, and naming a TypeScript/JavaScript handler (`custom/x.ts`) it is deprecated
+and reported on every Generate. Leave an existing TypeScript `call:` as it is unless the developer
+says the Java delegate that replaces it exists - a `delegate:` naming a class nobody wrote fails the
+step at runtime.
 
 **Step resilience on a `delegate:` or a `notify:` step: `retry:`, `onError:`, `{error}` and declared
 step data.** A step that talks to something remote - provision a schema, register a client in an

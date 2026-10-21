@@ -1496,6 +1496,50 @@ class IntentEngineIT extends IntegrationTest {
     }
 
     @Test
+    void call_step_binds_a_java_class_like_a_delegate_and_reports_a_typescript_handler_as_deprecated() {
+        // #8009: a `call:` naming a Java class is bound exactly as `delegate:` binds it (flowable:class,
+        // built and injected by the client bean container), so a Java application needs no JavaScript
+        // engine for it. A `call:` naming a TypeScript handler keeps its ${JSTask} task - an existing
+        // process keeps working - and the generate response tells the author it is deprecated.
+        String yaml = """
+                name: archiving
+                entities:
+                  - name: Document
+                    fields:
+                      - { name: id,    type: integer, primaryKey: true, generated: true }
+                      - { name: title, type: string, length: 100 }
+                processes:
+                  - name: ArchiveDocument
+                    trigger: { onCreate: Document }
+                    steps:
+                      - { name: archive,     kind: serviceTask, args: { call: custom/DocumentArchiver.java } }
+                      - { name: notifyOwner, kind: serviceTask, args: { call: custom/notify-owner.ts } }
+                      - { name: done, kind: end }
+                """;
+        writeIntent(yaml);
+        restAssuredExecutor.execute(() -> given().when()
+                                                 .post(GENERATE_URL)
+                                                 .then()
+                                                 .statusCode(200)
+                                                 .body("warnings", hasItem(containsString(
+                                                         "step [notifyOwner] call [custom/notify-owner.ts] names a TypeScript/JavaScript handler, which is deprecated")))
+                                                 .body("warnings", hasItem(containsString("bind it with `delegate:`")))
+                                                 .body("warnings", not(hasItem(containsString("[archive]")))));
+
+        String bpmn = contentOf("ArchiveDocument.bpmn");
+        assertTrue(
+                bpmn.contains("<serviceTask id=\"archive\" name=\"Archive\"")
+                        && bpmn.contains("flowable:class=\"custom.DocumentArchiver\""),
+                "a Java call must bind its class through flowable:class, as a delegate does");
+        assertEquals(1, bpmn.split("\\$\\{JSTask}", -1).length - 1, "only the TypeScript call may emit a JavaScript task");
+        assertTrue(
+                bpmn.contains("<serviceTask id=\"notifyOwner\" name=\"Notify Owner\"")
+                        && bpmn.contains("<![CDATA[" + PROJECT + "/custom/notify-owner.ts]]>"),
+                "the TypeScript call keeps its ${JSTask} task and its project-qualified handler path");
+        assertFalse(resource("custom/Archive.java").exists(), "a Java call names its own class - no custom/ stub is scaffolded");
+    }
+
+    @Test
     void wait_step_and_boundary_timers_emit_catch_event_timers_and_correlating_glue() {
         // BPM events wave 1 (#6327/#6328): a `wait` step parks the process on a message intermediate
         // catch event resumed by a generated correlating listener (by the stamped ProcessId through the
