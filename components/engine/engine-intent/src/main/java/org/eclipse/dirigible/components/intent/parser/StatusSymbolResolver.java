@@ -280,10 +280,13 @@ final class StatusSymbolResolver {
             // than the exception - "start this process when the record reaches IDENTIFIED" is what an
             // onTransition trigger is FOR - and this was the one `when` in the DSL left unresolved: the
             // name survived into the generated listener as a string compared against the integer FK, so
-            // the guard could never hold and the process silently never started (#6862).
+            // the guard could never hold and the process silently never started (#6862). The same
+            // failure hid behind any other to-one relation - "start this flow for a CLOSE request" names
+            // a seed of the request-type nomenclature - so the guard then resolves each to-one relation
+            // against ITS target, as a decision does (#8015).
             Map<?, ?> trigger = asMap(process.get("trigger"));
             if (trigger != null && trigger.get("when") != null) {
-                rewriteWhen(trigger, statusRelationName(triggerEntity), statusOf(triggerEntity), subject + " trigger when");
+                rewriteTriggerWhen(trigger, triggerEntity, subject + " trigger when");
             }
             for (Object stepNode : asList(process.get("steps"))) {
                 Map<?, ?> step = asMap(stepNode);
@@ -310,7 +313,7 @@ final class StatusSymbolResolver {
                 // on any to-one (a send method, a channel), and resolving against the entity's status
                 // would take an id out of the wrong nomenclature.
                 if ("decision".equals(lower(text(step, "kind"))) && args.get("if") instanceof String condition) {
-                    put(args, "if", rewriteRelationComparisons(condition, triggerEntity, stepSubject + " if"));
+                    put(args, "if", rewriteRelationComparisons(condition, triggerEntity, null, stepSubject + " if"));
                 }
                 // `setRelationField: <Relation>` + `value:` writes an id of THAT relation's target - the
                 // status in the canonical case, but the same shape serves any nomenclature FK.
@@ -439,7 +442,9 @@ final class StatusSymbolResolver {
      * staleness sweep, a month-end generation all start by naming the status the row must stand in.
      * Left unresolved, the name reached the generated job as a string compared against the integer
      * status FK ({@code .eq("Status", "OVERDUE")}), so the query matched nothing forever and the
-     * schedule ticked on doing nothing - the silent failure naming a status exists to remove (#6645).
+     * schedule ticked on doing nothing - the silent failure naming a status exists to remove (#6645). A
+     * condition on any other to-one relation names a seed of that relation's own target and resolves
+     * the same way (#8015).
      *
      * <p>
      * Same-model source only. A cross-model source ({@code model: <uses alias>}) is not in this file's
@@ -552,27 +557,53 @@ final class StatusSymbolResolver {
     }
 
     /**
-     * Resolve the one condition of a {@code { field, op, value }} where list whose {@code field} names
-     * the queried entity's {@code function: EntityStatus} relation, on that entity's own nomenclature.
+     * Resolve the conditions of a {@code { field, op, value }} where list whose {@code field} names a
+     * to-one relation of the queried entity: the {@code function: EntityStatus} one on that entity's
+     * own nomenclature, any other (issue #8015) on the nomenclature of the relation's own target - a
+     * request's {@code type} names a seed of the request types, not a status.
      *
      * <p>
-     * Only that condition is a candidate at all, exactly as a register lookup's static filter is: every
-     * other condition compares an ordinary column, whose string value (an {@code op: like} on a name)
-     * is just a value and would be reported as an unknown status.
+     * Only those conditions are candidates at all, exactly as a register lookup's static filter is:
+     * every other condition compares an ordinary column, whose string value (an {@code op: like} on a
+     * name) is just a value and would be reported as an unknown status.
      */
     private void rewriteConditions(Object where, String entityName, String subject) {
         String statusRelation = statusRelationName(entityName);
-        if (statusRelation == null) {
-            return;
-        }
-        Target status = statusOf(entityName);
         for (Object node : asList(where)) {
             Map<?, ?> condition = asMap(node);
             String field = condition == null ? null : text(condition, "field");
-            if (field != null && lower(field).equals(lower(statusRelation))) {
-                putResolved(condition, "value", status, subject + " [" + field + "]");
+            if (field == null) {
+                continue;
+            }
+            if (lower(field).equals(lower(statusRelation))) {
+                putResolved(condition, "value", statusOf(entityName), subject + " [" + field + "]");
+                continue;
+            }
+            Map<?, ?> relation = toOneRelationIgnoringCase(entityName, field);
+            if (relation != null) {
+                rewriteRelationCondition(condition, relation, subject + " [" + field + "]");
             }
         }
+    }
+
+    /**
+     * Resolve a {@code where} condition on a non-status to-one relation whose value is a seeded name.
+     * The foreign key is an integer, so a name is meaningful only for equality: {@code eq}/{@code ne}
+     * resolve it, any other operator is refused.
+     */
+    private void rewriteRelationCondition(Map<?, ?> condition, Map<?, ?> relation, String subject) {
+        String name = condition.get("value") instanceof String ? text(condition, "value") : null;
+        String op = lower(text(condition, "op"));
+        if (name == null || op == null || INTEGER.matcher(name)
+                                                 .matches()) {
+            return; // nothing symbolic - or no operator, which the parser refuses
+        }
+        if (!"eq".equals(op) && !"ne".equals(op)) {
+            issues.add(subject + " compares the relation to the name [" + name + "] with [" + op
+                    + "] - a seeded name has no ordering; use eq/ne");
+            return;
+        }
+        putResolved(condition, "value", new Target(text(relation, "to"), text(relation, "model")), subject);
     }
 
     /**
@@ -708,8 +739,8 @@ final class StatusSymbolResolver {
     }
 
     /**
-     * Resolve every {@code <Relation> ==|!= <NAME>} comparison of a decision condition against the
-     * nomenclature THAT relation points at (issue #7648).
+     * Resolve every {@code <Relation> ==|!= <NAME>} comparison of a decision condition (issue #7648) or
+     * a trigger guard (issue #8015) against the nomenclature THAT relation points at.
      *
      * <p>
      * A term naming anything but a to-one relation of the entity is left exactly as written - a
@@ -719,10 +750,13 @@ final class StatusSymbolResolver {
      *
      * @param condition the authored condition
      * @param entityName the process's trigger entity
+     * @param resolvedRelation a relation an earlier pass over the same condition already resolved - its
+     *        comparisons are left to that pass, so a name it refused is not reported twice - or
+     *        {@code null}
      * @param subject what to name in an issue
      * @return the condition with each resolvable name replaced by its seed id
      */
-    private String rewriteRelationComparisons(String condition, String entityName, String subject) {
+    private String rewriteRelationComparisons(String condition, String entityName, String resolvedRelation, String subject) {
         if (condition == null || entityName == null) {
             return condition;
         }
@@ -730,7 +764,8 @@ final class StatusSymbolResolver {
         StringBuilder rewritten = new StringBuilder();
         while (matcher.find()) {
             String replacement = matcher.group();
-            Map<?, ?> relation = toOneRelation(entityName, matcher.group(1));
+            Map<?, ?> relation = matcher.group(1)
+                                        .equalsIgnoreCase(resolvedRelation) ? null : toOneRelation(entityName, matcher.group(1));
             boolean numeric = INTEGER.matcher(matcher.group(3))
                                      .matches();
             boolean nullTest = "null".equals(matcher.group(3));
@@ -757,6 +792,18 @@ final class StatusSymbolResolver {
                           .get("relations"))) {
             Map<?, ?> relation = asMap(node);
             if (relation != null && relationName.equals(text(relation, "name"))) {
+                return relation;
+            }
+        }
+        return null;
+    }
+
+    private Map<?, ?> toOneRelationIgnoringCase(String entityName, String relationName) {
+        for (Object node : asList(entities.get(entityName) == null ? null
+                : entities.get(entityName)
+                          .get("relations"))) {
+            Map<?, ?> relation = asMap(node);
+            if (relation != null && isToOne(relation) && relationName.equalsIgnoreCase(text(relation, "name"))) {
                 return relation;
             }
         }
@@ -837,6 +884,33 @@ final class StatusSymbolResolver {
         } else if (value instanceof String expression) {
             put(owner, key, rewriteExpression(expression, statusRelation, target, subject));
         }
+    }
+
+    /**
+     * Rewrite a process trigger's {@code when} guard in place, scalar or list (#6957): each term first
+     * through the record's own status, then through every other to-one relation of the trigger entity,
+     * each against its own target's nomenclature (#8015). Fields, literals and {@code null} tests pass
+     * through untouched.
+     */
+    @SuppressWarnings("unchecked")
+    private void rewriteTriggerWhen(Map<?, ?> trigger, String triggerEntity, String subject) {
+        Object value = trigger.get("when");
+        if (value instanceof List<?> list) {
+            List<Object> mutable = (List<Object>) list;
+            for (int i = 0; i < mutable.size(); i++) {
+                if (mutable.get(i) instanceof String term) {
+                    mutable.set(i, rewriteTriggerTerm(term, triggerEntity, subject));
+                }
+            }
+        } else if (value instanceof String term) {
+            put(trigger, "when", rewriteTriggerTerm(term, triggerEntity, subject));
+        }
+    }
+
+    private String rewriteTriggerTerm(String term, String triggerEntity, String subject) {
+        String statusRelation = statusRelationName(triggerEntity);
+        String rewritten = rewriteExpression(term, statusRelation, statusOf(triggerEntity), subject);
+        return rewriteRelationComparisons(rewritten, triggerEntity, statusRelation, subject);
     }
 
     /**
