@@ -1,0 +1,13 @@
+{
+    "name": "Scheduled Job (Java)",
+    "description": "Scheduled Job with a client Java handler",
+    "sources": [
+        {
+            "location": "/template-job/handler.java.template",
+            "action": "generate",
+            "rename": "{{javaPackageName}}/{{javaClassName}}.java"
+        }
+    ],
+    "parameters": [],
+    "order": 50
+}

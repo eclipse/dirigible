@@ -1,0 +1,6 @@
+{
+    "name": "websocket",
+    "label": "WebSocket",
+    "extension": "websocket",
+    "data": "{\n    \"handler\": \"myproject/myhandler.js\",\n    \"endpoint\": \"myendpoint\",\n    \"description\": \"My WebSocket\"\n}"
+}

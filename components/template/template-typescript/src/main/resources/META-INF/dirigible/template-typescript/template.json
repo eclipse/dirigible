@@ -1,0 +1,19 @@
+{
+    "name": "Java (API)",
+    "description": "Client Java Service Sample",
+    "glyph": "sap-icon--source-code",
+    "sources": [
+        {
+            "location": "/template-typescript/project.json.template",
+            "action": "generate",
+            "rename": "project.json"
+        },
+        {
+            "location": "/template-typescript/service.java.template",
+            "action": "generate",
+            "rename": "{{javaPackageName}}/{{javaClassName}}.java"
+        }
+    ],
+    "parameters": [],
+    "order": 1
+}

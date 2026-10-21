@@ -1,0 +1,10 @@
+{
+    "name": "Classpath Template",
+    "sources": [
+        {
+            "location": "/template-descriptors-test/file.txt.template",
+            "action": "generate"
+        }
+    ],
+    "parameters": []
+}

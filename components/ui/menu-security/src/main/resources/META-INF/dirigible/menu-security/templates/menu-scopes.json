@@ -1,0 +1,6 @@
+{
+    "name": "scopes",
+    "label": "Scopes Definitions",
+    "extension": "scopes",
+    "data": "[\n    {\n        \"scope\": \"administration\",\n        \"roles\": [\n            \"ADMINISTRATOR\"\n        ],\n        \"description\": \"Administration scope\"\n    },\n    {\n        \"scope\": \"operations\",\n        \"roles\": [\n            \"ADMINISTRATOR\",\n            \"OPERATOR\"\n        ],\n        \"description\": \"Operations scope\"\n    }\n]"
+}

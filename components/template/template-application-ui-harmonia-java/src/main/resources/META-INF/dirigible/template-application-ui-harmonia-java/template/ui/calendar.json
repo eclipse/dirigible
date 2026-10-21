@@ -1,0 +1,18 @@
+{
+    "sources": [
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/calendar/calendar-page.js.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/js/components/pages/{{perspectiveName}}/{{name}}CalendarPage.js",
+            "collection": "uiCalendarModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/calendar/calendar-view.html.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/views/{{perspectiveName}}/{{name}}-calendar.html",
+            "collection": "uiCalendarModels"
+        }
+    ]
+}

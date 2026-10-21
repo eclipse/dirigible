@@ -1,0 +1,14 @@
+{
+    "name": "Database Access (API)",
+    "description": "Client Java Service With Database Query Support",
+    "glyph": "sap-icon--database",
+    "sources": [
+        {
+            "location": "/template-database-access/service.java.template",
+            "action": "generate",
+            "rename": "{{javaPackageName}}/{{javaClassName}}.java"
+        }
+    ],
+    "parameters": [],
+    "order": 21
+}

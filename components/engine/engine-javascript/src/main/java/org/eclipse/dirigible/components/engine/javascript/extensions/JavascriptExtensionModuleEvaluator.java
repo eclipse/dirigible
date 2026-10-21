@@ -58,7 +58,7 @@ class JavascriptExtensionModuleEvaluator implements ExtensionModuleEvaluator {
         }
 
         @Override
-        public Optional<ExtensionModuleExport> evaluate(String module, List<String> exportNames) {
+        public Optional<ExtensionModuleExport> evaluate(String module, List<String> exportNames, List<Object> arguments) {
             Value exports = load(module);
             if (exports == null || !exports.hasMembers()) {
                 return Optional.empty();
@@ -66,7 +66,8 @@ class JavascriptExtensionModuleEvaluator implements ExtensionModuleEvaluator {
             for (String exportName : exportNames) {
                 Value export = exports.getMember(exportName);
                 if (export != null && export.canExecute()) {
-                    return Optional.of(new ExtensionModuleExport(exportName, toMap(module, exportName, export.execute())));
+                    Value result = export.execute(arguments.toArray());
+                    return Optional.of(new ExtensionModuleExport(exportName, toMap(module, exportName, result)));
                 }
             }
             return Optional.empty();

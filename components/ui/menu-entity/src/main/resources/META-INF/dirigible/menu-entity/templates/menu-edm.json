@@ -1,0 +1,7 @@
+{
+    "name": "edm",
+    "label": "Entity Data Model",
+    "extension": "edm",
+    "data": "<model><entities></entities><mxGraphModel><root></root></mxGraphModel></model>",
+    "order": 10
+}

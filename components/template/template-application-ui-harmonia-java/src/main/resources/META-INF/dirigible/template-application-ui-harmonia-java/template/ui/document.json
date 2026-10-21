@@ -1,0 +1,32 @@
+{
+    "sources": [
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/manage/list-page.js.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/js/components/pages/{{perspectiveName}}/{{name}}ManageListPage.js",
+            "collection": "uiDocumentModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/manage/list-view.html.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/views/{{perspectiveName}}/{{name}}-manage-list.html",
+            "collection": "uiDocumentModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/document/document-page.js.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/js/components/pages/{{perspectiveName}}/{{name}}DocumentPage.js",
+            "collection": "uiDocumentModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/document/document-view.html.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/views/{{perspectiveName}}/{{name}}-document.html",
+            "collection": "uiDocumentModels"
+        }
+    ]
+}

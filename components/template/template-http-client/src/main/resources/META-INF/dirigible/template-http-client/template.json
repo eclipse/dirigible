@@ -1,0 +1,13 @@
+{
+    "name": "HTTP Client (API)",
+    "description": "Client Java Service With HTTP Client Support",
+    "sources": [
+        {
+            "location": "/template-http-client/service.java.template",
+            "action": "generate",
+            "rename": "{{javaPackageName}}/{{javaClassName}}.java"
+        }
+    ],
+    "parameters": [],
+    "order": 20
+}

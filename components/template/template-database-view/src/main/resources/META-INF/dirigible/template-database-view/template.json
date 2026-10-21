@@ -1,0 +1,18 @@
+{
+    "name": "Database View (Model)",
+    "description": "Database View Descriptor",
+    "sources": [
+        {
+            "location": "/template-database-view/database.view.template",
+            "action": "generate",
+            "rename": "{{fileName}}.view"
+        }
+    ],
+    "parameters": [
+        {
+            "name": "viewName",
+            "label": "View Name"
+        }
+    ],
+    "order": 41
+}

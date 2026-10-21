@@ -1,0 +1,6 @@
+{
+    "name": "csv",
+    "label": "CSV File",
+    "extension": "csv",
+    "data": "column1,column2\nvalue1_1,value2_1\nvalue1_2,value2_2"
+}

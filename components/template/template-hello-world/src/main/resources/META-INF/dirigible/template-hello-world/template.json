@@ -1,0 +1,13 @@
+{
+    "name": "Hello World",
+    "description": "Basic client Java service sample",
+    "sources": [
+        {
+            "location": "/template-hello-world/service.java.template",
+            "action": "generate",
+            "rename": "{{javaPackageName}}/{{javaClassName}}.java"
+        }
+    ],
+    "parameters": [],
+    "order": 0
+}

@@ -22,23 +22,18 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import org.eclipse.dirigible.commons.config.StaticObjects;
-import org.eclipse.dirigible.components.api.platform.WorkspaceFacade;
-import org.eclipse.dirigible.components.base.spring.BeanProvider;
 import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
+import org.eclipse.dirigible.components.ide.template.service.TemplateDescriptors;
 import org.eclipse.dirigible.components.ide.workspace.service.PublisherService;
 import org.eclipse.dirigible.components.ide.workspace.service.WorkspaceService;
 import org.eclipse.dirigible.components.initializers.classpath.ClasspathExpander;
 import org.eclipse.dirigible.components.intent.generator.IntentGenerationService;
 import org.eclipse.dirigible.components.intent.model.UsesIntent;
 import org.eclipse.dirigible.components.intent.parser.IntentParser;
-import org.eclipse.dirigible.components.open.telemetry.OpenTelemetryProvider;
 import org.eclipse.dirigible.components.base.registry.RegistryMutationTracker;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.local.LocalRepository;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
-import io.opentelemetry.api.OpenTelemetry;
 
 /**
  * Regenerates a project from its {@code *.intent} the way the IDE's Generate does, without a
@@ -46,9 +41,9 @@ import io.opentelemetry.api.OpenTelemetry;
  * repository, with the template modules laid into its registry from the classpath.
  *
  * <p>
- * Only the generation beans are created - no web server, no data source, no synchronizer. They
- * still live in a Spring context, because the template descriptors are JavaScript modules whose
- * runner resolves its optional collaborators through {@link BeanProvider}.
+ * Only the generation beans are created - no web server, no data source, no synchronizer, and no
+ * script engine: the template descriptors are data, so a generation runs no script. A template
+ * whose descriptor is still a script is refused by name.
  *
  * <p>
  * The project is copied in, never generated in place: the caller decides what to do with the
@@ -78,24 +73,15 @@ final class IntentRegeneration implements AutoCloseable {
      * @throws IOException when the repository folder cannot be created
      */
     IntentRegeneration() throws IOException {
-        // the real path: the script engine resolves modules against canonical paths, and a temp folder
-        // reached through a symbolic link (macOS /var -> /private/var) would not be the registry it reads
-        root = Files.createTempDirectory("dirigible-generate-")
-                    .toRealPath();
+        root = Files.createTempDirectory("dirigible-generate-");
         repository = new LocalRepository(root.toString(), true);
-        // the template-module runner finds the registry through it
-        StaticObjects.set(StaticObjects.REPOSITORY, repository);
         context = new AnnotationConfigApplicationContext();
         context.registerBean(IRepository.class, () -> repository);
-        context.registerBean(BeanProvider.class);
-        // every script run is traced; a generation run has no collector to send the spans to
-        context.registerBean(OpenTelemetryProvider.class);
-        context.registerBean(OpenTelemetry.class, OpenTelemetry::noop);
         context.registerBean(RegistryMutationTracker.class);
+        // the workspace service takes it for the on-save extensions, which a generation never triggers
         context.registerBean(JavascriptService.class);
         context.registerBean(WorkspaceService.class);
-        // the template modules' own scripts (project.json.mjs) read the workspace through it
-        context.registerBean(WorkspaceFacade.class);
+        context.registerBean(TemplateDescriptors.class);
         // nothing is published anywhere - the registry holds the templates and nothing else
         context.registerBean(PublisherService.class,
                 () -> new PublisherService(repository, List.of(), context.getBean(RegistryMutationTracker.class)));
@@ -212,7 +198,6 @@ final class IntentRegeneration implements AutoCloseable {
     @Override
     public void close() {
         context.close();
-        StaticObjects.set(StaticObjects.REPOSITORY, null);
         deleteRecursively(root);
     }
 

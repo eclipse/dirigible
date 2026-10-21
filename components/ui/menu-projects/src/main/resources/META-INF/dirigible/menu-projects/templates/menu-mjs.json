@@ -1,0 +1,7 @@
+{
+    "name": "javascript-esm",
+    "label": "JavaScript Service",
+    "extension": "mjs",
+    "data": "import { response } from \"@aerokit/sdk/http\";\n\nresponse.println(\"Hello World!\");",
+    "order": 1
+}

@@ -1,0 +1,25 @@
+{
+    "name": "Harmonia Generator from Form Model",
+    "description": "Alpine.js + Harmonia Form Model Generator Template",
+    "extension": "form",
+    "sources": [
+        {
+            "location": "/template-form-builder-harmonia/ui/translations.json.template",
+            "path": "i18n/en-US/translations.json",
+            "action": "translate"
+        },
+        {
+            "location": "/template-form-builder-harmonia/ui/form.js.template",
+            "action": "generate",
+            "rename": "gen/{{genFolderName}}/forms/{{fileName}}/form.js",
+            "engine": "velocity"
+        },
+        {
+            "location": "/template-form-builder-harmonia/ui/index.html.template",
+            "action": "generate",
+            "rename": "gen/{{genFolderName}}/forms/{{fileName}}/index.html",
+            "engine": "velocity"
+        }
+    ],
+    "parameters": []
+}

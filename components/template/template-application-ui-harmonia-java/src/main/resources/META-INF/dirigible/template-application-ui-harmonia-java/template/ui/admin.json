@@ -1,0 +1,25 @@
+{
+    "sources": [
+        {
+            "location": "/template-application-ui-harmonia-java/ui/admin/admin-index.html.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/admin/index.html",
+            "collection": "adminModel"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/admin/admin-perspective.json.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/perspectives/admin/perspective.json",
+            "collection": "adminModel"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/admin/admin-perspective.extension.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/perspectives/admin/perspective.extension",
+            "collection": "adminModel"
+        }
+    ]
+}

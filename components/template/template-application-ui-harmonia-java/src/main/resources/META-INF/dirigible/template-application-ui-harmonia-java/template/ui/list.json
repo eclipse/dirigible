@@ -1,0 +1,18 @@
+{
+    "sources": [
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/list/page.js.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/js/components/pages/{{perspectiveName}}/{{name}}ListPage.js",
+            "collection": "uiListModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/list/view.html.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/views/{{perspectiveName}}/{{name}}-list.html",
+            "collection": "uiListModels"
+        }
+    ]
+}

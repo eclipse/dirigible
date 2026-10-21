@@ -1,0 +1,49 @@
+{
+    "name": "BPM Starter Project",
+    "description": "BPM Process And Service Task Sample",
+    "sources": [
+        {
+            "location": "/template-bpm/process.bpmn.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "{{fileName}}.bpmn"
+        },
+        {
+            "location": "/template-bpm/api/ProcessService.java.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "{{javaPackageName}}/ProcessService.java"
+        },
+        {
+            "location": "/template-bpm/trigger-new-process.form.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "trigger-new-process.form"
+        },
+        {
+            "location": "/template-bpm/trigger-new-process.gen.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "trigger-new-process.gen"
+        },
+        {
+            "location": "/template-bpm/tasks/MyServiceTask.java.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "{{javaPackageName}}/MyServiceTask.java"
+        },
+        {
+            "location": "/template-bpm/project.json",
+            "action": "generate",
+            "rename": "project.json"
+        }
+    ],
+    "parameters": [
+        {
+            "name": "processId",
+            "label": "Process Identifier",
+            "required": true
+        }
+    ],
+    "order": 35
+}

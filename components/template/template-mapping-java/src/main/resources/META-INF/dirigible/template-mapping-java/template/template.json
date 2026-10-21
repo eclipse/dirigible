@@ -1,0 +1,14 @@
+{
+    "name": "Generator from Mapping Model - Java",
+    "description": "Mapping Model Generator Template - client Java",
+    "extension": "mapping",
+    "sources": [
+        {
+            "location": "/template-mapping-java/mapper.java.template",
+            "action": "generate",
+            "rename": "gen/{{javaGenFolderName}}/mappings/{{mapperClassName}}.java",
+            "engine": "velocity"
+        }
+    ],
+    "parameters": []
+}

@@ -1,0 +1,6 @@
+{
+    "name": "database-table",
+    "label": "Database Table",
+    "extension": "table",
+    "data": "{\n    \"name\": \"MYTABLE\",\n    \"type\": \"TABLE\",\n    \"columns\": [\n        {\n            \"name\": \"ID\",\n            \"type\": \"INTEGER\",\n            \"length\": \"0\",\n            \"nullable\": \"false\",\n            \"primaryKey\": \"true\",\n            \"defaultValue\": \"\"\n        }\n    ]\n}"
+}

@@ -1,0 +1,6 @@
+{
+    "name": "report-model",
+    "label": "Report Model",
+    "extension": "report",
+    "data": "{\n    \"name\": \"MYREPORT\",\n    \"alias\": \"mt\",\n    \"table\": \"MYTABLE\",\n    \"columns\": [\n        {\n            \"alias\": \"Customer\",\n            \"name\": \"CUSTOMER_NAME\",\n            \"type\": \"VARCHAR\",\n            \"aggregate\": \"NONE\",\n            \"table\": \"mt\",\n            \"select\": true\n        }\n    ]\n}"
+}

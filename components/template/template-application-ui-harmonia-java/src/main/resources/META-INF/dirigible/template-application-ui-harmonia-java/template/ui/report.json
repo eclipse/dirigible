@@ -1,0 +1,32 @@
+{
+    "sources": [
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/report/table-page.js.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/js/components/pages/{{perspectiveName}}/{{name}}ReportPage.js",
+            "collection": "uiReportTableModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/report/table-view.html.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/views/{{perspectiveName}}/{{name}}-report.html",
+            "collection": "uiReportTableModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/report/chart-page.js.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/js/components/pages/{{perspectiveName}}/{{name}}ReportPage.js",
+            "collection": "uiReportChartModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/report/chart-view.html.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/views/{{perspectiveName}}/{{name}}-report.html",
+            "collection": "uiReportChartModels"
+        }
+    ]
+}

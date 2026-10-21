@@ -1,0 +1,6 @@
+{
+    "name": "schema",
+    "label": "Database Schema Model",
+    "extension": "dsm",
+    "data": "<schema><structures></structures><mxGraphModel><root></root></mxGraphModel></schema>"
+}

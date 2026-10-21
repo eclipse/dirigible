@@ -9,12 +9,20 @@ rides on — runs entirely in Java, in `components/ide/ide-template`
 `parameterUtils.js` under `service-generate`) was migrated and **deleted** — see
 [`GENERATION_UTILS_JAVA_PLAN.md`](GENERATION_UTILS_JAVA_PLAN.md) §6-§7. Things to know before touching it:
 
-- **Template descriptors are still JavaScript.** Each `template-*` module exports `getTemplate()`
-  (sources + parameters), which the Java pipeline reads through
-  `GenerationService.getTemplateMetadata` (a GraalJS call per template). Their `generate()` functions
-  are gone: the per-template pre-logic lives in `ModelTemplateAdapters`, keyed by template id, and a
-  template the pipeline does not know is **refused by name** rather than half-generated. Add a
-  template → add its adapter entry.
+- **Template descriptors are data, and a generation starts no script engine (#8007).** A template's
+  descriptor (sources + parameters) is a `.json` file read by `TemplateDescriptors`; a composite takes
+  in its parts with `{"include": "<descriptor>.json"}` entries in `sources` / `parameters` (replaced in
+  place, parameters then deduplicated by name, first wins). **The template id is still the `.js` path**
+  its `.extension` registers (`template-application-dao-java/template/template.js`): intent recipes,
+  `ModelTemplateAdapters` and every committed `.gen` record it, so an id resolves to the `.json` next
+  to the module it names - do not rename the ids. A descriptor still written as JavaScript (a user
+  project's) is called through the `ExtensionModuleEvaluator` SPI where the JavaScript engine is
+  deployed; headless generation has none and refuses it by name. `project.json` is a Velocity source
+  with `"overwrite": false`: a non-blank file the project has is kept. The catalogue the IDE dialogs
+  read is `TemplateCatalogueEndpoint`, mapped on the retired scripts' URLs
+  (`/services/js/service-template/api/templates.js`). The per-template pre-logic lives in
+  `ModelTemplateAdapters`, keyed by template id, and a template the pipeline does not know is
+  **refused by name** rather than half-generated. Add a template → add its adapter entry.
 - **Every number in the parameter graph is a `Double`** and an absent key is not a null one
   (`ModelValues.putNumber` / `remove`) — the graph reaches the engines through a `Map` deserialization
   that types every JSON number as `Double`, so `minLength` renders as `0.0` and always did.

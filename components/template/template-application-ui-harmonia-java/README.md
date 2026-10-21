@@ -81,15 +81,41 @@ Velocity-processed (which would collide with `$`-sigils in the JS).
 
 ## Generation wiring
 
+The descriptors are JSON data (#8007), read without a script engine. A composite takes in
+its parts with `{"include": "<descriptor>.json"}` entries, replaced in place; the template
+id stays `template-application-ui-harmonia-java/template/template.js`, which resolves to the
+`.json` next to it.
+
 - `template/template.extension` — registers on `platform-templates`.
-- `template/template.js` — entry; merges `template-application-rest-java` sources
-  with `template/ui/template.js`.
-- `template/ui/template.js` — aggregates the per-view source collectors.
-- `template/ui/shell.js` — the SPA shell + static assets (above).
-- `template/ui/list.js` — LIST/PRIMARY entities -> page component + view fragment.
-- `template/ui/related.js` — entities declaring `relatedEntities` -> one `<Entity>.related.js`
+- `template/template.json` — entry; includes `template-application-schema` (REQUIRED: the
+  schema creates the tables the client-Java entities only map), `template-application-rest-java`
+  (which includes the DAO layer) and `template/ui/template.json`.
+- `template/ui/template.json` — the translation catalog, then the per-view source lists below.
+- `template/ui/shell.json` — the project-specific shell files (`index.html`, `js/config.js`,
+  `_settings.html`, the dashboard); the shared runtime is served from `application-core/shell`.
+- `template/ui/list.json` — LIST/PRIMARY entities -> page component + view fragment.
+- `template/ui/manage.json` — MANAGE/PRIMARY entities -> a CRUD list page plus a shared
+  create/edit form page (`/{name}`, `/{name}/create`, `/{name}/{id}/edit`).
+- `template/ui/setting.json` — SETTING entities -> the manage views under the "Settings" perspective.
+- `template/ui/masterDetail.json` — masters browse on the manage list and open on the manage form;
+  details emit an `App.registerDetail` registration and a routed create/edit form.
+- `template/ui/document.json` — MANAGE_DOCUMENT masters -> a header form, an inline line-items
+  table and a totals footer.
+- `template/ui/calendar.json`, `template/ui/slots.json` — an ADDITIONAL page, not a replacement
+  (#6547): the entity keeps its own layout and every page it generates, the calendar / slot picker
+  takes over the landing route.
+- `template/ui/related.json` — entities declaring `relatedEntities` -> one `<Entity>.related.js`
   registration (the read-only register of the records REFERENCING them). See below.
-- `template/ui/navigation.js` — placeholder (nav currently folded into index.html).
+- `template/ui/report.json` — REPORT entities -> a data table or a native `x-h-chart-*` chart over
+  the generated Java report controller.
+- `template/ui/navigation.json` — one shared-shell perspective per top-level entity, one pair per
+  LAYOUT collection; deliberately not `uiCalendarModels` / `uiSlotsModels`, whose entities are
+  already in one of them.
+- `template/ui/my.json`, `template/ui/partner.json` — the personal and partner surfaces, scoped to
+  `<Entity>MyController` / `<Entity>PartnerController`.
+- `template/ui/admin.json` — one plain administration page per module (`adminModel`).
+- `template/template-report-file.json` + `template/ui/reportFile.json` — a standalone `.report`:
+  the Java report backend plus a self-contained page under `gen/<javaGenFolder>/reports/<name>/`.
 
 Velocity model vars (per-entity collections, same as the Angular module):
 `$name`, `$perspectiveName`, `$properties[]` (`$property.name`, `.dataName`,

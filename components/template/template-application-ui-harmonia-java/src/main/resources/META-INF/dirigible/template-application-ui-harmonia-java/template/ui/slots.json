@@ -1,0 +1,18 @@
+{
+    "sources": [
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/slots/slots-page.js.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/js/components/pages/{{perspectiveName}}/{{name}}SlotsPage.js",
+            "collection": "uiSlotsModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/slots/slots-view.html.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/views/{{perspectiveName}}/{{name}}-slots.html",
+            "collection": "uiSlotsModels"
+        }
+    ]
+}

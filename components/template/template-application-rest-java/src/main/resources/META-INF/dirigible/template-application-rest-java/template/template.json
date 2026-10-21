@@ -1,0 +1,51 @@
+{
+    "name": "Application - REST - Java",
+    "description": "Application with REST APIs (Java)",
+    "extension": "model",
+    "sources": [
+        {
+            "location": "/template-application-rest-java/api/EntityController.java.template",
+            "action": "generate",
+            "rename": "gen/{{javaGenFolderName}}/api/{{javaPerspectiveName}}/{{name}}Controller.java",
+            "engine": "velocity",
+            "collection": "apiModels"
+        },
+        {
+            "comment": "The personal (my) surface: an ADDITIONAL controller scoped to the logged-in user's identity record, generated only for entities with a personal owner relation (or the scope inherited from their composition parent) - see the intent identity/personal/sensitive attributes.",
+            "location": "/template-application-rest-java/api/EntityMyController.java.template",
+            "action": "generate",
+            "rename": "gen/{{javaGenFolderName}}/api/{{javaPerspectiveName}}/{{name}}MyController.java",
+            "engine": "velocity",
+            "collection": "personalModels"
+        },
+        {
+            "comment": "The PARTNER surface: the external-partner (Customer/Supplier) mirror of the my controller, scoped to the logged-in partner's identity record - generated for entities with a `partner: true` owner relation (or the scope inherited from their composition parent).",
+            "location": "/template-application-rest-java/api/EntityPartnerController.java.template",
+            "action": "generate",
+            "rename": "gen/{{javaGenFolderName}}/api/{{javaPerspectiveName}}/{{name}}PartnerController.java",
+            "engine": "velocity",
+            "collection": "partnerModels"
+        },
+        {
+            "location": "/template-application-rest-java/project.json.template",
+            "action": "generate",
+            "rename": "project.json",
+            "engine": "velocity",
+            "overwrite": false
+        },
+        {
+            "location": "/template-application-rest-java/roles/default-roles.roles.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{javaGenFolderName}}/roles/default-roles.roles"
+        },
+        {
+            "include": "template-application-dao-java/template/template.json"
+        }
+    ],
+    "parameters": [
+        {
+            "include": "template-application-dao-java/template/template.json"
+        }
+    ]
+}

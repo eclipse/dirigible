@@ -1,0 +1,7 @@
+{
+    "name": "Hello",
+    "label": "Java Service",
+    "extension": "java",
+    "data": "import jakarta.servlet.http.HttpServletRequest;\nimport jakarta.servlet.http.HttpServletResponse;\nimport org.eclipse.dirigible.engine.java.handler.JavaHandler;\n\npublic class Hello implements JavaHandler {\n\n    public void handle(HttpServletRequest req, HttpServletResponse resp) throws Exception {\n        resp.getWriter().println(\"Hello World!\");\n    }\n\n}",
+    "order": 3
+}

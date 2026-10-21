@@ -1,0 +1,6 @@
+{
+    "name": "form",
+    "label": "Form Definition",
+    "extension": "form",
+    "data": "{\n    \"metadata\": {},\n    \"feeds\": [],\n    \"scripts\": [],\n    \"code\": \"\",\n    \"form\": []\n}"
+}

@@ -41,6 +41,9 @@ public class GenerationTemplateMetadataSource {
     /** The handler. */
     private String handler;
 
+    /** Whether the generated file replaces one the project already has; absent means it does. */
+    private Boolean overwrite;
+
     /**
      * Gets the location.
      *
@@ -201,6 +204,26 @@ public class GenerationTemplateMetadataSource {
      */
     public void setHandler(String handler) {
         this.handler = handler;
+    }
+
+    /**
+     * Tells whether the generated file replaces the one the project already has. A source declaring
+     * {@code "overwrite": false} is generated only into a project that has no such file, or has it
+     * blank - a project descriptor the developer may have edited, for instance.
+     *
+     * @return true unless the source declares {@code "overwrite": false}
+     */
+    public boolean isOverwrite() {
+        return overwrite == null || overwrite;
+    }
+
+    /**
+     * Sets whether the generated file replaces the one the project already has.
+     *
+     * @param overwrite false to keep a non-blank file the project already has
+     */
+    public void setOverwrite(Boolean overwrite) {
+        this.overwrite = overwrite;
     }
 
 }

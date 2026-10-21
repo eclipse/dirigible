@@ -1,0 +1,32 @@
+{
+    "sources": [
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/manage/list-page.js.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/js/components/pages/{{perspectiveName}}/{{name}}ManageListPage.js",
+            "collection": "uiSettingModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/manage/list-view.html.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/views/{{perspectiveName}}/{{name}}-manage-list.html",
+            "collection": "uiSettingModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/manage/form-page.js.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/js/components/pages/{{perspectiveName}}/{{name}}FormPage.js",
+            "collection": "uiSettingModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/manage/form-view.html.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/views/{{perspectiveName}}/{{name}}-form.html",
+            "collection": "uiSettingModels"
+        }
+    ]
+}

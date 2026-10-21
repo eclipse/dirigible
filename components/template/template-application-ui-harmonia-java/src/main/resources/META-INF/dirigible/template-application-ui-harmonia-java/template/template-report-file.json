@@ -1,0 +1,28 @@
+{
+    "name": "Application Report - Table - Harmonia",
+    "description": "Application Table Report - Alpine.js + Harmonia UI, Java backend",
+    "extension": "report",
+    "sources": [
+        {
+            "include": "template-application-ui-harmonia-java/template/ui/reportFile.json"
+        }
+    ],
+    "parameters": [
+        {
+            "name": "extensionPoint",
+            "label": "Extension Point",
+            "placeholder": "Enter Extension Point, if not provided defaults to the project name",
+            "required": false
+        },
+        {
+            "name": "brand",
+            "label": "Brand",
+            "placeholder": "Enter Brand"
+        },
+        {
+            "name": "title",
+            "label": "Title",
+            "placeholder": "Enter Title"
+        }
+    ]
+}

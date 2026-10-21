@@ -13,7 +13,6 @@ import com.google.gson.Gson;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
-import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
 import org.eclipse.dirigible.components.engine.template.GenerationException;
 import org.eclipse.dirigible.components.engine.template.TemplateEngine;
 import org.eclipse.dirigible.components.engine.template.TemplateEnginesManager;
@@ -25,23 +24,19 @@ import org.eclipse.dirigible.components.ide.workspace.domain.Project;
 import org.eclipse.dirigible.components.ide.workspace.domain.Workspace;
 import org.eclipse.dirigible.components.ide.workspace.service.PublisherService;
 import org.eclipse.dirigible.components.ide.workspace.service.WorkspaceService;
-import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
-import org.eclipse.dirigible.graalium.core.javascript.modules.Module;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.eclipse.dirigible.repository.api.IResource;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import static java.text.MessageFormat.format;
 
@@ -64,16 +59,32 @@ public class GenerationService {
     public static final String GENERATION_ENGINE_DEFAULT = "mustache";
 
     /** The workspace service. */
-    @Autowired
-    private WorkspaceService workspaceService;
+    private final WorkspaceService workspaceService;
 
     /** The publish service. */
-    @Autowired
-    private PublisherService publisherService;
+    private final PublisherService publisherService;
 
     /** The template engines manager. */
-    @Autowired
-    private TemplateEnginesManager templateEnginesManager;
+    private final TemplateEnginesManager templateEnginesManager;
+
+    /** The template descriptors. */
+    private final TemplateDescriptors templateDescriptors;
+
+    /**
+     * Instantiates a new generation service.
+     *
+     * @param workspaceService the workspace service
+     * @param publisherService the publisher service
+     * @param templateEnginesManager the template engines manager
+     * @param templateDescriptors the template descriptors
+     */
+    GenerationService(WorkspaceService workspaceService, PublisherService publisherService, TemplateEnginesManager templateEnginesManager,
+            TemplateDescriptors templateDescriptors) {
+        this.workspaceService = workspaceService;
+        this.publisherService = publisherService;
+        this.templateEnginesManager = templateEnginesManager;
+        this.templateDescriptors = templateDescriptors;
+    }
 
     /**
      * Gets the workspace service.
@@ -124,7 +135,7 @@ public class GenerationService {
         addStandardParameters(workspace, project, path, parameters.getParameters());
 
         getPublisherService().publish(workspace, project, "");
-        GenerationTemplateMetadata metadata = getTemplateMetadata(parameters);
+        GenerationTemplateMetadata metadata = templateDescriptors.readMetadata(parameters.getTemplate(), parameters.getParameters());
 
         for (GenerationTemplateMetadataSource source : metadata.getSources()) {
             String sourcePath = new RepositoryPath().append(IRepositoryStructure.PATH_REGISTRY_PUBLIC)
@@ -160,41 +171,6 @@ public class GenerationService {
             }
         }
         return generatedFiles;
-    }
-
-    /**
-     * Gets the template metadata.
-     *
-     * @param parameters the parameters
-     * @return the template metadata
-     */
-    private static GenerationTemplateMetadata getTemplateMetadata(GenerationTemplateParameters parameters) {
-        return getTemplateMetadata(parameters.getTemplate(), parameters.getParameters());
-    }
-
-    /**
-     * Gets the template metadata, by reading the template module's own descriptor.
-     *
-     * <p>
-     * The descriptors are authored as template modules, so reading one means running its
-     * {@code getTemplate} function. The parameters are passed in because a composite template branches
-     * on them when assembling its source list.
-     *
-     * @param templateModule the template's module path
-     * @param parameters the generation parameters
-     * @return the template metadata
-     */
-    public static GenerationTemplateMetadata getTemplateMetadata(String templateModule, Map<String, Object> parameters) {
-        try (DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner()) {
-            Module module = runner.run(Path.of(templateModule));
-            Object res = runner.runMethod(module, "getTemplate", parameters)
-                               .as(Object.class);
-            String serializedMetadata = GsonHelper.toJson(res);
-            GenerationTemplateMetadata metadata = GsonHelper.fromJson(serializedMetadata, GenerationTemplateMetadata.class);
-            return Objects.requireNonNull(metadata);
-        } catch (Exception e) {
-            throw new IllegalArgumentException(format("Invalid template definition file: [{0}]", templateModule), e);
-        }
     }
 
     /**
@@ -276,6 +252,12 @@ public class GenerationService {
                                                                          .toString())
                                                        .append(generatedFileName)
                                                        .build();
+        if (!source.isOverwrite()) {
+            File existing = projectObject.getFile(generatedFilePath);
+            if (existing.exists() && !new String(existing.getContent(), StandardCharsets.UTF_8).isBlank()) {
+                output = existing.getContent();
+            }
+        }
         String contentType = ContentTypeHelper.getContentType(ContentTypeHelper.getExtension(generatedFileName));
         boolean isBinary = ContentTypeHelper.isBinary(contentType);
         File fileObject = projectObject.createFile(generatedFilePath, output, isBinary, contentType);

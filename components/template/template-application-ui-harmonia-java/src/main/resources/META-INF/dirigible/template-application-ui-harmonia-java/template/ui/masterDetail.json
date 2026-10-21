@@ -1,0 +1,102 @@
+{
+    "sources": [
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/manage/list-page.js.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/js/components/pages/{{perspectiveName}}/{{name}}ManageListPage.js",
+            "collection": "uiManageMasterModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/manage/list-view.html.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/views/{{perspectiveName}}/{{name}}-manage-list.html",
+            "collection": "uiManageMasterModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/manage/form-page.js.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/js/components/pages/{{perspectiveName}}/{{name}}FormPage.js",
+            "collection": "uiManageMasterModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/manage/form-view.html.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/views/{{perspectiveName}}/{{name}}-form.html",
+            "collection": "uiManageMasterModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/manage/list-page.js.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/js/components/pages/{{perspectiveName}}/{{name}}ManageListPage.js",
+            "collection": "uiListMasterModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/manage/list-view.html.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/views/{{perspectiveName}}/{{name}}-manage-list.html",
+            "collection": "uiListMasterModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/manage/form-page.js.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/js/components/pages/{{perspectiveName}}/{{name}}FormPage.js",
+            "collection": "uiListMasterModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/manage/form-view.html.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/views/{{perspectiveName}}/{{name}}-form.html",
+            "collection": "uiListMasterModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/master/detail-register.js.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/js/components/pages/{{perspectiveName}}/{{name}}.detail.js",
+            "collection": "uiManageDetailsModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/manage/form-page.js.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/js/components/pages/{{perspectiveName}}/{{name}}FormPage.js",
+            "collection": "uiManageDetailsModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/manage/form-view.html.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/views/{{perspectiveName}}/{{name}}-form.html",
+            "collection": "uiManageDetailsModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/master/detail-register.js.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/js/components/pages/{{perspectiveName}}/{{name}}.detail.js",
+            "collection": "uiListDetailsModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/manage/form-page.js.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/js/components/pages/{{perspectiveName}}/{{name}}FormPage.js",
+            "collection": "uiListDetailsModels"
+        },
+        {
+            "location": "/template-application-ui-harmonia-java/ui/perspective/manage/form-view.html.template",
+            "action": "generate",
+            "engine": "velocity",
+            "rename": "gen/{{genFolderName}}/views/{{perspectiveName}}/{{name}}-form.html",
+            "collection": "uiListDetailsModels"
+        }
+    ]
+}

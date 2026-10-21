@@ -1,0 +1,6 @@
+{
+    "name": "database-view",
+    "label": "Database View",
+    "extension": "view",
+    "data": "{\n    \"name\": \"MYVIEW\",\n    \"type\": \"VIEW\",\n    \"query\": \"SELECT * FROM MYTABLE\",\n    \"dependencies\": [\n        {\n            \"name\": \"MYTABLE\",\n            \"type\": \"TABLE\"\n        }\n    ]\n}"
+}

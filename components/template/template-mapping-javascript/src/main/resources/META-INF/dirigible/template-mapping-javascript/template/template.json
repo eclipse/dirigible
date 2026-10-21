@@ -1,0 +1,14 @@
+{
+    "name": "Generator from Mapping Model",
+    "description": "Mapping Model Generator Template",
+    "extension": "mapping",
+    "sources": [
+        {
+            "location": "/template-mapping-javascript/mapper.ts.template",
+            "action": "generate",
+            "rename": "gen/{{genFolderName}}/mappings/{{fileName}}.ts",
+            "engine": "velocity"
+        }
+    ],
+    "parameters": []
+}
