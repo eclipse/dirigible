@@ -317,6 +317,18 @@ public abstract class JavaRepository<T> {
     }
 
     /**
+     * One page of {@link #findAll(Criteria)}, bounded in the database (dirigible #7982).
+     *
+     * @param criteria the query criteria
+     * @param limit max rows to return; non-positive means unlimited
+     * @param offset rows to skip; non-positive means none
+     * @return the requested page
+     */
+    public List<T> findAll(Criteria criteria, int limit, int offset) {
+        return store().findAll(entityClass, criteria, limit, offset);
+    }
+
+    /**
      * Delete an entity instance, applying the delete rules of the records that reference it - see
      * {@link #requireDeletable(Object)}.
      *
@@ -640,6 +652,32 @@ public abstract class JavaRepository<T> {
      */
     public List<T> query(String hql, Map<String, Object> parameters) {
         return store().query(entityClass, hql, parameters);
+    }
+
+    /**
+     * One page of {@link #query(String, Map)}, bounded in the database (dirigible #7982). The query
+     * should carry an {@code order by}, or the page is a slice of an undefined order.
+     *
+     * @param hql the query string
+     * @param parameters named parameter bindings
+     * @param limit max rows to return; non-positive means unlimited
+     * @param offset rows to skip; non-positive means none
+     * @return the requested page
+     */
+    public List<T> query(String hql, Map<String, Object> parameters, int limit, int offset) {
+        return store().query(entityClass, hql, parameters, limit, offset);
+    }
+
+    /**
+     * Run a {@code select count(...)} HQL query over this repository's entity - a filtered count in the
+     * database, without loading the rows (dirigible #7982).
+     *
+     * @param countHql the HQL query, selecting a single count
+     * @param parameters named parameter bindings
+     * @return the count
+     */
+    public long countQuery(String countHql, Map<String, Object> parameters) {
+        return store().countQuery(entityClass, countHql, parameters);
     }
 
     /**

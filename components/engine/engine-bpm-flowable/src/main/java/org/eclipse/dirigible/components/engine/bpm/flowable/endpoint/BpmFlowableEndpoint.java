@@ -240,8 +240,10 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
      */
     @GetMapping(value = "/bpm-processes/instances")
     public ResponseEntity<List<ProcessInstanceData>> getProcessesInstances(
-            @Nullable @RequestParam("businessKey") Optional<String> businessKey, @Nullable @RequestParam("key") Optional<String> key) {
-        return ResponseEntity.ok(bpmService.getProcessInstances(key, businessKey));
+            @Nullable @RequestParam("businessKey") Optional<String> businessKey, @Nullable @RequestParam("key") Optional<String> key,
+            @RequestParam(value = "limit", required = false) Integer limit) {
+        // the Processes perspective asks for 100 - honoured in the database (dirigible #7982)
+        return ResponseEntity.ok(bpmService.getProcessInstances(key, businessKey, limit));
     }
 
     /**
@@ -264,9 +266,10 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
     @GetMapping(value = "/bpm-processes/historic-instances")
     public ResponseEntity<List<HistoricProcessInstance>> getHistoricProcessesInstances(
             @Nullable @RequestParam("definitionKey") Optional<String> definitionKey,
-            @Nullable @RequestParam("businessKey") Optional<String> businessKey) {
-
-        return ResponseEntity.ok(bpmService.getCompletedProcessInstances(definitionKey, businessKey));
+            @Nullable @RequestParam("businessKey") Optional<String> businessKey,
+            @RequestParam(value = "limit", required = false) Integer limit) {
+        // history grows without bound: the page the client asks for, in the database (dirigible #7982)
+        return ResponseEntity.ok(bpmService.getCompletedProcessInstances(definitionKey, businessKey, limit));
     }
 
     /**
@@ -302,17 +305,21 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
      */
     @GetMapping(value = "/bpm-processes/instance/{id}/variables")
     public ResponseEntity<List<VariableInstance>> getProcessInstanceVariables(@PathVariable("id") String processInstanceId,
-            @Nullable @RequestParam("variableName") Optional<String> variableName) {
-        List<VariableInstance> variables = bpmService.getProcessInstanceVariables(processInstanceId, variableName);
+            @Nullable @RequestParam("variableName") Optional<String> variableName,
+            @RequestParam(value = "limit", required = false) Integer limit) {
+        List<VariableInstance> variables = bpmService.getProcessInstanceVariables(processInstanceId, variableName, limit);
 
         return ResponseEntity.ok(variables);
     }
 
     @GetMapping(value = "/bpm-processes/instance/{id}/tasks")
     public ResponseEntity<List<TaskDTO>> getProcessInstanceTasks(@PathVariable("id") String id,
-            @RequestParam(value = "type", required = false) String type) {
+            @RequestParam(value = "type", required = false) String type, @RequestParam(value = "limit", required = false) Integer limit) {
+        // One instance's open tasks are a handful; the limit is still honoured, before the per-task
+        // mapping (dirigible #7982).
         List<TaskDTO> taskDTOS = bpmService.findTasks(id, extractPrincipalType(type))
                                            .stream()
+                                           .limit(limit != null && limit > 0 ? limit : Long.MAX_VALUE)
                                            .map(this::mapToDTO)
                                            .collect(Collectors.toList());
         return ResponseEntity.ok(taskDTOS);
@@ -493,9 +500,10 @@ public class BpmFlowableEndpoint extends BaseEndpoint {
      * @return list of dead-letter jobs
      */
     @GetMapping(value = "/bpm-processes/instance/{id}/jobs")
-    public ResponseEntity<List<Job>> getDeadLetterJobs(@PathVariable("id") String processInstanceId) {
+    public ResponseEntity<List<Job>> getDeadLetterJobs(@PathVariable("id") String processInstanceId,
+            @RequestParam(value = "limit", required = false) Integer limit) {
 
-        List<Job> jobs = bpmService.getDeadLetterJobs(processInstanceId);
+        List<Job> jobs = bpmService.getDeadLetterJobs(processInstanceId, limit);
 
         return ResponseEntity.ok(jobs);
     }

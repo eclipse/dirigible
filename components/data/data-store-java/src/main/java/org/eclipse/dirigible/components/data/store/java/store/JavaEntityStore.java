@@ -683,13 +683,59 @@ public class JavaEntityStore {
      * @return the query results
      */
     public <T> List<T> query(Class<T> type, String hql, Map<String, Object> parameters) {
+        return query(type, hql, parameters, -1, -1);
+    }
+
+    /**
+     * One page of {@link #query(Class, String, Map)}, bounded in the database (dirigible #7982): a
+     * caller that asks for a page must not be handed - and must not make the server materialise - every
+     * row the query matches. The query should carry an {@code order by}, or the page is a slice of an
+     * undefined order.
+     *
+     * @param <T> the entity type
+     * @param type the entity class
+     * @param hql the HQL/JPQL query string
+     * @param parameters named parameter bindings; may be {@code null}
+     * @param limit max rows to return; non-positive means unlimited
+     * @param offset rows to skip; non-positive means none
+     * @return the requested page
+     */
+    public <T> List<T> query(Class<T> type, String hql, Map<String, Object> parameters, int limit, int offset) {
         RegisteredEntity meta = resolve(type);
         return read(session -> {
             Query<Map> q = session.createQuery(hql, Map.class);
             if (parameters != null) {
                 parameters.forEach(q::setParameter);
             }
+            if (limit > 0) {
+                q.setMaxResults(limit);
+            }
+            if (offset > 0) {
+                q.setFirstResult(offset);
+            }
             return mapRows(type, meta, q.getResultList());
+        });
+    }
+
+    /**
+     * Run a {@code select count(...)} HQL query and return its number - a filtered count in the
+     * database, without loading the rows it counts (dirigible #7982).
+     *
+     * @param <T> the entity type the query is about (resolved, so an unregistered type fails fast)
+     * @param type the entity class
+     * @param countHql the HQL query, selecting a single count
+     * @param parameters named parameter bindings; may be {@code null}
+     * @return the count, 0 when the query yields none
+     */
+    public <T> long countQuery(Class<T> type, String countHql, Map<String, Object> parameters) {
+        resolve(type);
+        return read(session -> {
+            Query<Long> q = session.createQuery(countHql, Long.class);
+            if (parameters != null) {
+                parameters.forEach(q::setParameter);
+            }
+            Long result = q.getSingleResult();
+            return result == null ? 0L : result;
         });
     }
 
@@ -710,6 +756,25 @@ public class JavaEntityStore {
         RegisteredEntity meta = resolve(type);
         String hql = criteria.append("from " + meta.entityName());
         return query(type, hql, criteria.parameters());
+    }
+
+    /**
+     * One page of {@link #findAll(Class, Criteria)}, bounded in the database (dirigible #7982).
+     *
+     * @param <T> the entity type
+     * @param type the entity class
+     * @param criteria the query criteria; {@code null} pages over all rows
+     * @param limit max rows to return; non-positive means unlimited
+     * @param offset rows to skip; non-positive means none
+     * @return the requested page
+     */
+    public <T> List<T> findAll(Class<T> type, Criteria criteria, int limit, int offset) {
+        if (criteria == null) {
+            return findAll(type, limit, offset);
+        }
+        RegisteredEntity meta = resolve(type);
+        String hql = criteria.append("from " + meta.entityName());
+        return query(type, hql, criteria.parameters(), limit, offset);
     }
 
     /**

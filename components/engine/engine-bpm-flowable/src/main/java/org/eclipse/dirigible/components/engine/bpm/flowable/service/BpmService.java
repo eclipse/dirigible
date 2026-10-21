@@ -271,7 +271,20 @@ public class BpmService {
      * @return the process instances
      */
     public List<ProcessInstanceData> getProcessInstances(Optional<String> key, Optional<String> businessKey) {
-        List<ProcessInstance> processInstances = bpmProviderFlowable.getProcessInstances(key, businessKey);
+        return getProcessInstances(key, businessKey, null);
+    }
+
+    /**
+     * The running instances, newest first and at most {@code limit} of them when a limit is given
+     * (dirigible #7982).
+     *
+     * @param key the process definition key, if any
+     * @param businessKey a business key fragment, if any
+     * @param limit the most instances to return; null = all
+     * @return the instances
+     */
+    public List<ProcessInstanceData> getProcessInstances(Optional<String> key, Optional<String> businessKey, Integer limit) {
+        List<ProcessInstance> processInstances = bpmProviderFlowable.getProcessInstances(key, businessKey, limit);
         // Resolved for the whole listing at once: per instance it is three statements, and the listing
         // is unbounded - the Monitoring shell polls it every 30 s with no key (#7250).
         Map<String, List<String>> activityIds = bpmProviderFlowable.getProcessInstanceActivityIds(processInstances);
@@ -358,7 +371,21 @@ public class BpmService {
      * @return the process instances
      */
     public List<HistoricProcessInstance> getCompletedProcessInstances(Optional<String> definitionKey, Optional<String> businessKey) {
-        return bpmProviderFlowable.getCompletedProcessInstances(definitionKey, businessKey);
+        return getCompletedProcessInstances(definitionKey, businessKey, null);
+    }
+
+    /**
+     * The finished instances, most recently ended first and at most {@code limit} of them (dirigible
+     * #7982).
+     *
+     * @param definitionKey the process definition key, if any
+     * @param businessKey a business key fragment, if any
+     * @param limit the most instances to return; null = all
+     * @return the instances
+     */
+    public List<HistoricProcessInstance> getCompletedProcessInstances(Optional<String> definitionKey, Optional<String> businessKey,
+            Integer limit) {
+        return bpmProviderFlowable.getCompletedProcessInstances(definitionKey, businessKey, limit);
     }
 
     /**
@@ -368,7 +395,18 @@ public class BpmService {
      * @return list of jobs
      */
     public List<Job> getDeadLetterJobs(String processInstanceId) {
-        return bpmProviderFlowable.getDeadLetterJobs(processInstanceId);
+        return getDeadLetterJobs(processInstanceId, null);
+    }
+
+    /**
+     * A process instance's dead-letter jobs, at most {@code limit} of them (dirigible #7982).
+     *
+     * @param processInstanceId the process instance
+     * @param limit the most jobs to return; null = all
+     * @return the jobs
+     */
+    public List<Job> getDeadLetterJobs(String processInstanceId, Integer limit) {
+        return bpmProviderFlowable.getDeadLetterJobs(processInstanceId, limit);
     }
 
     /**
@@ -464,7 +502,19 @@ public class BpmService {
     }
 
     public List<VariableInstance> getProcessInstanceVariables(String processInstanceId, Optional<String> variableName) {
-        return bpmProviderFlowable.getProcessInstanceVariables(processInstanceId, variableName);
+        return getProcessInstanceVariables(processInstanceId, variableName, null);
+    }
+
+    /**
+     * A process instance's variables, by name and at most {@code limit} of them (dirigible #7982).
+     *
+     * @param processInstanceId the process instance
+     * @param variableName a variable name fragment, if any
+     * @param limit the most variables to return; null = all
+     * @return the variables
+     */
+    public List<VariableInstance> getProcessInstanceVariables(String processInstanceId, Optional<String> variableName, Integer limit) {
+        return bpmProviderFlowable.getProcessInstanceVariables(processInstanceId, variableName, limit);
     }
 
     public Optional<byte[]> getProcessDefinitionImage(String processDefinitionKey) throws IOException {

@@ -144,26 +144,31 @@ public class ${name}MyController {
 #if($personalParent)
     @Get
     @Documentation("List my ${name} of one ${personalParent.entity}")
-    public List<${name}Entity> getAll(@QueryParam("${personalParent.fkProperty}") String ${personalParent.fkProperty}) {
+    public List<${name}Entity> getAll(@QueryParam("${personalParent.fkProperty}") String ${personalParent.fkProperty},
+                                      @QueryParam("$limit") Integer limit, @QueryParam("$offset") Integer offset) {
         if (${personalParent.fkProperty} == null || me() == null) {
             return List.of();
         }
         requireMyParent(${personalParent.fkProperty});
         Map<String, Object> params = new LinkedHashMap<>();
         params.put("parent", ${personalParent.fkProperty});
-        List<${name}Entity> result = repository.query("from ${javaGenFolderName}_${name}Entity e where e.${personalParent.fkProperty} = :parent", params);
+        // the page api.getAll asks for (dirigible #7982); without $limit every line, as before
+        List<${name}Entity> result = repository.query("from ${javaGenFolderName}_${name}Entity e where e.${personalParent.fkProperty} = :parent#if($orderByHql) order by ${orderByHql}#else order by e.#foreach($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end#end", params,
+                limit != null ? limit.intValue() : -1, offset != null ? offset.intValue() : 0);
         result.forEach(this::scrub);
         return result;
     }
 #else
     @Get
     @Documentation("List my ${name}")
-    public List<${name}Entity> getAll() {
+    public List<${name}Entity> getAll(@QueryParam("$limit") Integer limit, @QueryParam("$offset") Integer offset) {
         ${personalFkJavaClass} me = me();
         if (me == null) {
             return List.of();
         }
-        List<${name}Entity> result = repository.findAll(Criteria.create().eq("${personalProperty}", me)#if($orderByCriteria)${orderByCriteria}#end);
+        // the page api.getAll asks for (dirigible #7982); without $limit every record, as before
+        List<${name}Entity> result = repository.findAll(Criteria.create().eq("${personalProperty}", me)#if($orderByCriteria)${orderByCriteria}#else.orderByAsc("#foreach($property in $properties)#if($property.dataPrimaryKey)${property.name}#end#end")#end,
+                limit != null ? limit.intValue() : -1, offset != null ? offset.intValue() : 0);
         result.forEach(this::scrub);
         return result;
     }
@@ -172,7 +177,8 @@ public class ${name}MyController {
     @Documentation("Count my ${name}")
     public Map<String, Long> count() {
         ${personalFkJavaClass} me = me();
-        return Map.of("count", me == null ? 0L : (long) repository.findAll(Criteria.create().eq("${personalProperty}", me)).size());
+        // counted in the database, not by loading every record (dirigible #7982)
+        return Map.of("count", me == null ? 0L : repository.count(Criteria.create().eq("${personalProperty}", me)));
     }
 #end
 

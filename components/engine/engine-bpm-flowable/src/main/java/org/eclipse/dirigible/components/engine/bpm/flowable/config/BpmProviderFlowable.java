@@ -55,6 +55,7 @@ import org.flowable.engine.runtime.Execution;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.engine.runtime.ProcessInstanceQuery;
 import org.flowable.image.ProcessDiagramGenerator;
+import org.flowable.job.api.DeadLetterJobQuery;
 import org.flowable.job.api.Job;
 import org.flowable.task.api.Task;
 import org.flowable.variable.api.history.HistoricVariableInstance;
@@ -555,6 +556,19 @@ public class BpmProviderFlowable implements BpmProvider {
     }
 
     public List<VariableInstance> getProcessInstanceVariables(String processInstanceId, Optional<String> variableName) {
+        return getProcessInstanceVariables(processInstanceId, variableName, null);
+    }
+
+    /**
+     * A process instance's variables, by name and at most {@code limit} of them when a limit is given
+     * (dirigible #7982).
+     *
+     * @param processInstanceId the process instance
+     * @param variableName a variable name fragment, if any
+     * @param limit the most variables to return; null or non-positive = all
+     * @return the variables
+     */
+    public List<VariableInstance> getProcessInstanceVariables(String processInstanceId, Optional<String> variableName, Integer limit) {
         flowableArtefactsValidator.validateProcessInstanceId(processInstanceId);
 
         VariableInstanceQuery processInstanceQuery = processEngine.getRuntimeService()
@@ -563,16 +577,36 @@ public class BpmProviderFlowable implements BpmProvider {
                                                      .isEmpty()) {
             processInstanceQuery.variableNameLike("%" + variableName.get() + "%");
         }
-        return processInstanceQuery.processInstanceId(processInstanceId)
-                                   .list();
+        processInstanceQuery.processInstanceId(processInstanceId);
+        if (isLimited(limit)) {
+            processInstanceQuery.orderByVariableName()
+                                .asc();
+        }
+        return list(processInstanceQuery, limit);
     }
 
     public List<Job> getDeadLetterJobs(String processInstanceId) {
-        return processEngine.getManagementService()
-                            .createDeadLetterJobQuery()
-                            .processInstanceId(processInstanceId)
-                            .jobTenantId(getTenantId())
-                            .list();
+        return getDeadLetterJobs(processInstanceId, null);
+    }
+
+    /**
+     * A process instance's dead-letter jobs, at most {@code limit} of them when a limit is given
+     * (dirigible #7982).
+     *
+     * @param processInstanceId the process instance
+     * @param limit the most jobs to return; null or non-positive = all
+     * @return the jobs
+     */
+    public List<Job> getDeadLetterJobs(String processInstanceId, Integer limit) {
+        DeadLetterJobQuery query = processEngine.getManagementService()
+                                                .createDeadLetterJobQuery()
+                                                .processInstanceId(processInstanceId)
+                                                .jobTenantId(getTenantId());
+        if (isLimited(limit)) {
+            query.orderByJobCreateTime()
+                 .desc();
+        }
+        return list(query, limit);
     }
 
     public Optional<byte[]> getProcessDefinitionImage(String processDefinitionKey) throws IOException {
@@ -673,6 +707,20 @@ public class BpmProviderFlowable implements BpmProvider {
     }
 
     public List<ProcessInstance> getProcessInstances(Optional<String> key, Optional<String> businessKey) {
+        return getProcessInstances(key, businessKey, null);
+    }
+
+    /**
+     * The running instances, newest first and at most {@code limit} of them when a limit is given -
+     * bounded in the database (dirigible #7982): the Processes perspective asks for 100, and an
+     * approval-heavy instance runs thousands.
+     *
+     * @param key the process definition key, if any
+     * @param businessKey a business key fragment, if any
+     * @param limit the most instances to return; null or non-positive = all
+     * @return the instances
+     */
+    public List<ProcessInstance> getProcessInstances(Optional<String> key, Optional<String> businessKey, Integer limit) {
         ProcessInstanceQuery processInstanceQuery = processEngine.getRuntimeService()
                                                                  .createProcessInstanceQuery();
 
@@ -686,11 +734,53 @@ public class BpmProviderFlowable implements BpmProvider {
             processInstanceQuery.processInstanceBusinessKeyLike("%" + businessKey.get() + "%");
         }
         processInstanceQuery.processInstanceTenantId(getTenantId());
+        if (isLimited(limit)) {
+            processInstanceQuery.orderByStartTime()
+                                .desc()
+                                .orderByProcessInstanceId()
+                                .desc();
+        }
+        return list(processInstanceQuery, limit);
+    }
 
-        return processInstanceQuery.list();
+    /**
+     * Whether a listing was asked for a bounded page.
+     *
+     * @param limit the requested limit
+     * @return true for a positive limit
+     */
+    private static boolean isLimited(Integer limit) {
+        return limit != null && limit > 0;
+    }
+
+    /**
+     * Runs a query whole, or bounded to {@code limit} rows in the database when one is given (dirigible
+     * #7982).
+     *
+     * @param <U> the result type
+     * @param query the query
+     * @param limit the most rows to return; null or non-positive = all
+     * @return the rows
+     */
+    private static <U> List<U> list(org.flowable.common.engine.api.query.Query<?, U> query, Integer limit) {
+        return isLimited(limit) ? query.listPage(0, limit) : query.list();
     }
 
     public List<HistoricProcessInstance> getCompletedProcessInstances(Optional<String> definitionKey, Optional<String> businessKey) {
+        return getCompletedProcessInstances(definitionKey, businessKey, null);
+    }
+
+    /**
+     * The finished instances, most recently ended first and at most {@code limit} of them when a limit
+     * is given (dirigible #7982) - history grows without bound, so an unpaged listing only gets slower.
+     *
+     * @param definitionKey the process definition key, if any
+     * @param businessKey a business key fragment, if any
+     * @param limit the most instances to return; null or non-positive = all
+     * @return the instances
+     */
+    public List<HistoricProcessInstance> getCompletedProcessInstances(Optional<String> definitionKey, Optional<String> businessKey,
+            Integer limit) {
         HistoricProcessInstanceQuery historicProcessInstanceQuery = processEngine.getHistoryService()
                                                                                  .createHistoricProcessInstanceQuery();
 
@@ -705,8 +795,14 @@ public class BpmProviderFlowable implements BpmProvider {
         }
         historicProcessInstanceQuery.processInstanceTenantId(getTenantId());
 
-        return historicProcessInstanceQuery.finished()
-                                           .list();
+        historicProcessInstanceQuery.finished();
+        if (isLimited(limit)) {
+            historicProcessInstanceQuery.orderByProcessInstanceEndTime()
+                                        .desc()
+                                        .orderByProcessInstanceId()
+                                        .desc();
+        }
+        return list(historicProcessInstanceQuery, limit);
     }
 
     public Deployment deployProcess(String deploymentKey, String resourceName, String content) {
