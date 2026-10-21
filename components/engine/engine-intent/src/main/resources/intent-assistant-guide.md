@@ -2877,6 +2877,12 @@ name is a generation error. Numeric ids keep working. Names have no ordering, so
 rejected - express "live rows" as a `scope`, not as an id range. A cross-model status must still be
 referenced by its numeric id (its seeds live in the other model).
 
+The same holds for **any other to-one relation** onto a seeded nomenclature (a request type, a send
+method) in a process `trigger.when`, a decision `if` and a `where` condition (`schedules[].where`,
+`items: where:`, a rollup's `where`): the name resolves against THAT relation's target, so
+`trigger: { onCreate: Request, when: "type == CLOSE" }` and `{ field: type, op: eq, value: CLOSE }`
+compare the type's seed id. Only `==`/`!=` (`eq`/`ne`) may compare a name.
+
 #### reports[].kind: balance - the accounting balance report
 
 **Use when:** the user needs a trial balance, general ledger summary, or any opening / period /
