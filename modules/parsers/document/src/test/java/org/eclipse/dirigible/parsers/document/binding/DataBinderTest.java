@@ -492,4 +492,134 @@ public class DataBinderTest {
                                                       .get(0)
                                                       .text());
     }
+
+    /**
+     * Invoice lines at two VAT rates, the numbers JSON-decoded as doubles (the print payload's shape).
+     */
+    private static final List<Map<String, Object>> MIXED_RATE_LINES = List.of(Map.of("VatRate", 20.0, "Net", 10.0, "Vat", 2.0),
+            Map.of("VatRate", 9.0, "Net", 22.8, "Vat", 2.05), Map.of("VatRate", 20.0, "Net", 15.0, "Vat", 3.0));
+
+    @Test
+    public void forGroupByExpandsOnePerRateWithExactSumsInRateOrder() {
+        Node root = parser.parse("""
+                <document>
+                    <for source="items" groupBy="VatRate">
+                        <text>{{VatRate:0.##}}%: {{sum(Net)}} / {{sum(Vat)}} ({{count()}})</text>
+                    </for>
+                </document>
+                """);
+        Node bound = binder.bind(root, Map.of("items", MIXED_RATE_LINES));
+        assertEquals(2, bound.children()
+                             .size());
+        assertEquals("9%: 22.80 / 2.05 (1)", bound.children()
+                                                  .get(0)
+                                                  .text());
+        assertEquals("20%: 25.00 / 5.00 (2)", bound.children()
+                                                   .get(1)
+                                                   .text());
+    }
+
+    @Test
+    public void tableGroupByRendersOneRowPerRate() {
+        Node root = parser.parse("""
+                <document>
+                    <table source="items" groupBy="VatRate">
+                        <column>{{VatRate:0.##}}%</column>
+                        <column>{{sum(Net)}}</column>
+                        <column>{{sum(Vat)}}</column>
+                    </table>
+                </document>
+                """);
+        TableNode table = (TableNode) binder.bind(root, Map.of("items", MIXED_RATE_LINES))
+                                            .children()
+                                            .get(0);
+        // 3 column definitions + one row per rate
+        assertEquals(5, table.children()
+                             .size());
+        Node twentyPercent = table.children()
+                                  .get(4);
+        assertEquals("20%", twentyPercent.children()
+                                         .get(0)
+                                         .text());
+        assertEquals("25.00", twentyPercent.children()
+                                           .get(1)
+                                           .text());
+        assertEquals("5.00", twentyPercent.children()
+                                          .get(2)
+                                          .text());
+    }
+
+    @Test
+    public void groupByKeepsOnlyFilteredRowsAndGroupsNumbersByValue() {
+        Node root = parser.parse("""
+                <document>
+                    <for source="items" filter="billable" groupBy="VatRate">
+                        <text>{{VatRate}}: {{sum(Net)}}</text>
+                    </for>
+                </document>
+                """);
+        // 20 (an int) and 20.0 (a double) are one rate; the unbillable line is not counted
+        Node bound = binder.bind(root, Map.of("items", List.of(Map.of("VatRate", 20, "Net", 1.5, "billable", true),
+                Map.of("VatRate", 20.0, "Net", 2.5, "billable", true), Map.of("VatRate", 20, "Net", 100.0, "billable", false))));
+        assertEquals(1, bound.children()
+                             .size());
+        assertEquals("20: 4.00", bound.children()
+                                      .get(0)
+                                      .text());
+    }
+
+    @Test
+    public void groupByOrdersTextKeysByTextAndPutsRowsWithoutTheKeyLast() {
+        Node root = parser.parse("<document><for source=\"items\" groupBy=\"Kind\"><text>[{{Kind}}] {{count()}}</text></for></document>");
+        Node bound = binder.bind(root,
+                Map.of("items", List.of(Map.of("Kind", "TAX"), Map.of("Net", 1.0), Map.of("Kind", "BASE"), Map.of("Kind", "TAX"))));
+        assertEquals(3, bound.children()
+                             .size());
+        assertEquals("[BASE] 1", bound.children()
+                                      .get(0)
+                                      .text());
+        assertEquals("[TAX] 2", bound.children()
+                                     .get(1)
+                                     .text());
+        assertEquals("[] 1", bound.children()
+                                  .get(2)
+                                  .text());
+    }
+
+    @Test
+    public void aggregatesAndGroupKeysReadTheRowItselfNeverTheEnclosingContext() {
+        Node root =
+                parser.parse("<document><for source=\"items\" groupBy=\"VatRate\"><text>{{VatRate}}: {{sum(Vat)}}</text></for></document>");
+        // the document-level Vat and VatRate must not leak into a row that lacks them
+        Node bound = binder.bind(root, Map.of("Vat", 99.0, "VatRate", 7, "items",
+                List.of(Map.of("VatRate", 20, "Net", 10.0, "Vat", 2.0), Map.of("VatRate", 20, "Net", 5.0), Map.of("Net", 1.0))));
+        assertEquals(2, bound.children()
+                             .size());
+        assertEquals("20: 2.00", bound.children()
+                                      .get(0)
+                                      .text());
+        // the row without a rate is its own group, last; its placeholder still falls back as any row does
+        assertEquals("7: 0.00", bound.children()
+                                     .get(1)
+                                     .text());
+    }
+
+    @Test
+    public void aggregatesTakeFormatsAndRenderEmptyOutsideAGroup() {
+        Node root = parser.parse("""
+                <document>
+                    <text>[{{sum(Net)}}][{{count()}}]</text>
+                    <for source="items" groupBy="VatRate">
+                        <text>{{sum(Net):#,##0.0}}</text>
+                    </for>
+                </document>
+                """);
+        Node bound = binder.bind(root, Map.of("items", List.of(Map.of("VatRate", 20, "Net", 1234.5), Map.of("VatRate", 20, "Net", 0.25))));
+        assertEquals("[][]", bound.children()
+                                  .get(0)
+                                  .text());
+        assertEquals("1 234.8", bound.children()
+                                     .get(1)
+                                     .text());
+    }
 }

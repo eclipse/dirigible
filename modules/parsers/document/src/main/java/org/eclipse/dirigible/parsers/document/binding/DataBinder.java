@@ -19,10 +19,14 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.dirigible.parsers.document.Attributes;
 import org.eclipse.dirigible.parsers.document.ForNode;
@@ -48,6 +52,14 @@ import org.eclipse.dirigible.parsers.document.parser.TagRegistry;
  * its resolved {@code source} against the listed values instead of testing truthiness. One fed
  * collection can this way render into several purpose-grouped tables (a payslip's earnings vs
  * deductions, a journal entry's debit vs credit side) without pre-splitting the data.
+ *
+ * <p>
+ * Rows can also be <b>grouped</b>: {@code groupBy="VatRate"} on a {@code table} or {@code for}
+ * expands one row per distinct value of the path over the rows the filter kept, ordered by that
+ * value. Inside a group a plain placeholder reads the group's first row (so the key prints as
+ * itself), {@code sum(<path>)} adds the path over the group's rows exactly, and {@code count()}
+ * counts them - the per-rate tax base and VAT of an invoice with lines at several VAT rates. Both
+ * aggregates take formats and alternatives like any other operand.
  *
  * <p>
  * The context is plain {@code Map<String, Object>} / {@code List<Object>} data (e.g. a JSON-decoded
@@ -95,6 +107,12 @@ public final class DataBinder {
     }
 
     private static final String WORDS_FORMAT = "words";
+
+    /** The {@code sum(<path>)} aggregate of a grouped {@code table}/{@code for}. */
+    private static final Pattern SUM = Pattern.compile("sum\\(\\s*([^()]+?)\\s*\\)");
+
+    /** The {@code count()} aggregate of a grouped {@code table}/{@code for}. */
+    private static final String COUNT = "count()";
 
     private final TagRegistry registry;
 
@@ -175,8 +193,8 @@ public final class DataBinder {
 
     /**
      * A table keeps its column definitions (widths/labels for the renderer) and gains one {@code row}
-     * of {@code column} cells per source element; each cell's content is the column template bound in
-     * the row's scope.
+     * of {@code column} cells per source element - or per group with {@code groupBy}; each cell's
+     * content is the column template bound in the row's scope.
      */
     private TableNode expandTable(TableNode table, Scope scope) {
         List<Node> children = new ArrayList<>();
@@ -187,12 +205,7 @@ public final class DataBinder {
                 children.add(rebuildWithoutText(child));
             }
         }
-        for (Object element : asList(scope.resolve(table.attributes()
-                                                        .get("source")))) {
-            Scope rowScope = new Scope(asMap(element), scope);
-            if (!keepRow(table, rowScope)) {
-                continue;
-            }
+        for (Scope rowScope : rowScopes(table, scope)) {
             List<Node> cells = new ArrayList<>();
             for (Node column : columns) {
                 cells.add(rebuild(column, rowScope, bindChildren(column, rowScope)));
@@ -203,14 +216,93 @@ public final class DataBinder {
     }
 
     private void expandRows(ForNode forNode, Scope scope, List<Node> target) {
-        for (Object element : asList(scope.resolve(forNode.attributes()
-                                                          .get("source")))) {
-            Scope rowScope = new Scope(asMap(element), scope);
-            if (!keepRow(forNode, rowScope)) {
-                continue;
-            }
+        for (Scope rowScope : rowScopes(forNode, scope)) {
             target.addAll(bindChildren(forNode, rowScope));
         }
+    }
+
+    /**
+     * The row scopes a {@code table}/{@code for} node expands into: one per {@code source} element the
+     * row filter keeps, or - with {@code groupBy="<path>"} - one per distinct value of that path over
+     * the kept elements (see {@link #groups}).
+     */
+    private static List<Scope> rowScopes(Node node, Scope scope) {
+        List<Scope> rows = new ArrayList<>();
+        for (Object element : asList(scope.resolve(node.attributes()
+                                                       .get("source")))) {
+            Scope rowScope = new Scope(asMap(element), scope);
+            if (keepRow(node, rowScope)) {
+                rows.add(rowScope);
+            }
+        }
+        String groupBy = node.attributes()
+                             .get("groupBy");
+        return groupBy == null || groupBy.isBlank() ? rows : groups(rows, groupBy.trim(), scope);
+    }
+
+    /**
+     * One scope per distinct value of {@code path} over the rows - read from each row itself, never
+     * from the enclosing context - ordered by that value: numerically when every value is a number,
+     * else by its text, with the rows lacking it last. Numbers group by their value ({@code 20} and
+     * {@code 20.0} are one group). A group scope reads its FIRST row, so the key and any other field
+     * print as plain placeholders, and carries all its rows for the {@code sum(<path>)} /
+     * {@code count()} aggregates.
+     */
+    private static List<Scope> groups(List<Scope> rows, String path, Scope parent) {
+        Map<Object, List<Scope>> byKey = new LinkedHashMap<>();
+        for (Scope row : rows) {
+            byKey.computeIfAbsent(groupKey(row.resolveOwn(path)), key -> new ArrayList<>())
+                 .add(row);
+        }
+        boolean numeric = byKey.keySet()
+                               .stream()
+                               .allMatch(key -> key == null || key instanceof BigDecimal);
+        Comparator<Object> order = numeric ? Comparator.comparing(key -> (BigDecimal) key) : Comparator.comparing(String::valueOf);
+        List<Scope> groups = new ArrayList<>();
+        byKey.entrySet()
+             .stream()
+             .sorted(Map.Entry.comparingByKey(Comparator.nullsLast(order)))
+             .forEach(group -> groups.add(new Scope(group.getValue()
+                                                         .get(0)
+                                                         .data(),
+                     parent, group.getValue())));
+        return groups;
+    }
+
+    /** A grouping key: a number by its value, whatever its type and scale; anything else as it is. */
+    private static Object groupKey(Object value) {
+        BigDecimal amount = value instanceof Number ? asAmount(value) : null;
+        return amount != null ? amount.stripTrailingZeros() : value;
+    }
+
+    /**
+     * One operand's value: the {@code sum(<path>)} / {@code count()} aggregate over the rows of the
+     * nearest enclosing group, else the path itself. {@code sum} adds the path's numeric values exactly
+     * ({@code BigDecimal}, so per-line VAT sums to the cent), reading each row itself - a row lacking
+     * the field never picks it up from the enclosing context - and skips the rows where it is missing
+     * or not a number. Outside any group an aggregate resolves to nothing and renders empty.
+     */
+    private static Object resolveOperand(String operand, Scope scope) {
+        boolean count = COUNT.equals(operand.replace(" ", ""));
+        Matcher sum = SUM.matcher(operand);
+        if (!count && !sum.matches()) {
+            return scope.resolve(operand);
+        }
+        List<Scope> rows = scope.groupRows();
+        if (rows == null) {
+            return null;
+        }
+        if (count) {
+            return rows.size();
+        }
+        BigDecimal total = BigDecimal.ZERO;
+        for (Scope row : rows) {
+            BigDecimal value = asAmount(row.resolveOwn(sum.group(1)));
+            if (value != null) {
+                total = total.add(value);
+            }
+        }
+        return total;
     }
 
     /**
@@ -332,7 +424,7 @@ public final class DataBinder {
                                  .trim();
                 operand = operand.substring(0, colon);
             }
-            Object resolved = scope.resolve(operand.trim());
+            Object resolved = resolveOperand(operand.trim(), scope);
             String rendered;
             if (pattern != null && pattern.startsWith(WORDS_FORMAT)) {
                 rendered = inWords(resolved, pattern.substring(WORDS_FORMAT.length()), scope);
@@ -476,18 +568,34 @@ public final class DataBinder {
         return value instanceof Map ? (Map<String, Object>) value : Map.of();
     }
 
-    /** A row scope resolving against its own data first, then the enclosing scope. */
-    private record Scope(Map<String, Object> data, Scope parent) {
+    /**
+     * A row scope resolving against its own data first, then the enclosing scope. A group scope
+     * ({@code groupBy}) reads its first row and carries every row of the group for the aggregates.
+     */
+    private record Scope(Map<String, Object> data, Scope parent, List<Scope> group) {
+
+        Scope(Map<String, Object> data, Scope parent) {
+            this(data, parent, null);
+        }
+
+        /** The rows of the nearest enclosing group, {@code null} outside any group. */
+        List<Scope> groupRows() {
+            if (group != null) {
+                return group;
+            }
+            return parent != null ? parent.groupRows() : null;
+        }
 
         Object resolve(String path) {
             if (path == null || path.isBlank()) {
                 return null;
             }
-            Object resolved = resolveLocal(path.trim());
+            Object resolved = resolveOwn(path.trim());
             return resolved == null && parent != null ? parent.resolve(path) : resolved;
         }
 
-        private Object resolveLocal(String path) {
+        /** The path read from this scope's own data only, without the enclosing-scope fallback. */
+        Object resolveOwn(String path) {
             Object current = data;
             for (String segment : path.split("\\.")) {
                 if (!(current instanceof Map<?, ?> map)) {
