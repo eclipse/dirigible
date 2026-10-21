@@ -119,10 +119,11 @@ public class CsvFile extends Artefact {
      * Whether a re-import may UPDATE rows that already exist. Absent from the .csvim this is FALSE: a
      * seed's default job is starter content - INSERT what is missing, never touch a row the user may
      * have edited since. A re-import fires on any artefact hash change (a regenerated .csvim, a new CSV
-     * column), and with upsert on it rewrites every seeded PK row with the seed's values, binding NULL
-     * for the columns the CSV does not carry - which silently destroyed a production row edited long
-     * after its seeding (#6980). Release-maintained reference data (nomenclatures, translations) opts
-     * in explicitly with {@code "upsert": true}.
+     * column), and with upsert on it rewrites every seeded PK row with the seed's values - which
+     * silently destroyed a production row edited long after its seeding (#6980). Since #7923 an update
+     * writes only the columns the CSV header names; the ones it does not carry keep their stored
+     * values. Release-maintained reference data (nomenclatures, translations) opts in explicitly with
+     * {@code "upsert": true}.
      */
     @Column(name = "CSV_FILE_UPSERT", columnDefinition = "boolean", nullable = false)
     @Expose
