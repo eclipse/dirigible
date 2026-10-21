@@ -753,6 +753,14 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
             // one from the targeted writes that publish no "-updated" at all. It is the same recompute
             // keyed on the payload's FK, so one handler repairs whichever side the payload names.
             rollups.add(rollupEntry(base, className + "RollupOnRekey", "-rekeyed"));
+            // A filtered roll-up counts only the rows its where: selects, and a status is what such a
+            // filter names. A transitions: button, a create-from's sourceStatus flip and a process setter
+            // all move it with a targeted write that publishes "-transitioned" alone (#7942), so the same
+            // recompute binds that channel too - otherwise the parent kept counting a row the filter now
+            // excludes until some unrelated write of a sibling fired.
+            if (!filter.isEmpty()) {
+                rollups.add(rollupEntry(base, className + "RollupOnTransition", "-transitioned"));
+            }
         }
         return rollups;
     }
