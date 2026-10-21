@@ -846,7 +846,10 @@ a `required` text field is refused when it is blank after that trim - spaces alo
   complete"; `map` values are a source
   property (copy), a literal, or a `{sourceProperty}` template; item values are `rule(<column>)`
   references, arithmetic over the SOURCE's fields, or - for a to-one relation cell - a bare SOURCE
-  relation name whose FK is copied onto the line; a row `when` is `<SourceField> ==|!= <number>`.
+  relation name whose FK is copied onto the line; a row `when` is one term or a list of terms
+  (ANDed): `<SourceField> ==|!= '<string>'`, or `<SourceField> ==|!=|<|<=|>|>= <number>` -
+  e.g. `when: ["Vat != 0", "VatTransactionCode != 'NOCR'"]`. A null field reads as 0 in a number
+  term and equals no string.
   A missing rule row or null referenced column SKIPS the posting (the unposted worklist = final-status
   documents with no back-referencing target), never throws - and says so in the log naming the rule
   entity, the match value and the source, because nothing else in the system marks the gap (#7649).
@@ -2415,7 +2418,7 @@ amounts:
       - name: "Services for {period}"   # string cell: {field} interpolates a source property
         quantity: 1                     # numeric cell: a Calc arithmetic expression over the source,
         price: BillableAmount           #   rounded to the target field's scale (a literal is trivial)
-        when: "BillableAmount != 0"     # optional guard: `<SourceField> ==|!= <number>` (Calc, null-safe)
+        when: "BillableAmount != 0"     # optional guard: the posting item row's grammar (Calc, null-safe)
 ```
 
 - A **numeric** target field (decimal/double/integer/long) takes a `Calc` arithmetic expression -

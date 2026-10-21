@@ -12,6 +12,7 @@ package org.eclipse.dirigible.components.ide.template.service.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Java expressions for the EXPRESSION readings a {@code .glue} carries (issue #7425).
@@ -114,6 +115,21 @@ import java.util.Map;
  * <td>{@code Calc.eval("Vat", source, 6).compareTo(new java.math.BigDecimal("0")) != 0}</td>
  * </tr>
  * <tr>
+ * <td>{@code calcOrder}</td>
+ * <td>{@code owner}, {@code property}, {@code op}, {@code text}</td>
+ * <td>{@code Calc.eval("Vat", source, 6).compareTo(new java.math.BigDecimal("0")) > 0}</td>
+ * </tr>
+ * <tr>
+ * <td>{@code textCompare}</td>
+ * <td>{@code owner}, {@code property}, {@code equal}, {@code text}</td>
+ * <td>{@code !java.util.Objects.equals((String) source.Code, "NOCR")}</td>
+ * </tr>
+ * <tr>
+ * <td>{@code all}</td>
+ * <td>{@code parts}</td>
+ * <td>the parts joined with {@code &&}</td>
+ * </tr>
+ * <tr>
  * <td>{@code ruleCase}</td>
  * <td>{@code by}, {@code owner}, {@code cases} ({@code value} / {@code column}),
  * {@code otherwise}</td>
@@ -170,6 +186,9 @@ public final class JavaExpressions {
 
     /** The scale a guard's {@code Calc} comparison reads the compared field at. */
     private static final String GUARD_SCALE = "6";
+
+    /** The operators a {@code calcOrder} guard may carry. */
+    private static final Set<String> ORDERINGS = Set.of("<", "<=", ">", ">=");
 
     /**
      * Not instantiable.
@@ -236,7 +255,20 @@ public final class JavaExpressions {
                 yield access + " == null ? null : " + access + ".negate()";
             }
             case "convert" -> convert(text(reading, "type"));
-            case "calcCompare" -> calcCompare(reading, qualified);
+            case "calcCompare" -> calcCompare(reading, flag(reading, "equal") ? "==" : "!=", qualified);
+            case "calcOrder" -> ORDERINGS.contains(text(reading, "op")) ? calcCompare(reading, text(reading, "op"), qualified) : null;
+            case "textCompare" -> {
+                String value = text(reading, "text");
+                // The cast makes a guard over a property that is not a String a compile error rather
+                // than an equality that never holds.
+                yield value == null ? null
+                        : (flag(reading, "equal") ? "" : "!") + "java.util.Objects.equals((String) " + access(reading) + ", "
+                                + literal(value) + ")";
+            }
+            case "all" -> {
+                List<String> parts = parts(reading, qualified);
+                yield parts == null || parts.isEmpty() ? null : String.join(" && ", parts);
+            }
             case "ruleCase" -> ruleCase(reading, qualified);
             case "defaultLanguage" -> DEFAULT_LANGUAGE;
             case "languageFrom" -> {
@@ -407,18 +439,18 @@ public final class JavaExpressions {
      * number.
      *
      * @param reading the reading
+     * @param operator the comparison operator
      * @param qualified whether {@code Calc} is spelled fully qualified
      * @return the boolean expression, or null when the reading carries no number
      */
-    private static String calcCompare(Map<?, ?> reading, boolean qualified) {
+    private static String calcCompare(Map<?, ?> reading, String operator, boolean qualified) {
         String property = text(reading, "property");
         String value = text(reading, "text");
         if (property == null || value == null) {
             return null;
         }
         return (qualified ? QUALIFIED_CALC : CALC) + ".eval(\"" + JavaLiterals.escape(property) + "\", " + text(reading, "owner") + ", "
-                + GUARD_SCALE + ").compareTo(new java.math.BigDecimal(\"" + JavaLiterals.escape(value) + "\")) "
-                + (flag(reading, "equal") ? "==" : "!=") + " 0";
+                + GUARD_SCALE + ").compareTo(new java.math.BigDecimal(\"" + JavaLiterals.escape(value) + "\")) " + operator + " 0";
     }
 
     /**
