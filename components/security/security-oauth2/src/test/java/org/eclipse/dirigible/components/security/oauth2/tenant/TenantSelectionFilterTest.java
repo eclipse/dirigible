@@ -498,6 +498,17 @@ class TenantSelectionFilterTest {
     }
 
     @Test
+    void theShellBootstrapIsNotFilteredAtItsCanonicalPaths() {
+        for (String path : List.of("/services/platform/extensions/shells", "/services/platform/extensions/themes",
+                "/services/platform/branding.js", "/services/platform/user-name", "/services/platform/languages",
+                "/services/platform/country", "/services/platform/clear-cache")) {
+            assertThat(filter.shouldNotFilter(new MockHttpServletRequest("GET", path))).as(path)
+                                                                                       .isTrue();
+        }
+        assertThat(filter.shouldNotFilter(new MockHttpServletRequest("GET", "/services/platform/unknown"))).isFalse();
+    }
+
+    @Test
     void theFilterIsInertWhereTenantsAreNotSelected() {
         Configuration.remove(DirigibleConfig.TENANT_RESOLUTION_STRATEGY.getKey());
         TenantSelectionFilter subdomainFilter =

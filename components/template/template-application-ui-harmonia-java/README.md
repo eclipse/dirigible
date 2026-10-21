@@ -100,7 +100,7 @@ no `collection`, so `$models` = `model.entities`.
 **Perspectives are JSON extension modules** (#7964). Every generated `perspective.json`
 (`perspective/perspective.json.template` and its `my` / `partner` / `admin` siblings) is the
 perspective object itself, read by the Java aggregation behind
-`/services/js/platform-core/extension-services/perspectives.js` without starting a script engine;
+`/services/platform/extensions/perspectives` without starting a script engine;
 the `.extension` names the `.json`. Labels go in through `menuLabelJson` / `appTitleJson`, the
 JSON-escaped twins of `menuLabel` / `appTitle`.
 

@@ -10,8 +10,8 @@
  * Only NAMED perspective groups are shown (the platform's ungrouped/utility AngularJS perspectives -
  * e.g. the old Settings - are intentionally excluded; this is the pure-Harmonia application layer).
  */
-const PERSPECTIVES_URL = '/services/js/platform-core/extension-services/perspectives.js?extensionPoints=application-admin-perspectives';
-const PROJECTIONS_URL = '/services/js/platform-core/extension-services/projections.js?extensionPoints=admin-shell-no-projections';
+const PERSPECTIVES_URL = '/services/platform/extensions/perspectives?extensionPoints=application-admin-perspectives';
+const PROJECTIONS_URL = '/services/platform/extensions/projections?extensionPoints=admin-shell-no-projections';
 // Last selected projection, persisted like the theme/language flags (shared localStorage convention).
 const PROJECTION_KEY = 'codbex.harmonia.projection';
 

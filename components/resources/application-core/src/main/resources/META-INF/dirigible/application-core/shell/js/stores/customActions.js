@@ -114,7 +114,7 @@ document.addEventListener('alpine:init', () => {
       try {
         const query = [...points].map((p) => 'extensionPoints=' + encodeURIComponent(p)).join('&');
         const data = await App.services.api.get(
-          '/services/js/platform-core/extension-services/views.js?' + query,
+          '/services/platform/extensions/views?' + query,
           { baseUrl: '' });
         this.actions = Array.isArray(data) ? data : [];
         this.loaded = true;

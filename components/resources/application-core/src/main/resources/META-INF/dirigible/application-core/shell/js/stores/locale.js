@@ -27,7 +27,7 @@
 document.addEventListener('alpine:init', () => {
   const STORAGE_KEY = 'codbex.harmonia.language';
 
-  const LANGUAGES_URL = '/services/js/platform-core/services/application-languages.js';
+  const LANGUAGES_URL = '/services/platform/languages';
 
   // Kept outside the store: Alpine makes every store property reactive, and a promise is not state.
   let valueFinal = Promise.resolve();

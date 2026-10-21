@@ -33,7 +33,7 @@ document.addEventListener('alpine:init', () => {
 
     async load() {
       try {
-        const r = await fetch('/services/js/platform-core/services/user-name.js', {
+        const r = await fetch('/services/platform/user-name', {
           headers: { 'Accept': 'text/plain' }, credentials: 'same-origin',
         });
         if (r.ok) this.name = (await r.text()).trim();
