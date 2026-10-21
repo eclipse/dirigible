@@ -10,12 +10,14 @@
 package org.eclipse.dirigible.components.intent.generator;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.dirigible.components.base.helpers.JsonHelper;
 import org.eclipse.dirigible.components.ide.template.service.model.ModelGenerationService;
 import org.eclipse.dirigible.components.intent.LoggedValue;
 import org.eclipse.dirigible.components.intent.model.IntentModel;
@@ -26,6 +28,8 @@ import org.eclipse.dirigible.repository.api.IRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import com.google.gson.JsonElement;
 
 /**
  * Runs the generation pass for one intent document against a target project: hands every registered
@@ -59,6 +63,13 @@ public class IntentGenerationService {
      */
     private static final Set<String> INTENT_OWNED_EXTENSIONS = Set.of(".edm", ".model", ".bpmn", ".form", ".report", ".roles", ".access",
             ".dsm", ".schema", ".table", ".view", ".csvim", ".csv", ".glue", ".print", ".extension", ".test");
+
+    /**
+     * The name every action, {@code generates:} and {@code transitions:} extension ends with - the
+     * generators write {@code <name>-action}, {@code <name>-generate-action} and
+     * {@code <name>-transition-action}.
+     */
+    private static final String ACTION_EXTENSION_SUFFIX = "-action.extension";
 
     private final List<IntentTargetGenerator> generators;
     private final IRepository repository;
@@ -171,7 +182,7 @@ public class IntentGenerationService {
         } catch (RuntimeException e) {
             LOGGER.error("Cross-model impact report failed for project [{}]", LoggedValue.of(projectName), e);
         }
-        List<String> scrubbed = scrubStaleModelFiles(projectRoot, context.getWrittenFileNames());
+        List<String> scrubbed = scrubStaleModelFiles(projectRoot, projectName, context.getWrittenFileNames());
         List<Map<String, Object>> plan = buildCodeGenerationPlan(context.getSettings(), context.getWrittenFileNames());
         runCodeGenerations(plan, workspaceName, projectName);
         auditConsumedAttributes(context, plan, workspaceName, projectName);
@@ -395,26 +406,89 @@ public class IntentGenerationService {
 
     /**
      * Remove intent-owned model files at the project root that are not part of the current output set.
+     *
+     * <p>
+     * An action descriptor ({@code <name>-action.json}, {@code -generate-action.json},
+     * {@code -transition-action.json}) cannot be owned by its extension - {@code project.json} and any
+     * hand-written {@code .json} share it - so it is scrubbed by its twin instead (dirigible #7981): it
+     * goes with the {@code .extension} that registered it, and a pre-#7964 {@code .js} descriptor goes
+     * once its {@code .extension} names the {@code .json} that replaced it.
      */
-    private List<String> scrubStaleModelFiles(String projectRoot, Set<String> keep) {
+    private List<String> scrubStaleModelFiles(String projectRoot, String projectName, Set<String> keep) {
         List<String> scrubbed = new ArrayList<>();
         ICollection project = repository.getCollection(projectRoot);
         if (!project.exists()) {
             return scrubbed;
         }
         for (String fileName : project.getResourcesNames()) {
-            if (keep.contains(fileName) || !isIntentOwned(fileName)) {
+            if (!isIntentOwned(fileName)) {
                 continue;
             }
-            try {
-                repository.removeResource(projectRoot + "/" + fileName);
-                scrubbed.add(fileName);
-                LOGGER.info("Scrubbed stale intent output [{}/{}]", LoggedValue.of(projectRoot), LoggedValue.of(fileName));
-            } catch (RuntimeException e) {
-                LOGGER.error("Failed to scrub stale intent output [{}/{}]", LoggedValue.of(projectRoot), LoggedValue.of(fileName), e);
+            String descriptor = descriptorOf(projectRoot, projectName, fileName);
+            if (keep.contains(fileName)) {
+                if (descriptor != null && descriptor.endsWith(".json")) {
+                    scrubIfPresent(projectRoot, removeExtension(descriptor) + ".js", keep, scrubbed);
+                }
+                continue;
+            }
+            scrubIfPresent(projectRoot, fileName, keep, scrubbed);
+            if (descriptor != null) {
+                scrubIfPresent(projectRoot, descriptor, keep, scrubbed);
             }
         }
         return scrubbed;
+    }
+
+    private void scrubIfPresent(String projectRoot, String fileName, Set<String> keep, List<String> scrubbed) {
+        String path = projectRoot + "/" + fileName;
+        if (keep.contains(fileName) || !repository.getResource(path)
+                                                  .exists()) {
+            return;
+        }
+        try {
+            repository.removeResource(path);
+            scrubbed.add(fileName);
+            LOGGER.info("Scrubbed stale intent output [{}/{}]", LoggedValue.of(projectRoot), LoggedValue.of(fileName));
+        } catch (RuntimeException e) {
+            LOGGER.error("Failed to scrub stale intent output [{}/{}]", LoggedValue.of(projectRoot), LoggedValue.of(fileName), e);
+        }
+    }
+
+    /**
+     * The root file name of the action descriptor a generated {@code <name>-action.extension}
+     * registers, or {@code null} for any other file - including an extension whose module is not its
+     * same-named twin at this project's root, which is not a generator's output.
+     */
+    private String descriptorOf(String projectRoot, String projectName, String fileName) {
+        if (!fileName.endsWith(ACTION_EXTENSION_SUFFIX)) {
+            return null;
+        }
+        String content = new String(repository.getResource(projectRoot + "/" + fileName)
+                                              .getContent(),
+                StandardCharsets.UTF_8);
+        String module;
+        try {
+            JsonElement json = JsonHelper.parseJson(content);
+            JsonElement moduleElement = json.isJsonObject() ? json.getAsJsonObject()
+                                                                  .get("module")
+                    : null;
+            module = moduleElement != null && moduleElement.isJsonPrimitive() ? moduleElement.getAsString() : null;
+        } catch (RuntimeException e) {
+            LOGGER.warn("Unreadable extension [{}/{}] - its module is left in place", LoggedValue.of(projectRoot), LoggedValue.of(fileName),
+                    e);
+            return null;
+        }
+        String base = removeExtension(fileName);
+        String prefix = projectName + "/";
+        if (module == null || !module.startsWith(prefix)) {
+            return null;
+        }
+        String descriptor = module.substring(prefix.length());
+        return descriptor.equals(base + ".json") || descriptor.equals(base + ".js") ? descriptor : null;
+    }
+
+    private static String removeExtension(String fileName) {
+        return fileName.substring(0, fileName.lastIndexOf('.'));
     }
 
     private static boolean isIntentOwned(String fileName) {
