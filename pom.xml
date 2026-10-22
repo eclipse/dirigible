@@ -765,6 +765,12 @@
                         <configuration>
                             <publishingServerId>ossrh</publishingServerId>
                             <autoPublish>true</autoPublish>
+                            <!-- The Java edition has no sources of its own, hence no javadoc, while its
+                                 executable jar carries classes, and Central refuses the whole deployment
+                                 over it (#8067). It is distributed as the -java Docker image. -->
+                            <excludeArtifacts>
+                                <excludeArtifact>dirigible-application-java</excludeArtifact>
+                            </excludeArtifacts>
                         </configuration>
                     </plugin>
                     <plugin>
