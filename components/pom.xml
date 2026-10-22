@@ -93,6 +93,7 @@
         <module>engine/engine-ftp</module>
         <module>engine/engine-sftp</module>
         <module>engine/engine-di</module>
+        <module>engine/engine-javascript-bridges</module>
 
         <!-- IDE -->
         <module>ide/ide-workspace</module>

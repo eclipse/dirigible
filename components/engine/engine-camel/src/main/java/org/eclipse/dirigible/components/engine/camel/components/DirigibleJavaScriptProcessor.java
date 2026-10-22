@@ -14,6 +14,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.camel.support.CamelContextHelper;
+import org.eclipse.dirigible.components.base.script.ScriptEngineUnavailableException;
 import org.eclipse.dirigible.components.tracing.TaskState;
 import org.eclipse.dirigible.components.tracing.TaskStateUtil;
 import org.eclipse.dirigible.components.tracing.TaskType;
@@ -61,20 +62,17 @@ class DirigibleJavaScriptProcessor implements Processor {
     }
 
     private DirigibleJavaScriptInvoker getInvoker(CamelContext camelContext) {
+        DirigibleJavaScriptInvoker invoker;
         try {
-            DirigibleJavaScriptInvoker invoker = CamelContextHelper.findSingleByType(camelContext, DirigibleJavaScriptInvoker.class);
-            if (invoker == null) {
-                invoker = camelContext.getInjector()
-                                      .newInstance(DirigibleJavaScriptInvoker.class);
-            }
-            if (invoker == null) {
-                throw new DirigibleJavaScriptException("Cannot get instance of " + DirigibleJavaScriptInvoker.class);
-            }
-
-            return invoker;
+            invoker = CamelContextHelper.findSingleByType(camelContext, DirigibleJavaScriptInvoker.class);
         } catch (RuntimeException ex) {
             throw new DirigibleJavaScriptException("Cannot get instance of " + DirigibleJavaScriptInvoker.class, ex);
         }
+        if (invoker == null) {
+            // Only the JavaScript engine provides the invoker - an interface no injector could build.
+            throw new ScriptEngineUnavailableException(javaScriptPath);
+        }
+        return invoker;
     }
 
 }

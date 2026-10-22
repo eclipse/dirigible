@@ -11,16 +11,20 @@ package org.eclipse.dirigible.components.api.rabbitmq;
 
 import nl.altindag.log.LogCaptor;
 import org.eclipse.dirigible.commons.config.Configuration;
+import org.eclipse.dirigible.components.base.script.ScriptExecutor;
+import org.eclipse.dirigible.components.base.spring.BeanProvider;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.OS;
+import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.testcontainers.containers.RabbitMQContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
 
 @Tag("testcontainers")
 @DisabledOnOs(OS.WINDOWS)
@@ -55,7 +59,10 @@ public class RabbitMQFacadeTest {
     public void rabbitMQIntegration() {
         logCaptor.setLogLevelToInfo();
 
-        RabbitMQFacade.startListening(queue, "rabbitmq/test-handler");
+        // The handler is a script, so listening needs a script engine to hand the messages to.
+        new ApplicationContextRunner().withUserConfiguration(BeanProvider.class)
+                                      .withBean(ScriptExecutor.class, () -> mock(ScriptExecutor.class))
+                                      .run(context -> RabbitMQFacade.startListening(queue, "rabbitmq/test-handler"));
         assertEquals(logCaptor.getInfoLogs()
                               .get(0),
                 "RabbitMQ receiver created for [" + queue + "]");

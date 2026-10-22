@@ -20,7 +20,9 @@ import java.util.concurrent.ExecutionException;
 import jakarta.websocket.DeploymentException;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
-import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
+import org.eclipse.dirigible.components.base.script.ScriptEngineUnavailableException;
+import org.eclipse.dirigible.components.base.script.ScriptExecutor;
+import org.eclipse.dirigible.components.base.spring.BeanProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.simp.stomp.StompSession;
@@ -80,13 +82,16 @@ public class WebsocketsFacade {
      * @throws IOException in case of an error
      * @throws InterruptedException the interrupted exception
      * @throws ExecutionException the execution exception
+     * @throws ScriptEngineUnavailableException when no script engine is deployed to run the handler
      */
     public static final StompSession createWebsocket(String uri, String handler, Map<String, String> connectHeaders)
             throws DeploymentException, IOException, InterruptedException, ExecutionException {
         if (logger.isDebugEnabled()) {
             logger.debug("Connecting to " + uri);
         }
-        WebsocketClient client = new WebsocketClient(uri, JavascriptService.get(), handler, connectHeaders);
+        ScriptExecutor scriptExecutor = BeanProvider.getOptionalBean(ScriptExecutor.class)
+                                                    .orElseThrow(() -> new ScriptEngineUnavailableException(handler));
+        WebsocketClient client = new WebsocketClient(uri, scriptExecutor, handler, connectHeaders);
         return client.connect();
     }
 

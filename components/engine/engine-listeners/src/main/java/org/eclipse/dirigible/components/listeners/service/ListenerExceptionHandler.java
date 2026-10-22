@@ -11,8 +11,6 @@ package org.eclipse.dirigible.components.listeners.service;
 
 import jakarta.jms.ExceptionListener;
 import jakarta.jms.JMSException;
-import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
-import org.eclipse.dirigible.graalium.core.javascript.modules.Module;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,13 +25,18 @@ class ListenerExceptionHandler implements ExceptionListener {
     /** The handler path. */
     private final String handlerPath;
 
+    /** The executor of the listener's script handler. */
+    private final ListenerScriptExecutor scriptExecutor;
+
     /**
      * Instantiates a new listener exception handler.
      *
      * @param handlerPath the handler path
+     * @param scriptExecutor the executor of the listener's script handler
      */
-    ListenerExceptionHandler(String handlerPath) {
+    ListenerExceptionHandler(String handlerPath, ListenerScriptExecutor scriptExecutor) {
         this.handlerPath = handlerPath;
+        this.scriptExecutor = scriptExecutor;
     }
 
     /**
@@ -45,32 +48,11 @@ class ListenerExceptionHandler implements ExceptionListener {
     public void onException(JMSException jmsException) {
         try {
             String errorMessage = jmsException.getMessage();
-            executeOnErrorHandler(errorMessage);
+            scriptExecutor.onError(handlerPath, errorMessage);
         } catch (RuntimeException ex) {
             ex.addSuppressed(jmsException);
             LOGGER.error("Failed to handle exception properly", ex);
         }
-    }
-
-    /**
-     * Execute on error handler.
-     *
-     * @param errorMessage the error message
-     */
-    private void executeOnErrorHandler(String errorMessage) {
-        try (DirigibleJavascriptCodeRunner runner = createJSCodeRunner()) {
-            Module module = runner.run(handlerPath);
-            runner.runMethod(module, "onError", errorMessage);
-        }
-    }
-
-    /**
-     * Creates the JS code runner.
-     *
-     * @return the dirigible javascript code runner
-     */
-    DirigibleJavascriptCodeRunner createJSCodeRunner() {
-        return new DirigibleJavascriptCodeRunner();
     }
 
 }

@@ -9,15 +9,13 @@
  */
 package org.eclipse.dirigible.components.jobs.handler;
 
-import java.nio.file.Path;
-
-import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
+import org.eclipse.dirigible.components.base.script.ScriptEngineUnavailableException;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
 
 /**
  * Runs a job's handler on the engine the job declares: {@value JavaJobExecutor#ENGINE_JAVA} routes
- * to the client-Java executor, anything else to the JavaScript runner (the handler is then a
+ * to the client-Java executor, anything else to the script executor (the handler is then a
  * repository path).
  *
  * <p>
@@ -32,8 +30,11 @@ public class JobHandlerRunner {
 
     private final ObjectProvider<JavaJobExecutor> javaJobExecutor;
 
-    JobHandlerRunner(ObjectProvider<JavaJobExecutor> javaJobExecutor) {
+    private final ObjectProvider<JobScriptExecutor> jobScriptExecutor;
+
+    JobHandlerRunner(ObjectProvider<JavaJobExecutor> javaJobExecutor, ObjectProvider<JobScriptExecutor> jobScriptExecutor) {
         this.javaJobExecutor = javaJobExecutor;
+        this.jobScriptExecutor = jobScriptExecutor;
     }
 
     /**
@@ -53,8 +54,29 @@ public class JobHandlerRunner {
             executor.execute(handler);
             return;
         }
-        try (DirigibleJavascriptCodeRunner runner = new DirigibleJavascriptCodeRunner()) {
-            runner.run(Path.of(handler));
+        scriptExecutor(handler).execute(handler);
+    }
+
+    /**
+     * Checks that a script job's engine is deployed, so a job that could never run is not scheduled. A
+     * Java job is registered by the Java engine itself and needs no check.
+     *
+     * @param handler the job's handler
+     * @param engine the job's engine, or {@code null} for the default JavaScript one
+     * @throws ScriptEngineUnavailableException when the job is a script job and no script engine is
+     *         deployed
+     */
+    public void verifyRunnable(String handler, String engine) {
+        if (!JavaJobExecutor.ENGINE_JAVA.equals(engine)) {
+            scriptExecutor(handler);
         }
+    }
+
+    private JobScriptExecutor scriptExecutor(String handler) {
+        JobScriptExecutor executor = jobScriptExecutor.getIfAvailable();
+        if (executor == null) {
+            throw new ScriptEngineUnavailableException(handler);
+        }
+        return executor;
     }
 }

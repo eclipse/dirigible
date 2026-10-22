@@ -12,9 +12,10 @@ package org.eclipse.dirigible.components.api.platform;
 import java.util.Map;
 
 import org.eclipse.dirigible.commons.api.helpers.GsonHelper;
-import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
+import org.eclipse.dirigible.components.base.script.ScriptEngineUnavailableException;
+import org.eclipse.dirigible.components.base.script.ScriptExecutor;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
 
 /**
@@ -29,17 +30,16 @@ public class EnginesFacade implements InitializingBean {
     /** The engines. */
     private static String[] ENGINES = new String[] {"javascript"};
 
-    /** The publisherService. */
-    private JavascriptService javascriptService;
+    /** The executor of the scripts, absent where no script engine is deployed. */
+    private final ObjectProvider<ScriptExecutor> scriptExecutor;
 
     /**
      * Instantiates a new engines facade.
      *
-     * @param javascriptService the javascript service
+     * @param scriptExecutor the executor of the scripts
      */
-    @Autowired
-    private EnginesFacade(JavascriptService javascriptService) {
-        this.javascriptService = javascriptService;
+    private EnginesFacade(ObjectProvider<ScriptExecutor> scriptExecutor) {
+        this.scriptExecutor = scriptExecutor;
     }
 
     /**
@@ -61,13 +61,12 @@ public class EnginesFacade implements InitializingBean {
         return INSTANCE;
     }
 
-    /**
-     * Gets the javascript service.
-     *
-     * @return the javascript service
-     */
-    public JavascriptService getJavascriptService() {
-        return javascriptService;
+    private ScriptExecutor scriptExecutor(String script) {
+        ScriptExecutor executor = scriptExecutor.getIfAvailable();
+        if (executor == null) {
+            throw new ScriptEngineUnavailableException(script);
+        }
+        return executor;
     }
 
 
@@ -87,8 +86,8 @@ public class EnginesFacade implements InitializingBean {
             Map<Object, Object> parameters, boolean debug) throws Exception {
         if ("javascript".equals(type)) {
             return EnginesFacade.get()
-                                .getJavascriptService()
-                                .handleRequest(projectName, projectFilePath, projectFilePathParam, parameters, debug);
+                                .scriptExecutor(projectName + "/" + projectFilePath)
+                                .execute(projectName, projectFilePath, projectFilePathParam, parameters, debug);
         } else {
             throw new Exception("Engine does not exist: " + type);
         }

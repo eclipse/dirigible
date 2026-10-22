@@ -12,6 +12,7 @@ package org.eclipse.dirigible.components.jobs.manager;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dirigible.components.base.tenant.TenantContext;
 import org.eclipse.dirigible.components.jobs.handler.JobHandler;
+import org.eclipse.dirigible.components.jobs.handler.JobHandlerRunner;
 import org.eclipse.dirigible.components.jobs.tenant.JobNameCreator;
 import org.quartz.*;
 import org.slf4j.Logger;
@@ -43,17 +44,22 @@ public class JobsManager {
     /** The job name creator. */
     private final JobNameCreator jobNameCreator;
 
+    /** The runner a user job's handler is dispatched to. */
+    private final JobHandlerRunner jobHandlerRunner;
+
     /**
      * Instantiates a new jobs manager.
      *
      * @param scheduler the scheduler
      * @param tenantContext the tenant context
      * @param jobNameCreator the job name creator
+     * @param jobHandlerRunner the runner a user job's handler is dispatched to
      */
-    JobsManager(Scheduler scheduler, TenantContext tenantContext, JobNameCreator jobNameCreator) {
+    JobsManager(Scheduler scheduler, TenantContext tenantContext, JobNameCreator jobNameCreator, JobHandlerRunner jobHandlerRunner) {
         this.scheduler = scheduler;
         this.tenantContext = tenantContext;
         this.jobNameCreator = jobNameCreator;
+        this.jobHandlerRunner = jobHandlerRunner;
     }
 
     /**
@@ -71,6 +77,11 @@ public class JobsManager {
             }
             LOGGER.debug("Job [{}] is NOT enabled and will not be scheduled.", jobDefinition);
             return;
+        }
+        // Before the "already exists" shortcut: the scheduler's store outlives the process, so a
+        // script job scheduled by a run that had the script engine is still there on one that does not.
+        if (!isInternalJob(jobDefinition)) {
+            jobHandlerRunner.verifyRunnable(jobDefinition.getHandler(), jobDefinition.getEngine());
         }
         try {
             TriggerKey triggerKey = createTriggerKey(jobDefinition);

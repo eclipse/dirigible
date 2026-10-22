@@ -14,12 +14,6 @@
     <packaging>jar</packaging>
 
     <dependencies>
-        <dependency>
-            <groupId>org.graalvm.js</groupId>
-            <artifactId>js-language</artifactId>
-            <version>${graalvm.version}</version>
-        </dependency>
-
         <!-- JS sources -->
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
@@ -36,6 +30,7 @@
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-api-test</artifactId>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>

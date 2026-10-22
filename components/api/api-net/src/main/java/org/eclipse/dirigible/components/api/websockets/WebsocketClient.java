@@ -22,7 +22,7 @@ import jakarta.websocket.OnMessage;
 import jakarta.websocket.OnOpen;
 import jakarta.websocket.Session;
 
-import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
+import org.eclipse.dirigible.components.base.script.ScriptExecutor;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,8 +57,8 @@ public class WebsocketClient {
     /** The session. */
     private StompSession session;
 
-    /** The javascript service. */
-    private final JavascriptService javascriptService;
+    /** The executor of the handler's script. */
+    private final ScriptExecutor scriptExecutor;
 
     /** The headers of the STOMP CONNECT frame. */
     private final Map<String, String> connectHeaders;
@@ -67,26 +67,26 @@ public class WebsocketClient {
      * Instantiates a new websocket client that connects with a bare CONNECT frame.
      *
      * @param uri the uri
-     * @param javascriptService the javascript service
+     * @param scriptExecutor the executor of the handler's script
      * @param handler the handler
      */
-    public WebsocketClient(String uri, JavascriptService javascriptService, String handler) {
-        this(uri, javascriptService, handler, Map.of());
+    public WebsocketClient(String uri, ScriptExecutor scriptExecutor, String handler) {
+        this(uri, scriptExecutor, handler, Map.of());
     }
 
     /**
      * Instantiates a new websocket client.
      *
      * @param uri the uri
-     * @param javascriptService the javascript service
+     * @param scriptExecutor the executor of the handler's script
      * @param handler the handler
      * @param connectHeaders the headers of the STOMP CONNECT frame - a Dirigible {@code /stomp}
      *        endpoint needs {@code Authorization: Bearer <token>} there, since an anonymous CONNECT is
      *        refused
      */
-    public WebsocketClient(String uri, JavascriptService javascriptService, String handler, Map<String, String> connectHeaders) {
+    public WebsocketClient(String uri, ScriptExecutor scriptExecutor, String handler, Map<String, String> connectHeaders) {
         this.uri = uri;
-        this.javascriptService = javascriptService;
+        this.scriptExecutor = scriptExecutor;
         this.handler = handler;
         this.connectHeaders = Map.copyOf(connectHeaders);
     }
@@ -122,12 +122,12 @@ public class WebsocketClient {
     }
 
     /**
-     * Gets the javascript service.
+     * Gets the executor of the handler's script.
      *
-     * @return the javascript service
+     * @return the script executor
      */
-    public JavascriptService getJavascriptService() {
-        return javascriptService;
+    public ScriptExecutor getScriptExecutor() {
+        return scriptExecutor;
     }
 
     /**
@@ -162,7 +162,7 @@ public class WebsocketClient {
         context.put("method", "onopen");
         context.put("handler", this.handler);
         RepositoryPath path = new RepositoryPath(handler);
-        getJavascriptService().handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
+        getScriptExecutor().execute(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
     }
 
     /**
@@ -178,7 +178,7 @@ public class WebsocketClient {
         context.put("method", "onmessage");
         context.put("handler", this.handler);
         RepositoryPath path = new RepositoryPath(WebsocketsFacade.DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_MESSAGE);
-        getJavascriptService().handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
+        getScriptExecutor().execute(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
     }
 
     /**
@@ -197,7 +197,7 @@ public class WebsocketClient {
         context.put("method", "onerror");
         context.put("handler", this.handler);
         RepositoryPath path = new RepositoryPath(WebsocketsFacade.DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_ERROR);
-        getJavascriptService().handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
+        getScriptExecutor().execute(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
     }
 
     /**
@@ -213,7 +213,7 @@ public class WebsocketClient {
         context.put("method", "onclose");
         context.put("handler", this.handler);
         RepositoryPath path = new RepositoryPath(WebsocketsFacade.DIRIGIBLE_WEBSOCKET_WRAPPER_MODULE_ON_CLOSE);
-        getJavascriptService().handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
+        getScriptExecutor().execute(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
     }
 
 }

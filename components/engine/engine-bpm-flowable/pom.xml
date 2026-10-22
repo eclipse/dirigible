@@ -51,10 +51,6 @@
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-engine-bpm</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-components-engine-javascript</artifactId>
-        </dependency>
         <!--
           Only the ClientClassLoader / ClientClassLoaderHolder primitives are needed here (so
           DirigibleJavaCallDelegate and ClientAwareClassLoader can resolve client-compiled

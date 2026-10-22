@@ -25,12 +25,6 @@
 			<artifactId>dirigible-components-core-repository</artifactId>
 		</dependency>
 
-		<!-- Engine -->
-		<dependency>
-			<groupId>org.eclipse.dirigible</groupId>
-			<artifactId>dirigible-components-engine-javascript</artifactId>
-		</dependency>
-		
 		<!-- IDE -->
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
@@ -51,6 +45,11 @@
 		<dependency>
 			<groupId>org.eclipse.dirigible</groupId>
 			<artifactId>dirigible-components-ide-git</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-api-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 		

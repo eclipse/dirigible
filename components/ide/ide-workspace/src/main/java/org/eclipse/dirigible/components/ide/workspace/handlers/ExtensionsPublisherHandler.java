@@ -14,11 +14,12 @@ package org.eclipse.dirigible.components.ide.workspace.handlers;
 
 import org.eclipse.dirigible.components.api.extensions.ExtensionsFacade;
 import org.eclipse.dirigible.components.base.publisher.PublisherHandler;
-import org.eclipse.dirigible.components.engine.javascript.service.JavascriptService;
+import org.eclipse.dirigible.components.base.script.ScriptEngineUnavailableException;
+import org.eclipse.dirigible.components.base.script.ScriptExecutor;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -51,9 +52,17 @@ public class ExtensionsPublisherHandler implements PublisherHandler {
     /** The Constant EXTENSION_PARAMETER_PATH. */
     private static final String EXTENSION_PARAMETER_PATH = "path";
 
-    /** The javascript service. */
-    @Autowired
-    private JavascriptService javascriptService;
+    /** The executor of the extension scripts, absent where no script engine is deployed. */
+    private final ObjectProvider<ScriptExecutor> scriptExecutor;
+
+    /**
+     * Instantiates a new extensions publisher handler.
+     *
+     * @param scriptExecutor the executor of the extension scripts
+     */
+    ExtensionsPublisherHandler(ObjectProvider<ScriptExecutor> scriptExecutor) {
+        this.scriptExecutor = scriptExecutor;
+    }
 
     /**
      * Before publish.
@@ -84,7 +93,11 @@ public class ExtensionsPublisherHandler implements PublisherHandler {
                     internal.put(EXTENSION_PARAMETER_PATH, location);
                     internal.put("handler", module);
                     RepositoryPath path = new RepositoryPath(module);
-                    javascriptService.handleRequest(path.getSegments()[0], path.constructPathFrom(1), null, internal, false);
+                    ScriptExecutor executor = scriptExecutor.getIfAvailable();
+                    if (executor == null) {
+                        throw new ScriptEngineUnavailableException(module);
+                    }
+                    executor.execute(path.getSegments()[0], path.constructPathFrom(1), null, internal, false);
                     if (logger.isTraceEnabled()) {
                         logger.trace("Workspace {} Extension: {} finshed.", state, module);
                     }

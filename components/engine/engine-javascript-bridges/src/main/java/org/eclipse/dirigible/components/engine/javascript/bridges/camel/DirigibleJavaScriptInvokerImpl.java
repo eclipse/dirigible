@@ -8,12 +8,13 @@
  * SPDX-FileCopyrightText: Eclipse Dirigible contributors SPDX-License-Identifier: EPL-2.0
  */
 
-package org.eclipse.dirigible.components.engine.camel.invoke;
+package org.eclipse.dirigible.components.engine.javascript.bridges.camel;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.spi.Synchronization;
 import org.eclipse.dirigible.components.engine.camel.components.DirigibleJavaScriptInvoker;
+import org.eclipse.dirigible.components.engine.camel.invoke.IntegrationMessage;
 import org.eclipse.dirigible.graalium.core.DirigibleJavascriptCodeRunner;
 import org.graalvm.polyglot.Value;
 import org.graalvm.polyglot.proxy.ProxyExecutable;
