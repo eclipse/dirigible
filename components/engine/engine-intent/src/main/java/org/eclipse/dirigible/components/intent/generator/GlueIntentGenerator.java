@@ -6014,27 +6014,20 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
             entry.put("perspective", setter.perspective());
             entry.put("keyProperty", setter.keyProperty());
             entry.put("keyAccessor", setter.keyAccessor());
-            entry.put("field", setter.field());
-            entry.put("value", setter.value());
-            entry.put("relation", setter.relation() ? "true" : "false");
-            // A clearField setter assigns null instead of a literal (#7386). Emitted only when it is
-            // one, so every other setter's descriptor stays byte-identical.
-            if (setter.clear()) {
-                entry.put("clear", "true");
-            }
-            // The {error} token (whole-value, parser-enforced) reads the failure message the runtime
-            // conversion published instead of assigning a literal. Emitted only when used, so every
-            // other setter's descriptor stays byte-identical.
-            if (!setter.relation() && ProcessResilienceSupport.ERROR_TOKEN.equals(setter.value()
-                                                                                        .trim())) {
-                entry.put("errorMessage", "true");
-            }
-            // The {now} token (whole-value, timestamp/date only - parser-enforced) stamps the moment
-            // the step runs, in the Java type the entity declares for the column (#7873). Emitted only
-            // when used, so every other setter's descriptor stays byte-identical.
-            if (setter.now()) {
-                entry.put("now", "true");
-                entry.put("nowExpression", "java.time." + setter.javaType() + ".now()");
+            // A set: map of several members (#8042) is one targeted write of all of them; a single
+            // member keeps its own keys, so every single-member setter's descriptor stays byte-identical.
+            if (setter.assignments()
+                      .size() == 1) {
+                putAssignment(entry, setter.assignments()
+                                           .get(0));
+            } else {
+                List<Map<String, Object>> assignments = new ArrayList<>();
+                for (SetFieldSupport.Assignment assignment : setter.assignments()) {
+                    Map<String, Object> member = new LinkedHashMap<>();
+                    putAssignment(member, assignment);
+                    assignments.add(member);
+                }
+                entry.put("assignments", assignments);
             }
             // A one-hop setter (#7934) writes the record the trigger's FK points at, through that
             // record's own repository. Emitted only when used, so every other setter's descriptor stays
@@ -6048,5 +6041,31 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
             setters.add(entry);
         }
         return setters;
+    }
+
+    /** The keys one member write carries - a single-member setter's, or one entry of a set: map's. */
+    private static void putAssignment(Map<String, Object> entry, SetFieldSupport.Assignment assignment) {
+        entry.put("field", assignment.field());
+        entry.put("value", assignment.value());
+        entry.put("relation", assignment.relation() ? "true" : "false");
+        // A clearField setter assigns null instead of a literal (#7386). Emitted only when it is
+        // one, so every other setter's descriptor stays byte-identical.
+        if (assignment.clear()) {
+            entry.put("clear", "true");
+        }
+        // The {error} token (whole-value, parser-enforced) reads the failure message the runtime
+        // conversion published instead of assigning a literal. Emitted only when used, so every
+        // other setter's descriptor stays byte-identical.
+        if (!assignment.relation() && ProcessResilienceSupport.ERROR_TOKEN.equals(assignment.value()
+                                                                                            .trim())) {
+            entry.put("errorMessage", "true");
+        }
+        // The {now} token (whole-value, timestamp/date only - parser-enforced) stamps the moment
+        // the step runs, in the Java type the entity declares for the column (#7873). Emitted only
+        // when used, so every other setter's descriptor stays byte-identical.
+        if (assignment.now()) {
+            entry.put("now", "true");
+            entry.put("nowExpression", "java.time." + assignment.javaType() + ".now()");
+        }
     }
 }

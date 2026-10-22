@@ -158,6 +158,35 @@ class GlueGeneratorTest {
     }
 
     /**
+     * A {@code set:} setter's members become the values of its one {@code updateProperties} map, in the
+     * authored order, each the value its single-member setter would assign (#8042).
+     */
+    @Test
+    void aSetMapsMembersRenderAsTheValuesOfOneWrite() {
+        List<Map<String, Object>> assignments =
+                List.of(member("SlotKey", "", Map.of("clear", "true")), member("Status", "3", Map.of("relation", "true")),
+                        member("FinishedAt", "{now}", Map.of("now", "true", "nowExpression", "java.time.Instant.now()")),
+                        member("ErrorMessage", "{error}", Map.of("errorMessage", "true")), member("Note", "the \"last\" one", Map.of()));
+
+        List<Map<String, Object>> rendered = GlueGenerator.setterAssignments(assignments);
+
+        assertThat(rendered).extracting(member -> member.get("field"))
+                            .containsExactly("SlotKey", "Status", "FinishedAt", "ErrorMessage", "Note");
+        assertThat(rendered).extracting(member -> member.get("expression"))
+                            .containsExactly("null", "3", "java.time.Instant.now()",
+                                    "errorMessage == null ? \"\" : errorMessage.toString()", "\"the \\\"last\\\" one\"");
+    }
+
+    private static Map<String, Object> member(String field, String value, Map<String, String> flags) {
+        Map<String, Object> member = new LinkedHashMap<>();
+        member.put("field", field);
+        member.put("value", value);
+        member.put("relation", "false");
+        member.putAll(flags);
+        return member;
+    }
+
+    /**
      * The glue carries the query's CLAUSES and this layer writes the {@code Criteria} (issue #7406) -
      * the builder package and {@code java.time} leave the process description, and the same facts can
      * reach a template generating something other than Java.

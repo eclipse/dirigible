@@ -781,16 +781,13 @@ public final class CheckSupport {
             // A one-hop setter (#7934) moves the TARGET's status, so it is the target's checks it reaches.
             EntityIntent entity = byName.get(setter.writtenEntity());
             RelationIntent status = entity == null ? null : IntentEntities.entityStatusRelation(entity);
-            if (!setter.relation() || status == null || !IntentNaming.pascalCase(status.getName())
-                                                                     .equals(setter.field())
-                    || setter.value() == null || !setter.value()
-                                                        .trim()
-                                                        .matches("-?\\d+")) {
+            String value = status == null ? null : setter.relationValue(IntentNaming.pascalCase(status.getName()));
+            if (value == null || !value.trim()
+                                       .matches("-?\\d+")) {
                 continue;
             }
             targets.computeIfAbsent(setter.writtenEntity(), name -> new TreeSet<>())
-                   .add(Integer.valueOf(setter.value()
-                                              .trim()));
+                   .add(Integer.valueOf(value.trim()));
         }
         return targets;
     }

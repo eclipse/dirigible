@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.eclipse.dirigible.components.ide.template.service.model.ModelValues.asMaps;
+import static org.eclipse.dirigible.components.ide.template.service.model.ModelValues.isTrue;
 import static org.eclipse.dirigible.components.ide.template.service.model.ModelValues.str;
 import static org.eclipse.dirigible.components.ide.template.service.model.ModelValues.strOr;
 import static org.eclipse.dirigible.components.ide.template.service.model.ModelValues.truthy;
@@ -371,6 +372,45 @@ class GlueGenerator {
         if (item.containsKey("targetPerspective")) {
             context.put("javaTargetPerspective", sanitize(item, "targetPerspective"));
         }
+        // A set: map (#8042) writes all its members in one updateProperties.
+        List<Map<String, Object>> assignments = asMaps(item.get("assignments"));
+        if (!assignments.isEmpty()) {
+            context.put("assignments", setterAssignments(assignments));
+            context.put("readsErrorMessage", assignments.stream()
+                                                        .anyMatch(assignment -> isTrue(assignment, "errorMessage")));
+        }
+    }
+
+    /**
+     * Renders the members of a {@code set:} setter, in the authored order, as the Java value each one
+     * puts into the single {@code updateProperties} map - the same value its single-member setter
+     * assigns: a relation's seed id unquoted, {@code null} for an erasure, the {@code {now}} moment,
+     * the {@code errorMessage} variable for {@code {error}}, else the escaped literal.
+     *
+     * @param assignments the descriptor's {@code assignments}
+     * @return one {@code {field, expression}} per member
+     */
+    static List<Map<String, Object>> setterAssignments(List<Map<String, Object>> assignments) {
+        List<Map<String, Object>> rendered = new ArrayList<>(assignments.size());
+        for (Map<String, Object> assignment : assignments) {
+            String expression;
+            if (isTrue(assignment, "relation")) {
+                expression = str(assignment, "value");
+            } else if (isTrue(assignment, "clear")) {
+                expression = "null";
+            } else if (isTrue(assignment, "now")) {
+                expression = str(assignment, "nowExpression");
+            } else if (isTrue(assignment, "errorMessage")) {
+                expression = "errorMessage == null ? \"\" : errorMessage.toString()";
+            } else {
+                expression = javaString(str(assignment, "value"));
+            }
+            Map<String, Object> member = new LinkedHashMap<>();
+            member.put("field", str(assignment, "field"));
+            member.put("expression", expression);
+            rendered.add(member);
+        }
+        return rendered;
     }
 
     /**

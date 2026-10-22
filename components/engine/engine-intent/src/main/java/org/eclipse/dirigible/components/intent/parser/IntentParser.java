@@ -168,15 +168,16 @@ public final class IntentParser {
      * the service task's actions - {@code ServiceTaskHandlerGenerator} scaffolds both from the same
      * keys.
      */
-    private static final Map<String, Set<String>> STEP_ARGS_BY_KIND = Map.of("userTask",
-            Set.of("assignee", "form", "timeout", "expire", "setRelationField", "value", "next"), "serviceTask",
-            Set.of("setField", "clearField", "setRelationField", "value", "call", "delegate", "fields", "javaHandler", "notify", "next",
-                    "retry", "onError", "produces", "uses"),
-            "script",
-            Set.of("setField", "clearField", "setRelationField", "value", "call", "delegate", "fields", "javaHandler", "notify", "next"),
-            "decision", Set.of("if", "then", "else", "next"), "wait",
-            Set.of("after", "onCreate", "onUpdate", "onTransition", "via", "when", "next"), "parallel", Set.of("branches", "next"), "end",
-            Set.of("next"));
+    private static final Map<String, Set<String>> STEP_ARGS_BY_KIND =
+            Map.of("userTask", Set.of("assignee", "form", "timeout", "expire", "setRelationField", "set", "value", "next"), "serviceTask",
+                    Set.of("setField", "clearField", "setRelationField", "set", "value", "call", "delegate", "fields", "javaHandler",
+                            "notify", "next", "retry", "onError", "produces", "uses"),
+                    "script",
+                    Set.of("setField", "clearField", "setRelationField", "set", "value", "call", "delegate", "fields", "javaHandler",
+                            "notify", "next"),
+                    "decision", Set.of("if", "then", "else", "next"), "wait",
+                    Set.of("after", "onCreate", "onUpdate", "onTransition", "via", "when", "next"), "parallel", Set.of("branches", "next"),
+                    "end", Set.of("next"));
     /** Every arg the DSL knows, on any kind - anything else is a typo, not a misplacement. */
     private static final Set<String> KNOWN_STEP_ARGS = STEP_ARGS_BY_KIND.values()
                                                                         .stream()
@@ -188,7 +189,7 @@ public final class IntentParser {
      * than adding a second, blunter line.
      */
     private static final Set<String> STEP_ARGS_CHECKED_BY_KIND_ELSEWHERE =
-            Set.of("setField", "clearField", "setRelationField", "delegate", "notify", "timeout", "expire");
+            Set.of("setField", "clearField", "setRelationField", "set", "delegate", "notify", "timeout", "expire");
     /**
      * Entity events a declarative-glue item (notification, integration, departure, process trigger) can
      * bind to. {@code onTransition} is the STATUS axis - a workflow setter, a {@code transitions:}
@@ -375,6 +376,7 @@ public final class IntentParser {
         if (model == null) {
             model = new IntentModel();
         }
+        restoreSetMaps(tree, model);
         validate(model, issues);
         return model;
     }
@@ -8436,8 +8438,15 @@ public final class IntentParser {
      */
     private static void validateSetFieldValueType(ProcessIntent process, StepIntent step, String setField, FieldIntent field,
             List<String> issues) {
-        String subject = "process [" + process.getName() + "] step [" + step.getName() + "] setField [" + setField + "]";
-        String value = stepArg(step, "value");
+        validateSetFieldValueType("process [" + process.getName() + "] step [" + step.getName() + "] setField [" + setField + "]", field,
+                stepArg(step, "value"), issues);
+    }
+
+    /**
+     * {@link #validateSetFieldValueType(ProcessIntent, StepIntent, String, FieldIntent, List)} for one
+     * value.
+     */
+    private static void validateSetFieldValueType(String subject, FieldIntent field, String value, List<String> issues) {
         boolean blank = value == null || value.isBlank();
         boolean now = !blank && SetFieldSupport.NOW_TOKEN.equals(value.trim());
         if (SetFieldSupport.isNowFieldType(field.getType())) {
@@ -8505,6 +8514,113 @@ public final class IntentParser {
             return "a field of [" + entity.getName() + "]";
         }
         return "which is not a relation of [" + entity.getName() + "]";
+    }
+
+    /**
+     * A {@code set:} map's {@code null} is the {@code clearField} erasure of its key (#8042), and the
+     * Gson round trip of the tree drops a {@code null} map value - so each step's map is put back from
+     * the raw tree, where its {@code null}s still stand (and its seed names are already resolved).
+     */
+    private static void restoreSetMaps(Object tree, IntentModel model) {
+        if (!(tree instanceof Map<?, ?> root) || !(root.get("processes") instanceof List<?> processes)) {
+            return;
+        }
+        for (int p = 0; p < processes.size() && p < model.getProcesses()
+                                                         .size(); p++) {
+            if (!(processes.get(p) instanceof Map<?, ?> process) || !(process.get("steps") instanceof List<?> steps)) {
+                continue;
+            }
+            List<StepIntent> typed = model.getProcesses()
+                                          .get(p)
+                                          .getSteps();
+            for (int s = 0; s < steps.size() && s < typed.size(); s++) {
+                if (steps.get(s) instanceof Map<?, ?> step && step.get("args") instanceof Map<?, ?> args
+                        && args.get(SetFieldSupport.SET_ARG) instanceof Map<?, ?> set && typed.get(s)
+                                                                                              .getArgs() != null) {
+                    typed.get(s)
+                         .getArgs()
+                         .put(SetFieldSupport.SET_ARG, new LinkedHashMap<Object, Object>(set));
+                }
+            }
+        }
+    }
+
+    /**
+     * A {@code set:} map writes several members of ONE record in one statement (#8042). Each key is
+     * held to the single-member setter of its kind - a field to {@code setField}'s value rules (or, as
+     * {@code null}, to {@code clearField}'s), a to-one relation to {@code setRelationField}'s - with
+     * that setter's messages, and every key must address the record the first one does: the trigger's
+     * members, or one relation's. A step is one write, so the map stands alone among the setter args.
+     */
+    private static void validateSetMap(ProcessIntent process, StepIntent step, Object setArg, EntityIntent trigger,
+            Map<String, EntityIntent> byName, List<String> issues) {
+        String subject = "process [" + process.getName() + "] step [" + step.getName() + "] set";
+        boolean serviceTask = "serviceTask".equals(step.getKind());
+        if (!serviceTask && !"userTask".equals(step.getKind())) {
+            issues.add("process [" + process.getName() + "] step [" + step.getName() + "] uses set but is not a serviceTask or userTask");
+            return;
+        }
+        if (!(setArg instanceof Map<?, ?> set)) {
+            issues.add(subject + " must be a map of member: value (e.g. `set: { slotKey: null, Status: DONE }`)");
+            return;
+        }
+        if (trigger == null) {
+            issues.add("process [" + process.getName() + "] step [" + step.getName()
+                    + "] uses set but the process has no trigger entity to write");
+            return;
+        }
+        if (set.isEmpty()) {
+            issues.add(subject + " names no member - write at least one, or drop the step");
+        }
+        for (String other : List.of("setField", "clearField", "setRelationField", "value", "delegate", "call", "javaHandler", "notify")) {
+            if (step.getArgs()
+                    .get(other) != null) {
+                issues.add(subject + " cannot be combined with " + other
+                        + " - a step does one thing; name every member in the set: map, or give the other work its own step");
+            }
+        }
+        SetFieldSupport.Hop record = null;
+        String recordPath = null;
+        for (Map.Entry<?, ?> entry : set.entrySet()) {
+            String path = String.valueOf(entry.getKey());
+            String keySubject = subject + " [" + path + "]";
+            SetFieldSupport.Hop hop = setterHop(process, step, "set", path, trigger, byName, issues);
+            if (hop == null) {
+                continue;
+            }
+            if (record == null) {
+                record = hop;
+                recordPath = path;
+            } else if (!SetFieldSupport.sameRecord(record, hop)) {
+                issues.add(keySubject + " writes another record than [" + recordPath + "] - a set: map writes one record, the trigger's"
+                        + " members or those of one relation's target; give the other record its own step");
+            }
+            Object value = entry.getValue();
+            String target = hop.target()
+                               .getName();
+            FieldIntent field = fieldByName(hop.target(), hop.member());
+            if (toOneRelationByName(hop.target(), hop.member()) != null) {
+                if (value == null) {
+                    issues.add(keySubject + " is a relation of [" + target + "] and cannot be cleared - set it to a seeded name or id");
+                } else if (parseSeedId(value.toString()) == null) {
+                    issues.add(keySubject + " value [" + value + "] must be an integer record id");
+                }
+            } else if (field == null) {
+                issues.add(keySubject + " is not a field or a manyToOne/oneToOne relation of [" + target + "]");
+            } else if (!serviceTask) {
+                issues.add(keySubject + " is a field of [" + target + "] - a userTask writes only to-one relations; write the field from a"
+                        + " serviceTask");
+            } else if (value == null) {
+                if (field.getType() != null && !"string".equals(field.getType()) && !"text".equals(field.getType())) {
+                    issues.add(keySubject + " must be a string/text field (an erasure is the counterpart of a literal write)");
+                }
+            } else if (value.toString()
+                            .isBlank()) {
+                issues.add(keySubject + " must declare a value - null clears the field");
+            } else {
+                validateSetFieldValueType(keySubject, field, value.toString(), issues);
+            }
+        }
     }
 
     /**
@@ -8620,6 +8736,12 @@ public final class IntentParser {
                                 + "] value [" + value + "] must be an integer record id");
                     }
                 }
+            }
+            Object set = step.getArgs() == null ? null
+                    : step.getArgs()
+                          .get(SetFieldSupport.SET_ARG);
+            if (set != null) {
+                validateSetMap(process, step, set, trigger, byName, issues);
             }
             String delegate = stepArg(step, "delegate");
             if (delegate != null && !delegate.isBlank()) {
@@ -8976,7 +9098,46 @@ public final class IntentParser {
                     }
                 }
             }
+            // The same two whole-value tokens on each value of a set: map (#8042).
+            Map<?, ?> set = SetFieldSupport.setMap(step);
+            if (set != null) {
+                errorReachable = validateSetMapTokens(process, subject, step, set, errorReachable, issues);
+            }
         }
+    }
+
+    /**
+     * The whole-value {@code {now}} and {@code {error}} rules of a {@code setField} value, on each
+     * value of a {@code set:} map.
+     *
+     * @return the steps reachable from an onError route, computed on first {@code {error}} use
+     */
+    private static Set<String> validateSetMapTokens(ProcessIntent process, String subject, StepIntent step, Map<?, ?> set,
+            Set<String> errorReachable, List<String> issues) {
+        Set<String> reachable = errorReachable;
+        for (Map.Entry<?, ?> entry : set.entrySet()) {
+            if (!(entry.getValue() instanceof String text)) {
+                continue;
+            }
+            String keySubject = subject + " set [" + entry.getKey() + "] value [" + text + "]";
+            if (text.contains(SetFieldSupport.NOW_TOKEN) && !SetFieldSupport.NOW_TOKEN.equals(text.trim())) {
+                issues.add(keySubject + " may use " + SetFieldSupport.NOW_TOKEN + " only as the whole value");
+            }
+            if (!text.contains(ProcessResilienceSupport.ERROR_TOKEN)) {
+                continue;
+            }
+            if (!ProcessResilienceSupport.ERROR_TOKEN.equals(text.trim())) {
+                issues.add(keySubject + " may use {error} only as the whole value");
+                continue;
+            }
+            if (reachable == null) {
+                reachable = ProcessResilienceSupport.errorReachableSteps(process);
+            }
+            if (!reachable.contains(step.getName())) {
+                issues.add(keySubject + " is only resolvable on a step reachable from an onError route");
+            }
+        }
+        return reachable;
     }
 
     /**
@@ -9106,8 +9267,7 @@ public final class IntentParser {
                 } else if (!"serviceTask".equals(thenStep.getKind())) {
                     issues.add("process [" + process.getName() + "] abortOn `then` [" + then
                             + "] must be a serviceTask cleanup (setField/clearField/setRelationField) or the literal `end` - an abort handler cannot wait on a user task");
-                } else if (stepArg(thenStep, "setField") == null && stepArg(thenStep, "clearField") == null
-                        && stepArg(thenStep, "setRelationField") == null) {
+                } else if (!SetFieldSupport.isSetterStep(thenStep)) {
                     issues.add("process [" + process.getName() + "] abortOn `then` [" + then
                             + "] must set or clear a field/relation (setField/clearField/setRelationField) - it runs unattended on the abort path");
                 } else if (isRoutedToFromMainFlow(process, then)) {
@@ -10965,23 +11125,26 @@ public final class IntentParser {
                 continue;
             }
             for (StepIntent step : process.getSteps()) {
-                String relation = stepArg(step, "setRelationField");
-                Integer target = parseSeedId(stepArg(step, "value"));
-                // The write may be one hop away (#7934): `order.Status` moves the order, so it faces the
-                // order's graph exactly as the order's own setter does.
-                SetFieldSupport.Hop hop = relation == null ? null : SetFieldSupport.hop(trigger, relation, byName);
-                if (hop == null || !entity.getName()
-                                          .equals(hop.target()
-                                                     .getName())
-                        || !hop.member()
-                               .equalsIgnoreCase(status.getName())
-                        || target == null) {
-                    continue; // a non-numeric or unresolvable value is reported by the step's own validation
-                }
-                if (!reachable.contains(target)) {
-                    issues.add("process [" + process.getName() + "] step [" + step.getName() + "] sets the status to ["
-                            + statusLabel(target, statuses) + "], which no edge of the [" + entity.getName()
-                            + "] lifecycle reaches - add the edge or set a status the graph can enter");
+                // A setRelationField, or a relation key of a set: map (#8042).
+                for (Map.Entry<String, String> write : SetFieldSupport.relationWrites(step)
+                                                                      .entrySet()) {
+                    Integer target = parseSeedId(write.getValue());
+                    // The write may be one hop away (#7934): `order.Status` moves the order, so it faces
+                    // the order's graph exactly as the order's own setter does.
+                    SetFieldSupport.Hop hop = SetFieldSupport.hop(trigger, write.getKey(), byName);
+                    if (hop == null || !entity.getName()
+                                              .equals(hop.target()
+                                                         .getName())
+                            || !hop.member()
+                                   .equalsIgnoreCase(status.getName())
+                            || target == null) {
+                        continue; // a non-numeric or unresolvable value is reported by the step's own validation
+                    }
+                    if (!reachable.contains(target)) {
+                        issues.add("process [" + process.getName() + "] step [" + step.getName() + "] sets the status to ["
+                                + statusLabel(target, statuses) + "], which no edge of the [" + entity.getName()
+                                + "] lifecycle reaches - add the edge or set a status the graph can enter");
+                    }
                 }
             }
         }
