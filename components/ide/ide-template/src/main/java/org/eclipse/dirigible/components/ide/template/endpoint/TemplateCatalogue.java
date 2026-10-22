@@ -30,7 +30,9 @@ import org.springframework.stereotype.Component;
  *
  * <p>
  * A template declaring {@value ScriptEngineAvailability#REQUIRES_SCRIPT_ENGINE} - one that creates
- * a JavaScript or TypeScript file - is offered only where the JavaScript engine is deployed.
+ * a JavaScript or TypeScript file, or points at one - is offered only where the JavaScript engine
+ * is deployed, and one declaring {@value ScriptEngineAvailability#WITHOUT_SCRIPT_ENGINE} - its JSON
+ * or Java alternative - only where it is not.
  */
 @Component
 class TemplateCatalogue {
@@ -80,8 +82,8 @@ class TemplateCatalogue {
     /**
      * Reads the templates registered on the extension point that the current user may see, in the order
      * the extension service returns them, each with its {@code id}: the module its extension names. A
-     * template whose descriptor cannot be read is skipped with a warning naming it, and one that needs
-     * the JavaScript engine is left out where the engine is not deployed.
+     * template whose descriptor cannot be read is skipped with a warning naming it, one that needs the
+     * JavaScript engine is left out where the engine is not deployed, and its alternative where it is.
      *
      * @param extensionPoint the extension point
      * @return the templates
@@ -106,7 +108,13 @@ class TemplateCatalogue {
     }
 
     private boolean isOffered(Map<String, Object> template) {
-        return !Boolean.TRUE.equals(template.get(ScriptEngineAvailability.REQUIRES_SCRIPT_ENGINE)) || scriptEngine.isAvailable();
+        if (Boolean.TRUE.equals(template.get(ScriptEngineAvailability.REQUIRES_SCRIPT_ENGINE))) {
+            return scriptEngine.isAvailable();
+        }
+        if (Boolean.TRUE.equals(template.get(ScriptEngineAvailability.WITHOUT_SCRIPT_ENGINE))) {
+            return !scriptEngine.isAvailable();
+        }
+        return true;
     }
 
     private static int compareForDialogs(Map<String, Object> left, Map<String, Object> right) {

@@ -42,7 +42,7 @@ java -jar build/application/target/dirigible-application-*-executable.jar
 
 UI at `http://localhost:8080`, default credentials `admin`/`admin`. Useful URLs on the same port:
 
-- `/` — redirects to the IDE entrypoint (default `services/web/shell-ide/`, configurable via `DIRIGIBLE_HOME_URL`)
+- `/` — redirects to the home page (default `services/web/home/`, configurable via `DIRIGIBLE_HOME_URL`)
 - `/swagger-ui/index.html`, `/api-docs` — OpenAPI / Swagger UI for built-in REST endpoints
 - `/actuator/health/readiness`, `/actuator/health/liveness` — health probes (also what the CI DAST job polls)
 - `/services/...` — secured Spring-side endpoints (see `BaseEndpoint.PREFIX_ENDPOINT_*`)
@@ -51,7 +51,7 @@ UI at `http://localhost:8080`, default credentials `admin`/`admin`. Useful URLs 
 - `/odata/v2/...` — OData services (CXF base path)
 - `/websockets/...` — WebSocket endpoints
 
-Default DB is **file-backed** H2 at `jdbc:h2:file:./target/dirigible/h2/DefaultDB;LOCK_TIMEOUT=10000` (see `components/data/data-sources/src/main/resources/META-INF/dirigible/datasources/DefaultDB.datasource` — this is also why `mvn clean` is required when switching DBs, the old H2 files survive otherwise). Switch by exporting `DIRIGIBLE_DATASOURCE_DEFAULT_DRIVER/URL/USERNAME/PASSWORD`. Server port is overridable via `DIRIGIBLE_SERVER_PORT` (default 8080). The in-IDE terminal launches `ttyd` on 9000. The Dockerfile additionally exposes 8081 as the Graalium debug port (env var `DIRIGIBLE_JAVASCRIPT_GRAALVM_DEBUGGER_PORT`; debugging is on by default via `DIRIGIBLE_GRAALIUM_ENABLE_DEBUG=true`).
+Default DB is **file-backed** H2 at `jdbc:h2:file:./target/dirigible/h2/DefaultDB;LOCK_TIMEOUT=10000` (see `components/data/data-sources/src/main/resources/META-INF/dirigible/datasources/DefaultDB.datasource` — this is also why `mvn clean` is required when switching DBs, the old H2 files survive otherwise). Switch by exporting `DIRIGIBLE_DATASOURCE_DEFAULT_DRIVER/URL/USERNAME/PASSWORD`. Server port is overridable via `DIRIGIBLE_SERVER_PORT` (default 8080). The in-IDE terminal launches `ttyd` on 9000. The default edition's Dockerfile additionally exposes 8081, the JavaScript debugger's port (`DIRIGIBLE_GRAALIUM_DEBUG_PORT`; `DIRIGIBLE_JAVASCRIPT_GRAALVM_DEBUGGER_PORT` is catalogued but read by nothing). The debugger is switched by `DIRIGIBLE_GRAALIUM_ENABLE_DEBUG`: its catalogue default is `false`, but `dirigible-commons.properties` (`commons-resources`) sets it to `true`, so it is on unless overridden.
 
 The on-disk Dirigible repository ("registry") defaults to `./target/` relative to the working directory (`DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER`). Inside it the canonical layout is `/registry/public/<project>/...` for published artefacts and `/users/<user>/workspace/<project>/...` for in-IDE workspaces (see `IRepositoryStructure`). Multi-tenancy is on by default (`DIRIGIBLE_MULTI_TENANT_MODE=true`).
 

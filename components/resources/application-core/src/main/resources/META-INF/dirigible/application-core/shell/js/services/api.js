@@ -63,9 +63,10 @@ App.services.recentFailures = {
 
 App.services.api = {
   // Base URL for this application's generated REST controllers. Read from the
-  // generated config (js/config.js) so this file stays model-independent.
+  // generated config (js/config.js) so this file stays model-independent; a shell
+  // without REST entities of its own leaves it empty.
   get baseUrl() {
-    return (App.config && App.config.restBase) || '/services/ts/app/gen/api';
+    return (App.config && App.config.restBase) || '';
   },
 
   // Base URLs for OTHER backend modules, referenced by a logical name via
