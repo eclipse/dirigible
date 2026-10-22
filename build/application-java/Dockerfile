@@ -1,15 +1,16 @@
 ARG DIRIGIBLE_VERSION=latest
 FROM amazoncorretto:21-alpine
 
-# The Java edition (#8011): the runtime without the JavaScript and TypeScript stack and without the
-# IDE, so neither Node (npm, tsc) nor ttyd (the IDE terminal) is installed. git stays for the Git API,
-# fontconfig and the fonts for PDF rendering.
+# The Java edition (#8011, #8026): the platform and its IDE without the JavaScript and TypeScript stack,
+# so Node (npm, tsc) is not installed. ttyd for the IDE terminal, git for the Git API and the Git
+# perspective, fontconfig and the fonts for PDF rendering.
 
 VOLUME /tmp
 
 RUN apk update && \
     apk add --no-cache \
     # Consolidating all apk adds to ensure one layer and the latest patches
+    ttyd \
     git \
     fontconfig ttf-dejavu ttf-liberation \
     # cleanup of apk cache

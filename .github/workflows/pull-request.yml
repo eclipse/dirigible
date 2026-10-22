@@ -184,13 +184,12 @@ jobs:
           platforms: ${{ matrix.platform }}
           push: false
 
-      # The Java edition (#8011) runs an intent application the default edition generates - its Java
-      # API and its application shell - with no JavaScript engine and no IDE on board.
+      # The Java edition (#8011, #8026): with no JavaScript engine on board, its IDE generates and
+      # publishes an intent application, which then runs - its Java API and its application shell.
       - name: Smoke test of the Java edition
         if: matrix.platform == 'amd64'
         run: >-
           build/application-java/smoke-test.sh
-          build/application/target/dirigible-application-*-executable.jar
           build/application-java/target/dirigible-application-java-*-executable.jar
 
   # The gate selects every HTTP-level IT plus the smoke-tagged journeys - 173 classes on run
