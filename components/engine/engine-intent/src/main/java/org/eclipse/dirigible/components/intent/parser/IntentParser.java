@@ -174,8 +174,9 @@ public final class IntentParser {
                     "retry", "onError", "produces", "uses"),
             "script",
             Set.of("setField", "clearField", "setRelationField", "value", "call", "delegate", "fields", "javaHandler", "notify", "next"),
-            "decision", Set.of("if", "then", "else", "next"), "wait", Set.of("onCreate", "onUpdate", "onTransition", "via", "when", "next"),
-            "parallel", Set.of("branches", "next"), "end", Set.of("next"));
+            "decision", Set.of("if", "then", "else", "next"), "wait",
+            Set.of("after", "onCreate", "onUpdate", "onTransition", "via", "when", "next"), "parallel", Set.of("branches", "next"), "end",
+            Set.of("next"));
     /** Every arg the DSL knows, on any kind - anything else is a typo, not a misplacement. */
     private static final Set<String> KNOWN_STEP_ARGS = STEP_ARGS_BY_KIND.values()
                                                                         .stream()
@@ -8686,12 +8687,14 @@ public final class IntentParser {
     }
 
     /**
-     * A {@code wait} step parks the process on an entity event: exactly one of
+     * A {@code wait} step parks the process either for a declared time ({@code after:} a positive
+     * ISO-8601 duration, the pause of a polling loop) or on an entity event: exactly one of
      * {@code onCreate}/{@code onUpdate}/{@code onTransition} naming a declared entity; when that entity
      * is not the trigger entity itself, {@code via:} must name the to-one relation of the <b>event</b>
      * entity that walks to the trigger entity (the record carrying the parked instance's
-     * {@code ProcessId}). Without these checks a typo would leave the process parked forever instead of
-     * failing at parse time.
+     * {@code ProcessId}). The two forms exclude each other, and only the event form needs a trigger
+     * entity. Without these checks a typo would leave the process parked forever instead of failing at
+     * parse time.
      */
     private static void validateWaitSteps(ProcessIntent process, String triggerEntity, Map<String, EntityIntent> byName,
             List<String> issues) {
@@ -8714,9 +8717,15 @@ public final class IntentParser {
                     eventEntity = target;
                 }
             }
+            String after = stepArg(step, ProcessWaitSupport.AFTER);
+            if (after != null) {
+                validateTimedWait(process, step, after, events, issues);
+                continue;
+            }
             if (events != 1) {
                 issues.add("process [" + process.getName() + "] wait [" + step.getName()
-                        + "] must declare exactly one of onCreate/onUpdate/onTransition naming the resuming entity event");
+                        + "] must declare exactly one of onCreate/onUpdate/onTransition naming the resuming entity event, or"
+                        + " `after: <ISO-8601 duration>` for a timed wait");
                 continue;
             }
             if (!byName.containsKey(eventEntity)) {
@@ -8752,6 +8761,28 @@ public final class IntentParser {
             } else if (!triggerEntity.equals(relation.getTo())) {
                 issues.add("process [" + process.getName() + "] wait [" + step.getName() + "] via [" + via + "] targets ["
                         + relation.getTo() + "] but must target the trigger entity [" + triggerEntity + "]");
+            }
+        }
+    }
+
+    /**
+     * A timed {@code wait} ({@code after:}) resumes on its duration alone: no record correlates it, so
+     * an event key, {@code via:} or {@code when:} beside it would be a second, contradicting answer to
+     * "what resumes this wait" - refused rather than silently ignored.
+     */
+    private static void validateTimedWait(ProcessIntent process, StepIntent step, String after, int events, List<String> issues) {
+        String subject = "process [" + process.getName() + "] wait [" + step.getName() + "]";
+        if (!isPositiveIso8601Duration(after)) {
+            issues.add(subject + " `after` [" + after + "] is not a positive ISO-8601 duration (e.g. PT10S, PT5M, P1D)");
+        }
+        if (events > 0) {
+            issues.add(subject + " declares both `after` and an entity event - a wait resumes either after a duration or on"
+                    + " onCreate/onUpdate/onTransition, not both");
+        }
+        for (String eventQualifier : List.of("via", "when")) {
+            if (stepArg(step, eventQualifier) != null) {
+                issues.add(subject + " declares `after` with `" + eventQualifier + "` - " + eventQualifier
+                        + " qualifies an entity-event wait, a timed wait resumes on its duration alone");
             }
         }
     }
@@ -9141,6 +9172,24 @@ public final class IntentParser {
             }
         }
         return false;
+    }
+
+    /**
+     * Whether the value parses as an ISO-8601 duration ({@code PT10S}) or period ({@code P1D}) that is
+     * longer than zero.
+     */
+    private static boolean isPositiveIso8601Duration(String value) {
+        try {
+            return java.time.Duration.parse(value)
+                                     .isPositive();
+        } catch (java.time.format.DateTimeParseException ignoredDuration) {
+            try {
+                java.time.Period period = java.time.Period.parse(value);
+                return !period.isNegative() && !period.isZero();
+            } catch (java.time.format.DateTimeParseException ignoredPeriod) {
+                return false;
+            }
+        }
     }
 
     /** Whether the value parses as an ISO-8601 duration ({@code PT4H}) or period ({@code P3D}). */

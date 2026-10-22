@@ -28,6 +28,10 @@ import org.eclipse.dirigible.components.intent.model.StepIntent;
  * its stamped {@code ProcessId} and correlates the message. Correlation rides the ProcessId the
  * trigger listener already writes back - no new bookkeeping; a missing/blank ProcessId or an
  * instance not parked on the message is a no-op, never an error (the fail-soft glue convention).
+ * <p>
+ * A <b>timed</b> wait ({@code args: { after: PT10S, next: ... }}) is the pause of a polling loop: a
+ * timer intermediate catch event and nothing else - no message, no listener, because no record
+ * resumes it.
  */
 public final class ProcessWaitSupport {
 
@@ -39,6 +43,9 @@ public final class ProcessWaitSupport {
      * instance but never resume it.
      */
     public static final List<String> EVENT_KINDS = List.of("onCreate", "onUpdate", "onTransition");
+
+    /** The {@code wait} arg that makes it a timed wait: an ISO-8601 duration ({@code PT10S}). */
+    public static final String AFTER = "after";
 
     private ProcessWaitSupport() {}
 
@@ -78,8 +85,8 @@ public final class ProcessWaitSupport {
                 continue; // no trigger entity -> no ProcessId column to correlate on
             }
             for (StepIntent step : process.getSteps()) {
-                if (!"wait".equals(step.getKind()) || step.getName() == null) {
-                    continue;
+                if (!"wait".equals(step.getKind()) || step.getName() == null || isTimed(step)) {
+                    continue; // a timed wait resumes on its timer - nothing to correlate
                 }
                 String eventKind = eventKind(step);
                 String eventEntity = eventKind == null ? null : stringArg(step, eventKind);
@@ -116,8 +123,19 @@ public final class ProcessWaitSupport {
         return IntentNaming.pascalCase(process) + IntentNaming.pascalCase(step);
     }
 
-    /** The lifecycle event kind a wait step binds to, or {@code null} when none is declared. */
+    /** Whether a wait step parks for a duration ({@code after:}) rather than on an entity event. */
+    public static boolean isTimed(StepIntent step) {
+        return stringArg(step, AFTER) != null;
+    }
+
+    /**
+     * The lifecycle event kind a wait step binds to, or {@code null} when none is declared - and for a
+     * timed wait, which is not an event wait whatever else it declares (the parser refuses the mix).
+     */
     public static String eventKind(StepIntent step) {
+        if (isTimed(step)) {
+            return null;
+        }
         for (String kind : EVENT_KINDS) {
             if (stringArg(step, kind) != null) {
                 return kind;
