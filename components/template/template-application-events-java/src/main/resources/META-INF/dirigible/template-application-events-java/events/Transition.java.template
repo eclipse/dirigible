@@ -219,8 +219,13 @@ public class ${className}Transition {
 #end
 #foreach($load in $notifyRelationLoads)
             gen.${load.javaGenFolder}.data.${load.javaTargetPerspective}.${load.targetEntity}Entity ${load.local} =
+#if($load.source)
+                    ${load.source} == null || ${load.source}.${load.fkProperty} == null ? null
+                            : new gen.${load.javaGenFolder}.data.${load.javaTargetPerspective}.${load.targetEntity}Repository().findById(${load.source}.${load.fkProperty});
+#else
                     entity.${load.fkProperty} == null ? null
                             : new gen.${load.javaGenFolder}.data.${load.javaTargetPerspective}.${load.targetEntity}Repository().findById(entity.${load.fkProperty});
+#end
 #end
 #if($usesRecordUrl == "true")
             // {recordUrl} - the deep link to the record this message is about (the ROW in a fan-out).

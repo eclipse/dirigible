@@ -180,7 +180,11 @@ public class ${className} implements JavaDelegate {
         }
 #end
 #foreach($load in $notifyRelationLoads)
+#if($load.source)
+        ${load.targetEntity}Entity ${load.local} = ${load.source} == null || ${load.source}.${load.fkProperty} == null ? null : new ${load.targetEntity}Repository().findById(${load.source}.${load.fkProperty});
+#else
         ${load.targetEntity}Entity ${load.local} = entity.${load.fkProperty} == null ? null : new ${load.targetEntity}Repository().findById(entity.${load.fkProperty});
+#end
 #end
 #if($usesRecordUrl == "true")
         // {recordUrl} - the deep link to the record this message is about (the ROW in a fan-out). The

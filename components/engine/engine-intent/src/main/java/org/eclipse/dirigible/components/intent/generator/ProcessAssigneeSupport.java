@@ -10,6 +10,7 @@
 package org.eclipse.dirigible.components.intent.generator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -226,51 +227,47 @@ public final class ProcessAssigneeSupport {
         if (path == null || path.isBlank()) {
             return Walk.failed("declares an assignee with no path");
         }
-        List<Hop> hops = new ArrayList<>();
-        String firstFkProperty = null;
-        EntityIntent current = owner;
-        CrossModelTarget crossModelTerminal = null;
-        String[] segments = path.split("\\.", -1);
-        for (int i = 0; i < segments.length; i++) {
-            String segment = segments[i];
-            if (segment.isBlank()) {
-                return Walk.failed("declares assignee path [" + path + "] with an empty segment");
-            }
-            if (current == null) {
+        ToOneWalk.Result walked = ToOneWalk.walk(owner, Arrays.asList(path.split("\\.", -1)), byName);
+        if (!walked.resolved()) {
+            return Walk.failed(switch (walked.failure()) {
+                case EMPTY_SEGMENT -> "declares assignee path [" + path + "] with an empty segment";
                 // The previous hop left this model; a projection carries the target's own properties but
                 // not its relations, so the walk has nothing left to traverse.
-                return Walk.failed("declares assignee path [" + path + "] but segment [" + segment
-                        + "] walks on past a cross-model relation - a cross-model hop can only be the last one");
-            }
-            RelationIntent relation = toOneRelation(current, segment);
-            if (relation == null) {
-                return Walk.failed(
-                        "declares assignee path [" + path + "] but [" + current.getName() + "] has no to-one relation [" + segment + "]");
-            }
-            // The FK that reaches this segment is read off the PREVIOUS record, so it is recorded there
-            // - on the walked entity for the first segment, back-filled onto the preceding hop after.
-            if (i == 0) {
-                firstFkProperty = IntentNaming.pascalCase(segment);
-            } else {
-                Hop previous = hops.get(i - 1);
-                hops.set(i - 1, new Hop(previous.local(), previous.entity(), previous.perspective(), IntentNaming.pascalCase(segment),
-                        previous.crossModel(), previous.targetModel(), previous.targetProject()));
-            }
-            boolean isCrossModel = relation.getModel() != null && !relation.getModel()
-                                                                           .isBlank();
+                case PAST_CROSS_MODEL -> "declares assignee path [" + path + "] but segment [" + walked.segment()
+                        + "] walks on past a cross-model relation - a cross-model hop can only be the last one";
+                case NOT_TO_ONE -> "declares assignee path [" + path + "] but [" + walked.at()
+                                                                                         .getName()
+                        + "] has no to-one relation [" + walked.segment() + "]";
+                case UNKNOWN_TARGET -> "declares assignee path [" + path + "] but relation [" + walked.segment()
+                        + "] targets unknown entity [" + walked.relation()
+                                                               .getTo()
+                        + "]";
+            });
+        }
+        List<ToOneWalk.Link> links = walked.links();
+        List<Hop> hops = new ArrayList<>();
+        CrossModelTarget crossModelTerminal = null;
+        for (int i = 0; i < links.size(); i++) {
+            RelationIntent relation = links.get(i)
+                                           .relation();
+            boolean isCrossModel = links.get(i)
+                                        .crossModel();
             CrossModelTarget target = isCrossModel && crossModel != null ? crossModel.resolve(relation) : null;
-            EntityIntent local = isCrossModel ? null : byName.get(relation.getTo());
-            if (!isCrossModel && local == null) {
-                return Walk.failed("declares assignee path [" + path + "] but relation [" + segment + "] targets unknown entity ["
-                        + relation.getTo() + "]");
-            }
+            // The FK that reaches the NEXT segment is read off this record; the first segment's FK is read
+            // off the walked entity itself.
+            String nextFkProperty = i + 1 < links.size() ? IntentNaming.pascalCase(links.get(i + 1)
+                                                                                        .segment())
+                    : "";
             hops.add(new Hop("hop" + i, relation.getTo(),
                     isCrossModel ? crossModelPerspective(relation, target)
                             : IntentEntities.resolvePerspective(relation.getTo(), compositionParents, settingEntities),
-                    "", isCrossModel, isCrossModel ? relation.getModel() : "", target == null ? "" : target.project()));
-            current = local;
+                    nextFkProperty, isCrossModel, isCrossModel ? relation.getModel() : "", target == null ? "" : target.project()));
             crossModelTerminal = isCrossModel ? target : null;
         }
+        String firstFkProperty = IntentNaming.pascalCase(links.get(0)
+                                                              .segment());
+        EntityIntent current = links.get(links.size() - 1)
+                                    .target();
         if (current != null) {
             if (current.getIdentity() == null || current.getIdentity()
                                                         .isBlank()) {
@@ -360,16 +357,6 @@ public final class ProcessAssigneeSupport {
 
     private static String crossModelPerspective(RelationIntent relation, CrossModelTarget target) {
         return target != null && target.perspectiveName() != null ? target.perspectiveName() : relation.getTo();
-    }
-
-    private static RelationIntent toOneRelation(EntityIntent owner, String name) {
-        for (RelationIntent relation : owner.getRelations()) {
-            boolean toOne = "manyToOne".equals(relation.getKind()) || "oneToOne".equals(relation.getKind());
-            if (toOne && name.equals(relation.getName())) {
-                return relation;
-            }
-        }
-        return null;
     }
 
     private static String idAccessor(FieldIntent pk) {

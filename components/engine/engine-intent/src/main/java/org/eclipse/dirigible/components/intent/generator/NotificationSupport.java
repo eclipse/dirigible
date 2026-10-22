@@ -10,6 +10,7 @@
 package org.eclipse.dirigible.components.intent.generator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,13 +33,20 @@ import org.eclipse.dirigible.components.intent.model.RelationIntent;
  * A value or {@code {placeholder}} is one of: a <b>reserved link token</b> ({@code appUrl} - the
  * application's external base URL, see {@link #APP_URL_TOKEN}; {@code recordUrl} / {@code inboxUrl}
  * - the ready-made deep links, see {@link #RECORD_URL_TOKEN}), a <b>direct field</b> of the event
- * entity (rendered {@code entity.<PascalField>}), or a one-hop <b>{@code relation.field}</b> of a
- * to-one relation (rendered against a related entity the listener loads once by FK id - the same
- * one-hop mechanism the decision resolvers use, see {@link ProcessResolverSupport}). Multi-hop
- * paths are not supported. The {@code when} guard is one {@code <Property> ==|!= <literal>}
- * comparison over the record's own properties - or the list form meaning their AND - read into
- * neutral terms against the property's declared type by {@link CheckSupport#conditionTerms} where
- * the entity is known; see {@link #guardTerms(Object, EntityIntent, Map)}.
+ * entity (rendered {@code entity.<PascalField>}), or a <b>relation path</b> ending at a field
+ * ({@code relation.field}, {@code subscription.customer.name}): every segment but the last names a
+ * {@code manyToOne} / {@code oneToOne} relation - the first of the entity the message is about,
+ * each further one of the previous segment's target - and the last is a field of the last target.
+ * There is no depth limit; a cross-model relation may only be the last relation segment, its target
+ * being a projection without relations (see {@link ToOneWalk}). The listener loads each distinct
+ * relation prefix once by FK id, null-guarded, into a local named after the prefix's segments
+ * joined by {@code _} - so a one-hop path loads into a local named after the relation, as it always
+ * did. A notify <b>plan</b> walks the whole chain; the {@link #resolver} other call sites use (a
+ * declared {@code payload:}, a report {@code bind:}, a create-from {@code map:}) keeps one hop. The
+ * {@code when} guard is one {@code <Property> ==|!= <literal>} comparison over the record's own
+ * properties - or the list form meaning their AND - read into neutral terms against the property's
+ * declared type by {@link CheckSupport#conditionTerms} where the entity is known; see
+ * {@link #guardTerms(Object, EntityIntent, Map)}.
  *
  * <p>
  * Inside a <b>fan-out</b> the entity every bare path resolves against is the ROW; a placeholder
@@ -47,8 +55,8 @@ import org.eclipse.dirigible.components.intent.model.RelationIntent;
  */
 public final class NotificationSupport {
 
-    private static final Pattern PATH = Pattern.compile("[A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)?");
-    private static final Pattern PLACEHOLDER = Pattern.compile("\\{([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)?)\\}");
+    private static final Pattern PATH = Pattern.compile("[A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*");
+    private static final Pattern PLACEHOLDER = Pattern.compile("\\{([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*)\\}");
     private static final Pattern SIMPLE_COMPARISON = Pattern.compile("\\s*([A-Za-z_][A-Za-z0-9_]*)\\s*(==|!=)\\s*(.+?)\\s*");
 
     /**
@@ -144,14 +152,22 @@ public final class NotificationSupport {
     private NotificationSupport() {}
 
     /**
-     * A one-hop to-one relation the listener must load before building the message. A cross-model
-     * relation ({@code crossModel} true) points at an entity owned by another model, so the generated
-     * listener imports the OWNER's {@code targetModel}/{@code targetProject} generated
-     * Entity/Repository (the same registry-wide-compile mechanism the relation links / personal
-     * assignee use), not this project's.
+     * A to-one relation the listener must load before building the message. A cross-model relation
+     * ({@code crossModel} true) points at an entity owned by another model, so the generated listener
+     * imports the OWNER's {@code targetModel}/{@code targetProject} generated Entity/Repository (the
+     * same registry-wide-compile mechanism the relation links / personal assignee use), not this
+     * project's. {@code source} is the local the foreign key is read off: the record itself
+     * ({@link NotifySupport#ENTITY_LOCAL}) for a first hop, the previous prefix's local for a further
+     * hop of a relation path.
      */
     public record RelationLoad(String local, String targetEntity, String targetPerspective, String fkProperty, boolean crossModel,
-            String targetModel, String targetProject) {
+            String targetModel, String targetProject, String source) {
+
+        /** A load read off the record itself - every load but a further hop of a relation path. */
+        public RelationLoad(String local, String targetEntity, String targetPerspective, String fkProperty, boolean crossModel,
+                String targetModel, String targetProject) {
+            this(local, targetEntity, targetPerspective, fkProperty, crossModel, targetModel, targetProject, NotifySupport.ENTITY_LOCAL);
+        }
     }
 
     /**
@@ -176,6 +192,11 @@ public final class NotificationSupport {
             entry.put("crossModel", load.crossModel());
             entry.put("targetModel", load.targetModel());
             entry.put("targetProject", load.targetProject());
+            // Carried only for a further hop of a relation path, so a load read off the record - every
+            // load there was before relation paths - projects exactly as it always did.
+            if (!NotifySupport.ENTITY_LOCAL.equals(load.source())) {
+                entry.put("source", load.source());
+            }
             loads.add(entry);
         }
         return loads;
@@ -303,7 +324,7 @@ public final class NotificationSupport {
             Map<String, EntityIntent> byName, Map<String, String> compositionParents, CrossModelLookup crossModel) {
         Object when = notification.getEvent()
                                   .get("when");
-        Resolver resolver = new Resolver(eventEntity, null, escalation, byName, compositionParents, crossModel);
+        Resolver resolver = new Resolver(eventEntity, null, escalation, byName, compositionParents, crossModel, true);
         String recipient = resolver.value(notification.getTo());
         String ccExpression = isBlank(notification.getCc()) ? null : resolver.value(notification.getCc());
         String bccExpression = isBlank(notification.getBcc()) ? null : resolver.value(notification.getBcc());
@@ -311,7 +332,7 @@ public final class NotificationSupport {
                 || !isBlank(notification.getBcc()) && bccExpression == null) {
             return null; // an unresolvable recipient relation.field - skip rather than email garbage
         }
-        // Rendered BEFORE the loads are read: a placeholder is what registers most one-hop loads, and an
+        // Rendered BEFORE the loads are read: a placeholder is what registers most relation loads, and an
         // argument list evaluated left to right would snapshot the loads before the text added any.
         String subjectExpression = resolver.text(notification.getSubject());
         String bodyExpression = resolver.text(notification.getBody());
@@ -327,7 +348,7 @@ public final class NotificationSupport {
      * event map because the call site itself IS the event.
      *
      * @param to the recipient: an {@code @config:KEY} reference, a literal address, a direct field, or
-     *        a one-hop {@code relation.field}
+     *        a relation path ({@code relation.field}, {@code a.b.field})
      * @param subject the subject, with {@code {field}} / {@code {relation.field}} placeholders
      * @param body the body, with the same placeholders
      * @param when an optional guard - a comparison, a list of them, or {@code null} for none
@@ -350,7 +371,7 @@ public final class NotificationSupport {
      * stays unresolvable and the caller drops the block instead of mailing one address N times.
      *
      * @param to the recipient: an {@code @config:KEY} reference, a literal address, a direct field, or
-     *        a one-hop {@code relation.field}
+     *        a relation path ({@code relation.field}, {@code a.b.field})
      * @param subject the subject, with {@code {field}} / {@code {relation.field}} /
      *        {@code {record.field}} placeholders
      * @param body the body, with the same placeholders
@@ -410,7 +431,7 @@ public final class NotificationSupport {
      */
     public static Plan plan(String to, String cc, String bcc, String subject, String body, String html, Object when, EntityIntent entity,
             EntityIntent anchor, Map<String, EntityIntent> byName, Map<String, String> compositionParents, CrossModelLookup crossModel) {
-        Resolver resolver = new Resolver(entity, anchor, null, byName, compositionParents, crossModel);
+        Resolver resolver = new Resolver(entity, anchor, null, byName, compositionParents, crossModel, true);
         String recipient = resolver.value(to);
         String ccExpression = isBlank(cc) ? null : resolver.value(cc);
         String bccExpression = isBlank(bcc) ? null : resolver.value(bcc);
@@ -506,7 +527,8 @@ public final class NotificationSupport {
      * A resolver over one entity, for a caller that needs the path vocabulary on its own terms - the
      * declared {@code payload:} of an outward-facing entry ({@link PayloadSupport}), which classifies
      * its own value forms but must resolve a field / one-hop {@code relation.field} exactly the way a
-     * notification does, and accumulate the same relation loads.
+     * notification does, and accumulate the same relation loads. It resolves ONE hop: a longer relation
+     * path is a notify path only, and is unresolvable here.
      *
      * @param entity the entity the paths resolve against
      * @param byName all LOCAL entities by name
@@ -516,7 +538,7 @@ public final class NotificationSupport {
      */
     static Resolver resolver(EntityIntent entity, Map<String, EntityIntent> byName, Map<String, String> compositionParents,
             CrossModelLookup crossModel) {
-        return new Resolver(entity, null, null, byName, compositionParents, crossModel);
+        return new Resolver(entity, null, null, byName, compositionParents, crossModel, false);
     }
 
     /** Resolves values/text against the event entity, accumulating the relation loads they require. */
@@ -529,13 +551,16 @@ public final class NotificationSupport {
         private final Map<String, String> compositionParents;
         private final Set<String> settingEntities;
         private final CrossModelLookup crossModel;
+        private final boolean walksChains;
         private final Map<String, RelationLoad> loads = new LinkedHashMap<>();
+        /** The relation prefix each registered local loads, to refuse a second prefix landing on it. */
+        private final Map<String, String> prefixByLocal = new LinkedHashMap<>();
         private boolean usesRecordUrl;
         private boolean usesInboxUrl;
         private boolean usesVariables;
 
         Resolver(EntityIntent entity, EntityIntent anchor, EntityIntent escalation, Map<String, EntityIntent> byName,
-                Map<String, String> compositionParents, CrossModelLookup crossModel) {
+                Map<String, String> compositionParents, CrossModelLookup crossModel, boolean walksChains) {
             this.entity = entity;
             this.anchor = anchor;
             this.escalation = escalation;
@@ -543,6 +568,7 @@ public final class NotificationSupport {
             this.compositionParents = compositionParents;
             this.settingEntities = IntentEntities.settingEntities(byName.values());
             this.crossModel = crossModel;
+            this.walksChains = walksChains;
         }
 
         List<RelationLoad> loads() {
@@ -686,23 +712,28 @@ public final class NotificationSupport {
                 }
                 return NotifySupport.RECORD_LOCAL + "." + IntentNaming.pascalCase(field);
             }
-            int dot = path.indexOf('.');
-            if (dot < 0) {
+            String[] segments = path.split("\\.");
+            if (segments.length == 1) {
                 return "entity." + IntentNaming.pascalCase(path);
             }
-            String relationName = path.substring(0, dot);
-            String fieldName = path.substring(dot + 1);
-            RelationIntent relation = toOneRelation(relationName);
-            if (relation == null) {
+            if (segments.length > 2 && !walksChains) {
+                return null; // a walk past one hop is a notify path only
+            }
+            List<String> relations = Arrays.asList(segments)
+                                           .subList(0, segments.length - 1);
+            String fieldName = segments[segments.length - 1];
+            ToOneWalk.Result walk = ToOneWalk.walk(entity, relations, byName);
+            if (!walk.resolved()) {
                 return null;
             }
+            List<ToOneWalk.Link> links = walk.links();
+            ToOneWalk.Link last = links.get(links.size() - 1);
             String pascalField = IntentNaming.pascalCase(fieldName);
-            // Cross-model relation.field (e.g. Customer.email where Customer is owned by another model):
-            // resolve the owner's facts through the injected lookup and load from the OWNER's package.
-            // A same-model relation resolves against the local byName map as before.
-            if (relation.getModel() != null && !relation.getModel()
-                                                        .isBlank()) {
-                CrossModelTarget xm = crossModel == null ? null : crossModel.resolve(relation);
+            CrossModelTarget xm = null;
+            if (last.crossModel()) {
+                // Cross-model last relation (e.g. Customer.email where Customer is owned by another model):
+                // resolve the owner's facts through the injected lookup and load from the OWNER's package.
+                xm = crossModel == null ? null : crossModel.resolve(last.relation());
                 if (xm == null) {
                     return null;
                 }
@@ -712,20 +743,37 @@ public final class NotificationSupport {
                                                      .contains(pascalField)) {
                     return null;
                 }
-                loads.computeIfAbsent(relationName, name -> new RelationLoad(name, relation.getTo(), xm.perspectiveName(),
-                        IntentNaming.pascalCase(name), true, xm.modelAlias(), xm.project()));
-                return "(" + relationName + " == null ? null : " + relationName + "." + pascalField + ")";
-            }
-            EntityIntent target = byName.get(relation.getTo());
-            if (target == null || fieldOf(target, fieldName) == null) {
+            } else if (fieldOf(last.target(), fieldName) == null) {
                 return null;
             }
-            loads.computeIfAbsent(relationName,
-                    name -> new RelationLoad(name, relation.getTo(),
-                            IntentEntities.resolvePerspective(relation.getTo(), compositionParents, settingEntities),
-                            IntentNaming.pascalCase(name), false, "", ""));
-            // The listener loads the related entity into a local named after the relation.
-            return "(" + relationName + " == null ? null : " + relationName + "." + pascalField + ")";
+            // Each prefix loads into a local named after its segments joined by `_` - the relation's own
+            // name for a first hop. Two prefixes landing on one local (a relation literally named
+            // `subscription_customer` beside the walk subscription.customer) would declare it twice.
+            for (int i = 0; i < links.size(); i++) {
+                String taken = prefixByLocal.get(String.join("_", relations.subList(0, i + 1)));
+                if (taken != null && !taken.equals(String.join(".", relations.subList(0, i + 1)))) {
+                    return null;
+                }
+            }
+            String source = NotifySupport.ENTITY_LOCAL;
+            for (int i = 0; i < links.size(); i++) {
+                ToOneWalk.Link link = links.get(i);
+                String local = String.join("_", relations.subList(0, i + 1));
+                String perspective = link.crossModel() ? xm.perspectiveName()
+                        : IntentEntities.resolvePerspective(link.relation()
+                                                                .getTo(),
+                                compositionParents, settingEntities);
+                prefixByLocal.putIfAbsent(local, String.join(".", relations.subList(0, i + 1)));
+                // Registered in walk order, so a prefix always precedes its extensions and is loaded once
+                // however many paths share it.
+                loads.putIfAbsent(local, new RelationLoad(local, link.relation()
+                                                                     .getTo(),
+                        perspective, IntentNaming.pascalCase(link.segment()), link.crossModel(), link.crossModel() ? xm.modelAlias() : "",
+                        link.crossModel() ? xm.project() : "", source));
+                source = local;
+            }
+            // The listener loads the last related entity into the local of the whole relation prefix.
+            return "(" + source + " == null ? null : " + source + "." + pascalField + ")";
         }
 
         /**
@@ -747,16 +795,6 @@ public final class NotificationSupport {
                 return Readings.read(NotifySupport.ENTITY_LOCAL, IntentNaming.pascalCase(path));
             }
             return Readings.hop(path.substring(0, dot), IntentNaming.pascalCase(path.substring(dot + 1)));
-        }
-
-        RelationIntent toOneRelation(String name) {
-            for (RelationIntent relation : entity.getRelations()) {
-                boolean toOne = "manyToOne".equals(relation.getKind()) || "oneToOne".equals(relation.getKind());
-                if (toOne && name.equals(relation.getName())) {
-                    return relation;
-                }
-            }
-            return null;
         }
 
         private static FieldIntent fieldOf(EntityIntent entity, String name) {

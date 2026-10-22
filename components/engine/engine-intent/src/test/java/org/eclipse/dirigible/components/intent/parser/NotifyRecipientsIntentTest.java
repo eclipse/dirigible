@@ -243,10 +243,13 @@ class NotifyRecipientsIntentTest {
         assertIssue(fanOut, "transition [Reopen] notify cc [record.requestedBy] is record-scoped");
     }
 
+    /**
+     * A copy recipient may walk a chain of to-one relations (#8030), but every segment must resolve.
+     */
     @Test
-    void aMultiHopCopyRecipientIsRefused() {
+    void anUnresolvableMultiHopCopyRecipientIsRefused() {
         assertIssue(YAML.replace("cc: requestedBy", "cc: Owner.Manager.email"),
-                "process [Closing] step [notify] notify cc [Owner.Manager.email] uses a multi-hop path");
+                "process [Closing] step [notify] notify cc [Owner.Manager.email]: [Manager] is not a to-one relation of [Person]");
     }
 
     @Test
