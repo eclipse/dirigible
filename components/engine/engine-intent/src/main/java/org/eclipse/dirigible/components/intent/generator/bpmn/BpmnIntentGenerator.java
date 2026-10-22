@@ -126,6 +126,8 @@ public class BpmnIntentGenerator implements IntentTargetGenerator {
     private static final Logger LOGGER = LoggerFactory.getLogger(BpmnIntentGenerator.class);
 
     private static final String START_ID = "start";
+    /** The start event's id in a process that has a step of its own named {@link #START_ID}. */
+    private static final String START_EVENT_FALLBACK_ID = "startEvent";
     private static final String END_ID = "end";
     /** A {@code call:} the {@code ${JSTask}} delegate runs - see {@link #isScriptHandler}. */
     private static final Pattern SCRIPT_HANDLER = Pattern.compile(".*\\.(?:m?js|ts)(?:/\\w*)?(?:/\\w*)?");
@@ -779,7 +781,8 @@ public class BpmnIntentGenerator implements IntentTargetGenerator {
             steps.add(join);
         }
         TargetResolver targets = new TargetResolver(steps, regions, augmented.nodesByStep());
-        List<String> effectiveSteps = buildEffectiveStepIds(steps);
+        String startId = startEventId(steps, abortThenName);
+        List<String> effectiveSteps = buildEffectiveStepIds(steps, startId);
         Set<String> parallelOffLinear = new HashSet<>(ProcessParallelSupport.joinIds(forks));
         for (String regionStep : regions.steps()) {
             parallelOffLinear.addAll(targets.nodesOf(regionStep));
@@ -871,7 +874,7 @@ public class BpmnIntentGenerator implements IntentTargetGenerator {
           .append("\"></flowable:property>\n");
         sb.append("    </extensionElements>\n");
         sb.append("    <startEvent id=\"")
-          .append(START_ID)
+          .append(startId)
           .append("\"></startEvent>\n");
         for (StepIntent step : steps) {
             if (step.getName() == null || step.getName()
@@ -1278,11 +1281,11 @@ public class BpmnIntentGenerator implements IntentTargetGenerator {
      * Build the list of step IDs that participate in the default linear flow. {@code decision} steps
      * participate (they are an exclusiveGateway with a default outgoing edge), but {@code end} steps
      * are translated to the canonical end event - their IDs are replaced by {@link #END_ID} in the
-     * sequence.
+     * sequence. The chain opens with the start event, {@code startId}.
      */
-    private static List<String> buildEffectiveStepIds(List<StepIntent> steps) {
+    private static List<String> buildEffectiveStepIds(List<StepIntent> steps, String startId) {
         List<String> ids = new ArrayList<>();
-        ids.add(START_ID);
+        ids.add(startId);
         for (StepIntent step : steps) {
             if (step.getName() == null || step.getName()
                                               .isBlank()) {
@@ -1296,6 +1299,31 @@ public class BpmnIntentGenerator implements IntentTargetGenerator {
         }
         ids.add(END_ID);
         return dedupeConsecutive(ids);
+    }
+
+    /**
+     * The start event's id: {@link #START_ID}, unless an element of the process already carries it.
+     * Every step becomes an element whose id is its name, and {@code start} is a natural step name -
+     * two elements sharing an id make the whole document fail to deploy. Only a colliding process moves
+     * its start event aside, so every other generated {@code .bpmn} keeps its bytes.
+     *
+     * @param steps every element the process emits as a step, synthesized ones included
+     * @param abortThenName the abort cleanup step, already pulled out of {@code steps}, or {@code null}
+     */
+    private static String startEventId(List<StepIntent> steps, String abortThenName) {
+        Set<String> taken = new HashSet<>();
+        for (StepIntent step : steps) {
+            taken.add(step.getName());
+        }
+        taken.add(abortThenName);
+        if (!taken.contains(START_ID)) {
+            return START_ID;
+        }
+        String id = START_EVENT_FALLBACK_ID;
+        for (int suffix = 2; taken.contains(id); suffix++) {
+            id = START_EVENT_FALLBACK_ID + suffix;
+        }
+        return id;
     }
 
     /**
@@ -2141,12 +2169,14 @@ public class BpmnIntentGenerator implements IntentTargetGenerator {
             }
         }
 
+        // The chain opens with the start event (buildEffectiveStepIds).
+        String startId = effectiveIds.get(0);
         Map<String, int[]> bounds = new LinkedHashMap<>();
         for (String id : effectiveIds) {
             if (bounds.containsKey(id)) {
                 continue;
             }
-            int[] size = nodeSize(id, steps);
+            int[] size = nodeSize(id, startId, steps);
             int centerX = FIRST_NODE_CENTER_X + columnOf.get(rank.get(id)) * COLUMN_PITCH;
             int centerY = CENTER_Y + (int) Math.round(laneOf.get(id) * LANE_HEIGHT);
             bounds.put(id, new int[] {centerX - size[0] / 2, centerY - size[1] / 2, size[0], size[1]});
@@ -2155,7 +2185,7 @@ public class BpmnIntentGenerator implements IntentTargetGenerator {
     }
 
     /**
-     * Longest-path rank of each node from {@link #START_ID}, computed by Bellman-Ford-style relaxation
+     * Longest-path rank of each node from the start event, computed by Bellman-Ford-style relaxation
      * (bounded to {@code |nodes|} passes so a stray back edge cannot loop forever). The end event is
      * pinned to the deepest rank so nothing sits to its right.
      */
@@ -2224,8 +2254,8 @@ public class BpmnIntentGenerator implements IntentTargetGenerator {
     }
 
     /** Width/height of a node's shape by its element id / step kind. */
-    private static int[] nodeSize(String id, List<StepIntent> steps) {
-        if (START_ID.equals(id)) {
+    private static int[] nodeSize(String id, String startId, List<StepIntent> steps) {
+        if (startId.equals(id)) {
             return new int[] {30, 30};
         }
         if (END_ID.equals(id)) {

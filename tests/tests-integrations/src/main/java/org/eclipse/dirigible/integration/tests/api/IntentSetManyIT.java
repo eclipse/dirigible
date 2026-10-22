@@ -109,7 +109,8 @@ class IntentSetManyIT extends IntegrationTest {
               - name: RunJob
                 trigger: { onCreate: Job }
                 steps:
-                  - { name: begin, kind: serviceTask, args: { set: { errorMessage: null, Status: RUNNING }, next: done } }
+                  # A step named like the start event deploys - the start event moves aside (#8058).
+                  - { name: start, kind: serviceTask, args: { set: { errorMessage: null, Status: RUNNING }, next: done } }
                   - { name: done,  kind: end }
               - name: Finish
                 trigger: { onCreate: JobFinish }
