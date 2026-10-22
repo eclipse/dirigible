@@ -729,11 +729,15 @@ public final class NotificationSupport {
             List<ToOneWalk.Link> links = walk.links();
             ToOneWalk.Link last = links.get(links.size() - 1);
             String pascalField = IntentNaming.pascalCase(fieldName);
-            CrossModelTarget xm = null;
+            // The OWNER's coordinates of a cross-model last relation - only the last relation of a walk can be
+            // one (ToOneWalk refuses a segment past it), so they are carried for that load alone.
+            String ownerPerspective = "";
+            String ownerModel = "";
+            String ownerProject = "";
             if (last.crossModel()) {
                 // Cross-model last relation (e.g. Customer.email where Customer is owned by another model):
                 // resolve the owner's facts through the injected lookup and load from the OWNER's package.
-                xm = crossModel == null ? null : crossModel.resolve(last.relation());
+                CrossModelTarget xm = crossModel == null ? null : crossModel.resolve(last.relation());
                 if (xm == null) {
                     return null;
                 }
@@ -743,6 +747,9 @@ public final class NotificationSupport {
                                                      .contains(pascalField)) {
                     return null;
                 }
+                ownerPerspective = xm.perspectiveName();
+                ownerModel = xm.modelAlias();
+                ownerProject = xm.project();
             } else if (fieldOf(last.target(), fieldName) == null) {
                 return null;
             }
@@ -759,7 +766,7 @@ public final class NotificationSupport {
             for (int i = 0; i < links.size(); i++) {
                 ToOneWalk.Link link = links.get(i);
                 String local = String.join("_", relations.subList(0, i + 1));
-                String perspective = link.crossModel() ? xm.perspectiveName()
+                String perspective = link.crossModel() ? ownerPerspective
                         : IntentEntities.resolvePerspective(link.relation()
                                                                 .getTo(),
                                 compositionParents, settingEntities);
@@ -768,8 +775,8 @@ public final class NotificationSupport {
                 // however many paths share it.
                 loads.putIfAbsent(local, new RelationLoad(local, link.relation()
                                                                      .getTo(),
-                        perspective, IntentNaming.pascalCase(link.segment()), link.crossModel(), link.crossModel() ? xm.modelAlias() : "",
-                        link.crossModel() ? xm.project() : "", source));
+                        perspective, IntentNaming.pascalCase(link.segment()), link.crossModel(), link.crossModel() ? ownerModel : "",
+                        link.crossModel() ? ownerProject : "", source));
                 source = local;
             }
             // The listener loads the last related entity into the local of the whole relation prefix.
