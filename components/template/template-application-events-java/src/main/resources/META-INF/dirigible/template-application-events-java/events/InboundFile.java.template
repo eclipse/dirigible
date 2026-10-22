@@ -187,6 +187,35 @@ public class ${className}FileImport implements JobHandler {
         }
 #end
 #foreach($lookup in $lookups)
+#if($lookup.composite)
+#foreach($term in $lookup.terms)
+        Object ${term.local}Key = envelope.get(${term.fromLiteral});
+        if (${term.local}Key == null) {
+            throw new IllegalArgumentException("record " + record + " carries nothing to resolve ${lookup.property} by");
+        }
+#end
+#foreach($term in $lookup.terms)
+#if($term.hop)
+        java.util.List<gen.${javaGenFolderName}.data.${term.javaHopPerspective}.${term.hopEntity}Entity> ${term.local}Matches =
+                new gen.${javaGenFolderName}.data.${term.javaHopPerspective}.${term.hopEntity}Repository()
+                        .findAll(Criteria.create()
+                                         .eq("${term.hopByProperty}", ${term.hopByValueExpression}));
+        if (${term.local}Matches.size() != 1) {
+            throw new IllegalArgumentException(
+                    "record " + record + ": no unique ${lookup.targetEntity} matches " + ${lookup.keysExpression} + " - no unique ${term.hopEntity} matches ${term.label}");
+        }
+#end
+#end
+        java.util.List<gen.${javaGenFolderName}.data.${lookup.javaTargetPerspective}.${lookup.targetEntity}Entity> ${lookup.local}Matches =
+                new gen.${javaGenFolderName}.data.${lookup.javaTargetPerspective}.${lookup.targetEntity}Repository()
+                        .findAll(Criteria.create()
+#foreach($term in $lookup.terms)
+                                         .eq("${term.property}", ${term.valueExpression})#if(!$foreach.hasNext));#end
+#end
+        if (${lookup.local}Matches.size() != 1) {
+            throw new IllegalArgumentException("record " + record + ": no unique ${lookup.targetEntity} matches " + ${lookup.keysExpression});
+        }
+#else
         Object ${lookup.local}Key = envelope.get(${lookup.fromLiteral});
         if (${lookup.local}Key == null) {
             throw new IllegalArgumentException("record " + record + " carries nothing to resolve ${lookup.property} by");
@@ -199,6 +228,7 @@ public class ${className}FileImport implements JobHandler {
             throw new IllegalArgumentException(
                     "record " + record + ": no unique ${lookup.targetEntity} matches ${lookup.byProperty} [" + ${lookup.local}Key + "]");
         }
+#end
         entity.${lookup.property} = ${lookup.local}Matches.get(0).${lookup.targetKeyProperty};
 #end
         return entity;
@@ -257,6 +287,41 @@ public class ${className}FileImport implements JobHandler {
                 }
 #end
 #foreach($lookup in $collection.lookups)
+#if($lookup.composite)
+#foreach($term in $lookup.terms)
+                Object ${term.local}Key = item.get(${term.fromLiteral});
+                if (${term.local}Key == null) {
+                    throw new IllegalArgumentException("record " + record + ": element " + index + " of [" + ${collection.fromLiteral} + "] carries nothing to resolve ${lookup.property} by");
+                }
+#end
+                java.util.List<Object> ${lookup.local}Key = ${lookup.keyList};
+                gen.${javaGenFolderName}.data.${lookup.javaTargetPerspective}.${lookup.targetEntity}Entity ${lookup.local}Match =
+                        ${lookup.local}Cache.get(${lookup.local}Key);
+                if (${lookup.local}Match == null) {
+#foreach($term in $lookup.terms)
+#if($term.hop)
+                    java.util.List<gen.${javaGenFolderName}.data.${term.javaHopPerspective}.${term.hopEntity}Entity> ${term.local}Matches =
+                            new gen.${javaGenFolderName}.data.${term.javaHopPerspective}.${term.hopEntity}Repository()
+                                    .findAll(Criteria.create()
+                                                     .eq("${term.hopByProperty}", ${term.hopByValueExpression}));
+                    if (${term.local}Matches.size() != 1) {
+                        throw new IllegalArgumentException("record " + record + ": element " + index + " of [" + ${collection.fromLiteral} + "]: no unique ${lookup.targetEntity} matches " + ${lookup.keysExpression} + " - no unique ${term.hopEntity} matches ${term.label}");
+                    }
+#end
+#end
+                    java.util.List<gen.${javaGenFolderName}.data.${lookup.javaTargetPerspective}.${lookup.targetEntity}Entity> ${lookup.local}Matches =
+                            new gen.${javaGenFolderName}.data.${lookup.javaTargetPerspective}.${lookup.targetEntity}Repository()
+                                    .findAll(Criteria.create()
+#foreach($term in $lookup.terms)
+                                                     .eq("${term.property}", ${term.valueExpression})#if(!$foreach.hasNext));#end
+#end
+                    if (${lookup.local}Matches.size() != 1) {
+                        throw new IllegalArgumentException("record " + record + ": element " + index + " of [" + ${collection.fromLiteral} + "]: no unique ${lookup.targetEntity} matches " + ${lookup.keysExpression});
+                    }
+                    ${lookup.local}Match = ${lookup.local}Matches.get(0);
+                    ${lookup.local}Cache.put(${lookup.local}Key, ${lookup.local}Match);
+                }
+#else
 #if($collection.scalarElements)
                 Object ${lookup.local}Key = element;
 #else
@@ -278,6 +343,7 @@ public class ${className}FileImport implements JobHandler {
                     ${lookup.local}Match = ${lookup.local}Matches.get(0);
                     ${lookup.local}Cache.put(${lookup.local}Key, ${lookup.local}Match);
                 }
+#end
                 child.${lookup.property} = ${lookup.local}Match.${lookup.targetKeyProperty};
 #end
                 ${collection.local}.add(child);

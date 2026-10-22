@@ -83,6 +83,43 @@ public class ${className}Webhook {
         }
 #end
 #foreach($lookup in $lookups)
+#if($lookup.composite)
+#foreach($term in $lookup.terms)
+        Object ${term.local}Key = envelope.get(${term.fromLiteral});
+        if (${term.local}Key == null) {
+            LOG.error("Inbound ${name}: a posted payload carries no [{}] to resolve ${lookup.property} by - NOT ingested",
+                    ${term.fromLiteral});
+            Response.setStatus(400);
+            return "{\"error\": \"no ${term.label} to resolve ${lookup.property} by\"}";
+        }
+#end
+#foreach($term in $lookup.terms)
+#if($term.hop)
+        java.util.List<gen.${javaGenFolderName}.data.${term.javaHopPerspective}.${term.hopEntity}Entity> ${term.local}Matches =
+                new gen.${javaGenFolderName}.data.${term.javaHopPerspective}.${term.hopEntity}Repository()
+                        .findAll(Criteria.create()
+                                         .eq("${term.hopByProperty}", ${term.hopByValueExpression}));
+        if (${term.local}Matches.size() != 1) {
+            LOG.error("Inbound ${name}: no unique ${lookup.targetEntity} matches {} from [{}] - no unique ${term.hopEntity} matches ${term.label} - NOT ingested",
+                    ${lookup.keysExpression}, ${lookup.fromLiteral});
+            Response.setStatus(400);
+            return "{\"error\": \"no unique ${lookup.targetEntity} matches the ${lookup.byProperty} in the payload\"}";
+        }
+#end
+#end
+        java.util.List<gen.${javaGenFolderName}.data.${lookup.javaTargetPerspective}.${lookup.targetEntity}Entity> ${lookup.local}Matches =
+                new gen.${javaGenFolderName}.data.${lookup.javaTargetPerspective}.${lookup.targetEntity}Repository()
+                        .findAll(Criteria.create()
+#foreach($term in $lookup.terms)
+                                         .eq("${term.property}", ${term.valueExpression})#if(!$foreach.hasNext));#end
+#end
+        if (${lookup.local}Matches.size() != 1) {
+            LOG.error("Inbound ${name}: no unique ${lookup.targetEntity} matches {} from [{}] - NOT ingested",
+                    ${lookup.keysExpression}, ${lookup.fromLiteral});
+            Response.setStatus(400);
+            return "{\"error\": \"no unique ${lookup.targetEntity} matches the ${lookup.byProperty} in the payload\"}";
+        }
+#else
         Object ${lookup.local}Key = envelope.get(${lookup.fromLiteral});
         if (${lookup.local}Key == null) {
             LOG.error("Inbound ${name}: a posted payload carries no [{}] to resolve ${lookup.property} by - NOT ingested",
@@ -100,6 +137,7 @@ public class ${className}Webhook {
             Response.setStatus(400);
             return "{\"error\": \"no unique ${lookup.targetEntity} matches the ${lookup.byProperty} in the payload\"}";
         }
+#end
         entity.${lookup.property} = ${lookup.local}Matches.get(0).${lookup.targetKeyProperty};
 #end
 #foreach($collection in $collections)
@@ -154,6 +192,47 @@ public class ${className}Webhook {
                 }
 #end
 #foreach($lookup in $collection.lookups)
+#if($lookup.composite)
+#foreach($term in $lookup.terms)
+                Object ${term.local}Key = item.get(${term.fromLiteral});
+                if (${term.local}Key == null) {
+                    LOG.error("Inbound ${name}: a posted payload: element [{}] of [{}] carries no [{}] to resolve ${lookup.property} by - NOT ingested", index, ${collection.fromLiteral}, ${term.fromLiteral});
+                    Response.setStatus(400);
+                    return Json.stringify(java.util.Map.of("error", "element " + index + " of [" + ${collection.fromLiteral} + "] carries nothing to resolve ${lookup.property} by"));
+                }
+#end
+                java.util.List<Object> ${lookup.local}Key = ${lookup.keyList};
+                gen.${javaGenFolderName}.data.${lookup.javaTargetPerspective}.${lookup.targetEntity}Entity ${lookup.local}Match =
+                        ${lookup.local}Cache.get(${lookup.local}Key);
+                if (${lookup.local}Match == null) {
+#foreach($term in $lookup.terms)
+#if($term.hop)
+                    java.util.List<gen.${javaGenFolderName}.data.${term.javaHopPerspective}.${term.hopEntity}Entity> ${term.local}Matches =
+                            new gen.${javaGenFolderName}.data.${term.javaHopPerspective}.${term.hopEntity}Repository()
+                                    .findAll(Criteria.create()
+                                                     .eq("${term.hopByProperty}", ${term.hopByValueExpression}));
+                    if (${term.local}Matches.size() != 1) {
+                        LOG.error("Inbound ${name}: a posted payload: element [{}] of [{}]: no unique ${lookup.targetEntity} matches {} - no unique ${term.hopEntity} matches ${term.label} - NOT ingested", index, ${collection.fromLiteral}, ${lookup.keysExpression});
+                        Response.setStatus(400);
+                        return Json.stringify(java.util.Map.of("error", "element " + index + " of [" + ${collection.fromLiteral} + "]: no unique ${lookup.targetEntity} matches " + ${lookup.keysExpression}));
+                    }
+#end
+#end
+                    java.util.List<gen.${javaGenFolderName}.data.${lookup.javaTargetPerspective}.${lookup.targetEntity}Entity> ${lookup.local}Matches =
+                            new gen.${javaGenFolderName}.data.${lookup.javaTargetPerspective}.${lookup.targetEntity}Repository()
+                                    .findAll(Criteria.create()
+#foreach($term in $lookup.terms)
+                                                     .eq("${term.property}", ${term.valueExpression})#if(!$foreach.hasNext));#end
+#end
+                    if (${lookup.local}Matches.size() != 1) {
+                        LOG.error("Inbound ${name}: a posted payload: element [{}] of [{}]: no unique ${lookup.targetEntity} matches {} - NOT ingested", index, ${collection.fromLiteral}, ${lookup.keysExpression});
+                        Response.setStatus(400);
+                        return Json.stringify(java.util.Map.of("error", "element " + index + " of [" + ${collection.fromLiteral} + "]: no unique ${lookup.targetEntity} matches " + ${lookup.keysExpression}));
+                    }
+                    ${lookup.local}Match = ${lookup.local}Matches.get(0);
+                    ${lookup.local}Cache.put(${lookup.local}Key, ${lookup.local}Match);
+                }
+#else
 #if($collection.scalarElements)
                 Object ${lookup.local}Key = element;
 #else
@@ -179,6 +258,7 @@ public class ${className}Webhook {
                     ${lookup.local}Match = ${lookup.local}Matches.get(0);
                     ${lookup.local}Cache.put(${lookup.local}Key, ${lookup.local}Match);
                 }
+#end
                 child.${lookup.property} = ${lookup.local}Match.${lookup.targetKeyProperty};
 #end
                 ${collection.local}.add(child);

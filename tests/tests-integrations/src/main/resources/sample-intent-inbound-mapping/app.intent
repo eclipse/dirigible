@@ -64,6 +64,38 @@ entities:
     relations:
       - { name: purchaseOrder, kind: manyToOne, to: PurchaseOrder, required: true, composition: true }
 
+  # A composite business key (dirigible #8033): a subscription is identified by its customer AND its
+  # plan, and the sender knows only their codes. Neither code identifies a subscription on its own -
+  # every seeded customer holds two of them - so the pair must be a declared unique: of Subscription,
+  # which is what makes a lookup on it legal.
+  - name: Customer
+    fields:
+      - { name: id,   type: integer, primaryKey: true, generated: true }
+      - { name: code, type: string, required: true, unique: true, length: 40 }
+
+  - name: Plan
+    fields:
+      - { name: id,   type: integer, primaryKey: true, generated: true }
+      - { name: code, type: string, required: true, unique: true, length: 40 }
+
+  - name: Subscription
+    unique:
+      - fields: [customer, plan]
+        message: "The customer already subscribes to this plan"
+    fields:
+      - { name: id, type: integer, primaryKey: true, generated: true }
+    relations:
+      - { name: customer, kind: manyToOne, to: Customer, required: true }
+      - { name: plan,     kind: manyToOne, to: Plan,     required: true }
+
+  - name: UsageReport
+    fields:
+      - { name: id,       type: integer, primaryKey: true, generated: true }
+      - { name: reportId, type: string, required: true, unique: true, length: 64 }
+      - { name: units,    type: integer }
+    relations:
+      - { name: subscription, kind: manyToOne, to: Subscription, required: true }
+
 inbound:
   # The real arrival contract: an envelope with a type and a version, two business keys, and only
   # then some record fields. Without `map:` this could only be ingested by a hand-written consumer.
@@ -127,6 +159,23 @@ inbound:
           product:  { lookup: Product, by: sku, from: sku }
       tags: { from: tags, map: { label: "." } }
 
+  # A usage report names its subscription by the pair it is for. Each hop resolves a code to its row
+  # first, then one query on Subscription matches both; an unknown customer, an unknown plan, or a
+  # pair nobody subscribes to rejects the report, logged with both codes.
+  - name: usage
+    source: { queue: sample.usage }
+    create: UsageReport
+    map: &usage
+      reportId: reportId
+      units:    units
+      subscription: { lookup: Subscription, by: [customer.code, plan.code], from: [customerCode, planCode] }
+
+  # The same report, posted: a miss is answered 400.
+  - name: usageHook
+    path: /usage
+    create: UsageReport
+    map: *usage
+
 processes:
   # Started by the order's create event, which is dispatched after the transaction that wrote the
   # order AND its lines commits - so its only step counts every line.
@@ -156,3 +205,25 @@ seeds:
     rows:
       - { id: 1, sku: A }
       - { id: 2, sku: B }
+
+  - name: usage-customers
+    entity: Customer
+    rows:
+      - { id: 1, code: ACME }
+      - { id: 2, code: GLOBEX }
+
+  # ENTERPRISE has no subscriber, so ACME/ENTERPRISE resolves both hops and still matches nothing.
+  - name: usage-plans
+    entity: Plan
+    rows:
+      - { id: 1, code: BASIC }
+      - { id: 2, code: PRO }
+      - { id: 3, code: ENTERPRISE }
+
+  - name: usage-subscriptions
+    entity: Subscription
+    rows:
+      - { id: 1, customer: 1, plan: 1 }
+      - { id: 2, customer: 1, plan: 2 }
+      - { id: 3, customer: 2, plan: 1 }
+      - { id: 4, customer: 2, plan: 2 }

@@ -30,6 +30,10 @@ public final class GlueTemplateRendering {
 
     private static final String INBOUND_MESSAGE = "/template-application-events-java/events/InboundMessage.java.template";
 
+    private static final String WEBHOOK = "/template-application-events-java/events/Webhook.java.template";
+
+    private static final String INBOUND_FILE = "/template-application-events-java/events/InboundFile.java.template";
+
     private GlueTemplateRendering() {}
 
     /**
@@ -41,11 +45,39 @@ public final class GlueTemplateRendering {
      * @throws IOException when the template cannot be read or rendered
      */
     public static String renderInboundMessage(Map<String, Object> entry, String genFolder) throws IOException {
+        return render("inboundMessages", INBOUND_MESSAGE, entry, genFolder);
+    }
+
+    /**
+     * Render the webhook controller of one inbound entry.
+     *
+     * @param entry the {@code inbound} glue entry
+     * @param genFolder the generation folder, the {@code javaGenFolderName} of the package
+     * @return the generated Java source
+     * @throws IOException when the template cannot be read or rendered
+     */
+    public static String renderWebhook(Map<String, Object> entry, String genFolder) throws IOException {
+        return render("inbound", WEBHOOK, entry, genFolder);
+    }
+
+    /**
+     * Render the drop-folder job of one inbound entry.
+     *
+     * @param entry the {@code inboundFiles} glue entry
+     * @param genFolder the generation folder, the {@code javaGenFolderName} of the package
+     * @return the generated Java source
+     * @throws IOException when the template cannot be read or rendered
+     */
+    public static String renderInboundFile(Map<String, Object> entry, String genFolder) throws IOException {
+        return render("inboundFiles", INBOUND_FILE, entry, genFolder);
+    }
+
+    private static String render(String collection, String location, Map<String, Object> entry, String genFolder) throws IOException {
         GenerationTemplateMetadataSource source = new GenerationTemplateMetadataSource();
-        source.setLocation(INBOUND_MESSAGE);
-        source.setRename("gen/events/" + genFolder + "/Consumer.java");
-        List<GeneratedFile> files = new GlueGenerator(new VelocityRenderer()).generate("inboundMessages", source, read(INBOUND_MESSAGE),
-                Map.of("inboundMessages", List.of(entry)), new LinkedHashMap<>(Map.of("javaGenFolderName", genFolder)));
+        source.setLocation(location);
+        source.setRename("gen/events/" + genFolder + "/Handler.java");
+        List<GeneratedFile> files = new GlueGenerator(new VelocityRenderer()).generate(collection, source, read(location),
+                Map.of(collection, List.of(entry)), new LinkedHashMap<>(Map.of("javaGenFolderName", genFolder)));
         return files.get(0)
                     .content();
     }

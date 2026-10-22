@@ -392,6 +392,243 @@ class GlueInboundMappingTest {
         assertTrue(consumer.contains("is not an object - NOT ingested"), "an element of the wrong shape is still acknowledged");
     }
 
+    /** The usage report of #8033: it names its subscription by the customer and plan codes. */
+    private static final String USAGE = """
+            name: billing
+            entities:
+              - name: Customer
+                fields:
+                  - { name: id,   type: integer, primaryKey: true, generated: true }
+                  - { name: code, type: string, unique: true }
+              - name: Plan
+                fields:
+                  - { name: id,   type: integer, primaryKey: true, generated: true }
+                  - { name: code, type: string, unique: true }
+              - name: Subscription
+                unique:
+                  - fields: [customer, plan]
+                fields:
+                  - { name: id,     type: integer, primaryKey: true, generated: true }
+                  - { name: region, type: string }
+                relations:
+                  - { name: customer, kind: manyToOne, to: Customer, required: true }
+                  - { name: plan,     kind: manyToOne, to: Plan,     required: true }
+              - name: UsageReport
+                fields:
+                  - { name: id,       type: integer, primaryKey: true, generated: true }
+                  - { name: reportId, type: string, unique: true, required: true }
+                  - { name: units,    type: integer }
+                relations:
+                  - { name: subscription, kind: manyToOne, to: Subscription, required: true }
+            inbound:
+              - name: usage
+                source: { queue: "usage.reported" }
+                create: UsageReport
+                map: &usage
+                  reportId: reportId
+                  units:    units
+                  subscription: { lookup: Subscription, by: [customer.code, plan.code], from: [customerCode, planCode] }
+              - name: usageHook
+                path: /usage
+                create: UsageReport
+                map: *usage
+              - name: usageDrop
+                source: { folder: target/usage, cron: "0/5 * * * * ?" }
+                create: UsageReport
+                map: *usage
+            """;
+
+    /** The query that fills the relation: every hop resolved, then ONE query matching both parts. */
+    private static final String COMPOSITE_QUERY = """
+                    java.util.List<gen.sales.data.subscription.SubscriptionEntity> lookupSubscriptionMatches =
+                            new gen.sales.data.subscription.SubscriptionRepository()
+                                    .findAll(Criteria.create()
+                                                     .eq("Customer", lookupSubscriptionByCustomerMatches.get(0).Id)
+                                                     .eq("Plan", lookupSubscriptionByPlanMatches.get(0).Id));
+            """;
+
+    @Test
+    void aCompositeLookupIsPlannedAsItsPartsOnEveryArrival() {
+        IntentModel model = IntentParser.parse(USAGE);
+        for (Map<String, Object> entry : List.of(GlueIntentGenerator.buildInboundForTest(model)
+                                                                    .get(0),
+                GlueIntentGenerator.buildInboundMessagesForTest(model)
+                                   .get(0),
+                GlueIntentGenerator.buildInboundFilesForTest(model)
+                                   .get(0))) {
+            Map<?, ?> lookup = (Map<?, ?>) ((List<?>) entry.get("lookups")).get(0);
+            assertEquals(Boolean.TRUE, lookup.get("composite"));
+            assertEquals("Subscription", lookup.get("targetEntity"));
+            assertEquals("Customer.Code, Plan.Code", lookup.get("byProperty"));
+            assertEquals("java.util.List.of(lookupSubscriptionByCustomerKey, lookupSubscriptionByPlanKey)", lookup.get("keyList"));
+            List<?> terms = (List<?>) lookup.get("terms");
+            assertEquals(2, terms.size());
+            Map<?, ?> customer = (Map<?, ?>) terms.get(0);
+            assertEquals("Customer.Code", customer.get("label"));
+            assertEquals("\"customerCode\"", customer.get("fromLiteral"));
+            assertEquals(Boolean.TRUE, customer.get("hop"));
+            assertEquals("Customer", customer.get("hopEntity"));
+            assertEquals("Code", customer.get("hopByProperty"));
+            assertEquals("String.valueOf(lookupSubscriptionByCustomerKey)", customer.get("hopByValueExpression"));
+            assertEquals("Customer", customer.get("property"));
+            assertEquals("lookupSubscriptionByCustomerMatches.get(0).Id", customer.get("valueExpression"));
+        }
+    }
+
+    @Test
+    void aCompositeLookupResolvesEachHopThenQueriesOnce() throws IOException {
+        String consumer = renderConsumer(USAGE);
+
+        String customer = branch(consumer, "java.util.List<gen.sales.data.customer.CustomerEntity> lookupSubscriptionByCustomerMatches =");
+        assertTrue(customer.contains(".eq(\"Code\", String.valueOf(lookupSubscriptionByCustomerKey)));"), customer);
+        assertTrue(consumer.contains(".eq(\"Code\", String.valueOf(lookupSubscriptionByPlanKey)));"), consumer);
+        assertTrue(consumer.contains(COMPOSITE_QUERY), consumer);
+        assertTrue(consumer.indexOf("lookupSubscriptionByPlanMatches =") < consumer.indexOf("lookupSubscriptionMatches ="),
+                "every hop is resolved before the target is queried");
+        assertTrue(consumer.contains("entity.Subscription = lookupSubscriptionMatches.get(0).Id;"), consumer);
+    }
+
+    @Test
+    void aCompositeMissLogsEveryKey() throws IOException {
+        String consumer = renderConsumer(USAGE);
+
+        assertEquals(
+                """
+                        if (lookupSubscriptionMatches.size() != 1) {
+                                    LOG.error("Inbound usage: no unique Subscription matches {} from [{}] - NOT ingested",
+                                            "Customer.Code [" + lookupSubscriptionByCustomerKey + "], Plan.Code [" + lookupSubscriptionByPlanKey + "]", "customerCode, planCode");
+                                    return;
+                                }
+                        """,
+                branch(consumer, "if (lookupSubscriptionMatches.size() != 1) {"));
+        String hop = branch(consumer, "if (lookupSubscriptionByPlanMatches.size() != 1) {");
+        assertTrue(hop.contains("no unique Subscription matches {} from [{}] - no unique Plan matches Plan.Code - NOT ingested"), hop);
+        assertTrue(hop.contains("\"Customer.Code [\" + lookupSubscriptionByCustomerKey + \"], Plan.Code [\""), hop);
+        String noKey = branch(consumer, "if (lookupSubscriptionByPlanKey == null) {");
+        assertTrue(noKey.contains("carries no [{}] to resolve Subscription by - NOT ingested"), noKey);
+        assertTrue(noKey.contains("\"planCode\");"), noKey);
+    }
+
+    /** A webhook answers every composite miss with 400, and a drop file fails the whole file. */
+    @Test
+    void aCompositeLookupOnTheWebhookAndTheFileJob() throws IOException {
+        IntentModel model = IntentParser.parse(USAGE);
+        // Line ends normalized as in renderConsumer: the templates carry the checkout's (CRLF on Windows).
+        String webhook = GlueTemplateRendering.renderWebhook(GlueIntentGenerator.buildInboundForTest(model)
+                                                                                .get(0),
+                "sales")
+                                              .replace("\r\n", "\n");
+        String job = GlueTemplateRendering.renderInboundFile(GlueIntentGenerator.buildInboundFilesForTest(model)
+                                                                                .get(0),
+                "sales")
+                                          .replace("\r\n", "\n");
+
+        for (String source : List.of(webhook, job)) {
+            assertTrue(source.contains(COMPOSITE_QUERY), source);
+            assertTrue(source.contains("entity.Subscription = lookupSubscriptionMatches.get(0).Id;"), source);
+        }
+        String rejected = branch(webhook, "if (lookupSubscriptionMatches.size() != 1) {");
+        assertTrue(rejected.contains("Response.setStatus(400);"), rejected);
+        assertTrue(rejected.contains("no unique Subscription matches the Customer.Code, Plan.Code in the payload"), rejected);
+        assertTrue(
+                branch(webhook, "if (lookupSubscriptionByCustomerKey == null) {").contains("no Customer.Code to resolve Subscription by"));
+        assertTrue(branch(job, "if (lookupSubscriptionMatches.size() != 1) {").contains(
+                "throw new IllegalArgumentException(\"record \" + record + \": no unique Subscription matches \" + \"Customer.Code [\""));
+    }
+
+    /** The per-lookup onMissing of #8031 applies to the whole composite lookup. */
+    @Test
+    void aCompositeLookupDeadLettersEveryMiss() throws IOException {
+        // The queue arrival alone: a webhook or a drop folder does not take the key.
+        String queued = USAGE.substring(0, USAGE.indexOf("  - name: usageHook"));
+        String consumer = renderConsumer(
+                queued.replace("from: [customerCode, planCode] }", "from: [customerCode, planCode], onMissing: deadLetter }"));
+
+        for (String opening : List.of("if (lookupSubscriptionByCustomerKey == null) {",
+                "if (lookupSubscriptionByPlanMatches.size() != 1) {", "if (lookupSubscriptionMatches.size() != 1) {")) {
+            String branch = branch(consumer, opening);
+            assertTrue(branch.contains("throw new IllegalStateException(") && branch.contains("- dead-lettered\");"), branch);
+            assertTrue(!branch.contains("return;") && !branch.contains("LOG."), branch);
+        }
+    }
+
+    private static final String USAGE_LINES = """
+            name: billing
+            entities:
+              - name: Customer
+                fields:
+                  - { name: id,   type: integer, primaryKey: true, generated: true }
+                  - { name: code, type: string, unique: true }
+              - name: Subscription
+                unique:
+                  - fields: [customer, region]
+                fields:
+                  - { name: id,     type: integer, primaryKey: true, generated: true }
+                  - { name: region, type: string }
+                relations:
+                  - { name: customer, kind: manyToOne, to: Customer, required: true }
+              - name: UsageBatch
+                fields:
+                  - { name: id,      type: integer, primaryKey: true, generated: true }
+                  - { name: batchId, type: string, unique: true }
+                relations:
+                  - { name: lines, kind: oneToMany, to: UsageLine }
+              - name: UsageLine
+                fields:
+                  - { name: id,    type: integer, primaryKey: true, generated: true }
+                  - { name: units, type: integer }
+                relations:
+                  - { name: batch,        kind: manyToOne, to: UsageBatch, composition: true }
+                  - { name: subscription, kind: manyToOne, to: Subscription }
+            inbound:
+              - name: usageBatches
+                source: { queue: "usage.batches" }
+                create: UsageBatch
+                map:
+                  batchId: batchId
+                  lines:
+                    from: lines
+                    map:
+                      units: units
+                      subscription: { lookup: Subscription, by: [customer.code, region], from: [customerCode, region] }
+            """;
+
+    /**
+     * An element's composite lookup reads its parts from the element, and caches its matches by the
+     * whole combination - a field part compared with its converted value, a hop through its key.
+     */
+    @Test
+    void aCompositeLookupInACollectionElement() throws IOException {
+        String consumer = renderConsumer(USAGE_LINES);
+
+        assertTrue(consumer.contains("Object lookupLinesSubscriptionByCustomerKey = item.get(\"customerCode\");"), consumer);
+        assertTrue(consumer.contains("Object lookupLinesSubscriptionByRegionKey = item.get(\"region\");"), consumer);
+        assertTrue(consumer.contains("java.util.List<Object> lookupLinesSubscriptionKey ="
+                + " java.util.List.of(lookupLinesSubscriptionByCustomerKey, lookupLinesSubscriptionByRegionKey);"), consumer);
+        assertTrue(consumer.contains(".eq(\"Customer\", lookupLinesSubscriptionByCustomerMatches.get(0).Id)\n"), consumer);
+        assertTrue(consumer.contains(".eq(\"Region\", String.valueOf(lookupLinesSubscriptionByRegionKey)));\n"), consumer);
+        assertTrue(consumer.contains("lookupLinesSubscriptionCache.put(lookupLinesSubscriptionKey, lookupLinesSubscriptionMatch);"),
+                consumer);
+        assertTrue(consumer.contains("child.Subscription = lookupLinesSubscriptionMatch.Id;"), consumer);
+        assertTrue(!consumer.contains("lookupLinesSubscriptionByRegionMatches"), "a field part is not resolved by a query of its own");
+    }
+
+    /** A single-key lookup carries none of the composite keys, so its descriptor is what it was. */
+    @Test
+    void theScalarFormIsUnchanged() {
+        IntentModel model = IntentParser.parse(YAML);
+        for (Map<String, Object> entry : List.of(GlueIntentGenerator.buildInboundForTest(model)
+                                                                    .get(0),
+                GlueIntentGenerator.buildInboundMessagesForTest(model)
+                                   .get(0),
+                GlueIntentGenerator.buildInboundFilesForTest(model)
+                                   .get(0))) {
+            Map<?, ?> lookup = (Map<?, ?>) ((List<?>) entry.get("lookups")).get(0);
+            assertEquals(List.of("property", "local", "from", "fromLiteral", "targetEntity", "targetPerspective", "byProperty",
+                    "byValueExpression", "targetKeyProperty", "deadLetter"), List.copyOf(lookup.keySet()));
+        }
+    }
+
     /**
      * The rendered source with {@code \n} line ends. The template's own line ends are the checkout's
      * (CRLF on a Windows runner), and the blocks asserted here are matched line by line.

@@ -556,6 +556,152 @@ class InboundMappingIntentTest {
                 """, "map [moreLines] fills [OrderLine] a second time - one collection per child relation");
     }
 
+    /** The issue's subscriptions model: a usage report names its subscription by the pair it is for. */
+    private static final String SUBSCRIPTIONS = """
+            name: billing
+            entities:
+              - name: Customer
+                fields:
+                  - { name: id,     type: integer, primaryKey: true, generated: true }
+                  - { name: code,   type: string, unique: true }
+                  - { name: name,   type: string }
+                  - { name: region, type: string }
+              - name: Plan
+                fields:
+                  - { name: id,   type: integer, primaryKey: true, generated: true }
+                  - { name: code, type: string, unique: true }
+              - name: Subscription
+                unique:
+                  - fields: [customer, plan]
+                    message: "The customer already subscribes to this plan"
+                fields:
+                  - { name: id,     type: integer, primaryKey: true, generated: true }
+                  - { name: region, type: string }
+                  - { name: since,  type: date }
+                relations:
+                  - { name: customer, kind: manyToOne, to: Customer, required: true }
+                  - { name: plan,     kind: manyToOne, to: Plan,     required: true }
+              - name: UsageReport
+                fields:
+                  - { name: id,       type: integer, primaryKey: true, generated: true }
+                  - { name: reportId, type: string, unique: true, required: true }
+                  - { name: units,    type: integer }
+                relations:
+                  - { name: subscription, kind: manyToOne, to: Subscription, required: true }
+            """;
+
+    private static final String USAGE_ARRIVAL = """
+            inbound:
+              - name: usage
+                source: { queue: "usage.reported" }
+                accept: { type: usage.reported, version: 1 }
+                create: UsageReport
+                map:
+                  reportId: reportId
+                  units:    units
+            """;
+
+    @Test
+    void aCompositeLookupMatchingADeclaredUniqueIsAccepted() {
+        IntentModel model = IntentParser.parse(SUBSCRIPTIONS + USAGE_ARRIVAL + """
+                      subscription: { lookup: Subscription, by: [customer.code, plan.code], from: [customerCode, planCode] }
+                """);
+
+        assertTrue(model.getInbound()
+                        .get(0)
+                        .getMap()
+                        .get("subscription") instanceof java.util.Map,
+                "a composite lookup stays a map the generator reads");
+        // The declared order of the parts does not have to be the unique entry's own.
+        IntentParser.parse(SUBSCRIPTIONS + USAGE_ARRIVAL + """
+                      subscription: { lookup: Subscription, by: [plan.code, customer.code], from: [planCode, customerCode] }
+                """);
+    }
+
+    @Test
+    void aCompositeLookupWithoutAMatchingUniqueIsRejected() {
+        String undeclared = SUBSCRIPTIONS.replace("""
+                    unique:
+                      - fields: [customer, plan]
+                        message: "The customer already subscribes to this plan"
+                """, "");
+        assertFailsOn(undeclared, USAGE_ARRIVAL + """
+                      subscription: { lookup: Subscription, by: [customer.code, plan.code], from: [customerCode, planCode] }
+                """, "map [subscription] lookup matches on [customer.code, plan.code], which is not a declared unique key of [Subscription]"
+                + " - declare unique: [{ fields: [customer, plan] }] on it, since a lookup that could match several rows would silently"
+                + " pick one; its declared keys: none");
+        // Only one of the key's parts: the customer alone may subscribe to several plans.
+        assertFailsOn(SUBSCRIPTIONS, USAGE_ARRIVAL + """
+                      subscription: { lookup: Subscription, by: [customer.code, region], from: [customerCode, region] }
+                """, "which is not a declared unique key of [Subscription] - declare unique: [{ fields: [customer, region] }] on it,"
+                + " since a lookup that could match several rows would silently pick one; its declared keys: [customer, plan]");
+        // A third part is not the declared key either - it would be a key nothing enforces.
+        assertFailsOn(SUBSCRIPTIONS, USAGE_ARRIVAL + """
+                      subscription: { lookup: Subscription, by: [customer.code, plan.code, region], from: [customerCode, planCode, region] }
+                """, "which is not a declared unique key of [Subscription]");
+    }
+
+    @Test
+    void aHopToANonUniqueFieldIsRejected() {
+        assertFailsOn(SUBSCRIPTIONS, USAGE_ARRIVAL + """
+                      subscription: { lookup: Subscription, by: [customer.name, plan.code], from: [customerName, planCode] }
+                """, "map [subscription] lookup part [customer.name] matches on [name], which is not unique on [Customer]");
+    }
+
+    @Test
+    void unequalByAndFromAreRejected() {
+        assertFailsOn(SUBSCRIPTIONS, USAGE_ARRIVAL + """
+                      subscription: { lookup: Subscription, by: [customer.code, plan.code], from: [customerCode] }
+                """, "map [subscription] lookup pairs by and from by position - both must be lists of the same length");
+        assertFailsOn(SUBSCRIPTIONS, USAGE_ARRIVAL + """
+                      subscription: { lookup: Subscription, by: [customer.code, plan.code], from: customerCode }
+                """, "map [subscription] lookup pairs by and from by position - both must be lists of the same length");
+    }
+
+    @Test
+    void aCompositeLookupsPartsAreHeldToTheSingleKeyRules() {
+        assertFailsOn(SUBSCRIPTIONS, USAGE_ARRIVAL + """
+                      subscription: { lookup: Subscription, by: [customer.code, since], from: [customerCode, since] }
+                """, "map [subscription] lookup matches on the [date] field [since] - a business key is a string or an integer field");
+        assertFailsOn(SUBSCRIPTIONS, USAGE_ARRIVAL + """
+                      subscription: { lookup: Subscription, by: [customer.code, owner.code], from: [customerCode, ownerCode] }
+                """, "map [subscription] lookup matches on [owner.code], but [owner] is not a to-one relation of [Subscription]");
+        assertFailsOn(SUBSCRIPTIONS, USAGE_ARRIVAL + """
+                      subscription: { lookup: Subscription, by: [customer.code, plan.owner.code], from: [customerCode, ownerCode] }
+                """, "map [subscription] lookup matches on [plan.owner.code], which hops more than one relation");
+        assertFailsOn(SUBSCRIPTIONS, USAGE_ARRIVAL + """
+                      subscription: { lookup: Subscription, by: [customer.code, customer.id], from: [customerCode, customerId] }
+                """, "map [subscription] lookup names [customer] twice");
+        assertFailsOn(SUBSCRIPTIONS, USAGE_ARRIVAL + """
+                      subscription: { lookup: Subscription, by: [customer.code, plan.code], from: [customerCode, "."] }
+                """, "map [subscription] lookup from [.] must name a key");
+        assertFailsOn(SUBSCRIPTIONS, USAGE_ARRIVAL + """
+                      subscription: { lookup: Subscription, by: [customer.code], from: [customerCode] }
+                """, "map [subscription] lookup names a composite key of one part");
+    }
+
+    @Test
+    void aCrossModelHopIsRejected() {
+        String remote = SUBSCRIPTIONS.replace("      - { name: plan,     kind: manyToOne, to: Plan,     required: true }",
+                "      - { name: plan,     kind: manyToOne, to: Plan,     required: true }\n"
+                        + "      - { name: warehouse, kind: manyToOne, to: Warehouse, model: logistics }");
+        assertFailsOn(remote, USAGE_ARRIVAL + """
+                      subscription: { lookup: Subscription, by: [customer.code, warehouse.code], from: [customerCode, warehouseCode] }
+                """,
+                "map [subscription] lookup matches on [warehouse.code], which reads [Warehouse] - it must be an entity declared in this"
+                        + " model (cross-model lookups are not supported yet)");
+    }
+
+    @Test
+    void aCompositeLookupMayMixAFieldAndAHop() {
+        // A customer holds one subscription per region: the key pairs a hop with a field of the target.
+        String regional = SUBSCRIPTIONS.replace("      - fields: [customer, plan]",
+                "      - fields: [customer, region]\n      - fields: [customer, plan]");
+        IntentParser.parse(regional + USAGE_ARRIVAL + """
+                      subscription: { lookup: Subscription, by: [customer.code, region], from: [customerCode, region] }
+                """);
+    }
+
     private static void assertFailsOn(String model, String inbound, String expected) {
         IntentValidationException failure = assertThrows(IntentValidationException.class, () -> IntentParser.parse(model + inbound));
         assertTrue(failure.getMessage()
