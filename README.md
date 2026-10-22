@@ -310,9 +310,10 @@ export DIRIGIBLE_TSC_WATCH_SERVICE_ENABLED=false
 
 #### Java edition
 
-For applications written entirely in Java - generated from an intent or hand-written - there is a runtime-only
-edition without the JavaScript and TypeScript stack (GraalJS, Node, tsc) and without the IDE. It runs the same Java
-applications in a smaller image; a JavaScript or TypeScript artefact is reported as failed, naming the missing engine.
+For applications written entirely in Java - generated from an intent or hand-written - there is an edition without
+the JavaScript and TypeScript stack (GraalJS, Node, tsc). It carries the same IDE and runs the same Java applications
+in a smaller image; a JavaScript or TypeScript artefact is reported as failed, naming the missing engine, and the IDE
+offers no JavaScript or TypeScript authoring.
 
 ```
 docker run --name dirigible --rm -p 8080:8080 dirigiblelabs/dirigible:latest-java

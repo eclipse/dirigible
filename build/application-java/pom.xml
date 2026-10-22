@@ -14,11 +14,11 @@
     <artifactId>dirigible-application-java</artifactId>
     <packaging>jar</packaging>
 
-    <!-- The Java edition (#8011): the runtime of the default application without the JavaScript and
-         TypeScript stack (GraalJS, graalium, the TypeScript toolchain, the JavaScript SDK) and without
-         the IDE (its perspectives, views, editors and services), the generation templates and the intent
-         Builder. Applications written in client Java - generated or hand-written - run on it unchanged;
-         a JavaScript artefact is reported as failed, naming the missing engine (#8006).
+    <!-- The Java edition (#8011, #8026): the default application - its IDE included - without the
+         JavaScript and TypeScript stack (GraalJS, graalium, the TypeScript toolchain, the JavaScript
+         SDK). Applications written in client Java - generated or hand-written - are developed and run
+         on it unchanged; a JavaScript artefact is reported as failed, naming the missing engine (#8006),
+         and the IDE offers no JavaScript or TypeScript authoring (#8036).
 
          It takes the default application as its one dependency - its classes, its configuration and
          everything it assembles - and excludes what it leaves out, so a module added to the default
@@ -40,22 +40,6 @@
                     <!-- the JavaScript SDK: resources only, declared by most api-* modules -->
                     <groupId>org.eclipse.dirigible</groupId>
                     <artifactId>dirigible-components-api-modules-javascript</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.eclipse.dirigible</groupId>
-                    <artifactId>dirigible-components-group-ide</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.eclipse.dirigible</groupId>
-                    <artifactId>dirigible-components-group-templates</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.eclipse.dirigible</groupId>
-                    <artifactId>dirigible-components-engine-intent</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.eclipse.dirigible</groupId>
-                    <artifactId>dirigible-components-resources-builder</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
