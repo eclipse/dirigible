@@ -48,8 +48,12 @@ import org.eclipse.dirigible.components.intent.model.RelationIntent;
  * otherwise fully modelled arrival. The {@code by:} field must be UNIQUE (or the target's primary
  * key): a non-unique lookup silently picking one of several rows is worse than failing, so it is
  * refused when the intent is read rather than at run time.
- * <li><b>A lookup that matches nothing REJECTS the arrival</b> - it never stores a null relation,
- * and the generated handler logs the value it could not resolve.
+ * <li><b>A lookup that matches nothing REJECTS the arrival</b> - it never stores a null relation.
+ * How depends on its {@code onMissing:}. With {@code drop}, the default, the generated handler logs
+ * the value it could not resolve and acknowledges the message. With {@code deadLetter} it throws,
+ * so the broker redelivers the message and finally moves it to its dead-letter destination, where
+ * it can be replayed once the missing row exists. Only a queue or topic arrival takes the key: a
+ * webhook already answers {@code 400}, and a polled folder has nowhere to dead-letter to.
  * <li><b>A non-matching {@code accept:} is acknowledged and ignored</b>, with a warning. A sender
  * rolling out a new version must not fill this receiver's error queue.
  * <li><b>A collection maps a JSON array onto child rows.</b> A {@code map:} key naming a
@@ -86,7 +90,13 @@ public final class ArrivalSupport {
     private static final Set<String> BY_TYPES = Set.of("string", "text", "uuid", "integer", "int", "long", "month", "week");
 
     /** The closed key vocabulary of a {@code map:} lookup value. */
-    private static final Set<String> LOOKUP_KEYS = Set.of("lookup", "by", "from");
+    private static final Set<String> LOOKUP_KEYS = Set.of("lookup", "by", "from", "onMissing");
+
+    /** The {@code onMissing:} of a lookup that acknowledges an unresolved arrival - the default. */
+    private static final String ON_MISSING_DROP = "drop";
+
+    /** The {@code onMissing:} of a lookup that fails an unresolved arrival into the dead letters. */
+    private static final String ON_MISSING_DEAD_LETTER = "deadLetter";
 
     /** The closed key vocabulary of a {@code map:} collection value. */
     private static final Set<String> COLLECTION_KEYS = Set.of("from", "map", "max");
@@ -123,9 +133,11 @@ public final class ArrivalSupport {
      * @param byProperty the target's PascalCase property the business key matches
      * @param byValueExpression the conversion of the envelope value to that property's type
      * @param targetKeyProperty the target's PascalCase primary-key property - the value stored
+     * @param deadLetter {@code true} when a miss fails the message ({@code onMissing: deadLetter}),
+     *        {@code false} when it acknowledges it
      */
     public record Lookup(String property, String local, String from, String fromLiteral, String targetEntity, String targetPerspective,
-            String byProperty, String byValueExpression, String targetKeyProperty) {
+            String byProperty, String byValueExpression, String targetKeyProperty, boolean deadLetter) {
     }
 
     /**
@@ -182,11 +194,35 @@ public final class ArrivalSupport {
         if (entity == null) {
             return; // the unknown-entity issue is already reported; nothing to check the map against
         }
+        String sourceWithoutDeadLetters = sourceWithoutDeadLetters(inbound);
         Set<String> filledChildren = new HashSet<>();
         for (Map.Entry<String, Object> declared : inbound.getMap()
                                                          .entrySet()) {
-            validateMapEntry(declared.getKey(), declared.getValue(), entity, byName, subject, filledChildren, issues);
+            validateMapEntry(declared.getKey(), declared.getValue(), entity, byName, subject, sourceWithoutDeadLetters, filledChildren,
+                    issues);
         }
+    }
+
+    /**
+     * The kind of an arrival that has no dead letters for a lookup's {@code onMissing:} to choose: a
+     * webhook answers a miss with {@code 400}, so its poster already knows, and a polled folder is out
+     * of the key's scope.
+     *
+     * @return {@code webhook}, {@code file}, or {@code null} for a queue or topic arrival
+     */
+    private static String sourceWithoutDeadLetters(InboundIntent inbound) {
+        if (inbound.getPath() != null && !inbound.getPath()
+                                                 .isBlank()) {
+            return "webhook";
+        }
+        if (inbound.getSource() != null && inbound.getSource()
+                                                  .getFolder() != null
+                && !inbound.getSource()
+                           .getFolder()
+                           .isBlank()) {
+            return "file";
+        }
+        return null;
     }
 
     /**
@@ -233,8 +269,8 @@ public final class ArrivalSupport {
      * on a key being absent.
      *
      * @param plan the resolved mapping, or {@code null} when the entry declares none
-     * @return the {@code hasEnvelope} / {@code hasAccept} / {@code hasMap} / {@code hasCollections}
-     *         keys and their payloads
+     * @return the {@code hasEnvelope} / {@code hasAccept} / {@code hasMap} /
+     *         {@code hasDeadLetterLookups} / {@code hasCollections} keys and their payloads
      */
     public static Map<String, Object> arrivalFields(Plan plan) {
         boolean hasAccept = plan != null && plan.acceptExpression() != null;
@@ -281,9 +317,21 @@ public final class ArrivalSupport {
         }
         fields.put("mapFields", mapped);
         fields.put("lookups", looked);
+        fields.put("hasDeadLetterLookups", plan != null && hasDeadLetterLookup(plan));
         fields.put("hasCollections", hasCollections);
         fields.put("collections", collected);
         return fields;
+    }
+
+    private static boolean hasDeadLetterLookup(Plan plan) {
+        return plan.lookups()
+                   .stream()
+                   .anyMatch(Lookup::deadLetter)
+                || plan.collections()
+                       .stream()
+                       .flatMap(collection -> collection.lookups()
+                                                        .stream())
+                       .anyMatch(Lookup::deadLetter);
     }
 
     private static List<Map<String, Object>> renderedFields(List<MapField> fields) {
@@ -312,6 +360,7 @@ public final class ArrivalSupport {
             one.put("byProperty", lookup.byProperty());
             one.put("byValueExpression", lookup.byValueExpression());
             one.put("targetKeyProperty", lookup.targetKeyProperty());
+            one.put("deadLetter", lookup.deadLetter());
             rendered.add(one);
         }
         return rendered;
@@ -332,7 +381,7 @@ public final class ArrivalSupport {
     }
 
     private static void validateMapEntry(String name, Object value, EntityIntent entity, Map<String, EntityIntent> byName, String subject,
-            Set<String> filledChildren, List<String> issues) {
+            String sourceWithoutDeadLetters, Set<String> filledChildren, List<String> issues) {
         FieldIntent field = fieldOf(entity, name);
         RelationIntent relation = toOneRelation(entity, name);
         RelationIntent children = oneToManyRelation(entity, name);
@@ -354,7 +403,8 @@ public final class ArrivalSupport {
                         + "] - it is filled by a collection { from, map }, not by an envelope key or a lookup");
                 return;
             }
-            validateCollection(name, (Map<?, ?>) value, children, entity, byName, subject, filledChildren, issues);
+            validateCollection(name, (Map<?, ?>) value, children, entity, byName, subject, sourceWithoutDeadLetters, filledChildren,
+                    issues);
             return;
         }
         if (collection) {
@@ -369,7 +419,7 @@ public final class ArrivalSupport {
             return;
         }
         if (value instanceof Map<?, ?> lookup) {
-            validateLookup(name, lookup, relation, byName, subject, issues);
+            validateLookup(name, lookup, relation, byName, subject, sourceWithoutDeadLetters, issues);
             return;
         }
         if (value instanceof Iterable) {
@@ -393,7 +443,8 @@ public final class ArrivalSupport {
      * with the parent in one unit of work, so it must be a row the arrival owns.
      */
     private static void validateCollection(String name, Map<?, ?> collection, RelationIntent children, EntityIntent entity,
-            Map<String, EntityIntent> byName, String subject, Set<String> filledChildren, List<String> issues) {
+            Map<String, EntityIntent> byName, String subject, String sourceWithoutDeadLetters, Set<String> filledChildren,
+            List<String> issues) {
         String where = subject + " map [" + name + "]";
         for (Object key : collection.keySet()) {
             if (!COLLECTION_KEYS.contains(String.valueOf(key))) {
@@ -459,7 +510,7 @@ public final class ArrivalSupport {
                 continue;
             }
             if (value instanceof Map<?, ?> lookup) {
-                validateLookup(name + "." + key, lookup, relation, byName, subject, issues);
+                validateLookup(name + "." + key, lookup, relation, byName, subject, sourceWithoutDeadLetters, issues);
                 if (ELEMENT.equals(text(lookup.get("from")))) {
                     scalar = true;
                 } else {
@@ -494,12 +545,15 @@ public final class ArrivalSupport {
     }
 
     private static void validateLookup(String name, Map<?, ?> lookup, RelationIntent relation, Map<String, EntityIntent> byName,
-            String subject, List<String> issues) {
+            String subject, String sourceWithoutDeadLetters, List<String> issues) {
         String where = subject + " map [" + name + "] lookup";
         for (Object key : lookup.keySet()) {
             if (!LOOKUP_KEYS.contains(String.valueOf(key))) {
-                issues.add(where + " declares unknown key [" + key + "] - a lookup names lookup, by and from");
+                issues.add(where + " declares unknown key [" + key + "] - a lookup names lookup, by and from, and optionally onMissing");
             }
+        }
+        if (lookup.containsKey("onMissing")) {
+            validateOnMissing(lookup.get("onMissing"), where, sourceWithoutDeadLetters, issues);
         }
         String target = text(lookup.get("lookup"));
         String by = text(lookup.get("by"));
@@ -536,6 +590,23 @@ public final class ArrivalSupport {
             return;
         }
         validateBy(by, looked, where, issues);
+    }
+
+    /**
+     * A lookup's {@code onMissing:} is {@code drop} or {@code deadLetter}, and only on an arrival that
+     * has dead letters to choose between - a queue or a topic.
+     */
+    private static void validateOnMissing(Object onMissing, String where, String sourceWithoutDeadLetters, List<String> issues) {
+        String value = text(onMissing);
+        if (!ON_MISSING_DROP.equals(value) && !ON_MISSING_DEAD_LETTER.equals(value)) {
+            issues.add(where + " onMissing [" + onMissing + "] must be " + ON_MISSING_DROP + " or " + ON_MISSING_DEAD_LETTER);
+        }
+        if ("webhook".equals(sourceWithoutDeadLetters)) {
+            issues.add(where + " declares onMissing on a webhook source - a webhook answers 400 when a lookup resolves nothing,"
+                    + " so there is nothing to dead-letter");
+        } else if ("file".equals(sourceWithoutDeadLetters)) {
+            issues.add(where + " declares onMissing on a file source - only a queue or topic arrival can dead-letter a message");
+        }
     }
 
     /**
@@ -609,7 +680,8 @@ public final class ArrivalSupport {
         String property = IntentNaming.pascalCase(name);
         return new Lookup(property, local, from, NotificationSupport.quote(from), looked.getName(),
                 IntentEntities.resolvePerspective(looked.getName(), compositionParents, model), IntentNaming.pascalCase(by),
-                conversion(normalized(byField.getType()), local + "Key"), IntentEntities.keyFieldName(looked));
+                conversion(normalized(byField.getType()), local + "Key"), IntentEntities.keyFieldName(looked),
+                ON_MISSING_DEAD_LETTER.equals(text(declared.get("onMissing"))));
     }
 
     private static Collection collection(String name, Map<?, ?> declared, EntityIntent entity, Map<String, EntityIntent> byName,

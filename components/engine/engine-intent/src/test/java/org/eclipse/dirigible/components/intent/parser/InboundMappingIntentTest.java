@@ -192,6 +192,64 @@ class InboundMappingIntentTest {
                 """, "declares unknown key [form]");
     }
 
+    /** A queue and a topic both have dead letters, so both take either outcome of a miss. */
+    @Test
+    void onMissingParsesOnAQueueAndATopic() {
+        IntentParser.parse(ENTITIES + """
+                inbound:
+                  - name: queued
+                    source: { queue: assignments }
+                    create: TenantUserAssignment
+                    map:
+                      tenant: { lookup: Tenant,         by: tenantId, from: tenantId, onMissing: deadLetter }
+                      role:   { lookup: AssignmentRole, by: name,     from: role,     onMissing: drop }
+                  - name: published
+                    source: { topic: assignments }
+                    create: TenantUserAssignment
+                    map:
+                      tenant: { lookup: Tenant, by: tenantId, from: tenantId, onMissing: deadLetter }
+                """);
+    }
+
+    @Test
+    void anUnknownOnMissingValueIsRejected() {
+        assertFails("""
+                inbound:
+                  - name: userAssignments
+                    source: { queue: assignments }
+                    create: TenantUserAssignment
+                    map:
+                      tenant: { lookup: Tenant, by: tenantId, from: tenantId, onMissing: retry }
+                """, "inbound [userAssignments] map [tenant] lookup onMissing [retry] must be drop or deadLetter");
+    }
+
+    /**
+     * A webhook answers a miss with 400 - its poster already knows, and there is no message to keep.
+     */
+    @Test
+    void onMissingOnAWebhookIsRejected() {
+        assertFails("""
+                inbound:
+                  - name: assignmentHook
+                    path: /assignments
+                    create: TenantUserAssignment
+                    map:
+                      tenant: { lookup: Tenant, by: tenantId, from: tenantId, onMissing: deadLetter }
+                """, "inbound [assignmentHook] map [tenant] lookup declares onMissing on a webhook source");
+    }
+
+    @Test
+    void onMissingOnAFileSourceIsRejected() {
+        assertFails("""
+                inbound:
+                  - name: assignmentDrop
+                    source: { folder: target/inbox, cron: "0/5 * * * * ?" }
+                    create: TenantUserAssignment
+                    map:
+                      tenant: { lookup: Tenant, by: tenantId, from: tenantId, onMissing: drop }
+                """, "inbound [assignmentDrop] map [tenant] lookup declares onMissing on a file source");
+    }
+
     @Test
     void aMapKeyThatIsNotAPropertyFailsTheParse() {
         assertFails("""
@@ -434,6 +492,40 @@ class InboundMappingIntentTest {
         assertFailsOn(ORDERS, ORDER_ARRIVAL + """
                       lines: { from: lines, map: { quantity: ".", product: { lookup: Product, by: sku, from: sku } } }
                 """, "map [lines] mixes [.] with named element keys - an element is either a value or an object");
+    }
+
+    /**
+     * Every element is resolved before anything is written, so failing on one leaves nothing behind.
+     */
+    @Test
+    void onMissingInACollectionElementLookupIsAccepted() {
+        IntentParser.parse(ORDERS + ORDER_ARRIVAL + """
+                      lines:
+                        from: lines
+                        map:
+                          quantity: qty
+                          product:  { lookup: Product, by: sku, from: sku, onMissing: deadLetter }
+                """);
+    }
+
+    @Test
+    void anElementLookupsOnMissingFollowsTheSameRules() {
+        assertFailsOn(ORDERS, """
+                inbound:
+                  - name: orderHook
+                    path: /orders
+                    create: PurchaseOrder
+                    map:
+                      lines: { from: lines, map: { product: { lookup: Product, by: sku, from: sku, onMissing: later } } }
+                """, "map [lines.product] lookup onMissing [later] must be drop or deadLetter");
+        assertFailsOn(ORDERS, """
+                inbound:
+                  - name: orderHook
+                    path: /orders
+                    create: PurchaseOrder
+                    map:
+                      lines: { from: lines, map: { product: { lookup: Product, by: sku, from: sku, onMissing: deadLetter } } }
+                """, "map [lines.product] lookup declares onMissing on a webhook source");
     }
 
     @Test

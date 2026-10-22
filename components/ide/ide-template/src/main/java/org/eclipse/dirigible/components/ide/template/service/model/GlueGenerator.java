@@ -773,7 +773,8 @@ class GlueGenerator {
      * @param context the template context
      */
     private static void bindArrival(Map<String, Object> item, Map<String, Object> context) {
-        copy(context, item, "hasEnvelope", "hasAccept", "acceptExpression", "acceptSummary", "acceptSummaryLiteral", "hasMap", "mapFields");
+        copy(context, item, "hasEnvelope", "hasAccept", "acceptExpression", "acceptSummary", "acceptSummaryLiteral", "hasMap", "mapFields",
+                "hasDeadLetterLookups");
         List<Object> lookups = resolvedLookups(item.get("lookups"));
         context.put("lookups", lookups);
         // A collection writes composition child rows, so its child entity and every element lookup

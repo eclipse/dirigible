@@ -75,11 +75,15 @@ inbound:
       messageId: messageId
       email:     email
       seats:     seatCount
-      tenant:    { lookup: Tenant,         by: tenantId, from: tenantId }
+      # An unknown tenant is a configuration error on one side or the other, so the message is
+      # dead-lettered (redelivered, then moved to ActiveMQ.DLQ) where it can be replayed once fixed.
+      # An unknown role keeps the default, onMissing: drop - logged and acknowledged.
+      tenant:    { lookup: Tenant,         by: tenantId, from: tenantId, onMissing: deadLetter }
       role:      { lookup: AssignmentRole, by: name,     from: role }
 
   # The same envelope, posted instead of published: the mapping describes the PAYLOAD, so it is the
-  # same on every arrival - only the transport differs.
+  # same on every arrival - only the transport differs. A webhook takes no onMissing: it answers a
+  # miss with 400, so the poster already knows.
   - name: assignmentHook
     path: /assignments
     accept: { type: user.assignment.requested, version: 1 }

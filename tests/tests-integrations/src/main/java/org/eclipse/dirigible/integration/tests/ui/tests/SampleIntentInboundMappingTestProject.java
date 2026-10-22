@@ -49,7 +49,9 @@ import ch.qos.logback.classic.Level;
  * IGNORED with a warning - 202 on the webhook, a warning and nothing stored on the queue - so a
  * sender rolling out a new version cannot fill the receiver's error path;
  * <li>an envelope naming a register row that does not exist is REJECTED - 400 on the webhook, an
- * error log on the queue - rather than stored with a null relation.
+ * error log on the queue - rather than stored with a null relation. On the queue, the tenant lookup
+ * declares {@code onMissing: deadLetter} (dirigible #8031), so a message naming an unknown tenant
+ * is not acknowledged: it lands on the broker's dead-letter destination after the redeliveries.
  * </ul>
  *
  * <p>
@@ -67,6 +69,10 @@ class SampleIntentInboundMappingTestProject extends BaseIntentTestProject {
             "/services/java/" + PROJECT + "/gen/assignments/api/tenantuserassignment/TenantUserAssignmentController";
     private static final String WEBHOOK = "/services/java/" + PROJECT + "/gen/events/assignments/AssignmentHookWebhook/assignments";
     private static final String QUEUE = "codbex.user-assignment-requests";
+
+    /** Where the embedded broker moves a message whose redeliveries ran out. */
+    private static final String DEAD_LETTER_QUEUE = "ActiveMQ.DLQ";
+    private static final long DEAD_LETTER_TIMEOUT_MILLIS = 120_000;
 
     /** The generated queue consumer's own logger - where an ignored or rejected arrival is reported. */
     private static final String CONSUMER_LOGGER = "app.gen.events.assignments.AssignmentRequestsConsumer";
@@ -106,6 +112,44 @@ class SampleIntentInboundMappingTestProject extends BaseIntentTestProject {
         verifyWebhook();
         verifyQueue(consumerLogs);
         verifyCollections(orderLogs);
+        verifyDeadLetter(consumerLogs);
+    }
+
+    /**
+     * A tenant this deployment does not know is a configuration error, so the queue's tenant lookup
+     * declares {@code onMissing: deadLetter} (dirigible #8031). The consumer fails the message, the
+     * broker redelivers it under its redelivery policy, and then moves it to its dead-letter
+     * destination, where it can be replayed. Acknowledging it would lose it.
+     */
+    private void verifyDeadLetter(LogsAsserter consumerLogs) {
+        MessagingFacade.sendToQueue(QUEUE, envelope("queue-dead", 1, "nope", "User", 1));
+
+        awaitDeadLetter("queue-dead");
+
+        restAssuredExecutor.execute(() -> given().when()
+                                                 .get(ASSIGNMENT_API)
+                                                 .then()
+                                                 .statusCode(200)
+                                                 .body("MessageId", not(hasItem("queue-dead"))));
+        // Every attempt reaches the consumer's onError with the value it could not resolve.
+        consumerLogs.assertLoggedMessage("no unique Tenant matches TenantId [nope] from [tenantId] - dead-lettered", Level.ERROR);
+    }
+
+    /**
+     * Reads the dead-letter destination until the message carrying {@code messageId} arrives. The
+     * redeliveries back off exponentially, so it takes about half a minute. A message dead-lettered by
+     * anything else is read and skipped.
+     */
+    private static void awaitDeadLetter(String messageId) {
+        long deadline = System.currentTimeMillis() + DEAD_LETTER_TIMEOUT_MILLIS;
+        String expected = "\"messageId\":\"" + messageId + "\"";
+        for (long remaining = DEAD_LETTER_TIMEOUT_MILLIS; remaining > 0; remaining = deadline - System.currentTimeMillis()) {
+            if (MessagingFacade.receiveFromQueue(DEAD_LETTER_QUEUE, remaining)
+                               .contains(expected)) {
+                return;
+            }
+        }
+        throw new AssertionError("[" + messageId + "] never reached [" + DEAD_LETTER_QUEUE + "]");
     }
 
     /**

@@ -52,6 +52,17 @@
 			<artifactId>dirigible-parsers-document</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- Test: render the generated inbound consumer through the real Velocity template -->
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-engine-template-velocity</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.dirigible</groupId>
+			<artifactId>dirigible-components-template-application-events-java</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<properties>
