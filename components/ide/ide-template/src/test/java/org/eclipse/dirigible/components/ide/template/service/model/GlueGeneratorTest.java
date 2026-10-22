@@ -163,9 +163,10 @@ class GlueGeneratorTest {
      */
     @Test
     void aSetMapsMembersRenderAsTheValuesOfOneWrite() {
-        List<Map<String, Object>> assignments = List.of(member("SlotKey", "", "clear", "true"), member("Status", "3", "relation", "true"),
-                member("FinishedAt", "{now}", "now", "true", "nowExpression", "java.time.Instant.now()"),
-                member("ErrorMessage", "{error}", "errorMessage", "true"), member("Note", "the \"last\" one"));
+        List<Map<String, Object>> assignments =
+                List.of(member("SlotKey", "", Map.of("clear", "true")), member("Status", "3", Map.of("relation", "true")),
+                        member("FinishedAt", "{now}", Map.of("now", "true", "nowExpression", "java.time.Instant.now()")),
+                        member("ErrorMessage", "{error}", Map.of("errorMessage", "true")), member("Note", "the \"last\" one", Map.of()));
 
         List<Map<String, Object>> rendered = GlueGenerator.setterAssignments(assignments);
 
@@ -176,14 +177,12 @@ class GlueGeneratorTest {
                                     "errorMessage == null ? \"\" : errorMessage.toString()", "\"the \\\"last\\\" one\"");
     }
 
-    private static Map<String, Object> member(String field, String value, String... flags) {
+    private static Map<String, Object> member(String field, String value, Map<String, String> flags) {
         Map<String, Object> member = new LinkedHashMap<>();
         member.put("field", field);
         member.put("value", value);
         member.put("relation", "false");
-        for (int i = 0; i < flags.length; i += 2) {
-            member.put(flags[i], flags[i + 1]);
-        }
+        member.putAll(flags);
         return member;
     }
 
