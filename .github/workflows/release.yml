@@ -446,12 +446,36 @@ jobs:
 
       #--------------- Publish aerokit/sdk to NPM -----------------#
 
+      # The release branch carries exactly what was released, and the tag is made from it (see
+      # github-release). Master takes the two version commits as they are when it has not moved
+      # since the release started. When something was merged meanwhile, that push is rejected, and
+      # the development commit is made again on top of the current master instead (#8065):
+      # versions:set on master's own tree, so a module added meanwhile gets the snapshot version
+      # too, plus the upgrade and performance baselines of this release. The release commit then
+      # stays on the release branch and its tag only. The files the npm steps changed were only
+      # needed to publish, hence the forced checkout.
       - name: "Git: Push Changes"
         run: |
           git checkout -B ${{ github.event.inputs.releaseVersion }}
           git push --set-upstream origin ${{ github.event.inputs.releaseVersion }}
           git checkout -B master
-          git push --set-upstream origin master
+          if git push --set-upstream origin master; then
+            exit 0
+          fi
+          for attempt in 1 2 3; do
+            echo "::warning::master moved during the release - committing the development version on top of it (attempt ${attempt})"
+            git fetch origin master
+            git checkout -f -B master origin/master
+            mvn versions:set -DnewVersion=${{ github.event.inputs.snapshotVersion }}
+            git checkout ${{ github.event.inputs.releaseVersion }} -- tests/UPGRADE_FROM tests/PERF_BASELINE.json
+            git add '**pom.xml' tests/UPGRADE_FROM tests/PERF_BASELINE.json
+            git diff --cached --quiet || git commit -m "version set to ${{ github.event.inputs.snapshotVersion }} for development"
+            if git push --set-upstream origin master; then
+              exit 0
+            fi
+          done
+          echo "::error::master kept moving - the development version did not reach it"
+          exit 1
 
       - name: Package fat JAR
         run: |
@@ -747,6 +771,9 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: v${{ github.event.inputs.releaseVersion }}
+          # From the release branch, not the default branch: master may hold commits merged during
+          # or after the release (#8065)
+          target_commitish: ${{ github.event.inputs.releaseVersion }}
           name: ${{ github.event.inputs.releaseVersion }}
           draft: false
           prerelease: false
