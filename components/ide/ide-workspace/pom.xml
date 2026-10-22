@@ -32,6 +32,14 @@
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-commons-process</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-components-ide-problems</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-components-core-extensions</artifactId>
+        </dependency>
         
         <!-- API -->
         <dependency>

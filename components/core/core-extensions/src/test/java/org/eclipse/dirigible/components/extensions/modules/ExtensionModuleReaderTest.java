@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -24,6 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.eclipse.dirigible.components.extensions.domain.Extension;
 import org.eclipse.dirigible.components.extensions.service.ExtensionService;
@@ -69,6 +71,12 @@ class ExtensionModuleReaderTest {
 
     @Mock
     private ExtensionModuleEvaluator.Session session;
+
+    @Mock
+    private ObjectProvider<ScriptModuleSkipListener> skipListenerProvider;
+
+    @Mock
+    private ScriptModuleSkipListener skipListener;
 
     private final ListAppender<ILoggingEvent> log = new ListAppender<>();
 
@@ -138,6 +146,7 @@ class ExtensionModuleReaderTest {
     void skips_a_script_module_where_no_evaluator_is_present_and_warns_once() {
         extensions("app/legacy.js");
         when(evaluatorProvider.getIfAvailable()).thenReturn(null);
+        when(skipListenerProvider.orderedStream()).thenAnswer(invocation -> Stream.empty());
         ExtensionModuleReader reader = reader();
 
         reader.read(List.of(POINT), EXPORTS);
@@ -150,6 +159,39 @@ class ExtensionModuleReaderTest {
         assertEquals(1, log.list.stream()
                                 .filter(event -> event.getLevel() == Level.DEBUG)
                                 .count());
+    }
+
+    @Test
+    void tells_the_skip_listener_what_a_read_skipped_once_instead_of_warning_per_module() {
+        extensions("app/legacy.js", "app/perspective.json", "other/menu.js");
+        resource("app/perspective.json", "{\"id\": \"orders\"}");
+        when(evaluatorProvider.getIfAvailable()).thenReturn(null);
+        when(skipListenerProvider.orderedStream()).thenAnswer(invocation -> Stream.of(skipListener));
+        ExtensionModuleReader reader = reader();
+
+        assertEquals(1, reader.read(List.of(POINT), EXPORTS)
+                              .size());
+        reader.read(List.of(POINT), EXPORTS);
+
+        verify(skipListener, times(1)).scriptModulesSkipped(List.of("app/legacy.js", "other/menu.js"));
+        assertEquals(List.of(), warnings());
+    }
+
+    @Test
+    void a_failing_skip_listener_costs_its_report_not_the_read() {
+        extensions("app/legacy.js", "app/perspective.json");
+        resource("app/perspective.json", "{\"id\": \"orders\"}");
+        when(evaluatorProvider.getIfAvailable()).thenReturn(null);
+        when(skipListenerProvider.orderedStream()).thenAnswer(invocation -> Stream.of(skipListener));
+        doThrow(new IllegalStateException("no database")).when(skipListener)
+                                                         .scriptModulesSkipped(List.of("app/legacy.js"));
+
+        assertEquals(1, reader().read(List.of(POINT), EXPORTS)
+                                .size());
+        assertEquals(1, warnings().size());
+        assertEquals("no database", warnings().get(0)
+                                              .getThrowableProxy()
+                                              .getMessage());
     }
 
     @Test
@@ -179,7 +221,7 @@ class ExtensionModuleReaderTest {
     }
 
     private ExtensionModuleReader reader() {
-        return new ExtensionModuleReader(extensionService, repository, evaluatorProvider);
+        return new ExtensionModuleReader(extensionService, repository, evaluatorProvider, skipListenerProvider);
     }
 
     private void extensions(String... modules) {

@@ -85,6 +85,17 @@ public class ProblemService {
     }
 
     /**
+     * Find by category.
+     *
+     * @param category the category
+     * @return the problems
+     */
+    @Transactional(readOnly = true)
+    public List<Problem> findByCategory(String category) {
+        return problemRepository.findByCategory(category);
+    }
+
+    /**
      * Update cause by location, type and category.
      *
      * @param cause the cause

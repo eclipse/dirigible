@@ -21,10 +21,12 @@
         <title shell-title></title>
         <script type="text/javascript" src="/services/web/shell-ide/configs/shell.js"></script>
         <meta name="platform-links" category="ng-view,ng-shell">
+        <script type="text/javascript" src="/services/web/shell-ide/js/javascript-deprecation.js"></script>
     </head>
 
     <body>
         <shell-header></shell-header>
+        <javascript-deprecation-banner></javascript-deprecation-banner>
         <perspective-container condensed="true"></perspective-container>
         <status-bar></status-bar>
 
@@ -33,7 +35,7 @@
         <notifications></notifications>
 
         <script type="text/javascript">
-            angular.module('shell', ['blimpKit', 'platformShell']).controller('ShellController', ($scope) => { });
+            angular.module('shell', ['blimpKit', 'platformShell', 'javascriptDeprecation']).controller('ShellController', ($scope) => { });
         </script>
 
         <theme></theme>
