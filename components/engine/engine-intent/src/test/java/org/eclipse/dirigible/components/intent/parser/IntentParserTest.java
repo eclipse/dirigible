@@ -3568,6 +3568,74 @@ class IntentParserTest {
     }
 
     /**
+     * A customer listing its support tickets, the {@code show:} and the ticket's audit flag filled in
+     * per test.
+     */
+    private static final String RELATED_AUDIT = """
+            name: support
+            entities:
+              - name: Customer
+                fields:
+                  - { name: id,   type: integer, primaryKey: true, generated: true }
+                  - { name: name, type: string }
+                related:
+                  - entity: SupportTicket
+                    show: %s
+              - name: SupportTicket
+                audit: %s
+                fields:
+                  - { name: id,      type: integer, primaryKey: true, generated: true }
+                  - { name: subject, type: string }
+                relations:
+                  - { name: customer, kind: manyToOne, to: Customer, required: true }
+            """;
+
+    /**
+     * When and by whom a referencing record was opened is what a register is most often read for, and
+     * an {@code audit: true} source carries exactly that (#8062) - matched case-insensitively, like
+     * every other {@code show:} name.
+     */
+    @Test
+    void anAuditSourcesCreatedAtAndCreatedByMayBeShown() {
+        IntentModel model =
+                IntentParser.parse(RELATED_AUDIT.formatted("[id, subject, CreatedAt, createdBy, UpdatedAt, UpdatedBy]", "true"));
+        assertEquals(List.of("id", "subject", "CreatedAt", "createdBy", "UpdatedAt", "UpdatedBy"), model.getEntities()
+                                                                                                        .get(0)
+                                                                                                        .getRelated()
+                                                                                                        .get(0)
+                                                                                                        .getShow());
+    }
+
+    /**
+     * A source without {@code audit: true} has no audit columns, and the refusal says which flag is
+     * missing.
+     */
+    @Test
+    void anAuditColumnOfANonAuditSourceIsRejected() {
+        IntentValidationException ex = assertThrows(IntentValidationException.class,
+                () -> IntentParser.parse(RELATED_AUDIT.formatted("[subject, CreatedAt]", "false")));
+        assertTrue(ex.getIssues()
+                     .stream()
+                     .anyMatch(i -> i.contains("[CreatedAt] is an audit column, and [SupportTicket] is not audit: true")),
+                "an audit column of a non-audit source must name the flag, got: " + ex.getIssues());
+    }
+
+    /** The audit columns widen what an audit source may show by exactly those four names. */
+    @Test
+    void anUnknownShowEntryIsStillRejected() {
+        IntentValidationException ex = assertThrows(IntentValidationException.class,
+                () -> IntentParser.parse(RELATED_AUDIT.formatted("[CreatedAt, OpenedAt]", "true")));
+        assertEquals(1, ex.getIssues()
+                          .size(),
+                "only the unknown name may be reported, got: " + ex.getIssues());
+        assertTrue(ex.getIssues()
+                     .get(0)
+                     .contains("show references [OpenedAt] which is not a field or relation of [SupportTicket]"),
+                ex.getIssues()
+                  .get(0));
+    }
+
+    /**
      * A header value required when ANY line satisfies a condition (#7560) - the legal ground a
      * zero-rated line calls for (ЗДДС чл. 114). Read where the lines are, so it needs the gate.
      */

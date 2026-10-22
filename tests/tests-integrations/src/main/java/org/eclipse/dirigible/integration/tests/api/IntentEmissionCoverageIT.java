@@ -581,6 +581,11 @@ class IntentEmissionCoverageIT extends IntegrationTest {
               # field; ClaimLine inherits the personal scope through its composition parent.
               - name: Person
                 identity: email
+                # related over an `audit: true` source (#8062): when and by whom each claim was
+                # opened are its audit columns, which the register may show like any field.
+                related:
+                  - entity: Claim
+                    show: [note, CreatedAt, CreatedBy]
                 fields:
                   - { name: id,    type: integer, primaryKey: true, generated: true }
                   - { name: name,  type: string, required: true, length: 200 }
@@ -2902,6 +2907,15 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                 accountRegister.indexOf("name: 'Date'") < accountRegister.indexOf("name: 'Status'")
                         && !accountRegister.contains("name: 'Id'"),
                 "the register's columns must be the authored ones, got: " + accountRegister);
+        // An audit source's CreatedAt / CreatedBy are shown like any column (#8062): the timestamp as a
+        // date-time, from its type, and the user name as plain text.
+        String personRegister = contentOf("gen/emission/js/components/pages/Person/Person.related.js");
+        String createdAtColumn = registerColumn(personRegister, "CreatedAt");
+        String createdByColumn = registerColumn(personRegister, "CreatedBy");
+        assertTrue(createdAtColumn.contains("date: true"), "an audit timestamp column must render as a date, got: " + createdAtColumn);
+        assertFalse(
+                createdByColumn.contains("date: true") || createdByColumn.contains("number: true") || createdByColumn.contains("lookup:"),
+                "an audit user column must render as plain text, got: " + createdByColumn);
         // ... and the referenced entity's own page renders them.
         String accountFormPage = contentOf("gen/emission/js/components/pages/Account/AccountFormPage.js");
         assertTrue(accountFormPage.contains("App.relatedFor('Account')"),
@@ -7388,6 +7402,17 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                    .then()
                    .statusCode(200)
                    .body("findAll { it.Person != 1 }.size()", equalTo(0));
+            // Person's register of its claims (#8062) reads them through this very search - and the
+            // audit columns it shows are there: when the delegated claim was opened, and by whom.
+            given().filter(session)
+                   .contentType("application/json")
+                   .body("{\"equals\":{\"Person\":2}}")
+                   .when()
+                   .post(API + "/claim/ClaimController/search")
+                   .then()
+                   .statusCode(200)
+                   .body("find { it.Note == 'delegated' }.CreatedAt", notNullValue())
+                   .body("find { it.Note == 'delegated' }.CreatedBy", equalTo("admin"));
         });
         // While armed, the Inbox's assignee query serves the ACTING person's personal-assigned
         // tasks - the delegated claim's confirm task, which the real user could never see before.
@@ -8669,6 +8694,14 @@ class IntentEmissionCoverageIT extends IntegrationTest {
         return new String(repository.getResource(PROJECT_PATH + "/" + fileName)
                                     .getContent(),
                 StandardCharsets.UTF_8);
+    }
+
+    /** The one-line column entry a generated {@code *.related.js} register writes for a property. */
+    private static String registerColumn(String register, String name) {
+        return register.lines()
+                       .filter(line -> line.contains("{ name: '" + name + "'"))
+                       .findFirst()
+                       .orElseThrow(() -> new AssertionError("no register column [" + name + "] in: " + register));
     }
 
     /** A resource the platform ships on the classpath - the shared shell runtime, for one. */

@@ -5112,8 +5112,15 @@ public final class IntentParser {
     }
 
     /**
-     * Every {@code show:} name must be one of the source's own fields or relations (matched
-     * case-insensitively, like {@code order:}), and may be listed only once.
+     * The four columns {@code audit: true} adds to an entity, lower-cased for the case-insensitive
+     * {@code show:} match.
+     */
+    private static final Set<String> AUDIT_COLUMNS = Set.of("createdat", "createdby", "updatedat", "updatedby");
+
+    /**
+     * Every {@code show:} name must be one of the source's own fields or relations - or, on an
+     * {@code audit: true} source, one of its audit columns - matched case-insensitively like
+     * {@code order:}, and may be listed only once.
      *
      * @param subject the message prefix
      * @param related the register
@@ -5138,6 +5145,9 @@ public final class IntentParser {
                                   .toLowerCase(Locale.ROOT));
             }
         }
+        if (source.isAudited()) {
+            known.addAll(AUDIT_COLUMNS);
+        }
         Set<String> seen = new HashSet<>();
         for (String token : related.getShow()) {
             if (isBlank(token)) {
@@ -5149,7 +5159,12 @@ public final class IntentParser {
             if (!seen.add(key)) {
                 issues.add(subject + " show lists [" + token + "] more than once");
             }
-            if (!known.contains(key)) {
+            if (known.contains(key)) {
+                continue;
+            }
+            if (AUDIT_COLUMNS.contains(key)) {
+                issues.add(subject + " show: [" + token + "] is an audit column, and [" + related.getEntity() + "] is not audit: true");
+            } else {
                 issues.add(subject + " show references [" + token + "] which is not a field or relation of [" + related.getEntity() + "]");
             }
         }
