@@ -11,6 +11,7 @@ package org.eclipse.dirigible.integration.tests.api;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 
 import java.nio.charset.StandardCharsets;
@@ -27,6 +28,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
 
 import io.restassured.http.ContentType;
 
@@ -36,6 +38,8 @@ import io.restassured.http.ContentType;
  * edited row whenever any column carried NULL - even though the JDBC layer binds a JSON null as SQL
  * NULL. Drives the same CRUD endpoint the Results view uses.
  */
+// One Dirigible boot for the whole class: each method creates and drops its own table.
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class DatabaseCrudNullValuesIT extends IntegrationTest {
 
     /**
@@ -72,17 +76,7 @@ class DatabaseCrudNullValuesIT extends IntegrationTest {
 
     @Test
     void a_row_updates_to_null_through_the_results_view_endpoint() throws Exception {
-        String datasourceName = dataSourcesManager.getDefaultDataSource()
-                                                  .getName();
-        String schemaName;
-        try (Connection connection = dataSourcesManager.getDefaultDataSource()
-                                                       .getConnection()) {
-            schemaName = connection.getSchema();
-        }
-        // The Results view base64-encodes the table name in the path (see result.js).
-        String encodedTableName = Base64.getEncoder()
-                                        .encodeToString(TABLE_NAME.getBytes(StandardCharsets.UTF_8));
-        String url = "/services/js/view-databases/js/databaseTable.js/" + datasourceName + "/" + schemaName + "/" + encodedTableName;
+        String url = resultsViewUrl();
 
         // NAME: null used to make Update.execute throw before reaching the database.
         restAssuredExecutor.execute(() -> given().contentType(ContentType.JSON)
@@ -102,5 +96,57 @@ class DatabaseCrudNullValuesIT extends IntegrationTest {
             assertThat(resultSet.getString("NAME")).isNull();
             assertThat(resultSet.getString("NOTE")).isEqualTo("kept");
         }
+    }
+
+    /**
+     * The rest of the Results view's row editing - list, create, delete - with the bodies its create
+     * and delete dialogs send (#8023).
+     */
+    @Test
+    void rows_are_listed_created_and_deleted_through_the_results_view_endpoint() throws Exception {
+        String url = resultsViewUrl();
+
+        restAssuredExecutor.execute(() -> {
+            given().when()
+                   .get(url)
+                   .then()
+                   .statusCode(200)
+                   .body("ID", contains(1))
+                   .body("NAME", contains("John"));
+            given().contentType(ContentType.JSON)
+                   .body("{\"schemaName\":\"ignored\",\"tableName\":\"ignored\",\"data\":{\"ID\":2,\"NAME\":\"Mary\",\"NOTE\":null}}")
+                   .when()
+                   .post(url)
+                   .then()
+                   .statusCode(200)
+                   .body("success", equalTo(true));
+            given().contentType(ContentType.JSON)
+                   .body("{\"data\":{\"ID\":1,\"NAME\":\"John\",\"NOTE\":\"seed\"},\"primaryKey\":[\"ID\"]}")
+                   .when()
+                   .delete(url)
+                   .then()
+                   .statusCode(200)
+                   .body("success", equalTo(true));
+            given().when()
+                   .get(url)
+                   .then()
+                   .statusCode(200)
+                   .body("ID", contains(2))
+                   .body("NAME", contains("Mary"));
+        });
+    }
+
+    private String resultsViewUrl() throws Exception {
+        String datasourceName = dataSourcesManager.getDefaultDataSource()
+                                                  .getName();
+        String schemaName;
+        try (Connection connection = dataSourcesManager.getDefaultDataSource()
+                                                       .getConnection()) {
+            schemaName = connection.getSchema();
+        }
+        // The Results view base64-encodes the table name in the path (see result.js).
+        String encodedTableName = Base64.getEncoder()
+                                        .encodeToString(TABLE_NAME.getBytes(StandardCharsets.UTF_8));
+        return "/services/js/view-databases/js/databaseTable.js/" + datasourceName + "/" + schemaName + "/" + encodedTableName;
     }
 }

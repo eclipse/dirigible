@@ -1,5 +1,0 @@
-{
-    "module": "perspective-operations/api/artefacts/markdown/artefacts-markdown.mjs",
-    "extensionPoint": "platform-operations-artefacts",
-    "description": "Markdown Artefacts Extension"
-}

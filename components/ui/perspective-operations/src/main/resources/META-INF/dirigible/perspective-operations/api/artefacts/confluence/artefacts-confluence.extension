@@ -1,5 +1,0 @@
-{
-    "module": "perspective-operations/api/artefacts/confluence/artefacts-confluence.mjs",
-    "extensionPoint": "platform-operations-artefacts",
-    "description": "Confluence Artefacts Extension"
-}

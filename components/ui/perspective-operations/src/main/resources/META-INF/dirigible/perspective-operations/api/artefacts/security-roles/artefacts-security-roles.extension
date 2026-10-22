@@ -1,5 +1,0 @@
-{
-    "module": "perspective-operations/api/artefacts/security-roles/artefacts-security-roles.mjs",
-    "extensionPoint": "platform-operations-artefacts",
-    "description": "Security Roles Artefacts Extension"
-}

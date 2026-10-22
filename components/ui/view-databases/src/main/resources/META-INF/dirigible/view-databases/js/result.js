@@ -95,11 +95,11 @@ resultView.controller('DatabaseResultController', ($scope, $http, Dialogs, Statu
             if (data.type === 'update') {
                 method = 'PUT';
                 requestBody['primaryKey'] = $scope.primaryKeyColumns;
-            } else if (data.type === 'update') {
+            } else if (data.type === 'delete') {
                 method = 'DELETE';
                 requestBody['primaryKey'] = $scope.primaryKeyColumns;
             }
-            const url = `/services/js/view-databases/js/databaseTable.js/${selectedDatabase.name}/${$scope.schemaName}/${$scope.tableName}`;
+            const url = `/services/js/view-databases/js/databaseTable.js/${selectedDatabase.name}/${$scope.schemaName}/${btoa($scope.tableName)}`;
             $http({
                 method: method,
                 url: url,
