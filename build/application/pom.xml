@@ -175,6 +175,13 @@
             <type>pom</type>
         </dependency>
 
+        <!-- JavaScript and TypeScript - left out by the Java edition (build/application-java) -->
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-components-group-javascript</artifactId>
+            <type>pom</type>
+        </dependency>
+
         <!-- IDE -->
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>

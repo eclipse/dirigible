@@ -1,0 +1,29 @@
+ARG DIRIGIBLE_VERSION=latest
+FROM amazoncorretto:21-alpine
+
+# The Java edition (#8011): the runtime without the JavaScript and TypeScript stack and without the
+# IDE, so neither Node (npm, tsc) nor ttyd (the IDE terminal) is installed. git stays for the Git API,
+# fontconfig and the fonts for PDF rendering.
+
+VOLUME /tmp
+
+RUN apk update && \
+    apk add --no-cache \
+    # Consolidating all apk adds to ensure one layer and the latest patches
+    git \
+    fontconfig ttf-dejavu ttf-liberation \
+    # cleanup of apk cache
+    && rm -rf /var/cache/apk/*
+
+COPY target/dirigible-application-java-*-executable.jar dirigible.jar
+
+# Drop-in directory for AOT compiled module jars and the resolved-modules directory, exactly as in the
+# default image (build/application/Dockerfile).
+RUN mkdir -p /modules /root/.dirigible/resolved-modules
+
+# The same -jar launch as the default image: PropertiesLauncher honors -Dloader.path, and -jar makes
+# the JVM honor the Launcher-Agent-Class manifest entry.
+ENTRYPOINT ["java", "--add-opens", "java.base/java.lang=ALL-UNNAMED", "--add-opens", "java.base/java.lang.reflect=ALL-UNNAMED", "--add-opens", "java.base/java.nio=ALL-UNNAMED", "-Dloader.path=/modules", "-jar", "/dirigible.jar"]
+
+# 8080 for the spring boot application
+EXPOSE 8080

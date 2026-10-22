@@ -308,6 +308,26 @@ process. To keep the watcher off even when TypeScript sources are present, set:
 export DIRIGIBLE_TSC_WATCH_SERVICE_ENABLED=false
 ```
 
+#### Java edition
+
+For applications written entirely in Java - generated from an intent or hand-written - there is a runtime-only
+edition without the JavaScript and TypeScript stack (GraalJS, Node, tsc) and without the IDE. It runs the same Java
+applications in a smaller image; a JavaScript or TypeScript artefact is reported as failed, naming the missing engine.
+
+```
+docker run --name dirigible --rm -p 8080:8080 dirigiblelabs/dirigible:latest-java
+```
+
+Released versions are tagged `<version>-java`. To build it locally, after building the project:
+
+```
+cd build/application-java
+docker build -t dirigiblelabs/dirigible:latest-java -f Dockerfile .
+```
+
+Applications reach it as on any runtime instance: as AOT-compiled module jars in `/modules`, or through
+`DIRIGIBLE_REGISTRY_EXTERNAL_FOLDER`.
+
 #### Native image
 
 ##### Prerequisites

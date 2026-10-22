@@ -24,6 +24,11 @@
             <artifactId>es5-shim</artifactId>
             <version>${es5-shim.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.webjars.npm</groupId>
+            <artifactId>papaparse</artifactId>
+            <version>${papaparse.version}</version>
+        </dependency>
     </dependencies>
 
     <properties>

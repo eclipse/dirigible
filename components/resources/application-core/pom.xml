@@ -44,6 +44,12 @@
             <artifactId>pinecone-router</artifactId>
             <version>${pinecone-router.version}</version>
         </dependency>
+        <dependency>
+            <!-- the shell's documents page parses CSV with it; every generated application shell loads it -->
+            <groupId>org.webjars.npm</groupId>
+            <artifactId>papaparse</artifactId>
+            <version>${papaparse.version}</version>
+        </dependency>
     </dependencies>
 
     <properties>

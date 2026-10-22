@@ -131,6 +131,31 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
+      # The Java edition (#8011), published as the latest-java tag of the same image. Its digests are
+      # uploaded as java-digests-*, a name the default manifest's digests-* pattern cannot match.
+      - name: Build and push the Java edition by digest
+        id: build-java
+        uses: docker/build-push-action@v6
+        with:
+          context: build/application-java
+          platforms: ${{ matrix.platform }}
+          tags: dirigiblelabs/dirigible
+          outputs: type=image,push-by-digest=true,name-canonical=true,push=true
+
+      - name: Export the Java edition digest
+        run: |
+          mkdir -p /tmp/java-digests
+          digest="${{ steps.build-java.outputs.digest }}"
+          touch "/tmp/java-digests/${digest#sha256:}"
+
+      - name: Upload the Java edition digest
+        uses: actions/upload-artifact@v4
+        with:
+          name: java-digests-${{ matrix.platform }}
+          path: /tmp/java-digests/*
+          if-no-files-found: error
+          retention-days: 1
+
   build-deploy-manifest:
     needs: build-deploy
     runs-on: ubuntu-latest
@@ -140,6 +165,13 @@ jobs:
         with:
           path: /tmp/digests
           pattern: digests-*
+          merge-multiple: true
+
+      - name: Download the Java edition digests
+        uses: actions/download-artifact@v4
+        with:
+          path: /tmp/java-digests
+          pattern: java-digests-*
           merge-multiple: true
 
       - name: Set up Docker Buildx
@@ -155,6 +187,12 @@ jobs:
         working-directory: /tmp/digests
         run: |
           docker buildx imagetools create -t dirigiblelabs/dirigible:latest \
+            $(printf 'dirigiblelabs/dirigible@sha256:%s ' *)
+
+      - name: Create the Java edition manifest list and push
+        working-directory: /tmp/java-digests
+        run: |
+          docker buildx imagetools create -t dirigiblelabs/dirigible:latest-java \
             $(printf 'dirigiblelabs/dirigible@sha256:%s ' *)
 
   tests:
