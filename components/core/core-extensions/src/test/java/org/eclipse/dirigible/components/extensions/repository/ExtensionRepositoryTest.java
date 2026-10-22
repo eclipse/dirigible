@@ -12,6 +12,7 @@ package org.eclipse.dirigible.components.extensions.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.dirigible.components.extensions.domain.Extension;
@@ -108,6 +109,22 @@ public class ExtensionRepositoryTest {
         Extension extension = entityManager.getReference(Extension.class, id);
         assertNotNull(extension);
         assertNotNull(extension.getLocation());
+    }
+
+    /**
+     * Finds the extensions registering a module, in any of the forms given.
+     */
+    @Test
+    public void findByModuleIn() {
+        extensionRepository.save(createExtension("/a/b/c/e6.extension", "e6", "description", "epoint1", "/e5"));
+
+        List<String> names = extensionRepository.findByModuleIn(List.of("e5", "/e5"))
+                                                .stream()
+                                                .map(Extension::getName)
+                                                .sorted()
+                                                .toList();
+
+        assertEquals(List.of("e5", "e6"), names);
     }
 
     /**

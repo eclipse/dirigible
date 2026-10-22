@@ -1,0 +1,7 @@
+{
+    "id": "tracing-tasks-view",
+    "label": "Tracing Tasks",
+    "region": "left",
+    "autoFocusTab": false,
+    "path": "/services/web/perspective-tracing/views/tracing-tasks.html"
+}

@@ -1,0 +1,5 @@
+{
+    "id": "edmReference",
+    "label": "Import Entity from External Model",
+    "path": "/services/web/editor-entity/dialogs/reference.html"
+}

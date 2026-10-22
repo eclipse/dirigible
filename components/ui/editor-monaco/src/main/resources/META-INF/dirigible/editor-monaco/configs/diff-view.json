@@ -1,0 +1,6 @@
+{
+    "id": "diff",
+    "label": "Difference",
+    "region": "center",
+    "path": "/services/web/editor-monaco/diff-view.html"
+}

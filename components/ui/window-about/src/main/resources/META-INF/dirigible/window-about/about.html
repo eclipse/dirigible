@@ -19,7 +19,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
         <title config-title></title>
-        <script type="text/javascript" src="/services/web/window-about/configs/about-window.js"></script>
+        <script type="text/javascript" src="/services/platform/extensions/modules/window-about/configs/about-window.json?global=viewData"></script>
         <meta name="platform-links" category="ng-view">
         <script type="text/javascript" src="js/about.js"></script>
     </head>
@@ -48,7 +48,7 @@
                         <tr bk-table-row ng-if="version.productCommitId !== '${git.commit.id}'">
                             <td bk-table-cell><strong>{{'window-about:commitId' | t:'Commit Id'}}</strong></td>
                             <td bk-table-cell>
-                                <a style="color:inherit" href="{{::version.productRepository}}/commit/{{::version.productCommitId}}" target="_blank" rel="noopener noreferrer">{{::version.productCommitId}}</a>
+                                <a style="color:inherit" ng-href="{{::version.productRepository}}/commit/{{::version.productCommitId}}" target="_blank" rel="noopener noreferrer">{{::version.productCommitId}}</a>
                             </td>
                         </tr>
                         <tr bk-table-row>

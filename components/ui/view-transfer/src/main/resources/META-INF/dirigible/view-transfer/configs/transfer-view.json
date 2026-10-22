@@ -1,0 +1,8 @@
+{
+    "id": "datatransfer",
+    "region": "bottom",
+    "label": "Transfer",
+    "lazyLoad": true,
+    "autoFocusTab": false,
+    "path": "/services/web/view-transfer/transfer.html"
+}

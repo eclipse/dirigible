@@ -1,0 +1,8 @@
+{
+    "id": "listeners",
+    "label": "Listeners",
+    "region": "bottom",
+    "lazyLoad": false,
+    "autoFocusTab": false,
+    "path": "/services/web/view-listeners/listeners.html"
+}

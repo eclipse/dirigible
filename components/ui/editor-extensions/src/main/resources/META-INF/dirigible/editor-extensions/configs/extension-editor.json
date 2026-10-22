@@ -1,0 +1,9 @@
+{
+    "id": "extension",
+    "label": "Extension",
+    "region": "center",
+    "path": "/services/web/editor-extensions/editors/extension/editor.html",
+    "contentTypes": [
+        "application/json+extension"
+    ]
+}

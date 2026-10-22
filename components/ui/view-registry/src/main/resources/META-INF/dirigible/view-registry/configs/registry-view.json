@@ -1,0 +1,7 @@
+{
+    "id": "registry",
+    "label": "Registry",
+    "region": "left",
+    "autoFocusTab": false,
+    "path": "/services/web/view-registry/registry.html"
+}

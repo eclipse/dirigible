@@ -1,0 +1,8 @@
+{
+    "id": "terminal",
+    "label": "Terminal",
+    "region": "bottom",
+    "lazyLoad": true,
+    "autoFocusTab": false,
+    "path": "/services/web/view-terminal/terminal.html"
+}

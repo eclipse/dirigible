@@ -1,5 +1,5 @@
 {
-    "module": "perspective-database/configs/database-perspective.js",
+    "module": "perspective-database/configs/database-perspective.json",
     "extensionPoint": "platform-perspectives",
     "description": "Database Perspective"
 }

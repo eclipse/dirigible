@@ -1,5 +1,5 @@
 {
-    "module": "view-git/configs/git-projects.js",
+    "module": "view-git/configs/git-projects.json",
     "extensionPoint": "platform-views",
     "description": "Git Projects View"
 }

@@ -21,8 +21,9 @@
 		<link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
 		<!-- Title directive that will automatically create a title based on the view config -->
 		<title config-title></title>
-		<!-- Editor configuration module -->
-		<script type="text/javascript" src="/services/web/${projectName}/configs/${fileName}-editor.js"></script>
+		<!-- Editor config: the editor's extension module configs/${fileName}-editor.json, read as the 'editorData' global.
+		     Its contentTypes are the mime types of the files the editor opens. -->
+		<script type="text/javascript" src="/services/platform/extensions/modules/${projectName}/configs/${fileName}-editor.json?global=editorData"></script>
 		<!-- Editor services and view styles -->
 		<meta name="platform-links" category="ng-view,ng-editor">
 		<!-- Editor controller -->

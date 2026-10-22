@@ -1,0 +1,5 @@
+{
+    "id": "bpm-user-task-details",
+    "label": "Process Task Details",
+    "path": "/services/web/perspective-processes/dialogs/bpm-task-details.html"
+}

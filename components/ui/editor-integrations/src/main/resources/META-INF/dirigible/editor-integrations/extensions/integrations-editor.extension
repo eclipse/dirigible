@@ -1,5 +1,5 @@
 {
-    "module": "editor-integrations/configs/integrations-editor.js",
+    "module": "editor-integrations/configs/integrations-editor.json",
     "extensionPoint": "platform-editors",
     "description": "Integrations Editor"
 }

@@ -1,5 +1,5 @@
 {
-    "module": "view-security/configs/access-view.js",
+    "module": "view-security/configs/access-view.json",
     "extensionPoint": "platform-views",
     "description": "Access View"
 }

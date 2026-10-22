@@ -1,5 +1,5 @@
 {
-    "module": "view-logs/configs/logs-view.js",
+    "module": "view-logs/configs/logs-view.json",
     "extensionPoint": "platform-views",
     "description": "Logs View"
 }

@@ -1,5 +1,5 @@
 {
-    "module": "view-git/configs/remote-view.js",
+    "module": "view-git/configs/remote-view.json",
     "extensionPoint": "platform-views",
     "description": "Git Remote Branches View"
 }

@@ -1,0 +1,8 @@
+{
+    "id": "access",
+    "region": "bottom",
+    "label": "Access",
+    "lazyLoad": true,
+    "autoFocusTab": false,
+    "path": "/services/web/view-security/views/access.html"
+}

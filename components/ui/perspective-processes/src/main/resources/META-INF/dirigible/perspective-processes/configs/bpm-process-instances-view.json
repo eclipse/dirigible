@@ -1,0 +1,7 @@
+{
+    "id": "bpm-process-instances-view",
+    "label": "Process Instances",
+    "region": "left",
+    "autoFocusTab": false,
+    "path": "/services/web/perspective-processes/views/bpm-process-instances.html"
+}

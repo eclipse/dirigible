@@ -1,0 +1,8 @@
+{
+    "id": "import",
+    "label": "Import",
+    "lazyLoad": true,
+    "autoFocusTab": false,
+    "region": "left",
+    "path": "/services/web/view-import/import.html"
+}

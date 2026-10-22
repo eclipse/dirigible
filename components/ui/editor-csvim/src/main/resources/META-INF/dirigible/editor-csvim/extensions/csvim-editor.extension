@@ -1,5 +1,5 @@
 {
-    "module": "editor-csvim/configs/csvim-editor.js",
+    "module": "editor-csvim/configs/csvim-editor.json",
     "extensionPoint": "platform-editors",
     "description": "CSVIM Editor"
 }

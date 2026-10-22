@@ -28,6 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ExtensionService extends BaseArtefactService<Extension, Long> {
 
+    private final ExtensionRepository extensionRepository;
+
     /**
      * Instantiates a new extension service.
      *
@@ -35,6 +37,7 @@ public class ExtensionService extends BaseArtefactService<Extension, Long> {
      */
     public ExtensionService(ExtensionRepository repository) {
         super(repository);
+        this.extensionRepository = repository;
     }
 
     /**
@@ -56,6 +59,23 @@ public class ExtensionService extends BaseArtefactService<Extension, Long> {
                                            })
                                            .collect(Collectors.toList());
         return result;
+    }
+
+    /**
+     * Finds the extensions registering a module, those the current user may see. The module matches
+     * whether or not the extension declares it with a leading slash.
+     *
+     * @param module the module path, relative to the public registry
+     * @return the extensions
+     */
+    @Transactional(readOnly = true)
+    public List<Extension> findByModule(String module) {
+        String relative = module.startsWith("/") ? module.substring(1) : module;
+        boolean validRequest = UserRequestVerifier.isValid();
+        return extensionRepository.findByModuleIn(List.of(relative, "/" + relative))
+                                  .stream()
+                                  .filter(extension -> validateRoles(validRequest, extension))
+                                  .toList();
     }
 
     private boolean validateRoles(boolean validRequest, Extension extension) {

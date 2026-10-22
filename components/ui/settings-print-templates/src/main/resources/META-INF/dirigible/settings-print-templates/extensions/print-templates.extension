@@ -1,5 +1,5 @@
 {
-    "module": "settings-print-templates/configs/print-templates.js",
+    "module": "settings-print-templates/configs/print-templates.json",
     "extensionPoint": "platform-settings",
     "description": "Print templates settings view"
 }

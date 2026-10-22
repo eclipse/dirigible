@@ -1,0 +1,7 @@
+{
+    "id": "gitProjects",
+    "label": "Git Projects",
+    "region": "left",
+    "autoFocusTab": false,
+    "path": "/services/web/view-git/git-projects.html"
+}

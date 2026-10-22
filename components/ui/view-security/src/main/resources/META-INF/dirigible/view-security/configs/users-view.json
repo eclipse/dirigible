@@ -1,0 +1,8 @@
+{
+    "id": "users",
+    "region": "center",
+    "label": "Users",
+    "lazyLoad": true,
+    "autoFocusTab": false,
+    "path": "/services/web/view-security/views/users.html"
+}

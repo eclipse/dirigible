@@ -1,0 +1,9 @@
+{
+    "id": "csvim-editor",
+    "region": "center",
+    "label": "CSVIM Editor",
+    "path": "/services/web/editor-csvim/editor.html",
+    "contentTypes": [
+        "application/json+csvim"
+    ]
+}

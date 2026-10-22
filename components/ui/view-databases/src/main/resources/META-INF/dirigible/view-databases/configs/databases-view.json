@@ -1,0 +1,8 @@
+{
+    "id": "databases",
+    "region": "bottom",
+    "label": "Databases",
+    "lazyLoad": true,
+    "autoFocusTab": false,
+    "path": "/services/web/view-databases/databases.html"
+}

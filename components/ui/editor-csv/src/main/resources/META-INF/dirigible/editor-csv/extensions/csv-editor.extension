@@ -1,5 +1,5 @@
 {
-    "module": "editor-csv/configs/csv-editor.js",
+    "module": "editor-csv/configs/csv-editor.json",
     "extensionPoint": "platform-editors",
     "description": "CSV Editor"
 }

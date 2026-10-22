@@ -1,5 +1,5 @@
 {
-    "module": "view-assistant/configs/assistant-view.js",
+    "module": "view-assistant/configs/assistant-view.json",
     "extensionPoint": "platform-views",
     "description": "AI Assistant View"
 }

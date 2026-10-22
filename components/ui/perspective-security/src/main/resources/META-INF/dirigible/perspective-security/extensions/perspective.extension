@@ -1,5 +1,5 @@
 {
-    "module": "perspective-security/configs/security-perspective.js",
+    "module": "perspective-security/configs/security-perspective.json",
     "extensionPoint": "platform-perspectives",
     "description": "Security Perspective"
 }

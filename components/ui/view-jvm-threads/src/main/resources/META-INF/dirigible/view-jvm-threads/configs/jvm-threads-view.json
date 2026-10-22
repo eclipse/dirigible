@@ -1,0 +1,8 @@
+{
+    "id": "jvm-threads",
+    "label": "Threads",
+    "region": "center",
+    "lazyLoad": true,
+    "autoFocusTab": false,
+    "path": "/services/web/view-jvm-threads/jvm-threads.html"
+}

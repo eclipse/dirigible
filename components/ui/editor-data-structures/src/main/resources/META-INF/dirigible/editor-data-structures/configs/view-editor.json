@@ -1,0 +1,9 @@
+{
+    "id": "view",
+    "label": "View",
+    "region": "center",
+    "path": "/services/web/editor-data-structures/editors/view/editor.html",
+    "contentTypes": [
+        "application/json+view"
+    ]
+}

@@ -1,5 +1,5 @@
 {
-    "module": "editor-extensions/configs/extension-editor.js",
+    "module": "editor-extensions/configs/extension-editor.json",
     "extensionPoint": "platform-editors",
     "description": "Extension Editor"
 }

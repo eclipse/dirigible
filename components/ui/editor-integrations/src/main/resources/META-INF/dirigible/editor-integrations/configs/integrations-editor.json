@@ -1,0 +1,9 @@
+{
+    "id": "integrationsEditor",
+    "label": "Integrations Editor",
+    "region": "center",
+    "path": "/services/web/editor-integrations/editor.html",
+    "contentTypes": [
+        "application/camel"
+    ]
+}

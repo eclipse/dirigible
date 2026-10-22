@@ -15,14 +15,14 @@
             "rename": "js/{{fileName}}.js"
         },
         {
-            "location": "/template-perspective/configs/perspective.js.template",
+            "location": "/template-perspective/configs/perspective.json.template",
             "action": "generate",
-            "rename": "configs/{{fileName}}-perspective.js"
+            "rename": "configs/{{fileName}}-perspective.json"
         },
         {
-            "location": "/template-perspective/configs/perspective-menu.js.template",
+            "location": "/template-perspective/configs/perspective-menu.json.template",
             "action": "generate",
-            "rename": "configs/{{fileName}}-perspective-menu.js"
+            "rename": "configs/{{fileName}}-perspective-menu.json"
         },
         {
             "location": "/template-perspective/extensions/perspective.extension.template",

@@ -1,0 +1,8 @@
+{
+    "id": "translation",
+    "label": "Translation",
+    "region": "center",
+    "lazyLoad": true,
+    "autoFocusTab": true,
+    "path": "/services/web/view-translation/translation.html"
+}

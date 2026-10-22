@@ -1,5 +1,5 @@
 {
-    "module": "view-jobs/configs/job-logs-window.js",
+    "module": "view-jobs/configs/job-logs-window.json",
     "extensionPoint": "platform-windows",
     "description": "Job logs window"
 }

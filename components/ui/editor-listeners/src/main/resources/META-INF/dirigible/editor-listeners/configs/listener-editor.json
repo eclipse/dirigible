@@ -1,0 +1,9 @@
+{
+    "id": "listener",
+    "label": "Listener",
+    "region": "center",
+    "path": "/services/web/editor-listeners/editor.html",
+    "contentTypes": [
+        "application/json+listener"
+    ]
+}

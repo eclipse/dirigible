@@ -1,0 +1,10 @@
+{
+    "id": "localeSettings",
+    "label": "Region & Language",
+    "translation": {
+        "key": "settings-locale:regionAndLang"
+    },
+    "order": 2,
+    "glyph": "sap-icon--translate",
+    "path": "/services/web/settings-locale/index.html"
+}

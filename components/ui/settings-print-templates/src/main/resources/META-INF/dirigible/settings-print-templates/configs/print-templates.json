@@ -1,0 +1,7 @@
+{
+    "id": "printTemplatesSettings",
+    "label": "Print Templates",
+    "order": 3,
+    "glyph": "sap-icon--print",
+    "path": "/services/web/settings-print-templates/index.html"
+}

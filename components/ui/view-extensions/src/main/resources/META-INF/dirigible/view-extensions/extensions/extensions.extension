@@ -1,5 +1,5 @@
 {
-    "module": "view-extensions/configs/extensions-view.js",
+    "module": "view-extensions/configs/extensions-view.json",
     "extensionPoint": "platform-views",
     "description": "Extensions View"
 }

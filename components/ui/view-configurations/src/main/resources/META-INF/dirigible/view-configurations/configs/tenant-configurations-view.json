@@ -1,0 +1,8 @@
+{
+    "id": "tenant-configurations",
+    "label": "Tenant Configurations",
+    "region": "center",
+    "lazyLoad": true,
+    "autoFocusTab": true,
+    "path": "/services/web/view-configurations/tenant-configurations.html"
+}

@@ -19,12 +19,18 @@ import java.util.Map;
 
 import org.eclipse.dirigible.components.extensions.modules.ExtensionModule;
 import org.eclipse.dirigible.components.extensions.modules.ExtensionModuleReader;
+import org.eclipse.dirigible.repository.api.IRepository;
+import org.eclipse.dirigible.repository.api.IRepositoryStructure;
 import org.springframework.stereotype.Component;
 
 /**
  * Aggregates the main menu of the IDE: the contributed menus, then the derived Window menu (the
  * shells, the perspectives with the utility perspectives after a separator, and the views), then
  * the Help system menu, which is pulled to the end wherever it was contributed.
+ *
+ * <p>
+ * A contributed item that names a project in {@code requiresProject} is shown only while that
+ * project is published - how the Help menu offers OpenAPI only where the Swagger view is deployed.
  */
 @Component
 class MenusAggregator {
@@ -42,7 +48,11 @@ class MenusAggregator {
 
     private static final String TRANSLATION = "translation";
 
+    private static final String REQUIRES_PROJECT = "requiresProject";
+
     private final ExtensionModuleReader reader;
+
+    private final IRepository repository;
 
     private final PerspectivesAggregator perspectives;
 
@@ -54,12 +64,15 @@ class MenusAggregator {
      * Instantiates a new menus aggregator.
      *
      * @param reader the extension module reader
+     * @param repository the repository, read for the projects items require
      * @param perspectives the perspectives aggregator
      * @param views the views aggregator
      * @param shells the shells aggregator
      */
-    MenusAggregator(ExtensionModuleReader reader, PerspectivesAggregator perspectives, ViewsAggregator views, ShellsAggregator shells) {
+    MenusAggregator(ExtensionModuleReader reader, IRepository repository, PerspectivesAggregator perspectives, ViewsAggregator views,
+            ShellsAggregator shells) {
         this.reader = reader;
+        this.repository = repository;
         this.perspectives = perspectives;
         this.views = views;
         this.shells = shells;
@@ -80,6 +93,7 @@ class MenusAggregator {
         Map<String, Object> helpMenu = null;
         for (ExtensionModule module : reader.read(extensionPoints, EXPORTS)) {
             Map<String, Object> menu = module.content();
+            removeUnavailableItems(menu);
             if (truthy(menu, "systemMenu") && "help".equals(menu.get(ID))) {
                 helpMenu = menu;
             } else {
@@ -90,6 +104,30 @@ class MenusAggregator {
         // Added even when absent - the menu has always ended with this slot, null or not.
         menus.add(helpMenu);
         return menus;
+    }
+
+    /**
+     * Removes, at every depth of a contributed menu, the items whose required project is not published,
+     * and the evaluated condition from the items kept, so the shell receives the menu it renders.
+     */
+    private void removeUnavailableItems(Map<?, ?> node) {
+        if (node.get("menu") instanceof Map<?, ?> menu) {
+            removeUnavailableItems(menu);
+        }
+        if (node.get(ITEMS) instanceof List<?> items) {
+            items.removeIf(item -> item instanceof Map<?, ?> entry && !isAvailable(entry));
+            for (Object item : items) {
+                if (item instanceof Map<?, ?> entry) {
+                    entry.remove(REQUIRES_PROJECT);
+                    removeUnavailableItems(entry);
+                }
+            }
+        }
+    }
+
+    private boolean isAvailable(Map<?, ?> item) {
+        return !(item.get(REQUIRES_PROJECT) instanceof String project)
+                || repository.hasResource(IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/" + project + "/project.json");
     }
 
     private Map<String, Object> windowMenu(List<String> perspectiveExtensionPoints, List<String> viewExtensionPoints,

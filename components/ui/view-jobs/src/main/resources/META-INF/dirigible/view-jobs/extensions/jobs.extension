@@ -1,5 +1,5 @@
 {
-    "module": "view-jobs/configs/jobs-view.js",
+    "module": "view-jobs/configs/jobs-view.json",
     "extensionPoint": "platform-views",
     "description": "Jobs View"
 }

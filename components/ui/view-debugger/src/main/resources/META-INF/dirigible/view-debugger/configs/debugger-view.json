@@ -1,0 +1,7 @@
+{
+    "id": "debugger",
+    "label": "Debugger",
+    "region": "center",
+    "lazyLoad": true,
+    "path": "/services/web/view-debugger/debugger.html"
+}

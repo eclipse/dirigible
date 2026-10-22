@@ -1,0 +1,8 @@
+{
+    "id": "views",
+    "label": "View Structures",
+    "region": "bottom",
+    "lazyLoad": true,
+    "autoFocusTab": false,
+    "path": "/services/web/view-data-structures/views.html"
+}

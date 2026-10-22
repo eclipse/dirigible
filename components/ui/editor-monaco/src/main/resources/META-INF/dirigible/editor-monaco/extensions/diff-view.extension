@@ -1,5 +1,5 @@
 {
-    "module": "editor-monaco/configs/diff-view.js",
+    "module": "editor-monaco/configs/diff-view.json",
     "extensionPoint": "platform-views",
     "description": "File difference viewer"
 }

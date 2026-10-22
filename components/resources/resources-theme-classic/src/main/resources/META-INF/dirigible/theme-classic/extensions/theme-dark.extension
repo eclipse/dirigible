@@ -1,5 +1,5 @@
 {
     "description": "Platform Theme - Classic Dark",
     "extensionPoint": "platform-themes",
-    "module": "theme-classic/extensions/theme-dark.js"
+    "module": "theme-classic/extensions/theme-dark.json"
 }

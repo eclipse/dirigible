@@ -1,0 +1,73 @@
+{
+    "systemMenu": true,
+    "id": "help",
+    "menu": {
+        "translation": {
+            "key": "common:help"
+        },
+        "label": "Help",
+        "items": [
+            {
+                "translation": {
+                    "key": "menu-help:portal"
+                },
+                "label": "Help Portal",
+                "action": "open",
+                "link": "https://www.dirigible.io/help/",
+                "separator": false
+            },
+            {
+                "translation": {
+                    "key": "menu-help:support"
+                },
+                "label": "Contact Support",
+                "action": "open",
+                "link": "https://github.com/eclipse-dirigible/dirigible/issues",
+                "separator": false
+            },
+            {
+                "translation": {
+                    "key": "menu-help:feature"
+                },
+                "label": "Suggest a Feature",
+                "action": "open",
+                "link": "https://github.com/eclipse-dirigible/dirigible/issues/new?assignees=&labels=&template=feature_request.md&title=[New%20Feature]",
+                "separator": false
+            },
+            {
+                "translation": {
+                    "key": "menu-help:whatsNew"
+                },
+                "label": "What's New",
+                "action": "open",
+                "link": "https://x.com/dirigible_io",
+                "separator": true
+            },
+            {
+                "translation": {
+                    "key": "menu-help:updates"
+                },
+                "label": "Check for Updates",
+                "action": "open",
+                "link": "http://download.dirigible.io/",
+                "separator": true
+            },
+            {
+                "label": "OpenAPI",
+                "action": "open",
+                "link": "/services/web/view-swagger/ui/",
+                "separator": true,
+                "requiresProject": "view-swagger"
+            },
+            {
+                "id": "about",
+                "translation": {
+                    "key": "menu-help:about"
+                },
+                "label": "About",
+                "action": "openWindow",
+                "separator": false
+            }
+        ]
+    }
+}

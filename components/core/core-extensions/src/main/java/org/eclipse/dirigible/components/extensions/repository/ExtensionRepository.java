@@ -9,6 +9,9 @@
  */
 package org.eclipse.dirigible.components.extensions.repository;
 
+import java.util.Collection;
+import java.util.List;
+
 import org.eclipse.dirigible.components.base.artefact.ArtefactRepository;
 import org.eclipse.dirigible.components.extensions.domain.Extension;
 import org.springframework.data.jpa.repository.Modifying;
@@ -22,6 +25,14 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository("extensionRepository")
 public interface ExtensionRepository extends ArtefactRepository<Extension, Long> {
+
+    /**
+     * Finds the extensions registering any of the given modules.
+     *
+     * @param modules the module paths, as the extensions declare them
+     * @return the extensions
+     */
+    List<Extension> findByModuleIn(Collection<String> modules);
 
     /**
      * Sets the running to all.

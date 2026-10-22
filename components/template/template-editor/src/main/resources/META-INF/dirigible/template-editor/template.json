@@ -15,9 +15,9 @@
             "rename": "js/{{fileName}}.js"
         },
         {
-            "location": "/template-editor/configs/editor.js.template",
+            "location": "/template-editor/configs/editor.json.template",
             "action": "generate",
-            "rename": "configs/{{fileName}}-editor.js"
+            "rename": "configs/{{fileName}}-editor.json"
         },
         {
             "location": "/template-editor/extensions/editor.extension.template",

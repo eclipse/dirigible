@@ -1,5 +1,5 @@
 {
-    "module": "view-preview/configs/preview-view.js",
+    "module": "view-preview/configs/preview-view.json",
     "extensionPoint": "platform-views",
     "description": "Preview View"
 }

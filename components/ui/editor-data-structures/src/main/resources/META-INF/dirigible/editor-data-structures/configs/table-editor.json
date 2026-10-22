@@ -1,0 +1,9 @@
+{
+    "id": "table",
+    "label": "Table",
+    "region": "center",
+    "path": "/services/web/editor-data-structures/editors/table/editor.html",
+    "contentTypes": [
+        "application/json+table"
+    ]
+}

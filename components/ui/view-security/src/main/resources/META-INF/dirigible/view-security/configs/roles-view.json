@@ -1,0 +1,8 @@
+{
+    "id": "roles",
+    "region": "bottom",
+    "label": "Roles",
+    "lazyLoad": true,
+    "autoFocusTab": false,
+    "path": "/services/web/view-security/views/roles.html"
+}

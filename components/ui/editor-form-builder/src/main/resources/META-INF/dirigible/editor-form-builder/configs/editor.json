@@ -1,0 +1,9 @@
+{
+    "id": "formBuilder",
+    "region": "center",
+    "label": "Form Builder",
+    "path": "/services/web/editor-form-builder/editor.html",
+    "contentTypes": [
+        "application/json+form"
+    ]
+}

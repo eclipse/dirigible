@@ -1,0 +1,9 @@
+{
+    "id": "intent-editor",
+    "region": "center",
+    "label": "Intent Editor",
+    "path": "/services/web/editor-intent/editor.html",
+    "contentTypes": [
+        "application/yaml+intent"
+    ]
+}

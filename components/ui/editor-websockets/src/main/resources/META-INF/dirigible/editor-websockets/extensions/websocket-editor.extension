@@ -1,5 +1,5 @@
 {
-    "module": "editor-websockets/configs/websocket-editor.js",
+    "module": "editor-websockets/configs/websocket-editor.json",
     "extensionPoint": "platform-editors",
     "description": "Websocket Editor"
 }

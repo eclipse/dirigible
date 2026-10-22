@@ -1,0 +1,9 @@
+{
+    "id": "dsm",
+    "label": "Database Schema Modeler",
+    "region": "center",
+    "path": "/services/web/editor-schema/modeler.html",
+    "contentTypes": [
+        "application/database-schema-model+xml"
+    ]
+}

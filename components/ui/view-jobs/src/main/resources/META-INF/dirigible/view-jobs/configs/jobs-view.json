@@ -1,0 +1,8 @@
+{
+    "id": "jobs",
+    "label": "Jobs",
+    "region": "center",
+    "lazyLoad": false,
+    "autoFocusTab": true,
+    "path": "/services/web/view-jobs/jobs.html"
+}

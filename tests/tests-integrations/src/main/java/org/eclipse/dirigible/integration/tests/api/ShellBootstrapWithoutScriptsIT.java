@@ -13,6 +13,8 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.startsWith;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -43,14 +45,16 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.test.annotation.DirtiesContext;
 
 /**
- * A Harmonia shell bootstraps without running a script (#7964).
+ * A Harmonia shell (#7964) and the IDE (#8022) bootstrap without running a script.
  *
  * <p>
  * The shells' bootstrap endpoints - the aggregated extensions, the user name, the languages, the
  * country and the branding - are answered by Java, and the extension modules the platform and the
- * current application template contribute are JSON. A counting double wraps the JavaScript engine's
- * {@link ExtensionModuleEvaluator}: across the whole bootstrap of every runtime shell it must not
- * be called once. A legacy script module keeps loading beside the JSON ones, through the evaluator.
+ * current application template contribute are JSON, the IDE's perspectives, views, windows,
+ * editors, menus, themes and settings included. A counting double wraps the JavaScript engine's
+ * {@link ExtensionModuleEvaluator}: across the whole bootstrap of every runtime shell, and of the
+ * IDE with the descriptors its pages read, it must not be called once. A legacy script module keeps
+ * loading beside the JSON ones, through the evaluator.
  */
 @Import(ShellBootstrapWithoutScriptsIT.CountingEvaluatorConfiguration.class)
 // One Dirigible boot for the whole class: each method cleans up after itself.
@@ -99,6 +103,26 @@ class ShellBootstrapWithoutScriptsIT extends IntegrationTest {
             "/services/platform/country", //
             "/services/platform/clear-cache");
 
+    private static final String IDE_EXTENSIONS = "/services/js/platform-core/extension-services/";
+
+    /**
+     * What the IDE requests while it bootstraps and switches perspectives, at the script URLs it asks.
+     */
+    private static final List<String> IDE_BOOTSTRAP_URLS = List.of( //
+            IDE_EXTENSIONS + "perspectives.js?extensionPoints=platform-perspectives", //
+            IDE_EXTENSIONS + "shells.js?extensionPoints=platform-shells", //
+            IDE_EXTENSIONS + "views.js?extensionPoints=platform-views", //
+            IDE_EXTENSIONS + "views.js?extensionPoints=platform-subviews", //
+            IDE_EXTENSIONS + "views.js?extensionPoints=platform-windows", //
+            IDE_EXTENSIONS + "views.js?extensionPoints=platform-settings&type=settings", //
+            IDE_EXTENSIONS + "editors.js?extensionPoints=platform-editors", //
+            IDE_EXTENSIONS + "menus.js?extensionPoints=platform-menus&perspectiveExtPoints=platform-perspectives"
+                    + "&viewExtPoints=platform-views&shellExtPoints=platform-shells", //
+            IDE_EXTENSIONS + "themes.js?extensionPoints=platform-themes", //
+            IDE_EXTENSIONS + "locales.js?extensionPoints=platform-locales&langs=en-US&namespaces=common");
+
+    private static final String PAGE_DESCRIPTORS = "/services/platform/extensions/modules/";
+
     @Autowired
     private IRepository repository;
 
@@ -138,6 +162,83 @@ class ShellBootstrapWithoutScriptsIT extends IntegrationTest {
 
         assertEquals(List.of(), evaluator.evaluatedModules(), "no extension module may be evaluated as a script during a shell bootstrap");
         assertEquals(0, evaluator.sessions(), "no script engine may be started during a shell bootstrap");
+    }
+
+    @Test
+    void bootstraps_the_ide_and_its_pages_without_running_a_script() {
+        evaluator.reset();
+
+        for (String url : IDE_BOOTSTRAP_URLS) {
+            given().when()
+                   .get(url)
+                   .then()
+                   .statusCode(200);
+        }
+        given().when()
+               .get(IDE_EXTENSIONS + "perspectives.js")
+               .then()
+               .body("perspectives.id", hasItems("workbench", "git", "database", "operations"))
+               .body("utilities.id", hasItem("platformSettings"));
+        given().when()
+               .get(IDE_EXTENSIONS + "views.js")
+               .then()
+               .body("id", hasItems("projects", "gitProjects", "console", "documentStorage"));
+        given().when()
+               .get(IDE_EXTENSIONS + "views.js?extensionPoints=platform-windows")
+               .then()
+               .body("id", hasItems("about", "documentStorage", "edmDetails"));
+        given().when()
+               .get(IDE_EXTENSIONS + "views.js?extensionPoints=platform-settings&type=settings")
+               .then()
+               .body("id", hasItems("generalSettings", "localeSettings"));
+        given().when()
+               .get(IDE_EXTENSIONS + "editors.js")
+               .then()
+               .body("id", hasItems("monaco", "edm", "csv-editor"));
+        given().when()
+               .get(IDE_EXTENSIONS + "themes.js")
+               .then()
+               .body("id", hasItems("blimpkit-auto", "classic-light"));
+        // The Help menu offers OpenAPI because the Swagger view is published - a condition of the data, not
+        // a script.
+        given().when()
+               .get(IDE_EXTENSIONS + "menus.js")
+               .then()
+               .body("find { it != null && it.id == 'help' }.menu.items.label", equalTo(List.of("Help Portal", "Contact Support",
+                       "Suggest a Feature", "What's New", "Check for Updates", "OpenAPI", "About")));
+
+        // A page reads its own descriptor as a global, from the same JSON module the extension registers.
+        assertPageDescriptor("view-git/configs/git-projects.json", "viewData", "gitProjects");
+        assertPageDescriptor("window-about/configs/about-window.json", "viewData", "about");
+        assertPageDescriptor("editor-csv/configs/csv-editor.json", "editorData", "csv-editor");
+        assertPageDescriptor("perspective-workbench/configs/perspective.json", "perspectiveData", "workbench");
+
+        assertEquals(List.of(), evaluator.evaluatedModules(), "no extension module may be evaluated as a script while the IDE bootstraps");
+        assertEquals(0, evaluator.sessions(), "no script engine may be started while the IDE bootstraps");
+    }
+
+    @Test
+    void reads_only_a_registered_json_module_as_a_page_descriptor() {
+        // Every project has a project.json, and no extension registers it.
+        given().when()
+               .get(PAGE_DESCRIPTORS + "view-git/project.json?global=viewData")
+               .then()
+               .statusCode(404);
+        given().when()
+               .get(PAGE_DESCRIPTORS + "view-git/configs/git-projects.json?global=view-data")
+               .then()
+               .statusCode(400);
+    }
+
+    private static void assertPageDescriptor(String module, String global, String id) {
+        given().when()
+               .get(PAGE_DESCRIPTORS + module + "?global=" + global)
+               .then()
+               .statusCode(200)
+               .contentType(startsWith("text/javascript"))
+               .header("Cache-Control", equalTo("private, no-cache"))
+               .body(startsWith("const " + global + " = {"))
+               .body(containsString("\"id\":\"" + id + "\""));
     }
 
     @Test

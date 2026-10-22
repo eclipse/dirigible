@@ -1,5 +1,5 @@
 {
-    "module": "view-java/configs/java-view.js",
+    "module": "view-java/configs/java-view.json",
     "extensionPoint": "platform-views",
     "description": "Java View"
 }

@@ -1,5 +1,5 @@
 {
-    "module": "view-welcome/configs/welcome.js",
+    "module": "view-welcome/configs/welcome.json",
     "extensionPoint": "platform-views",
     "description": "Welcome page"
 }

@@ -1,5 +1,5 @@
 {
-    "module": "view-jvm-threads/configs/jvm-threads-view.js",
+    "module": "view-jvm-threads/configs/jvm-threads-view.json",
     "extensionPoint": "platform-views",
     "description": "JVM Threads View"
 }

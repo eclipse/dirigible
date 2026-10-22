@@ -1,0 +1,8 @@
+{
+    "id": "properties",
+    "label": "Properties",
+    "region": "bottom",
+    "lazyLoad": true,
+    "autoFocusTab": false,
+    "path": "/services/web/view-properties/properties.html"
+}

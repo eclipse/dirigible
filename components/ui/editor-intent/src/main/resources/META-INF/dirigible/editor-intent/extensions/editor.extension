@@ -1,5 +1,5 @@
 {
-    "module": "editor-intent/configs/intent-editor.js",
+    "module": "editor-intent/configs/intent-editor.json",
     "extensionPoint": "platform-editors",
     "description": "Intent Editor"
 }

@@ -1,0 +1,7 @@
+{
+    "id": "projects",
+    "label": "Projects",
+    "region": "left",
+    "autoFocusTab": false,
+    "path": "/services/web/view-projects/projects.html"
+}

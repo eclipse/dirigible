@@ -1,0 +1,9 @@
+{
+    "id": "websocket",
+    "label": "Websocket",
+    "region": "center",
+    "path": "/services/web/editor-websockets/editor.html",
+    "contentTypes": [
+        "application/json+websocket"
+    ]
+}

@@ -1,0 +1,8 @@
+{
+    "id": "tables",
+    "label": "Table Structures",
+    "region": "bottom",
+    "lazyLoad": true,
+    "autoFocusTab": false,
+    "path": "/services/web/view-data-structures/tables.html"
+}

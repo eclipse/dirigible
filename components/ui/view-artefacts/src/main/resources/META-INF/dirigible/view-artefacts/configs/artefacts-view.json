@@ -1,0 +1,8 @@
+{
+    "id": "artefacts",
+    "label": "Artefacts",
+    "region": "center",
+    "lazyLoad": false,
+    "autoFocusTab": true,
+    "path": "/services/web/view-artefacts/artefacts.html"
+}

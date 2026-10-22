@@ -1,5 +1,5 @@
 {
-    "module": "perspective-processes/configs/perspective-menu.js",
+    "module": "perspective-processes/configs/perspective-menu.json",
     "extensionPoint": "platform-menus",
     "description": "Business Processes Perspective Menu"
 }

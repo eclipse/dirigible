@@ -1,5 +1,5 @@
 {
-    "module": "perspective-operations/configs/perspective-menu.js",
+    "module": "perspective-operations/configs/perspective-menu.json",
     "extensionPoint": "platform-menus",
     "description": "Operations perspective menu"
 }

@@ -1,0 +1,8 @@
+{
+    "id": "logs",
+    "label": "Logs",
+    "region": "bottom",
+    "lazyLoad": false,
+    "autoFocusTab": false,
+    "path": "/services/web/view-logs/logs.html"
+}

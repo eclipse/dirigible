@@ -12,8 +12,10 @@ package org.eclipse.dirigible.integration.tests.api;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.startsWith;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -33,10 +35,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 
+import io.restassured.path.json.JsonPath;
+
 /**
  * Template descriptors are data (#8007): the catalogue the IDE's dialogs read and an intent
  * Generate start no script engine, and a descriptor a user project still writes as JavaScript keeps
- * working through the engine.
+ * working through the engine. The views, editors and perspectives the IDE's New wizards generate
+ * are JSON descriptors too (#8022).
  *
  * <p>
  * The counting double of {@link ShellBootstrapWithoutScriptsIT} wraps the JavaScript engine's
@@ -214,6 +219,68 @@ class TemplateDescriptorsIT extends IntegrationTest {
         assertEquals("edited by hand", readProjectFile("docs/notes.txt"));
         assertEquals("generated readme", readProjectFile("docs/readme.txt"));
         assertEquals(0, evaluator.sessions(), "no script engine may be started to read a JSON descriptor");
+    }
+
+    @Test
+    void generates_ide_plug_ins_whose_descriptors_are_json_modules_their_pages_read() {
+        writeProjectFile("project.json", "{\"guid\":\"" + PROJECT + "\"}");
+        evaluator.reset();
+
+        generateFile("orders", "template-view/template.js", Map.of("viewId", "template-descriptors-it-view", "viewName", "Orders"));
+        generateFile("notes", "template-editor/template.js", Map.of("editorId", "template-descriptors-it-editor", "editorName", "Notes"));
+        generateFile("sales", "template-perspective/template.js",
+                Map.of("perspectiveId", "template-descriptors-it-perspective", "perspectiveName", "Sales"));
+
+        assertPlugIn("orders.html", "extensions/orders.extension", "configs/orders-view.json", "viewData");
+        assertPlugIn("notes.html", "extensions/notes.extension", "configs/notes-editor.json", "editorData");
+        assertPlugIn("sales.html", "extensions/sales-perspective.extension", "configs/sales-perspective.json", "perspectiveData");
+        assertEquals(PROJECT + "/configs/sales-perspective-menu.json",
+                JsonPath.from(readProjectFile("extensions/sales-perspective-menu.extension"))
+                        .getString("module"));
+        assertEquals("template-descriptors-it-perspective", JsonPath.from(readProjectFile("configs/sales-perspective-menu.json"))
+                                                                    .getString("perspectiveId"));
+
+        for (String file : List.of("configs/orders-view.json", "extensions/orders.extension", "configs/notes-editor.json",
+                "extensions/notes.extension", "configs/sales-perspective.json", "extensions/sales-perspective.extension",
+                "configs/sales-perspective-menu.json", "extensions/sales-perspective-menu.extension")) {
+            create(IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/" + PROJECT + "/" + file, readProjectFile(file));
+        }
+        synchronizationProcessor.forceProcessSynchronizers();
+
+        restAssuredExecutor.execute(() -> {
+            given().when()
+                   .get("/services/platform/extensions/views")
+                   .then()
+                   .body("find { it.id == 'template-descriptors-it-view' }.label", equalTo("Orders"));
+            given().when()
+                   .get("/services/platform/extensions/editors")
+                   .then()
+                   .body("find { it.id == 'template-descriptors-it-editor' }.label", equalTo("Notes"));
+            given().when()
+                   .get("/services/platform/extensions/perspectives")
+                   .then()
+                   .body("perspectives.find { it.id == 'template-descriptors-it-perspective' }.label", equalTo("Sales"));
+            given().when()
+                   .get("/services/platform/extensions/modules/" + PROJECT + "/configs/orders-view.json?global=viewData")
+                   .then()
+                   .statusCode(200)
+                   .body(startsWith("const viewData = {\"id\":\"template-descriptors-it-view\""));
+        }, ASSERTION_TIMEOUT_SECONDS);
+
+        assertEquals(0, evaluator.sessions(), "no script engine may be started to generate or load an IDE plug-in");
+    }
+
+    /**
+     * A generated plug-in registers its JSON descriptor as its extension module, and its page reads the
+     * same module as its global.
+     */
+    private void assertPlugIn(String page, String extension, String descriptor, String global) {
+        assertEquals(PROJECT + "/" + descriptor, JsonPath.from(readProjectFile(extension))
+                                                         .getString("module"));
+        assertEquals("/services/web/" + PROJECT + "/" + page, JsonPath.from(readProjectFile(descriptor))
+                                                                      .getString("path"));
+        String script = "/services/platform/extensions/modules/" + PROJECT + "/" + descriptor + "?global=" + global;
+        assertTrue(readProjectFile(page).contains("src=\"" + script + "\""), page + " must read its descriptor from " + script);
     }
 
     private void generateIntent() {

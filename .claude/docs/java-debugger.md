@@ -29,7 +29,7 @@ Browser (debug.js) ←WebSocket→ JavaDebugWebSocketHandler
 ### Frontend (`components/ui/view-java-debug`)
 
 - **Region:** `left` (sits alongside Projects/Import/Search in the left sidebar)
-- **Config:** `configs/debug-view.js` — `region: 'left'`, `lazyLoad: true`
+- **Config:** `configs/debug-view.json` — `"region": "left"`, `"lazyLoad": true`
 - **Layout:** compact toolbar (Attach, Disconnect, step controls) + status strip + three collapsible sections (Call Stack, Variables, Breakpoints)
 - **Workspace:** read from `localStorage[${getBrandingInfo().prefix}.workspace.selected]` on load; kept in sync via `platform.workspace.changed` hub topic (same source as the Projects view)
 - **Port:** fetched from `GET /services/ide/java-debug/config` on startup; falls back to 8000

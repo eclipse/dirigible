@@ -1,0 +1,8 @@
+{
+    "id": "scopes",
+    "region": "bottom",
+    "label": "Scopes",
+    "lazyLoad": true,
+    "autoFocusTab": false,
+    "path": "/services/web/view-security/views/scopes.html"
+}

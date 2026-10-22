@@ -1,0 +1,7 @@
+{
+    "id": "documentStorage",
+    "label": "Documents",
+    "path": "/services/web/documents/index.html",
+    "order": 300,
+    "icon": "/services/web/documents/images/documents.svg"
+}

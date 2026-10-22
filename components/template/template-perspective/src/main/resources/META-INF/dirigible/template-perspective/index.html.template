@@ -24,8 +24,9 @@
 		<!-- Fake icon -->
 		<link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=" />
 
-		<!-- Perspective config -->
-		<script type="text/javascript" src="/services/web/${projectName}/configs/${fileName}-perspective.js"></script>
+		<!-- Perspective config: the perspective's extension module configs/${fileName}-perspective.json, read as the
+		     'perspectiveData' global. Its order sorts the sidebar entries, its icon is the svg the sidebar shows. -->
+		<script type="text/javascript" src="/services/platform/extensions/modules/${projectName}/configs/${fileName}-perspective.json?global=perspectiveData"></script>
 
 		<!-- Base perspective services and styles -->
 		<meta name="platform-links" category="ng-view,ng-perspective">

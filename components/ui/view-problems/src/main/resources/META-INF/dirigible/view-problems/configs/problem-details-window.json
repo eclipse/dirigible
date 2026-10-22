@@ -1,0 +1,6 @@
+{
+    "id": "problem-details",
+    "label": "Problem Details",
+    "autoFocusTab": false,
+    "path": "/services/web/view-problems/problem-details.html"
+}

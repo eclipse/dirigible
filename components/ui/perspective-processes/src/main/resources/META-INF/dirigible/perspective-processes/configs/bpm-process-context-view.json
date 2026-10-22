@@ -1,0 +1,7 @@
+{
+    "id": "bpm-process-context-view",
+    "label": "Process Context",
+    "region": "bottom",
+    "autoFocusTab": false,
+    "path": "/services/web/perspective-processes/views/bpm-process-context.html"
+}

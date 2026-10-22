@@ -1,5 +1,5 @@
 {
-    "module": "view-repository/configs/repository-view.js",
+    "module": "view-repository/configs/repository-view.json",
     "extensionPoint": "platform-views",
     "description": "Repository View"
 }

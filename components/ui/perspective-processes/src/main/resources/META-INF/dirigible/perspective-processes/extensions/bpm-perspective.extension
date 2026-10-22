@@ -1,5 +1,5 @@
 {
-    "module": "perspective-processes/configs/bpm-perspective.js",
+    "module": "perspective-processes/configs/bpm-perspective.json",
     "extensionPoint": "platform-perspectives",
     "description": "Business Processes Perspective"
 }

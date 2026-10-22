@@ -1,5 +1,5 @@
 {
-    "module": "perspective-jobs/configs/perspective-menu.js",
+    "module": "perspective-jobs/configs/perspective-menu.json",
     "extensionPoint": "platform-menus",
     "description": "Jobs perspective menu"
 }

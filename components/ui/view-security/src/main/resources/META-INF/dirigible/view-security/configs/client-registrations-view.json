@@ -1,0 +1,8 @@
+{
+    "id": "client-registrations",
+    "label": "Client Registrations",
+    "region": "left",
+    "lazyLoad": false,
+    "autoFocusTab": false,
+    "path": "/services/web/view-security/views/client-registrations.html"
+}

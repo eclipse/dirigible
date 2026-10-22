@@ -1,0 +1,8 @@
+{
+    "id": "messaging-destinations",
+    "region": "left",
+    "label": "Destinations",
+    "lazyLoad": true,
+    "autoFocusTab": false,
+    "path": "/services/web/view-messaging-destinations/messaging-destinations.html"
+}

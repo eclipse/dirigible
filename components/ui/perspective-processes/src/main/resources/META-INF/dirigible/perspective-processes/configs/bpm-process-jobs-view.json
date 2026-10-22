@@ -1,0 +1,7 @@
+{
+    "id": "bpm-process-jobs-view",
+    "label": "Jobs Incidents",
+    "region": "bottom",
+    "autoFocusTab": false,
+    "path": "/services/web/perspective-processes/views/bpm-process-jobs.html"
+}

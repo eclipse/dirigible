@@ -1,0 +1,8 @@
+{
+    "id": "result",
+    "region": "bottom",
+    "label": "Result",
+    "lazyLoad": false,
+    "autoFocusTab": false,
+    "path": "/services/web/view-databases/result.html"
+}

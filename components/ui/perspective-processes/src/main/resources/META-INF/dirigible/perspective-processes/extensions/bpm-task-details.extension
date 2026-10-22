@@ -1,5 +1,5 @@
 {
-    "module": "perspective-processes/configs/bpm-task-details-window.js",
+    "module": "perspective-processes/configs/bpm-task-details-window.json",
     "extensionPoint": "platform-windows",
     "description": "User Task Details"
 }

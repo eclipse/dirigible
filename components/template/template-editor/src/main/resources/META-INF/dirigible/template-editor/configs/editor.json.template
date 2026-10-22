@@ -1,0 +1,9 @@
+{
+    "id": "{{editorId}}",
+    "region": "center",
+    "label": "{{editorName}}",
+    "path": "/services/web/{{projectName}}/{{fileName}}.html",
+    "contentTypes": [
+        "text/plain"
+    ]
+}

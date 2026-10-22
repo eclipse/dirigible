@@ -21,8 +21,10 @@
 		<link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=">
 		<!-- Title directive that will automatically create a title based on the view config -->
 		<title config-title></title>
-		<!-- View config -->
-		<script type="text/javascript" src="/services/web/${projectName}/configs/${fileName}-view.js"></script>
+		<!-- View config: the view's extension module configs/${fileName}-view.json, read as the 'viewData' global.
+		     Its region is 'left', 'right', 'center' or 'bottom'; with lazyLoad the view loads only once it becomes visible;
+		     with autoFocusTab it asks the layout to focus its tab, which center and bottom views should do. -->
+		<script type="text/javascript" src="/services/platform/extensions/modules/${projectName}/configs/${fileName}-view.json?global=viewData"></script>
 		<!-- View services and styles -->
 		<meta name="platform-links" category="ng-view">
 		<!-- View controller -->

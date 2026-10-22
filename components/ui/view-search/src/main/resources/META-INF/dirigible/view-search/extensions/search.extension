@@ -1,5 +1,5 @@
 {
-    "module": "view-search/configs/search-view.js",
+    "module": "view-search/configs/search-view.json",
     "extensionPoint": "platform-views",
     "description": "Search View"
 }

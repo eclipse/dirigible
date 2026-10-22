@@ -1,0 +1,9 @@
+{
+    "id": "roles",
+    "label": "Roles",
+    "region": "center",
+    "path": "/services/web/editor-security/editors/roles/editor.html",
+    "contentTypes": [
+        "application/json+roles"
+    ]
+}
