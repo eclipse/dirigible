@@ -16,8 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 /**
- * Validation of the {@code wait} step (park the process on an entity event) and the user-task
- * {@code timeout:}/{@code expire:} boundary timers.
+ * Validation of the {@code wait} step (park the process on an entity event, or for a duration) and
+ * the user-task {@code timeout:}/{@code expire:} boundary timers.
  */
 class WaitTimerIntentTest {
 
@@ -55,6 +55,33 @@ class WaitTimerIntentTest {
                   - { name: done,        kind: end }
             """;
 
+    /**
+     * The polling loop a timed wait exists for: the check reads the state once, a decision routes on
+     * it, and an expected "not yet" pauses instead of failing a job through {@code retry:}.
+     */
+    static final String TIMED_YAML =
+            """
+                    name: archive
+                    entities:
+                      - name: ArchiveRequest
+                        fields:
+                          - { name: id, type: integer, primaryKey: true, generated: true }
+                          - { name: errorMessage, type: string, length: 2000 }
+                    processes:
+                      - name: ExportArchive
+                        trigger: { onCreate: ArchiveRequest }
+                        vars:
+                          - { name: exportState }
+                        steps:
+                          - { name: startExport, kind: serviceTask, args: { delegate: custom.StartExportTask, retry: { count: 3, every: PT30S }, onError: recordFailure, next: checkExport } }
+                          - { name: checkExport, kind: serviceTask, args: { delegate: custom.CheckExportTask, produces: [exportState], retry: { count: 3, every: PT30S }, onError: recordFailure, next: exportDone } }
+                          - { name: exportDone,  kind: decision,    args: { if: "exportState == 'DONE'", then: publish, else: pause } }
+                          - { name: pause,       kind: wait,        args: { after: PT10S, next: checkExport } }
+                          - { name: publish,     kind: serviceTask, args: { delegate: custom.PublishTask, next: done } }
+                          - { name: recordFailure, kind: serviceTask, args: { setField: errorMessage, value: "{error}", next: done } }
+                          - { name: done, kind: end }
+                    """;
+
     @Test
     void theShowcaseParses() {
         assertDoesNotThrow(() -> IntentParser.parse(YAML));
@@ -77,6 +104,71 @@ class WaitTimerIntentTest {
     void aWaitWithoutAnEventIsRejected() {
         String yaml = YAML.replace("onCreate: CaseMessage, via: case, when: \"internal == 0\", ", "");
         assertIssue(yaml, "must declare exactly one of onCreate/onUpdate");
+    }
+
+    @Test
+    void aTimedWaitParses() {
+        assertDoesNotThrow(() -> IntentParser.parse(TIMED_YAML));
+    }
+
+    @Test
+    void aTimedWaitWithAnInvalidDurationIsRejected() {
+        String yaml = TIMED_YAML.replace("after: PT10S", "after: 10s");
+        assertIssue(yaml, "process [ExportArchive] wait [pause] `after` [10s] is not a positive ISO-8601 duration");
+    }
+
+    @Test
+    void aTimedWaitWithAZeroDurationIsRejected() {
+        String yaml = TIMED_YAML.replace("after: PT10S", "after: PT0S");
+        assertIssue(yaml, "process [ExportArchive] wait [pause] `after` [PT0S] is not a positive ISO-8601 duration");
+    }
+
+    @Test
+    void aTimedWaitWithANegativeDurationIsRejected() {
+        String yaml = TIMED_YAML.replace("after: PT10S", "after: PT-10S");
+        assertIssue(yaml, "`after` [PT-10S] is not a positive ISO-8601 duration");
+    }
+
+    @Test
+    void aTimedWaitOfAPeriodParses() {
+        assertDoesNotThrow(() -> IntentParser.parse(TIMED_YAML.replace("after: PT10S", "after: P1D")));
+    }
+
+    @Test
+    void aTimedWaitWithAnEventIsRejected() {
+        String yaml = TIMED_YAML.replace("after: PT10S,", "after: PT10S, onCreate: ArchiveRequest,");
+        assertIssue(yaml, "wait [pause] declares both `after` and an entity event");
+    }
+
+    @Test
+    void aTimedWaitWithViaOrWhenIsRejected() {
+        assertIssue(TIMED_YAML.replace("after: PT10S,", "after: PT10S, via: request,"), "wait [pause] declares `after` with `via`");
+        assertIssue(TIMED_YAML.replace("after: PT10S,", "after: PT10S, when: \"id == 1\","), "wait [pause] declares `after` with `when`");
+    }
+
+    @Test
+    void aWaitWithNeitherIsRejected() {
+        String yaml = TIMED_YAML.replace("after: PT10S, ", "");
+        assertIssue(yaml, "wait [pause] must declare exactly one of onCreate/onUpdate/onTransition naming the resuming entity event,"
+                + " or `after: <ISO-8601 duration>` for a timed wait");
+    }
+
+    /** No record correlates a timed wait, so - unlike an event wait - it needs no process trigger. */
+    @Test
+    void aTimedWaitNeedsNoTriggerEntity() {
+        String yaml = """
+                name: poller
+                processes:
+                  - name: Poll
+                    vars:
+                      - { name: state }
+                    steps:
+                      - { name: check, kind: serviceTask, args: { delegate: custom.CheckTask, produces: [state], next: ready } }
+                      - { name: ready, kind: decision,    args: { if: "state == 'DONE'", then: done, else: pause } }
+                      - { name: pause, kind: wait,        args: { after: PT1M, next: check } }
+                      - { name: done,  kind: end }
+                """;
+        assertDoesNotThrow(() -> IntentParser.parse(yaml));
     }
 
     @Test

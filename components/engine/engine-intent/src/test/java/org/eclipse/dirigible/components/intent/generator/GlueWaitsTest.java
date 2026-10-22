@@ -110,6 +110,21 @@ class GlueWaitsTest {
         assertEquals("", wait.get("viaFkProperty"), "the trigger entity carries the ProcessId itself - no via walk");
     }
 
+    /**
+     * A timed wait resumes on its timer, so it has nothing to correlate: no wait listener is generated
+     * for it, and the event wait beside it is generated exactly as before.
+     */
+    @Test
+    void aTimedWaitGeneratesNoListener() {
+        String yaml = YAML.replace("      - { name: done,        kind: end }",
+                "      - { name: pause,       kind: wait, args: { after: PT10S, next: done } }\n      - { name: done,        kind: end }");
+        List<Map<String, Object>> waits = GlueIntentGenerator.buildWaitsForTest(IntentParser.parse(yaml));
+        assertEquals(1, waits.size(), "only the event wait has a listener");
+        assertEquals("CaseHandlingAwaitReply", waits.get(0)
+                                                    .get("className"));
+        assertEquals(GlueIntentGenerator.buildWaitsForTest(IntentParser.parse(YAML)), waits, "the event wait is unchanged");
+    }
+
     @Test
     void rendersTheExpireDateLoader() {
         IntentModel model = IntentParser.parse(YAML);

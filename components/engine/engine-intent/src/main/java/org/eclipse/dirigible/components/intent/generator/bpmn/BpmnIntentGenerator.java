@@ -809,9 +809,10 @@ public class BpmnIntentGenerator implements IntentTargetGenerator {
         sb.append(" targetNamespace=\"http://www.flowable.org/processdef\">\n");
         // Message definitions live at the definitions level; each wait step's catch event references
         // one by id. The name is process + step (unique per file; correlation additionally scopes by
-        // process-instance id, so the compound name is for readability, not disambiguation).
+        // process-instance id, so the compound name is for readability, not disambiguation). A timed
+        // wait catches a timer, not a message.
         for (StepIntent step : steps) {
-            if ("wait".equals(step.getKind()) && step.getName() != null) {
+            if ("wait".equals(step.getKind()) && step.getName() != null && !ProcessWaitSupport.isTimed(step)) {
                 String message = ProcessWaitSupport.messageName(processId, step.getName());
                 sb.append("  <message id=\"")
                   .append(escapeXmlAttribute(message))
@@ -1691,7 +1692,8 @@ public class BpmnIntentGenerator implements IntentTargetGenerator {
      * generated wait listener (see
      * {@link org.eclipse.dirigible.components.intent.generator.ProcessWaitSupport}) correlates the
      * message on the resuming entity event. The message definition itself is emitted at the definitions
-     * level by {@code render}.
+     * level by {@code render}. A timed wait ({@code after:}) is a timer intermediate catch event
+     * instead: the engine resumes it, so it needs neither a message nor a listener.
      */
     private static void appendWaitCatchEvent(StringBuilder sb, StepIntent step, String processName) {
         sb.append("    <intermediateCatchEvent id=\"")
@@ -1699,9 +1701,15 @@ public class BpmnIntentGenerator implements IntentTargetGenerator {
           .append("\" name=\"")
           .append(escapeXmlAttribute(IntentNaming.humanize(step.getName())))
           .append("\">\n");
-        sb.append("      <messageEventDefinition messageRef=\"")
-          .append(escapeXmlAttribute(ProcessWaitSupport.messageName(processName, step.getName())))
-          .append("\"></messageEventDefinition>\n");
+        if (ProcessWaitSupport.isTimed(step)) {
+            sb.append("      <timerEventDefinition><timeDuration>")
+              .append(escapeXmlAttribute(stringArg(step, ProcessWaitSupport.AFTER)))
+              .append("</timeDuration></timerEventDefinition>\n");
+        } else {
+            sb.append("      <messageEventDefinition messageRef=\"")
+              .append(escapeXmlAttribute(ProcessWaitSupport.messageName(processName, step.getName())))
+              .append("\"></messageEventDefinition>\n");
+        }
         sb.append("    </intermediateCatchEvent>\n");
     }
 

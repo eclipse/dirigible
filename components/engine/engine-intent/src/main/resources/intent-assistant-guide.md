@@ -1958,7 +1958,10 @@ processes:
 
 - `retry: { count: <n>, every: <ISO-8601 duration> }` - re-attempt the failed step `count` further
   times, spaced by `every` (same vocabulary as `timeout.after`). `count` must be an integer >= 1.
-  Absent -> today's behaviour (existing files generate byte-identically).
+  Absent -> today's behaviour (existing files generate byte-identically). `retry:` is for
+  **unexpected** failures: never make a delegate throw "not yet" to poll a state you expect to change -
+  every check becomes a failed job with an ERROR, and the budget spent on waiting leaves a real failure
+  no retries of its own. Poll with a timed `wait` instead (below).
 - `onError: <step | end>` - where the exhausted (or, with no `retry`, the first) failure routes,
   validated like `next`/`then`. Route the main flow around the error steps with `next`, as with
   decision branches. Absent -> the runtime's own incident, as today.
@@ -2016,6 +2019,28 @@ processes:
   note does not resume the wait.
 - The process must have a `trigger:` entity - the instance THIS process stamped on that record is how
   the resuming event finds the parked instance. No parked instance (or a guard miss) is simply a no-op.
+
+**Waiting for a time: a timed `wait`.** `after: <ISO-8601 duration>` (`PT10S`, `PT5M`, `P1D`, longer
+than zero) parks the instance for that long, then continues at `next`. It is the pause of a **polling
+loop** - a check reads the state once, a decision routes on it, and an expected "not yet" pauses and
+checks again:
+
+```yaml
+    vars:
+      - { name: exportState }
+    steps:
+      # reads the remote state once: produces exportState = RUNNING | DONE; throws only on a real failure
+      - { name: checkExport, kind: serviceTask, args: { delegate: custom.CheckExportTask, produces: [exportState], retry: { count: 3, every: PT30S }, onError: recordFailure, next: exportDone } }
+      - { name: exportDone,  kind: decision,    args: { if: "exportState == 'DONE'", then: publish, else: pause } }
+      - { name: pause,       kind: wait,        args: { after: PT10S, next: checkExport } }
+```
+
+- A wait declares EITHER `after:` OR exactly one entity event - never both, and a timed wait takes no
+  `via:` / `when:`. It needs no `trigger:` entity: no record resumes it.
+- How long to keep polling is the check's decision (it can count its own attempts) - there is no loop
+  budget construct; the check's own `retry:` stays for its real failures.
+- While parked, the instance's current step is the wait; aborting or cancelling the instance cancels
+  its timer, as for a parked event wait.
 
 **Boundary timers on a user task: `timeout:` and `expire:`.** Generated flows can react to time
 passing while a task sits in the Inbox. Both are optional attributes of a `userTask`'s args, and both
@@ -4904,7 +4929,7 @@ or a seeded name.
 | primary-key `type` | `integer`, `int`, `long` (integer only) |
 | relation `kind` | `oneToMany`, `manyToOne`, `oneToOne`, `manyToMany`, `subset` |
 | step `kind` | `userTask`, `serviceTask`, `decision`, `script`, `wait`, `end` |
-| wait event | `onCreate`, `onUpdate`, `onTransition` (never `onDelete`) |
+| wait event | `onCreate`, `onUpdate`, `onTransition` (never `onDelete`) - or `after: <ISO-8601 duration>` (a timed wait), never both |
 | userTask timers | `timeout: { after: <ISO-8601 duration>, then: <step> }`, `expire: { until: <date/timestamp field>, then: <step> }` |
 | serviceTask `retry` | `{ count: <integer >= 1>, every: <ISO-8601 duration> }` - `delegate:` and non-fan-out `notify:` steps only |
 | serviceTask `onError` | a declared step or `end` - `delegate:` and non-fan-out `notify:` steps only; `{error}` (a whole-value `setField` value) is readable on the route |
@@ -4952,6 +4977,7 @@ or a seeded name.
 - "store / manage X" -> **entities**
 - "approval / multi-step / workflow" -> **processes** (+ a **form** for each user task)
 - "the flow waits for a reply / a payment / a goods receipt (a data event resumes it)" -> **processes** (a `wait` step)
+- "check every N seconds until the export / job / remote state is done" -> **processes** (a check `serviceTask` + a `decision` + a timed `wait` looping back - not `retry:`)
 - "remind / escalate if a task is not handled in N days (SLA)" -> **processes** (userTask `timeout:`)
 - "who/which was assigned / in force / valid on that date (from a register with from-to dates)" -> **resolves**
 - "X must be filled in before/when it reaches STATUS (but may be empty while it is a draft)" -> **checks** `requiredWhen` WITH the `status:` gate - a workflow's own status set is a repository write and never reaches a controller

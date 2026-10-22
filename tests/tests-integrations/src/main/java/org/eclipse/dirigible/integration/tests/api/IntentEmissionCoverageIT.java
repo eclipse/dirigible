@@ -947,6 +947,14 @@ class IntentEmissionCoverageIT extends IntegrationTest {
                   - { name: failureMessage, type: string, length: 500 }
                   - { name: sendFailure,    type: string, length: 500 }
 
+              # An expected wait is a loop, not a retry (#8040): the poll below checks a state it
+              # expects to change and pauses on a timed wait between checks.
+              - name: Rendition
+                fields:
+                  - { name: id,    type: integer, primaryKey: true, generated: true }
+                  - { name: title, type: string, length: 200 }
+                  - { name: state, type: string, length: 20 }
+
               # The non-HTTP inbound arrivals (#6537) ingest into an entity of their own: an ingested
               # record must not start a process, or the queue/file scenarios would seed extra Inbox
               # tasks the RFQ scenarios pick up by name.
@@ -1308,903 +1316,917 @@ class IntentEmissionCoverageIT extends IntegrationTest {
     // caps at 65535 UTF-8 bytes and the entities above reach it; `concat` keeps the joined value out
     // of the constant pool, which a `+` would not (the compiler folds it back into one over-long
     // constant). Nothing about the model is split - the two halves are one document.
-    private static final String INTENT_YAML_GLUE = """
-            aggregates:
-              - name: ledgerTotal
-                of: Ledger
-                op: sum
-                sum: amount
-                by: [Person, Unit]
-                into: LedgerTotal
-                field: total
-              - name: bookingAllowance
-                of: Booking
-                op: sum
-                sum: days
-                by: [Person]
-                into: BookingAllowance
-                field: remaining
+    private static final String INTENT_YAML_GLUE =
+            """
+                    aggregates:
+                      - name: ledgerTotal
+                        of: Ledger
+                        op: sum
+                        sum: amount
+                        by: [Person, Unit]
+                        into: LedgerTotal
+                        field: total
+                      - name: bookingAllowance
+                        of: Booking
+                        op: sum
+                        sum: days
+                        by: [Person]
+                        into: BookingAllowance
+                        field: remaining
 
-            # auto-sensitive derivation: totalCost sums the SENSITIVE ClaimLine.cost into the
-            # personal-rooted Claim - the parser must mark the target sensitive automatically
-            # (the leak class where the leaf is scrubbed but its total travels the my wire).
-            # totalCost is NOT authored sensitive on purpose.
-            rollups:
-              - { name: claimCost, entity: ClaimLine, via: Claim, field: totalCost, op: sum, of: cost }
-              - { name: pledgePaid, entity: PledgePayment, via: Pledge, field: paid, op: sum, of: amount,
-                  capacity: total, balance: balance, status: Status, statusWhenFull: 3, statusWhenPartial: 2 }
-              # WHICH rows a capacity roll-up counts (#7542): a cancelled allocation must stop consuming
-              # the fund's budget, or the fund stays exhausted for ever and the replacement allocation
-              # can never be made. The same clauses narrow the asynchronous recompute AND the
-              # synchronous overdraw guard, so the stored balance and the enforced ceiling agree.
-              - name: fundAllocated
-                entity: PledgePayment
-                via: Fund
-                field: allocated
-                op: sum
-                of: amount
-                capacity: budget
-                balance: unallocated
-                where:
-                  - { field: Status, op: ne, value: CANCELLED }
-                message: "This fund has only {remaining} left of {capacity}; this allocation asks {requested}."
+                    # auto-sensitive derivation: totalCost sums the SENSITIVE ClaimLine.cost into the
+                    # personal-rooted Claim - the parser must mark the target sensitive automatically
+                    # (the leak class where the leaf is scrubbed but its total travels the my wire).
+                    # totalCost is NOT authored sensitive on purpose.
+                    rollups:
+                      - { name: claimCost, entity: ClaimLine, via: Claim, field: totalCost, op: sum, of: cost }
+                      - { name: pledgePaid, entity: PledgePayment, via: Pledge, field: paid, op: sum, of: amount,
+                          capacity: total, balance: balance, status: Status, statusWhenFull: 3, statusWhenPartial: 2 }
+                      # WHICH rows a capacity roll-up counts (#7542): a cancelled allocation must stop consuming
+                      # the fund's budget, or the fund stays exhausted for ever and the replacement allocation
+                      # can never be made. The same clauses narrow the asynchronous recompute AND the
+                      # synchronous overdraw guard, so the stored balance and the enforced ceiling agree.
+                      - name: fundAllocated
+                        entity: PledgePayment
+                        via: Fund
+                        field: allocated
+                        op: sum
+                        of: amount
+                        capacity: budget
+                        balance: unallocated
+                        where:
+                          - { field: Status, op: ne, value: CANCELLED }
+                        message: "This fund has only {remaining} left of {capacity}; this allocation asks {requested}."
 
-            expansions:
-              - name: retainer-periods
-                from: Retainer
-                into: RetainerPeriod
-                unit: month
-                between: { start: startDate, end: endDate }
-                map: { dueDate: period }
-                spread: { total: fee, into: amount, round: 2 }
-                count: periods
-              - name: nights
-                from: Stay
-                into: StayNight
-                between: { start: fromDate, end: toDate }
-                map: { day: period }
-                spread: { total: total, into: amount, round: 2 }
-                count: nights
+                    expansions:
+                      - name: retainer-periods
+                        from: Retainer
+                        into: RetainerPeriod
+                        unit: month
+                        between: { start: startDate, end: endDate }
+                        map: { dueDate: period }
+                        spread: { total: fee, into: amount, round: 2 }
+                        count: periods
+                      - name: nights
+                        from: Stay
+                        into: StayNight
+                        between: { start: fromDate, end: toDate }
+                        map: { day: period }
+                        spread: { total: total, into: amount, round: 2 }
+                        count: nights
 
-            # collection-driven generation: the monthly job creates one Claim per Person and,
-            # under each, one ClaimLine per working day of the month (amount defaulted).
-            schedules:
-              - name: monthly-claims
-                cron: "0 0 4 1 * *"
-                entity: Person
-                generate:
-                  to: Claim
-                  # run: month natural key (#7106) - a re-run in the same month finds the Claim the
-                  # first tick filed instead of minting a duplicate. The guard ranges over `filed`
-                  # (the sole date-typed `now` default), NOT the month-typed `Period` (#7229); the
-                  # emitted .between(...) over a LocalDate column is compiled by the publish below.
-                  unique: [Person, { run: month }]
-                  map: { Person: id }
-                  defaults: { note: monthly, Period: now, filed: now, recordedAt: now }
-                  children:
-                    - to: ClaimLine
-                      parent: Claim
-                      forEach: { days: workingDays }
-                      dayField: day
-                      defaults: { amount: 8 }
+                    # collection-driven generation: the monthly job creates one Claim per Person and,
+                    # under each, one ClaimLine per working day of the month (amount defaulted).
+                    schedules:
+                      - name: monthly-claims
+                        cron: "0 0 4 1 * *"
+                        entity: Person
+                        generate:
+                          to: Claim
+                          # run: month natural key (#7106) - a re-run in the same month finds the Claim the
+                          # first tick filed instead of minting a duplicate. The guard ranges over `filed`
+                          # (the sole date-typed `now` default), NOT the month-typed `Period` (#7229); the
+                          # emitted .between(...) over a LocalDate column is compiled by the publish below.
+                          unique: [Person, { run: month }]
+                          map: { Person: id }
+                          defaults: { note: monthly, Period: now, filed: now, recordedAt: now }
+                          children:
+                            - to: ClaimLine
+                              parent: Claim
+                              forEach: { days: workingDays }
+                              dayField: day
+                              defaults: { amount: 8 }
 
-              # the dunning run: a notify fan-out whose per-row relation loads (the recipient, the
-              # render language) and attachment render sit INSIDE the fail-soft try (#7233). It never
-              # fires here (the 1st at 05:00); it is in this fixture to be COMPILED at publish - the
-              # engine IT pins the ordering over emitted text, this one proves the moved block builds.
-              - name: overdue-bills
-                cron: "0 0 5 1 * *"
-                entity: Bill
-                notify:
-                  to: Person.email
-                  subject: "Reminder: bill {note}"
-                  body: "Dear {Person.name}, your bill is still open: {recordUrl}"
-                  # #7488: the marked-up alternative - compiled here, the escaped values included.
-                  html: '<p>Dear {Person.name}, your bill is <a href="{recordUrl}">still open</a>.</p>'
-                  attach: print
-                  languageFrom: Person.locale
-                  outcome: sendOutcome
+                      # the dunning run: a notify fan-out whose per-row relation loads (the recipient, the
+                      # render language) and attachment render sit INSIDE the fail-soft try (#7233). It never
+                      # fires here (the 1st at 05:00); it is in this fixture to be COMPILED at publish - the
+                      # engine IT pins the ordering over emitted text, this one proves the moved block builds.
+                      - name: overdue-bills
+                        cron: "0 0 5 1 * *"
+                        entity: Bill
+                        notify:
+                          to: Person.email
+                          subject: "Reminder: bill {note}"
+                          body: "Dear {Person.name}, your bill is still open: {recordUrl}"
+                          # #7488: the marked-up alternative - compiled here, the escaped values included.
+                          html: '<p>Dear {Person.name}, your bill is <a href="{recordUrl}">still open</a>.</p>'
+                          attach: print
+                          languageFrom: Person.locale
+                          outcome: sendOutcome
 
-              # #7276: a tick that BOTH records and mails, escalating by how overdue the bill is. It
-              # never fires here (the 1st of January at 07:00); it is in this fixture so the combined
-              # job - the ladder lookup, the level written into the natural key, the guard that gates
-              # the send - is COMPILED by the publish below, which is the only proof it builds.
-              - name: bill-dunning
-                cron: "0 0 7 1 1 *"
-                entity: Bill
-                where:
-                  - { field: dueOn, op: lt, value: CURRENT_DATE }
-                escalate:
-                  ladder: ReminderLevel
-                  after: daysAfterDue
-                  since: dueOn
-                  into: Level
-                generate:
-                  to: BillReminder
-                  unique: [Bill, Level]
-                  map: { Bill: id }
-                  defaults: { sentOn: now }
-                notify:
-                  to: Person.email
-                  subject: "Bill {note} - {escalation.name}"
-                  body: "{escalation.wording}"
+                      # #7276: a tick that BOTH records and mails, escalating by how overdue the bill is. It
+                      # never fires here (the 1st of January at 07:00); it is in this fixture so the combined
+                      # job - the ladder lookup, the level written into the natural key, the guard that gates
+                      # the send - is COMPILED by the publish below, which is the only proof it builds.
+                      - name: bill-dunning
+                        cron: "0 0 7 1 1 *"
+                        entity: Bill
+                        where:
+                          - { field: dueOn, op: lt, value: CURRENT_DATE }
+                        escalate:
+                          ladder: ReminderLevel
+                          after: daysAfterDue
+                          since: dueOn
+                          into: Level
+                        generate:
+                          to: BillReminder
+                          unique: [Bill, Level]
+                          map: { Bill: id }
+                          defaults: { sentOn: now }
+                        notify:
+                          to: Person.email
+                          subject: "Bill {note} - {escalation.name}"
+                          body: "{escalation.wording}"
 
-              # #7385: the operations mailbox a sweep reports to differs per environment, so the
-              # address is a configuration KEY read at send time rather than a literal. It never fires
-              # here (the 1st of January at 06:00); it is in this fixture so the Configurations.get
-              # recipient is COMPILED by the publish below - a String expression where the templates
-              # used to paste a quoted literal.
-              - name: stuck-bills
-                cron: "0 0 6 1 1 *"
-                entity: Bill
-                where:
-                  - { field: dueOn, op: lt, value: CURRENT_DATE }
-                notify:
-                  to: "@config:BILLING_OPS_EMAIL"
-                  subject: "Bill {note} has not moved"
-                  body: "It may need an operator."
+                      # #7385: the operations mailbox a sweep reports to differs per environment, so the
+                      # address is a configuration KEY read at send time rather than a literal. It never fires
+                      # here (the 1st of January at 06:00); it is in this fixture so the Configurations.get
+                      # recipient is COMPILED by the publish below - a String expression where the templates
+                      # used to paste a quoted literal.
+                      - name: stuck-bills
+                        cron: "0 0 6 1 1 *"
+                        entity: Bill
+                        where:
+                          - { field: dueOn, op: lt, value: CURRENT_DATE }
+                        notify:
+                          to: "@config:BILLING_OPS_EMAIL"
+                          subject: "Bill {note} has not moved"
+                          body: "It may need an operator."
 
-              # #7384: the staleness sweep - the flagship use of a relative moment (#6764) - reads the
-              # `audit: true` CreatedAt column, which generates as a java.time.Instant. Emitted as a
-              # LocalDateTime, Hibernate refused to bind it and the tick threw before reading a single
-              # row, so this one is TRIGGERED below rather than only compiled: the bind is what the run
-              # proves, and it happens whether or not the query matches. Both renderings of a timestamp
-              # moment are on the same tick - the time amount (an Instant offset by a Duration) and the
-              # calendar one (a month, which has no fixed length in seconds and is applied on the
-              # calendar of the run's own zone). The cron is the 1st of January at 06:00, so nothing
-              # else ever fires it, and nothing is a month old inside a test run, so it mails nobody.
-              - name: stale-claims
-                cron: "0 0 6 1 1 ?"
-                entity: Claim
-                where:
-                  - { field: CreatedAt, op: lt, value: "CURRENT_TIMESTAMP-PT30M" }
-                  - { field: UpdatedAt, op: ge, value: "CURRENT_TIMESTAMP-P1M" }
-                notify:
-                  to: Person.email
-                  subject: "Claim {note} has not moved"
-                  body: "Still open: {recordUrl}"
+                      # #7384: the staleness sweep - the flagship use of a relative moment (#6764) - reads the
+                      # `audit: true` CreatedAt column, which generates as a java.time.Instant. Emitted as a
+                      # LocalDateTime, Hibernate refused to bind it and the tick threw before reading a single
+                      # row, so this one is TRIGGERED below rather than only compiled: the bind is what the run
+                      # proves, and it happens whether or not the query matches. Both renderings of a timestamp
+                      # moment are on the same tick - the time amount (an Instant offset by a Duration) and the
+                      # calendar one (a month, which has no fixed length in seconds and is applied on the
+                      # calendar of the run's own zone). The cron is the 1st of January at 06:00, so nothing
+                      # else ever fires it, and nothing is a month old inside a test run, so it mails nobody.
+                      - name: stale-claims
+                        cron: "0 0 6 1 1 ?"
+                        entity: Claim
+                        where:
+                          - { field: CreatedAt, op: lt, value: "CURRENT_TIMESTAMP-PT30M" }
+                          - { field: UpdatedAt, op: ge, value: "CURRENT_TIMESTAMP-P1M" }
+                        notify:
+                          to: Person.email
+                          subject: "Claim {note} has not moved"
+                          body: "Still open: {recordUrl}"
 
-            processes:
-              # Two mints in ONE run (#7623): the copy's Version increments while the document it
-              # copies keeps its identity, and both mints go through the repository's save() with the
-              # five file columns and Version assigned by the delegate.
-              - name: ArchiveMint
-                trigger: { onCreate: Archive }
-                steps:
-                  - { name: mintFirst,  kind: serviceTask, args: { delegate: gen.events.ArchiveSnapshotGenerator, next: mintSecond } }
-                  - { name: mintSecond, kind: serviceTask, args: { delegate: gen.events.ArchiveSnapshotGenerator, next: minted } }
-                  - { name: minted, kind: end }
+                    processes:
+                      # Two mints in ONE run (#7623): the copy's Version increments while the document it
+                      # copies keeps its identity, and both mints go through the repository's save() with the
+                      # five file columns and Version assigned by the delegate.
+                      - name: ArchiveMint
+                        trigger: { onCreate: Archive }
+                        steps:
+                          - { name: mintFirst,  kind: serviceTask, args: { delegate: gen.events.ArchiveSnapshotGenerator, next: mintSecond } }
+                          - { name: mintSecond, kind: serviceTask, args: { delegate: gen.events.ArchiveSnapshotGenerator, next: minted } }
+                          - { name: minted, kind: end }
 
-              # assignee: personal - the confirm task lands in exactly the owner's Inbox (the IT
-              # runs as admin, mapped by the Person seed below).
-              - name: ClaimConfirm
-                trigger: { onCreate: Claim }
-                steps:
-                  - { name: confirm, kind: userTask, args: { assignee: personal } }
-                  - { name: end, kind: end }
+                      # assignee: personal - the confirm task lands in exactly the owner's Inbox (the IT
+                      # runs as admin, mapped by the Person seed below).
+                      - name: ClaimConfirm
+                        trigger: { onCreate: Claim }
+                        steps:
+                          - { name: confirm, kind: userTask, args: { assignee: personal } }
+                          - { name: end, kind: end }
 
-              # wait + boundary timers: review escalates after 2s (non-cancelling - the task stays),
-              # expires when validUntil passes (cancelling - the task is withdrawn), and once
-              # reviewed the flow parks until a non-internal reply resumes it.
-              - name: RfqFlow
-                trigger: { onCreate: Rfq }
-                steps:
-                  - name: review
-                    kind: userTask
-                    args:
-                      assignee: reviewer
-                      timeout: { after: PT2S, then: escalate }
-                      expire: { until: validUntil, then: markExpired }
-                      next: awaitReply
-                  - { name: escalate,    kind: serviceTask, args: { setField: state, value: ESCALATED, next: end } }
-                  - { name: markExpired, kind: serviceTask, args: { setField: state, value: EXPIRED, next: end } }
-                  - { name: awaitReply,  kind: wait, args: { onCreate: RfqReply, via: Rfq, when: "internal == false", next: markReplied } }
-                  - { name: markReplied, kind: serviceTask, args: { setField: state, value: REPLIED, next: end } }
-                  - { name: end, kind: end }
+                      # wait + boundary timers: review escalates after 2s (non-cancelling - the task stays),
+                      # expires when validUntil passes (cancelling - the task is withdrawn), and once
+                      # reviewed the flow parks until a non-internal reply resumes it.
+                      - name: RfqFlow
+                        trigger: { onCreate: Rfq }
+                        steps:
+                          - name: review
+                            kind: userTask
+                            args:
+                              assignee: reviewer
+                              timeout: { after: PT2S, then: escalate }
+                              expire: { until: validUntil, then: markExpired }
+                              next: awaitReply
+                          - { name: escalate,    kind: serviceTask, args: { setField: state, value: ESCALATED, next: end } }
+                          - { name: markExpired, kind: serviceTask, args: { setField: state, value: EXPIRED, next: end } }
+                          - { name: awaitReply,  kind: wait, args: { onCreate: RfqReply, via: Rfq, when: "internal == false", next: markReplied } }
+                          - { name: markReplied, kind: serviceTask, args: { setField: state, value: REPLIED, next: end } }
+                          - { name: end, kind: end }
 
-              # generates step axis (#6800): every step is a serviceTask, so both observed moments -
-              # dispatch REACHED and settle COMPLETED - fire without any inbox interaction. The two
-              # appending create-froms and the one at-most-once create-from below bind to them.
-              - name: ShipmentFlow
-                trigger: { onCreate: Shipment }
-                steps:
-                  # The written value is authored prose and is emitted as a Java string literal, so
-                  # the quote in it is the #7295 assertion on the setter delegate.
-                  - { name: dispatch, kind: serviceTask, args: { setField: note, value: 'DISPATCHED "in full"', next: settle } }
-                  - { name: settle,   kind: serviceTask, args: { setField: note, value: SETTLED, next: end } }
-                  - { name: end, kind: end }
+                      # generates step axis (#6800): every step is a serviceTask, so both observed moments -
+                      # dispatch REACHED and settle COMPLETED - fire without any inbox interaction. The two
+                      # appending create-froms and the one at-most-once create-from below bind to them.
+                      - name: ShipmentFlow
+                        trigger: { onCreate: Shipment }
+                        steps:
+                          # The written value is authored prose and is emitted as a Java string literal, so
+                          # the quote in it is the #7295 assertion on the setter delegate.
+                          - { name: dispatch, kind: serviceTask, args: { setField: note, value: 'DISPATCHED "in full"', next: settle } }
+                          - { name: settle,   kind: serviceTask, args: { setField: note, value: SETTLED, next: end } }
+                          - { name: end, kind: end }
 
-              # stampOn (#7874): the setter is the whole step - the repository stamps ApprovedAt with it.
-              - name: PermitApproval
-                trigger: { onCreate: Permit }
-                steps:
-                  - { name: markApproved, kind: serviceTask, args: { setRelationField: Status, value: APPROVED, next: end } }
-                  - { name: end, kind: end }
+                      # stampOn (#7874): the setter is the whole step - the repository stamps ApprovedAt with it.
+                      - name: PermitApproval
+                        trigger: { onCreate: Permit }
+                        steps:
+                          - { name: markApproved, kind: serviceTask, args: { setRelationField: Status, value: APPROVED, next: end } }
+                          - { name: end, kind: end }
 
-              # abortOn: voiding the approval (CancelApproval -> status 3) cancels the confirm task.
-              - name: ApprovalFlow
-                trigger: { onCreate: Approval }
-                abortOn: { status: [3] }
-                steps:
-                  - { name: confirm, kind: userTask, args: { assignee: approver } }
-                  - { name: end, kind: end }
+                      # abortOn: voiding the approval (CancelApproval -> status 3) cancels the confirm task.
+                      - name: ApprovalFlow
+                        trigger: { onCreate: Approval }
+                        abortOn: { status: [3] }
+                        steps:
+                          - { name: confirm, kind: userTask, args: { assignee: approver } }
+                          - { name: end, kind: end }
 
-              # TWO flows on ONE record (#6862): ApprovalFlow above starts on create and stamps the
-              # record; this one starts when that record is voided. While the at-most-once guard read
-              # the single ProcessId, this second flow never started for any record the first had
-              # already stamped - silently, with no log line and no visible symptom.
-              - name: VoidedFollowUp
-                trigger: { onTransition: Approval, when: "Status == CANCELLED" }
-                steps:
-                  - { name: filed, kind: end }
+                      # TWO flows on ONE record (#6862): ApprovalFlow above starts on create and stamps the
+                      # record; this one starts when that record is voided. While the at-most-once guard read
+                      # the single ProcessId, this second flow never started for any record the first had
+                      # already stamped - silently, with no log line and no visible symptom.
+                      - name: VoidedFollowUp
+                        trigger: { onTransition: Approval, when: "Status == CANCELLED" }
+                        steps:
+                          - { name: filed, kind: end }
 
-              # step resilience (#6762): the flaky call succeeds on its LAST declared attempt (the
-              # delegate counts invocations, so GeneratedKey == KEY-3 pins the R<count+1> cycle),
-              # the produced secret flows through `uses` into the writer and is cleared once it
-              # completes, and the doomed call after the hold exhausts its single retry and routes
-              # its FINAL attempt's message into the record via {error}. The writer is bound with a
-              # `call:` naming its Java source (#8009): it runs on the delegate path, not as a
-              # JavaScript task, so the KEY-3 on the record is also proof that the call ran.
-              - name: ProvisionFlow
-                trigger: { onCreate: Provision }
-                vars:
-                  - { name: apiKey, clearAfter: storeKey }
-                steps:
-                  - name: flakyCall
-                    kind: serviceTask
-                    args:
-                      delegate: custom.FlakyProvisioner
-                      produces: [apiKey]
-                      retry: { count: 2, every: PT2S }
-                      onError: recordFailure
-                      next: storeKey
-                  - name: storeKey
-                    kind: serviceTask
-                    args: { call: custom/ProvisionKeyWriter.java, uses: [apiKey], next: notifyOwner }
-                  # a SEND declaring its own resilience (#7056): this instance has no SMTP, so the
-                  # delivery cannot succeed - which is the case being asserted. The exhausted retry
-                  # routes the FINAL attempt's message onto the record and the flow CARRIES ON to the
-                  # hold, instead of the send dead-lettering and stopping the process where it stands.
-                  - name: notifyOwner
-                    kind: serviceTask
-                    args:
-                      notify: { to: owner@example.com, subject: "Provisioned {title}", body: "Ready." }
-                      retry: { count: 1, every: PT1S }
-                      onError: recordSendFailure
-                      next: hold
-                  - name: recordSendFailure
-                    kind: serviceTask
-                    args: { setField: sendFailure, value: "{error}", next: hold }
-                  - name: hold
-                    kind: userTask
-                    args: { assignee: operator, next: doomedCall }
-                  - name: doomedCall
-                    kind: serviceTask
-                    args:
-                      delegate: custom.DoomedProvisioner
-                      retry: { count: 1, every: PT2S }
-                      onError: recordFailure
-                      next: end
-                  - name: recordFailure
-                    kind: serviceTask
-                    args: { setField: failureMessage, value: "{error}", next: end }
-                  - { name: end, kind: end }
+                      # step resilience (#6762): the flaky call succeeds on its LAST declared attempt (the
+                      # delegate counts invocations, so GeneratedKey == KEY-3 pins the R<count+1> cycle),
+                      # the produced secret flows through `uses` into the writer and is cleared once it
+                      # completes, and the doomed call after the hold exhausts its single retry and routes
+                      # its FINAL attempt's message into the record via {error}. The writer is bound with a
+                      # `call:` naming its Java source (#8009): it runs on the delegate path, not as a
+                      # JavaScript task, so the KEY-3 on the record is also proof that the call ran.
+                      - name: ProvisionFlow
+                        trigger: { onCreate: Provision }
+                        vars:
+                          - { name: apiKey, clearAfter: storeKey }
+                        steps:
+                          - name: flakyCall
+                            kind: serviceTask
+                            args:
+                              delegate: custom.FlakyProvisioner
+                              produces: [apiKey]
+                              retry: { count: 2, every: PT2S }
+                              onError: recordFailure
+                              next: storeKey
+                          - name: storeKey
+                            kind: serviceTask
+                            args: { call: custom/ProvisionKeyWriter.java, uses: [apiKey], next: notifyOwner }
+                          # a SEND declaring its own resilience (#7056): this instance has no SMTP, so the
+                          # delivery cannot succeed - which is the case being asserted. The exhausted retry
+                          # routes the FINAL attempt's message onto the record and the flow CARRIES ON to the
+                          # hold, instead of the send dead-lettering and stopping the process where it stands.
+                          - name: notifyOwner
+                            kind: serviceTask
+                            args:
+                              notify: { to: owner@example.com, subject: "Provisioned {title}", body: "Ready." }
+                              retry: { count: 1, every: PT1S }
+                              onError: recordSendFailure
+                              next: hold
+                          - name: recordSendFailure
+                            kind: serviceTask
+                            args: { setField: sendFailure, value: "{error}", next: hold }
+                          - name: hold
+                            kind: userTask
+                            args: { assignee: operator, next: doomedCall }
+                          - name: doomedCall
+                            kind: serviceTask
+                            args:
+                              delegate: custom.DoomedProvisioner
+                              retry: { count: 1, every: PT2S }
+                              onError: recordFailure
+                              next: end
+                          - name: recordFailure
+                            kind: serviceTask
+                            args: { setField: failureMessage, value: "{error}", next: end }
+                          - { name: end, kind: end }
 
-              # a SENDING step: the serviceTask's whole work is the mail about the trigger record.
-              # It attaches a REPORT rather than the record's own document (the transition below
-              # covers that one), and the Bills this test creates carry no Person - so at runtime the
-              # delegate takes its no-recipient no-op path BEFORE any render, which is exactly what
-              # must not stall a flow.
-              - name: BillFlow
-                trigger: { onCreate: Bill }
-                steps:
-                  - name: mailBill
-                    kind: serviceTask
-                    args:
-                      notify:
-                        to: Person.email
-                        subject: "Bill {note}"
-                        body: "Dear {Person.name}, your bill totals {amount}."
-                        html: "<p>Dear <b>{Person.name}</b>, your bill totals {amount}.</p>"
-                        # attach a parameterized REPORT (#6931): the report runs scoped to THIS
-                        # record's values and the rendered PDF rides along. `minTotal` declares an
-                        # `initial`, so binding it is REQUIRED - left unbound it would stay at that
-                        # one fixed slice and every recipient would be mailed the same rows.
-                        attach:
-                          report: ClaimsByUnit
-                          bind: { minTotal: amount, note: note }
-                      next: shareBill
-                  # the MIRROR of the per-row fan-out: the rows are only the recipient list, and the
-                  # document is the BILL's - rendered once (and not at all when nobody is invited,
-                  # which is the path this test's Bills take) and attached to every message.
-                  - name: shareBill
-                    kind: serviceTask
-                    args:
-                      notify:
-                        forEach: BillRecipient
-                        to: Person.email
-                        subject: "Bill {record.note}"
-                        # {recordUrl} in a fan-out links the ROW - what THIS message is about -
-                        # while {record.note} above reads the anchor. Two different scopes, both
-                        # explicit.
-                        body: "Dear {Person.name}, the bill is attached. Your copy: {recordUrl}"
-                        html: "<p>Dear {Person.name}, bill <b>{record.note}</b> is attached.</p>"
-                        attach: recordPrint
-                      next: end
-                  - { name: end, kind: end }
+                      # timed wait (#8040): the check answers RUNNING twice, and each answer pauses the
+                      # instance on a timer - never a failed job - before the third check answers DONE.
+                      - name: RenditionPoll
+                        trigger: { onCreate: Rendition }
+                        vars:
+                          - { name: renditionState }
+                        steps:
+                          - { name: checkRendition, kind: serviceTask, args: { delegate: custom.RenditionChecker, produces: [renditionState], next: renditionDone } }
+                          - { name: renditionDone,  kind: decision,    args: { if: "renditionState == 'DONE'", then: markRendered, else: pause } }
+                          - { name: pause,          kind: wait,        args: { after: PT1S, next: checkRendition } }
+                          - { name: markRendered,   kind: serviceTask, args: { setField: state, value: DONE, next: end } }
+                          - { name: end, kind: end }
 
-            # The glue EVENT AXIS (#6537): a notification and an integration bound to a process STEP
-            # rather than to an entity lifecycle event. The emitter inserted at the step boundary
-            # publishes the RFQ on the step topic, and these ordinary listeners consume it - so the
-            # emitter sits in the middle of the RfqFlow scenarios below: were it broken, the review
-            # task would never appear and the timeout/expire/wait assertions would fail. The recipient
-            # is a LITERAL so the send is really attempted and cannot succeed (no SMTP on this
-            # instance) - the flow must run through the step regardless. The integration's URL comes
-            # from a configuration key that is not set here, which is the listener's documented no-op.
-            notifications:
-              - name: rfqReviewPending
-                event: { onStepReached: { process: RfqFlow, step: review } }
-                to: ops@example.com
-                subject: "RFQ {title} awaits review"
-                body: "A reviewer must handle it."
-                html: "<p>RFQ <b>{title}</b> awaits a reviewer.</p>"
-                outcome: notifyOutcome
+                      # a SENDING step: the serviceTask's whole work is the mail about the trigger record.
+                      # It attaches a REPORT rather than the record's own document (the transition below
+                      # covers that one), and the Bills this test creates carry no Person - so at runtime the
+                      # delegate takes its no-recipient no-op path BEFORE any render, which is exactly what
+                      # must not stall a flow.
+                      - name: BillFlow
+                        trigger: { onCreate: Bill }
+                        steps:
+                          - name: mailBill
+                            kind: serviceTask
+                            args:
+                              notify:
+                                to: Person.email
+                                subject: "Bill {note}"
+                                body: "Dear {Person.name}, your bill totals {amount}."
+                                html: "<p>Dear <b>{Person.name}</b>, your bill totals {amount}.</p>"
+                                # attach a parameterized REPORT (#6931): the report runs scoped to THIS
+                                # record's values and the rendered PDF rides along. `minTotal` declares an
+                                # `initial`, so binding it is REQUIRED - left unbound it would stay at that
+                                # one fixed slice and every recipient would be mailed the same rows.
+                                attach:
+                                  report: ClaimsByUnit
+                                  bind: { minTotal: amount, note: note }
+                              next: shareBill
+                          # the MIRROR of the per-row fan-out: the rows are only the recipient list, and the
+                          # document is the BILL's - rendered once (and not at all when nobody is invited,
+                          # which is the path this test's Bills take) and attached to every message.
+                          - name: shareBill
+                            kind: serviceTask
+                            args:
+                              notify:
+                                forEach: BillRecipient
+                                to: Person.email
+                                subject: "Bill {record.note}"
+                                # {recordUrl} in a fan-out links the ROW - what THIS message is about -
+                                # while {record.note} above reads the anchor. Two different scopes, both
+                                # explicit.
+                                body: "Dear {Person.name}, the bill is attached. Your copy: {recordUrl}"
+                                html: "<p>Dear {Person.name}, bill <b>{record.note}</b> is attached.</p>"
+                                attach: recordPrint
+                              next: end
+                          - { name: end, kind: end }
 
-            integrations:
-              - name: pushRfqReplied
-                event: { onStepCompleted: { process: RfqFlow, step: markReplied } }
-                method: POST
-                url: "@config:EMISSION_RFQ_WEBHOOK"
+                    # The glue EVENT AXIS (#6537): a notification and an integration bound to a process STEP
+                    # rather than to an entity lifecycle event. The emitter inserted at the step boundary
+                    # publishes the RFQ on the step topic, and these ordinary listeners consume it - so the
+                    # emitter sits in the middle of the RfqFlow scenarios below: were it broken, the review
+                    # task would never appear and the timeout/expire/wait assertions would fail. The recipient
+                    # is a LITERAL so the send is really attempted and cannot succeed (no SMTP on this
+                    # instance) - the flow must run through the step regardless. The integration's URL comes
+                    # from a configuration key that is not set here, which is the listener's documented no-op.
+                    notifications:
+                      - name: rfqReviewPending
+                        event: { onStepReached: { process: RfqFlow, step: review } }
+                        to: ops@example.com
+                        subject: "RFQ {title} awaits review"
+                        body: "A reviewer must handle it."
+                        html: "<p>RFQ <b>{title}</b> awaits a reviewer.</p>"
+                        outcome: notifyOutcome
 
-            # The non-HTTP inbound arrivals (#6537): the same JSON record, saved through the same
-            # repository, arriving on a queue or dropped as a file into a polled folder.
-            inbound:
-              - { name: signalHook,  path: /signal, create: Signal }
-              - { name: signalQueue, source: { queue: emission-signals }, create: Signal }
-              - { name: signalDrop,  source: { folder: target/inbox-emission, cron: "0/2 * * * * ?" }, create: Signal }
-              # Mapping on arrival (#6769): the payload is an ENVELOPE, so a gate decides whether this
-              # app understands it and a map projects it onto the record - including the business key
-              # (an e-mail) that becomes the raisedBy relation. The three arrivals above declare
-              # neither key, which is what keeps them proving the unmapped path at the same time.
-              - name: signalEnvelope
-                source: { queue: emission-signal-envelopes }
-                accept: { type: signal.raised, version: 1 }
-                create: Signal
-                map:
-                  note:     message
-                  raisedBy: { lookup: Person, by: email, from: raisedBy }
+                    integrations:
+                      - name: pushRfqReplied
+                        event: { onStepCompleted: { process: RfqFlow, step: markReplied } }
+                        method: POST
+                        url: "@config:EMISSION_RFQ_WEBHOOK"
 
-            # The departure half (#6767): the same record leaving on a queue, as a DECLARED envelope
-            # rather than the row as stored. The guard keeps an internal note off the wire, which is
-            # the assertion that the `when` of the event axis reaches a publisher at all. It is the
-            # LIST form - the implicit AND (#6957) - which this axis used to stringify into its scalar
-            # pattern and render as `true`, so a two-term guard let EVERY record depart (#7289).
-            outbound:
-              - name: publishSignal
-                event: { onCreate: Signal, when: ["note != internal", "note != secret"] }
-                to: { queue: emission-signals-out }
-                payload:
-                  type: "signal.raised"
-                  version: 1
-                  messageId: "{uuid}"
-                  tenantId: "{tenant}"
-                  note: note
+                    # The non-HTTP inbound arrivals (#6537): the same JSON record, saved through the same
+                    # repository, arriving on a queue or dropped as a file into a polled folder.
+                    inbound:
+                      - { name: signalHook,  path: /signal, create: Signal }
+                      - { name: signalQueue, source: { queue: emission-signals }, create: Signal }
+                      - { name: signalDrop,  source: { folder: target/inbox-emission, cron: "0/2 * * * * ?" }, create: Signal }
+                      # Mapping on arrival (#6769): the payload is an ENVELOPE, so a gate decides whether this
+                      # app understands it and a map projects it onto the record - including the business key
+                      # (an e-mail) that becomes the raisedBy relation. The three arrivals above declare
+                      # neither key, which is what keeps them proving the unmapped path at the same time.
+                      - name: signalEnvelope
+                        source: { queue: emission-signal-envelopes }
+                        accept: { type: signal.raised, version: 1 }
+                        create: Signal
+                        map:
+                          note:     message
+                          raisedBy: { lookup: Person, by: email, from: raisedBy }
 
-            # transitions: the guarded on-demand status flip - Cancel is allowed only on a DRAFT
-            # entry with nothing paid (Calc semantics: a null field reads as 0, so a never-paid
-            # entry passes).
-            transitions:
-              - name: CancelEntry
-                forEntity: Entry
-                from: [1]
-                setStatus: 3
-                when: "Paid == 0"
-                label: Cancel
-                icon: ban
-              - name: PostDoc
-                forEntity: Doc
-                from: [1]
-                setStatus: 2
-                label: Post
-                icon: check
-              - name: VoidDoc
-                forEntity: Doc
-                from: [2]
-                setStatus: 3
-                label: Void
-                icon: ban
-              - name: CancelApproval
-                forEntity: Approval
-                from: [1]
-                setStatus: 3
-                label: Cancel
-                icon: ban
-              # stampOn (#7874): the button only flips the status - the repository stamps ApprovedAt.
-              - name: ApproveClearance
-                forEntity: Clearance
-                from: [OPEN, REOPENED]
-                setStatus: APPROVED
-                label: Approve
-                icon: check
-              # The transition the event-driven create-from below listens for (#6711): posting the slip
-              # is what mints the voucher - the test never calls the create-from to get one.
-              - name: PostSlip
-                forEntity: Slip
-                from: [DRAFT]
-                setStatus: POSTED
-                label: Post
-                icon: check
-              # Voiding the GENERATED document is what releases the slip's one-shot slot (#6814): the
-              # create-from's at-most-once guard steps over a voucher whose status stage is `cancelled`,
-              # so the slip can be generated from again. Nothing about the create-from declares this -
-              # the seeds' `stage:` classification is what says the voided voucher no longer counts.
-              - name: VoidVoucher
-                forEntity: Voucher
-                from: [DRAFT]
-                setStatus: CANCELLED
-                label: Void
-                icon: ban
-              # send-document: the transition mails AFTER the flip commits, with the bill's own print
-              # rendered to PDF and attached. The recipient is a LITERAL so the runtime always gets past
-              # the recipient check and actually attempts the attachment - which cannot succeed on this
-              # instance (no print template in the CMS, no SMTP configured). That is the point: the flip
-              # must still return 200 with the status written. Fail-soft is the contract.
-              - name: SendBill
-                forEntity: Bill
-                from: [1]
-                setStatus: 2
-                label: Send
-                icon: mail
-                notify:
-                  to: ops@example.com
-                  subject: "Bill {note}"
-                  body: "Please find the bill attached. Open it here: {recordUrl}"
-                  html: '<p>Please find the bill attached. <a href="{recordUrl}">Open it here</a>.</p>'
-                  attach: print
-                  # #7023: stamp what the delivery did on the record, and publish -notifyFailed when it
-                  # did not leave - the trace the notification below binds.
-                  outcome: sendOutcome
-                  # languageFrom: the counterparty decides the language the attached print renders in.
-                  languageFrom: Person.locale
-                  # fileName (#6899): a self-describing name instead of the bare document number. The
-                  # {A|B} fallback covers the optional note (blank on most bills, and then the
-                  # counterparty names the file), and the hop adds a relation the message text - a
-                  # LITERAL recipient - never mentions, so the pattern's own load must be declared.
-                  fileName: "BILL_{note|Person.name}"
+                    # The departure half (#6767): the same record leaving on a queue, as a DECLARED envelope
+                    # rather than the row as stored. The guard keeps an internal note off the wire, which is
+                    # the assertion that the `when` of the event axis reaches a publisher at all. It is the
+                    # LIST form - the implicit AND (#6957) - which this axis used to stringify into its scalar
+                    # pattern and render as `true`, so a two-term guard let EVERY record depart (#7289).
+                    outbound:
+                      - name: publishSignal
+                        event: { onCreate: Signal, when: ["note != internal", "note != secret"] }
+                        to: { queue: emission-signals-out }
+                        payload:
+                          type: "signal.raised"
+                          version: 1
+                          messageId: "{uuid}"
+                          tenantId: "{tenant}"
+                          note: note
 
-            # postings + reverses (red storno): a POSTED Doc posts one balanced Entry (debit +
-            # credit); a VOIDED Doc posts the reversal - the SAME lines negated on the SAME sides,
-            # linked to the original through Entry.Storno, fail-soft when nothing was posted.
-            postings:
-              # #7703: the target carries immutableInPeriod, so this posting asks the register before
-              # it writes and says which document it left unposted - and its reopen sweeps re-run it.
-              - name: freightPosting
-                event: { onCreate: Consignment }
-                creates: FreightEntry
-                backReference: Consignment
-                map: { entryDate: shippedOn }
-                items:
-                  - { amount: "Value" }
-              - name: docPosting
-                event: { onTransition: Doc, when: "Status == 2" }
-                creates: Entry
-                backReference: Doc
-                map: { date: date }
-                items:
-                  # Party: source-FK copy (#6533) - the debit line carries Doc.Party as its dimension.
-                  - { debit: "Amount", Party: Party, weight: "Amount" }
-                  - { credit: "Amount" }
-              - name: docStorno
-                event: { onTransition: Doc, when: "Status == 3" }
-                reverses: docPosting
-                storno: Storno
-              # onCreate (#6421): the lifecycle-less Payment posts on its INSERT - no status guard.
-              - name: paymentPosting
-                event: { onCreate: Payment }
-                creates: Entry
-                backReference: Payment
-                map: { date: date }
-                items:
-                  - { debit: "Amount" }
-                  - { credit: "Amount" }
+                    # transitions: the guarded on-demand status flip - Cancel is allowed only on a DRAFT
+                    # entry with nothing paid (Calc semantics: a null field reads as 0, so a never-paid
+                    # entry passes).
+                    transitions:
+                      - name: CancelEntry
+                        forEntity: Entry
+                        from: [1]
+                        setStatus: 3
+                        when: "Paid == 0"
+                        label: Cancel
+                        icon: ban
+                      - name: PostDoc
+                        forEntity: Doc
+                        from: [1]
+                        setStatus: 2
+                        label: Post
+                        icon: check
+                      - name: VoidDoc
+                        forEntity: Doc
+                        from: [2]
+                        setStatus: 3
+                        label: Void
+                        icon: ban
+                      - name: CancelApproval
+                        forEntity: Approval
+                        from: [1]
+                        setStatus: 3
+                        label: Cancel
+                        icon: ban
+                      # stampOn (#7874): the button only flips the status - the repository stamps ApprovedAt.
+                      - name: ApproveClearance
+                        forEntity: Clearance
+                        from: [OPEN, REOPENED]
+                        setStatus: APPROVED
+                        label: Approve
+                        icon: check
+                      # The transition the event-driven create-from below listens for (#6711): posting the slip
+                      # is what mints the voucher - the test never calls the create-from to get one.
+                      - name: PostSlip
+                        forEntity: Slip
+                        from: [DRAFT]
+                        setStatus: POSTED
+                        label: Post
+                        icon: check
+                      # Voiding the GENERATED document is what releases the slip's one-shot slot (#6814): the
+                      # create-from's at-most-once guard steps over a voucher whose status stage is `cancelled`,
+                      # so the slip can be generated from again. Nothing about the create-from declares this -
+                      # the seeds' `stage:` classification is what says the voided voucher no longer counts.
+                      - name: VoidVoucher
+                        forEntity: Voucher
+                        from: [DRAFT]
+                        setStatus: CANCELLED
+                        label: Void
+                        icon: ban
+                      # send-document: the transition mails AFTER the flip commits, with the bill's own print
+                      # rendered to PDF and attached. The recipient is a LITERAL so the runtime always gets past
+                      # the recipient check and actually attempts the attachment - which cannot succeed on this
+                      # instance (no print template in the CMS, no SMTP configured). That is the point: the flip
+                      # must still return 200 with the status written. Fail-soft is the contract.
+                      - name: SendBill
+                        forEntity: Bill
+                        from: [1]
+                        setStatus: 2
+                        label: Send
+                        icon: mail
+                        notify:
+                          to: ops@example.com
+                          subject: "Bill {note}"
+                          body: "Please find the bill attached. Open it here: {recordUrl}"
+                          html: '<p>Please find the bill attached. <a href="{recordUrl}">Open it here</a>.</p>'
+                          attach: print
+                          # #7023: stamp what the delivery did on the record, and publish -notifyFailed when it
+                          # did not leave - the trace the notification below binds.
+                          outcome: sendOutcome
+                          # languageFrom: the counterparty decides the language the attached print renders in.
+                          languageFrom: Person.locale
+                          # fileName (#6899): a self-describing name instead of the bare document number. The
+                          # {A|B} fallback covers the optional note (blank on most bills, and then the
+                          # counterparty names the file), and the hop adds a relation the message text - a
+                          # LITERAL recipient - never mentions, so the pattern's own load must be declared.
+                          fileName: "BILL_{note|Person.name}"
 
-            # Computed create-from item lines (#6555): the list form of generates.items builds a fixed
-            # synthetic line from EXPRESSIONS over the source Slip - a Calc amount, a {} interpolated
-            # string, and a when guard - instead of mirroring a source child 1:1. The target items child
-            # (VoucherLine) is resolved automatically. Enforcement lives in the generated Generate.java.
-            #
-            # It is ALSO event-driven (#6711): posting a Slip mints the Voucher with nobody clicking,
-            # while `button: true` keeps the click as the second trigger - so both halves must share one
-            # at-most-once guard (the Voucher.Slip back-reference the map writes). The status is named,
-            # not numbered.
-            generates:
-              # A SYSTEM write dated inside a period (#7590): the create-from copies the period's own
-              # start date onto the booking and writes through the repository - never a controller -
-              # so only a repository-side period lock can refuse it.
-              - name: booking-from-period
-                from: AccountingPeriod
-                to: LedgerBooking
-                map:
-                  bookedOn: startDate
-                defaults:
-                  amount: 5.00
-              - name: voucher-from-slip
-                from: Slip
-                to: Voucher
-                event: { onTransition: Slip, when: "Status == POSTED" }
-                button: true
-                map:
-                  Slip: id
-                  # A one-hop relation.field source: the create-from loads the Slip's EntryStatus row by
-                  # its foreign key and copies the NAME off it - the snapshot an audit trail needs, which
-                  # `map:` could not express while a source had to be a property of the row itself.
-                  slipStatusName: Status.name
-                defaults:
-                  refNumber: "AUTO"
-                  date: now
-                items:
-                  - note: "Slip {label}"
-                    amount: "Total * 2"
-                    when: "Total != 0"
-              # generates on the step axis with mode: append (#6800). TWO appending rules share the
-              # target AND the back-reference on purpose: that is legal under append (each row records
-              # a different moment), where mode: once would make the second one a permanent no-op.
-              # `button: true` on the second keeps the click, which appends as well - append is the
-              # ABSENCE of a guard, not a state-aware one.
-              - name: log-dispatch
-                from: Shipment
-                to: ShipmentLog
-                event: { onStepReached: { process: ShipmentFlow, step: dispatch }, mode: append }
-                map:
-                  Shipment: id
-                defaults:
-                  step: "dispatch"
-              - name: log-settle
-                from: Shipment
-                to: ShipmentLog
-                event: { onStepCompleted: { process: ShipmentFlow, step: settle }, mode: append }
-                button: true
-                map:
-                  Shipment: id
-                defaults:
-                  step: "settle"
-              # the DEFAULT cardinality on the very same axis: one summary per shipment, and a click
-              # after the event hands back the one that exists instead of minting a second.
-              - name: summary-from-shipment
-                from: Shipment
-                to: ShipmentSummary
-                event: { onStepCompleted: { process: ShipmentFlow, step: settle } }
-                button: true
-                map:
-                  Shipment: id
-                defaults:
-                  note: "summary"
-              # Prompted create-from (#6685): a per-record action that collects the input the source
-              # cannot derive (here: a manual line's note + amount) before creating a composition
-              # child. The prompted values are posted with the source id and set on the target after
-              # map/defaults; a missing required input answers 400 before anything is written.
-              - name: add-voucher-line
-                from: Voucher
-                to: VoucherLine
-                label: Add Manual Line
-                map:
-                  Voucher: id
-                prompt:
-                  - { field: note }
-                  - { field: amount, required: true }
-              # The automatic half of the same axis: the create-from below is triggered by a status
-              # the REGISTER LOOKUP wrote, not by a button and not by a workflow step. The lookup
-              # persists that status with a targeted write, which publishes no event of its own, so
-              # this entry only ever fires if the lookup announces the transition itself.
-              - name: report-from-patrol
-                from: Patrol
-                to: PatrolReport
-                event: { onTransition: Patrol, when: "Status == POSTED" }
-                map:
-                  Patrol: id
-                defaults:
-                  note: "AUTO"
-              # The MIRROR items form with a source-row rule (#7091): the stay's nights become the
-              # bill's lines, but only the ones the rule qualifies. Before this, `items:` cloned every
-              # row - an unapproved or empty one was billed at the same footing as a good one, and since
-              # the target refuses a line missing a required value, ONE bad row could stop the whole
-              # document from being generated at all with nothing the intent could say about it.
-              #
-              # Skipping is the default. The rule reads a moment (CURRENT_DATE), so what qualifies moves
-              # with the clock of the run - the point of reusing the `where` a schedule's query carries.
-              - name: bill-from-stay
-                from: Stay
-                to: Bill
-                label: Bill the nights so far
-                items:
-                  from: StayNight
-                  to: BillLine
-                  where:
-                    - { field: day, op: le, value: CURRENT_DATE }
-                  map:
-                    Amount: amount
-                defaults:
-                  note: "from stay"
-              # The other reading of the same rule (`refuse:`): an unqualified row stops the whole
-              # create-from, naming the rows. Dropping a rejected line silently and billing it silently
-              # are both wrong, for different months - which one a document means is the author's call.
-              - name: checked-bill-from-stay
-                from: Stay
-                to: Bill
-                label: Bill the whole stay
-                items:
-                  from: StayNight
-                  to: BillLine
-                  where:
-                    - { field: amount, op: gt, value: 0 }
-                  refuse: 'Stay night carries no "amount"'
-                  map:
-                    Amount: amount
-                defaults:
-                  note: "from stay, checked"
+                    # postings + reverses (red storno): a POSTED Doc posts one balanced Entry (debit +
+                    # credit); a VOIDED Doc posts the reversal - the SAME lines negated on the SAME sides,
+                    # linked to the original through Entry.Storno, fail-soft when nothing was posted.
+                    postings:
+                      # #7703: the target carries immutableInPeriod, so this posting asks the register before
+                      # it writes and says which document it left unposted - and its reopen sweeps re-run it.
+                      - name: freightPosting
+                        event: { onCreate: Consignment }
+                        creates: FreightEntry
+                        backReference: Consignment
+                        map: { entryDate: shippedOn }
+                        items:
+                          - { amount: "Value" }
+                      - name: docPosting
+                        event: { onTransition: Doc, when: "Status == 2" }
+                        creates: Entry
+                        backReference: Doc
+                        map: { date: date }
+                        items:
+                          # Party: source-FK copy (#6533) - the debit line carries Doc.Party as its dimension.
+                          - { debit: "Amount", Party: Party, weight: "Amount" }
+                          - { credit: "Amount" }
+                      - name: docStorno
+                        event: { onTransition: Doc, when: "Status == 3" }
+                        reverses: docPosting
+                        storno: Storno
+                      # onCreate (#6421): the lifecycle-less Payment posts on its INSERT - no status guard.
+                      - name: paymentPosting
+                        event: { onCreate: Payment }
+                        creates: Entry
+                        backReference: Payment
+                        map: { date: date }
+                        items:
+                          - { debit: "Amount" }
+                          - { credit: "Amount" }
 
-            # resolves: (#6712) fill Patrol.Inspector from the Duty row whose validity period covers
-            # the patrol's date, stamp the outcome, and route the record by status. The status write is
-            # the point of the coverage: it is a transition like any other, and the generates entry
-            # above is bound to it - so this asserts the AUTOMATIC path reaches the same consumers the
-            # manual one does, which is exactly what silently did not happen.
-            resolves:
-              - name: assign-inspector
-                event: { onCreate: Patrol }
-                set: Inspector
-                from: Duty
-                match: { Zone: Zone }
-                between: { start: validFrom, end: validTo, value: visitedAt }
-                outcome: outcome
-                found: { setStatus: POSTED }
+                    # Computed create-from item lines (#6555): the list form of generates.items builds a fixed
+                    # synthetic line from EXPRESSIONS over the source Slip - a Calc amount, a {} interpolated
+                    # string, and a when guard - instead of mirroring a source child 1:1. The target items child
+                    # (VoucherLine) is resolved automatically. Enforcement lives in the generated Generate.java.
+                    #
+                    # It is ALSO event-driven (#6711): posting a Slip mints the Voucher with nobody clicking,
+                    # while `button: true` keeps the click as the second trigger - so both halves must share one
+                    # at-most-once guard (the Voucher.Slip back-reference the map writes). The status is named,
+                    # not numbered.
+                    generates:
+                      # A SYSTEM write dated inside a period (#7590): the create-from copies the period's own
+                      # start date onto the booking and writes through the repository - never a controller -
+                      # so only a repository-side period lock can refuse it.
+                      - name: booking-from-period
+                        from: AccountingPeriod
+                        to: LedgerBooking
+                        map:
+                          bookedOn: startDate
+                        defaults:
+                          amount: 5.00
+                      - name: voucher-from-slip
+                        from: Slip
+                        to: Voucher
+                        event: { onTransition: Slip, when: "Status == POSTED" }
+                        button: true
+                        map:
+                          Slip: id
+                          # A one-hop relation.field source: the create-from loads the Slip's EntryStatus row by
+                          # its foreign key and copies the NAME off it - the snapshot an audit trail needs, which
+                          # `map:` could not express while a source had to be a property of the row itself.
+                          slipStatusName: Status.name
+                        defaults:
+                          refNumber: "AUTO"
+                          date: now
+                        items:
+                          - note: "Slip {label}"
+                            amount: "Total * 2"
+                            when: "Total != 0"
+                      # generates on the step axis with mode: append (#6800). TWO appending rules share the
+                      # target AND the back-reference on purpose: that is legal under append (each row records
+                      # a different moment), where mode: once would make the second one a permanent no-op.
+                      # `button: true` on the second keeps the click, which appends as well - append is the
+                      # ABSENCE of a guard, not a state-aware one.
+                      - name: log-dispatch
+                        from: Shipment
+                        to: ShipmentLog
+                        event: { onStepReached: { process: ShipmentFlow, step: dispatch }, mode: append }
+                        map:
+                          Shipment: id
+                        defaults:
+                          step: "dispatch"
+                      - name: log-settle
+                        from: Shipment
+                        to: ShipmentLog
+                        event: { onStepCompleted: { process: ShipmentFlow, step: settle }, mode: append }
+                        button: true
+                        map:
+                          Shipment: id
+                        defaults:
+                          step: "settle"
+                      # the DEFAULT cardinality on the very same axis: one summary per shipment, and a click
+                      # after the event hands back the one that exists instead of minting a second.
+                      - name: summary-from-shipment
+                        from: Shipment
+                        to: ShipmentSummary
+                        event: { onStepCompleted: { process: ShipmentFlow, step: settle } }
+                        button: true
+                        map:
+                          Shipment: id
+                        defaults:
+                          note: "summary"
+                      # Prompted create-from (#6685): a per-record action that collects the input the source
+                      # cannot derive (here: a manual line's note + amount) before creating a composition
+                      # child. The prompted values are posted with the source id and set on the target after
+                      # map/defaults; a missing required input answers 400 before anything is written.
+                      - name: add-voucher-line
+                        from: Voucher
+                        to: VoucherLine
+                        label: Add Manual Line
+                        map:
+                          Voucher: id
+                        prompt:
+                          - { field: note }
+                          - { field: amount, required: true }
+                      # The automatic half of the same axis: the create-from below is triggered by a status
+                      # the REGISTER LOOKUP wrote, not by a button and not by a workflow step. The lookup
+                      # persists that status with a targeted write, which publishes no event of its own, so
+                      # this entry only ever fires if the lookup announces the transition itself.
+                      - name: report-from-patrol
+                        from: Patrol
+                        to: PatrolReport
+                        event: { onTransition: Patrol, when: "Status == POSTED" }
+                        map:
+                          Patrol: id
+                        defaults:
+                          note: "AUTO"
+                      # The MIRROR items form with a source-row rule (#7091): the stay's nights become the
+                      # bill's lines, but only the ones the rule qualifies. Before this, `items:` cloned every
+                      # row - an unapproved or empty one was billed at the same footing as a good one, and since
+                      # the target refuses a line missing a required value, ONE bad row could stop the whole
+                      # document from being generated at all with nothing the intent could say about it.
+                      #
+                      # Skipping is the default. The rule reads a moment (CURRENT_DATE), so what qualifies moves
+                      # with the clock of the run - the point of reusing the `where` a schedule's query carries.
+                      - name: bill-from-stay
+                        from: Stay
+                        to: Bill
+                        label: Bill the nights so far
+                        items:
+                          from: StayNight
+                          to: BillLine
+                          where:
+                            - { field: day, op: le, value: CURRENT_DATE }
+                          map:
+                            Amount: amount
+                        defaults:
+                          note: "from stay"
+                      # The other reading of the same rule (`refuse:`): an unqualified row stops the whole
+                      # create-from, naming the rows. Dropping a rejected line silently and billing it silently
+                      # are both wrong, for different months - which one a document means is the author's call.
+                      - name: checked-bill-from-stay
+                        from: Stay
+                        to: Bill
+                        label: Bill the whole stay
+                        items:
+                          from: StayNight
+                          to: BillLine
+                          where:
+                            - { field: amount, op: gt, value: 0 }
+                          refuse: 'Stay night carries no "amount"'
+                          map:
+                            Amount: amount
+                        defaults:
+                          note: "from stay, checked"
 
-            # The roles the model issues - and the ones a `visibleTo:` field may name.
-            permissions:
-              - { role: Payroll, description: May see what people are paid }
+                    # resolves: (#6712) fill Patrol.Inspector from the Duty row whose validity period covers
+                    # the patrol's date, stamp the outcome, and route the record by status. The status write is
+                    # the point of the coverage: it is a transition like any other, and the generates entry
+                    # above is bound to it - so this asserts the AUTOMATIC path reaches the same consumers the
+                    # manual one does, which is exactly what silently did not happen.
+                    resolves:
+                      - name: assign-inspector
+                        event: { onCreate: Patrol }
+                        set: Inspector
+                        from: Duty
+                        match: { Zone: Zone }
+                        between: { start: validFrom, end: validTo, value: visitedAt }
+                        outcome: outcome
+                        found: { setStatus: POSTED }
 
-            reports:
-              # A report grouping by a MULTILINGUAL nomenclature: its label column must be translated
-              # for the caller's Accept-Language exactly as the entity list page next to it is, or the
-              # two disagree on the same value (dirigible #6544).
-              - name: ClaimsByUnit
-                source: Claim
-                dimensions: [Unit]
-                measures: ["count(*)"]
-                # User-set parameters: rendered above the report and bound into its WHERE. Both
-                # targets are NULLABLE and unset on the seeded claims, so the unparameterized call
-                # below is the assertion that a declared parameter does not narrow the report before
-                # anyone touches it - a plain `>= :minTotal` would drop both rows on a NULL total.
-                parameters:
-                  - { name: minTotal, target: totalCost, op: ge, initial: "0" }
-                  - { name: note, target: note, op: like }
-              # A report parameter's `initial:` is authored prose bound on every call, and the
-              # generated repository writes it into a Java string literal - a quote in it used to
-              # end that literal and fail the compile of the whole module (#7295). Its own report,
-              # because the fallback narrows every unparameterized call by construction.
-              - name: ClaimNotes
-                source: Claim
-                dimensions: [note]
-                measures: ["count(*)"]
-                parameters:
-                  - { name: search, target: note, op: like, initial: 'O''Neil "the" note' }
-              # aging (#7888): the open amount (debit - credit) of every live entry, bucketed by days
-              # past its date as of the report's own asOf parameter - which defaults to the day the
-              # report is run, resolved per request by the generated repository.
-              - name: EntryAging
-                source: Entry
-                dimensions: [Account.name]
-                aging: { due: date, amount: "debit - credit", buckets: [30, 60, 90] }
-              # kind: statement (#6938): the line classification is emitted as a generated
-              # <REPORT>_LINES .view artifact - published with the project and provisioned by the
-              # ViewsSynchronizer AFTER the tables - and the .report keeps a thin windowed join over
-              # it, so the generated repository never carries the statement's structure as one giant
-              # Java literal (the #6936 class). MISS matches no account on purpose: a declared line
-              # renders (with 0) even when nothing selects into it; TOTAL is flattened arithmetic.
-              - name: EntrySheet
-                kind: statement
-                source: Entry
-                date: date
-                debit: debit
-                credit: credit
-                account: Account.name
-                lines:
-                  - { code: CASH,  label: Vault cash, accounts: "Vault*",   measure: closingNetDebit }
-                  - { code: MISS,  label: Missing,    accounts: "Nothing*", measure: closingNetDebit }
-                  - { code: TOTAL, label: Total,      sum: [CASH, MISS] }
-              # kind: statement on the CASH BASIS (#7857) - the direct-method cash-flow statement.
-              # The lines read the cash each counter-account's postings carried in entries touching
-              # 50*, and the per-entry cash totals are a second generated .view beside the _LINES one.
-              - name: CashFlow
-                kind: statement
-                source: CashVoucherLine
-                date: CashVoucher.bookedOn
-                debit: debit
-                credit: credit
-                account: LedgerAccount.code
-                cashAccounts: "50*"
-                lines:
-                  - { code: OP.IN,    label: Receipts from customers, accounts: "41*", measure: periodCredit }
-                  - { code: OP.SALES, label: Cash sales,              accounts: "70*", measure: periodCredit }
-                  - { code: OP.OUT,   label: Payments to suppliers,   accounts: "40*", measure: periodDebit }
-                  - { code: OP,       label: Operating,               sum: [OP.IN, OP.SALES], less: [OP.OUT] }
-                  - { code: INV,      label: Investing,               less: [INV.OUT] }
-                  - { code: INV.OUT,  label: Equipment bought,        accounts: "20*", measure: periodDebit }
-                  - { code: FIN,      label: Financing,               accounts: "15*", measure: periodCredit }
-                  - { code: NET,      label: Net cash flow,           sum: [OP, INV, FIN] }
-              # kind: ledger (#7887) - the account card over the same voucher ledger. LedgerAccount is
-              # a tree, and the group 50 holds the desk 5010 and the bank 5030: its card lists both
-              # accounts' lines, with the running balance carried across them and across pages.
-              - name: CashCard
-                kind: ledger
-                source: CashVoucherLine
-                date: CashVoucher.bookedOn
-                debit: debit
-                credit: credit
-                account: LedgerAccount
-                columns: [LedgerAccount.code]
-                correspondence: LedgerAccount.code
+                    # The roles the model issues - and the ones a `visibleTo:` field may name.
+                    permissions:
+                      - { role: Payroll, description: May see what people are paid }
 
-            seeds:
-              - name: people
-                entity: Person
-                rows:
-                  - { id: 1, name: Admin, email: admin }
-                  - { id: 2, name: Other, email: other@example.com }
-              # The base tariff is row 2, NOT row 1: a calculated FK that resolved to 1 could be a
-              # coincidence (a first row, a stray default), one that resolves to 2 can only be the
-              # action having run and matched on `base`.
-              - name: period-statuses
-                entity: PeriodStatus
-                rows:
-                  - { id: 1, name: OPEN }
-                  - { id: 2, name: CLOSED }
-              - name: tariffs
-                entity: Tariff
-                rows:
-                  - { id: 1, name: Promotional, base: false }
-                  - { id: 2, name: Standard,    base: true }
-              - name: claims
-                entity: Claim
-                rows:
-                  - { id: 1, note: mine,    rate: 50, Person: 1, Unit: 1 }
-                  - { id: 2, note: foreign, rate: 70, Person: 2, Unit: 1 }
-              - name: parties
-                entity: Party
-                rows:
-                  - { id: 1, name: Acme }
-              # stage: what each status MEANS to the lifecycle (#6645) - metadata, never a column of
-              # the seeded table. Consumed by a report's `scope:` and by the event-driven create-from's
-              # at-most-once guard, which steps over a target retired into `cancelled`/`void` (#6814).
-              - name: entry-statuses
-                entity: EntryStatus
-                rows:
-                  - { id: 1, name: DRAFT,     stage: draft }
-                  - { id: 2, name: POSTED,    stage: live }
-                  - { id: 3, name: CANCELLED, stage: cancelled }
-              - name: pledge-statuses
-                entity: PledgeStatus
-                rows:
-                  - { id: 1, name: OPEN }
-                  - { id: 2, name: PARTIAL }
-                  - { id: 3, name: SETTLED }
-              - name: clearance-statuses
-                entity: ClearanceStatus
-                rows:
-                  - { id: 1, name: OPEN }
-                  - { id: 2, name: APPROVED }
-                  - { id: 3, name: REOPENED }
-                  - { id: 4, name: CLOSED }
-              - name: permit-statuses
-                entity: PermitStatus
-                rows:
-                  - { id: 1, name: SUBMITTED }
-                  - { id: 2, name: APPROVED }
-              - name: pledge-payment-statuses
-                entity: PledgePaymentStatus
-                rows:
-                  - { id: 1, name: ACTIVE,    stage: live }
-                  - { id: 2, name: CANCELLED, stage: cancelled }
-              - name: channels
-                entity: Channel
-                rows:
-                  - { id: 1, name: Email,  active: true }
-                  - { id: 2, name: Social, active: true }
-                  - { id: 3, name: Print,  active: true }
-              # The subset value is seeded by the relation's authored name and lands in the normative
-              # shape - a quoted csv cell ("1,3"); the second row proves an omitted set stays null.
-              # Authored out of order and with a repeat on purpose: a seed reaches the table through
-              # neither the form nor the repository (CSVIM inserts straight into the database), so the
-              # ordering and de-duplication have to happen when the CSV is written (#6897).
-              - name: bulletins
-                entity: Bulletin
-                rows:
-                  - { id: 1, title: Welcome, channels: "3,1,3" }
-                  - { id: 2, title: Plain }
-              - name: zones
-                entity: Zone
-                rows:
-                  - { id: 1, name: North }
-              - name: inspectors
-                entity: Inspector
-                rows:
-                  - { id: 1, name: Early }
-                  - { id: 2, name: Late }
-              # Two duties for one zone, windows that do not overlap: the visit's date falls inside
-              # the SECOND, so resolving to inspector 2 can only mean the period was honoured - a
-              # lookup that matched on the zone alone would answer 1 (or refuse as ambiguous).
-              - name: duties
-                entity: Duty
-                rows:
-                  - { id: 1, Zone: 1, Inspector: 1, validFrom: "2020-01-01", validTo: "2020-12-31" }
-                  - { id: 2, Zone: 1, Inspector: 2, validFrom: "2021-01-01", validTo: "2021-12-31" }
-              - name: units
-                entity: Unit
-                rows:
-                  - { id: 1, name: Piece }
-              - name: units-bg
-                entity: Unit
-                language: bg
-                rows:
-                  - { id: 1, name: "Брой" }
-              # A seed row carrying a RELATION column (Parent) - the regression for the silent
-              # unknown-key drop: the emitted CSV must contain the FK column and BOTH rows must
-              # import (a dropped NOT-NULL-relevant column makes CSVIM skip rows silently).
-              - name: accounts
-                entity: Account
-                rows:
-                  - { id: 1, name: Assets }
-                  - { id: 2, name: Cash, Parent: 1 }
-                  # Vault exists for the EntrySheet statement report: only the seeded ledger rows
-                  # below reference it, so no runtime-created Entry can drift its figures.
-                  - { id: 3, name: Vault, Parent: 1 }
-              # The little ledger the EntrySheet statement reads: 100 debit against 40 credit on the
-              # same account - closingNetDebit must net the two BEFORE the line sums (= 60), which is
-              # the arithmetic a string assertion cannot vouch for.
-              - name: ledger-entries
-                entity: Entry
-                rows:
-                  - { id: 901, date: "2026-01-10", debit: 100, Account: 3, Status: 2 }
-                  - { id: 902, date: "2026-01-11", credit: 40, Account: 3, Status: 2 }
-              # The CashFlow ledger: the cash accounts (50*) move by +300 -120 -200 +1000 +0 +100 =
-              # 1080 - which the three sections must add up to. Voucher 5 is a desk-to-bank transfer
-              # (no cash flow), voucher 6 spreads 100 cash over 75 receivable and 25 sales by amount.
-              - name: ledger-accounts
-                entity: LedgerAccount
-                rows:
-                  - { id: 8, code: "50" }
-                  - { id: 1, code: "5010", Parent: 8 }
-                  - { id: 2, code: "5030", Parent: 8 }
-                  - { id: 3, code: "4110" }
-                  - { id: 4, code: "4010" }
-                  - { id: 5, code: "2040" }
-                  - { id: 6, code: "1510" }
-                  - { id: 7, code: "7010" }
-              - name: cash-vouchers
-                entity: CashVoucher
-                rows:
-                  - { id: 1, bookedOn: "2026-02-01" }
-                  - { id: 2, bookedOn: "2026-02-05" }
-                  - { id: 3, bookedOn: "2026-02-10" }
-                  - { id: 4, bookedOn: "2026-02-12" }
-                  - { id: 5, bookedOn: "2026-02-15" }
-                  - { id: 6, bookedOn: "2026-02-20" }
-              - name: cash-voucher-lines
-                entity: CashVoucherLine
-                rows:
-                  - { id: 11, debit: 300,   CashVoucher: 1, LedgerAccount: 1 }
-                  - { id: 12, credit: 300,  CashVoucher: 1, LedgerAccount: 3 }
-                  - { id: 21, debit: 120,   CashVoucher: 2, LedgerAccount: 4 }
-                  - { id: 22, credit: 120,  CashVoucher: 2, LedgerAccount: 2 }
-                  - { id: 31, debit: 200,   CashVoucher: 3, LedgerAccount: 5 }
-                  - { id: 32, credit: 200,  CashVoucher: 3, LedgerAccount: 1 }
-                  - { id: 41, debit: 1000,  CashVoucher: 4, LedgerAccount: 2 }
-                  - { id: 42, credit: 1000, CashVoucher: 4, LedgerAccount: 6 }
-                  - { id: 51, debit: 50,    CashVoucher: 5, LedgerAccount: 2 }
-                  - { id: 52, credit: 50,   CashVoucher: 5, LedgerAccount: 1 }
-                  - { id: 61, debit: 100,   CashVoucher: 6, LedgerAccount: 1 }
-                  - { id: 62, credit: 75,   CashVoucher: 6, LedgerAccount: 3 }
-                  - { id: 63, credit: 25,   CashVoucher: 6, LedgerAccount: 7 }
-            """;
+                    reports:
+                      # A report grouping by a MULTILINGUAL nomenclature: its label column must be translated
+                      # for the caller's Accept-Language exactly as the entity list page next to it is, or the
+                      # two disagree on the same value (dirigible #6544).
+                      - name: ClaimsByUnit
+                        source: Claim
+                        dimensions: [Unit]
+                        measures: ["count(*)"]
+                        # User-set parameters: rendered above the report and bound into its WHERE. Both
+                        # targets are NULLABLE and unset on the seeded claims, so the unparameterized call
+                        # below is the assertion that a declared parameter does not narrow the report before
+                        # anyone touches it - a plain `>= :minTotal` would drop both rows on a NULL total.
+                        parameters:
+                          - { name: minTotal, target: totalCost, op: ge, initial: "0" }
+                          - { name: note, target: note, op: like }
+                      # A report parameter's `initial:` is authored prose bound on every call, and the
+                      # generated repository writes it into a Java string literal - a quote in it used to
+                      # end that literal and fail the compile of the whole module (#7295). Its own report,
+                      # because the fallback narrows every unparameterized call by construction.
+                      - name: ClaimNotes
+                        source: Claim
+                        dimensions: [note]
+                        measures: ["count(*)"]
+                        parameters:
+                          - { name: search, target: note, op: like, initial: 'O''Neil "the" note' }
+                      # aging (#7888): the open amount (debit - credit) of every live entry, bucketed by days
+                      # past its date as of the report's own asOf parameter - which defaults to the day the
+                      # report is run, resolved per request by the generated repository.
+                      - name: EntryAging
+                        source: Entry
+                        dimensions: [Account.name]
+                        aging: { due: date, amount: "debit - credit", buckets: [30, 60, 90] }
+                      # kind: statement (#6938): the line classification is emitted as a generated
+                      # <REPORT>_LINES .view artifact - published with the project and provisioned by the
+                      # ViewsSynchronizer AFTER the tables - and the .report keeps a thin windowed join over
+                      # it, so the generated repository never carries the statement's structure as one giant
+                      # Java literal (the #6936 class). MISS matches no account on purpose: a declared line
+                      # renders (with 0) even when nothing selects into it; TOTAL is flattened arithmetic.
+                      - name: EntrySheet
+                        kind: statement
+                        source: Entry
+                        date: date
+                        debit: debit
+                        credit: credit
+                        account: Account.name
+                        lines:
+                          - { code: CASH,  label: Vault cash, accounts: "Vault*",   measure: closingNetDebit }
+                          - { code: MISS,  label: Missing,    accounts: "Nothing*", measure: closingNetDebit }
+                          - { code: TOTAL, label: Total,      sum: [CASH, MISS] }
+                      # kind: statement on the CASH BASIS (#7857) - the direct-method cash-flow statement.
+                      # The lines read the cash each counter-account's postings carried in entries touching
+                      # 50*, and the per-entry cash totals are a second generated .view beside the _LINES one.
+                      - name: CashFlow
+                        kind: statement
+                        source: CashVoucherLine
+                        date: CashVoucher.bookedOn
+                        debit: debit
+                        credit: credit
+                        account: LedgerAccount.code
+                        cashAccounts: "50*"
+                        lines:
+                          - { code: OP.IN,    label: Receipts from customers, accounts: "41*", measure: periodCredit }
+                          - { code: OP.SALES, label: Cash sales,              accounts: "70*", measure: periodCredit }
+                          - { code: OP.OUT,   label: Payments to suppliers,   accounts: "40*", measure: periodDebit }
+                          - { code: OP,       label: Operating,               sum: [OP.IN, OP.SALES], less: [OP.OUT] }
+                          - { code: INV,      label: Investing,               less: [INV.OUT] }
+                          - { code: INV.OUT,  label: Equipment bought,        accounts: "20*", measure: periodDebit }
+                          - { code: FIN,      label: Financing,               accounts: "15*", measure: periodCredit }
+                          - { code: NET,      label: Net cash flow,           sum: [OP, INV, FIN] }
+                      # kind: ledger (#7887) - the account card over the same voucher ledger. LedgerAccount is
+                      # a tree, and the group 50 holds the desk 5010 and the bank 5030: its card lists both
+                      # accounts' lines, with the running balance carried across them and across pages.
+                      - name: CashCard
+                        kind: ledger
+                        source: CashVoucherLine
+                        date: CashVoucher.bookedOn
+                        debit: debit
+                        credit: credit
+                        account: LedgerAccount
+                        columns: [LedgerAccount.code]
+                        correspondence: LedgerAccount.code
+
+                    seeds:
+                      - name: people
+                        entity: Person
+                        rows:
+                          - { id: 1, name: Admin, email: admin }
+                          - { id: 2, name: Other, email: other@example.com }
+                      # The base tariff is row 2, NOT row 1: a calculated FK that resolved to 1 could be a
+                      # coincidence (a first row, a stray default), one that resolves to 2 can only be the
+                      # action having run and matched on `base`.
+                      - name: period-statuses
+                        entity: PeriodStatus
+                        rows:
+                          - { id: 1, name: OPEN }
+                          - { id: 2, name: CLOSED }
+                      - name: tariffs
+                        entity: Tariff
+                        rows:
+                          - { id: 1, name: Promotional, base: false }
+                          - { id: 2, name: Standard,    base: true }
+                      - name: claims
+                        entity: Claim
+                        rows:
+                          - { id: 1, note: mine,    rate: 50, Person: 1, Unit: 1 }
+                          - { id: 2, note: foreign, rate: 70, Person: 2, Unit: 1 }
+                      - name: parties
+                        entity: Party
+                        rows:
+                          - { id: 1, name: Acme }
+                      # stage: what each status MEANS to the lifecycle (#6645) - metadata, never a column of
+                      # the seeded table. Consumed by a report's `scope:` and by the event-driven create-from's
+                      # at-most-once guard, which steps over a target retired into `cancelled`/`void` (#6814).
+                      - name: entry-statuses
+                        entity: EntryStatus
+                        rows:
+                          - { id: 1, name: DRAFT,     stage: draft }
+                          - { id: 2, name: POSTED,    stage: live }
+                          - { id: 3, name: CANCELLED, stage: cancelled }
+                      - name: pledge-statuses
+                        entity: PledgeStatus
+                        rows:
+                          - { id: 1, name: OPEN }
+                          - { id: 2, name: PARTIAL }
+                          - { id: 3, name: SETTLED }
+                      - name: clearance-statuses
+                        entity: ClearanceStatus
+                        rows:
+                          - { id: 1, name: OPEN }
+                          - { id: 2, name: APPROVED }
+                          - { id: 3, name: REOPENED }
+                          - { id: 4, name: CLOSED }
+                      - name: permit-statuses
+                        entity: PermitStatus
+                        rows:
+                          - { id: 1, name: SUBMITTED }
+                          - { id: 2, name: APPROVED }
+                      - name: pledge-payment-statuses
+                        entity: PledgePaymentStatus
+                        rows:
+                          - { id: 1, name: ACTIVE,    stage: live }
+                          - { id: 2, name: CANCELLED, stage: cancelled }
+                      - name: channels
+                        entity: Channel
+                        rows:
+                          - { id: 1, name: Email,  active: true }
+                          - { id: 2, name: Social, active: true }
+                          - { id: 3, name: Print,  active: true }
+                      # The subset value is seeded by the relation's authored name and lands in the normative
+                      # shape - a quoted csv cell ("1,3"); the second row proves an omitted set stays null.
+                      # Authored out of order and with a repeat on purpose: a seed reaches the table through
+                      # neither the form nor the repository (CSVIM inserts straight into the database), so the
+                      # ordering and de-duplication have to happen when the CSV is written (#6897).
+                      - name: bulletins
+                        entity: Bulletin
+                        rows:
+                          - { id: 1, title: Welcome, channels: "3,1,3" }
+                          - { id: 2, title: Plain }
+                      - name: zones
+                        entity: Zone
+                        rows:
+                          - { id: 1, name: North }
+                      - name: inspectors
+                        entity: Inspector
+                        rows:
+                          - { id: 1, name: Early }
+                          - { id: 2, name: Late }
+                      # Two duties for one zone, windows that do not overlap: the visit's date falls inside
+                      # the SECOND, so resolving to inspector 2 can only mean the period was honoured - a
+                      # lookup that matched on the zone alone would answer 1 (or refuse as ambiguous).
+                      - name: duties
+                        entity: Duty
+                        rows:
+                          - { id: 1, Zone: 1, Inspector: 1, validFrom: "2020-01-01", validTo: "2020-12-31" }
+                          - { id: 2, Zone: 1, Inspector: 2, validFrom: "2021-01-01", validTo: "2021-12-31" }
+                      - name: units
+                        entity: Unit
+                        rows:
+                          - { id: 1, name: Piece }
+                      - name: units-bg
+                        entity: Unit
+                        language: bg
+                        rows:
+                          - { id: 1, name: "Брой" }
+                      # A seed row carrying a RELATION column (Parent) - the regression for the silent
+                      # unknown-key drop: the emitted CSV must contain the FK column and BOTH rows must
+                      # import (a dropped NOT-NULL-relevant column makes CSVIM skip rows silently).
+                      - name: accounts
+                        entity: Account
+                        rows:
+                          - { id: 1, name: Assets }
+                          - { id: 2, name: Cash, Parent: 1 }
+                          # Vault exists for the EntrySheet statement report: only the seeded ledger rows
+                          # below reference it, so no runtime-created Entry can drift its figures.
+                          - { id: 3, name: Vault, Parent: 1 }
+                      # The little ledger the EntrySheet statement reads: 100 debit against 40 credit on the
+                      # same account - closingNetDebit must net the two BEFORE the line sums (= 60), which is
+                      # the arithmetic a string assertion cannot vouch for.
+                      - name: ledger-entries
+                        entity: Entry
+                        rows:
+                          - { id: 901, date: "2026-01-10", debit: 100, Account: 3, Status: 2 }
+                          - { id: 902, date: "2026-01-11", credit: 40, Account: 3, Status: 2 }
+                      # The CashFlow ledger: the cash accounts (50*) move by +300 -120 -200 +1000 +0 +100 =
+                      # 1080 - which the three sections must add up to. Voucher 5 is a desk-to-bank transfer
+                      # (no cash flow), voucher 6 spreads 100 cash over 75 receivable and 25 sales by amount.
+                      - name: ledger-accounts
+                        entity: LedgerAccount
+                        rows:
+                          - { id: 8, code: "50" }
+                          - { id: 1, code: "5010", Parent: 8 }
+                          - { id: 2, code: "5030", Parent: 8 }
+                          - { id: 3, code: "4110" }
+                          - { id: 4, code: "4010" }
+                          - { id: 5, code: "2040" }
+                          - { id: 6, code: "1510" }
+                          - { id: 7, code: "7010" }
+                      - name: cash-vouchers
+                        entity: CashVoucher
+                        rows:
+                          - { id: 1, bookedOn: "2026-02-01" }
+                          - { id: 2, bookedOn: "2026-02-05" }
+                          - { id: 3, bookedOn: "2026-02-10" }
+                          - { id: 4, bookedOn: "2026-02-12" }
+                          - { id: 5, bookedOn: "2026-02-15" }
+                          - { id: 6, bookedOn: "2026-02-20" }
+                      - name: cash-voucher-lines
+                        entity: CashVoucherLine
+                        rows:
+                          - { id: 11, debit: 300,   CashVoucher: 1, LedgerAccount: 1 }
+                          - { id: 12, credit: 300,  CashVoucher: 1, LedgerAccount: 3 }
+                          - { id: 21, debit: 120,   CashVoucher: 2, LedgerAccount: 4 }
+                          - { id: 22, credit: 120,  CashVoucher: 2, LedgerAccount: 2 }
+                          - { id: 31, debit: 200,   CashVoucher: 3, LedgerAccount: 5 }
+                          - { id: 32, credit: 200,  CashVoucher: 3, LedgerAccount: 1 }
+                          - { id: 41, debit: 1000,  CashVoucher: 4, LedgerAccount: 2 }
+                          - { id: 42, credit: 1000, CashVoucher: 4, LedgerAccount: 6 }
+                          - { id: 51, debit: 50,    CashVoucher: 5, LedgerAccount: 2 }
+                          - { id: 52, credit: 50,   CashVoucher: 5, LedgerAccount: 1 }
+                          - { id: 61, debit: 100,   CashVoucher: 6, LedgerAccount: 1 }
+                          - { id: 62, credit: 75,   CashVoucher: 6, LedgerAccount: 3 }
+                          - { id: 63, credit: 25,   CashVoucher: 6, LedgerAccount: 7 }
+                    """;
 
     /** The whole fixture, as the two halves above spell it. */
     // Still the entities list, for the same 65535-byte reason. A posting whose TARGET is locked by a
@@ -2443,6 +2465,29 @@ class IntentEmissionCoverageIT extends IntegrationTest {
             }
             """;
 
+    /**
+     * The check of the timed-wait poll (#8040): reads the state once per call, RUNNING on the first two
+     * checks of an instance and DONE on the third, counting in the instance's own {@code checks}
+     * variable so the history pins how often the loop ran.
+     */
+    private static final String RENDITION_CHECKER_JAVA = """
+            package custom;
+
+            import org.flowable.engine.delegate.DelegateExecution;
+            import org.flowable.engine.delegate.JavaDelegate;
+
+            public class RenditionChecker implements JavaDelegate {
+
+                @Override
+                public void execute(DelegateExecution execution) {
+                    Object previous = execution.getVariable("checks");
+                    int checks = previous instanceof Number number ? number.intValue() + 1 : 1;
+                    execution.setVariable("checks", checks);
+                    execution.setVariable("renditionState", checks < 3 ? "RUNNING" : "DONE");
+                }
+            }
+            """;
+
     @Test
     void generated_code_contains_every_feature_enforcement_and_the_published_app_enforces_it() {
         writeIntent(INTENT_YAML);
@@ -2451,6 +2496,7 @@ class IntentEmissionCoverageIT extends IntegrationTest {
         writeProjectFile("custom/FlakyProvisioner.java", FLAKY_PROVISIONER_JAVA);
         writeProjectFile("custom/ProvisionKeyWriter.java", PROVISION_KEY_WRITER_JAVA);
         writeProjectFile("custom/DoomedProvisioner.java", DOOMED_PROVISIONER_JAVA);
+        writeProjectFile("custom/RenditionChecker.java", RENDITION_CHECKER_JAVA);
         // Generate: the models AND the code from them, in one call - the production path. The engine
         // runs each recipe with the template and parameters the project's .settings declare, so a
         // parameter-gated producer (javaRuntime gates the leafOnly repository class, say) is exercised
@@ -2480,6 +2526,46 @@ class IntentEmissionCoverageIT extends IntegrationTest {
         assertNowDefaultRuntime();
         assertAgreeGuardsTheParentsRuntime();
         assertStatusStampsRuntime();
+        assertTimedWaitRuntime();
+    }
+
+    /**
+     * A timed {@code wait} (#8040), generated, published and running: it is a timer catch event with no
+     * message and no wait listener, and the poll it paces completes once the check answers DONE - after
+     * exactly three checks, so each RUNNING paused once on the timer and none failed a job.
+     */
+    private void assertTimedWaitRuntime() {
+        String bpmn = contentOf("RenditionPoll.bpmn");
+        assertTrue(bpmn.contains("<timerEventDefinition><timeDuration>PT1S</timeDuration></timerEventDefinition>"),
+                "a timed wait must render as a timer catch event, got: " + bpmn);
+        assertFalse(bpmn.contains("<message "), "a timed wait must declare no message, got: " + bpmn);
+        assertFalse(exists("gen/events/emission/RenditionPollPauseWait.java"), "a timed wait must generate no wait listener");
+
+        String renditionApi = API + "/rendition/RenditionController";
+        AtomicInteger rendition = new AtomicInteger();
+        restAssuredExecutor.execute(() -> rendition.set(given().contentType("application/json")
+                                                               .body("{\"Title\":\"annual report\"}")
+                                                               .when()
+                                                               .post(renditionApi)
+                                                               .then()
+                                                               .statusCode(200)
+                                                               .extract()
+                                                               .path("Id")));
+        AtomicReference<String> processId = new AtomicReference<>();
+        restAssuredExecutor.execute(() -> processId.set(given().when()
+                                                               .get(renditionApi + "/" + rendition.get())
+                                                               .then()
+                                                               .statusCode(200)
+                                                               .body("State", equalTo("DONE"))
+                                                               .extract()
+                                                               .path("ProcessId")),
+                60);
+        restAssuredExecutor.execute(() -> given().when()
+                                                 .get("/services/bpm/bpm-processes/historic-instances/" + processId.get() + "/variables")
+                                                 .then()
+                                                 .statusCode(200)
+                                                 .body("find { it.variableName == 'checks' }.value", equalTo(3)),
+                30);
     }
 
     /**
