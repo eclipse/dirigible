@@ -12,9 +12,11 @@ package org.eclipse.dirigible.components.intent.generator;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.dirigible.components.ide.template.service.model.GlueTemplateRendering;
 import org.eclipse.dirigible.components.intent.model.IntentModel;
 import org.eclipse.dirigible.components.intent.parser.IntentParser;
 import org.junit.jupiter.api.Test;
@@ -249,5 +251,166 @@ class GlueInboundMappingTest {
         return ((List<?>) collection.get("mapFields")).stream()
                                                       .map(field -> String.valueOf(((Map<?, ?>) field).get("property")))
                                                       .toList();
+    }
+
+    /** An order naming its customer by a business key - the arrival #8031 is about. */
+    private static final String CUSTOMER_ORDERS = """
+            name: sales
+            entities:
+              - name: Customer
+                fields:
+                  - { name: id,   type: integer, primaryKey: true, generated: true }
+                  - { name: code, type: string, unique: true }
+              - name: Order
+                fields:
+                  - { name: id,     type: integer, primaryKey: true, generated: true }
+                  - { name: number, type: string, unique: true, required: true }
+                relations:
+                  - { name: customer, kind: manyToOne, to: Customer, required: true }
+            inbound:
+              - name: orders
+                source: { queue: "orders.placed" }
+                accept: { type: order.placed, version: 1 }
+                create: Order
+                map:
+                  number:   number
+                  customer: { lookup: Customer, by: code, from: customerCode%s }
+            """;
+
+    /**
+     * The order lines of {@link #ORDERS}, arriving on a queue only - a webhook does not take the key.
+     */
+    private static final String QUEUED_LINES = """
+            name: shop
+            entities:
+              - name: Product
+                fields:
+                  - { name: id,  type: integer, primaryKey: true, generated: true }
+                  - { name: sku, type: string, unique: true }
+              - name: PurchaseOrder
+                fields:
+                  - { name: id,          type: integer, primaryKey: true, generated: true }
+                  - { name: orderNumber, type: string, unique: true }
+                relations:
+                  - { name: lines, kind: oneToMany, to: OrderLine }
+              - name: OrderLine
+                fields:
+                  - { name: id,       type: integer, primaryKey: true, generated: true }
+                  - { name: quantity, type: integer }
+                relations:
+                  - { name: purchaseOrder, kind: manyToOne, to: PurchaseOrder, composition: true }
+                  - { name: product,       kind: manyToOne, to: Product }
+            inbound:
+              - name: orderQueue
+                source: { queue: orders }
+                create: PurchaseOrder
+                map:
+                  orderNumber: orderNumber
+                  lines:
+                    from: lines
+                    map:
+                      quantity: qty
+                      product: { lookup: Product, by: sku, from: sku, onMissing: deadLetter }
+            """;
+
+    /**
+     * Both misses of a dead-letter lookup THROW: the listener container logs the failure and hands the
+     * message back to the broker, which retries it and then dead-letters it. A {@code return} would
+     * acknowledge it - the very loss the key exists to prevent.
+     */
+    @Test
+    void aDeadLetterLookupThrowsOnBothMisses() throws IOException {
+        String consumer = renderConsumer(CUSTOMER_ORDERS.formatted(", onMissing: deadLetter"));
+
+        String noKey = branch(consumer, "if (lookupCustomerKey == null) {");
+        assertTrue(noKey.contains("throw new IllegalStateException(\"Inbound orders: a message on [\" + destination() + \"] carries no [\""
+                + " + \"customerCode\""), noKey);
+        assertTrue(noKey.contains("to resolve Customer by - dead-lettered\");"), noKey);
+        String noMatch = branch(consumer, "if (lookupCustomerMatches.size() != 1) {");
+        assertTrue(
+                noMatch.contains(
+                        "throw new IllegalStateException(\"Inbound orders: no unique Customer matches Code [\" + lookupCustomerKey"),
+                noMatch);
+        assertTrue(noMatch.contains("+ \"] from [\" + \"customerCode\" + \"] - dead-lettered\");"), noMatch);
+        for (String branch : List.of(noKey, noMatch)) {
+            assertTrue(!branch.contains("return;") && !branch.contains("LOG."),
+                    "the consumer does not log the miss itself - the listener container logs every throwing handler: " + branch);
+        }
+        assertTrue(consumer.contains("A lookup declared onMissing: deadLetter rejects it by THROWING"),
+                "the class javadoc says which way the message is rejected");
+    }
+
+    /**
+     * A lookup without the key - or with the default spelled out - generates exactly what it did before
+     * the key existed: the miss is logged and the message acknowledged.
+     */
+    @Test
+    void aDropLookupIsUnchanged() throws IOException {
+        String withoutKey = renderConsumer(CUSTOMER_ORDERS.formatted(""));
+
+        assertEquals(withoutKey, renderConsumer(CUSTOMER_ORDERS.formatted(", onMissing: drop")));
+        assertEquals(
+                """
+                        if (lookupCustomerKey == null) {
+                                    LOG.error("Inbound orders: a message on [{}] carries no [{}] to resolve Customer by - NOT ingested", destination(),
+                                            "customerCode");
+                                    return;
+                                }
+                        """,
+                branch(withoutKey, "if (lookupCustomerKey == null) {"));
+        assertEquals("""
+                if (lookupCustomerMatches.size() != 1) {
+                            LOG.error("Inbound orders: no unique Customer matches Code [{}] from [{}] - NOT ingested",
+                                    lookupCustomerKey, "customerCode");
+                            return;
+                        }
+                """, branch(withoutKey, "if (lookupCustomerMatches.size() != 1) {"));
+        assertTrue(!withoutKey.contains("onMissing") && !withoutKey.contains("dead-letter"), withoutKey);
+    }
+
+    /**
+     * An element lookup dead-letters the same way. Every element is resolved before anything is
+     * written, so throwing there leaves nothing half-saved; the other element rejections keep their
+     * behaviour.
+     */
+    @Test
+    void aCollectionElementLookupDeadLetters() throws IOException {
+        String consumer = renderConsumer(QUEUED_LINES);
+
+        String noKey = branch(consumer, "if (lookupLinesProductKey == null) {");
+        assertTrue(
+                noKey.contains("throw new IllegalStateException(\"Inbound orderQueue: a message on [\" + destination() + \"]: element [\""
+                        + " + index + \"] of [\""),
+                noKey);
+        assertTrue(noKey.contains("+ \"] to resolve Product by - dead-lettered\");"), noKey);
+        String noMatch = branch(consumer, "if (lookupLinesProductMatches.size() != 1) {");
+        assertTrue(noMatch.contains("]: no unique Product matches Sku [\" + lookupLinesProductKey"), noMatch);
+        assertTrue(noMatch.contains("- dead-lettered\");"), noMatch);
+        for (String branch : List.of(noKey, noMatch)) {
+            assertTrue(!branch.contains("return;") && !branch.contains("LOG."), branch);
+        }
+        assertTrue(consumer.contains("is not an object - NOT ingested"), "an element of the wrong shape is still acknowledged");
+    }
+
+    /**
+     * The rendered source with {@code \n} line ends. The template's own line ends are the checkout's
+     * (CRLF on a Windows runner), and the blocks asserted here are matched line by line.
+     */
+    private static String renderConsumer(String yaml) throws IOException {
+        Map<String, Object> entry = GlueIntentGenerator.buildInboundMessagesForTest(IntentParser.parse(yaml))
+                                                       .get(0);
+        return GlueTemplateRendering.renderInboundMessage(entry, "sales")
+                                    .replace("\r\n", "\n");
+    }
+
+    /** The block a line opens, up to the brace closing it at the same indentation. */
+    private static String branch(String source, String opening) {
+        int start = source.indexOf(opening);
+        assertTrue(start >= 0, "no [" + opening + "] in:\n" + source);
+        int lineStart = source.lastIndexOf('\n', start) + 1;
+        String closing = "\n" + " ".repeat(start - lineStart) + "}\n";
+        int end = source.indexOf(closing, start);
+        assertTrue(end >= 0, "[" + opening + "] is never closed");
+        return source.substring(start, end + closing.length());
     }
 }

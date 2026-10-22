@@ -4246,6 +4246,14 @@ inbound:
   key): a lookup that could match several rows would silently pick one, so a non-unique `by:` fails at
   Generate. A lookup that matches nothing **rejects the arrival** with a clear log - never a null
   relation. v1 is same-model: the looked-up entity must be declared in this model.
+- **`onMissing:`** on a lookup of a **queue or topic** arrival says what that rejection does. `drop`
+  (the default) logs it and acknowledges the message, which is then gone. `deadLetter` fails the
+  message instead: the broker redelivers it a few times and then moves it to its dead-letter
+  destination, where it can be replayed. A redelivery that finds the row created in the meantime
+  ingests it. Use `deadLetter` when the sender cannot be told and a miss is a configuration error
+  someone must see and fix (a sender pointed at the wrong receiver, a register row not created yet):
+  `tenant: { lookup: Tenant, by: tenantId, from: tenantId, onMissing: deadLetter }`. A webhook does
+  not take the key, because it already answers 400. A drop folder does not take it either.
 
 Everything still saves through the entity's own repository, so validations, translations and the create
 event fire exactly as for any other write. Do not map the primary key - it is generated on insert; give

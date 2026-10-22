@@ -108,6 +108,14 @@ itself (`label: "."`). The arrival stores **one** `PurchaseOrder`, two `Purchase
    stores nothing and logs the rejection; both under the logger
    `gen.events.assignments.AssignmentRequestsConsumer`, visible in the Logs view or the console.
 
+   One naming a tenant that does not exist (`"tenantId":"nope"`) is not dropped. The queue's tenant
+   lookup declares `onMissing: deadLetter`
+   ([eclipse-dirigible/dirigible#8031](https://github.com/eclipse-dirigible/dirigible/issues/8031)), so
+   the consumer fails the message: the broker redelivers it three times and then moves it to
+   `ActiveMQ.DLQ`, where it can be replayed once the tenant exists. Each attempt logs the value it
+   could not resolve. If the tenant is created before the redeliveries run out, the message is
+   ingested.
+
    Mark the destination `global:` when the queue is a contract with another deployment (the platform's
    external-contract marker; the name is passed to the broker verbatim).
 

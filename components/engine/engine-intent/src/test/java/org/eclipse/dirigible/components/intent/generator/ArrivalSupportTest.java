@@ -84,6 +84,12 @@ class ArrivalSupportTest {
                 accept: { type: user.assignment.requested }
                 create: TenantUserAssignment
               - { name: plain, path: /plain, create: TenantUserAssignment }
+              - name: strictAssignments
+                source: { topic: assignments }
+                create: TenantUserAssignment
+                map:
+                  tenant: { lookup: Tenant,         by: tenantId, from: tenantId, onMissing: deadLetter }
+                  role:   { lookup: AssignmentRole, by: name,     from: role,     onMissing: drop }
             """;
 
     @Test
@@ -142,6 +148,40 @@ class ArrivalSupportTest {
         // import must resolve through it - a settings-unaware walk names a package that does not exist.
         assertEquals("Settings", lookups.get(1)
                                         .targetPerspective());
+    }
+
+    /**
+     * A lookup that does not say what a miss does keeps acknowledging it, as before the key existed.
+     */
+    @Test
+    void onMissingDefaultsToDrop() {
+        ArrivalSupport.Plan plan = plan("userAssignments");
+
+        assertTrue(plan.lookups()
+                       .stream()
+                       .noneMatch(ArrivalSupport.Lookup::deadLetter));
+        Map<String, Object> mapped = ArrivalSupport.arrivalFields(plan);
+        for (Object lookup : (List<?>) mapped.get("lookups")) {
+            assertEquals(Boolean.FALSE, ((Map<?, ?>) lookup).get("deadLetter"),
+                    "the key is always present, so a template can branch on it");
+        }
+        assertEquals(Boolean.FALSE, mapped.get("hasDeadLetterLookups"));
+        assertEquals(Boolean.FALSE, ArrivalSupport.arrivalFields(null)
+                                                  .get("hasDeadLetterLookups"));
+    }
+
+    @Test
+    void onMissingDeadLetterIsPlannedPerLookup() {
+        ArrivalSupport.Plan plan = plan("strictAssignments");
+
+        assertEquals(List.of(true, false), plan.lookups()
+                                               .stream()
+                                               .map(ArrivalSupport.Lookup::deadLetter)
+                                               .toList(),
+                "deadLetter on the tenant lookup, an explicit drop on the role lookup");
+        Map<String, Object> mapped = ArrivalSupport.arrivalFields(plan);
+        assertEquals(Boolean.TRUE, ((Map<?, ?>) ((List<?>) mapped.get("lookups")).get(0)).get("deadLetter"));
+        assertEquals(Boolean.TRUE, mapped.get("hasDeadLetterLookups"));
     }
 
     @Test

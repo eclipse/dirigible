@@ -32,6 +32,11 @@ import gen.${javaGenFolderName}.data.${javaPerspective}.${entity}Repository;
  * The payload is an envelope, so it is read as one and projected onto the record by the declared
  * map - a key the map does not name is not the record's business. A business-key lookup that
  * resolves to no single row REJECTS the message rather than storing a null relation.
+#if($hasDeadLetterLookups)
+ * A lookup declared onMissing: deadLetter rejects it by THROWING, so the broker redelivers the
+ * message and finally moves it to its dead-letter destination; every other lookup logs the miss and
+ * acknowledges the message.
+#end
 #end
 #if($hasCollections)
  *
@@ -84,18 +89,28 @@ public class ${className}Consumer implements MessageHandler {
 #foreach($lookup in $lookups)
         Object ${lookup.local}Key = envelope.get(${lookup.fromLiteral});
         if (${lookup.local}Key == null) {
+#if($lookup.deadLetter)
+            throw new IllegalStateException("Inbound ${name}: a message on [" + destination() + "] carries no [" + ${lookup.fromLiteral}
+                    + "] to resolve ${lookup.property} by - dead-lettered");
+#else
             LOG.error("Inbound ${name}: a message on [{}] carries no [{}] to resolve ${lookup.property} by - NOT ingested", destination(),
                     ${lookup.fromLiteral});
             return;
+#end
         }
         java.util.List<gen.${javaGenFolderName}.data.${lookup.javaTargetPerspective}.${lookup.targetEntity}Entity> ${lookup.local}Matches =
                 new gen.${javaGenFolderName}.data.${lookup.javaTargetPerspective}.${lookup.targetEntity}Repository()
                         .findAll(Criteria.create()
                                          .eq("${lookup.byProperty}", ${lookup.byValueExpression}));
         if (${lookup.local}Matches.size() != 1) {
+#if($lookup.deadLetter)
+            throw new IllegalStateException("Inbound ${name}: no unique ${lookup.targetEntity} matches ${lookup.byProperty} [" + ${lookup.local}Key
+                    + "] from [" + ${lookup.fromLiteral} + "] - dead-lettered");
+#else
             LOG.error("Inbound ${name}: no unique ${lookup.targetEntity} matches ${lookup.byProperty} [{}] from [{}] - NOT ingested",
                     ${lookup.local}Key, ${lookup.fromLiteral});
             return;
+#end
         }
         entity.${lookup.property} = ${lookup.local}Matches.get(0).${lookup.targetKeyProperty};
 #end
@@ -156,9 +171,14 @@ public class ${className}Consumer implements MessageHandler {
 #else
                 Object ${lookup.local}Key = item.get(${lookup.fromLiteral});
                 if (${lookup.local}Key == null) {
+#if($lookup.deadLetter)
+                    throw new IllegalStateException("Inbound ${name}: a message on [" + destination() + "]: element [" + index + "] of ["
+                            + ${collection.fromLiteral} + "] carries no [" + ${lookup.fromLiteral} + "] to resolve ${lookup.property} by - dead-lettered");
+#else
                     LOG.error("Inbound ${name}: a message on [{}]: element [{}] of [{}] carries no [{}] to resolve ${lookup.property} by - NOT ingested", destination(),
                             index, ${collection.fromLiteral}, ${lookup.fromLiteral});
                     return;
+#end
                 }
 #end
                 gen.${javaGenFolderName}.data.${lookup.javaTargetPerspective}.${lookup.targetEntity}Entity ${lookup.local}Match =
@@ -169,9 +189,15 @@ public class ${className}Consumer implements MessageHandler {
                                     .findAll(Criteria.create()
                                                      .eq("${lookup.byProperty}", ${lookup.byValueExpression}));
                     if (${lookup.local}Matches.size() != 1) {
+#if($lookup.deadLetter)
+                        throw new IllegalStateException("Inbound ${name}: a message on [" + destination() + "]: element [" + index + "] of ["
+                                + ${collection.fromLiteral} + "]: no unique ${lookup.targetEntity} matches ${lookup.byProperty} [" + ${lookup.local}Key
+                                + "] - dead-lettered");
+#else
                         LOG.error("Inbound ${name}: a message on [{}]: element [{}] of [{}]: no unique ${lookup.targetEntity} matches ${lookup.byProperty} [{}] - NOT ingested", destination(),
                                 index, ${collection.fromLiteral}, ${lookup.local}Key);
                         return;
+#end
                     }
                     ${lookup.local}Match = ${lookup.local}Matches.get(0);
                     ${lookup.local}Cache.put(${lookup.local}Key, ${lookup.local}Match);
