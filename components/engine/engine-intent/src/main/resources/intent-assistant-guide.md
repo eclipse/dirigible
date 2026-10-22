@@ -233,10 +233,18 @@ not as an apology.
 - **Lifecycle events** (`notifications`, `integrations`): exactly **one** of `onCreate` / `onUpdate` /
   `onDelete` per item, and it must reference a declared entity.
 - **Recipients** (`to` in any notify block): a literal email address, a direct field
-  of the entity, or a **one-hop** `relation.field` (e.g. `member.email`). The relation may be
-  **cross-model** - `partner.email` where `partner` targets an entity owned by another `uses` model
-  resolves against the owner's model (the generated listener imports the owner's Entity/Repository),
-  exactly like a cross-model dropdown. Multi-hop paths are not supported.
+  of the entity, or a **relation path** ending at a field - `member.email`, or a **chain of to-one
+  relations** such as `subscription.customer.email`: every segment but the last is a `manyToOne` /
+  `oneToOne` relation (the first of the record the block is about - the ROW inside a `forEach` - each
+  further one of the previous target), the last a field of the last target, with no depth limit. The
+  same paths work in every `{placeholder}` of `subject` / `body` / `html`
+  (`{subscription.plan.name}`), so a message reaches a parent's parent through the record it belongs
+  to - do NOT copy relations onto the record (`Renewal.customer` beside `Renewal.subscription`) just to
+  make the walk one hop. Each relation prefix is loaded once per message and a null hop renders
+  `null`. The LAST relation may be **cross-model** - `partner.email` where `partner` targets an entity
+  owned by another `uses` model resolves against the owner's model (the generated listener imports the
+  owner's Entity/Repository), exactly like a cross-model dropdown; a walk cannot continue past it. A
+  path of two or more relations that does not resolve is a parse error naming the failing segment.
 - **A recipient the ENVIRONMENT supplies: `to: "@config:OPS_EMAIL"`.** An operations mailbox - the one
   a staleness sweep or a failure notice reports to - is not a property of any record and differs per
   deployment, so name the configuration KEY and the address is read at send time (the same `@config:`
@@ -3274,13 +3282,13 @@ notifications:
   - name: welcomeMember
     event: { onCreate: Member }          # one event of the event axis (see below)
     channel: email
-    to: email                            # a field, a one-hop relation.field, or a literal address
+    to: email                            # a field, a relation path (customer.email), or a literal address
     subject: "Welcome to the library"
     body: "Hi, your membership is active."
 ```
 
 **Rules:** exactly one event of the event axis; `channel` is `email`; `to` follows the recipient rule
-(literal / `@config:KEY` / field / one-hop `relation.field`).
+(literal / `@config:KEY` / field / relation path such as `relation.field` or `a.b.field`).
 
 ### a styled message - `html:` beside `body` on any notify block
 

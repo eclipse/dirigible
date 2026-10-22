@@ -10,6 +10,7 @@
 package org.eclipse.dirigible.components.intent.parser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -45,6 +46,7 @@ import org.eclipse.dirigible.components.intent.generator.IntentNaming;
 import org.eclipse.dirigible.components.intent.generator.ScheduleSupport;
 import org.eclipse.dirigible.components.intent.generator.StatementSupport;
 import org.eclipse.dirigible.components.intent.generator.StepEventSupport;
+import org.eclipse.dirigible.components.intent.generator.ToOneWalk;
 import org.eclipse.dirigible.components.intent.generator.TriggerSupport;
 import org.eclipse.dirigible.components.intent.model.ActionIntent;
 import org.eclipse.dirigible.components.intent.model.AggregateIntent;
@@ -250,10 +252,10 @@ public final class IntentParser {
     /** The {@code {escalation.<field>}} placeholders of a subject / body (issue #7276). */
     private static final java.util.regex.Pattern ESCALATION_PLACEHOLDER =
             java.util.regex.Pattern.compile("\\{(" + NotificationSupport.ESCALATION_LOCAL + "\\.[A-Za-z0-9_.]*)\\}");
-    /** A {@code {path}} placeholder of a notify subject / body - a field or a one-hop path. */
+    /** A {@code {path}} placeholder of a notify subject / body - a field or a relation path. */
     private static final java.util.regex.Pattern NOTIFY_PLACEHOLDER =
-            java.util.regex.Pattern.compile("\\{([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)?)\\}");
-    /** A notify path (a field, a one-hop {@code relation.field}, or a reserved link token). */
+            java.util.regex.Pattern.compile("\\{([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*)\\}");
+    /** A notify path (a field, a relation path ending at a field, or a reserved link token). */
     private static final java.util.regex.Pattern NOTIFY_PATH =
             java.util.regex.Pattern.compile("[A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*");
     /** One {@code {...}} interpolation of a {@code fileName:} pattern. */
@@ -3468,6 +3470,7 @@ public final class IntentParser {
             aboutEntity = rows;
         }
         validateRecordScope(notify, subject, fansOut, anchorEntity, model, issues);
+        validateNotifyPaths(notify, subject, aboutEntity, model, issues);
         // The delivery outcome is stamped on the record the message is ABOUT - the ROW inside a
         // fan-out, which is the record that carries the recipient and therefore the one whose delivery
         // succeeded or failed. Validated here, after the fan-out has moved `aboutEntity`.
@@ -3567,7 +3570,8 @@ public final class IntentParser {
     /**
      * One recipient key of a notify block - {@code to}, {@code cc} or {@code bcc}, each taking the same
      * forms: a literal address, an {@code @config:KEY} reference read at send time, a direct field, a
-     * one-hop {@code relation.field}, or on a process step an {@code @var:<name>} process variable.
+     * relation path ending at a field (walked by {@link #validateNotifyPaths}), or on a process step an
+     * {@code @var:<name>} process variable.
      *
      * @param value the authored value, may be blank (nothing to check)
      * @param where the message prefix naming the call site and the key
@@ -3604,11 +3608,115 @@ public final class IntentParser {
                             .contains(name)) {
                 issues.add(where + " [" + trimmed + "] reads var [" + name + "], which the step does not list in `uses:` - add it there");
             }
-        } else if (!value.contains("@") && value.chars()
-                                                .filter(c -> c == '.')
-                                                .count() >= 2) {
-            issues.add(where + " [" + value
-                    + "] uses a multi-hop path, which is not supported - use a direct field, a one-hop relation.field, or a literal address");
+        }
+    }
+
+    /**
+     * The relation paths of a notify block that walk MORE than one to-one relation (#8030) - every
+     * {@code {placeholder}} of the subject / body / html and every recipient such as
+     * {@code subscription.customer.name}. Every segment but the last names a to-one relation - the
+     * first of the entity the block is about (the ROW inside a fan-out), each further one of the
+     * previous segment's target - and the last is a field of the last target; a cross-model relation
+     * may only be the last relation, and its field is checked at generation against the owner's model.
+     * The walk is {@link ToOneWalk}, the one an assignee path takes. Checked here because a placeholder
+     * the generator cannot resolve is sent as its own literal text, with nothing reporting it.
+     *
+     * <p>
+     * A one-hop path keeps the rules it always had, and the {@code record.} and {@code escalation.}
+     * scopes keep theirs (one field, no walk). The generated listener loads every relation prefix into
+     * a local named after its segments joined by {@code _}, so a prefix landing on the name of a to-one
+     * relation of the record, or on the local of another prefix, would be declared twice - refused,
+     * naming both.
+     *
+     * @param notify the block
+     * @param subject the message prefix identifying the call site
+     * @param aboutEntity the entity the block is about (the row inside a fan-out), or {@code null} when
+     *        it is unknown (already reported)
+     * @param model the parsed model
+     * @param issues the collected issues
+     */
+    private static void validateNotifyPaths(NotificationIntent notify, String subject, String aboutEntity, IntentModel model,
+            List<String> issues) {
+        EntityIntent about = aboutEntity == null ? null : entityByName(model, aboutEntity);
+        if (about == null) {
+            return;
+        }
+        Map<String, String> paths = new LinkedHashMap<>();
+        addNotifyRecipientPath(paths, subject + " recipient", notify.getTo());
+        addNotifyRecipientPath(paths, subject + " cc", notify.getCc());
+        addNotifyRecipientPath(paths, subject + " bcc", notify.getBcc());
+        for (String text : new String[] {notify.getSubject(), notify.getBody(), notify.getHtml()}) {
+            if (text != null) {
+                java.util.regex.Matcher matcher = NOTIFY_PLACEHOLDER.matcher(text);
+                while (matcher.find()) {
+                    paths.put(subject + " placeholder [{" + matcher.group(1) + "}]", matcher.group(1));
+                }
+            }
+        }
+        Map<String, EntityIntent> byName = IntentEntities.byName(model);
+        Map<String, String> prefixByLocal = new HashMap<>();
+        for (Map.Entry<String, String> entry : paths.entrySet()) {
+            String where = entry.getKey();
+            String[] segments = entry.getValue()
+                                     .split("\\.");
+            if (segments.length < 3 || RECORD_SCOPE.equals(segments[0]) || NotificationSupport.ESCALATION_LOCAL.equals(segments[0])) {
+                continue;
+            }
+            List<String> relations = Arrays.asList(segments)
+                                           .subList(0, segments.length - 1);
+            ToOneWalk.Result walk = ToOneWalk.walk(about, relations, byName);
+            List<ToOneWalk.Link> links = walk.links();
+            if (!walk.resolved()) {
+                switch (walk.failure()) {
+                    case NOT_TO_ONE -> issues.add(where + ": [" + walk.segment() + "] is not a to-one relation of [" + walk.at()
+                                                                                                                           .getName()
+                            + "]");
+                    case PAST_CROSS_MODEL -> issues.add(where + ": cross-model relation [" + links.get(links.size() - 1)
+                                                                                                  .segment()
+                            + "] must be the last relation of the path - its target carries no relations to walk on");
+                    // A dangling relation target is reported by the relations check, and a matched path has
+                    // no empty segment.
+                    default -> {
+                    }
+                }
+                continue;
+            }
+            ToOneWalk.Link last = links.get(links.size() - 1);
+            String field = segments[segments.length - 1];
+            if (!last.crossModel() && fieldByName(last.target(), field) == null) {
+                EntityIntent target = last.target();
+                issues.add(where + ": [" + field + "] is not a field of [" + target.getName() + "]");
+                continue;
+            }
+            for (int i = 1; i < relations.size(); i++) {
+                String prefix = String.join(".", relations.subList(0, i + 1));
+                String local = String.join("_", relations.subList(0, i + 1));
+                if (toOneRelationNamed(about, local) != null) {
+                    issues.add(where + ": the relation path [" + prefix + "] is loaded into the local [" + local
+                            + "], which is also the name of the relation [" + local + "] of [" + about.getName()
+                            + "] - rename the relation");
+                }
+                String other = prefixByLocal.putIfAbsent(local, prefix);
+                if (other != null && !other.equals(prefix)) {
+                    issues.add(where + ": the relation paths [" + other + "] and [" + prefix + "] would both be loaded into the local ["
+                            + local + "] - rename one of the relations");
+                }
+            }
+        }
+    }
+
+    /**
+     * Records a recipient that is a path - not blank, not a literal address, not an {@code @...}
+     * reference.
+     */
+    private static void addNotifyRecipientPath(Map<String, String> paths, String where, String value) {
+        if (value == null || value.isBlank() || value.contains("@")) {
+            return;
+        }
+        String trimmed = value.trim();
+        if (NOTIFY_PATH.matcher(trimmed)
+                       .matches()) {
+            paths.put(where + " [" + trimmed + "]", trimmed);
         }
     }
 

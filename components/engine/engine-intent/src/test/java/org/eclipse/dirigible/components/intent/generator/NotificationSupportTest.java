@@ -269,6 +269,70 @@ class NotificationSupportTest {
         assertEquals("(partner == null ? null : partner.Email)", plan.toExpression());
     }
 
+    /** Order --customer--> Customer --partner--> Partner (owned by another model). */
+    private static Map<String, EntityIntent> chainedModel() {
+        RelationIntent partner = toOne("partner", "Partner");
+        partner.setModel("acme-partners");
+        EntityIntent customer = new EntityIntent();
+        customer.setName("Customer");
+        customer.setFields(List.of(field("id"), field("name")));
+        customer.setRelations(List.of(partner));
+        EntityIntent order = new EntityIntent();
+        order.setName("Order");
+        order.setFields(List.of(field("id")));
+        order.setRelations(List.of(toOne("customer", "Customer")));
+        Map<String, EntityIntent> byName = new LinkedHashMap<>();
+        byName.put("Customer", customer);
+        byName.put("Order", order);
+        return byName;
+    }
+
+    /** A cross-model relation may end a walk: its load reads the FK off the previous hop's local. */
+    @Test
+    void aCrossModelLastRelationLoadsFromTheOwnerOffThePreviousHop() {
+        Map<String, EntityIntent> byName = chainedModel();
+        NotificationSupport.CrossModelLookup lookup = relation -> new NotificationSupport.CrossModelTarget("Partner", "acme-partners",
+                "acme-partners", java.util.Set.of("Id", "Email"));
+        NotificationSupport.Plan plan =
+                NotificationSupport.plan(notification("customer.partner.email", "Order"), byName.get("Order"), byName, Map.of(), lookup);
+
+        assertEquals("(customer_partner == null ? null : customer_partner.Email)", plan.toExpression());
+        assertEquals(2, plan.loads()
+                            .size());
+        NotificationSupport.RelationLoad customer = plan.loads()
+                                                        .get(0);
+        assertEquals("entity", customer.source());
+        assertFalse(customer.crossModel());
+        NotificationSupport.RelationLoad partner = plan.loads()
+                                                       .get(1);
+        assertEquals("customer_partner", partner.local());
+        assertEquals("customer", partner.source());
+        assertEquals("Partner", partner.fkProperty());
+        assertTrue(partner.crossModel());
+        assertEquals("acme-partners", partner.targetModel());
+        assertEquals("customer", NotificationSupport.loadFields(plan.loads())
+                                                    .get(1)
+                                                    .get("source"));
+        assertFalse(NotificationSupport.loadFields(plan.loads())
+                                       .get(0)
+                                       .containsKey("source"),
+                "a load read off the record projects as it always did");
+    }
+
+    /**
+     * The resolver the other path sites share (a payload, a report bind, a create-from map) keeps one
+     * hop: a walk is a notify path only.
+     */
+    @Test
+    void theSharedResolverKeepsOneHop() {
+        Map<String, EntityIntent> byName = chainedModel();
+        NotificationSupport.Resolver resolver = NotificationSupport.resolver(byName.get("Order"), byName, Map.of(), null);
+        assertNull(resolver.access("customer.partner.email", false));
+        assertEquals("(customer == null ? null : customer.Name)", resolver.access("customer.name", false));
+        assertEquals(1, resolver.loads()
+                                .size());
+    }
+
     @Test
     void crossModelRecipientFieldValidatedAgainstOwnerProperties() {
         Map<String, EntityIntent> byName = crossModelEventModel();

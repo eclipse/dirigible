@@ -88,9 +88,9 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GlueIntentGenerator.class);
 
-    /** A {@code {path}} placeholder of a notify subject / body - a field or a one-hop path. */
+    /** A {@code {path}} placeholder of a notify subject / body - a field or a relation path. */
     private static final java.util.regex.Pattern NOTIFY_PLACEHOLDER =
-            java.util.regex.Pattern.compile("\\{([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)?)\\}");
+            java.util.regex.Pattern.compile("\\{([A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*)\\}");
 
     /** The reserved link tokens a notify path may be instead of a property of the record. */
     private static final java.util.Set<String> RESERVED_NOTIFY_TOKENS =
@@ -5781,12 +5781,14 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
     }
 
     /**
-     * The one-hop loads a notify block needs, in first-use order and deduplicated by local: the message
-     * text's, then a print attachment's file-name ones, then a report attachment's bindings. Returned
-     * as the typed records (rather than the glue projection) so a caller that also has loads of its own
-     * - a schedule that both generates and notifies (issue #7276) - can merge before projecting: the
-     * generated loop declares each local ONCE, so the same relation reached by both halves must not be
-     * loaded twice.
+     * The relation loads a notify block needs, in first-use order and deduplicated by local: the
+     * message text's, then a print attachment's file-name ones, then a report attachment's bindings.
+     * The order is what lets a further hop of a relation path read its foreign key off the local
+     * declared before it: the resolver registers a prefix before its extensions, and a merge only ever
+     * appends. Returned as the typed records (rather than the glue projection) so a caller that also
+     * has loads of its own - a schedule that both generates and notifies (issue #7276) - can merge
+     * before projecting: the generated loop declares each local ONCE, so the same relation reached by
+     * both halves must not be loaded twice.
      *
      * @param plan the translated notify block
      * @param attachment the resolved print attachment, or {@code null}
@@ -5817,7 +5819,10 @@ public class GlueIntentGenerator implements IntentTargetGenerator {
         return merged;
     }
 
-    /** The loads with every repeated local dropped, keeping first-use order. */
+    /**
+     * The loads with every repeated local dropped, keeping first-use order (a prefix before its
+     * extensions).
+     */
     private static List<NotificationSupport.RelationLoad> dedupeLoads(List<NotificationSupport.RelationLoad> loads) {
         List<NotificationSupport.RelationLoad> unique = new ArrayList<>();
         Set<String> declared = new LinkedHashSet<>();
