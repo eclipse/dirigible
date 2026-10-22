@@ -175,6 +175,59 @@ class ServerSideScriptDeprecationTest {
     }
 
     @Test
+    void theScriptModulesSkippedForAnUnpublishedProjectGetOneWarningAndACountingEntry() {
+        deprecation.scriptModulesSkipped(List.of("gaia/ui/orders.js", "/gaia/ui/customers.js"));
+        deprecation.scriptModulesSkipped(List.of("gaia/ui/customers.js", "gaia/ui/invoices.js", "billing/menu.js"));
+        deprecation.scriptModulesSkipped(List.of("gaia/ui/orders.js"));
+
+        ArgumentCaptor<Problem> saved = ArgumentCaptor.forClass(Problem.class);
+        verify(problemService, times(3)).save(saved.capture());
+        assertThat(saved.getAllValues()).extracting(Problem::getLocation)
+                                        .containsExactly("/gaia", "/gaia", "/billing");
+        Problem gaia = saved.getAllValues()
+                            .get(1);
+        assertThat(gaia.getCause()).isEqualTo("Project [gaia] uses server-side JavaScript or TypeScript (3 extension modules) and this"
+                + " instance has no JavaScript engine, so it does not run - JavaScript extension modules and artefacts skipped: 3."
+                + " Migration guide: https://github.com/eclipse-dirigible/dirigible/issues/8048");
+        assertThat(gaia.getCategory()).isEqualTo(ServerSideScriptDeprecation.PROBLEM_CATEGORY);
+        assertThat(gaia.getSource()).isEqualTo("ExtensionModuleReader");
+        assertThat(log.list).extracting(ILoggingEvent::getFormattedMessage)
+                            .containsExactly(skippedWarning("gaia"), skippedWarning("billing"));
+    }
+
+    @Test
+    void anEntryAPublishWroteIsNotReplacedByTheSkippedCount() {
+        Problem published = entry("/gaia");
+        published.setSource("ServerSideScriptDeprecation");
+        when(problemService.findByLocationAndTypeAndCategory("/gaia", ServerSideScriptDeprecation.PROBLEM_TYPE,
+                ServerSideScriptDeprecation.PROBLEM_CATEGORY)).thenReturn(List.of(published));
+
+        deprecation.scriptModulesSkipped(List.of("gaia/ui/orders.js"));
+
+        verify(problemService, never()).deleteByLocationAndTypeAndCategory(anyString(), anyString(), anyString());
+        verify(problemService, never()).save(any(Problem.class));
+        assertThat(log.list).extracting(ILoggingEvent::getFormattedMessage)
+                            .containsExactly(skippedWarning("gaia"));
+    }
+
+    @Test
+    void aPublishReplacesTheEntryOfTheSkippedModules() {
+        deprecation.scriptModulesSkipped(List.of("shop/ui/menu.js"));
+        publishShopWithScripts();
+
+        deprecation.review("shop");
+
+        ArgumentCaptor<Problem> saved = ArgumentCaptor.forClass(Problem.class);
+        verify(problemService, times(2)).save(saved.capture());
+        assertThat(saved.getAllValues()
+                        .get(1)
+                        .getCause()).isEqualTo(EXPECTED_WARNING);
+        assertThat(saved.getAllValues()
+                        .get(1)
+                        .getSource()).isEqualTo("ServerSideScriptDeprecation");
+    }
+
+    @Test
     void theFlaggedProjectsAreTheEntriesOfTheCategory() {
         when(problemService.findByCategory(ServerSideScriptDeprecation.PROBLEM_CATEGORY)).thenReturn(
                 List.of(entry("/shop"), entry("/billing")));
@@ -196,6 +249,12 @@ class ServerSideScriptDeprecationTest {
 
     private void write(String path, String content) {
         repository.createResource(path, content.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private static String skippedWarning(String project) {
+        return "Project [" + project + "] uses server-side JavaScript and this instance has no JavaScript engine, so its JavaScript"
+                + " extension modules are skipped - the Problems view counts them. Migration guide:"
+                + " https://github.com/eclipse-dirigible/dirigible/issues/8048";
     }
 
     private static Problem entry(String location) {

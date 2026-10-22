@@ -41,7 +41,8 @@ import tools.jackson.databind.json.JsonMapper;
  * read that meets JSON modules alone starts no script engine. A module that cannot be read is
  * skipped with a warning naming it, and so is a script module where no evaluator is present - a
  * repeat of that one logs at DEBUG, since it recurs on every shell load until the module is
- * converted.
+ * converted. Where a {@link ScriptModuleSkipListener} is deployed, it is told the script modules
+ * each read skipped, and reports them per project in place of the warning per module.
  */
 @Component
 public class ExtensionModuleReader {
@@ -61,6 +62,8 @@ public class ExtensionModuleReader {
 
     private final ObjectProvider<ExtensionModuleEvaluator> evaluator;
 
+    private final ObjectProvider<ScriptModuleSkipListener> skipListeners;
+
     /** The script modules already reported as skipped for want of an evaluator. */
     private final Set<String> reportedUnevaluated = ConcurrentHashMap.newKeySet();
 
@@ -70,12 +73,14 @@ public class ExtensionModuleReader {
      * @param extensionService the extension service
      * @param repository the repository
      * @param evaluator the script module evaluator, absent where no script engine is deployed
+     * @param skipListeners told the script modules skipped for want of an evaluator
      */
     public ExtensionModuleReader(ExtensionService extensionService, IRepository repository,
-            ObjectProvider<ExtensionModuleEvaluator> evaluator) {
+            ObjectProvider<ExtensionModuleEvaluator> evaluator, ObjectProvider<ScriptModuleSkipListener> skipListeners) {
         this.extensionService = extensionService;
         this.repository = repository;
         this.evaluator = evaluator;
+        this.skipListeners = skipListeners;
     }
 
     /**
@@ -159,6 +164,12 @@ public class ExtensionModuleReader {
 
         private ExtensionModuleEvaluator.Session session;
 
+        /** The modules this read skipped for want of an evaluator, each reported for the first time. */
+        private final List<String> skipped = new ArrayList<>();
+
+        /** The listeners told about the skipped modules, looked up on the first one. */
+        private List<ScriptModuleSkipListener> listeners;
+
         private ScriptModules(List<String> exportNames) {
             this.exportNames = exportNames;
         }
@@ -195,20 +206,54 @@ public class ExtensionModuleReader {
 
         private void reportUnevaluated(String module, String extensionPoint) {
             if (reportedUnevaluated.add(extensionPoint + " " + module)) {
-                LOGGER.warn(
-                        "Extension module [{}] of extension point [{}] is a script module and no script engine is deployed, so it is skipped."
-                                + " Convert it to a .json module, or regenerate the application that contributes it.",
-                        loggable(module), loggable(extensionPoint));
+                skipped.add(module);
+                if (listeners().isEmpty()) {
+                    LOGGER.warn(
+                            "Extension module [{}] of extension point [{}] is a script module and no script engine is deployed, so it is skipped."
+                                    + " Convert it to a .json module, or regenerate the application that contributes it.",
+                            loggable(module), loggable(extensionPoint));
+                } else {
+                    LOGGER.debug("Extension module [{}] of extension point [{}] is a script module and no script engine is deployed,"
+                            + " so it is skipped and reported for its project.", loggable(module), loggable(extensionPoint));
+                }
             } else {
                 LOGGER.debug("Extension module [{}] of extension point [{}] is a script module and is skipped again.", loggable(module),
                         loggable(extensionPoint));
             }
         }
 
+        private List<ScriptModuleSkipListener> listeners() {
+            if (listeners == null) {
+                listeners = skipListeners.orderedStream()
+                                         .toList();
+            }
+            return listeners;
+        }
+
         @Override
         public void close() {
             if (session != null) {
                 session.close();
+            }
+            if (!skipped.isEmpty()) {
+                notifySkipped();
+            }
+        }
+
+        /**
+         * Tells the listeners what this read skipped. A failing listener costs its report, never the read:
+         * the modules that could be read are still answered.
+         */
+        private void notifySkipped() {
+            List<String> modules = List.copyOf(skipped);
+            for (ScriptModuleSkipListener listener : listeners()) {
+                try {
+                    listener.scriptModulesSkipped(modules);
+                } catch (RuntimeException e) {
+                    LOGGER.warn("Listener [{}] failed to report [{}] skipped script modules", listener.getClass()
+                                                                                                      .getName(),
+                            modules.size(), e);
+                }
             }
         }
     }
