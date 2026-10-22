@@ -1,0 +1,18 @@
+<model zeta="last" entities="replaced" title="Edge &amp; Co" description="line1&#10;line2&#9;tab &quot;q&quot; back\slash &lt;tag&gt; &#233; &#x1F600; &#x2028; cr&#13;end" languages="[&quot;en&quot;,&quot;bg&quot;]" customActionLabels="{&quot;b&quot;:&quot;x&quot;,&quot;10&quot;:&quot;ten&quot;,&quot;2&quot;:&quot;two&quot;,&quot;a&quot;:&quot;w&quot;,&quot;01&quot;:&quot;q&quot;,&quot;-1&quot;:&quot;neg&quot;,&quot;4294967295&quot;:&quot;max&quot;,&quot;4294967294&quot;:&quot;maxidx&quot;,&quot;0&quot;:&quot;zero&quot;}" widgets="[{'bad': 1}]" processTaskLabels="{&quot;dup&quot;:1,&quot;other&quot;:2,&quot;dup&quot;:3}" icon="  [not json]">
+ <entities>
+  <entity name="Numbers" dataName="NUMBERS" checks="[{&quot;i&quot;:1,&quot;f&quot;:1.50,&quot;big&quot;:1e21,&quot;justUnder&quot;:999999999999999900000,&quot;small&quot;:0.000001,&quot;tiny&quot;:1e-7,&quot;negz&quot;:-0,&quot;negzf&quot;:-0.0,&quot;huge&quot;:12345678901234567890,&quot;exp&quot;:1.5e300,&quot;n&quot;:null,&quot;t&quot;:true,&quot;f2&quot;:false,&quot;s&quot;:&quot;x&quot;,&quot;pi&quot;:3.141592653589793,&quot;third&quot;:0.3333333333333333,&quot;e7&quot;:12345678.5,&quot;neg&quot;:-42.125,&quot;minv&quot;:5e-324,&quot;maxv&quot;:1.7976931348623157e308,&quot;e15&quot;:1e15,&quot;e16&quot;:12345678901234567,&quot;ctl&quot;:&quot;a\u0001b\u001fc\u007fd e\/f&quot;,&quot;lone&quot;:&quot;\ud800x&quot;,&quot;pair&quot;:&quot;😀&quot;,&quot;esc&quot;:&quot;q\&quot;b\\n\nt\tr\rbs\bff\f&quot;,&quot;nested&quot;:{&quot;z&quot;:[1,[2,{}],[]],&quot;7&quot;:&quot;seven&quot;,&quot;a&quot;:{}}}]" rollupGuards="[1,]" labelParts="[1] x" aggregateKeys="{ &quot;a&quot; : [ 1 , 2 ] }" groupingKeys="plain" relatedEntities=" [1]" agreeGuards="[]" lifecycleStatusNameList="{}" duplicateReset="[&quot;dueOn&quot;]" duplicateDefaults="{&quot;orderedOn&quot;:&quot;now&quot;}" scopedCalendars="[{&quot;entity&quot;:&quot;Cal&quot;}" rollupGuard="{&quot;single&quot;:true}" lookupColumns="[&quot;entity-level-not-parsed&quot;]" languages="[&quot;entity-level-not-parsed&quot;]">
+   <property name="Id" dataName="NUMBERS_ID" dataType="INTEGER" dataPrimaryKey="true" lookupColumns="[{&quot;name&quot;:&quot;Code&quot;,&quot;width&quot;:20.0}]" checks="[&quot;property-level-not-parsed&quot;]"></property>
+  </entity>
+  <entity name="NoProperties" dataName="NO_PROPERTIES">
+  </entity>
+ </entities>
+ <perspectives>
+  <perspective><name>One</name><label>One</label><order>1</order></perspective>
+  <perspective role="admin"><name>Two</name><label>Two</label><order>2</order></perspective>
+  <perspective>Plain</perspective>
+ </perspectives>
+ <navigations>
+  <item><id>nav-a</id><label>A</label><order>1</order></item>
+  <item><id>nav-b</id><label>B</label><link>/b</link></item>
+ </navigations>
+</model>

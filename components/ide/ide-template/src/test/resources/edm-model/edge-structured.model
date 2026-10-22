@@ -1,0 +1,154 @@
+{
+    "model": {
+        "customActionLabels": {
+            "0": "zero",
+            "2": "two",
+            "10": "ten",
+            "4294967294": "maxidx",
+            "b": "x",
+            "a": "w",
+            "01": "q",
+            "-1": "neg",
+            "4294967295": "max"
+        },
+        "description": "line1\nline2\ttab \"q\" back\\slash <tag> é 😀   cr\rend",
+        "entities": [
+            {
+                "properties": [
+                    {
+                        "checks": "[\"property-level-not-parsed\"]",
+                        "dataName": "NUMBERS_ID",
+                        "dataPrimaryKey": "true",
+                        "dataType": "INTEGER",
+                        "lookupColumns": [
+                            {
+                                "name": "Code",
+                                "width": 20
+                            }
+                        ],
+                        "name": "Id"
+                    }
+                ],
+                "aggregateKeys": {
+                    "a": [
+                        1,
+                        2
+                    ]
+                },
+                "agreeGuards": [],
+                "checks": [
+                    {
+                        "i": 1,
+                        "f": 1.5,
+                        "big": 1e+21,
+                        "justUnder": 999999999999999900000,
+                        "small": 0.000001,
+                        "tiny": 1e-7,
+                        "negz": 0,
+                        "negzf": 0,
+                        "huge": 12345678901234567000,
+                        "exp": 1.5e+300,
+                        "n": null,
+                        "t": true,
+                        "f2": false,
+                        "s": "x",
+                        "pi": 3.141592653589793,
+                        "third": 0.3333333333333333,
+                        "e7": 12345678.5,
+                        "neg": -42.125,
+                        "minv": 5e-324,
+                        "maxv": 1.7976931348623157e+308,
+                        "e15": 1000000000000000,
+                        "e16": 12345678901234568,
+                        "ctl": "a\u0001b\u001fcd e/f",
+                        "lone": "\ud800x",
+                        "pair": "😀",
+                        "esc": "q\"b\\n\nt\tr\rbs\bff\f",
+                        "nested": {
+                            "7": "seven",
+                            "z": [
+                                1,
+                                [
+                                    2,
+                                    {}
+                                ],
+                                []
+                            ],
+                            "a": {}
+                        }
+                    }
+                ],
+                "dataName": "NUMBERS",
+                "duplicateDefaults": {
+                    "orderedOn": "now"
+                },
+                "duplicateReset": [
+                    "dueOn"
+                ],
+                "groupingKeys": "plain",
+                "labelParts": "[1] x",
+                "languages": "[\"entity-level-not-parsed\"]",
+                "lifecycleStatusNameList": {},
+                "lookupColumns": "[\"entity-level-not-parsed\"]",
+                "name": "Numbers",
+                "relatedEntities": " [1]",
+                "rollupGuard": {
+                    "single": true
+                },
+                "rollupGuards": "[1,]",
+                "scopedCalendars": "[{\"entity\":\"Cal\"}"
+            },
+            {
+                "properties": [
+                    {}
+                ],
+                "dataName": "NO_PROPERTIES",
+                "name": "NoProperties"
+            }
+        ],
+        "icon": "  [not json]",
+        "languages": [
+            "en",
+            "bg"
+        ],
+        "processTaskLabels": {
+            "dup": 3,
+            "other": 2
+        },
+        "title": "Edge & Co",
+        "widgets": "[{'bad': 1}]",
+        "zeta": "last",
+        "perspectives": [
+            {
+                "name": "One",
+                "label": "One",
+                "order": "1"
+            },
+            {
+                "-role": "admin",
+                "name": "Two",
+                "label": "Two",
+                "order": "2"
+            },
+            {
+                "0": "P",
+                "1": "l",
+                "2": "a",
+                "3": "i",
+                "4": "n"
+            }
+        ],
+        "navigations": [
+            {
+                "id": "nav-a",
+                "label": "A",
+                "order": "1"
+            },
+            {
+                "id": "nav-b",
+                "label": "B",
+                "link": "/b"
+            }
+        ]
+    }
+}

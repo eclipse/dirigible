@@ -1,0 +1,3 @@
+# Byte-exact fixtures: each .model is what the JavaScript transformation wrote for its .edm, and is
+# compared byte for byte, so git must not convert their line endings on checkout.
+* -text

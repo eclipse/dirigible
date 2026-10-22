@@ -47,7 +47,7 @@ import com.google.gson.JsonParser;
  * The {@code .edm} must be a lossless source for the derived {@code .model} (#6826). Intent
  * Generate writes {@code <name>.edm} and a complete {@code <name>.model} together; the loss used to
  * happen when the {@code .edm} was used to rebuild the {@code .model} - opening a diagram and
- * saving it, which regenerates the model from the {@code .edm} via {@code transform-edm.js},
+ * saving it, which regenerates the model from the {@code .edm} via {@code EdmModelTransformation},
  * dropped every structured (List/Map) attribute (rollupGuard, checks, uniqueConstraints, ...)
  * because they never reached the {@code .edm}.
  *
@@ -409,7 +409,7 @@ class EdmModelRoundTripIT extends IntegrationTest {
             String propertyName = relation.getAttribute("property");
             Element property = edmProperty(document, entityName, propertyName);
             String where = "the .edm's <relation> for [" + entityName + "." + propertyName + "] disagrees with its <property> on ";
-            // `name` is the attribute transform-edm.js reads; `relationName` is its twin, kept in step.
+            // `name` is the attribute the .model is rebuilt from; `relationName` is its twin, kept in step.
             assertEquals(property.getAttribute("relationshipName"), relation.getAttribute("name"),
                     where + "the relationship name - the save applies the <relation>'s value, renaming the relationship");
             assertEquals(property.getAttribute("relationshipName"), relation.getAttribute("relationName"),
@@ -530,8 +530,8 @@ class EdmModelRoundTripIT extends IntegrationTest {
      * rather than here: {@code uniqueConstraints} is emitted and rebuilt by the composite-unique-key
      * feature's {@code <constraints>} section (a shape without {@code properties}), and this fix
      * deliberately does not touch it (see {@code EdmIntentGenerator.STRUCTURED_ATTRIBUTES} and
-     * {@code transform-edm.js} {@code ENTITY_STRUCTURED}). Its non-duplication is asserted separately
-     * above.
+     * {@code EdmModelTransformation} {@code ENTITY_STRUCTURED}). Its non-duplication is asserted
+     * separately above.
      */
     private static final java.util.Set<String> ROUND_TRIP_EXCEPTIONS = java.util.Set.of("uniqueConstraints");
 

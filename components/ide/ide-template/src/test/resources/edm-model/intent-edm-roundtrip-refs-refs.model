@@ -1,0 +1,84 @@
+{
+    "model": {
+        "title": "Refs",
+        "entities": [
+            {
+                "properties": [
+                    {
+                        "auditType": "NONE",
+                        "dataAutoIncrement": "true",
+                        "dataLength": "20",
+                        "dataName": "CURRENCY_ID",
+                        "dataNullable": "false",
+                        "dataPrimaryKey": "true",
+                        "dataType": "INTEGER",
+                        "description": "",
+                        "name": "Id",
+                        "tooltip": "",
+                        "widgetIsMajor": "true",
+                        "widgetLength": "20",
+                        "widgetSize": "",
+                        "widgetType": "NUMBER"
+                    },
+                    {
+                        "auditType": "NONE",
+                        "dataLength": "3",
+                        "dataName": "CURRENCY_CODE",
+                        "dataNullable": "true",
+                        "dataType": "VARCHAR",
+                        "description": "",
+                        "name": "Code",
+                        "tooltip": "",
+                        "widgetIsMajor": "true",
+                        "widgetLength": "3",
+                        "widgetSize": "",
+                        "widgetType": "TEXTBOX"
+                    },
+                    {
+                        "auditType": "NONE",
+                        "dataLength": "100",
+                        "dataName": "CURRENCY_NAME",
+                        "dataNullable": "true",
+                        "dataType": "VARCHAR",
+                        "description": "",
+                        "name": "Name",
+                        "tooltip": "",
+                        "widgetIsMajor": "true",
+                        "widgetLength": "100",
+                        "widgetSize": "",
+                        "widgetType": "TEXTBOX"
+                    }
+                ],
+                "caption": "Manage entity Currency",
+                "dataCount": "SELECT COUNT(*) AS COUNT FROM \"${tablePrefix}REFS_CURRENCY\"",
+                "dataName": "REFS_CURRENCY",
+                "dataQuery": "",
+                "description": "Manage entity Currency",
+                "entityLabel": "Currency",
+                "generateDefaultRoles": "true",
+                "generateReport": "false",
+                "icon": "/services/web/resources/unicons/file.svg",
+                "iconName": "list",
+                "layoutType": "MANAGE_MASTER",
+                "menuIndex": "100",
+                "menuKey": "currency",
+                "menuLabel": "Currencies",
+                "name": "Currency",
+                "perspectiveHeader": "",
+                "perspectiveIcon": "/services/web/resources/unicons/file.svg",
+                "perspectiveLabel": "Settings",
+                "perspectiveName": "Settings",
+                "perspectiveNavId": "",
+                "perspectiveOrder": "1",
+                "perspectiveRole": "",
+                "roleRead": "edm-roundtrip-refs.Currency.CurrencyReadOnly",
+                "roleWrite": "edm-roundtrip-refs.Currency.CurrencyFullAccess",
+                "title": "Currency",
+                "tooltip": "Currency",
+                "type": "SETTING"
+            }
+        ],
+        "perspectives": [],
+        "navigations": []
+    }
+}

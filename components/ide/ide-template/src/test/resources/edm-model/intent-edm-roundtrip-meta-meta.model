@@ -1,0 +1,232 @@
+{
+    "model": {
+        "customActionLabels": {
+            "VoidClaim": "Void"
+        },
+        "description": "Round-trip fixture for the document-level metadata",
+        "icon": "receipt",
+        "languages": [
+            "en",
+            "bg"
+        ],
+        "processTaskLabels": {
+            "ClaimApproval": "Claim Approval",
+            "review": "Review"
+        },
+        "title": "Meta",
+        "widgets": [
+            {
+                "name": "OpenClaims",
+                "kind": "kpi",
+                "url": "/services/js/meta/custom/open-claims.js",
+                "label": "Open Claims",
+                "tId": "widgetOpenClaims",
+                "icon": "activity"
+            }
+        ],
+        "entities": [
+            {
+                "properties": [
+                    {
+                        "auditType": "NONE",
+                        "dataAutoIncrement": "true",
+                        "dataLength": "20",
+                        "dataName": "CLAIM_STATUS_ID",
+                        "dataNullable": "false",
+                        "dataPrimaryKey": "true",
+                        "dataType": "INTEGER",
+                        "description": "",
+                        "name": "Id",
+                        "tooltip": "",
+                        "widgetIsMajor": "true",
+                        "widgetLength": "20",
+                        "widgetSize": "",
+                        "widgetType": "NUMBER"
+                    },
+                    {
+                        "auditType": "NONE",
+                        "dataLength": "40",
+                        "dataName": "CLAIM_STATUS_NAME",
+                        "dataNullable": "false",
+                        "dataType": "VARCHAR",
+                        "description": "",
+                        "isRequiredProperty": "true",
+                        "name": "Name",
+                        "tooltip": "",
+                        "widgetIsMajor": "true",
+                        "widgetLength": "40",
+                        "widgetSize": "",
+                        "widgetType": "TEXTBOX"
+                    }
+                ],
+                "caption": "Manage entity ClaimStatus",
+                "dataCount": "SELECT COUNT(*) AS COUNT FROM \"${tablePrefix}META_CLAIM_STATUS\"",
+                "dataName": "META_CLAIM_STATUS",
+                "dataQuery": "",
+                "description": "Manage entity ClaimStatus",
+                "entityLabel": "Claim Status",
+                "generateDefaultRoles": "true",
+                "generateReport": "false",
+                "icon": "/services/web/resources/unicons/file.svg",
+                "iconName": "list",
+                "layoutType": "MANAGE_MASTER",
+                "menuIndex": "100",
+                "menuKey": "claimstatus",
+                "menuLabel": "Claim Statuses",
+                "name": "ClaimStatus",
+                "perspectiveHeader": "",
+                "perspectiveIcon": "/services/web/resources/unicons/file.svg",
+                "perspectiveLabel": "Settings",
+                "perspectiveName": "Settings",
+                "perspectiveNavId": "",
+                "perspectiveOrder": "1",
+                "perspectiveRole": "",
+                "roleRead": "edm-roundtrip-meta.ClaimStatus.ClaimStatusReadOnly",
+                "roleWrite": "edm-roundtrip-meta.ClaimStatus.ClaimStatusFullAccess",
+                "title": "ClaimStatus",
+                "tooltip": "ClaimStatus",
+                "type": "SETTING"
+            },
+            {
+                "properties": [
+                    {
+                        "auditType": "NONE",
+                        "dataAutoIncrement": "true",
+                        "dataLength": "20",
+                        "dataName": "CLAIM_ID",
+                        "dataNullable": "false",
+                        "dataPrimaryKey": "true",
+                        "dataType": "INTEGER",
+                        "description": "",
+                        "name": "Id",
+                        "tooltip": "",
+                        "widgetIsMajor": "true",
+                        "widgetLength": "20",
+                        "widgetSize": "",
+                        "widgetType": "NUMBER"
+                    },
+                    {
+                        "auditType": "NONE",
+                        "dataLength": "40",
+                        "dataName": "CLAIM_NUMBER",
+                        "dataNullable": "true",
+                        "dataType": "VARCHAR",
+                        "description": "",
+                        "name": "Number",
+                        "tooltip": "",
+                        "widgetIsMajor": "true",
+                        "widgetLength": "40",
+                        "widgetSize": "",
+                        "widgetType": "TEXTBOX"
+                    },
+                    {
+                        "auditType": "NONE",
+                        "dataName": "CLAIM_FILED_ON",
+                        "dataNullable": "true",
+                        "dataType": "DATE",
+                        "description": "",
+                        "name": "FiledOn",
+                        "tooltip": "",
+                        "widgetIsMajor": "true",
+                        "widgetLength": "20",
+                        "widgetSize": "",
+                        "widgetType": "DATE"
+                    },
+                    {
+                        "auditType": "NONE",
+                        "dataLength": "100",
+                        "dataName": "CLAIM_PROCESS_ID",
+                        "dataNullable": "true",
+                        "dataType": "VARCHAR",
+                        "description": "Process instance started for this record",
+                        "isReadOnlyProperty": "true",
+                        "name": "ProcessId",
+                        "tooltip": "",
+                        "widgetIsMajor": "false",
+                        "widgetLength": "100",
+                        "widgetSize": "",
+                        "widgetType": "TEXTBOX"
+                    },
+                    {
+                        "auditType": "NONE",
+                        "dataLength": "1000",
+                        "dataName": "CLAIM_PROCESS_IDS",
+                        "dataNullable": "true",
+                        "dataType": "VARCHAR",
+                        "description": "Processes started for this record, as Process=instanceId pairs",
+                        "isReadOnlyProperty": "true",
+                        "name": "ProcessIds",
+                        "tooltip": "",
+                        "widgetIsMajor": "false",
+                        "widgetLength": "1000",
+                        "widgetSize": "",
+                        "widgetType": "TEXTBOX"
+                    },
+                    {
+                        "auditType": "NONE",
+                        "dataDefaultValue": "1",
+                        "dataName": "CLAIM_STATUS",
+                        "dataNullable": "true",
+                        "dataType": "INTEGER",
+                        "description": "",
+                        "name": "Status",
+                        "relationshipCardinality": "n_1",
+                        "relationshipEntityName": "ClaimStatus",
+                        "relationshipEntityPerspectiveLabel": "Entities",
+                        "relationshipEntityPerspectiveName": "Settings",
+                        "relationshipName": "Claim_Status",
+                        "relationshipType": "ASSOCIATION",
+                        "tooltip": "",
+                        "whenTargetDeleted": "restrict",
+                        "widgetDropDownKey": "Id",
+                        "widgetDropDownValue": "Name",
+                        "widgetIsMajor": "true",
+                        "widgetLength": "20",
+                        "widgetSize": "",
+                        "widgetStatusSteps": "1,3",
+                        "widgetType": "DOCUMENT_STATUS"
+                    }
+                ],
+                "caption": "Manage entity Claim",
+                "dataCount": "SELECT COUNT(*) AS COUNT FROM \"${tablePrefix}META_CLAIM\"",
+                "dataName": "META_CLAIM",
+                "dataQuery": "",
+                "description": "Manage entity Claim",
+                "entityLabel": "Claim",
+                "generateDefaultRoles": "true",
+                "generateReport": "false",
+                "icon": "/services/web/resources/unicons/file.svg",
+                "iconName": "list",
+                "layoutType": "MANAGE",
+                "menuIndex": "100",
+                "menuKey": "claim",
+                "menuLabel": "Claims",
+                "name": "Claim",
+                "perspectiveHeader": "",
+                "perspectiveIcon": "/services/web/resources/unicons/file.svg",
+                "perspectiveLabel": "Claim",
+                "perspectiveName": "Claim",
+                "perspectiveNavId": "",
+                "perspectiveOrder": "1",
+                "perspectiveRole": "",
+                "roleRead": "edm-roundtrip-meta.Claim.ClaimReadOnly",
+                "roleWrite": "edm-roundtrip-meta.Claim.ClaimFullAccess",
+                "title": "Claim",
+                "tooltip": "Claim",
+                "type": "PRIMARY",
+                "workflowStatusInitial": "1",
+                "workflowStatusProperty": "Status",
+                "workflowStatusValues": "9"
+            }
+        ],
+        "perspectives": [
+            {
+                "name": "Claim",
+                "label": "Claim",
+                "icon": "/services/web/resources/unicons/file.svg",
+                "order": "1"
+            }
+        ],
+        "navigations": []
+    }
+}

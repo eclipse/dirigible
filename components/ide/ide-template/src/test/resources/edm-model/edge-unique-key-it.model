@@ -1,0 +1,59 @@
+{
+    "model": {
+        "entities": [
+            {
+                "properties": [
+                    {
+                        "dataAutoIncrement": "true",
+                        "dataName": "TENANT_APPLICATION_ID",
+                        "dataPrimaryKey": "true",
+                        "dataType": "INTEGER",
+                        "name": "Id"
+                    },
+                    {
+                        "dataName": "TENANT_APPLICATION_TENANT",
+                        "dataType": "INTEGER",
+                        "name": "Tenant"
+                    },
+                    {
+                        "dataName": "TENANT_APPLICATION_APPLICATION",
+                        "dataType": "INTEGER",
+                        "name": "Application"
+                    }
+                ],
+                "caption": "Manage entity TenantApplication",
+                "dataName": "PROVISIONING_TENANT_APPLICATION",
+                "layoutType": "MANAGE_MASTER",
+                "name": "TenantApplication",
+                "perspectiveName": "Provisioning",
+                "title": "TenantApplication",
+                "tooltip": "TenantApplication",
+                "type": "PRIMARY",
+                "uniqueConstraints": [
+                    {
+                        "name": "TenantApplication_Tenant_Application",
+                        "columns": [
+                            {
+                                "name": "TENANT_APPLICATION_TENANT"
+                            },
+                            {
+                                "name": "TENANT_APPLICATION_APPLICATION"
+                            }
+                        ],
+                        "columnsCsv": "TENANT_APPLICATION_TENANT,TENANT_APPLICATION_APPLICATION",
+                        "message": "This application is already provisioned for the tenant"
+                    }
+                ]
+            }
+        ],
+        "perspectives": [
+            {
+                "name": "Provisioning",
+                "label": "Provisioning",
+                "icon": "/services/web/resources/unicons/copy.svg",
+                "order": "1"
+            }
+        ],
+        "navigations": []
+    }
+}

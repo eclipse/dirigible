@@ -14,6 +14,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.dirigible.commons.api.helpers.ContentTypeHelper;
 import org.eclipse.dirigible.commons.api.helpers.FileSystemUtils;
+import org.eclipse.dirigible.commons.api.helpers.LogSanitizer;
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.api.extensions.ExtensionsFacade;
 import org.eclipse.dirigible.components.api.security.UserFacade;
@@ -77,16 +78,22 @@ public class WorkspaceService {
     /** The executor of the on-save extension scripts, absent where no script engine is deployed. */
     private final ObjectProvider<ScriptExecutor> scriptExecutor;
 
+    /** The platform's own on-save hooks, run before the extension scripts. */
+    private final List<WorkspaceOnSaveHandler> onSaveHandlers;
+
     /**
      * Instantiates a new workspace service.
      *
      * @param repository the repository
      * @param scriptExecutor the executor of the on-save extension scripts
+     * @param onSaveHandlers the platform's own on-save hooks
      */
     @Autowired
-    public WorkspaceService(IRepository repository, ObjectProvider<ScriptExecutor> scriptExecutor) {
+    public WorkspaceService(IRepository repository, ObjectProvider<ScriptExecutor> scriptExecutor,
+            List<WorkspaceOnSaveHandler> onSaveHandlers) {
         this.repository = repository;
         this.scriptExecutor = scriptExecutor;
+        this.onSaveHandlers = List.copyOf(onSaveHandlers);
     }
 
     /**
@@ -399,8 +406,27 @@ public class WorkspaceService {
         }
         boolean isBinary = ContentTypeHelper.isBinary(contentType);
         File fileObject = projectObject.createFile(path, content, isBinary, contentType);
+        runOnSaveHandlers(projectObject, path);
         triggerOnSaveExtensions(workspace, project, path);
         return fileObject;
+    }
+
+    /**
+     * Runs the platform's own on-save hooks, each isolated from the failure of another.
+     *
+     * @param project the project the saved file belongs to
+     * @param path the file path
+     */
+    private void runOnSaveHandlers(Project project, String path) {
+        for (WorkspaceOnSaveHandler handler : onSaveHandlers) {
+            try {
+                handler.onSave(project, path);
+            } catch (RuntimeException e) {
+                logger.error("Workspace on-save handler [{}] failed for [{}]", handler.getClass()
+                                                                                      .getName(),
+                        LogSanitizer.sanitize(path), e);
+            }
+        }
     }
 
     /**
@@ -461,6 +487,7 @@ public class WorkspaceService {
         File fileObject = projectObject.getFile(path);
         fileObject.getInternal()
                   .setContent(content);
+        runOnSaveHandlers(projectObject, path);
         triggerOnSaveExtensions(workspace, project, path);
         return fileObject;
     }

@@ -1,0 +1,115 @@
+{
+    "model": {
+        "entities": [
+            {
+                "properties": [
+                    {
+                        "dataName": "CUSTOMER_ID",
+                        "dataPrimaryKey": "true",
+                        "name": "Id"
+                    },
+                    {
+                        "dataName": "CUSTOMER_CODE",
+                        "name": "Code"
+                    },
+                    {
+                        "dataName": "CUSTOMER_NAME",
+                        "name": "Name"
+                    },
+                    {
+                        "dataName": "",
+                        "name": "Blank"
+                    }
+                ],
+                "dataName": "CUSTOMER",
+                "name": "Customer",
+                "uniqueConstraints": [
+                    {
+                        "name": "Customer_Code_Name",
+                        "columns": [
+                            {
+                                "name": "CUSTOMER_CODE"
+                            },
+                            {
+                                "name": "CUSTOMER_NAME"
+                            }
+                        ],
+                        "columnsCsv": "CUSTOMER_CODE,CUSTOMER_NAME",
+                        "message": "A Customer with the same Code, Name already exists"
+                    },
+                    {
+                        "columns": [
+                            {
+                                "name": "CUSTOMER_NAME"
+                            },
+                            {
+                                "name": "CUSTOMER_CODE"
+                            }
+                        ],
+                        "columnsCsv": "CUSTOMER_NAME,CUSTOMER_CODE",
+                        "message": "Custom message"
+                    }
+                ]
+            },
+            {
+                "properties": [
+                    {
+                        "dataName": "ORDER_ID",
+                        "dataPrimaryKey": "true",
+                        "name": "Id"
+                    },
+                    {
+                        "dataName": "ORDER_CUSTOMER",
+                        "name": "Customer",
+                        "relationshipEntityPerspectiveName": "Customers",
+                        "relationshipEntityName": "Customer",
+                        "relationshipName": "Order_Customer",
+                        "relationshipEntityPerspectiveLabel": "Customer Label"
+                    },
+                    {
+                        "dataName": "ORDER_OWNER",
+                        "name": "Owner",
+                        "relationshipEntityPerspectiveName": "OwnPerspective",
+                        "relationshipName": "Order_Owner_Own"
+                    },
+                    {
+                        "dataName": "ORDER_TWICE",
+                        "name": "Twice",
+                        "relationshipEntityName": "Customer",
+                        "relationshipName": "Order_Twice_1",
+                        "relationshipEntityPerspectiveLabel": "Second"
+                    }
+                ],
+                "dataName": "ORDER",
+                "name": "Order",
+                "uniqueConstraints": [
+                    {
+                        "name": "Order_Customer_Owner",
+                        "columns": [
+                            {
+                                "name": "ORDER_CUSTOMER"
+                            },
+                            {
+                                "name": "ORDER_OWNER"
+                            }
+                        ],
+                        "columnsCsv": "ORDER_CUSTOMER,ORDER_OWNER",
+                        "message": {}
+                    }
+                ]
+            }
+        ],
+        "perspectives": [
+            {
+                "name": "Single",
+                "label": "Single"
+            }
+        ],
+        "navigations": [
+            {
+                "id": "only",
+                "label": "Only"
+            }
+        ]
+    }
+}

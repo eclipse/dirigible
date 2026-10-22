@@ -1,0 +1,144 @@
+<model title="Accessibility" processTaskLabels="{&quot;InvoiceReview&quot;:&quot;Invoice Review&quot;,&quot;review&quot;:&quot;Review&quot;}">
+ <entities>
+  <entity name="Customer" dataName="ACCESSIBILITY_CUSTOMER" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}ACCESSIBILITY_CUSTOMER&quot;" dataQuery="" type="PRIMARY" title="Customer" caption="Manage entity Customer" description="Manage entity Customer" tooltip="Customer" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="customer" menuLabel="Customers" entityLabel="Customer" menuIndex="100" layoutType="MANAGE" perspectiveName="Customer" perspectiveLabel="Customer" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="1" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="AccessibilityHarmoniaIT.Customer.CustomerReadOnly" roleWrite="AccessibilityHarmoniaIT.Customer.CustomerFullAccess">
+   <property name="Id" description="" tooltip="" dataName="CUSTOMER_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Name" description="" tooltip="" dataName="CUSTOMER_NAME" dataType="VARCHAR" dataNullable="false" isRequiredProperty="true" dataLength="100" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="true"></property>
+   <property name="Email" description="" tooltip="" dataName="CUSTOMER_EMAIL" dataType="VARCHAR" dataNullable="true" dataLength="100" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="true"></property>
+   <property name="Since" description="" tooltip="" dataName="CUSTOMER_SINCE" dataType="DATE" dataNullable="true" auditType="NONE" widgetType="DATE" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Vip" description="" tooltip="" dataName="CUSTOMER_VIP" dataType="BOOLEAN" dataNullable="true" auditType="NONE" widgetType="CHECKBOX" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+  </entity>
+  <entity name="Invoice" dataName="ACCESSIBILITY_INVOICE" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}ACCESSIBILITY_INVOICE&quot;" dataQuery="" type="PRIMARY" title="Invoice" caption="Manage entity Invoice" description="Manage entity Invoice" tooltip="Invoice" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="invoice" menuLabel="Invoices" entityLabel="Invoice" menuIndex="100" layoutType="MANAGE_DOCUMENT" perspectiveName="Invoice" perspectiveLabel="Invoice" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="2" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="AccessibilityHarmoniaIT.Invoice.InvoiceReadOnly" roleWrite="AccessibilityHarmoniaIT.Invoice.InvoiceFullAccess" documentItemsEntity="InvoiceItem" documentLabel="Invoice" documentItemsLabel="Invoice Items" hasPrint="true">
+   <property name="Id" description="" tooltip="" dataName="INVOICE_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Number" description="" tooltip="" dataName="INVOICE_NUMBER" dataType="VARCHAR" dataNullable="true" dataLength="20" auditType="NONE" widgetType="DOCUMENT_NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Date" description="" tooltip="" dataName="INVOICE_DATE" dataType="DATE" dataNullable="true" auditType="NONE" widgetType="DATE" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Note" description="" tooltip="" dataName="INVOICE_NOTE" dataType="VARCHAR" dataNullable="true" dataLength="200" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="200" widgetIsMajor="true"></property>
+   <property name="ProcessId" description="Process instance started for this record" tooltip="" dataName="INVOICE_PROCESS_ID" dataType="VARCHAR" dataNullable="true" dataLength="100" auditType="NONE" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="false"></property>
+   <property name="ProcessIds" description="Processes started for this record, as Process=instanceId pairs" tooltip="" dataName="INVOICE_PROCESS_IDS" dataType="VARCHAR" dataNullable="true" dataLength="1000" auditType="NONE" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="1000" widgetIsMajor="false"></property>
+   <property name="Customer" description="" tooltip="" dataName="INVOICE_CUSTOMER" dataType="INTEGER" dataNullable="false" isRequiredProperty="true" auditType="NONE" relationshipType="ASSOCIATION" relationshipCardinality="n_1" relationshipName="Invoice_Customer" relationshipEntityName="Customer" relationshipEntityPerspectiveName="Customer" relationshipEntityPerspectiveLabel="Entities" whenTargetDeleted="restrict" widgetType="DROPDOWN" widgetSize="" widgetLength="20" widgetIsMajor="true" widgetDropDownKey="Id" widgetDropDownValue="Name"></property>
+   <property name="Status" description="" tooltip="" dataName="INVOICE_STATUS" dataType="INTEGER" dataNullable="true" dataDefaultValue="1" auditType="NONE" relationshipType="ASSOCIATION" relationshipCardinality="n_1" relationshipName="Invoice_Status" relationshipEntityName="InvoiceStatus" relationshipEntityPerspectiveName="Settings" relationshipEntityPerspectiveLabel="Entities" whenTargetDeleted="restrict" widgetType="DOCUMENT_STATUS" widgetSize="" widgetLength="20" widgetIsMajor="true" widgetDropDownKey="Id" widgetDropDownValue="Name" widgetStatusSteps="1,2,3"></property>
+  </entity>
+  <relation name="Invoice_Customer" type="relation" entity="Invoice" relationName="Invoice_Customer" relationshipEntityPerspectiveName="Customer" relationshipEntityPerspectiveLabel="Entities" property="Customer" referenced="Customer" referencedProperty="Id">
+  </relation>
+  <relation name="Invoice_Status" type="relation" entity="Invoice" relationName="Invoice_Status" relationshipEntityPerspectiveName="Settings" relationshipEntityPerspectiveLabel="Entities" property="Status" referenced="InvoiceStatus" referencedProperty="Id">
+  </relation>
+  <entity name="InvoiceItem" dataName="ACCESSIBILITY_INVOICE_ITEM" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}ACCESSIBILITY_INVOICE_ITEM&quot;" dataQuery="" type="DEPENDENT" title="InvoiceItem" caption="Manage entity InvoiceItem" description="Manage entity InvoiceItem" tooltip="InvoiceItem" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="invoiceitem" menuLabel="Invoice Items" entityLabel="Invoice Item" menuIndex="100" layoutType="MANAGE_DETAILS" perspectiveName="Invoice" perspectiveLabel="Invoice" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="3" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="AccessibilityHarmoniaIT.Invoice.InvoiceItemReadOnly" roleWrite="AccessibilityHarmoniaIT.Invoice.InvoiceItemFullAccess">
+   <property name="Id" description="" tooltip="" dataName="INVOICE_ITEM_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Product" description="" tooltip="" dataName="INVOICE_ITEM_PRODUCT" dataType="VARCHAR" dataNullable="true" dataLength="100" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="true"></property>
+   <property name="Quantity" description="" tooltip="" dataName="INVOICE_ITEM_QUANTITY" dataType="DECIMAL" dataNullable="true" dataLength="16" dataPrecision="16" dataScale="2" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="16" widgetIsMajor="true"></property>
+   <property name="Invoice" description="" tooltip="" dataName="INVOICE_ITEM_INVOICE" dataType="INTEGER" dataNullable="false" isRequiredProperty="true" auditType="NONE" relationshipType="COMPOSITION" relationshipCardinality="1_n" relationshipName="InvoiceItem_Invoice" relationshipEntityName="Invoice" relationshipEntityPerspectiveName="Invoice" relationshipEntityPerspectiveLabel="Entities" widgetType="DROPDOWN" widgetSize="" widgetLength="20" widgetIsMajor="true" widgetDropDownKey="Id" widgetDropDownValue="Number"></property>
+  </entity>
+  <relation name="InvoiceItem_Invoice" type="relation" entity="InvoiceItem" relationName="InvoiceItem_Invoice" relationshipEntityPerspectiveName="Invoice" relationshipEntityPerspectiveLabel="Entities" property="Invoice" referenced="Invoice" referencedProperty="Id">
+  </relation>
+  <entity name="InvoiceStatus" dataName="ACCESSIBILITY_INVOICE_STATUS" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}ACCESSIBILITY_INVOICE_STATUS&quot;" dataQuery="" type="SETTING" title="InvoiceStatus" caption="Manage entity InvoiceStatus" description="Manage entity InvoiceStatus" tooltip="InvoiceStatus" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="invoicestatus" menuLabel="Invoice Statuses" entityLabel="Invoice Status" menuIndex="100" layoutType="MANAGE_MASTER" perspectiveName="Settings" perspectiveLabel="Settings" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="3" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="AccessibilityHarmoniaIT.InvoiceStatus.InvoiceStatusReadOnly" roleWrite="AccessibilityHarmoniaIT.InvoiceStatus.InvoiceStatusFullAccess">
+   <property name="Id" description="" tooltip="" dataName="INVOICE_STATUS_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Name" description="" tooltip="" dataName="INVOICE_STATUS_NAME" dataType="VARCHAR" dataNullable="true" dataLength="40" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="40" widgetIsMajor="true"></property>
+  </entity>
+ </entities>
+ <perspectives>
+  <perspective><name>Customer</name><label>Customer</label><icon>/services/web/resources/unicons/file.svg</icon><order>1</order></perspective>
+  <perspective><name>Invoice</name><label>Invoice</label><icon>/services/web/resources/unicons/file.svg</icon><order>2</order></perspective>
+ </perspectives>
+ <navigations>
+ </navigations>
+ <mxGraphModel>
+  <root>
+   <mxCell id="0"/>
+   <mxCell id="1" parent="0"/>
+   <mxCell id="ent_Customer" style="entity" parent="1" vertex="1">
+    <Entity name="Customer" dataName="ACCESSIBILITY_CUSTOMER" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}ACCESSIBILITY_CUSTOMER&quot;" dataQuery="" title="Customer" caption="Manage entity Customer" description="Manage entity Customer" tooltip="Customer" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="customer" menuLabel="Customers" entityLabel="Customer" menuIndex="100" layoutType="MANAGE" perspectiveName="Customer" perspectiveLabel="Customer" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="1" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="AccessibilityHarmoniaIT.Customer.CustomerReadOnly" roleWrite="AccessibilityHarmoniaIT.Customer.CustomerFullAccess" type="Entity" as="value"/>
+    <mxGeometry x="20" y="20" width="200" height="158" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry>
+   </mxCell>
+   <mxCell id="ent_Customer_p_Id" parent="ent_Customer" vertex="1" connectable="0">
+    <Property name="Id" description="" tooltip="" dataName="CUSTOMER_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="28" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Customer_p_Name" parent="ent_Customer" vertex="1" connectable="0">
+    <Property name="Name" description="" tooltip="" dataName="CUSTOMER_NAME" dataType="VARCHAR" dataNullable="false" isRequiredProperty="true" dataLength="100" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="54" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Customer_p_Email" parent="ent_Customer" vertex="1" connectable="0">
+    <Property name="Email" description="" tooltip="" dataName="CUSTOMER_EMAIL" dataType="VARCHAR" dataNullable="true" dataLength="100" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="80" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Customer_p_Since" parent="ent_Customer" vertex="1" connectable="0">
+    <Property name="Since" description="" tooltip="" dataName="CUSTOMER_SINCE" dataType="DATE" dataNullable="true" auditType="NONE" widgetType="DATE" widgetSize="" widgetLength="20" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="106" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Customer_p_Vip" parent="ent_Customer" vertex="1" connectable="0">
+    <Property name="Vip" description="" tooltip="" dataName="CUSTOMER_VIP" dataType="BOOLEAN" dataNullable="true" auditType="NONE" widgetType="CHECKBOX" widgetSize="" widgetLength="20" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="132" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Invoice" style="entity" parent="1" vertex="1">
+    <Entity name="Invoice" dataName="ACCESSIBILITY_INVOICE" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}ACCESSIBILITY_INVOICE&quot;" dataQuery="" title="Invoice" caption="Manage entity Invoice" description="Manage entity Invoice" tooltip="Invoice" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="invoice" menuLabel="Invoices" entityLabel="Invoice" menuIndex="100" layoutType="MANAGE_DOCUMENT" perspectiveName="Invoice" perspectiveLabel="Invoice" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="2" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="AccessibilityHarmoniaIT.Invoice.InvoiceReadOnly" roleWrite="AccessibilityHarmoniaIT.Invoice.InvoiceFullAccess" documentItemsEntity="InvoiceItem" documentLabel="Invoice" documentItemsLabel="Invoice Items" hasPrint="true" type="Entity" as="value"/>
+    <mxGeometry x="300" y="20" width="200" height="236" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry>
+   </mxCell>
+   <mxCell id="ent_Invoice_p_Id" parent="ent_Invoice" vertex="1" connectable="0">
+    <Property name="Id" description="" tooltip="" dataName="INVOICE_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="28" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Invoice_p_Number" parent="ent_Invoice" vertex="1" connectable="0">
+    <Property name="Number" description="" tooltip="" dataName="INVOICE_NUMBER" dataType="VARCHAR" dataNullable="true" dataLength="20" auditType="NONE" widgetType="DOCUMENT_NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="54" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Invoice_p_Date" parent="ent_Invoice" vertex="1" connectable="0">
+    <Property name="Date" description="" tooltip="" dataName="INVOICE_DATE" dataType="DATE" dataNullable="true" auditType="NONE" widgetType="DATE" widgetSize="" widgetLength="20" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="80" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Invoice_p_Note" parent="ent_Invoice" vertex="1" connectable="0">
+    <Property name="Note" description="" tooltip="" dataName="INVOICE_NOTE" dataType="VARCHAR" dataNullable="true" dataLength="200" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="200" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="106" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Invoice_p_ProcessId" parent="ent_Invoice" vertex="1" connectable="0">
+    <Property name="ProcessId" description="Process instance started for this record" tooltip="" dataName="INVOICE_PROCESS_ID" dataType="VARCHAR" dataNullable="true" dataLength="100" auditType="NONE" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="false" as="value"/>
+    <mxGeometry y="132" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Invoice_p_ProcessIds" parent="ent_Invoice" vertex="1" connectable="0">
+    <Property name="ProcessIds" description="Processes started for this record, as Process=instanceId pairs" tooltip="" dataName="INVOICE_PROCESS_IDS" dataType="VARCHAR" dataNullable="true" dataLength="1000" auditType="NONE" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="1000" widgetIsMajor="false" as="value"/>
+    <mxGeometry y="158" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Invoice_p_Customer" parent="ent_Invoice" vertex="1" connectable="0">
+    <Property name="Customer" description="" tooltip="" dataName="INVOICE_CUSTOMER" dataType="INTEGER" dataNullable="false" isRequiredProperty="true" auditType="NONE" relationshipType="ASSOCIATION" relationshipCardinality="n_1" relationshipName="Invoice_Customer" relationshipEntityName="Customer" relationshipEntityPerspectiveName="Customer" relationshipEntityPerspectiveLabel="Entities" whenTargetDeleted="restrict" widgetType="DROPDOWN" widgetSize="" widgetLength="20" widgetIsMajor="true" widgetDropDownKey="Id" widgetDropDownValue="Name" dataNotNull="true" as="value"/>
+    <mxGeometry y="184" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Invoice_p_Status" parent="ent_Invoice" vertex="1" connectable="0">
+    <Property name="Status" description="" tooltip="" dataName="INVOICE_STATUS" dataType="INTEGER" dataNullable="true" dataDefaultValue="1" auditType="NONE" relationshipType="ASSOCIATION" relationshipCardinality="n_1" relationshipName="Invoice_Status" relationshipEntityName="InvoiceStatus" relationshipEntityPerspectiveName="Settings" relationshipEntityPerspectiveLabel="Entities" whenTargetDeleted="restrict" widgetType="DOCUMENT_STATUS" widgetSize="" widgetLength="20" widgetIsMajor="true" widgetDropDownKey="Id" widgetDropDownValue="Name" widgetStatusSteps="1,2,3" as="value"/>
+    <mxGeometry y="210" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_InvoiceItem" style="dependent" parent="1" vertex="1">
+    <Entity name="InvoiceItem" entityType="DEPENDENT" dataName="ACCESSIBILITY_INVOICE_ITEM" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}ACCESSIBILITY_INVOICE_ITEM&quot;" dataQuery="" title="InvoiceItem" caption="Manage entity InvoiceItem" description="Manage entity InvoiceItem" tooltip="InvoiceItem" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="invoiceitem" menuLabel="Invoice Items" entityLabel="Invoice Item" menuIndex="100" layoutType="MANAGE_DETAILS" perspectiveName="Invoice" perspectiveLabel="Invoice" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="3" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="AccessibilityHarmoniaIT.Invoice.InvoiceItemReadOnly" roleWrite="AccessibilityHarmoniaIT.Invoice.InvoiceItemFullAccess" type="Entity" as="value"/>
+    <mxGeometry x="580" y="140" width="200" height="132" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry>
+   </mxCell>
+   <mxCell id="ent_InvoiceItem_p_Id" parent="ent_InvoiceItem" vertex="1" connectable="0">
+    <Property name="Id" description="" tooltip="" dataName="INVOICE_ITEM_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="28" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_InvoiceItem_p_Product" parent="ent_InvoiceItem" vertex="1" connectable="0">
+    <Property name="Product" description="" tooltip="" dataName="INVOICE_ITEM_PRODUCT" dataType="VARCHAR" dataNullable="true" dataLength="100" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="54" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_InvoiceItem_p_Quantity" parent="ent_InvoiceItem" vertex="1" connectable="0">
+    <Property name="Quantity" description="" tooltip="" dataName="INVOICE_ITEM_QUANTITY" dataType="DECIMAL" dataNullable="true" dataLength="16" dataPrecision="16" dataScale="2" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="16" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="80" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_InvoiceItem_p_Invoice" parent="ent_InvoiceItem" vertex="1" connectable="0">
+    <Property name="Invoice" description="" tooltip="" dataName="INVOICE_ITEM_INVOICE" dataType="INTEGER" dataNullable="false" isRequiredProperty="true" auditType="NONE" relationshipType="COMPOSITION" relationshipCardinality="1_n" relationshipName="InvoiceItem_Invoice" relationshipEntityName="Invoice" relationshipEntityPerspectiveName="Invoice" relationshipEntityPerspectiveLabel="Entities" widgetType="DROPDOWN" widgetSize="" widgetLength="20" widgetIsMajor="true" widgetDropDownKey="Id" widgetDropDownValue="Number" dataNotNull="true" as="value"/>
+    <mxGeometry y="106" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_InvoiceStatus" style="setting" parent="1" vertex="1">
+    <Entity name="InvoiceStatus" entityType="SETTING" dataName="ACCESSIBILITY_INVOICE_STATUS" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}ACCESSIBILITY_INVOICE_STATUS&quot;" dataQuery="" title="InvoiceStatus" caption="Manage entity InvoiceStatus" description="Manage entity InvoiceStatus" tooltip="InvoiceStatus" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="invoicestatus" menuLabel="Invoice Statuses" entityLabel="Invoice Status" menuIndex="100" layoutType="MANAGE_MASTER" perspectiveName="Settings" perspectiveLabel="Settings" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="3" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="AccessibilityHarmoniaIT.InvoiceStatus.InvoiceStatusReadOnly" roleWrite="AccessibilityHarmoniaIT.InvoiceStatus.InvoiceStatusFullAccess" type="Entity" as="value"/>
+    <mxGeometry x="580" y="20" width="200" height="80" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry>
+   </mxCell>
+   <mxCell id="ent_InvoiceStatus_p_Id" parent="ent_InvoiceStatus" vertex="1" connectable="0">
+    <Property name="Id" description="" tooltip="" dataName="INVOICE_STATUS_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="28" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_InvoiceStatus_p_Name" parent="ent_InvoiceStatus" vertex="1" connectable="0">
+    <Property name="Name" description="" tooltip="" dataName="INVOICE_STATUS_NAME" dataType="VARCHAR" dataNullable="true" dataLength="40" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="40" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="54" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="edge_Invoice_Customer" parent="1" source="ent_Invoice_p_Customer" target="ent_Customer_p_Id" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+   <mxCell id="edge_Invoice_Status" parent="1" source="ent_Invoice_p_Status" target="ent_InvoiceStatus_p_Id" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+   <mxCell id="edge_InvoiceItem_Invoice" parent="1" source="ent_InvoiceItem_p_Invoice" target="ent_Invoice_p_Id" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+  </root>
+ </mxGraphModel>
+</model>

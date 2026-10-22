@@ -1,0 +1,46 @@
+{
+    "model": {
+        "entities": [
+            {
+                "properties": [
+                    {
+                        "dataAutoIncrement": "true",
+                        "dataName": "LONELY_ID",
+                        "dataPrimaryKey": "true",
+                        "dataType": "INTEGER",
+                        "name": "Id",
+                        "relationshipEntityName": "Lonely",
+                        "relationshipName": "Lonely_Self"
+                    }
+                ],
+                "dataName": "LONELY",
+                "name": "Lonely",
+                "perspectiveName": "Lonely",
+                "uniqueConstraints": [
+                    {
+                        "name": "Lonely_Id_Id",
+                        "columns": [
+                            {
+                                "name": "LONELY_ID"
+                            },
+                            {
+                                "name": "LONELY_ID"
+                            }
+                        ],
+                        "columnsCsv": "LONELY_ID,LONELY_ID",
+                        "message": "A Lonely with the same Id, Id already exists"
+                    }
+                ]
+            }
+        ],
+        "perspectives": [
+            {
+                "name": "Lonely",
+                "label": "Lonely",
+                "icon": "/services/web/resources/unicons/copy.svg",
+                "order": "100"
+            }
+        ],
+        "navigations": []
+    }
+}

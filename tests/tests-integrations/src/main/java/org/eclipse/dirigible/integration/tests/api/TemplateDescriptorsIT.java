@@ -138,7 +138,7 @@ class TemplateDescriptorsIT extends IntegrationTest {
                    .get(CATALOGUE + "/extensions")
                    .then()
                    .statusCode(200)
-                   .body("$", hasItems("model", "glue", "form", "report", "mapping", "edm"));
+                   .body("$", hasItems("model", "glue", "form", "report", "mapping"));
         });
 
         assertEquals(0, evaluator.sessions(), "no script engine may be started to list the shipped templates");

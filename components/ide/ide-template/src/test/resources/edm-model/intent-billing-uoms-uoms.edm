@@ -1,0 +1,89 @@
+<model title="Uoms" description="Units of measure and their dimensions" icon="ruler">
+ <entities>
+  <entity name="Dimension" dataName="UOMS_DIMENSION" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}UOMS_DIMENSION&quot;" dataQuery="" type="SETTING" title="Dimension" caption="Manage entity Dimension" description="Manage entity Dimension" tooltip="Dimension" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="dimension" menuLabel="Dimensions" entityLabel="Dimension" menuIndex="100" layoutType="MANAGE_MASTER" perspectiveName="Settings" perspectiveLabel="Settings" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="1" perspectiveNavId="master-data" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="uoms.Dimension.DimensionReadOnly" roleWrite="uoms.Dimension.DimensionFullAccess">
+   <property name="Id" description="" tooltip="" dataName="DIMENSION_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Name" description="" tooltip="" dataName="DIMENSION_NAME" dataType="VARCHAR" dataNullable="false" isRequiredProperty="true" dataLength="100" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="true"></property>
+   <property name="Sap" description="" tooltip="" dataName="DIMENSION_SAP" dataType="VARCHAR" dataNullable="true" dataLength="20" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+  </entity>
+  <entity name="UoM" dataName="UOMS_UO_M" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}UOMS_UO_M&quot;" dataQuery="" type="SETTING" title="UoM" caption="Manage entity UoM" description="Manage entity UoM" tooltip="UoM" icon="/services/web/resources/unicons/ruler.svg" iconName="ruler" menuKey="uom" menuLabel="Units of Measure" entityLabel="Unit of Measure" menuIndex="100" layoutType="MANAGE_MASTER" perspectiveName="Settings" perspectiveLabel="Settings" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/ruler.svg" perspectiveOrder="1" perspectiveNavId="master-data" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="uoms.UoM.UoMReadOnly" roleWrite="uoms.UoM.UoMFullAccess">
+   <property name="Id" description="" tooltip="" dataName="UO_M_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Name" description="" tooltip="" dataName="UO_M_NAME" dataType="VARCHAR" dataNullable="false" isRequiredProperty="true" dataLength="100" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="true"></property>
+   <property name="Iso" description="" tooltip="" dataName="UO_M_ISO" dataType="VARCHAR" dataNullable="true" dataLength="10" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="10" widgetIsMajor="true"></property>
+   <property name="Sap" description="" tooltip="" dataName="UO_M_SAP" dataType="VARCHAR" dataNullable="true" dataLength="20" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Numerator" description="" tooltip="" dataName="UO_M_NUMERATOR" dataType="DECIMAL" dataNullable="true" dataLength="16" dataPrecision="18" dataScale="6" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="16" widgetIsMajor="true"></property>
+   <property name="Denominator" description="" tooltip="" dataName="UO_M_DENOMINATOR" dataType="DECIMAL" dataNullable="true" dataLength="16" dataPrecision="18" dataScale="6" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="16" widgetIsMajor="true"></property>
+   <property name="Rounding" description="" tooltip="" dataName="UO_M_ROUNDING" dataType="INTEGER" dataNullable="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Base" description="" tooltip="" dataName="UO_M_BASE" dataType="BOOLEAN" dataNullable="true" auditType="NONE" widgetType="CHECKBOX" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Dimension" description="" tooltip="" dataName="UO_M_DIMENSION" dataType="INTEGER" dataNullable="true" auditType="NONE" relationshipType="ASSOCIATION" relationshipCardinality="n_1" relationshipName="UoM_Dimension" relationshipEntityName="Dimension" relationshipEntityPerspectiveName="Settings" relationshipEntityPerspectiveLabel="Entities" whenTargetDeleted="restrict" widgetType="DROPDOWN" widgetSize="" widgetLength="20" widgetIsMajor="true" widgetDropDownKey="Id" widgetDropDownValue="Name"></property>
+  </entity>
+  <relation name="UoM_Dimension" type="relation" entity="UoM" relationName="UoM_Dimension" relationshipEntityPerspectiveName="Settings" relationshipEntityPerspectiveLabel="Entities" property="Dimension" referenced="Dimension" referencedProperty="Id">
+  </relation>
+ </entities>
+ <perspectives>
+ </perspectives>
+ <navigations>
+ </navigations>
+ <mxGraphModel>
+  <root>
+   <mxCell id="0"/>
+   <mxCell id="1" parent="0"/>
+   <mxCell id="ent_Dimension" style="setting" parent="1" vertex="1">
+    <Entity name="Dimension" entityType="SETTING" dataName="UOMS_DIMENSION" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}UOMS_DIMENSION&quot;" dataQuery="" title="Dimension" caption="Manage entity Dimension" description="Manage entity Dimension" tooltip="Dimension" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="dimension" menuLabel="Dimensions" entityLabel="Dimension" menuIndex="100" layoutType="MANAGE_MASTER" perspectiveName="Settings" perspectiveLabel="Settings" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="1" perspectiveNavId="master-data" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="uoms.Dimension.DimensionReadOnly" roleWrite="uoms.Dimension.DimensionFullAccess" type="Entity" as="value"/>
+    <mxGeometry x="20" y="20" width="200" height="106" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry>
+   </mxCell>
+   <mxCell id="ent_Dimension_p_Id" parent="ent_Dimension" vertex="1" connectable="0">
+    <Property name="Id" description="" tooltip="" dataName="DIMENSION_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="28" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Dimension_p_Name" parent="ent_Dimension" vertex="1" connectable="0">
+    <Property name="Name" description="" tooltip="" dataName="DIMENSION_NAME" dataType="VARCHAR" dataNullable="false" isRequiredProperty="true" dataLength="100" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="54" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Dimension_p_Sap" parent="ent_Dimension" vertex="1" connectable="0">
+    <Property name="Sap" description="" tooltip="" dataName="DIMENSION_SAP" dataType="VARCHAR" dataNullable="true" dataLength="20" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="20" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="80" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_UoM" style="setting" parent="1" vertex="1">
+    <Entity name="UoM" entityType="SETTING" dataName="UOMS_UO_M" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}UOMS_UO_M&quot;" dataQuery="" title="UoM" caption="Manage entity UoM" description="Manage entity UoM" tooltip="UoM" icon="/services/web/resources/unicons/ruler.svg" iconName="ruler" menuKey="uom" menuLabel="Units of Measure" entityLabel="Unit of Measure" menuIndex="100" layoutType="MANAGE_MASTER" perspectiveName="Settings" perspectiveLabel="Settings" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/ruler.svg" perspectiveOrder="1" perspectiveNavId="master-data" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="uoms.UoM.UoMReadOnly" roleWrite="uoms.UoM.UoMFullAccess" type="Entity" as="value"/>
+    <mxGeometry x="300" y="20" width="200" height="262" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry>
+   </mxCell>
+   <mxCell id="ent_UoM_p_Id" parent="ent_UoM" vertex="1" connectable="0">
+    <Property name="Id" description="" tooltip="" dataName="UO_M_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="28" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_UoM_p_Name" parent="ent_UoM" vertex="1" connectable="0">
+    <Property name="Name" description="" tooltip="" dataName="UO_M_NAME" dataType="VARCHAR" dataNullable="false" isRequiredProperty="true" dataLength="100" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="54" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_UoM_p_Iso" parent="ent_UoM" vertex="1" connectable="0">
+    <Property name="Iso" description="" tooltip="" dataName="UO_M_ISO" dataType="VARCHAR" dataNullable="true" dataLength="10" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="10" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="80" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_UoM_p_Sap" parent="ent_UoM" vertex="1" connectable="0">
+    <Property name="Sap" description="" tooltip="" dataName="UO_M_SAP" dataType="VARCHAR" dataNullable="true" dataLength="20" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="20" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="106" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_UoM_p_Numerator" parent="ent_UoM" vertex="1" connectable="0">
+    <Property name="Numerator" description="" tooltip="" dataName="UO_M_NUMERATOR" dataType="DECIMAL" dataNullable="true" dataLength="16" dataPrecision="18" dataScale="6" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="16" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="132" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_UoM_p_Denominator" parent="ent_UoM" vertex="1" connectable="0">
+    <Property name="Denominator" description="" tooltip="" dataName="UO_M_DENOMINATOR" dataType="DECIMAL" dataNullable="true" dataLength="16" dataPrecision="18" dataScale="6" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="16" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="158" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_UoM_p_Rounding" parent="ent_UoM" vertex="1" connectable="0">
+    <Property name="Rounding" description="" tooltip="" dataName="UO_M_ROUNDING" dataType="INTEGER" dataNullable="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="184" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_UoM_p_Base" parent="ent_UoM" vertex="1" connectable="0">
+    <Property name="Base" description="" tooltip="" dataName="UO_M_BASE" dataType="BOOLEAN" dataNullable="true" auditType="NONE" widgetType="CHECKBOX" widgetSize="" widgetLength="20" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="210" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_UoM_p_Dimension" parent="ent_UoM" vertex="1" connectable="0">
+    <Property name="Dimension" description="" tooltip="" dataName="UO_M_DIMENSION" dataType="INTEGER" dataNullable="true" auditType="NONE" relationshipType="ASSOCIATION" relationshipCardinality="n_1" relationshipName="UoM_Dimension" relationshipEntityName="Dimension" relationshipEntityPerspectiveName="Settings" relationshipEntityPerspectiveLabel="Entities" whenTargetDeleted="restrict" widgetType="DROPDOWN" widgetSize="" widgetLength="20" widgetIsMajor="true" widgetDropDownKey="Id" widgetDropDownValue="Name" as="value"/>
+    <mxGeometry y="236" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="edge_UoM_Dimension" parent="1" source="ent_UoM_p_Dimension" target="ent_Dimension_p_Id" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+  </root>
+ </mxGraphModel>
+</model>

@@ -1,0 +1,119 @@
+<model title="Customers" description="Customer master data" icon="users">
+ <entities>
+  <entity name="Customer" dataName="CUSTOMERS_CUSTOMER" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}CUSTOMERS_CUSTOMER&quot;" dataQuery="" type="PRIMARY" title="Customer" caption="Manage entity Customer" description="Manage entity Customer" tooltip="Customer" icon="/services/web/resources/unicons/users.svg" iconName="users" menuKey="customer" menuLabel="Customers" entityLabel="Customer" menuIndex="100" layoutType="MANAGE" perspectiveName="Customer" perspectiveLabel="Customer" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/users.svg" perspectiveOrder="1" perspectiveNavId="master-data" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="customers.Customer.CustomerReadOnly" roleWrite="customers.Customer.CustomerFullAccess">
+   <property name="Id" description="" tooltip="" dataName="CUSTOMER_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Name" description="" tooltip="" dataName="CUSTOMER_NAME" dataType="VARCHAR" dataNullable="false" isRequiredProperty="true" dataLength="200" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="200" widgetIsMajor="true"></property>
+   <property name="Email" description="" tooltip="" dataName="CUSTOMER_EMAIL" dataType="VARCHAR" dataNullable="true" dataLength="200" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="200" widgetIsMajor="true"></property>
+   <property name="Phone" description="" tooltip="" dataName="CUSTOMER_PHONE" dataType="VARCHAR" dataNullable="true" dataLength="50" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="50" widgetIsMajor="true"></property>
+   <property name="Address" description="" tooltip="" dataName="CUSTOMER_ADDRESS" dataType="VARCHAR" dataNullable="true" dataLength="400" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="400" widgetIsMajor="true"></property>
+   <property name="Uuid" description="" tooltip="" dataName="CUSTOMER_UUID" dataType="VARCHAR" dataNullable="true" isReadOnlyProperty="true" generatedUuid="true" dataLength="36" dataUnique="true" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="36" widgetIsMajor="true"></property>
+   <property name="CreatedAt" description="" tooltip="" dataName="CUSTOMER_CREATED_AT" dataType="TIMESTAMP" dataNullable="true" auditType="CREATED_AT" isReadOnlyProperty="true" widgetType="DATETIME-LOCAL" widgetSize="" widgetLength="20" widgetIsMajor="false"></property>
+   <property name="CreatedBy" description="" tooltip="" dataName="CUSTOMER_CREATED_BY" dataType="VARCHAR" dataNullable="true" dataLength="128" auditType="CREATED_BY" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="128" widgetIsMajor="false"></property>
+   <property name="UpdatedAt" description="" tooltip="" dataName="CUSTOMER_UPDATED_AT" dataType="TIMESTAMP" dataNullable="true" auditType="UPDATED_AT" isReadOnlyProperty="true" widgetType="DATETIME-LOCAL" widgetSize="" widgetLength="20" widgetIsMajor="false"></property>
+   <property name="UpdatedBy" description="" tooltip="" dataName="CUSTOMER_UPDATED_BY" dataType="VARCHAR" dataNullable="true" dataLength="128" auditType="UPDATED_BY" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="128" widgetIsMajor="false"></property>
+   <property name="Country" description="" tooltip="" dataName="CUSTOMER_COUNTRY" dataType="INTEGER" dataNullable="true" auditType="NONE" relationshipType="ASSOCIATION" relationshipCardinality="n_1" relationshipName="Customer_Country" relationshipEntityName="Country" relationshipEntityPerspectiveName="Settings" relationshipEntityPerspectiveLabel="Entities" widgetType="DROPDOWN" widgetSize="" widgetLength="20" widgetIsMajor="true" widgetDropDownKey="Id" widgetDropDownValue="Name" whenTargetDeleted="restrict"></property>
+   <property name="Currency" description="" tooltip="" dataName="CUSTOMER_CURRENCY" dataType="INTEGER" dataNullable="true" auditType="NONE" relationshipType="ASSOCIATION" relationshipCardinality="n_1" relationshipName="Customer_Currency" relationshipEntityName="Currency" relationshipEntityPerspectiveName="Settings" relationshipEntityPerspectiveLabel="Entities" widgetType="DROPDOWN" widgetSize="" widgetLength="20" widgetIsMajor="true" widgetDropDownKey="Id" widgetDropDownValue="Name" whenTargetDeleted="restrict"></property>
+  </entity>
+  <relation name="Customer_Country" type="relation" entity="Customer" relationName="Customer_Country" relationshipEntityPerspectiveName="Settings" relationshipEntityPerspectiveLabel="Entities" property="Country" referenced="Country" referencedProperty="Id">
+  </relation>
+  <relation name="Customer_Currency" type="relation" entity="Customer" relationName="Customer_Currency" relationshipEntityPerspectiveName="Settings" relationshipEntityPerspectiveLabel="Entities" property="Currency" referenced="Currency" referencedProperty="Id">
+  </relation>
+  <entity name="Country" dataName="COUNTRIES_COUNTRY" dataCount="" dataQuery="" type="PROJECTION" title="Country" caption="Projection of Country" description="Cross-model reference to Country owned by countries" tooltip="Country" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="country" menuLabel="Countries" menuIndex="100" layoutType="" perspectiveName="" perspectiveLabel="" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="0" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="false" projectionReferencedModel="/countries/countries.model" projectionReferencedEntity="Country">
+   <property name="Id" description="" tooltip="" dataName="COUNTRY_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" auditType="NONE" widgetType="NUMBER" widgetIsMajor="false"></property>
+   <property name="Name" description="" tooltip="" dataName="COUNTRY_NAME" dataType="VARCHAR" dataNullable="true" auditType="NONE" widgetType="TEXTBOX" widgetIsMajor="true"></property>
+  </entity>
+  <entity name="Currency" dataName="CURRENCIES_CURRENCY" dataCount="" dataQuery="" type="PROJECTION" title="Currency" caption="Projection of Currency" description="Cross-model reference to Currency owned by currencies" tooltip="Currency" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="currency" menuLabel="Currencies" menuIndex="100" layoutType="" perspectiveName="" perspectiveLabel="" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="0" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="false" projectionReferencedModel="/currencies/currencies.model" projectionReferencedEntity="Currency">
+   <property name="Id" description="" tooltip="" dataName="CURRENCY_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" auditType="NONE" widgetType="NUMBER" widgetIsMajor="false"></property>
+   <property name="Name" description="" tooltip="" dataName="CURRENCY_NAME" dataType="VARCHAR" dataNullable="true" auditType="NONE" widgetType="TEXTBOX" widgetIsMajor="true"></property>
+  </entity>
+ </entities>
+ <perspectives>
+  <perspective><name>Customer</name><label>Customer</label><icon>/services/web/resources/unicons/users.svg</icon><order>1</order></perspective>
+ </perspectives>
+ <navigations>
+ </navigations>
+ <mxGraphModel>
+  <root>
+   <mxCell id="0"/>
+   <mxCell id="1" parent="0"/>
+   <mxCell id="ent_Customer" style="entity" parent="1" vertex="1">
+    <Entity name="Customer" dataName="CUSTOMERS_CUSTOMER" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}CUSTOMERS_CUSTOMER&quot;" dataQuery="" title="Customer" caption="Manage entity Customer" description="Manage entity Customer" tooltip="Customer" icon="/services/web/resources/unicons/users.svg" iconName="users" menuKey="customer" menuLabel="Customers" entityLabel="Customer" menuIndex="100" layoutType="MANAGE" perspectiveName="Customer" perspectiveLabel="Customer" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/users.svg" perspectiveOrder="1" perspectiveNavId="master-data" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="customers.Customer.CustomerReadOnly" roleWrite="customers.Customer.CustomerFullAccess" type="Entity" as="value"/>
+    <mxGeometry x="20" y="20" width="200" height="340" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry>
+   </mxCell>
+   <mxCell id="ent_Customer_p_Id" parent="ent_Customer" vertex="1" connectable="0">
+    <Property name="Id" description="" tooltip="" dataName="CUSTOMER_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="28" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Customer_p_Name" parent="ent_Customer" vertex="1" connectable="0">
+    <Property name="Name" description="" tooltip="" dataName="CUSTOMER_NAME" dataType="VARCHAR" dataNullable="false" isRequiredProperty="true" dataLength="200" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="200" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="54" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Customer_p_Email" parent="ent_Customer" vertex="1" connectable="0">
+    <Property name="Email" description="" tooltip="" dataName="CUSTOMER_EMAIL" dataType="VARCHAR" dataNullable="true" dataLength="200" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="200" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="80" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Customer_p_Phone" parent="ent_Customer" vertex="1" connectable="0">
+    <Property name="Phone" description="" tooltip="" dataName="CUSTOMER_PHONE" dataType="VARCHAR" dataNullable="true" dataLength="50" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="50" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="106" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Customer_p_Address" parent="ent_Customer" vertex="1" connectable="0">
+    <Property name="Address" description="" tooltip="" dataName="CUSTOMER_ADDRESS" dataType="VARCHAR" dataNullable="true" dataLength="400" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="400" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="132" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Customer_p_Uuid" parent="ent_Customer" vertex="1" connectable="0">
+    <Property name="Uuid" description="" tooltip="" dataName="CUSTOMER_UUID" dataType="VARCHAR" dataNullable="true" isReadOnlyProperty="true" generatedUuid="true" dataLength="36" dataUnique="true" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="36" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="158" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Customer_p_CreatedAt" parent="ent_Customer" vertex="1" connectable="0">
+    <Property name="CreatedAt" description="" tooltip="" dataName="CUSTOMER_CREATED_AT" dataType="TIMESTAMP" dataNullable="true" auditType="CREATED_AT" isReadOnlyProperty="true" widgetType="DATETIME-LOCAL" widgetSize="" widgetLength="20" widgetIsMajor="false" as="value"/>
+    <mxGeometry y="184" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Customer_p_CreatedBy" parent="ent_Customer" vertex="1" connectable="0">
+    <Property name="CreatedBy" description="" tooltip="" dataName="CUSTOMER_CREATED_BY" dataType="VARCHAR" dataNullable="true" dataLength="128" auditType="CREATED_BY" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="128" widgetIsMajor="false" as="value"/>
+    <mxGeometry y="210" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Customer_p_UpdatedAt" parent="ent_Customer" vertex="1" connectable="0">
+    <Property name="UpdatedAt" description="" tooltip="" dataName="CUSTOMER_UPDATED_AT" dataType="TIMESTAMP" dataNullable="true" auditType="UPDATED_AT" isReadOnlyProperty="true" widgetType="DATETIME-LOCAL" widgetSize="" widgetLength="20" widgetIsMajor="false" as="value"/>
+    <mxGeometry y="236" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Customer_p_UpdatedBy" parent="ent_Customer" vertex="1" connectable="0">
+    <Property name="UpdatedBy" description="" tooltip="" dataName="CUSTOMER_UPDATED_BY" dataType="VARCHAR" dataNullable="true" dataLength="128" auditType="UPDATED_BY" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="128" widgetIsMajor="false" as="value"/>
+    <mxGeometry y="262" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Customer_p_Country" parent="ent_Customer" vertex="1" connectable="0">
+    <Property name="Country" description="" tooltip="" dataName="CUSTOMER_COUNTRY" dataType="INTEGER" dataNullable="true" auditType="NONE" relationshipType="ASSOCIATION" relationshipCardinality="n_1" relationshipName="Customer_Country" relationshipEntityName="Country" relationshipEntityPerspectiveName="Settings" relationshipEntityPerspectiveLabel="Entities" widgetType="DROPDOWN" widgetSize="" widgetLength="20" widgetIsMajor="true" widgetDropDownKey="Id" widgetDropDownValue="Name" whenTargetDeleted="restrict" as="value"/>
+    <mxGeometry y="288" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Customer_p_Currency" parent="ent_Customer" vertex="1" connectable="0">
+    <Property name="Currency" description="" tooltip="" dataName="CUSTOMER_CURRENCY" dataType="INTEGER" dataNullable="true" auditType="NONE" relationshipType="ASSOCIATION" relationshipCardinality="n_1" relationshipName="Customer_Currency" relationshipEntityName="Currency" relationshipEntityPerspectiveName="Settings" relationshipEntityPerspectiveLabel="Entities" widgetType="DROPDOWN" widgetSize="" widgetLength="20" widgetIsMajor="true" widgetDropDownKey="Id" widgetDropDownValue="Name" whenTargetDeleted="restrict" as="value"/>
+    <mxGeometry y="314" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Country" style="projection" parent="1" vertex="1">
+    <Entity name="Country" entityType="PROJECTION" dataName="COUNTRIES_COUNTRY" dataCount="" dataQuery="" title="Country" caption="Projection of Country" description="Cross-model reference to Country owned by countries" tooltip="Country" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="country" menuLabel="Countries" menuIndex="100" layoutType="" perspectiveName="" perspectiveLabel="" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="0" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="false" projectionReferencedModel="/countries/countries.model" projectionReferencedEntity="Country" type="Entity" as="value"/>
+    <mxGeometry x="300" y="20" width="200" height="80" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry>
+   </mxCell>
+   <mxCell id="ent_Country_p_Id" style="projectionproperty" parent="ent_Country" vertex="1" connectable="0">
+    <Property name="Id" description="" tooltip="" dataName="COUNTRY_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" auditType="NONE" widgetType="NUMBER" widgetIsMajor="false" dataNotNull="true" as="value"/>
+    <mxGeometry y="28" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Country_p_Name" style="projectionproperty" parent="ent_Country" vertex="1" connectable="0">
+    <Property name="Name" description="" tooltip="" dataName="COUNTRY_NAME" dataType="VARCHAR" dataNullable="true" auditType="NONE" widgetType="TEXTBOX" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="54" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Currency" style="projection" parent="1" vertex="1">
+    <Entity name="Currency" entityType="PROJECTION" dataName="CURRENCIES_CURRENCY" dataCount="" dataQuery="" title="Currency" caption="Projection of Currency" description="Cross-model reference to Currency owned by currencies" tooltip="Currency" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="currency" menuLabel="Currencies" menuIndex="100" layoutType="" perspectiveName="" perspectiveLabel="" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="0" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="false" projectionReferencedModel="/currencies/currencies.model" projectionReferencedEntity="Currency" type="Entity" as="value"/>
+    <mxGeometry x="580" y="20" width="200" height="80" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry>
+   </mxCell>
+   <mxCell id="ent_Currency_p_Id" style="projectionproperty" parent="ent_Currency" vertex="1" connectable="0">
+    <Property name="Id" description="" tooltip="" dataName="CURRENCY_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" auditType="NONE" widgetType="NUMBER" widgetIsMajor="false" dataNotNull="true" as="value"/>
+    <mxGeometry y="28" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Currency_p_Name" style="projectionproperty" parent="ent_Currency" vertex="1" connectable="0">
+    <Property name="Name" description="" tooltip="" dataName="CURRENCY_NAME" dataType="VARCHAR" dataNullable="true" auditType="NONE" widgetType="TEXTBOX" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="54" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="edge_Customer_Country" parent="1" source="ent_Customer_p_Country" target="ent_Country_p_Id" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+   <mxCell id="edge_Customer_Currency" parent="1" source="ent_Customer_p_Currency" target="ent_Currency_p_Id" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+  </root>
+ </mxGraphModel>
+</model>

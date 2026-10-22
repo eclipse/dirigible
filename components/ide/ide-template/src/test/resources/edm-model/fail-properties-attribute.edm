@@ -1,0 +1,7 @@
+<model>
+ <entities>
+  <entity name="Single" dataName="SINGLE" properties="clobbered-by-push">
+   <property name="Id" dataName="SINGLE_ID"></property>
+  </entity>
+ </entities>
+</model>

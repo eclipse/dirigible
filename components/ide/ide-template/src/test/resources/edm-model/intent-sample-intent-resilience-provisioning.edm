@@ -1,0 +1,75 @@
+<model title="Provisioning" description="Step resilience demo - retry, onError, {error} and cleared step data on a delegate and on a send (dirigible" processTaskLabels="{&quot;TenantProvisioning&quot;:&quot;Tenant Provisioning&quot;}">
+ <entities>
+  <entity name="ProvisioningStatus" dataName="PROVISIONING_PROVISIONING_STATUS" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}PROVISIONING_PROVISIONING_STATUS&quot;" dataQuery="" type="SETTING" title="ProvisioningStatus" caption="Manage entity ProvisioningStatus" description="Manage entity ProvisioningStatus" tooltip="ProvisioningStatus" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="provisioningstatus" menuLabel="Provisioning Statuses" entityLabel="Provisioning Status" menuIndex="100" layoutType="MANAGE_MASTER" perspectiveName="Settings" perspectiveLabel="Settings" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="1" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="sample-intent-resilience.ProvisioningStatus.ProvisioningStatusReadOnly" roleWrite="sample-intent-resilience.ProvisioningStatus.ProvisioningStatusFullAccess">
+   <property name="Id" description="" tooltip="" dataName="PROVISIONING_STATUS_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Name" description="" tooltip="" dataName="PROVISIONING_STATUS_NAME" dataType="VARCHAR" dataNullable="false" isRequiredProperty="true" dataLength="100" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="true"></property>
+  </entity>
+  <entity name="TenantApplication" dataName="PROVISIONING_TENANT_APPLICATION" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}PROVISIONING_TENANT_APPLICATION&quot;" dataQuery="" type="PRIMARY" title="TenantApplication" caption="Manage entity TenantApplication" description="Manage entity TenantApplication" tooltip="TenantApplication" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="tenantapplication" menuLabel="Tenant Applications" entityLabel="Tenant Application" menuIndex="100" layoutType="MANAGE" perspectiveName="TenantApplication" perspectiveLabel="TenantApplication" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="1" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="sample-intent-resilience.TenantApplication.TenantApplicationReadOnly" roleWrite="sample-intent-resilience.TenantApplication.TenantApplicationFullAccess" workflowStatusProperty="Status" workflowStatusInitial="1">
+   <property name="Id" description="" tooltip="" dataName="TENANT_APPLICATION_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Title" description="" tooltip="" dataName="TENANT_APPLICATION_TITLE" dataType="VARCHAR" dataNullable="false" isRequiredProperty="true" dataLength="200" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="200" widgetIsMajor="true"></property>
+   <property name="GeneratedKey" description="" tooltip="" dataName="TENANT_APPLICATION_GENERATED_KEY" dataType="VARCHAR" dataNullable="true" dataLength="100" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="true"></property>
+   <property name="FailureMessage" description="" tooltip="" dataName="TENANT_APPLICATION_FAILURE_MESSAGE" dataType="VARCHAR" dataNullable="true" dataLength="500" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="500" widgetIsMajor="true"></property>
+   <property name="ProcessId" description="Process instance started for this record" tooltip="" dataName="TENANT_APPLICATION_PROCESS_ID" dataType="VARCHAR" dataNullable="true" dataLength="100" auditType="NONE" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="false"></property>
+   <property name="ProcessIds" description="Processes started for this record, as Process=instanceId pairs" tooltip="" dataName="TENANT_APPLICATION_PROCESS_IDS" dataType="VARCHAR" dataNullable="true" dataLength="1000" auditType="NONE" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="1000" widgetIsMajor="false"></property>
+   <property name="Status" description="" tooltip="" dataName="TENANT_APPLICATION_STATUS" dataType="INTEGER" dataNullable="true" dataDefaultValue="1" auditType="NONE" relationshipType="ASSOCIATION" relationshipCardinality="n_1" relationshipName="TenantApplication_Status" relationshipEntityName="ProvisioningStatus" relationshipEntityPerspectiveName="Settings" relationshipEntityPerspectiveLabel="Entities" whenTargetDeleted="restrict" widgetType="DOCUMENT_STATUS" widgetSize="" widgetLength="20" widgetIsMajor="true" widgetDropDownKey="Id" widgetDropDownValue="Name" widgetStatusSteps="1,2"></property>
+  </entity>
+  <relation name="TenantApplication_Status" type="relation" entity="TenantApplication" relationName="TenantApplication_Status" relationshipEntityPerspectiveName="Settings" relationshipEntityPerspectiveLabel="Entities" property="Status" referenced="ProvisioningStatus" referencedProperty="Id">
+  </relation>
+ </entities>
+ <perspectives>
+  <perspective><name>TenantApplication</name><label>TenantApplication</label><icon>/services/web/resources/unicons/file.svg</icon><order>1</order></perspective>
+ </perspectives>
+ <navigations>
+ </navigations>
+ <mxGraphModel>
+  <root>
+   <mxCell id="0"/>
+   <mxCell id="1" parent="0"/>
+   <mxCell id="ent_ProvisioningStatus" style="setting" parent="1" vertex="1">
+    <Entity name="ProvisioningStatus" entityType="SETTING" dataName="PROVISIONING_PROVISIONING_STATUS" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}PROVISIONING_PROVISIONING_STATUS&quot;" dataQuery="" title="ProvisioningStatus" caption="Manage entity ProvisioningStatus" description="Manage entity ProvisioningStatus" tooltip="ProvisioningStatus" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="provisioningstatus" menuLabel="Provisioning Statuses" entityLabel="Provisioning Status" menuIndex="100" layoutType="MANAGE_MASTER" perspectiveName="Settings" perspectiveLabel="Settings" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="1" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="sample-intent-resilience.ProvisioningStatus.ProvisioningStatusReadOnly" roleWrite="sample-intent-resilience.ProvisioningStatus.ProvisioningStatusFullAccess" type="Entity" as="value"/>
+    <mxGeometry x="20" y="20" width="200" height="80" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry>
+   </mxCell>
+   <mxCell id="ent_ProvisioningStatus_p_Id" parent="ent_ProvisioningStatus" vertex="1" connectable="0">
+    <Property name="Id" description="" tooltip="" dataName="PROVISIONING_STATUS_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="28" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_ProvisioningStatus_p_Name" parent="ent_ProvisioningStatus" vertex="1" connectable="0">
+    <Property name="Name" description="" tooltip="" dataName="PROVISIONING_STATUS_NAME" dataType="VARCHAR" dataNullable="false" isRequiredProperty="true" dataLength="100" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="54" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_TenantApplication" style="entity" parent="1" vertex="1">
+    <Entity name="TenantApplication" dataName="PROVISIONING_TENANT_APPLICATION" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}PROVISIONING_TENANT_APPLICATION&quot;" dataQuery="" title="TenantApplication" caption="Manage entity TenantApplication" description="Manage entity TenantApplication" tooltip="TenantApplication" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="tenantapplication" menuLabel="Tenant Applications" entityLabel="Tenant Application" menuIndex="100" layoutType="MANAGE" perspectiveName="TenantApplication" perspectiveLabel="TenantApplication" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="1" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="sample-intent-resilience.TenantApplication.TenantApplicationReadOnly" roleWrite="sample-intent-resilience.TenantApplication.TenantApplicationFullAccess" workflowStatusProperty="Status" workflowStatusInitial="1" type="Entity" as="value"/>
+    <mxGeometry x="300" y="20" width="200" height="210" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry>
+   </mxCell>
+   <mxCell id="ent_TenantApplication_p_Id" parent="ent_TenantApplication" vertex="1" connectable="0">
+    <Property name="Id" description="" tooltip="" dataName="TENANT_APPLICATION_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="28" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_TenantApplication_p_Title" parent="ent_TenantApplication" vertex="1" connectable="0">
+    <Property name="Title" description="" tooltip="" dataName="TENANT_APPLICATION_TITLE" dataType="VARCHAR" dataNullable="false" isRequiredProperty="true" dataLength="200" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="200" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="54" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_TenantApplication_p_GeneratedKey" parent="ent_TenantApplication" vertex="1" connectable="0">
+    <Property name="GeneratedKey" description="" tooltip="" dataName="TENANT_APPLICATION_GENERATED_KEY" dataType="VARCHAR" dataNullable="true" dataLength="100" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="80" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_TenantApplication_p_FailureMessage" parent="ent_TenantApplication" vertex="1" connectable="0">
+    <Property name="FailureMessage" description="" tooltip="" dataName="TENANT_APPLICATION_FAILURE_MESSAGE" dataType="VARCHAR" dataNullable="true" dataLength="500" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="500" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="106" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_TenantApplication_p_ProcessId" parent="ent_TenantApplication" vertex="1" connectable="0">
+    <Property name="ProcessId" description="Process instance started for this record" tooltip="" dataName="TENANT_APPLICATION_PROCESS_ID" dataType="VARCHAR" dataNullable="true" dataLength="100" auditType="NONE" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="false" as="value"/>
+    <mxGeometry y="132" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_TenantApplication_p_ProcessIds" parent="ent_TenantApplication" vertex="1" connectable="0">
+    <Property name="ProcessIds" description="Processes started for this record, as Process=instanceId pairs" tooltip="" dataName="TENANT_APPLICATION_PROCESS_IDS" dataType="VARCHAR" dataNullable="true" dataLength="1000" auditType="NONE" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="1000" widgetIsMajor="false" as="value"/>
+    <mxGeometry y="158" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_TenantApplication_p_Status" parent="ent_TenantApplication" vertex="1" connectable="0">
+    <Property name="Status" description="" tooltip="" dataName="TENANT_APPLICATION_STATUS" dataType="INTEGER" dataNullable="true" dataDefaultValue="1" auditType="NONE" relationshipType="ASSOCIATION" relationshipCardinality="n_1" relationshipName="TenantApplication_Status" relationshipEntityName="ProvisioningStatus" relationshipEntityPerspectiveName="Settings" relationshipEntityPerspectiveLabel="Entities" whenTargetDeleted="restrict" widgetType="DOCUMENT_STATUS" widgetSize="" widgetLength="20" widgetIsMajor="true" widgetDropDownKey="Id" widgetDropDownValue="Name" widgetStatusSteps="1,2" as="value"/>
+    <mxGeometry y="184" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="edge_TenantApplication_Status" parent="1" source="ent_TenantApplication_p_Status" target="ent_ProvisioningStatus_p_Id" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+  </root>
+ </mxGraphModel>
+</model>

@@ -1,0 +1,174 @@
+<model title="Library" description="Library management with a loan approval workflow" processTaskLabels="{&quot;LoanApproval&quot;:&quot;Loan Approval&quot;,&quot;librarianReview&quot;:&quot;Librarian Review&quot;,&quot;curatorReview&quot;:&quot;Curator Review&quot;,&quot;MemberApproval&quot;:&quot;Member Approval&quot;}">
+ <entities>
+  <entity name="Genre" dataName="LIBRARY_GENRE" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}LIBRARY_GENRE&quot;" dataQuery="" type="SETTING" title="Genre" caption="Manage entity Genre" description="Reference data for book genres" tooltip="Genre" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="genre" menuLabel="Genres" entityLabel="Genre" menuIndex="100" layoutType="MANAGE_MASTER" perspectiveName="Settings" perspectiveLabel="Settings" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="1" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="sample-intent-model.Genre.GenreReadOnly" roleWrite="sample-intent-model.Genre.GenreFullAccess">
+   <property name="Id" description="" tooltip="" dataName="GENRE_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Name" description="" tooltip="" dataName="GENRE_NAME" dataType="VARCHAR" dataNullable="false" isRequiredProperty="true" dataLength="100" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="true"></property>
+  </entity>
+  <entity name="Book" dataName="LIBRARY_BOOK" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}LIBRARY_BOOK&quot;" dataQuery="" type="PRIMARY" title="Book" caption="Manage entity Book" description="Manage entity Book" tooltip="Book" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="book" menuLabel="Books" entityLabel="Book" menuIndex="100" layoutType="MANAGE" perspectiveName="Book" perspectiveLabel="Book" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="1" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="false" roleRead="Librarian" roleWrite="Librarian">
+   <property name="Id" description="" tooltip="" dataName="BOOK_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Title" description="" tooltip="" dataName="BOOK_TITLE" dataType="VARCHAR" dataNullable="false" isRequiredProperty="true" dataLength="200" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="200" widgetIsMajor="true"></property>
+   <property name="Summary" description="" tooltip="" dataName="BOOK_SUMMARY" dataType="VARCHAR" dataNullable="true" dataLength="4000" auditType="NONE" widgetType="TEXTAREA" widgetSize="" widgetLength="4000" widgetIsMajor="true"></property>
+   <property name="Price" description="" tooltip="" dataName="BOOK_PRICE" dataType="DECIMAL" dataNullable="true" dataLength="16" dataPrecision="16" dataScale="2" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="16" widgetIsMajor="true"></property>
+   <property name="Available" description="" tooltip="" dataName="BOOK_AVAILABLE" dataType="BOOLEAN" dataNullable="true" dataDefaultValue="true" auditType="NONE" widgetType="CHECKBOX" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="PublishedOn" description="" tooltip="" dataName="BOOK_PUBLISHED_ON" dataType="DATE" dataNullable="true" auditType="NONE" widgetType="DATE" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="LoanCount" description="" tooltip="" dataName="BOOK_LOAN_COUNT" dataType="INTEGER" dataNullable="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Genre" description="" tooltip="" dataName="BOOK_GENRE" dataType="INTEGER" dataNullable="true" auditType="NONE" relationshipType="ASSOCIATION" relationshipCardinality="n_1" relationshipName="Book_Genre" relationshipEntityName="Genre" relationshipEntityPerspectiveName="Settings" relationshipEntityPerspectiveLabel="Entities" whenTargetDeleted="restrict" widgetType="DROPDOWN" widgetSize="" widgetLength="20" widgetIsMajor="true" widgetDropDownKey="Id" widgetDropDownValue="Name"></property>
+  </entity>
+  <relation name="Book_Genre" type="relation" entity="Book" relationName="Book_Genre" relationshipEntityPerspectiveName="Settings" relationshipEntityPerspectiveLabel="Entities" property="Genre" referenced="Genre" referencedProperty="Id">
+  </relation>
+  <entity name="Member" dataName="LIBRARY_MEMBER" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}LIBRARY_MEMBER&quot;" dataQuery="" type="PRIMARY" title="Member" caption="Manage entity Member" description="Manage entity Member" tooltip="Member" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="member" menuLabel="Members" entityLabel="Member" menuIndex="100" layoutType="MANAGE_MASTER" perspectiveName="Member" perspectiveLabel="Member" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="2" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="false" roleRead="Librarian" roleWrite="sample-intent-model.Member.MemberFullAccess">
+   <property name="Id" description="" tooltip="" dataName="MEMBER_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Name" description="" tooltip="" dataName="MEMBER_NAME" dataType="VARCHAR" dataNullable="false" isRequiredProperty="true" dataLength="200" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="200" widgetIsMajor="true"></property>
+   <property name="Email" description="" tooltip="" dataName="MEMBER_EMAIL" dataType="VARCHAR" dataNullable="true" dataLength="200" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="200" widgetIsMajor="true"></property>
+   <property name="JoinedAt" description="" tooltip="" dataName="MEMBER_JOINED_AT" dataType="TIMESTAMP" dataNullable="true" auditType="NONE" widgetType="DATETIME-LOCAL" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Status" description="" tooltip="" dataName="MEMBER_STATUS" dataType="VARCHAR" dataNullable="true" dataLength="20" dataDefaultValue="PENDING" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="ProcessId" description="Process instance started for this record" tooltip="" dataName="MEMBER_PROCESS_ID" dataType="VARCHAR" dataNullable="true" dataLength="100" auditType="NONE" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="false"></property>
+   <property name="ProcessIds" description="Processes started for this record, as Process=instanceId pairs" tooltip="" dataName="MEMBER_PROCESS_IDS" dataType="VARCHAR" dataNullable="true" dataLength="1000" auditType="NONE" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="1000" widgetIsMajor="false"></property>
+  </entity>
+  <entity name="Loan" dataName="LIBRARY_LOAN" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}LIBRARY_LOAN&quot;" dataQuery="" type="DEPENDENT" title="Loan" caption="Manage entity Loan" description="Manage entity Loan" tooltip="Loan" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="loan" menuLabel="Loans" entityLabel="Loan" menuIndex="100" layoutType="MANAGE_DETAILS" perspectiveName="Member" perspectiveLabel="Member" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="3" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="false" roleRead="Librarian" roleWrite="Librarian" groupingKeys="[{&quot;key&quot;:&quot;Book&quot;}]" groupingSourcePk="Id">
+   <property name="Id" description="" tooltip="" dataName="LOAN_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Number" description="" tooltip="" dataName="LOAN_NUMBER" dataType="VARCHAR" dataNullable="true" dataLength="100" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="true"></property>
+   <property name="LoanedOn" description="" tooltip="" dataName="LOAN_LOANED_ON" dataType="DATE" dataNullable="false" isRequiredProperty="true" auditType="NONE" widgetType="DATE" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="DueOn" description="" tooltip="" dataName="LOAN_DUE_ON" dataType="DATE" dataNullable="true" auditType="NONE" widgetType="DATE" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="ProcessId" description="Process instance started for this record" tooltip="" dataName="LOAN_PROCESS_ID" dataType="VARCHAR" dataNullable="true" dataLength="100" auditType="NONE" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="false"></property>
+   <property name="ProcessIds" description="Processes started for this record, as Process=instanceId pairs" tooltip="" dataName="LOAN_PROCESS_IDS" dataType="VARCHAR" dataNullable="true" dataLength="1000" auditType="NONE" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="1000" widgetIsMajor="false"></property>
+   <property name="Member" description="" tooltip="" dataName="LOAN_MEMBER" dataType="INTEGER" dataNullable="false" isRequiredProperty="true" auditType="NONE" relationshipType="COMPOSITION" relationshipCardinality="1_n" relationshipName="Loan_Member" relationshipEntityName="Member" relationshipEntityPerspectiveName="Member" relationshipEntityPerspectiveLabel="Entities" widgetType="DROPDOWN" widgetSize="" widgetLength="20" widgetIsMajor="true" widgetDropDownKey="Id" widgetDropDownValue="Name"></property>
+   <property name="Book" description="" tooltip="" dataName="LOAN_BOOK" dataType="INTEGER" dataNullable="false" isRequiredProperty="true" auditType="NONE" relationshipType="ASSOCIATION" relationshipCardinality="n_1" relationshipName="Loan_Book" relationshipEntityName="Book" relationshipEntityPerspectiveName="Book" relationshipEntityPerspectiveLabel="Entities" whenTargetDeleted="restrict" widgetType="DROPDOWN" widgetSize="" widgetLength="20" widgetIsMajor="true" widgetDropDownKey="Id" widgetDropDownValue="Title"></property>
+  </entity>
+  <relation name="Loan_Member" type="relation" entity="Loan" relationName="Loan_Member" relationshipEntityPerspectiveName="Member" relationshipEntityPerspectiveLabel="Entities" property="Member" referenced="Member" referencedProperty="Id">
+  </relation>
+  <relation name="Loan_Book" type="relation" entity="Loan" relationName="Loan_Book" relationshipEntityPerspectiveName="Book" relationshipEntityPerspectiveLabel="Entities" property="Book" referenced="Book" referencedProperty="Id">
+  </relation>
+ </entities>
+ <perspectives>
+  <perspective><name>Book</name><label>Book</label><icon>/services/web/resources/unicons/file.svg</icon><order>1</order></perspective>
+  <perspective><name>Member</name><label>Member</label><icon>/services/web/resources/unicons/file.svg</icon><order>2</order></perspective>
+ </perspectives>
+ <navigations>
+ </navigations>
+ <mxGraphModel>
+  <root>
+   <mxCell id="0"/>
+   <mxCell id="1" parent="0"/>
+   <mxCell id="ent_Genre" style="setting" parent="1" vertex="1">
+    <Entity name="Genre" entityType="SETTING" dataName="LIBRARY_GENRE" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}LIBRARY_GENRE&quot;" dataQuery="" title="Genre" caption="Manage entity Genre" description="Reference data for book genres" tooltip="Genre" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="genre" menuLabel="Genres" entityLabel="Genre" menuIndex="100" layoutType="MANAGE_MASTER" perspectiveName="Settings" perspectiveLabel="Settings" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="1" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="sample-intent-model.Genre.GenreReadOnly" roleWrite="sample-intent-model.Genre.GenreFullAccess" type="Entity" as="value"/>
+    <mxGeometry x="20" y="20" width="200" height="80" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry>
+   </mxCell>
+   <mxCell id="ent_Genre_p_Id" parent="ent_Genre" vertex="1" connectable="0">
+    <Property name="Id" description="" tooltip="" dataName="GENRE_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="28" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Genre_p_Name" parent="ent_Genre" vertex="1" connectable="0">
+    <Property name="Name" description="" tooltip="" dataName="GENRE_NAME" dataType="VARCHAR" dataNullable="false" isRequiredProperty="true" dataLength="100" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="54" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Book" style="entity" parent="1" vertex="1">
+    <Entity name="Book" dataName="LIBRARY_BOOK" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}LIBRARY_BOOK&quot;" dataQuery="" title="Book" caption="Manage entity Book" description="Manage entity Book" tooltip="Book" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="book" menuLabel="Books" entityLabel="Book" menuIndex="100" layoutType="MANAGE" perspectiveName="Book" perspectiveLabel="Book" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="1" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="false" roleRead="Librarian" roleWrite="Librarian" type="Entity" as="value"/>
+    <mxGeometry x="300" y="20" width="200" height="236" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry>
+   </mxCell>
+   <mxCell id="ent_Book_p_Id" parent="ent_Book" vertex="1" connectable="0">
+    <Property name="Id" description="" tooltip="" dataName="BOOK_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="28" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Book_p_Title" parent="ent_Book" vertex="1" connectable="0">
+    <Property name="Title" description="" tooltip="" dataName="BOOK_TITLE" dataType="VARCHAR" dataNullable="false" isRequiredProperty="true" dataLength="200" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="200" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="54" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Book_p_Summary" parent="ent_Book" vertex="1" connectable="0">
+    <Property name="Summary" description="" tooltip="" dataName="BOOK_SUMMARY" dataType="VARCHAR" dataNullable="true" dataLength="4000" auditType="NONE" widgetType="TEXTAREA" widgetSize="" widgetLength="4000" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="80" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Book_p_Price" parent="ent_Book" vertex="1" connectable="0">
+    <Property name="Price" description="" tooltip="" dataName="BOOK_PRICE" dataType="DECIMAL" dataNullable="true" dataLength="16" dataPrecision="16" dataScale="2" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="16" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="106" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Book_p_Available" parent="ent_Book" vertex="1" connectable="0">
+    <Property name="Available" description="" tooltip="" dataName="BOOK_AVAILABLE" dataType="BOOLEAN" dataNullable="true" dataDefaultValue="true" auditType="NONE" widgetType="CHECKBOX" widgetSize="" widgetLength="20" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="132" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Book_p_PublishedOn" parent="ent_Book" vertex="1" connectable="0">
+    <Property name="PublishedOn" description="" tooltip="" dataName="BOOK_PUBLISHED_ON" dataType="DATE" dataNullable="true" auditType="NONE" widgetType="DATE" widgetSize="" widgetLength="20" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="158" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Book_p_LoanCount" parent="ent_Book" vertex="1" connectable="0">
+    <Property name="LoanCount" description="" tooltip="" dataName="BOOK_LOAN_COUNT" dataType="INTEGER" dataNullable="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="184" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Book_p_Genre" parent="ent_Book" vertex="1" connectable="0">
+    <Property name="Genre" description="" tooltip="" dataName="BOOK_GENRE" dataType="INTEGER" dataNullable="true" auditType="NONE" relationshipType="ASSOCIATION" relationshipCardinality="n_1" relationshipName="Book_Genre" relationshipEntityName="Genre" relationshipEntityPerspectiveName="Settings" relationshipEntityPerspectiveLabel="Entities" whenTargetDeleted="restrict" widgetType="DROPDOWN" widgetSize="" widgetLength="20" widgetIsMajor="true" widgetDropDownKey="Id" widgetDropDownValue="Name" as="value"/>
+    <mxGeometry y="210" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Member" style="entity" parent="1" vertex="1">
+    <Entity name="Member" dataName="LIBRARY_MEMBER" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}LIBRARY_MEMBER&quot;" dataQuery="" title="Member" caption="Manage entity Member" description="Manage entity Member" tooltip="Member" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="member" menuLabel="Members" entityLabel="Member" menuIndex="100" layoutType="MANAGE_MASTER" perspectiveName="Member" perspectiveLabel="Member" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="2" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="false" roleRead="Librarian" roleWrite="sample-intent-model.Member.MemberFullAccess" type="Entity" as="value"/>
+    <mxGeometry x="20" y="140" width="200" height="210" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry>
+   </mxCell>
+   <mxCell id="ent_Member_p_Id" parent="ent_Member" vertex="1" connectable="0">
+    <Property name="Id" description="" tooltip="" dataName="MEMBER_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="28" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Member_p_Name" parent="ent_Member" vertex="1" connectable="0">
+    <Property name="Name" description="" tooltip="" dataName="MEMBER_NAME" dataType="VARCHAR" dataNullable="false" isRequiredProperty="true" dataLength="200" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="200" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="54" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Member_p_Email" parent="ent_Member" vertex="1" connectable="0">
+    <Property name="Email" description="" tooltip="" dataName="MEMBER_EMAIL" dataType="VARCHAR" dataNullable="true" dataLength="200" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="200" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="80" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Member_p_JoinedAt" parent="ent_Member" vertex="1" connectable="0">
+    <Property name="JoinedAt" description="" tooltip="" dataName="MEMBER_JOINED_AT" dataType="TIMESTAMP" dataNullable="true" auditType="NONE" widgetType="DATETIME-LOCAL" widgetSize="" widgetLength="20" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="106" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Member_p_Status" parent="ent_Member" vertex="1" connectable="0">
+    <Property name="Status" description="" tooltip="" dataName="MEMBER_STATUS" dataType="VARCHAR" dataNullable="true" dataLength="20" dataDefaultValue="PENDING" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="20" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="132" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Member_p_ProcessId" parent="ent_Member" vertex="1" connectable="0">
+    <Property name="ProcessId" description="Process instance started for this record" tooltip="" dataName="MEMBER_PROCESS_ID" dataType="VARCHAR" dataNullable="true" dataLength="100" auditType="NONE" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="false" as="value"/>
+    <mxGeometry y="158" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Member_p_ProcessIds" parent="ent_Member" vertex="1" connectable="0">
+    <Property name="ProcessIds" description="Processes started for this record, as Process=instanceId pairs" tooltip="" dataName="MEMBER_PROCESS_IDS" dataType="VARCHAR" dataNullable="true" dataLength="1000" auditType="NONE" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="1000" widgetIsMajor="false" as="value"/>
+    <mxGeometry y="184" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Loan" style="dependent" parent="1" vertex="1">
+    <Entity name="Loan" entityType="DEPENDENT" dataName="LIBRARY_LOAN" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}LIBRARY_LOAN&quot;" dataQuery="" title="Loan" caption="Manage entity Loan" description="Manage entity Loan" tooltip="Loan" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="loan" menuLabel="Loans" entityLabel="Loan" menuIndex="100" layoutType="MANAGE_DETAILS" perspectiveName="Member" perspectiveLabel="Member" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="3" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="false" roleRead="Librarian" roleWrite="Librarian" groupingKeys="[{&quot;key&quot;:&quot;Book&quot;}]" groupingSourcePk="Id" type="Entity" as="value"/>
+    <mxGeometry x="580" y="20" width="200" height="236" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry>
+   </mxCell>
+   <mxCell id="ent_Loan_p_Id" parent="ent_Loan" vertex="1" connectable="0">
+    <Property name="Id" description="" tooltip="" dataName="LOAN_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="28" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Loan_p_Number" parent="ent_Loan" vertex="1" connectable="0">
+    <Property name="Number" description="" tooltip="" dataName="LOAN_NUMBER" dataType="VARCHAR" dataNullable="true" dataLength="100" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="54" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Loan_p_LoanedOn" parent="ent_Loan" vertex="1" connectable="0">
+    <Property name="LoanedOn" description="" tooltip="" dataName="LOAN_LOANED_ON" dataType="DATE" dataNullable="false" isRequiredProperty="true" auditType="NONE" widgetType="DATE" widgetSize="" widgetLength="20" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="80" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Loan_p_DueOn" parent="ent_Loan" vertex="1" connectable="0">
+    <Property name="DueOn" description="" tooltip="" dataName="LOAN_DUE_ON" dataType="DATE" dataNullable="true" auditType="NONE" widgetType="DATE" widgetSize="" widgetLength="20" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="106" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Loan_p_ProcessId" parent="ent_Loan" vertex="1" connectable="0">
+    <Property name="ProcessId" description="Process instance started for this record" tooltip="" dataName="LOAN_PROCESS_ID" dataType="VARCHAR" dataNullable="true" dataLength="100" auditType="NONE" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="false" as="value"/>
+    <mxGeometry y="132" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Loan_p_ProcessIds" parent="ent_Loan" vertex="1" connectable="0">
+    <Property name="ProcessIds" description="Processes started for this record, as Process=instanceId pairs" tooltip="" dataName="LOAN_PROCESS_IDS" dataType="VARCHAR" dataNullable="true" dataLength="1000" auditType="NONE" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="1000" widgetIsMajor="false" as="value"/>
+    <mxGeometry y="158" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Loan_p_Member" parent="ent_Loan" vertex="1" connectable="0">
+    <Property name="Member" description="" tooltip="" dataName="LOAN_MEMBER" dataType="INTEGER" dataNullable="false" isRequiredProperty="true" auditType="NONE" relationshipType="COMPOSITION" relationshipCardinality="1_n" relationshipName="Loan_Member" relationshipEntityName="Member" relationshipEntityPerspectiveName="Member" relationshipEntityPerspectiveLabel="Entities" widgetType="DROPDOWN" widgetSize="" widgetLength="20" widgetIsMajor="true" widgetDropDownKey="Id" widgetDropDownValue="Name" dataNotNull="true" as="value"/>
+    <mxGeometry y="184" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Loan_p_Book" parent="ent_Loan" vertex="1" connectable="0">
+    <Property name="Book" description="" tooltip="" dataName="LOAN_BOOK" dataType="INTEGER" dataNullable="false" isRequiredProperty="true" auditType="NONE" relationshipType="ASSOCIATION" relationshipCardinality="n_1" relationshipName="Loan_Book" relationshipEntityName="Book" relationshipEntityPerspectiveName="Book" relationshipEntityPerspectiveLabel="Entities" whenTargetDeleted="restrict" widgetType="DROPDOWN" widgetSize="" widgetLength="20" widgetIsMajor="true" widgetDropDownKey="Id" widgetDropDownValue="Title" dataNotNull="true" as="value"/>
+    <mxGeometry y="210" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="edge_Book_Genre" parent="1" source="ent_Book_p_Genre" target="ent_Genre_p_Id" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+   <mxCell id="edge_Loan_Member" parent="1" source="ent_Loan_p_Member" target="ent_Member_p_Id" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+   <mxCell id="edge_Loan_Book" parent="1" source="ent_Loan_p_Book" target="ent_Book_p_Id" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+  </root>
+ </mxGraphModel>
+</model>

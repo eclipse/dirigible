@@ -1,0 +1,119 @@
+<model title="Currencies" description="Currency nomenclature and exchange rates" icon="banknote">
+ <entities>
+  <entity name="Currency" dataName="CURRENCIES_CURRENCY" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}CURRENCIES_CURRENCY&quot;" dataQuery="" type="SETTING" title="Currency" caption="Manage entity Currency" description="Manage entity Currency" tooltip="Currency" icon="/services/web/resources/unicons/banknote.svg" iconName="banknote" menuKey="currency" menuLabel="Currencies" entityLabel="Currency" menuIndex="100" layoutType="MANAGE_MASTER" perspectiveName="Settings" perspectiveLabel="Settings" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/banknote.svg" perspectiveOrder="1" perspectiveNavId="master-data" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="currencies.Currency.CurrencyReadOnly" roleWrite="currencies.Currency.CurrencyFullAccess">
+   <property name="Id" description="" tooltip="" dataName="CURRENCY_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Code" description="" tooltip="" dataName="CURRENCY_CODE" dataType="VARCHAR" dataNullable="false" isRequiredProperty="true" dataLength="3" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="3" widgetIsMajor="true"></property>
+   <property name="Name" description="" tooltip="" dataName="CURRENCY_NAME" dataType="VARCHAR" dataNullable="false" isRequiredProperty="true" dataLength="100" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="true"></property>
+   <property name="Symbol" description="" tooltip="" dataName="CURRENCY_SYMBOL" dataType="VARCHAR" dataNullable="true" dataLength="8" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="8" widgetIsMajor="true"></property>
+   <property name="IsPrefix" description="" tooltip="" dataName="CURRENCY_IS_PREFIX" dataType="BOOLEAN" dataNullable="true" auditType="NONE" widgetType="CHECKBOX" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Numeric" description="" tooltip="" dataName="CURRENCY_NUMERIC" dataType="INTEGER" dataNullable="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Rounding" description="" tooltip="" dataName="CURRENCY_ROUNDING" dataType="INTEGER" dataNullable="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Base" description="" tooltip="" dataName="CURRENCY_BASE" dataType="BOOLEAN" dataNullable="true" auditType="NONE" widgetType="CHECKBOX" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Rate" description="" tooltip="" dataName="CURRENCY_RATE" dataType="DECIMAL" dataNullable="true" dataLength="16" dataPrecision="18" dataScale="6" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="16" widgetIsMajor="true"></property>
+   <property name="CreatedAt" description="" tooltip="" dataName="CURRENCY_CREATED_AT" dataType="TIMESTAMP" dataNullable="true" auditType="CREATED_AT" isReadOnlyProperty="true" widgetType="DATETIME-LOCAL" widgetSize="" widgetLength="20" widgetIsMajor="false"></property>
+   <property name="CreatedBy" description="" tooltip="" dataName="CURRENCY_CREATED_BY" dataType="VARCHAR" dataNullable="true" dataLength="128" auditType="CREATED_BY" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="128" widgetIsMajor="false"></property>
+   <property name="UpdatedAt" description="" tooltip="" dataName="CURRENCY_UPDATED_AT" dataType="TIMESTAMP" dataNullable="true" auditType="UPDATED_AT" isReadOnlyProperty="true" widgetType="DATETIME-LOCAL" widgetSize="" widgetLength="20" widgetIsMajor="false"></property>
+   <property name="UpdatedBy" description="" tooltip="" dataName="CURRENCY_UPDATED_BY" dataType="VARCHAR" dataNullable="true" dataLength="128" auditType="UPDATED_BY" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="128" widgetIsMajor="false"></property>
+  </entity>
+  <entity name="CurrencyRate" dataName="CURRENCIES_CURRENCY_RATE" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}CURRENCIES_CURRENCY_RATE&quot;" dataQuery="" type="SETTING" title="CurrencyRate" caption="Manage entity CurrencyRate" description="Manage entity CurrencyRate" tooltip="CurrencyRate" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="currencyrate" menuLabel="Currency Rates" entityLabel="Currency Rate" menuIndex="100" layoutType="MANAGE_MASTER" perspectiveName="Settings" perspectiveLabel="Settings" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="1" perspectiveNavId="master-data" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="currencies.CurrencyRate.CurrencyRateReadOnly" roleWrite="currencies.CurrencyRate.CurrencyRateFullAccess">
+   <property name="Id" description="" tooltip="" dataName="CURRENCY_RATE_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Name" description="" tooltip="" dataName="CURRENCY_RATE_NAME" dataType="VARCHAR" dataNullable="true" dataLength="100" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="true"></property>
+   <property name="Date" description="" tooltip="" dataName="CURRENCY_RATE_DATE" dataType="DATE" dataNullable="false" isRequiredProperty="true" auditType="NONE" widgetType="DATE" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Rate" description="" tooltip="" dataName="CURRENCY_RATE_RATE" dataType="DECIMAL" dataNullable="false" isRequiredProperty="true" dataLength="16" dataPrecision="18" dataScale="6" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="16" widgetIsMajor="true"></property>
+   <property name="Currency" description="" tooltip="" dataName="CURRENCY_RATE_CURRENCY" dataType="INTEGER" dataNullable="false" isRequiredProperty="true" auditType="NONE" relationshipType="ASSOCIATION" relationshipCardinality="n_1" relationshipName="CurrencyRate_Currency" relationshipEntityName="Currency" relationshipEntityPerspectiveName="Settings" relationshipEntityPerspectiveLabel="Entities" whenTargetDeleted="restrict" widgetType="DROPDOWN" widgetSize="" widgetLength="20" widgetIsMajor="true" widgetDropDownKey="Id" widgetDropDownValue="Name"></property>
+  </entity>
+  <relation name="CurrencyRate_Currency" type="relation" entity="CurrencyRate" relationName="CurrencyRate_Currency" relationshipEntityPerspectiveName="Settings" relationshipEntityPerspectiveLabel="Entities" property="Currency" referenced="Currency" referencedProperty="Id">
+  </relation>
+ </entities>
+ <perspectives>
+ </perspectives>
+ <navigations>
+ </navigations>
+ <mxGraphModel>
+  <root>
+   <mxCell id="0"/>
+   <mxCell id="1" parent="0"/>
+   <mxCell id="ent_Currency" style="setting" parent="1" vertex="1">
+    <Entity name="Currency" entityType="SETTING" dataName="CURRENCIES_CURRENCY" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}CURRENCIES_CURRENCY&quot;" dataQuery="" title="Currency" caption="Manage entity Currency" description="Manage entity Currency" tooltip="Currency" icon="/services/web/resources/unicons/banknote.svg" iconName="banknote" menuKey="currency" menuLabel="Currencies" entityLabel="Currency" menuIndex="100" layoutType="MANAGE_MASTER" perspectiveName="Settings" perspectiveLabel="Settings" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/banknote.svg" perspectiveOrder="1" perspectiveNavId="master-data" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="currencies.Currency.CurrencyReadOnly" roleWrite="currencies.Currency.CurrencyFullAccess" type="Entity" as="value"/>
+    <mxGeometry x="20" y="20" width="200" height="366" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry>
+   </mxCell>
+   <mxCell id="ent_Currency_p_Id" parent="ent_Currency" vertex="1" connectable="0">
+    <Property name="Id" description="" tooltip="" dataName="CURRENCY_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="28" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Currency_p_Code" parent="ent_Currency" vertex="1" connectable="0">
+    <Property name="Code" description="" tooltip="" dataName="CURRENCY_CODE" dataType="VARCHAR" dataNullable="false" isRequiredProperty="true" dataLength="3" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="3" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="54" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Currency_p_Name" parent="ent_Currency" vertex="1" connectable="0">
+    <Property name="Name" description="" tooltip="" dataName="CURRENCY_NAME" dataType="VARCHAR" dataNullable="false" isRequiredProperty="true" dataLength="100" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="80" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Currency_p_Symbol" parent="ent_Currency" vertex="1" connectable="0">
+    <Property name="Symbol" description="" tooltip="" dataName="CURRENCY_SYMBOL" dataType="VARCHAR" dataNullable="true" dataLength="8" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="8" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="106" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Currency_p_IsPrefix" parent="ent_Currency" vertex="1" connectable="0">
+    <Property name="IsPrefix" description="" tooltip="" dataName="CURRENCY_IS_PREFIX" dataType="BOOLEAN" dataNullable="true" auditType="NONE" widgetType="CHECKBOX" widgetSize="" widgetLength="20" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="132" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Currency_p_Numeric" parent="ent_Currency" vertex="1" connectable="0">
+    <Property name="Numeric" description="" tooltip="" dataName="CURRENCY_NUMERIC" dataType="INTEGER" dataNullable="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="158" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Currency_p_Rounding" parent="ent_Currency" vertex="1" connectable="0">
+    <Property name="Rounding" description="" tooltip="" dataName="CURRENCY_ROUNDING" dataType="INTEGER" dataNullable="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="184" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Currency_p_Base" parent="ent_Currency" vertex="1" connectable="0">
+    <Property name="Base" description="" tooltip="" dataName="CURRENCY_BASE" dataType="BOOLEAN" dataNullable="true" auditType="NONE" widgetType="CHECKBOX" widgetSize="" widgetLength="20" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="210" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Currency_p_Rate" parent="ent_Currency" vertex="1" connectable="0">
+    <Property name="Rate" description="" tooltip="" dataName="CURRENCY_RATE" dataType="DECIMAL" dataNullable="true" dataLength="16" dataPrecision="18" dataScale="6" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="16" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="236" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Currency_p_CreatedAt" parent="ent_Currency" vertex="1" connectable="0">
+    <Property name="CreatedAt" description="" tooltip="" dataName="CURRENCY_CREATED_AT" dataType="TIMESTAMP" dataNullable="true" auditType="CREATED_AT" isReadOnlyProperty="true" widgetType="DATETIME-LOCAL" widgetSize="" widgetLength="20" widgetIsMajor="false" as="value"/>
+    <mxGeometry y="262" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Currency_p_CreatedBy" parent="ent_Currency" vertex="1" connectable="0">
+    <Property name="CreatedBy" description="" tooltip="" dataName="CURRENCY_CREATED_BY" dataType="VARCHAR" dataNullable="true" dataLength="128" auditType="CREATED_BY" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="128" widgetIsMajor="false" as="value"/>
+    <mxGeometry y="288" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Currency_p_UpdatedAt" parent="ent_Currency" vertex="1" connectable="0">
+    <Property name="UpdatedAt" description="" tooltip="" dataName="CURRENCY_UPDATED_AT" dataType="TIMESTAMP" dataNullable="true" auditType="UPDATED_AT" isReadOnlyProperty="true" widgetType="DATETIME-LOCAL" widgetSize="" widgetLength="20" widgetIsMajor="false" as="value"/>
+    <mxGeometry y="314" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Currency_p_UpdatedBy" parent="ent_Currency" vertex="1" connectable="0">
+    <Property name="UpdatedBy" description="" tooltip="" dataName="CURRENCY_UPDATED_BY" dataType="VARCHAR" dataNullable="true" dataLength="128" auditType="UPDATED_BY" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="128" widgetIsMajor="false" as="value"/>
+    <mxGeometry y="340" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_CurrencyRate" style="setting" parent="1" vertex="1">
+    <Entity name="CurrencyRate" entityType="SETTING" dataName="CURRENCIES_CURRENCY_RATE" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}CURRENCIES_CURRENCY_RATE&quot;" dataQuery="" title="CurrencyRate" caption="Manage entity CurrencyRate" description="Manage entity CurrencyRate" tooltip="CurrencyRate" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="currencyrate" menuLabel="Currency Rates" entityLabel="Currency Rate" menuIndex="100" layoutType="MANAGE_MASTER" perspectiveName="Settings" perspectiveLabel="Settings" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="1" perspectiveNavId="master-data" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="currencies.CurrencyRate.CurrencyRateReadOnly" roleWrite="currencies.CurrencyRate.CurrencyRateFullAccess" type="Entity" as="value"/>
+    <mxGeometry x="300" y="20" width="200" height="158" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry>
+   </mxCell>
+   <mxCell id="ent_CurrencyRate_p_Id" parent="ent_CurrencyRate" vertex="1" connectable="0">
+    <Property name="Id" description="" tooltip="" dataName="CURRENCY_RATE_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="28" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_CurrencyRate_p_Name" parent="ent_CurrencyRate" vertex="1" connectable="0">
+    <Property name="Name" description="" tooltip="" dataName="CURRENCY_RATE_NAME" dataType="VARCHAR" dataNullable="true" dataLength="100" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="54" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_CurrencyRate_p_Date" parent="ent_CurrencyRate" vertex="1" connectable="0">
+    <Property name="Date" description="" tooltip="" dataName="CURRENCY_RATE_DATE" dataType="DATE" dataNullable="false" isRequiredProperty="true" auditType="NONE" widgetType="DATE" widgetSize="" widgetLength="20" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="80" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_CurrencyRate_p_Rate" parent="ent_CurrencyRate" vertex="1" connectable="0">
+    <Property name="Rate" description="" tooltip="" dataName="CURRENCY_RATE_RATE" dataType="DECIMAL" dataNullable="false" isRequiredProperty="true" dataLength="16" dataPrecision="18" dataScale="6" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="16" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="106" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_CurrencyRate_p_Currency" parent="ent_CurrencyRate" vertex="1" connectable="0">
+    <Property name="Currency" description="" tooltip="" dataName="CURRENCY_RATE_CURRENCY" dataType="INTEGER" dataNullable="false" isRequiredProperty="true" auditType="NONE" relationshipType="ASSOCIATION" relationshipCardinality="n_1" relationshipName="CurrencyRate_Currency" relationshipEntityName="Currency" relationshipEntityPerspectiveName="Settings" relationshipEntityPerspectiveLabel="Entities" whenTargetDeleted="restrict" widgetType="DROPDOWN" widgetSize="" widgetLength="20" widgetIsMajor="true" widgetDropDownKey="Id" widgetDropDownValue="Name" dataNotNull="true" as="value"/>
+    <mxGeometry y="132" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="edge_CurrencyRate_Currency" parent="1" source="ent_CurrencyRate_p_Currency" target="ent_Currency_p_Id" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+  </root>
+ </mxGraphModel>
+</model>

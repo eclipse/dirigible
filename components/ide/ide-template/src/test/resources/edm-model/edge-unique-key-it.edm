@@ -1,0 +1,19 @@
+<model>
+ <entities>
+  <entity name="TenantApplication" dataName="PROVISIONING_TENANT_APPLICATION" type="PRIMARY" title="TenantApplication" caption="Manage entity TenantApplication" tooltip="TenantApplication" layoutType="MANAGE_MASTER" perspectiveName="Provisioning">
+   <property name="Id" dataName="TENANT_APPLICATION_ID" dataType="INTEGER" dataPrimaryKey="true" dataAutoIncrement="true"></property>
+   <property name="Tenant" dataName="TENANT_APPLICATION_TENANT" dataType="INTEGER"></property>
+   <property name="Application" dataName="TENANT_APPLICATION_APPLICATION" dataType="INTEGER"></property>
+  </entity>
+ </entities>
+ <constraints>
+  <uniqueKey><entity>TenantApplication</entity><name>TenantApplication_Tenant_Application</name><properties>Tenant,Application</properties><message>This application is already provisioned for the tenant</message></uniqueKey>
+  <uniqueKey><entity>Ghost</entity><name>Ghost_A_B</name><properties>A,B</properties><message>never</message></uniqueKey>
+ </constraints>
+ <perspectives>
+  <perspective><name>Provisioning</name><label>Provisioning</label><icon>/services/web/resources/unicons/copy.svg</icon><order>1</order></perspective>
+ </perspectives>
+ <navigations>
+ </navigations>
+ <mxGraphModel></mxGraphModel>
+</model>

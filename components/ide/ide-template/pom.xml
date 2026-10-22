@@ -56,7 +56,13 @@
             <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-api-extensions</artifactId>
         </dependency>
-        
+
+        <!-- Modules -->
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-commons-xml2json</artifactId>
+        </dependency>
+
         <!-- Test -->
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>

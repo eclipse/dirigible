@@ -37,9 +37,9 @@ const PROPERTY_HANDLED = new Set(['name', 'description', 'tooltip', 'dataName', 
 
 // Serialize every field not covered by the explicit block as a flat attribute, JSON-encoding structured
 // values (objects/arrays). A structured value loaded from the .edm arrives here as its JSON string (mxCodec
-// decodes attributes as strings) and is written back verbatim; an object gets JSON.stringify. transform-edm
-// (editor-entity/template/transform-edm.js, ENTITY_STRUCTURED/PROPERTY_STRUCTURED) parses the known
-// structured keys back into objects (#6826).
+// decodes attributes as strings) and is written back verbatim; an object gets JSON.stringify. The .edm-to-.model
+// transformation (EdmModelTransformation in ide-template, ENTITY_STRUCTURED/PROPERTY_STRUCTURED) parses the
+// known structured keys back into objects (#6826).
 function extraAttributes(obj, handled) {
 	let out = '';
 	for (let key in obj) {
