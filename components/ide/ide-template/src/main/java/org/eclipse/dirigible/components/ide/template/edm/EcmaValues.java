@@ -316,8 +316,8 @@ final class EcmaValues {
         for (int digits = 1; digits < MAX_DOUBLE_DIGITS; digits++) {
             BigDecimal below = exact.round(new MathContext(digits, RoundingMode.DOWN));
             BigDecimal above = exact.round(new MathContext(digits, RoundingMode.UP));
-            boolean belowReadsBack = Double.parseDouble(below.toString()) == number;
-            boolean aboveReadsBack = Double.parseDouble(above.toString()) == number;
+            boolean belowReadsBack = below.doubleValue() == number;
+            boolean aboveReadsBack = above.doubleValue() == number;
             if (belowReadsBack && aboveReadsBack) {
                 int comparison = exact.subtract(below)
                                       .compareTo(above.subtract(exact));

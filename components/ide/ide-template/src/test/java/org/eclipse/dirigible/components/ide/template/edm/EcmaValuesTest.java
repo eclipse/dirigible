@@ -33,8 +33,8 @@ class EcmaValuesTest {
                     "9007199254740992|9007199254740992", "12345678901234567890|12345678901234567000", "1.5e300|1.5e+300", "5e-324|5e-324",
                     "1.5e-323|1.5e-323", "1.7976931348623157e308|1.7976931348623157e+308", "12345678.5|12345678.5",
                     "1e15|1000000000000000"})
-    void aNumberIsWrittenAsJavaScriptWritesIt(String literal, String expected) {
-        assertEquals(expected, EcmaValues.numberToText(Double.parseDouble(literal)));
+    void aNumberIsWrittenAsJavaScriptWritesIt(double number, String expected) {
+        assertEquals(expected, EcmaValues.numberToText(number));
     }
 
     @Test

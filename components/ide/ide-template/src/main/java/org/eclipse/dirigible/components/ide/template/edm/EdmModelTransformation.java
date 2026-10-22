@@ -279,7 +279,7 @@ final class EdmModelTransformation {
 
     private static void fillIfAbsent(Map<String, Object> property, String key, Object fallback) {
         Object own = member(property, key);
-        if (own == UNDEFINED || own == null || "".equals(own)) {
+        if (own == UNDEFINED || own == null || (own instanceof String text && text.isEmpty())) {
             property.put(key, fallback);
         }
     }
