@@ -3195,20 +3195,21 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
                 continue;
             }
             for (StepIntent step : process.getSteps()) {
-                Object written = step.getArgs()
-                                     .get("setRelationField");
-                if (written != null && statusProperty.equals(IntentNaming.pascalCase(String.valueOf(written)
-                                                                                           .trim()))) {
-                    return true;
+                // A set: map writes the status beside other members of the record (#8042).
+                for (String written : SetFieldSupport.relationWrites(step)
+                                                     .keySet()) {
+                    if (statusProperty.equals(IntentNaming.pascalCase(written.trim()))) {
+                        return true;
+                    }
                 }
             }
         }
         // A step of ANOTHER entity's flow writes it too when it moves this status one hop away (#7934):
         // `setRelationField: order.Status` in an approval request's process owns the order's status.
         for (SetFieldSupport.Setter setter : SetFieldSupport.setters(model)) {
-            if (setter.via() != null && setter.relation() && entity.getName()
-                                                                   .equals(setter.targetEntity())
-                    && statusProperty.equals(setter.field())) {
+            if (setter.via() != null && entity.getName()
+                                              .equals(setter.targetEntity())
+                    && setter.relationValue(statusProperty) != null) {
                 return true;
             }
         }

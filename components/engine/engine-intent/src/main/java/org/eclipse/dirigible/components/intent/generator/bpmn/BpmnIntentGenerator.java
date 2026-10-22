@@ -188,7 +188,8 @@ public class BpmnIntentGenerator implements IntentTargetGenerator {
         Map<String, String> setterByProcessTask = new HashMap<>();
         for (SetFieldSupport.Setter setter : setters) {
             String key = setter.process() + "/" + setter.step();
-            if (setter.relation() && userTaskKeys.contains(key)) {
+            // Only relation writes run after a user task (parser-enforced), alone or as a set: map.
+            if (userTaskKeys.contains(key)) {
                 setterByProcessTask.put(key, setter.className());
             }
         }
@@ -305,7 +306,7 @@ public class BpmnIntentGenerator implements IntentTargetGenerator {
             Map<String, Set<Integer>> statusTargets, Set<String> userTaskKeys, Map<String, String> writerByProcessTask) {
         Map<String, Set<String>> byProcess = new HashMap<>();
         for (SetFieldSupport.Setter setter : setters) {
-            if (!setter.relation() || !gatesACheck(byName.get(setter.writtenEntity()), setter.field(), setter.value(), statusTargets)) {
+            if (!gatesACheck(setter, byName, statusTargets)) {
                 continue;
             }
             String key = setter.process() + "/" + setter.step();
@@ -352,12 +353,26 @@ public class BpmnIntentGenerator implements IntentTargetGenerator {
             Map<String, Set<Integer>> statusTargets) {
         Map<String, Set<String>> byProcess = new HashMap<>();
         for (SetFieldSupport.Setter setter : setters) {
-            if (setter.relation() && gatesACheck(byName.get(setter.writtenEntity()), setter.field(), setter.value(), statusTargets)) {
+            if (gatesACheck(setter, byName, statusTargets)) {
                 byProcess.computeIfAbsent(setter.process(), process -> new HashSet<>())
                          .add(setter.step());
             }
         }
         return byProcess;
+    }
+
+    /**
+     * Whether any relation write of the setter is a check-gated status write ({@link #gatesACheck}).
+     */
+    private static boolean gatesACheck(SetFieldSupport.Setter setter, Map<String, EntityIntent> byName,
+            Map<String, Set<Integer>> statusTargets) {
+        EntityIntent entity = byName.get(setter.writtenEntity());
+        for (SetFieldSupport.Assignment assignment : setter.assignments()) {
+            if (assignment.relation() && gatesACheck(entity, assignment.field(), assignment.value(), statusTargets)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -1471,6 +1486,8 @@ public class BpmnIntentGenerator implements IntentTargetGenerator {
         // or clears it);
         // - an author-declared serviceTask with a `setRelationField` -> JavaTask bound to the same
         // <events pkg>.<Handler> JavaDelegate (sets a to-one relation's FK to a seed id);
+        // - an author-declared serviceTask with a `set:` map -> JavaTask bound to the same delegate,
+        // which writes every member of the map in one updateProperties (#8042);
         // - an author-declared serviceTask with a `notify` block -> JavaTask bound to the generated
         // <events pkg>.<Process><Step>Send JavaDelegate (mails about the trigger record, optionally
         // attaching its rendered document);
@@ -1490,9 +1507,6 @@ public class BpmnIntentGenerator implements IntentTargetGenerator {
             return;
         }
         String javaHandler = stringArg(step, "javaHandler");
-        String setField = stringArg(step, "setField");
-        String clearField = stringArg(step, "clearField");
-        String setRelationField = stringArg(step, "setRelationField");
         String call = stringArg(step, "call");
         boolean sends = step.getArgs() != null && step.getArgs()
                                                       .get("notify") instanceof Map;
@@ -1501,8 +1515,7 @@ public class BpmnIntentGenerator implements IntentTargetGenerator {
         if (javaHandler != null && !javaHandler.isBlank()) {
             java = true;
             handlerValue = javaHandler;
-        } else if (setField != null && !setField.isBlank() || clearField != null && !clearField.isBlank()
-                || setRelationField != null && !setRelationField.isBlank()) {
+        } else if (SetFieldSupport.isSetterStep(step)) {
             java = true;
             handlerValue = eventsPackage + "." + SetFieldSupport.className(processName, step.getName());
         } else if (sends) {

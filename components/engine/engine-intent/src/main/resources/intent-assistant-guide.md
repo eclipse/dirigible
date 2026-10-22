@@ -1859,6 +1859,29 @@ column on the target's REST surface. Exactly one dot; the relation must be a loc
 collection, not a field, not a cross-model entity). A trigger record whose relation is empty is
 skipped with a warning.
 
+**Several members that change as one fact: `set:`.** Each setter step is its own job and its own
+transaction, so two steps that belong together - a job releasing its slot as it completes, a machine
+cleared field by field - leave a half-written state between them that another writer (or a crash)
+can see. Write them in ONE step with a `set:` map instead: one statement, so the record's
+`lifecycle:`, `stampOn` stamps and label judge the change as a whole, and one `-transitioned` event.
+Recommend it whenever several members change together:
+
+```yaml
+  steps:
+    - { name: begin,       kind: serviceTask, args: { set: { errorMessage: null, Status: RUNNING }, next: work } }
+    - { name: finish,      kind: serviceTask, args: { set: { slotKey: null, Status: DONE }, next: end } }
+    - { name: fail,        kind: serviceTask, args: { set: { errorMessage: "{error}", Status: FAILED }, next: end } }
+    - { name: freeMachine, kind: serviceTask, args: { set: { machine.lastReading: null, machine.operator: null }, next: end } }
+```
+
+Each key is what a single setter accepts (a field or a to-one relation, of the trigger or one hop
+away) and each value follows that setter's rule: a literal, `"{error}"` or `null` (the `clearField`
+erasure) on a `string`/`text` field, `"{now}"` on a `timestamp`/`date` field, a seeded name or id on a
+to-one relation (never `null`). ALL keys address the same record - all plain, or all through the same
+relation; writing two records is two steps. `set:` stands alone: never combined with
+`setField`/`clearField`/`setRelationField`/`value`, a `delegate:`, `call:` or `notify:`. On a
+`userTask` it may name to-one relations only, as `setRelationField` there.
+
 **Where to put the status set - the pattern to follow (and to recommend to users):**
 
 - **A task FOLLOWED BY a decision (Approve/Reject) → set the status on a `serviceTask` on the chosen

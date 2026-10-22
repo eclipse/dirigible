@@ -120,12 +120,11 @@ final class NumberingSupport {
             }
             Map<String, String> statusWrites = new HashMap<>();
             for (SetFieldSupport.Setter setter : setters) {
+                String value = setter.relationValue(statusProperty);
                 if (process.getName()
                            .equals(setter.process())
-                        && setter.relation() && setter.via() == null && statusProperty.equals(setter.field()) && !setter.value()
-                                                                                                                        .isBlank()) {
-                    statusWrites.put(setter.step(), setter.value()
-                                                          .trim());
+                        && setter.via() == null && value != null && !value.isBlank()) {
+                    statusWrites.put(setter.step(), value.trim());
                 }
             }
             for (StepIntent step : process.getSteps()) {

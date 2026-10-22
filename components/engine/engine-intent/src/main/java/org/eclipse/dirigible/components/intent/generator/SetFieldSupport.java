@@ -10,8 +10,10 @@
 package org.eclipse.dirigible.components.intent.generator;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.eclipse.dirigible.components.intent.LoggedValue;
 import org.eclipse.dirigible.components.intent.model.EntityIntent;
@@ -60,6 +62,14 @@ import org.slf4j.LoggerFactory;
  * local to-one relation of the trigger entity (parser-enforced); a null FK at run time is a logged
  * no-op.
  * <p>
+ * {@code set: { slotKey: null, Status: DONE }} writes several members of ONE record in one
+ * statement (#8042): each key is what a single-member setter would accept, its value follows that
+ * setter's rule ({@code null} is the {@code clearField} erasure, a to-one relation takes a seed
+ * id), and the whole map goes through one {@code updateProperties}, so the record's lifecycle,
+ * status stamps and label judge the change as a whole and one {@code -transitioned} is published.
+ * All keys address the same record - the trigger, or one hop through the same relation
+ * (parser-enforced). A one-key map is the single-member setter of that key.
+ * <p>
  * Scope: {@code setField} assigns a literal to a {@code string}/{@code text} field, or the
  * whole-value {@code {now}} token to a {@code timestamp}/{@code date} field; any other expression
  * value is out of scope. {@code setRelationField} assigns an integer seed id to a
@@ -73,6 +83,9 @@ public final class SetFieldSupport {
      */
     public static final String NOW_TOKEN = "{now}";
 
+    /** The step arg carrying a multi-member write: a map of member path to value (#8042). */
+    public static final String SET_ARG = "set";
+
     /** The {@code java.time} class a {@code {now}} setter assigns, keyed by the intent field type. */
     private static final Map<String, String> NOW_JAVA_TYPES = Map.of("timestamp", "Instant", "date", "LocalDate");
 
@@ -81,16 +94,8 @@ public final class SetFieldSupport {
     private SetFieldSupport() {}
 
     /**
-     * One field setter to generate.
+     * One member a setter writes.
      *
-     * @param process the owning process
-     * @param step the {@code serviceTask} step that declared the {@code setField}
-     * @param className the generated handler class simple name (e.g. {@code MemberApprovalActivate})
-     * @param entity the trigger entity whose field is set (e.g. {@code Member})
-     * @param perspective the entity's resolved perspective (its gen data subfolder)
-     * @param keyProperty the process variable holding the entity's PK (e.g. {@code Id})
-     * @param keyAccessor the {@link Number} accessor matching the PK type ({@code intValue} /
-     *        {@code longValue})
      * @param field the PascalCase property assigned (a string field for {@code setField}, or a to-one
      *        relation's FK property for {@code setRelationField})
      * @param value the value assigned (a string literal, or a seed id for a relation FK); empty for a
@@ -104,6 +109,23 @@ public final class SetFieldSupport {
      * @param javaType the {@code java.time} class a {@code now} setter assigns ({@code Instant} for a
      *        {@code timestamp} field, {@code LocalDate} for a {@code date} field); {@code null} for
      *        every other setter
+     */
+    public record Assignment(String field, String value, boolean relation, boolean clear, boolean now, String javaType) {
+    }
+
+    /**
+     * One field setter to generate.
+     *
+     * @param process the owning process
+     * @param step the {@code serviceTask} step that declared the {@code setField}
+     * @param className the generated handler class simple name (e.g. {@code MemberApprovalActivate})
+     * @param entity the trigger entity whose field is set (e.g. {@code Member})
+     * @param perspective the entity's resolved perspective (its gen data subfolder)
+     * @param keyProperty the process variable holding the entity's PK (e.g. {@code Id})
+     * @param keyAccessor the {@link Number} accessor matching the PK type ({@code intValue} /
+     *        {@code longValue})
+     * @param assignments the members written, in the authored order - one for a single-member setter,
+     *        several for a {@code set:} map, all of the same record
      * @param via for a one-hop setter ({@code order.Status}), the trigger entity's FK property the
      *        written record is reached through (e.g. {@code Order}); {@code null} for a setter of the
      *        trigger record itself
@@ -114,12 +136,28 @@ public final class SetFieldSupport {
      *        otherwise
      */
     public record Setter(String process, String step, String className, String entity, String perspective, String keyProperty,
-            String keyAccessor, String field, String value, boolean relation, boolean clear, boolean now, String javaType, String via,
-            String targetEntity, String targetPerspective, String targetKeyAccessor) {
+            String keyAccessor, List<Assignment> assignments, String via, String targetEntity, String targetPerspective,
+            String targetKeyAccessor) {
 
         /** The entity whose row the setter writes: the one-hop target, else the trigger entity. */
         public String writtenEntity() {
             return via == null ? entity : targetEntity;
+        }
+
+        /**
+         * The value the setter assigns to a to-one relation's FK property, or {@code null} when it does not
+         * write that relation.
+         *
+         * @param property the PascalCase FK property (e.g. {@code Status})
+         * @return the assigned value (a seed id once resolved), or {@code null}
+         */
+        public String relationValue(String property) {
+            for (Assignment assignment : assignments) {
+                if (assignment.relation() && property.equals(assignment.field())) {
+                    return assignment.value();
+                }
+            }
+            return null;
         }
     }
 
@@ -182,6 +220,15 @@ public final class SetFieldSupport {
                 if (step.getName() == null) {
                     continue;
                 }
+                Map<?, ?> set = setMap(step);
+                if (set != null) {
+                    Setter setter =
+                            setMapSetter(process, step, owner, perspective, keyProp, keyAcc, set, byName, model, compositionParents);
+                    if (setter != null) {
+                        setters.add(setter);
+                    }
+                    continue;
+                }
                 // setRelationField: set a to-one relation's FK to a seed id (an integer). Allowed on a
                 // serviceTask or a userTask (the BPMN runs the setter right after the user task completes).
                 String relField = stringArg(step, "setRelationField");
@@ -194,8 +241,8 @@ public final class SetFieldSupport {
                         continue;
                     }
                     String value = stringArg(step, "value");
-                    setters.add(setter(process, step, owner, perspective, keyProp, keyAcc, hop, value == null ? "" : value, true, false,
-                            false, null, model, compositionParents));
+                    setters.add(setter(process, step, owner, perspective, keyProp, keyAcc, hop,
+                            List.of(relationAssignment(hop.member(), value)), model, compositionParents));
                     continue;
                 }
                 // setField: set a string/text field to a literal value (serviceTask only).
@@ -222,22 +269,83 @@ public final class SetFieldSupport {
                             LoggedValue.of(process.getName()), LoggedValue.of(field), LoggedValue.of(triggerEntity));
                     continue;
                 }
-                // {now} stamps the moment on a timestamp/date field (the parser refuses it anywhere else).
-                boolean now = value != null && NOW_TOKEN.equals(value.trim());
-                String javaType = now ? NOW_JAVA_TYPES.get(target.getType()) : null;
-                setters.add(setter(process, step, owner, perspective, keyProp, keyAcc, hop, value == null ? "" : value, false, clear, now,
-                        javaType, model, compositionParents));
+                setters.add(setter(process, step, owner, perspective, keyProp, keyAcc, hop,
+                        List.of(fieldAssignment(hop.member(), target, clear ? null : value == null ? "" : value)), model,
+                        compositionParents));
             }
         }
         return setters;
     }
 
     /**
+     * The setter of a {@code set:} step: one assignment per key, in the authored order, all of the
+     * record the first key addresses. A key that does not resolve, or addresses another record, skips
+     * the step - the parser has already named it.
+     */
+    private static Setter setMapSetter(ProcessIntent process, StepIntent step, EntityIntent owner, String perspective, String keyProp,
+            String keyAcc, Map<?, ?> set, Map<String, EntityIntent> byName, IntentModel model, Map<String, String> compositionParents) {
+        List<Assignment> assignments = new ArrayList<>();
+        Hop record = null;
+        for (Map.Entry<?, ?> entry : set.entrySet()) {
+            String path = String.valueOf(entry.getKey());
+            Hop hop = hop(owner, path, byName);
+            if (hop == null || (record != null && !sameRecord(record, hop))) {
+                LOGGER.warn("Step [{}] in process [{}] sets [{}], which is not a member of the record the step writes - skipping",
+                        LoggedValue.of(step.getName()), LoggedValue.of(process.getName()), LoggedValue.of(path));
+                return null;
+            }
+            record = record == null ? hop : record;
+            Object value = entry.getValue();
+            FieldIntent field = fieldOf(hop.target(), hop.member());
+            if (relationOf(hop.target(), hop.member()) != null && value != null) {
+                assignments.add(relationAssignment(hop.member(), value.toString()));
+            } else if (field != null && "serviceTask".equals(step.getKind())) {
+                assignments.add(fieldAssignment(hop.member(), field, value == null ? null : value.toString()));
+            } else {
+                LOGGER.warn("Step [{}] in process [{}] sets [{}] to a value its setter does not accept - skipping",
+                        LoggedValue.of(step.getName()), LoggedValue.of(process.getName()), LoggedValue.of(path));
+                return null;
+            }
+        }
+        return record == null ? null
+                : setter(process, step, owner, perspective, keyProp, keyAcc, record, assignments, model, compositionParents);
+    }
+
+    /**
+     * Whether two resolved paths write the same record: both the trigger, or both through one relation.
+     */
+    public static boolean sameRecord(Hop first, Hop second) {
+        String firstVia = first.via() == null ? null
+                : first.via()
+                       .getName();
+        String secondVia = second.via() == null ? null
+                : second.via()
+                        .getName();
+        return Objects.equals(firstVia, secondVia);
+    }
+
+    /** A {@code setRelationField} assignment of a seed id. */
+    private static Assignment relationAssignment(String member, String value) {
+        return new Assignment(IntentNaming.pascalCase(member), value == null ? "" : value, true, false, false, null);
+    }
+
+    /**
+     * A field assignment: the erasure for a {@code null} value, the moment for the whole {@code {now}}
+     * token (the parser refuses it on any other field type), else the literal.
+     */
+    private static Assignment fieldAssignment(String member, FieldIntent field, String value) {
+        if (value == null) {
+            return new Assignment(IntentNaming.pascalCase(member), "", false, true, false, null);
+        }
+        boolean now = NOW_TOKEN.equals(value.trim());
+        return new Assignment(IntentNaming.pascalCase(member), value, false, false, now, now ? NOW_JAVA_TYPES.get(field.getType()) : null);
+    }
+
+    /**
      * One setter, its one-hop target coordinates filled in only when the path goes through a relation.
      */
     private static Setter setter(ProcessIntent process, StepIntent step, EntityIntent owner, String perspective, String keyProp,
-            String keyAcc, Hop hop, String value, boolean relation, boolean clear, boolean now, String javaType, IntentModel model,
-            Map<String, String> compositionParents) {
+            String keyAcc, Hop hop, List<Assignment> assignments, IntentModel model, Map<String, String> compositionParents) {
         String via = null;
         String targetEntity = null;
         String targetPerspective = null;
@@ -251,8 +359,59 @@ public final class SetFieldSupport {
             targetKeyAccessor = idAccessor(IntentEntities.primaryKeyOf(hop.target()));
         }
         return new Setter(process.getName(), step.getName(), className(process.getName(), step.getName()), owner.getName(), perspective,
-                keyProp, keyAcc, IntentNaming.pascalCase(hop.member()), value, relation, clear, now, javaType, via, targetEntity,
-                targetPerspective, targetKeyAccessor);
+                keyProp, keyAcc, List.copyOf(assignments), via, targetEntity, targetPerspective, targetKeyAccessor);
+    }
+
+    /**
+     * The {@code set:} map a step declares, or {@code null} when it declares none (or not as a map,
+     * which the parser refuses).
+     */
+    public static Map<?, ?> setMap(StepIntent step) {
+        Object set = step.getArgs() == null ? null
+                : step.getArgs()
+                      .get(SET_ARG);
+        return set instanceof Map<?, ?> map ? map : null;
+    }
+
+    /**
+     * Whether the step is a setter: it declares {@code setField}, {@code clearField},
+     * {@code setRelationField} or a {@code set:} map - each bound to the generated
+     * {@code <Process><Step>} delegate.
+     */
+    public static boolean isSetterStep(StepIntent step) {
+        return !isBlank(stringArg(step, "setField")) || !isBlank(stringArg(step, "clearField"))
+                || !isBlank(stringArg(step, "setRelationField")) || (step.getArgs() != null && step.getArgs()
+                                                                                                   .get(SET_ARG) != null);
+    }
+
+    /**
+     * The to-one relation writes a step MAY carry, as authored path to value, before the model says
+     * which paths are relations: its {@code setRelationField} with its {@code value}, and every key of
+     * its {@code set:} map. A caller matching a path against a relation name needs no model to tell
+     * them apart - a {@code set:} key naming a field never matches a relation.
+     *
+     * @param step the step
+     * @return the candidate writes, in the authored order; a value is {@code null} when absent
+     */
+    public static Map<String, String> relationWrites(StepIntent step) {
+        Map<String, String> writes = new LinkedHashMap<>();
+        String relation = stringArg(step, "setRelationField");
+        if (!isBlank(relation)) {
+            writes.put(relation, stringArg(step, "value"));
+        }
+        Map<?, ?> set = setMap(step);
+        if (set != null) {
+            for (Map.Entry<?, ?> entry : set.entrySet()) {
+                writes.put(String.valueOf(entry.getKey()), entry.getValue() == null ? null
+                        : entry.getValue()
+                               .toString());
+            }
+        }
+        return writes;
+    }
+
+    private static boolean isBlank(String value) {
+        return value == null || value.isBlank();
     }
 
     /**

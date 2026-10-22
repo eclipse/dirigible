@@ -318,27 +318,51 @@ final class StatusSymbolResolver {
                 // `setRelationField: <Relation>` + `value:` writes an id of THAT relation's target - the
                 // status in the canonical case, but the same shape serves any nomenclature FK.
                 String relationName = text(args, "setRelationField");
-                if (relationName == null || args.get("value") == null) {
-                    continue;
+                if (relationName != null && args.get("value") != null) {
+                    resolveSetterValue(args, "value", relationName, triggerEntity, false, stepSubject + " setRelationField");
                 }
-                // One hop (#7934): `order.Status` writes the status of the record `order` points at, so
-                // its name is a seed of the ORDER's nomenclature. A path that does not reach a local
-                // to-one target is the parser's to refuse, with a message about the path.
-                String writtenEntity = triggerEntity;
-                int dot = relationName.indexOf('.');
-                if (dot >= 0) {
-                    Map<?, ?> via = toOneRelation(triggerEntity, relationName.substring(0, dot));
-                    if (via == null || text(via, "model") != null || !isToOne(via) || !entities.containsKey(text(via, "to"))) {
-                        continue;
+                // A set: map (#8042) writes several members at once: each key naming a to-one relation is
+                // resolved exactly as a setRelationField's value; a field key passes through untouched.
+                Map<?, ?> set = asMap(args.get("set"));
+                if (set != null) {
+                    for (Object key : new ArrayList<>(set.keySet())) {
+                        if (key instanceof String path && set.get(path) != null) {
+                            resolveSetterValue(set, path, path, triggerEntity, true, stepSubject + " set");
+                        }
                     }
-                    writtenEntity = text(via, "to");
-                    relationName = relationName.substring(dot + 1);
                 }
-                Map<?, ?> relation = toOneRelation(writtenEntity, relationName);
-                Target target = relation == null ? new Target(null, null) : new Target(text(relation, "to"), text(relation, "model"));
-                putResolved(args, "value", target, stepSubject + " setRelationField [" + relationName + "] value");
             }
         }
+    }
+
+    /**
+     * Resolve the seed name a setter assigns to a to-one relation, in place, against that relation's
+     * target - on the trigger record, or one hop away (#7934): {@code order.Status} writes the status
+     * of the record {@code order} points at, so its name is a seed of the ORDER's nomenclature. A path
+     * that does not reach a local to-one target is the parser's to refuse, with a message about the
+     * path.
+     *
+     * @param mayNameAField whether the path may name a field instead - a {@code set:} key, whose
+     *        literal is then left alone
+     */
+    private void resolveSetterValue(Map<?, ?> owner, String key, String path, String triggerEntity, boolean mayNameAField, String subject) {
+        String writtenEntity = triggerEntity;
+        String relationName = path;
+        int dot = path.indexOf('.');
+        if (dot >= 0) {
+            Map<?, ?> via = toOneRelation(triggerEntity, path.substring(0, dot));
+            if (via == null || text(via, "model") != null || !isToOne(via) || !entities.containsKey(text(via, "to"))) {
+                return;
+            }
+            writtenEntity = text(via, "to");
+            relationName = path.substring(dot + 1);
+        }
+        Map<?, ?> relation = toOneRelation(writtenEntity, relationName);
+        if (relation == null && mayNameAField) {
+            return; // a field carries a literal, not a seed
+        }
+        Target target = relation == null ? new Target(null, null) : new Target(text(relation, "to"), text(relation, "model"));
+        putResolved(owner, key, target, subject + " [" + relationName + "] value");
     }
 
     private void rewritePostings(Map<?, ?> root) {

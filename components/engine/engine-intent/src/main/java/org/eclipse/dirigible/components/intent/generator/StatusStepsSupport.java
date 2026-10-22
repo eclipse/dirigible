@@ -127,16 +127,15 @@ public final class StatusStepsSupport {
             }
             boolean writesStatus = false;
             for (StepIntent step : process.getSteps()) {
-                Map<String, Object> args = step.getArgs();
-                Object relation = args == null ? null : args.get("setRelationField");
-                if (relation == null || !statusRel.getName()
-                                                  .equalsIgnoreCase(relation.toString())) {
-                    continue;
-                }
-                Integer target = statusId(args.get("value"));
-                if (target != null) {
-                    walked.add(target);
-                    writesStatus = true;
+                // setRelationField: Status, or a Status key of a set: map (#8042).
+                for (Map.Entry<String, String> write : SetFieldSupport.relationWrites(step)
+                                                                      .entrySet()) {
+                    Integer target = statusRel.getName()
+                                              .equalsIgnoreCase(write.getKey()) ? statusId(write.getValue()) : null;
+                    if (target != null) {
+                        walked.add(target);
+                        writesStatus = true;
+                    }
                 }
             }
             if (!writesStatus) {

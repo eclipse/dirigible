@@ -18,17 +18,31 @@ import gen.${javaGenFolderName}.data.${javaTargetPerspective}.${targetEntity}Rep
 #end
 
 /**
+#if($assignments)
 #if($via && $via != "")
- * Sets ${targetEntity}.${field} on the ${targetEntity} that ${entity}.${via} points at, for the ${process} process (a string field via setField, the moment the
+ * Sets several members of the ${targetEntity} that ${entity}.${via} points at, for the ${process} process,
 #else
- * Sets ${entity}.${field} for the ${process} process (a string field via setField, the moment the
+ * Sets several members of the ${entity} for the ${process} process,
 #end
+ * as ONE change (a set: map): one targeted write of every member, so the record's lifecycle, status
+ * stamps and label judge the change as a whole and no other writer sees it half done. Generated from the intent
+#elseif($via && $via != "")
+ * Sets ${targetEntity}.${field} on the ${targetEntity} that ${entity}.${via} points at, for the ${process} process (a string field via setField, the moment the
  * step runs on a timestamp/date field via setField {now}, its erasure via clearField, or a to-one
  * relation's FK to a seed id via setRelationField). Generated from the intent
+#else
+ * Sets ${entity}.${field} for the ${process} process (a string field via setField, the moment the
+ * step runs on a timestamp/date field via setField {now}, its erasure via clearField, or a to-one
+ * relation's FK to a seed id via setRelationField). Generated from the intent
+#end
  * .glue file - do not edit;
  * it is re-generated with the application. Runs
  * as a BPMN service task (flowable:delegateExpression="\${JavaTask}"): it persists the change as a
+#if($assignments)
+ * TARGETED write (updateProperties) - only the members set are in the UPDATE statement, so a
+#else
  * TARGETED single-column write (updateProperty) - only ${field} is in the UPDATE statement, so a
+#end
  * concurrent write to any other column of the row (a recalculated total, a minted document number,
  * the trigger's ProcessId) cannot be reverted, unlike the load-then-full-row-merge shape this
  * replaces. No "-updated" event is published, because this is a workflow-driven system write, not a
@@ -81,7 +95,19 @@ public class ${className} implements JavaDelegate {
 #set($writtenEntity = $entity)
 #set($writtenPerspective = $perspective)
 #end
-#if($relation == "true")
+#if($assignments)
+#if($readsErrorMessage)
+        // The {error} value: the failure message the resilience conversion published just before it
+        // raised the caught BPMN error that routed the flow here (empty when nothing published it).
+        Object errorMessage = execution.getVariable("__errorMessage");
+#end
+        // One change, one statement: every member below is written by the same updateProperties.
+        java.util.Map<String, Object> values = new java.util.LinkedHashMap<>();
+#foreach($assignment in $assignments)
+        values.put("${assignment.field}", ${assignment.expression});
+#end
+        int updated = ${writeRepository}.updateProperties(${writeKey}, values);
+#elseif($relation == "true")
         int updated = ${writeRepository}.updateProperty(${writeKey}, "${field}", ${value});
 #elseif($clear == "true")
         // clearField: the erasure twin of setField - the column goes back to empty, so a re-driven

@@ -39,6 +39,12 @@ import org.junit.jupiter.api.Test;
  * ...and its one hop - dirigible #7934: a setter whose path goes through a to-one relation
  * ({@code plan.Status}) carries {@code via} and the target's coordinates, so the template writes
  * through the target's repository; a setter of the trigger record gains none of those keys.
+ *
+ * <p>
+ * ...and its several members - dirigible #8042: a {@code set:} map carries one {@code assignments}
+ * entry per member, in the authored order, each with the keys its single-member setter would carry,
+ * so the template writes them in one {@code updateProperties}; a one-key map is that key's
+ * single-member setter.
  */
 class GlueSettersTest {
 
@@ -80,6 +86,11 @@ class GlueSettersTest {
                           - { name: stampDay, kind: serviceTask, args: { setField: provisionedOn, value: "{now}", next: end } }
                           - { name: activatePlan, kind: serviceTask, args: { setRelationField: plan.Status, value: 2, next: end } }
                           - { name: labelPlan, kind: serviceTask, args: { setField: plan.label, value: ACTIVE, next: end } }
+                          - { name: restart, kind: serviceTask, args: { set: { failureMessage: null, Status: 2, state: 'RUNNING "again"' }, next: end } }
+                          - { name: provisionPlan, kind: serviceTask, args: { delegate: custom.PlanProvisioner, onError: failAll, next: end } }
+                          - { name: failAll, kind: serviceTask, args: { set: { failureMessage: "{error}", provisionedAt: "{now}", Status: 3 }, next: end } }
+                          - { name: openPlan, kind: serviceTask, args: { set: { plan.Status: 2, plan.label: ACTIVE }, next: end } }
+                          - { name: markDoneOnce, kind: serviceTask, args: { set: { state: DONE }, next: end } }
                     """;
 
     @Test
@@ -190,6 +201,69 @@ class GlueSettersTest {
                 assertFalse(setter.containsKey(key), "a plain setter must stay exactly as before: " + setter);
             }
         }
+    }
+
+    @Test
+    void aSetMapIsOneSetterWithItsMembersInTheAuthoredOrder() {
+        Map<String, Object> setter = setter("TenantProvisioningRestart");
+        List<Map<String, Object>> assignments = assignments(setter);
+
+        assertEquals(List.of("FailureMessage", "Status", "State"), assignments.stream()
+                                                                              .map(assignment -> assignment.get("field"))
+                                                                              .toList());
+        assertEquals("true", assignments.get(0)
+                                        .get("clear"),
+                "null is the erasure: " + assignments);
+        assertEquals("true", assignments.get(1)
+                                        .get("relation"));
+        assertEquals("2", assignments.get(1)
+                                     .get("value"));
+        assertEquals("RUNNING \"again\"", assignments.get(2)
+                                                     .get("value"));
+        assertFalse(setter.containsKey("field"), "the members are the assignments, not a single field: " + setter);
+        assertFalse(setter.containsKey("via"), "a set: map of the trigger record carries no hop: " + setter);
+    }
+
+    @Test
+    void aSetMapWithErrorAndNow() {
+        List<Map<String, Object>> assignments = assignments(setter("TenantProvisioningFailAll"));
+
+        assertEquals("true", assignments.get(0)
+                                        .get("errorMessage"));
+        assertEquals("true", assignments.get(1)
+                                        .get("now"));
+        assertEquals("java.time.Instant.now()", assignments.get(1)
+                                                           .get("nowExpression"));
+        assertEquals("3", assignments.get(2)
+                                     .get("value"));
+    }
+
+    @Test
+    void aOneHopSetMapWritesTheTarget() {
+        Map<String, Object> setter = setter("TenantProvisioningOpenPlan");
+
+        assertEquals("Plan", setter.get("via"));
+        assertEquals("Plan", setter.get("targetEntity"));
+        assertEquals("longValue", setter.get("targetKeyAccessor"));
+        assertEquals(List.of("Status", "Label"), assignments(setter).stream()
+                                                                    .map(assignment -> assignment.get("field"))
+                                                                    .toList());
+    }
+
+    /** A one-key map is its key's single-member setter: the same descriptor, so the same delegate. */
+    @Test
+    void aOneKeySetMapIsTheSingleMemberSetter() {
+        Map<String, Object> single = new java.util.LinkedHashMap<>(setter("TenantProvisioningMarkDone"));
+        Map<String, Object> set = new java.util.LinkedHashMap<>(setter("TenantProvisioningMarkDoneOnce"));
+        single.remove("className");
+        set.remove("className");
+
+        assertEquals(single, set);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static List<Map<String, Object>> assignments(Map<String, Object> setter) {
+        return (List<Map<String, Object>>) setter.get("assignments");
     }
 
     private static Map<String, Object> setter(String className) {
