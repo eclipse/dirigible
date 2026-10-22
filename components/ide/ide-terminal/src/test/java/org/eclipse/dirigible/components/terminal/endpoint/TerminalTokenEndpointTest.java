@@ -15,6 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.test.json.JsonCompareMode;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -31,6 +32,6 @@ class TerminalTokenEndpointTest {
         mockMvc.perform(get("/services/js/view-terminal/js/token.js"))
                .andExpect(status().isOk())
                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-               .andExpect(content().json("{\"token\":\"\"}", true));
+               .andExpect(content().json("{\"token\":\"\"}", JsonCompareMode.STRICT));
     }
 }

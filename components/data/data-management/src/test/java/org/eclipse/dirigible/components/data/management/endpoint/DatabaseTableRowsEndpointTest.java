@@ -44,6 +44,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.json.JsonCompareMode;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
@@ -101,7 +102,7 @@ class DatabaseTableRowsEndpointTest {
         mockMvc.perform(get(URL, DATA_SOURCE, SCHEMA, encode(TABLE)))
                .andExpect(status().isOk())
                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-               .andExpect(content().json("[{\"Id\":1,\"Name\":\"John\",\"Note\":\"seed\"}]", true));
+               .andExpect(content().json("[{\"Id\":1,\"Name\":\"John\",\"Note\":\"seed\"}]", JsonCompareMode.STRICT));
     }
 
     @Test
@@ -175,6 +176,21 @@ class DatabaseTableRowsEndpointTest {
             assertThat(tables.next()).as("the table a name tried to drop is still there")
                                      .isTrue();
         }
+    }
+
+    @Test
+    void a_name_the_database_does_not_report_is_refused_before_any_statement() throws Exception {
+        mockMvc.perform(get(URL, DATA_SOURCE, SCHEMA, encode("Missing")))
+               .andExpect(status().isBadRequest())
+               .andExpect(jsonPath("$.details").value("The table [PUBLIC.Missing] does not exist"));
+        mockMvc.perform(get(URL, DATA_SOURCE, SCHEMA, encode("rows_it")))
+               .andExpect(status().isBadRequest())
+               .andExpect(jsonPath("$.details").value("The table [PUBLIC.rows_it] does not exist"));
+        mockMvc.perform(write(post(URL, DATA_SOURCE, SCHEMA, encode(TABLE)), "{\"data\":{\"Id\":2,\"Missing\":\"x\"}}"))
+               .andExpect(status().isBadRequest())
+               .andExpect(jsonPath("$.details").value("The table [PUBLIC.Rows_It] has no column [Missing]"));
+
+        assertThat(rows()).containsExactly("1|John|seed");
     }
 
     @Test

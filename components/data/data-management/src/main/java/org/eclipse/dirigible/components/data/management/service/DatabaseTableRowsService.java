@@ -12,10 +12,12 @@ package org.eclipse.dirigible.components.data.management.service;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -37,10 +39,12 @@ import com.google.gson.JsonObject;
  * Reads and edits the rows of one table, as the Database perspective's result view does.
  *
  * <p>
- * Every identifier - the schema, the table and each column - is quoted with the escape symbol of
- * the database's dialect, an embedded escape symbol doubled, so a name can never end its quoted
- * identifier early. Every value is a bound parameter, set the way the database API sets one, so a
- * JSON null is a SQL {@code NULL} and a string reaches a typed column converted.
+ * No identifier of a statement comes from the request: the schema, the table and each column are
+ * looked up in the database's own metadata, a name it does not report is refused, and the statement
+ * is built from the names the metadata returns - quoted with the escape symbol of the database's
+ * dialect, an embedded escape symbol doubled. Every value is a bound parameter, set the way the
+ * database API sets one, so a JSON null is a SQL {@code NULL} and a string reaches a typed column
+ * converted.
  */
 @Service
 public class DatabaseTableRowsService {
@@ -67,8 +71,8 @@ public class DatabaseTableRowsService {
      */
     public String findAll(String datasource, String schema, String table) throws Exception {
         try (Connection connection = getDataSource(datasource).getConnection()) {
-            char escape = escapeSymbol(connection);
-            String sql = "SELECT * FROM " + qualifiedTable(escape, schema, table);
+            String sql = "SELECT * FROM " + Table.resolve(connection, schema, table)
+                                                 .qualifiedName();
             try (PreparedStatement statement = connection.prepareStatement(sql); ResultSet resultSet = statement.executeQuery()) {
                 ByteArrayOutputStream output = new ByteArrayOutputStream();
                 DatabaseResultSetHelper.toJson(resultSet, false, false, output);
@@ -92,16 +96,16 @@ public class DatabaseTableRowsService {
             throw new IllegalArgumentException("The row holds no column value");
         }
         try (Connection connection = getDataSource(datasource).getConnection()) {
-            char escape = escapeSymbol(connection);
+            Table target = Table.resolve(connection, schema, table);
             List<String> columns = new ArrayList<>();
             List<String> placeholders = new ArrayList<>();
             JsonArray parameters = new JsonArray();
             for (Map.Entry<String, JsonElement> column : row.entrySet()) {
-                columns.add(quote(escape, column.getKey()));
+                columns.add(target.column(column.getKey()));
                 placeholders.add("?");
                 parameters.add(column.getValue());
             }
-            String sql = "INSERT INTO " + qualifiedTable(escape, schema, table) + " (" + String.join(", ", columns) + ") VALUES ("
+            String sql = "INSERT INTO " + target.qualifiedName() + " (" + String.join(", ", columns) + ") VALUES ("
                     + String.join(", ", placeholders) + ")";
             executeUpdate(connection, sql, parameters);
         }
@@ -120,13 +124,13 @@ public class DatabaseTableRowsService {
      */
     public void update(String datasource, String schema, String table, JsonObject row, Set<String> primaryKey) throws SQLException {
         try (Connection connection = getDataSource(datasource).getConnection()) {
-            char escape = escapeSymbol(connection);
+            Table target = Table.resolve(connection, schema, table);
             List<String> assignments = new ArrayList<>();
             List<String> conditions = new ArrayList<>();
             JsonArray values = new JsonArray();
             JsonArray keyValues = new JsonArray();
             for (Map.Entry<String, JsonElement> column : row.entrySet()) {
-                String predicate = quote(escape, column.getKey()) + " = ?";
+                String predicate = target.column(column.getKey()) + " = ?";
                 if (primaryKey.contains(column.getKey())) {
                     conditions.add(predicate);
                     keyValues.add(column.getValue());
@@ -142,7 +146,7 @@ public class DatabaseTableRowsService {
                 throw new IllegalArgumentException("The row holds none of the primary key columns " + primaryKey);
             }
             values.addAll(keyValues);
-            String sql = "UPDATE " + qualifiedTable(escape, schema, table) + " SET " + String.join(", ", assignments) + " WHERE "
+            String sql = "UPDATE " + target.qualifiedName() + " SET " + String.join(", ", assignments) + " WHERE "
                     + String.join(" AND ", conditions);
             executeUpdate(connection, sql, values);
         }
@@ -164,17 +168,17 @@ public class DatabaseTableRowsService {
             throw new IllegalArgumentException("No primary key column is given");
         }
         try (Connection connection = getDataSource(datasource).getConnection()) {
-            char escape = escapeSymbol(connection);
+            Table target = Table.resolve(connection, schema, table);
             List<String> conditions = new ArrayList<>();
             JsonArray keyValues = new JsonArray();
             for (String column : primaryKey) {
                 if (!row.has(column)) {
                     throw new IllegalArgumentException("The row holds no value for the primary key column [" + column + "]");
                 }
-                conditions.add(quote(escape, column) + " = ?");
+                conditions.add(target.column(column) + " = ?");
                 keyValues.add(row.get(column));
             }
-            String sql = "DELETE FROM " + qualifiedTable(escape, schema, table) + " WHERE " + String.join(" AND ", conditions);
+            String sql = "DELETE FROM " + target.qualifiedName() + " WHERE " + String.join(" AND ", conditions);
             executeUpdate(connection, sql, keyValues);
         }
     }
@@ -199,8 +203,91 @@ public class DatabaseTableRowsService {
                          .getEscapeSymbol();
     }
 
-    private static String qualifiedTable(char escape, String schema, String table) {
-        return quote(escape, schema) + "." + quote(escape, table);
+    /**
+     * Turns a name into a metadata search pattern that matches only that name, escaping the pattern
+     * wildcards when the driver has a search escape.
+     */
+    private static String searchPattern(String name, String searchEscape) {
+        if (searchEscape == null || searchEscape.isEmpty()) {
+            return name;
+        }
+        return name.replace(searchEscape, searchEscape + searchEscape)
+                   .replace("%", searchEscape + "%")
+                   .replace("_", searchEscape + "_");
+    }
+
+    /**
+     * A table as the database's metadata reports it, with its columns. A statement takes its names only
+     * from here, so a schema, a table or a column the database does not report is refused before any
+     * statement is prepared.
+     *
+     * @param escape the escape symbol of the database's dialect
+     * @param qualifier the schema, or the catalog for a database that reports its schemas as catalogs
+     * @param name the table name
+     * @param columns the column names, each mapped to itself as the metadata reports it
+     */
+    private record Table(char escape, String qualifier, String name, Map<String, String> columns) {
+
+        static Table resolve(Connection connection, String schema, String table) throws SQLException {
+            DatabaseMetaData metaData = connection.getMetaData();
+            char escape = escapeSymbol(connection);
+            String searchEscape = metaData.getSearchStringEscape();
+            String tablePattern = searchPattern(table, searchEscape);
+            try (ResultSet tables = metaData.getTables(null, searchPattern(schema, searchEscape), tablePattern, null)) {
+                while (tables.next()) {
+                    String schemaName = tables.getString("TABLE_SCHEM");
+                    String tableName = tables.getString("TABLE_NAME");
+                    if (schema.equals(schemaName) && table.equals(tableName)) {
+                        return new Table(escape, schemaName, tableName, columns(metaData.getColumns(null,
+                                searchPattern(schemaName, searchEscape), searchPattern(tableName, searchEscape), null), tableName));
+                    }
+                }
+            }
+            // A database that reports its schemas as catalogs (MySQL, MariaDB)
+            try (ResultSet tables = metaData.getTables(schema, null, tablePattern, null)) {
+                while (tables.next()) {
+                    String catalogName = tables.getString("TABLE_CAT");
+                    String tableName = tables.getString("TABLE_NAME");
+                    if (schema.equals(catalogName) && table.equals(tableName)) {
+                        return new Table(escape, catalogName, tableName,
+                                columns(metaData.getColumns(catalogName, null, searchPattern(tableName, searchEscape), null), tableName));
+                    }
+                }
+            }
+            throw new IllegalArgumentException("The table [" + schema + "." + table + "] does not exist");
+        }
+
+        private static Map<String, String> columns(ResultSet columns, String tableName) throws SQLException {
+            Map<String, String> names = new LinkedHashMap<>();
+            try (columns) {
+                while (columns.next()) {
+                    if (tableName.equals(columns.getString("TABLE_NAME"))) {
+                        String column = columns.getString("COLUMN_NAME");
+                        names.put(column, column);
+                    }
+                }
+            }
+            return names;
+        }
+
+        String qualifiedName() {
+            return quote(escape, qualifier) + "." + quote(escape, name);
+        }
+
+        /**
+         * The quoted name of a column of this table.
+         *
+         * @param column the column name the request gives
+         * @return the column's name as the metadata reports it, quoted
+         * @throws IllegalArgumentException if the table has no such column
+         */
+        String column(String column) {
+            String reported = columns.get(column);
+            if (reported == null) {
+                throw new IllegalArgumentException("The table [" + qualifier + "." + name + "] has no column [" + column + "]");
+            }
+            return quote(escape, reported);
+        }
     }
 
     /**
