@@ -60,9 +60,9 @@ public class RabbitMQFacade extends Thread {
     private static final String DIRIGIBLE_RABBITMQ_CLIENT_URI = "DIRIGIBLE_RABBITMQ_CLIENT_URI";
 
     /**
-     * The consumers.
+     * The consumers, one per queue and handler.
      */
-    private static final Map<String, RabbitMQReceiverRunner> CONSUMERS = Collections.synchronizedMap(new HashMap<>());
+    private static final Map<ConsumerKey, RabbitMQReceiverRunner> CONSUMERS = Collections.synchronizedMap(new HashMap<>());
 
     /**
      * Send message to given queue.
@@ -97,28 +97,41 @@ public class RabbitMQFacade extends Thread {
     public static final void startListening(String queue, String handler) {
         ScriptExecutor scriptExecutor = BeanProvider.getOptionalBean(ScriptExecutor.class)
                                                     .orElseThrow(() -> new ScriptEngineUnavailableException(handler));
-        Connection connection = connect();
-        Channel channel = createChannel(connection);
-        String location = null;
+        startListening(new ConsumerKey(queue, handler), new ScriptMessageListener(handler, scriptExecutor));
+    }
 
-        RabbitMQReceiverRunner receiverRunner = null;
-        location = createLocation(queue, handler);
-        receiverRunner = CONSUMERS.get(location);
+    /**
+     * Start listening on the given queue with a Java listener - no script engine is involved. A
+     * listener is told apart by its identity ({@link Object#equals(Object)}), so stop it by passing the
+     * same instance.
+     *
+     * @param queue the queue being used
+     * @param listener the listener the messages are handed to
+     */
+    public static final void startListening(String queue, RabbitMQMessageListener listener) {
+        startListening(new ConsumerKey(queue, listener), listener);
+    }
 
-        if (receiverRunner == null) {
-            receiverRunner = new RabbitMQReceiverRunner(connection, channel, queue, handler, scriptExecutor);
+    private static void startListening(ConsumerKey key, RabbitMQMessageListener listener) {
+        String queue = key.queue();
+        synchronized (CONSUMERS) {
+            if (CONSUMERS.containsKey(key)) {
+                if (logger.isWarnEnabled()) {
+                    logger.warn("RabbitMQ receiver [" + queue + "] has already been started.");
+                }
+                return;
+            }
+            Connection connection = connect();
+            Channel channel = createChannel(connection);
+            RabbitMQReceiverRunner receiverRunner = new RabbitMQReceiverRunner(connection, channel, queue, listener);
             Thread receiverThread = new Thread(receiverRunner);
             receiverThread.setDaemon(false);
             receiverThread.start();
 
-            CONSUMERS.put(location, receiverRunner);
-            if (logger.isInfoEnabled()) {
-                logger.info("RabbitMQ receiver created for [" + queue + "]");
-            }
-        } else {
-            if (logger.isWarnEnabled()) {
-                logger.warn("RabbitMQ receiver [" + queue + "] has already been started.");
-            }
+            CONSUMERS.put(key, receiverRunner);
+        }
+        if (logger.isInfoEnabled()) {
+            logger.info("RabbitMQ receiver created for [" + queue + "]");
         }
     }
 
@@ -129,14 +142,24 @@ public class RabbitMQFacade extends Thread {
      * @param handler the destination for the message
      */
     public static final void stopListening(String queue, String handler) {
-        RabbitMQReceiverRunner receiverRunner = null;
-        String location = null;
+        stopListening(new ConsumerKey(queue, handler));
+    }
 
-        location = createLocation(queue, handler);
-        receiverRunner = CONSUMERS.get(location);
+    /**
+     * Stop listening on the given queue with a Java listener started before.
+     *
+     * @param queue the queue being used
+     * @param listener the listener the consumer was started with
+     */
+    public static final void stopListening(String queue, RabbitMQMessageListener listener) {
+        stopListening(new ConsumerKey(queue, listener));
+    }
+
+    private static void stopListening(ConsumerKey key) {
+        String queue = key.queue();
+        RabbitMQReceiverRunner receiverRunner = CONSUMERS.remove(key);
         if (receiverRunner != null) {
             receiverRunner.stop();
-            CONSUMERS.remove(location);
             if (logger.isInfoEnabled()) {
                 logger.info("RabbitMQ receiver stopped for [" + queue + "]");
             }
@@ -195,13 +218,12 @@ public class RabbitMQFacade extends Thread {
     }
 
     /**
-     * Create internal identifier for a consumer.
+     * Identifies a consumer: its queue and its handler - the registry path of a handler script, or a
+     * Java listener.
      *
-     * @param queue the queue being used
-     * @param handler the destination for the message
-     * @return the identifier
+     * @param queue the queue
+     * @param handler the handler
      */
-    private static String createLocation(String queue, String handler) {
-        return "[" + queue + "]:[" + handler + "]";
+    private record ConsumerKey(String queue, Object handler) {
     }
 }

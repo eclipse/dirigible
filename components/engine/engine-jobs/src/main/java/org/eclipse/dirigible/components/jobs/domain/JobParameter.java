@@ -23,6 +23,8 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.Transient;
 
+import com.google.gson.annotations.Expose;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
@@ -43,18 +45,22 @@ public class JobParameter {
 
     /** The name. */
     @Column(name = "JOBPARAM_NAME", columnDefinition = "VARCHAR", nullable = false, length = 255)
+    @Expose
     private String name;
 
     /** The type. */
     @Column(name = "JOBPARAM_TYPE", columnDefinition = "VARCHAR", nullable = false, length = 255)
+    @Expose
     private String type; // string, number, boolean
 
     /** The default value. */
     @Column(name = "JOBPARAM_DEFAULT_VALUE", columnDefinition = "VARCHAR", nullable = true, length = 2000)
+    @Expose
     private String defaultValue = "";
 
     /** The choices. */
     @Column(name = "JOBPARAM_CHOICES", columnDefinition = "VARCHAR", nullable = true, length = 2000)
+    @Expose
     private String choices = "";
 
     /** The value. */

@@ -10,6 +10,7 @@
 package org.eclipse.dirigible.engine.java.scheduled;
 
 import java.lang.reflect.Method;
+import java.util.Map;
 
 import org.eclipse.dirigible.components.jobs.handler.JavaJobExecutor;
 import org.eclipse.dirigible.engine.java.component.ComponentContainer;
@@ -21,9 +22,11 @@ import org.springframework.stereotype.Component;
  * {@code JobHandler} + {@code JobExecutionService}) when a scheduled job's engine is
  * {@value JavaJobExecutor#ENGINE_JAVA}. It resolves the CURRENT client bean by the handler FQN from
  * the {@link ComponentContainer} (so a hot-reloaded class is picked up) and runs it - either
- * {@link JobHandler#run()} for the interface style, or the named {@code @Scheduled} method for the
- * method style (handler {@code <fqn>#<method>}). Failures propagate so the jobs engine records the
- * run as FAILED in the job log.
+ * {@link JobHandler#run()} for the interface style, or the named method for the method style
+ * (handler {@code <fqn>#<method>}): a {@code @Scheduled} method, or the bean method a {@code .job}
+ * artefact names. A named method declaring a single {@link Map} parameter receives the parameters
+ * the job's definition declares, at their values for the run; a method declaring none runs without
+ * them. Failures propagate so the jobs engine records the run as FAILED in the job log.
  */
 @Component
 public class JavaJobExecutorImpl implements JavaJobExecutor {
@@ -35,7 +38,7 @@ public class JavaJobExecutorImpl implements JavaJobExecutor {
     }
 
     @Override
-    public void execute(String handler) throws Exception {
+    public void execute(String handler, Map<String, String> parameters) throws Exception {
         int hash = handler.indexOf('#');
         String fqn = hash < 0 ? handler : handler.substring(0, hash);
         String methodName = hash < 0 ? null : handler.substring(hash + 1);
@@ -51,9 +54,38 @@ public class JavaJobExecutorImpl implements JavaJobExecutor {
             job.run();
             return;
         }
-        Method method = bean.getClass()
-                            .getDeclaredMethod(methodName);
+        Method method = jobMethod(bean.getClass(), methodName, handler);
         method.setAccessible(true);
-        method.invoke(bean);
+        if (method.getParameterCount() == 0) {
+            method.invoke(bean);
+        } else {
+            method.invoke(bean, parameters);
+        }
+    }
+
+    /**
+     * The method a {@code <fqn>#<method>} handler names: the variant receiving the job's parameters
+     * when the bean declares one, else the no-arg variant.
+     */
+    private static Method jobMethod(Class<?> type, String name, String handler) {
+        Method withoutParameters = null;
+        for (Method method : type.getDeclaredMethods()) {
+            if (!method.getName()
+                       .equals(name)) {
+                continue;
+            }
+            Class<?>[] parameterTypes = method.getParameterTypes();
+            if (parameterTypes.length == 1 && parameterTypes[0] == Map.class) {
+                return method;
+            }
+            if (parameterTypes.length == 0) {
+                withoutParameters = method;
+            }
+        }
+        if (withoutParameters == null) {
+            throw new IllegalStateException("Scheduled Java job bean [" + type.getName() + "] declares neither " + name + "() nor " + name
+                    + "(Map<String, String>) for job [" + handler + "]");
+        }
+        return withoutParameters;
     }
 }

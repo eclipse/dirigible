@@ -25,6 +25,13 @@ import org.eclipse.dirigible.components.api.job.JobFacade;
  * jobs - that would bypass the synchronizer contract and leave the live state out of sync with the
  * declarative source. A job is named as its definition names it; a client-Java job is named after
  * its class ({@code <fqn>}) or its {@code @Scheduled} method ({@code <fqn>.<method>}).
+ * <p>
+ * A {@code .job} descriptor runs a client-Java bean method with {@code "engine": "java"} and
+ * {@code "handler": "<fqn>#<method>"}. A method declaring a single {@code Map<String, String>}
+ * parameter receives the parameters the descriptor declares, each at its value for the run - as a
+ * script job's {@code job.getParameter} resolves it: the configuration value of the same name,
+ * which is where {@link #trigger(String, Map)} puts the values it passes, else the declared
+ * default.
  */
 public final class Scheduler {
 

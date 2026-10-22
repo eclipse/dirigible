@@ -19,10 +19,11 @@ import org.eclipse.dirigible.components.api.websockets.WebsocketsFacade;
 import org.springframework.messaging.simp.stomp.StompSession;
 
 /**
- * Outbound STOMP WebSocket client — connect to a remote endpoint, register a registry-resident
- * handler for lifecycle and message events, then optionally publish or query the platform's view of
- * active connections. Useful for bridging Dirigible into another service that exposes a WebSocket
- * interface (an external trading desk, a chat server, an MQTT bridge).
+ * Outbound STOMP WebSocket client — connect to a remote endpoint, handle its lifecycle and message
+ * events with a Java {@link WebsocketClientHandler} (or a registry-resident handler script), then
+ * optionally publish or query the platform's view of active connections. Useful for bridging
+ * Dirigible into another service that exposes a WebSocket interface (an external trading desk, a
+ * chat server, an MQTT bridge).
  * <p>
  * For inbound WebSockets (handlers exposed by Dirigible to remote clients) use the
  * {@link org.eclipse.dirigible.sdk.net.Websocket @Websocket} class annotation instead — that gives
@@ -52,6 +53,36 @@ public final class Websockets {
      */
     public static StompSession createWebsocket(String uri, String handler, Map<String, String> connectHeaders)
             throws DeploymentException, IOException, InterruptedException, ExecutionException {
+        return WebsocketsFacade.createWebsocket(uri, handler, connectHeaders);
+    }
+
+    /**
+     * Connects with a Java handler of the client's events - no script engine is involved.
+     *
+     * @param uri the endpoint
+     * @param handler the handler of the client's events
+     * @return the STOMP session, to send on
+     * @throws InterruptedException when interrupted while connecting
+     * @throws ExecutionException when the connection is refused or fails
+     */
+    public static StompSession createWebsocket(String uri, WebsocketClientHandler handler) throws InterruptedException, ExecutionException {
+        return createWebsocket(uri, handler, Map.of());
+    }
+
+    /**
+     * Connects with a Java handler of the client's events and the given STOMP CONNECT headers - a
+     * Dirigible {@code /stomp} endpoint needs {@code Authorization: Bearer <token>} there, since an
+     * anonymous CONNECT is refused.
+     *
+     * @param uri the endpoint
+     * @param handler the handler of the client's events
+     * @param connectHeaders the headers of the CONNECT frame
+     * @return the STOMP session, to send on
+     * @throws InterruptedException when interrupted while connecting
+     * @throws ExecutionException when the connection is refused or fails
+     */
+    public static StompSession createWebsocket(String uri, WebsocketClientHandler handler, Map<String, String> connectHeaders)
+            throws InterruptedException, ExecutionException {
         return WebsocketsFacade.createWebsocket(uri, handler, connectHeaders);
     }
 

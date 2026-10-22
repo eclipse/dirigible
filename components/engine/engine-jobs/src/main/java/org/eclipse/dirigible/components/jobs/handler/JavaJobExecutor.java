@@ -9,6 +9,8 @@
  */
 package org.eclipse.dirigible.components.jobs.handler;
 
+import java.util.Map;
+
 /**
  * SPI that runs a client-Java scheduled job identified by its handler string, invoked by
  * {@link JobExecutionService} when a job's engine is {@value #ENGINE_JAVA}. The implementation
@@ -34,9 +36,11 @@ public interface JavaJobExecutor {
      *
      * @param handler the job handler string - the fully-qualified class name of the client
      *        {@code JobHandler} bean, optionally suffixed {@code #method} for a {@code @Scheduled}
-     *        method.
+     *        method or the method a {@code .job} artefact names.
+     * @param parameters the parameters the job's definition declares, each at its value for this run;
+     *        empty when it declares none
      * @throws Exception when the job body throws - surfaced by the caller as a job failure (logged to
      *         the job log like any other engine).
      */
-    void execute(String handler) throws Exception;
+    void execute(String handler, Map<String, String> parameters) throws Exception;
 }

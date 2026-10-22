@@ -96,9 +96,11 @@ One Spring-singleton container, rebuilt per `ClientClassLoader` generation.
   client-facing lookup — resolves client beans first, then platform beans. Client code must **not**
   use the platform-internal `BeanProvider` (that's core-only; `JavaRepository.store()` uses it because
   it is platform code).
-- **`createUnmanaged(Class)` wires a client class the container does NOT own** — today exactly one
-  family: a client class **Flowable** instantiates itself and which therefore never becomes a bean —
-  a `JavaDelegate` (#7058) and a `flowable:class` execution / task listener (#7222). Same rules as a `@Component` (constructor / field `@Inject` / collection, by type
+- **`createUnmanaged(Class)` wires a client class the container does NOT own** — two families: a
+  client class **Flowable** instantiates itself and which therefore never becomes a bean — a
+  `JavaDelegate` (#7058) and a `flowable:class` execution / task listener (#7222) — and a Camel
+  `Processor` a `dirigible-java` route step builds for every exchange (`DirigibleJavaInvokerImpl`,
+  #8017; it used to be built by its no-arg constructor only). Same rules as a `@Component` (constructor / field `@Inject` / collection, by type
   with the parameter or field name disambiguating, `@PostConstruct`), resolved against the **live**
   singletons — it constructs no bean, so a cycle is impossible on this path — and the instance is
   **not registered** (it never appears in `get` / `getAll` / `instanceOf`, and a failure here is not a
@@ -213,6 +215,17 @@ instantiate client classes.
   of an `engine-java` dependency).
 - `HandlerClassConsumer` — `JavaHandler` (see below).
 
+**A `.job` artefact can run a client-Java bean method, and the method receives the parameters the
+artefact declares (#8017).** `"engine": "java"` with `"handler": "<fqn>#<method>"` names a method of a
+`@Component`; `JavaJobExecutorImpl` passes it a `Map<String, String>` when it declares one (the no-arg
+variant runs as before, and the `Map` variant wins when both exist). `JobExecutionService` resolves the
+values for a Java run only - the rule a script applies through `job.getParameter`: the configuration
+value of the same name (where `JobService.trigger` puts the values it was given, thread-scoped), else
+the declared default. Before that, the parameters reached nothing at all: `Job.parameters` and the
+`JobParameter` fields carried no `@Expose`, so the `.job` parser (Gson, exposed fields only) dropped every
+declaration - on both engines - and a trigger refused every value. A declaration removed from the
+artefact is removed with it (`orphanRemoval`). Covered by `JavaJobParametersIT`.
+
 ## Two handler styles — never mixed (jobs, listeners, websockets)
 
 A `@Component` class uses **exactly one** style; the engine rejects (error-logs + skips) a class that
@@ -249,6 +262,26 @@ Two consequences worth internalizing before writing either kind of handler:
   replayable — keyed on something durable, like the posting glue's back-reference — rather than
   transactional. Work that must not be lost still wants a reconciliation job that finds records left
   in a pre-handler state, because the dead-letter queue is where a poisonous message stops.
+
+## Outbound clients with Java handlers (`sdk.net.Websockets`, `sdk.rabbitmq.Consumer`)
+
+The SDK's outbound websocket client and RabbitMQ consumer take a Java handler as well as the registry
+path of a handler script (#8017) - no script engine is involved on the Java path:
+
+- `Websockets.createWebsocket(uri, WebsocketClientHandler[, connectHeaders])` — the handler names the
+  `destinations()` the client subscribes to once connected (default `/user/queue/reply`, as the scripting
+  client) and gets `onOpen(StompSession)`, `onMessage(message, destination)` with the frame body as text
+  whatever its content type, `onError(String)` and `onClose()` (whichever side closed, only for a client
+  that opened). The platform types are `api-net`'s `WebsocketClientListener` (which the SDK interface
+  extends), `ListenerStompSessionHandler`, `RawPayloadMessageConverter` and
+  `CloseNotifyingWebSocketClient`; the scripting client is untouched. Covered by `ExternalFrontendIT`
+  (a bearer STOMP session against the platform's own broker).
+- `Consumer.startListening(queue, MessageHandler)` / `stopListening(queue, MessageHandler)` — a handler
+  is told apart by its identity, so a component starting one in `@PostConstruct` stops the same instance
+  in `@PreDestroy` (the new generation's `@PostConstruct` runs before the old one's `@PreDestroy`, which a
+  key by class name would have turned into a skipped start). `RabbitMQReceiverRunner` serves both
+  handler kinds and registers ONE consumer: it used to register a new one in a loop until stopped.
+  Covered by `RabbitMQFacadeTest` (container tests) and `JavaRabbitMQConsumerIT`.
 
 ## `JavaHandler` (low-level REST)
 

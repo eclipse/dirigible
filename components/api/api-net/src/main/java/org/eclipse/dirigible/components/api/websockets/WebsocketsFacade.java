@@ -96,6 +96,26 @@ public class WebsocketsFacade {
     }
 
     /**
+     * Create a new Websocket by a given URI whose events a Java listener handles - no script engine is
+     * involved.
+     *
+     * @param uri the URI
+     * @param listener the listener of the client's events
+     * @param connectHeaders the headers of the CONNECT frame - a Dirigible {@code /stomp} endpoint
+     *        needs {@code Authorization: Bearer <token>} there, since an anonymous CONNECT is refused
+     * @return the Websocket Session object
+     * @throws InterruptedException the interrupted exception
+     * @throws ExecutionException when the connection is refused or fails
+     */
+    public static final StompSession createWebsocket(String uri, WebsocketClientListener listener, Map<String, String> connectHeaders)
+            throws InterruptedException, ExecutionException {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Connecting to " + uri);
+        }
+        return new WebsocketClient(uri, listener, connectHeaders).connect();
+    }
+
+    /**
      * Create a new Websocket by a given URI and Handler, connecting with the STOMP CONNECT headers
      * given as a JSON object - the form the scripting API passes them in.
      *

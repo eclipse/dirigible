@@ -26,6 +26,7 @@ import org.eclipse.dirigible.components.base.script.ScriptExecutor;
 import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.messaging.converter.CompositeMessageConverter;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
@@ -40,7 +41,8 @@ import org.springframework.web.socket.sockjs.client.Transport;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 
 /**
- * The Class WebsocketClient.
+ * An outbound STOMP client. Its handler is either a script, named by its registry path, or a Java
+ * {@link WebsocketClientListener}, named by its class.
  */
 @ClientEndpoint
 public class WebsocketClient {
@@ -57,8 +59,13 @@ public class WebsocketClient {
     /** The session. */
     private StompSession session;
 
-    /** The executor of the handler's script. */
+    /** The executor of the handler's script; {@code null} for a client with a Java listener. */
     private final ScriptExecutor scriptExecutor;
+
+    /**
+     * The Java listener of the client's events; {@code null} for a client whose handler is a script.
+     */
+    private final WebsocketClientListener listener;
 
     /** The headers of the STOMP CONNECT frame. */
     private final Map<String, String> connectHeaders;
@@ -88,6 +95,25 @@ public class WebsocketClient {
         this.uri = uri;
         this.scriptExecutor = scriptExecutor;
         this.handler = handler;
+        this.listener = null;
+        this.connectHeaders = Map.copyOf(connectHeaders);
+    }
+
+    /**
+     * Instantiates a new websocket client whose handler is a Java listener.
+     *
+     * @param uri the uri
+     * @param listener the listener of the client's events - its class name is the client's handler
+     * @param connectHeaders the headers of the STOMP CONNECT frame - a Dirigible {@code /stomp}
+     *        endpoint needs {@code Authorization: Bearer <token>} there, since an anonymous CONNECT is
+     *        refused
+     */
+    public WebsocketClient(String uri, WebsocketClientListener listener, Map<String, String> connectHeaders) {
+        this.uri = uri;
+        this.scriptExecutor = null;
+        this.handler = listener.getClass()
+                               .getName();
+        this.listener = listener;
         this.connectHeaders = Map.copyOf(connectHeaders);
     }
 
@@ -102,14 +128,50 @@ public class WebsocketClient {
         List<Transport> transports = new ArrayList<>();
         transports.add(new WebSocketTransport(new StandardWebSocketClient()));
         transports.add(new RestTemplateXhrTransport());
-        WebSocketStompClient stompClient = new WebSocketStompClient(new SockJsClient(transports));
-        stompClient.setMessageConverter(new MappingJackson2MessageConverter());
-        StompSessionHandler sessionHandler = new ClientStompSessionHandler();
+        WebSocketClient transport = new SockJsClient(transports);
         StompHeaders headers = new StompHeaders();
         connectHeaders.forEach(headers::add);
-        session = stompClient.connectAsync(uri, (WebSocketHttpHeaders) null, headers, sessionHandler)
-                             .get();
+        session = listener == null ? connectScriptClient(transport, headers) : connectListenerClient(transport, headers);
         return session;
+    }
+
+    private StompSession connectScriptClient(WebSocketClient transport, StompHeaders headers)
+            throws InterruptedException, ExecutionException {
+        WebSocketStompClient stompClient = new WebSocketStompClient(transport);
+        stompClient.setMessageConverter(new MappingJackson2MessageConverter());
+        StompSessionHandler sessionHandler = new ClientStompSessionHandler();
+        return stompClient.connectAsync(uri, (WebSocketHttpHeaders) null, headers, sessionHandler)
+                          .get();
+    }
+
+    /**
+     * Connects a client whose listener receives every message as text and hears of the close, while a
+     * payload it sends is converted as a scripting client's is.
+     */
+    private StompSession connectListenerClient(WebSocketClient transport, StompHeaders headers)
+            throws InterruptedException, ExecutionException {
+        ListenerStompSessionHandler sessionHandler = new ListenerStompSessionHandler(this, listener);
+        WebSocketStompClient stompClient =
+                new WebSocketStompClient(new CloseNotifyingWebSocketClient(transport, sessionHandler::connectionClosed));
+        stompClient.setMessageConverter(
+                new CompositeMessageConverter(List.of(new RawPayloadMessageConverter(), new MappingJackson2MessageConverter())));
+        return stompClient.connectAsync(uri, (WebSocketHttpHeaders) null, headers, sessionHandler)
+                          .get();
+    }
+
+    /**
+     * Records the connected session of a client with a Java listener and lists the client.
+     *
+     * @param session the connected session
+     */
+    void opened(StompSession session) {
+        this.session = session;
+        WebsocketsFacade.CLIENTS.add(this);
+    }
+
+    /** Delists a client with a Java listener whose connection was closed. */
+    void closed() {
+        WebsocketsFacade.CLIENTS.remove(this);
     }
 
     /**
@@ -124,7 +186,7 @@ public class WebsocketClient {
     /**
      * Gets the executor of the handler's script.
      *
-     * @return the script executor
+     * @return the script executor; {@code null} for a client with a Java listener
      */
     public ScriptExecutor getScriptExecutor() {
         return scriptExecutor;

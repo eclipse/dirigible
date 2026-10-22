@@ -466,10 +466,11 @@ public class ComponentContainer implements ClientBeanFactory {
      * {@inheritDoc}
      *
      * <p>
-     * The one client class the container cannot own: a {@code JavaDelegate}, which Flowable
-     * instantiates itself. Wiring it here rather than registering it as a bean is deliberate —
-     * annotating a delegate {@code @Component} would build a fully-injected singleton the engine never
-     * runs, next to the un-injected instance it does.
+     * The client classes the container cannot own: a {@code JavaDelegate}, which Flowable instantiates
+     * itself, and a Camel {@code Processor}, which a {@code dirigible-java} route step builds for every
+     * exchange. Wiring them here rather than registering them as beans is deliberate — annotating a
+     * delegate {@code @Component} would build a fully-injected singleton the engine never runs, next to
+     * the un-injected instance it does.
      */
     @Override
     public <T> Optional<T> createUnmanaged(Class<T> type) {

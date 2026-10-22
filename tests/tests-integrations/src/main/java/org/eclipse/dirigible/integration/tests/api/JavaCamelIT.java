@@ -50,6 +50,8 @@ class JavaCamelIT extends IntegrationTest {
 
     private static final String HANDLER_REGISTRY_PATH = IRepositoryStructure.PATH_REGISTRY_PUBLIC + HANDLER_SOURCE_LOCATION;
     private static final String ROUTE_REGISTRY_PATH = IRepositoryStructure.PATH_REGISTRY_PUBLIC + ROUTE_LOCATION;
+    private static final String GREETER_REGISTRY_PATH =
+            IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/" + PROJECT + "/com/acme/camel/Greeter.java";
 
     private static final long ASSERTION_TIMEOUT_SECONDS = 60;
 
@@ -91,10 +93,25 @@ class JavaCamelIT extends IntegrationTest {
         assertRouteBody("Set by MyCamelHandler v2");
     }
 
+    /**
+     * The processor is built through the client bean container, the way a BPMN {@code JavaDelegate} is
+     * (#8017): its constructor receives a {@code @Component} collaborator. It used to be built by its
+     * no-arg constructor, so a processor declaring a collaborator could not be built at all.
+     */
+    @Test
+    void processor_gets_its_collaborators_injected() {
+        write(GREETER_REGISTRY_PATH, greeterSource(), "text/x-java");
+        write(HANDLER_REGISTRY_PATH, injectedHandlerSource(), "text/x-java");
+        write(ROUTE_REGISTRY_PATH, routeSource(), "text/plain");
+        synchronizationProcessor.forceProcessSynchronizers();
+
+        assertRouteBody("Set by MyCamelHandler with an injected Greeter");
+    }
+
     @AfterEach
     void cleanup() {
         boolean removed = false;
-        for (String path : new String[] {ROUTE_REGISTRY_PATH, HANDLER_REGISTRY_PATH}) {
+        for (String path : new String[] {ROUTE_REGISTRY_PATH, HANDLER_REGISTRY_PATH, GREETER_REGISTRY_PATH}) {
             if (repository.hasResource(path)) {
                 repository.removeResource(path);
                 removed = true;
@@ -130,6 +147,37 @@ class JavaCamelIT extends IntegrationTest {
                     }
                 }
                 """.formatted(body);
+    }
+
+    private static String greeterSource() {
+        return """
+                package com.acme.camel;
+                import org.eclipse.dirigible.sdk.component.Component;
+                @Component
+                public class Greeter {
+                    public String greeting() {
+                        return "with an injected Greeter";
+                    }
+                }
+                """;
+    }
+
+    private static String injectedHandlerSource() {
+        return """
+                package com.acme.camel;
+                import org.apache.camel.Exchange;
+                import org.apache.camel.Processor;
+                public class MyCamelHandler implements Processor {
+                    private final Greeter greeter;
+                    public MyCamelHandler(Greeter greeter) {
+                        this.greeter = greeter;
+                    }
+                    @Override
+                    public void process(Exchange exchange) throws Exception {
+                        exchange.getMessage().setBody("Set by MyCamelHandler " + greeter.greeting());
+                    }
+                }
+                """;
     }
 
     private static String routeSource() {

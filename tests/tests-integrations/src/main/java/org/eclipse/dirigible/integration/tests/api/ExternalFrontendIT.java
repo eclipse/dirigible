@@ -46,6 +46,7 @@ import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -59,6 +60,8 @@ import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.eclipse.dirigible.components.api.websockets.WebsocketsFacade;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
+import org.eclipse.dirigible.sdk.net.WebsocketClientHandler;
+import org.eclipse.dirigible.sdk.net.Websockets;
 import org.eclipse.dirigible.tests.base.IntegrationTest;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -780,6 +783,44 @@ class ExternalFrontendIT extends IntegrationTest {
         assertThrows(ExecutionException.class, () -> WebsocketsFacade.createWebsocket(stompUrl(), PROJECT + "/ws-handler"));
     }
 
+    @Test
+    void theJavaSdkClientHandsItsEventsToAJavaHandler() throws Exception {
+        // a Java application opens the websocket with a Java handler - no script engine involved (#8017)
+        RecordingClientHandler handler = new RecordingClientHandler("/user/queue/reply/java-client");
+        StompSession session = Websockets.createWebsocket(stompUrl(), handler,
+                Map.of("Authorization", "Bearer " + identityProvider.idToken("jane", DEVELOPER_GROUPS)));
+        try {
+            assertTrue(handler.opened.await(10, TimeUnit.SECONDS), "the handler is told the client is open");
+            awaitSubscription("jane", "/user/queue/reply/java-client");
+            assertNotNull(Websockets.getClientByHandler(RecordingClientHandler.class.getName()), "an open client is listed");
+
+            Awaitility.await()
+                      .atMost(15, TimeUnit.SECONDS)
+                      .pollInterval(500, TimeUnit.MILLISECONDS)
+                      .untilAsserted(() -> {
+                          messagingTemplate.convertAndSendToUser("jane", "/queue/reply/java-client", "hello java");
+                          assertEquals("hello java@/user/queue/reply/java-client", handler.messages.poll(500, TimeUnit.MILLISECONDS));
+                      });
+        } finally {
+            session.disconnect();
+        }
+
+        assertTrue(handler.closed.await(10, TimeUnit.SECONDS), "a client's own disconnect is a close too");
+        assertNull(Websockets.getClientByHandler(RecordingClientHandler.class.getName()), "a closed client is no longer listed");
+        assertTrue(handler.errors.isEmpty(), "nothing went wrong: " + handler.errors);
+    }
+
+    @Test
+    void aRefusedJavaSdkClientTellsItsHandlerWhy() throws Exception {
+        RecordingClientHandler handler = new RecordingClientHandler("/user/queue/reply/java-client");
+
+        assertThrows(ExecutionException.class, () -> Websockets.createWebsocket(stompUrl(), handler));
+
+        assertEquals("Unauthorized", handler.errors.poll(10, TimeUnit.SECONDS));
+        assertEquals(1, handler.opened.getCount(), "a refused client was never open");
+        assertEquals(1, handler.closed.getCount(), "so it is never reported closed either");
+    }
+
     // --- POST /login/token ---------------------------------------------------------------------
 
     @Test
@@ -987,6 +1028,45 @@ class ExternalFrontendIT extends IntegrationTest {
         @Override
         public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
             errors.add("exception: " + exception.getMessage());
+        }
+    }
+
+    /** A Java SDK websocket client handler recording what it is told. */
+    private static final class RecordingClientHandler implements WebsocketClientHandler {
+
+        private final String destination;
+        final CountDownLatch opened = new CountDownLatch(1);
+        final BlockingQueue<String> messages = new LinkedBlockingQueue<>();
+        final BlockingQueue<String> errors = new LinkedBlockingQueue<>();
+        final CountDownLatch closed = new CountDownLatch(1);
+
+        RecordingClientHandler(String destination) {
+            this.destination = destination;
+        }
+
+        @Override
+        public List<String> destinations() {
+            return List.of(destination);
+        }
+
+        @Override
+        public void onOpen(StompSession session) {
+            opened.countDown();
+        }
+
+        @Override
+        public void onMessage(String message, String destination) {
+            messages.add(message + "@" + destination);
+        }
+
+        @Override
+        public void onError(String error) {
+            errors.add(error);
+        }
+
+        @Override
+        public void onClose() {
+            closed.countDown();
         }
     }
 
