@@ -1,0 +1,15 @@
+<model>
+ <entities>
+  <entity name="Lonely" dataName="LONELY" perspectiveName="Lonely">
+   <property name="Id" dataName="LONELY_ID" dataType="INTEGER" dataPrimaryKey="true" dataAutoIncrement="true"/>
+  </entity>
+  <relation name="Lonely_Self" entity="Lonely" property="Id" referenced="Lonely"/>
+ </entities>
+ <constraints>
+  <uniqueKey><entity>Lonely</entity><name>Lonely_Id_Id</name><properties>Id,Id</properties></uniqueKey>
+ </constraints>
+ <perspectives>
+  <perspective><name>Lonely</name><label>Lonely</label><icon>/services/web/resources/unicons/copy.svg</icon><order>100</order></perspective>
+ </perspectives>
+ <navigations/>
+</model>

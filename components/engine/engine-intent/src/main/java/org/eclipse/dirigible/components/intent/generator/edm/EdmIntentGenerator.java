@@ -4473,7 +4473,7 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
      * ({@code languages}, {@code widgets}, {@code customActionLabels}, {@code processTaskLabels}) as
      * JSON strings - the same flat-attribute mechanism the entity/property level uses, for the same
      * reason: a flat attribute survives both the mxGraph cell round-trip of a live editor save and the
-     * {@code transform-edm} regeneration, which a nested element would not.
+     * {@code .edm}-to-{@code .model} regeneration, which a nested element would not.
      *
      * <p>
      * Without this the {@code <model>} element carried NO attributes at all, so everything the
@@ -4499,8 +4499,10 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
             }
             Object value = attr.getValue();
             if ((value instanceof Iterable || value instanceof Map) && !STRUCTURED_ATTRIBUTES.contains(key)) {
-                LOGGER.warn("Document-level model value [{}] has no .edm representation and is lost when a diagram is saved -"
-                        + " add it to STRUCTURED_ATTRIBUTES (and to transform-edm.js's MODEL_STRUCTURED)", LoggedValue.of(key));
+                LOGGER.warn(
+                        "Document-level model value [{}] has no .edm representation and is lost when a diagram is saved -"
+                                + " add it to STRUCTURED_ATTRIBUTES (and to EdmModelTransformation's MODEL_STRUCTURED)",
+                        LoggedValue.of(key));
                 continue;
             }
             appendModelAttribute(sb, key, value);
@@ -4872,15 +4874,16 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
      * The document/entity/property attributes whose value is a List/Map. They are emitted into the
      * {@code .edm} as a JSON string in a flat attribute (never dropped, never a nested element) so the
      * {@code .edm} stays a lossless source for the derived {@code .model}: a flat attribute survives
-     * both the mxGraph cell-value round-trip of a live editor save and the {@code transform-edm}
-     * regeneration, which a nested element would not - #6826, and #6882 for the document level.
-     * {@code transform-edm.js} parses these keys back into objects.
+     * both the mxGraph cell-value round-trip of a live editor save and the
+     * {@code .edm}-to-{@code .model} regeneration, which a nested element would not - #6826, and #6882
+     * for the document level. {@code EdmModelTransformation} (ide-template) parses these keys back into
+     * objects.
      *
      * <p>
      * {@code uniqueConstraints} is deliberately NOT here: the composite-unique-key modeler feature owns
      * it, emitting a top-level {@code <constraints>}/{@code <uniqueKey>} section that
-     * {@code transform-edm} rebuilds into {@code uniqueConstraints}. Emitting it here too would write
-     * it twice and round-trip it as a duplicate.
+     * {@code EdmModelTransformation} rebuilds into {@code uniqueConstraints}. Emitting it here too
+     * would write it twice and round-trip it as a duplicate.
      */
     // The singular "rollupGuard" is no longer emitted (#7448 made it a list) but stays here so an .edm
     // authored before that keeps round-tripping as an object rather than a JSON string.
@@ -4891,9 +4894,8 @@ public class EdmIntentGenerator implements IntentTargetGenerator {
     /**
      * Compact, non-HTML-escaping JSON for the structured {@code .edm} attributes. Compact so the value
      * carries no structural newlines (XML attribute-value normalization would turn them into spaces),
-     * and HTML-escaping is off so the {@code .edm} reads cleanly - {@code transform-edm.js}'s
-     * {@code JSON.parse} accepts either form, and the round-trip is asserted on parsed structure, not
-     * bytes.
+     * and HTML-escaping is off so the {@code .edm} reads cleanly - {@code EdmModelTransformation}
+     * accepts either form, and the round-trip is asserted on parsed structure, not bytes.
      */
     private static final Gson STRUCTURED_JSON = new GsonBuilder().disableHtmlEscaping()
                                                                  .create();

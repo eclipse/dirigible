@@ -1,0 +1,45 @@
+<model title="Countries" description="Country nomenclature (ISO 3166)" icon="globe">
+ <entities>
+  <entity name="Country" dataName="COUNTRIES_COUNTRY" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}COUNTRIES_COUNTRY&quot;" dataQuery="" type="SETTING" title="Country" caption="Manage entity Country" description="Manage entity Country" tooltip="Country" icon="/services/web/resources/unicons/globe.svg" iconName="globe" menuKey="country" menuLabel="Countries" entityLabel="Country" menuIndex="100" layoutType="MANAGE_MASTER" perspectiveName="Settings" perspectiveLabel="Settings" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/globe.svg" perspectiveOrder="1" perspectiveNavId="master-data" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="countries.Country.CountryReadOnly" roleWrite="countries.Country.CountryFullAccess">
+   <property name="Id" description="" tooltip="" dataName="COUNTRY_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Name" description="" tooltip="" dataName="COUNTRY_NAME" dataType="VARCHAR" dataNullable="false" isRequiredProperty="true" dataLength="100" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="true"></property>
+   <property name="Code2" description="" tooltip="" dataName="COUNTRY_CODE2" dataType="VARCHAR" dataNullable="true" dataLength="2" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="2" widgetIsMajor="true"></property>
+   <property name="Code3" description="" tooltip="" dataName="COUNTRY_CODE3" dataType="VARCHAR" dataNullable="true" dataLength="3" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="3" widgetIsMajor="true"></property>
+   <property name="Numeric" description="" tooltip="" dataName="COUNTRY_NUMERIC" dataType="INTEGER" dataNullable="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+  </entity>
+ </entities>
+ <perspectives>
+ </perspectives>
+ <navigations>
+ </navigations>
+ <mxGraphModel>
+  <root>
+   <mxCell id="0"/>
+   <mxCell id="1" parent="0"/>
+   <mxCell id="ent_Country" style="setting" parent="1" vertex="1">
+    <Entity name="Country" entityType="SETTING" dataName="COUNTRIES_COUNTRY" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}COUNTRIES_COUNTRY&quot;" dataQuery="" title="Country" caption="Manage entity Country" description="Manage entity Country" tooltip="Country" icon="/services/web/resources/unicons/globe.svg" iconName="globe" menuKey="country" menuLabel="Countries" entityLabel="Country" menuIndex="100" layoutType="MANAGE_MASTER" perspectiveName="Settings" perspectiveLabel="Settings" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/globe.svg" perspectiveOrder="1" perspectiveNavId="master-data" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="countries.Country.CountryReadOnly" roleWrite="countries.Country.CountryFullAccess" type="Entity" as="value"/>
+    <mxGeometry x="20" y="20" width="200" height="158" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry>
+   </mxCell>
+   <mxCell id="ent_Country_p_Id" parent="ent_Country" vertex="1" connectable="0">
+    <Property name="Id" description="" tooltip="" dataName="COUNTRY_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="28" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Country_p_Name" parent="ent_Country" vertex="1" connectable="0">
+    <Property name="Name" description="" tooltip="" dataName="COUNTRY_NAME" dataType="VARCHAR" dataNullable="false" isRequiredProperty="true" dataLength="100" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="54" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Country_p_Code2" parent="ent_Country" vertex="1" connectable="0">
+    <Property name="Code2" description="" tooltip="" dataName="COUNTRY_CODE2" dataType="VARCHAR" dataNullable="true" dataLength="2" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="2" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="80" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Country_p_Code3" parent="ent_Country" vertex="1" connectable="0">
+    <Property name="Code3" description="" tooltip="" dataName="COUNTRY_CODE3" dataType="VARCHAR" dataNullable="true" dataLength="3" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="3" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="106" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Country_p_Numeric" parent="ent_Country" vertex="1" connectable="0">
+    <Property name="Numeric" description="" tooltip="" dataName="COUNTRY_NUMERIC" dataType="INTEGER" dataNullable="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="132" width="200" height="26" as="geometry"/>
+   </mxCell>
+  </root>
+ </mxGraphModel>
+</model>

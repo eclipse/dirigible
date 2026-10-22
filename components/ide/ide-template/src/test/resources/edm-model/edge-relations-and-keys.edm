@@ -1,0 +1,40 @@
+<model>
+ <entities>
+  <entity name="Customer" dataName="CUSTOMER">
+   <property name="Id" dataName="CUSTOMER_ID" dataPrimaryKey="true"></property>
+   <property name="Code" dataName="CUSTOMER_CODE"></property>
+   <property name="Name" dataName="CUSTOMER_NAME"></property>
+   <property name="Blank" dataName=""></property>
+  </entity>
+  <entity name="Order" dataName="ORDER">
+   <property name="Id" dataName="ORDER_ID" dataPrimaryKey="true"></property>
+   <property name="Customer" dataName="ORDER_CUSTOMER" relationshipEntityPerspectiveName=""></property>
+   <property name="Owner" dataName="ORDER_OWNER" relationshipName="Order_Owner_Own" relationshipEntityName="Stale" relationshipEntityPerspectiveName="OwnPerspective" relationshipEntityPerspectiveLabel=""></property>
+   <property name="Twice" dataName="ORDER_TWICE"></property>
+  </entity>
+  <relation name="Order_Customer" type="relation" entity="Order" relationName="Order_Customer" relationshipEntityPerspectiveName="Customers" relationshipEntityPerspectiveLabel="Customer Label" property="Customer" referenced="Customer" referencedProperty="Id">
+  </relation>
+  <relation name="Order_Owner" type="relation" entity="Order" property="Owner" relationshipEntityPerspectiveName="FromRelation">
+  </relation>
+  <relation name="Order_Twice_1" entity="Order" property="Twice">
+  </relation>
+  <relation name="Order_Twice_2" entity="Order" property="Twice" referenced="Customer" relationshipEntityPerspectiveLabel="Second">
+  </relation>
+  <relation name="Ghost_Rel" entity="Ghost" property="Nope" referenced="Customer">
+  </relation>
+ </entities>
+ <constraints>
+  <uniqueKey><entity>Customer</entity><name>Customer_Code_Name</name><properties> Code , Name ,, </properties></uniqueKey>
+  <uniqueKey><entity>Customer</entity><properties>Name,Code</properties><message>Custom message</message></uniqueKey>
+  <uniqueKey><entity>Customer</entity><name>Customer_Single</name><properties>Code</properties></uniqueKey>
+  <uniqueKey><entity>Customer</entity><name>Customer_Unknown</name><properties>Code,Missing</properties></uniqueKey>
+  <uniqueKey><entity>Customer</entity><name>Customer_Blank</name><properties>Code,Blank</properties></uniqueKey>
+  <uniqueKey><entity>Order</entity><name>Order_Customer_Owner</name><properties>Customer,Owner</properties><message></message></uniqueKey>
+ </constraints>
+ <perspectives>
+  <perspective><name>Single</name><label>Single</label></perspective>
+ </perspectives>
+ <navigations>
+  <item><id>only</id><label>Only</label></item>
+ </navigations>
+</model>

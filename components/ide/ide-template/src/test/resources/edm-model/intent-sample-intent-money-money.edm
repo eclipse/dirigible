@@ -1,0 +1,51 @@
+<model title="Money" description="The reference project of the in-process unit-test slice (dirigible">
+ <entities>
+  <entity name="InvoiceLine" dataName="MONEY_INVOICE_LINE" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}MONEY_INVOICE_LINE&quot;" dataQuery="" type="PRIMARY" title="InvoiceLine" caption="Manage entity InvoiceLine" description="Manage entity InvoiceLine" tooltip="InvoiceLine" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="invoiceline" menuLabel="Invoice Lines" entityLabel="Invoice Line" menuIndex="100" layoutType="MANAGE" perspectiveName="InvoiceLine" perspectiveLabel="InvoiceLine" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="1" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="sample-intent-money.InvoiceLine.InvoiceLineReadOnly" roleWrite="sample-intent-money.InvoiceLine.InvoiceLineFullAccess" importsCode="aW1wb3J0IGN1c3RvbS5MaW5lVmF0QWN0aW9uOwo=">
+   <property name="Id" description="" tooltip="" dataName="INVOICE_LINE_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Description" description="" tooltip="" dataName="INVOICE_LINE_DESCRIPTION" dataType="VARCHAR" dataNullable="false" isRequiredProperty="true" dataLength="200" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="200" widgetIsMajor="true"></property>
+   <property name="Quantity" description="" tooltip="" dataName="INVOICE_LINE_QUANTITY" dataType="DECIMAL" dataNullable="false" isRequiredProperty="true" dataLength="16" dataPrecision="18" dataScale="3" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="16" widgetIsMajor="true"></property>
+   <property name="UnitPrice" description="" tooltip="" dataName="INVOICE_LINE_UNIT_PRICE" dataType="DECIMAL" dataNullable="false" isRequiredProperty="true" dataLength="16" dataPrecision="18" dataScale="2" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="16" widgetIsMajor="true"></property>
+   <property name="VatRate" description="" tooltip="" dataName="INVOICE_LINE_VAT_RATE" dataType="DECIMAL" dataNullable="false" isRequiredProperty="true" dataLength="16" dataPrecision="5" dataScale="2" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="16" widgetIsMajor="true"></property>
+   <property name="VatAmount" description="" tooltip="" dataName="INVOICE_LINE_VAT_AMOUNT" dataType="DECIMAL" dataNullable="true" isReadOnlyProperty="true" dataLength="16" dataPrecision="18" dataScale="2" isCalculatedProperty="true" calculatedActionOnCreate="LineVatAction" calculatedActionOnUpdate="LineVatAction" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="16" widgetIsMajor="true"></property>
+  </entity>
+ </entities>
+ <perspectives>
+  <perspective><name>InvoiceLine</name><label>InvoiceLine</label><icon>/services/web/resources/unicons/file.svg</icon><order>1</order></perspective>
+ </perspectives>
+ <navigations>
+ </navigations>
+ <mxGraphModel>
+  <root>
+   <mxCell id="0"/>
+   <mxCell id="1" parent="0"/>
+   <mxCell id="ent_InvoiceLine" style="entity" parent="1" vertex="1">
+    <Entity name="InvoiceLine" dataName="MONEY_INVOICE_LINE" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}MONEY_INVOICE_LINE&quot;" dataQuery="" title="InvoiceLine" caption="Manage entity InvoiceLine" description="Manage entity InvoiceLine" tooltip="InvoiceLine" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="invoiceline" menuLabel="Invoice Lines" entityLabel="Invoice Line" menuIndex="100" layoutType="MANAGE" perspectiveName="InvoiceLine" perspectiveLabel="InvoiceLine" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="1" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="sample-intent-money.InvoiceLine.InvoiceLineReadOnly" roleWrite="sample-intent-money.InvoiceLine.InvoiceLineFullAccess" importsCode="aW1wb3J0IGN1c3RvbS5MaW5lVmF0QWN0aW9uOwo=" type="Entity" as="value"/>
+    <mxGeometry x="20" y="20" width="200" height="184" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry>
+   </mxCell>
+   <mxCell id="ent_InvoiceLine_p_Id" parent="ent_InvoiceLine" vertex="1" connectable="0">
+    <Property name="Id" description="" tooltip="" dataName="INVOICE_LINE_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="28" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_InvoiceLine_p_Description" parent="ent_InvoiceLine" vertex="1" connectable="0">
+    <Property name="Description" description="" tooltip="" dataName="INVOICE_LINE_DESCRIPTION" dataType="VARCHAR" dataNullable="false" isRequiredProperty="true" dataLength="200" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="200" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="54" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_InvoiceLine_p_Quantity" parent="ent_InvoiceLine" vertex="1" connectable="0">
+    <Property name="Quantity" description="" tooltip="" dataName="INVOICE_LINE_QUANTITY" dataType="DECIMAL" dataNullable="false" isRequiredProperty="true" dataLength="16" dataPrecision="18" dataScale="3" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="16" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="80" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_InvoiceLine_p_UnitPrice" parent="ent_InvoiceLine" vertex="1" connectable="0">
+    <Property name="UnitPrice" description="" tooltip="" dataName="INVOICE_LINE_UNIT_PRICE" dataType="DECIMAL" dataNullable="false" isRequiredProperty="true" dataLength="16" dataPrecision="18" dataScale="2" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="16" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="106" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_InvoiceLine_p_VatRate" parent="ent_InvoiceLine" vertex="1" connectable="0">
+    <Property name="VatRate" description="" tooltip="" dataName="INVOICE_LINE_VAT_RATE" dataType="DECIMAL" dataNullable="false" isRequiredProperty="true" dataLength="16" dataPrecision="5" dataScale="2" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="16" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="132" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_InvoiceLine_p_VatAmount" parent="ent_InvoiceLine" vertex="1" connectable="0">
+    <Property name="VatAmount" description="" tooltip="" dataName="INVOICE_LINE_VAT_AMOUNT" dataType="DECIMAL" dataNullable="true" isReadOnlyProperty="true" dataLength="16" dataPrecision="18" dataScale="2" isCalculatedProperty="true" calculatedActionOnCreate="LineVatAction" calculatedActionOnUpdate="LineVatAction" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="16" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="158" width="200" height="26" as="geometry"/>
+   </mxCell>
+  </root>
+ </mxGraphModel>
+</model>

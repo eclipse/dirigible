@@ -1,0 +1,70 @@
+<model title="Meta" description="Round-trip fixture for the document-level metadata" icon="receipt" languages="[&quot;en&quot;,&quot;bg&quot;]" widgets="[{&quot;name&quot;:&quot;OpenClaims&quot;,&quot;kind&quot;:&quot;kpi&quot;,&quot;url&quot;:&quot;/services/js/meta/custom/open-claims.js&quot;,&quot;label&quot;:&quot;Open Claims&quot;,&quot;tId&quot;:&quot;widgetOpenClaims&quot;,&quot;icon&quot;:&quot;activity&quot;}]" customActionLabels="{&quot;VoidClaim&quot;:&quot;Void&quot;}" processTaskLabels="{&quot;ClaimApproval&quot;:&quot;Claim Approval&quot;,&quot;review&quot;:&quot;Review&quot;}">
+ <entities>
+  <entity name="ClaimStatus" dataName="META_CLAIM_STATUS" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}META_CLAIM_STATUS&quot;" dataQuery="" type="SETTING" title="ClaimStatus" caption="Manage entity ClaimStatus" description="Manage entity ClaimStatus" tooltip="ClaimStatus" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="claimstatus" menuLabel="Claim Statuses" entityLabel="Claim Status" menuIndex="100" layoutType="MANAGE_MASTER" perspectiveName="Settings" perspectiveLabel="Settings" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="1" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="edm-roundtrip-meta.ClaimStatus.ClaimStatusReadOnly" roleWrite="edm-roundtrip-meta.ClaimStatus.ClaimStatusFullAccess">
+   <property name="Id" description="" tooltip="" dataName="CLAIM_STATUS_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Name" description="" tooltip="" dataName="CLAIM_STATUS_NAME" dataType="VARCHAR" dataNullable="false" isRequiredProperty="true" dataLength="40" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="40" widgetIsMajor="true"></property>
+  </entity>
+  <entity name="Claim" dataName="META_CLAIM" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}META_CLAIM&quot;" dataQuery="" type="PRIMARY" title="Claim" caption="Manage entity Claim" description="Manage entity Claim" tooltip="Claim" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="claim" menuLabel="Claims" entityLabel="Claim" menuIndex="100" layoutType="MANAGE" perspectiveName="Claim" perspectiveLabel="Claim" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="1" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="edm-roundtrip-meta.Claim.ClaimReadOnly" roleWrite="edm-roundtrip-meta.Claim.ClaimFullAccess" workflowStatusProperty="Status" workflowStatusValues="9" workflowStatusInitial="1">
+   <property name="Id" description="" tooltip="" dataName="CLAIM_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Number" description="" tooltip="" dataName="CLAIM_NUMBER" dataType="VARCHAR" dataNullable="true" dataLength="40" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="40" widgetIsMajor="true"></property>
+   <property name="FiledOn" description="" tooltip="" dataName="CLAIM_FILED_ON" dataType="DATE" dataNullable="true" auditType="NONE" widgetType="DATE" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="ProcessId" description="Process instance started for this record" tooltip="" dataName="CLAIM_PROCESS_ID" dataType="VARCHAR" dataNullable="true" dataLength="100" auditType="NONE" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="false"></property>
+   <property name="ProcessIds" description="Processes started for this record, as Process=instanceId pairs" tooltip="" dataName="CLAIM_PROCESS_IDS" dataType="VARCHAR" dataNullable="true" dataLength="1000" auditType="NONE" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="1000" widgetIsMajor="false"></property>
+   <property name="Status" description="" tooltip="" dataName="CLAIM_STATUS" dataType="INTEGER" dataNullable="true" dataDefaultValue="1" auditType="NONE" relationshipType="ASSOCIATION" relationshipCardinality="n_1" relationshipName="Claim_Status" relationshipEntityName="ClaimStatus" relationshipEntityPerspectiveName="Settings" relationshipEntityPerspectiveLabel="Entities" whenTargetDeleted="restrict" widgetType="DOCUMENT_STATUS" widgetSize="" widgetLength="20" widgetIsMajor="true" widgetDropDownKey="Id" widgetDropDownValue="Name" widgetStatusSteps="1,3"></property>
+  </entity>
+  <relation name="Claim_Status" type="relation" entity="Claim" relationName="Claim_Status" relationshipEntityPerspectiveName="Settings" relationshipEntityPerspectiveLabel="Entities" property="Status" referenced="ClaimStatus" referencedProperty="Id">
+  </relation>
+ </entities>
+ <perspectives>
+  <perspective><name>Claim</name><label>Claim</label><icon>/services/web/resources/unicons/file.svg</icon><order>1</order></perspective>
+ </perspectives>
+ <navigations>
+ </navigations>
+ <mxGraphModel>
+  <root>
+   <mxCell id="0"/>
+   <mxCell id="1" parent="0"/>
+   <mxCell id="ent_ClaimStatus" style="setting" parent="1" vertex="1">
+    <Entity name="ClaimStatus" entityType="SETTING" dataName="META_CLAIM_STATUS" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}META_CLAIM_STATUS&quot;" dataQuery="" title="ClaimStatus" caption="Manage entity ClaimStatus" description="Manage entity ClaimStatus" tooltip="ClaimStatus" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="claimstatus" menuLabel="Claim Statuses" entityLabel="Claim Status" menuIndex="100" layoutType="MANAGE_MASTER" perspectiveName="Settings" perspectiveLabel="Settings" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="1" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="edm-roundtrip-meta.ClaimStatus.ClaimStatusReadOnly" roleWrite="edm-roundtrip-meta.ClaimStatus.ClaimStatusFullAccess" type="Entity" as="value"/>
+    <mxGeometry x="20" y="20" width="200" height="80" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry>
+   </mxCell>
+   <mxCell id="ent_ClaimStatus_p_Id" parent="ent_ClaimStatus" vertex="1" connectable="0">
+    <Property name="Id" description="" tooltip="" dataName="CLAIM_STATUS_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="28" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_ClaimStatus_p_Name" parent="ent_ClaimStatus" vertex="1" connectable="0">
+    <Property name="Name" description="" tooltip="" dataName="CLAIM_STATUS_NAME" dataType="VARCHAR" dataNullable="false" isRequiredProperty="true" dataLength="40" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="40" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="54" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Claim" style="entity" parent="1" vertex="1">
+    <Entity name="Claim" dataName="META_CLAIM" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}META_CLAIM&quot;" dataQuery="" title="Claim" caption="Manage entity Claim" description="Manage entity Claim" tooltip="Claim" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="claim" menuLabel="Claims" entityLabel="Claim" menuIndex="100" layoutType="MANAGE" perspectiveName="Claim" perspectiveLabel="Claim" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="1" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="edm-roundtrip-meta.Claim.ClaimReadOnly" roleWrite="edm-roundtrip-meta.Claim.ClaimFullAccess" workflowStatusProperty="Status" workflowStatusValues="9" workflowStatusInitial="1" type="Entity" as="value"/>
+    <mxGeometry x="300" y="20" width="200" height="184" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry>
+   </mxCell>
+   <mxCell id="ent_Claim_p_Id" parent="ent_Claim" vertex="1" connectable="0">
+    <Property name="Id" description="" tooltip="" dataName="CLAIM_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="28" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Claim_p_Number" parent="ent_Claim" vertex="1" connectable="0">
+    <Property name="Number" description="" tooltip="" dataName="CLAIM_NUMBER" dataType="VARCHAR" dataNullable="true" dataLength="40" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="40" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="54" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Claim_p_FiledOn" parent="ent_Claim" vertex="1" connectable="0">
+    <Property name="FiledOn" description="" tooltip="" dataName="CLAIM_FILED_ON" dataType="DATE" dataNullable="true" auditType="NONE" widgetType="DATE" widgetSize="" widgetLength="20" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="80" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Claim_p_ProcessId" parent="ent_Claim" vertex="1" connectable="0">
+    <Property name="ProcessId" description="Process instance started for this record" tooltip="" dataName="CLAIM_PROCESS_ID" dataType="VARCHAR" dataNullable="true" dataLength="100" auditType="NONE" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="false" as="value"/>
+    <mxGeometry y="106" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Claim_p_ProcessIds" parent="ent_Claim" vertex="1" connectable="0">
+    <Property name="ProcessIds" description="Processes started for this record, as Process=instanceId pairs" tooltip="" dataName="CLAIM_PROCESS_IDS" dataType="VARCHAR" dataNullable="true" dataLength="1000" auditType="NONE" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="1000" widgetIsMajor="false" as="value"/>
+    <mxGeometry y="132" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Claim_p_Status" parent="ent_Claim" vertex="1" connectable="0">
+    <Property name="Status" description="" tooltip="" dataName="CLAIM_STATUS" dataType="INTEGER" dataNullable="true" dataDefaultValue="1" auditType="NONE" relationshipType="ASSOCIATION" relationshipCardinality="n_1" relationshipName="Claim_Status" relationshipEntityName="ClaimStatus" relationshipEntityPerspectiveName="Settings" relationshipEntityPerspectiveLabel="Entities" whenTargetDeleted="restrict" widgetType="DOCUMENT_STATUS" widgetSize="" widgetLength="20" widgetIsMajor="true" widgetDropDownKey="Id" widgetDropDownValue="Name" widgetStatusSteps="1,3" as="value"/>
+    <mxGeometry y="158" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="edge_Claim_Status" parent="1" source="ent_Claim_p_Status" target="ent_ClaimStatus_p_Id" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+  </root>
+ </mxGraphModel>
+</model>

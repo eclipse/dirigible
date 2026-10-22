@@ -1,0 +1,11 @@
+<model>
+ <entities>
+  <entity name="Item" dataName="ITEM" uniqueConstraints="already-a-string">
+   <property name="A" dataName="ITEM_A"></property>
+   <property name="B" dataName="ITEM_B"></property>
+  </entity>
+ </entities>
+ <constraints>
+  <uniqueKey><entity>Item</entity><name>Item_A_B</name><properties>A,B</properties></uniqueKey>
+ </constraints>
+</model>

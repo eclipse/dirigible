@@ -1,0 +1,86 @@
+<model title="Upgrade" processTaskLabels="{&quot;TicketReview&quot;:&quot;Ticket Review&quot;,&quot;review&quot;:&quot;Review&quot;}">
+ <entities>
+  <entity name="Customer" dataName="UPGRADE_CUSTOMER" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}UPGRADE_CUSTOMER&quot;" dataQuery="" type="PRIMARY" title="Customer" caption="Manage entity Customer" description="Manage entity Customer" tooltip="Customer" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="customer" menuLabel="Customers" entityLabel="Customer" menuIndex="100" layoutType="MANAGE" perspectiveName="Customer" perspectiveLabel="Customer" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="1" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="UpgradeFromPreviousReleaseIT.Customer.CustomerReadOnly" roleWrite="UpgradeFromPreviousReleaseIT.Customer.CustomerFullAccess">
+   <property name="Id" description="" tooltip="" dataName="CUSTOMER_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Name" description="" tooltip="" dataName="CUSTOMER_NAME" dataType="VARCHAR" dataNullable="true" dataLength="100" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="true"></property>
+  </entity>
+  <entity name="Ticket" dataName="UPGRADE_TICKET" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}UPGRADE_TICKET&quot;" dataQuery="" type="PRIMARY" title="Ticket" caption="Manage entity Ticket" description="Manage entity Ticket" tooltip="Ticket" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="ticket" menuLabel="Tickets" entityLabel="Ticket" menuIndex="100" layoutType="MANAGE" perspectiveName="Ticket" perspectiveLabel="Ticket" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="2" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="UpgradeFromPreviousReleaseIT.Ticket.TicketReadOnly" roleWrite="UpgradeFromPreviousReleaseIT.Ticket.TicketFullAccess">
+   <property name="Id" description="" tooltip="" dataName="TICKET_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Subject" description="" tooltip="" dataName="TICKET_SUBJECT" dataType="VARCHAR" dataNullable="true" dataLength="100" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="true"></property>
+   <property name="ProcessId" description="Process instance started for this record" tooltip="" dataName="TICKET_PROCESS_ID" dataType="VARCHAR" dataNullable="true" dataLength="100" auditType="NONE" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="false"></property>
+   <property name="ProcessIds" description="Processes started for this record, as Process=instanceId pairs" tooltip="" dataName="TICKET_PROCESS_IDS" dataType="VARCHAR" dataNullable="true" dataLength="1000" auditType="NONE" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="1000" widgetIsMajor="false"></property>
+   <property name="Customer" description="" tooltip="" dataName="TICKET_CUSTOMER" dataType="INTEGER" dataNullable="true" auditType="NONE" relationshipType="ASSOCIATION" relationshipCardinality="n_1" relationshipName="Ticket_Customer" relationshipEntityName="Customer" relationshipEntityPerspectiveName="Customer" relationshipEntityPerspectiveLabel="Entities" whenTargetDeleted="restrict" widgetType="DROPDOWN" widgetSize="" widgetLength="20" widgetIsMajor="true" widgetDropDownKey="Id" widgetDropDownValue="Name"></property>
+  </entity>
+  <relation name="Ticket_Customer" type="relation" entity="Ticket" relationName="Ticket_Customer" relationshipEntityPerspectiveName="Customer" relationshipEntityPerspectiveLabel="Entities" property="Customer" referenced="Customer" referencedProperty="Id">
+  </relation>
+  <entity name="TicketDigest" dataName="UPGRADE_TICKET_DIGEST" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}UPGRADE_TICKET_DIGEST&quot;" dataQuery="" type="PRIMARY" title="TicketDigest" caption="Manage entity TicketDigest" description="Manage entity TicketDigest" tooltip="TicketDigest" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="ticketdigest" menuLabel="Ticket Digests" entityLabel="Ticket Digest" menuIndex="100" layoutType="MANAGE" perspectiveName="TicketDigest" perspectiveLabel="TicketDigest" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="3" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="UpgradeFromPreviousReleaseIT.TicketDigest.TicketDigestReadOnly" roleWrite="UpgradeFromPreviousReleaseIT.TicketDigest.TicketDigestFullAccess">
+   <property name="Id" description="" tooltip="" dataName="TICKET_DIGEST_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Ticket" description="" tooltip="" dataName="TICKET_DIGEST_TICKET" dataType="INTEGER" dataNullable="true" auditType="NONE" relationshipType="ASSOCIATION" relationshipCardinality="n_1" relationshipName="TicketDigest_Ticket" relationshipEntityName="Ticket" relationshipEntityPerspectiveName="Ticket" relationshipEntityPerspectiveLabel="Entities" whenTargetDeleted="restrict" widgetType="DROPDOWN" widgetSize="" widgetLength="20" widgetIsMajor="true" widgetDropDownKey="Id" widgetDropDownValue="Subject"></property>
+  </entity>
+  <relation name="TicketDigest_Ticket" type="relation" entity="TicketDigest" relationName="TicketDigest_Ticket" relationshipEntityPerspectiveName="Ticket" relationshipEntityPerspectiveLabel="Entities" property="Ticket" referenced="Ticket" referencedProperty="Id">
+  </relation>
+ </entities>
+ <perspectives>
+  <perspective><name>Customer</name><label>Customer</label><icon>/services/web/resources/unicons/file.svg</icon><order>1</order></perspective>
+  <perspective><name>Ticket</name><label>Ticket</label><icon>/services/web/resources/unicons/file.svg</icon><order>2</order></perspective>
+  <perspective><name>TicketDigest</name><label>TicketDigest</label><icon>/services/web/resources/unicons/file.svg</icon><order>3</order></perspective>
+ </perspectives>
+ <navigations>
+ </navigations>
+ <mxGraphModel>
+  <root>
+   <mxCell id="0"/>
+   <mxCell id="1" parent="0"/>
+   <mxCell id="ent_Customer" style="entity" parent="1" vertex="1">
+    <Entity name="Customer" dataName="UPGRADE_CUSTOMER" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}UPGRADE_CUSTOMER&quot;" dataQuery="" title="Customer" caption="Manage entity Customer" description="Manage entity Customer" tooltip="Customer" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="customer" menuLabel="Customers" entityLabel="Customer" menuIndex="100" layoutType="MANAGE" perspectiveName="Customer" perspectiveLabel="Customer" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="1" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="UpgradeFromPreviousReleaseIT.Customer.CustomerReadOnly" roleWrite="UpgradeFromPreviousReleaseIT.Customer.CustomerFullAccess" type="Entity" as="value"/>
+    <mxGeometry x="20" y="20" width="200" height="80" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry>
+   </mxCell>
+   <mxCell id="ent_Customer_p_Id" parent="ent_Customer" vertex="1" connectable="0">
+    <Property name="Id" description="" tooltip="" dataName="CUSTOMER_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="28" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Customer_p_Name" parent="ent_Customer" vertex="1" connectable="0">
+    <Property name="Name" description="" tooltip="" dataName="CUSTOMER_NAME" dataType="VARCHAR" dataNullable="true" dataLength="100" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="54" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Ticket" style="entity" parent="1" vertex="1">
+    <Entity name="Ticket" dataName="UPGRADE_TICKET" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}UPGRADE_TICKET&quot;" dataQuery="" title="Ticket" caption="Manage entity Ticket" description="Manage entity Ticket" tooltip="Ticket" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="ticket" menuLabel="Tickets" entityLabel="Ticket" menuIndex="100" layoutType="MANAGE" perspectiveName="Ticket" perspectiveLabel="Ticket" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="2" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="UpgradeFromPreviousReleaseIT.Ticket.TicketReadOnly" roleWrite="UpgradeFromPreviousReleaseIT.Ticket.TicketFullAccess" type="Entity" as="value"/>
+    <mxGeometry x="300" y="20" width="200" height="158" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry>
+   </mxCell>
+   <mxCell id="ent_Ticket_p_Id" parent="ent_Ticket" vertex="1" connectable="0">
+    <Property name="Id" description="" tooltip="" dataName="TICKET_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="28" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Ticket_p_Subject" parent="ent_Ticket" vertex="1" connectable="0">
+    <Property name="Subject" description="" tooltip="" dataName="TICKET_SUBJECT" dataType="VARCHAR" dataNullable="true" dataLength="100" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="54" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Ticket_p_ProcessId" parent="ent_Ticket" vertex="1" connectable="0">
+    <Property name="ProcessId" description="Process instance started for this record" tooltip="" dataName="TICKET_PROCESS_ID" dataType="VARCHAR" dataNullable="true" dataLength="100" auditType="NONE" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="false" as="value"/>
+    <mxGeometry y="80" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Ticket_p_ProcessIds" parent="ent_Ticket" vertex="1" connectable="0">
+    <Property name="ProcessIds" description="Processes started for this record, as Process=instanceId pairs" tooltip="" dataName="TICKET_PROCESS_IDS" dataType="VARCHAR" dataNullable="true" dataLength="1000" auditType="NONE" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="1000" widgetIsMajor="false" as="value"/>
+    <mxGeometry y="106" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Ticket_p_Customer" parent="ent_Ticket" vertex="1" connectable="0">
+    <Property name="Customer" description="" tooltip="" dataName="TICKET_CUSTOMER" dataType="INTEGER" dataNullable="true" auditType="NONE" relationshipType="ASSOCIATION" relationshipCardinality="n_1" relationshipName="Ticket_Customer" relationshipEntityName="Customer" relationshipEntityPerspectiveName="Customer" relationshipEntityPerspectiveLabel="Entities" whenTargetDeleted="restrict" widgetType="DROPDOWN" widgetSize="" widgetLength="20" widgetIsMajor="true" widgetDropDownKey="Id" widgetDropDownValue="Name" as="value"/>
+    <mxGeometry y="132" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_TicketDigest" style="entity" parent="1" vertex="1">
+    <Entity name="TicketDigest" dataName="UPGRADE_TICKET_DIGEST" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}UPGRADE_TICKET_DIGEST&quot;" dataQuery="" title="TicketDigest" caption="Manage entity TicketDigest" description="Manage entity TicketDigest" tooltip="TicketDigest" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="ticketdigest" menuLabel="Ticket Digests" entityLabel="Ticket Digest" menuIndex="100" layoutType="MANAGE" perspectiveName="TicketDigest" perspectiveLabel="TicketDigest" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="3" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="UpgradeFromPreviousReleaseIT.TicketDigest.TicketDigestReadOnly" roleWrite="UpgradeFromPreviousReleaseIT.TicketDigest.TicketDigestFullAccess" type="Entity" as="value"/>
+    <mxGeometry x="580" y="20" width="200" height="80" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry>
+   </mxCell>
+   <mxCell id="ent_TicketDigest_p_Id" parent="ent_TicketDigest" vertex="1" connectable="0">
+    <Property name="Id" description="" tooltip="" dataName="TICKET_DIGEST_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="28" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_TicketDigest_p_Ticket" parent="ent_TicketDigest" vertex="1" connectable="0">
+    <Property name="Ticket" description="" tooltip="" dataName="TICKET_DIGEST_TICKET" dataType="INTEGER" dataNullable="true" auditType="NONE" relationshipType="ASSOCIATION" relationshipCardinality="n_1" relationshipName="TicketDigest_Ticket" relationshipEntityName="Ticket" relationshipEntityPerspectiveName="Ticket" relationshipEntityPerspectiveLabel="Entities" whenTargetDeleted="restrict" widgetType="DROPDOWN" widgetSize="" widgetLength="20" widgetIsMajor="true" widgetDropDownKey="Id" widgetDropDownValue="Subject" as="value"/>
+    <mxGeometry y="54" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="edge_Ticket_Customer" parent="1" source="ent_Ticket_p_Customer" target="ent_Customer_p_Id" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+   <mxCell id="edge_TicketDigest_Ticket" parent="1" source="ent_TicketDigest_p_Ticket" target="ent_Ticket_p_Id" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+  </root>
+ </mxGraphModel>
+</model>

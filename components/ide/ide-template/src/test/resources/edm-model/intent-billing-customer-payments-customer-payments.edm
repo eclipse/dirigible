@@ -1,0 +1,139 @@
+<model title="Customer Payments" description="Customer payments" icon="wallet">
+ <entities>
+  <entity name="CustomerPayment" dataName="CUSTOMER_PAYMENTS_CUSTOMER_PAYMENT" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}CUSTOMER_PAYMENTS_CUSTOMER_PAYMENT&quot;" dataQuery="" type="PRIMARY" title="CustomerPayment" caption="Manage entity CustomerPayment" description="Manage entity CustomerPayment" tooltip="CustomerPayment" icon="/services/web/resources/unicons/wallet.svg" iconName="wallet" menuKey="customerpayment" menuLabel="Customer Payments" entityLabel="Customer Payment" menuIndex="100" layoutType="MANAGE" perspectiveName="CustomerPayment" perspectiveLabel="CustomerPayment" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/wallet.svg" perspectiveOrder="1" perspectiveNavId="payments" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="customer-payments.CustomerPayment.CustomerPaymentReadOnly" roleWrite="customer-payments.CustomerPayment.CustomerPaymentFullAccess">
+   <property name="Id" description="" tooltip="" dataName="CUSTOMER_PAYMENT_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Name" description="" tooltip="" dataName="CUSTOMER_PAYMENT_NAME" dataType="VARCHAR" dataNullable="false" isRequiredProperty="true" dataLength="100" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="true"></property>
+   <property name="Date" description="" tooltip="" dataName="CUSTOMER_PAYMENT_DATE" dataType="DATE" dataNullable="false" isRequiredProperty="true" auditType="NONE" widgetType="DATE" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Valor" description="" tooltip="" dataName="CUSTOMER_PAYMENT_VALOR" dataType="DATE" dataNullable="true" auditType="NONE" widgetType="DATE" widgetSize="" widgetLength="20" widgetIsMajor="true"></property>
+   <property name="Amount" description="" tooltip="" dataName="CUSTOMER_PAYMENT_AMOUNT" dataType="DECIMAL" dataNullable="false" isRequiredProperty="true" dataLength="16" dataPrecision="18" dataScale="2" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="16" widgetIsMajor="true"></property>
+   <property name="CounterpartyIBAN" description="" tooltip="" dataName="CUSTOMER_PAYMENT_COUNTERPARTY_IBAN" dataType="VARCHAR" dataNullable="true" dataLength="34" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="34" widgetIsMajor="true"></property>
+   <property name="CounterpartyName" description="" tooltip="" dataName="CUSTOMER_PAYMENT_COUNTERPARTY_NAME" dataType="VARCHAR" dataNullable="true" dataLength="200" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="200" widgetIsMajor="true"></property>
+   <property name="Uuid" description="" tooltip="" dataName="CUSTOMER_PAYMENT_UUID" dataType="VARCHAR" dataNullable="true" isReadOnlyProperty="true" generatedUuid="true" dataLength="36" dataUnique="true" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="36" widgetIsMajor="true"></property>
+   <property name="Reason" description="" tooltip="" dataName="CUSTOMER_PAYMENT_REASON" dataType="VARCHAR" dataNullable="true" dataLength="200" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="200" widgetIsMajor="true"></property>
+   <property name="Description" description="" tooltip="" dataName="CUSTOMER_PAYMENT_DESCRIPTION" dataType="VARCHAR" dataNullable="true" dataLength="4000" auditType="NONE" widgetType="TEXTAREA" widgetSize="" widgetLength="4000" widgetIsMajor="true"></property>
+   <property name="CreatedAt" description="" tooltip="" dataName="CUSTOMER_PAYMENT_CREATED_AT" dataType="TIMESTAMP" dataNullable="true" auditType="CREATED_AT" isReadOnlyProperty="true" widgetType="DATETIME-LOCAL" widgetSize="" widgetLength="20" widgetIsMajor="false"></property>
+   <property name="CreatedBy" description="" tooltip="" dataName="CUSTOMER_PAYMENT_CREATED_BY" dataType="VARCHAR" dataNullable="true" dataLength="128" auditType="CREATED_BY" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="128" widgetIsMajor="false"></property>
+   <property name="UpdatedAt" description="" tooltip="" dataName="CUSTOMER_PAYMENT_UPDATED_AT" dataType="TIMESTAMP" dataNullable="true" auditType="UPDATED_AT" isReadOnlyProperty="true" widgetType="DATETIME-LOCAL" widgetSize="" widgetLength="20" widgetIsMajor="false"></property>
+   <property name="UpdatedBy" description="" tooltip="" dataName="CUSTOMER_PAYMENT_UPDATED_BY" dataType="VARCHAR" dataNullable="true" dataLength="128" auditType="UPDATED_BY" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="128" widgetIsMajor="false"></property>
+   <property name="Customer" description="" tooltip="" dataName="CUSTOMER_PAYMENT_CUSTOMER" dataType="INTEGER" dataNullable="false" isRequiredProperty="true" auditType="NONE" relationshipType="ASSOCIATION" relationshipCardinality="n_1" relationshipName="CustomerPayment_Customer" relationshipEntityName="Customer" relationshipEntityPerspectiveName="Customer" relationshipEntityPerspectiveLabel="Entities" widgetType="DROPDOWN" widgetSize="" widgetLength="20" widgetIsMajor="true" widgetDropDownKey="Id" widgetDropDownValue="Name" whenTargetDeleted="restrict"></property>
+   <property name="Currency" description="" tooltip="" dataName="CUSTOMER_PAYMENT_CURRENCY" dataType="INTEGER" dataNullable="true" auditType="NONE" relationshipType="ASSOCIATION" relationshipCardinality="n_1" relationshipName="CustomerPayment_Currency" relationshipEntityName="Currency" relationshipEntityPerspectiveName="Settings" relationshipEntityPerspectiveLabel="Entities" widgetType="DROPDOWN" widgetSize="" widgetLength="20" widgetIsMajor="true" widgetDropDownKey="Id" widgetDropDownValue="Name" whenTargetDeleted="restrict"></property>
+  </entity>
+  <relation name="CustomerPayment_Customer" type="relation" entity="CustomerPayment" relationName="CustomerPayment_Customer" relationshipEntityPerspectiveName="Customer" relationshipEntityPerspectiveLabel="Entities" property="Customer" referenced="Customer" referencedProperty="Id">
+  </relation>
+  <relation name="CustomerPayment_Currency" type="relation" entity="CustomerPayment" relationName="CustomerPayment_Currency" relationshipEntityPerspectiveName="Settings" relationshipEntityPerspectiveLabel="Entities" property="Currency" referenced="Currency" referencedProperty="Id">
+  </relation>
+  <entity name="Customer" dataName="CUSTOMERS_CUSTOMER" dataCount="" dataQuery="" type="PROJECTION" title="Customer" caption="Projection of Customer" description="Cross-model reference to Customer owned by customers" tooltip="Customer" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="customer" menuLabel="Customers" menuIndex="100" layoutType="" perspectiveName="" perspectiveLabel="" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="0" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="false" projectionReferencedModel="/customers/customers.model" projectionReferencedEntity="Customer">
+   <property name="Id" description="" tooltip="" dataName="CUSTOMER_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" auditType="NONE" widgetType="NUMBER" widgetIsMajor="false"></property>
+   <property name="Name" description="" tooltip="" dataName="CUSTOMER_NAME" dataType="VARCHAR" dataNullable="true" auditType="NONE" widgetType="TEXTBOX" widgetIsMajor="true"></property>
+  </entity>
+  <entity name="Currency" dataName="CURRENCIES_CURRENCY" dataCount="" dataQuery="" type="PROJECTION" title="Currency" caption="Projection of Currency" description="Cross-model reference to Currency owned by currencies" tooltip="Currency" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="currency" menuLabel="Currencies" menuIndex="100" layoutType="" perspectiveName="" perspectiveLabel="" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="0" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="false" projectionReferencedModel="/currencies/currencies.model" projectionReferencedEntity="Currency">
+   <property name="Id" description="" tooltip="" dataName="CURRENCY_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" auditType="NONE" widgetType="NUMBER" widgetIsMajor="false"></property>
+   <property name="Name" description="" tooltip="" dataName="CURRENCY_NAME" dataType="VARCHAR" dataNullable="true" auditType="NONE" widgetType="TEXTBOX" widgetIsMajor="true"></property>
+  </entity>
+ </entities>
+ <perspectives>
+  <perspective><name>CustomerPayment</name><label>CustomerPayment</label><icon>/services/web/resources/unicons/wallet.svg</icon><order>1</order></perspective>
+ </perspectives>
+ <navigations>
+ </navigations>
+ <mxGraphModel>
+  <root>
+   <mxCell id="0"/>
+   <mxCell id="1" parent="0"/>
+   <mxCell id="ent_CustomerPayment" style="entity" parent="1" vertex="1">
+    <Entity name="CustomerPayment" dataName="CUSTOMER_PAYMENTS_CUSTOMER_PAYMENT" dataCount="SELECT COUNT(*) AS COUNT FROM &quot;${tablePrefix}CUSTOMER_PAYMENTS_CUSTOMER_PAYMENT&quot;" dataQuery="" title="CustomerPayment" caption="Manage entity CustomerPayment" description="Manage entity CustomerPayment" tooltip="CustomerPayment" icon="/services/web/resources/unicons/wallet.svg" iconName="wallet" menuKey="customerpayment" menuLabel="Customer Payments" entityLabel="Customer Payment" menuIndex="100" layoutType="MANAGE" perspectiveName="CustomerPayment" perspectiveLabel="CustomerPayment" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/wallet.svg" perspectiveOrder="1" perspectiveNavId="payments" perspectiveRole="" generateReport="false" generateDefaultRoles="true" roleRead="customer-payments.CustomerPayment.CustomerPaymentReadOnly" roleWrite="customer-payments.CustomerPayment.CustomerPaymentFullAccess" type="Entity" as="value"/>
+    <mxGeometry x="20" y="20" width="200" height="444" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry>
+   </mxCell>
+   <mxCell id="ent_CustomerPayment_p_Id" parent="ent_CustomerPayment" vertex="1" connectable="0">
+    <Property name="Id" description="" tooltip="" dataName="CUSTOMER_PAYMENT_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" dataAutoIncrement="true" dataLength="20" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="20" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="28" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_CustomerPayment_p_Name" parent="ent_CustomerPayment" vertex="1" connectable="0">
+    <Property name="Name" description="" tooltip="" dataName="CUSTOMER_PAYMENT_NAME" dataType="VARCHAR" dataNullable="false" isRequiredProperty="true" dataLength="100" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="100" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="54" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_CustomerPayment_p_Date" parent="ent_CustomerPayment" vertex="1" connectable="0">
+    <Property name="Date" description="" tooltip="" dataName="CUSTOMER_PAYMENT_DATE" dataType="DATE" dataNullable="false" isRequiredProperty="true" auditType="NONE" widgetType="DATE" widgetSize="" widgetLength="20" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="80" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_CustomerPayment_p_Valor" parent="ent_CustomerPayment" vertex="1" connectable="0">
+    <Property name="Valor" description="" tooltip="" dataName="CUSTOMER_PAYMENT_VALOR" dataType="DATE" dataNullable="true" auditType="NONE" widgetType="DATE" widgetSize="" widgetLength="20" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="106" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_CustomerPayment_p_Amount" parent="ent_CustomerPayment" vertex="1" connectable="0">
+    <Property name="Amount" description="" tooltip="" dataName="CUSTOMER_PAYMENT_AMOUNT" dataType="DECIMAL" dataNullable="false" isRequiredProperty="true" dataLength="16" dataPrecision="18" dataScale="2" auditType="NONE" widgetType="NUMBER" widgetSize="" widgetLength="16" widgetIsMajor="true" dataNotNull="true" as="value"/>
+    <mxGeometry y="132" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_CustomerPayment_p_CounterpartyIBAN" parent="ent_CustomerPayment" vertex="1" connectable="0">
+    <Property name="CounterpartyIBAN" description="" tooltip="" dataName="CUSTOMER_PAYMENT_COUNTERPARTY_IBAN" dataType="VARCHAR" dataNullable="true" dataLength="34" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="34" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="158" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_CustomerPayment_p_CounterpartyName" parent="ent_CustomerPayment" vertex="1" connectable="0">
+    <Property name="CounterpartyName" description="" tooltip="" dataName="CUSTOMER_PAYMENT_COUNTERPARTY_NAME" dataType="VARCHAR" dataNullable="true" dataLength="200" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="200" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="184" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_CustomerPayment_p_Uuid" parent="ent_CustomerPayment" vertex="1" connectable="0">
+    <Property name="Uuid" description="" tooltip="" dataName="CUSTOMER_PAYMENT_UUID" dataType="VARCHAR" dataNullable="true" isReadOnlyProperty="true" generatedUuid="true" dataLength="36" dataUnique="true" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="36" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="210" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_CustomerPayment_p_Reason" parent="ent_CustomerPayment" vertex="1" connectable="0">
+    <Property name="Reason" description="" tooltip="" dataName="CUSTOMER_PAYMENT_REASON" dataType="VARCHAR" dataNullable="true" dataLength="200" auditType="NONE" widgetType="TEXTBOX" widgetSize="" widgetLength="200" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="236" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_CustomerPayment_p_Description" parent="ent_CustomerPayment" vertex="1" connectable="0">
+    <Property name="Description" description="" tooltip="" dataName="CUSTOMER_PAYMENT_DESCRIPTION" dataType="VARCHAR" dataNullable="true" dataLength="4000" auditType="NONE" widgetType="TEXTAREA" widgetSize="" widgetLength="4000" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="262" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_CustomerPayment_p_CreatedAt" parent="ent_CustomerPayment" vertex="1" connectable="0">
+    <Property name="CreatedAt" description="" tooltip="" dataName="CUSTOMER_PAYMENT_CREATED_AT" dataType="TIMESTAMP" dataNullable="true" auditType="CREATED_AT" isReadOnlyProperty="true" widgetType="DATETIME-LOCAL" widgetSize="" widgetLength="20" widgetIsMajor="false" as="value"/>
+    <mxGeometry y="288" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_CustomerPayment_p_CreatedBy" parent="ent_CustomerPayment" vertex="1" connectable="0">
+    <Property name="CreatedBy" description="" tooltip="" dataName="CUSTOMER_PAYMENT_CREATED_BY" dataType="VARCHAR" dataNullable="true" dataLength="128" auditType="CREATED_BY" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="128" widgetIsMajor="false" as="value"/>
+    <mxGeometry y="314" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_CustomerPayment_p_UpdatedAt" parent="ent_CustomerPayment" vertex="1" connectable="0">
+    <Property name="UpdatedAt" description="" tooltip="" dataName="CUSTOMER_PAYMENT_UPDATED_AT" dataType="TIMESTAMP" dataNullable="true" auditType="UPDATED_AT" isReadOnlyProperty="true" widgetType="DATETIME-LOCAL" widgetSize="" widgetLength="20" widgetIsMajor="false" as="value"/>
+    <mxGeometry y="340" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_CustomerPayment_p_UpdatedBy" parent="ent_CustomerPayment" vertex="1" connectable="0">
+    <Property name="UpdatedBy" description="" tooltip="" dataName="CUSTOMER_PAYMENT_UPDATED_BY" dataType="VARCHAR" dataNullable="true" dataLength="128" auditType="UPDATED_BY" isReadOnlyProperty="true" widgetType="TEXTBOX" widgetSize="" widgetLength="128" widgetIsMajor="false" as="value"/>
+    <mxGeometry y="366" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_CustomerPayment_p_Customer" parent="ent_CustomerPayment" vertex="1" connectable="0">
+    <Property name="Customer" description="" tooltip="" dataName="CUSTOMER_PAYMENT_CUSTOMER" dataType="INTEGER" dataNullable="false" isRequiredProperty="true" auditType="NONE" relationshipType="ASSOCIATION" relationshipCardinality="n_1" relationshipName="CustomerPayment_Customer" relationshipEntityName="Customer" relationshipEntityPerspectiveName="Customer" relationshipEntityPerspectiveLabel="Entities" widgetType="DROPDOWN" widgetSize="" widgetLength="20" widgetIsMajor="true" widgetDropDownKey="Id" widgetDropDownValue="Name" whenTargetDeleted="restrict" dataNotNull="true" as="value"/>
+    <mxGeometry y="392" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_CustomerPayment_p_Currency" parent="ent_CustomerPayment" vertex="1" connectable="0">
+    <Property name="Currency" description="" tooltip="" dataName="CUSTOMER_PAYMENT_CURRENCY" dataType="INTEGER" dataNullable="true" auditType="NONE" relationshipType="ASSOCIATION" relationshipCardinality="n_1" relationshipName="CustomerPayment_Currency" relationshipEntityName="Currency" relationshipEntityPerspectiveName="Settings" relationshipEntityPerspectiveLabel="Entities" widgetType="DROPDOWN" widgetSize="" widgetLength="20" widgetIsMajor="true" widgetDropDownKey="Id" widgetDropDownValue="Name" whenTargetDeleted="restrict" as="value"/>
+    <mxGeometry y="418" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Customer" style="projection" parent="1" vertex="1">
+    <Entity name="Customer" entityType="PROJECTION" dataName="CUSTOMERS_CUSTOMER" dataCount="" dataQuery="" title="Customer" caption="Projection of Customer" description="Cross-model reference to Customer owned by customers" tooltip="Customer" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="customer" menuLabel="Customers" menuIndex="100" layoutType="" perspectiveName="" perspectiveLabel="" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="0" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="false" projectionReferencedModel="/customers/customers.model" projectionReferencedEntity="Customer" type="Entity" as="value"/>
+    <mxGeometry x="300" y="20" width="200" height="80" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry>
+   </mxCell>
+   <mxCell id="ent_Customer_p_Id" style="projectionproperty" parent="ent_Customer" vertex="1" connectable="0">
+    <Property name="Id" description="" tooltip="" dataName="CUSTOMER_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" auditType="NONE" widgetType="NUMBER" widgetIsMajor="false" dataNotNull="true" as="value"/>
+    <mxGeometry y="28" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Customer_p_Name" style="projectionproperty" parent="ent_Customer" vertex="1" connectable="0">
+    <Property name="Name" description="" tooltip="" dataName="CUSTOMER_NAME" dataType="VARCHAR" dataNullable="true" auditType="NONE" widgetType="TEXTBOX" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="54" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Currency" style="projection" parent="1" vertex="1">
+    <Entity name="Currency" entityType="PROJECTION" dataName="CURRENCIES_CURRENCY" dataCount="" dataQuery="" title="Currency" caption="Projection of Currency" description="Cross-model reference to Currency owned by currencies" tooltip="Currency" icon="/services/web/resources/unicons/file.svg" iconName="list" menuKey="currency" menuLabel="Currencies" menuIndex="100" layoutType="" perspectiveName="" perspectiveLabel="" perspectiveHeader="" perspectiveIcon="/services/web/resources/unicons/file.svg" perspectiveOrder="0" perspectiveNavId="" perspectiveRole="" generateReport="false" generateDefaultRoles="false" projectionReferencedModel="/currencies/currencies.model" projectionReferencedEntity="Currency" type="Entity" as="value"/>
+    <mxGeometry x="580" y="20" width="200" height="80" as="geometry"><mxRectangle width="200" height="28" as="alternateBounds"/></mxGeometry>
+   </mxCell>
+   <mxCell id="ent_Currency_p_Id" style="projectionproperty" parent="ent_Currency" vertex="1" connectable="0">
+    <Property name="Id" description="" tooltip="" dataName="CURRENCY_ID" dataType="INTEGER" dataNullable="false" dataPrimaryKey="true" auditType="NONE" widgetType="NUMBER" widgetIsMajor="false" dataNotNull="true" as="value"/>
+    <mxGeometry y="28" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="ent_Currency_p_Name" style="projectionproperty" parent="ent_Currency" vertex="1" connectable="0">
+    <Property name="Name" description="" tooltip="" dataName="CURRENCY_NAME" dataType="VARCHAR" dataNullable="true" auditType="NONE" widgetType="TEXTBOX" widgetIsMajor="true" as="value"/>
+    <mxGeometry y="54" width="200" height="26" as="geometry"/>
+   </mxCell>
+   <mxCell id="edge_CustomerPayment_Customer" parent="1" source="ent_CustomerPayment_p_Customer" target="ent_Customer_p_Id" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+   <mxCell id="edge_CustomerPayment_Currency" parent="1" source="ent_CustomerPayment_p_Currency" target="ent_Currency_p_Id" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+  </root>
+ </mxGraphModel>
+</model>

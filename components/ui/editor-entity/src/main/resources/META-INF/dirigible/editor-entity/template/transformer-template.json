@@ -1,7 +1,0 @@
-{
-    "name": "Entity Data to JSON Model Transformer",
-    "description": "Model transformer template",
-    "extension": "edm",
-    "sources": [],
-    "parameters": []
-}
