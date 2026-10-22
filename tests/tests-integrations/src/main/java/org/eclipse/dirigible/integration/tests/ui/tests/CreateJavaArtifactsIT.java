@@ -21,11 +21,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * Drives the Workbench "New -> Java" submenu and asserts that each artefact lands in the right
- * place with the right content: a fully-qualified name creates the package folders and the matching
- * {@code package} declaration, a simple name lands in the project root with no package, and each
- * skeleton follows the strong-interface style. Content is read back over the workspace REST API
- * rather than the Monaco DOM, which keeps the assertions deterministic.
+ * Drives the Workbench "New -> Java" submenu, and the New items that create a Java handler, and
+ * asserts that each artefact lands in the right place with the right content: a fully-qualified
+ * name creates the package folders and the matching {@code package} declaration, a simple name
+ * lands in the project root with no package, and each skeleton follows the strong-interface style.
+ * Content is read back over the workspace REST API rather than the Monaco DOM, which keeps the
+ * assertions deterministic.
  */
 @Tag("slow")
 class CreateJavaArtifactsIT extends UserInterfaceIntegrationTest {
@@ -72,6 +73,14 @@ class CreateJavaArtifactsIT extends UserInterfaceIntegrationTest {
 
         workbench.createJavaArtifact(PROJECT, "Listener", "OrderListener");
         assertFileContains("/OrderListener.java", "implements MessageHandler", "ListenerKind");
+
+        // New -> Scheduled Job, Message Listener and WebSocket create the same Java handlers.
+        workbench.createJavaHandlerInProject(PROJECT, "Scheduled Job", "com.test.NightlyJob");
+        assertFileContains("/com/test/NightlyJob.java", "package com.test;", "implements JobHandler");
+        workbench.createJavaHandlerInProject(PROJECT, "Message Listener", "OrderEvents");
+        assertFileContains("/OrderEvents.java", "implements MessageHandler");
+        workbench.createJavaHandlerInProject(PROJECT, "WebSocket", "ChatSocket");
+        assertFileContains("/ChatSocket.java", "implements WebsocketHandler");
 
         // Repository additionally prompts for the entity type it manages.
         workbench.createJavaArtifact(PROJECT, "Repository", "CountryRepository", "Country");

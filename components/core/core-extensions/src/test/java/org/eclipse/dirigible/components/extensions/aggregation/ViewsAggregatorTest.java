@@ -13,11 +13,13 @@ import static org.eclipse.dirigible.components.extensions.aggregation.Modules.js
 import static org.eclipse.dirigible.components.extensions.aggregation.Modules.stub;
 import static org.eclipse.dirigible.components.extensions.aggregation.Modules.values;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.dirigible.components.base.script.ScriptEngineAvailability;
 import org.eclipse.dirigible.components.extensions.modules.ExtensionModuleReader;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +27,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
- * The view validation, de-duplication, focus and ordering rules.
+ * The view validation, de-duplication, focus and ordering rules, and the views offered only with
+ * the JavaScript engine.
  */
 @ExtendWith(MockitoExtension.class)
 class ViewsAggregatorTest {
@@ -34,6 +37,9 @@ class ViewsAggregatorTest {
 
     @Mock
     private ExtensionModuleReader reader;
+
+    @Mock
+    private ScriptEngineAvailability scriptEngine;
 
     @Test
     void skips_a_view_without_id_label_or_target() {
@@ -74,7 +80,19 @@ class ViewsAggregatorTest {
         assertEquals(List.of("o", "a", "b"), values(aggregate(), "id"));
     }
 
+    @Test
+    void offers_a_view_requiring_the_script_engine_only_where_it_is_deployed() {
+        stub(reader, POINT, json("{'id': 'debugger', 'label': 'Debugger', 'path': '/d', 'requiresScriptEngine': true}"),
+                json("{'id': 'console', 'label': 'Console', 'path': '/c'}"));
+
+        when(scriptEngine.isAvailable()).thenReturn(false);
+        assertEquals(List.of("console"), values(aggregate(), "id"));
+
+        when(scriptEngine.isAvailable()).thenReturn(true);
+        assertEquals(List.of("console", "debugger"), values(aggregate(), "id"));
+    }
+
     private List<Map<String, Object>> aggregate() {
-        return new ViewsAggregator(reader).aggregate(List.of(POINT));
+        return new ViewsAggregator(reader, scriptEngine).aggregate(List.of(POINT));
     }
 }

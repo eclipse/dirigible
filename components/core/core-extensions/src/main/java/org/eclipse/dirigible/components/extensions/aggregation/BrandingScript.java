@@ -20,6 +20,10 @@ import tools.jackson.databind.json.JsonMapper;
  * defined it already.
  *
  * <p>
+ * It also sets {@code top.PlatformScriptEngine}, whether the JavaScript engine is deployed, so the
+ * IDE's pages know without a request of their own whether to offer what only runs there.
+ *
+ * <p>
  * Every value is written as a JSON string literal: a tenant administrator sets these values, and
  * one holding a quote, a line break or {@code </script>} must stay a string rather than become
  * script.
@@ -48,9 +52,10 @@ final class BrandingScript {
     /**
      * Renders the script for the current configuration.
      *
+     * @param scriptEngineAvailable whether the JavaScript engine is deployed
      * @return the script
      */
-    static String render() {
+    static String render(boolean scriptEngineAvailable) {
         return "if (!top.hasOwnProperty('PlatformBranding')) top.PlatformBranding = {\n" //
                 + "    name: " + value(DirigibleConfig.BRANDING_NAME, NAME_DEFAULT) + ",\n" //
                 + "    subtitle: " + value(DirigibleConfig.BRANDING_SUBTITLE, "") + ",\n" //
@@ -62,7 +67,8 @@ final class BrandingScript {
                 + "    logo: " + value(DirigibleConfig.BRANDING_LOGO, LOGO_DEFAULT) + ",\n" //
                 + "    theme: " + value(DirigibleConfig.BRANDING_THEME, THEME_DEFAULT) + ",\n" //
                 + "    prefix: " + value(DirigibleConfig.BRANDING_PREFIX, PREFIX_DEFAULT) + "\n" //
-                + "};";
+                + "};\n" //
+                + "top.PlatformScriptEngine = " + scriptEngineAvailable + ";";
     }
 
     private static String value(DirigibleConfig key, String defaultValue) {

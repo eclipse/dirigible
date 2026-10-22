@@ -134,6 +134,20 @@ public class Workbench {
     }
 
     /**
+     * Creates a Java handler through a New menu item that creates one instead of a file - Scheduled
+     * Job, Message Listener, WebSocket - entering {@code name}, a simple or fully-qualified type name,
+     * in the resulting dialog.
+     */
+    public void createJavaHandlerInProject(String projectName, String newFileType, String name) {
+        expandProject(projectName);
+        browser.rightClickOnElementContainingText(HtmlElementType.ANCHOR, projectName);
+
+        browser.clickOnElementByAttributePatternAndText(HtmlElementType.SPAN, HtmlAttribute.CLASS, "fd-menu__title", newFileType);
+        browser.enterTextInElementById("fdti1", name);
+        browser.clickOnElementWithText(HtmlElementType.BUTTON, "Create");
+    }
+
+    /**
      * Creates a Java artefact through the project context menu (New -> Java -> {@code leafLabel}),
      * entering {@code name} in the resulting dialog. Use for the base types (Class, Interface, ...) and
      * the strong-interface skeletons (Controller, Job, Listener, WebSocket, Repository). For Package,

@@ -718,7 +718,11 @@ class DirigibleEditor {
 
         this.editor.setModel(model);
 
-        await TypeScriptUtils.loadDTS(this.monaco);
+        // The typings of the script API are served by the JavaScript engine; without it the editor runs on
+        // Monaco's built-in libraries alone.
+        if (top.PlatformScriptEngine === true) {
+            await TypeScriptUtils.loadDTS(this.monaco);
+        }
     }
 
     async #createEditorInstance() {

@@ -43,7 +43,8 @@ projectsView.controller('ProjectsViewController', (
         busyText: 'Loading...',
     };
     const inMacOS = clientOS.isMac();
-    const isDebugEnabled = ['Chrome/', 'Edg/', 'Brave/', 'OPR/', 'Electron/'].some(el => navigator.userAgent.includes(el));
+    // Debugging a script needs the JavaScript engine on the server and a Chromium DevTools frontend in the browser.
+    const isDebugEnabled = top.PlatformScriptEngine === true && ['Chrome/', 'Edg/', 'Brave/', 'OPR/', 'Electron/'].some(el => navigator.userAgent.includes(el));
     $scope.searchVisible = false;
     $scope.searchField = { text: '' };
     $scope.workspaceNames = [];
@@ -940,6 +941,8 @@ projectsView.controller('ProjectsViewController', (
                                 cancelLabel: 'Cancel'
                             }).then((form) => generateFromModelHandler(form), (error) => generateFromModelErrorHandler(error));
                         }
+                    } else if (javaKindOf(id)) {
+                        newJavaArtifact(`java:${javaKindOf(id)}`, contextMenuNodes[0]);
                     } else {
                         let name;
                         let nameless;
@@ -1780,6 +1783,14 @@ projectsView.controller('ProjectsViewController', (
                 preformatted: false,
             });
         });
+    }
+
+    /**
+     * The Java kind a New menu item creates, when the item creates a Java handler class (a Scheduled
+     * Job, a Message Listener, a WebSocket) rather than a file from its template data.
+     */
+    function javaKindOf(menuTemplateId) {
+        return menuTemplates.find((template) => template.id === menuTemplateId)?.javaKind;
     }
 
     function newJavaArtifact(menuId, node) {

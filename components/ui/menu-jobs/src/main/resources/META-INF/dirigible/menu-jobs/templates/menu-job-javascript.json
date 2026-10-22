@@ -1,0 +1,7 @@
+{
+    "name": "job",
+    "label": "Scheduled Job (JavaScript)",
+    "extension": "job",
+    "data": "{\n    \"expression\": \"0/10 * * * * ?\",\n    \"group\": \"defined\",\n    \"handler\": \"myproject/myhandler.js\",\n    \"description\": \"My Job\"\n}",
+    "requiresScriptEngine": true
+}

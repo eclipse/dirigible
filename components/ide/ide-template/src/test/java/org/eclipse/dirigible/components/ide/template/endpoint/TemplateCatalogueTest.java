@@ -23,6 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.dirigible.components.base.script.ScriptEngineAvailability;
 import org.eclipse.dirigible.components.extensions.domain.Extension;
 import org.eclipse.dirigible.components.extensions.modules.ExtensionModuleEvaluator;
 import org.eclipse.dirigible.components.extensions.service.ExtensionService;
@@ -38,8 +39,9 @@ import org.mockito.quality.Strictness;
 import org.springframework.beans.factory.ObjectProvider;
 
 /**
- * The catalogue lists each readable template with its module as id, and orders the lists the way
- * the script it replaces did.
+ * The catalogue lists each readable template with its module as id, leaves out the ones needing the
+ * JavaScript engine where it is not deployed, and orders the lists the way the script it replaces
+ * did.
  */
 @ExtendWith(MockitoExtension.class)
 class TemplateCatalogueTest {
@@ -53,6 +55,9 @@ class TemplateCatalogueTest {
     @Mock
     private ObjectProvider<ExtensionModuleEvaluator> evaluatorProvider;
 
+    @Mock
+    private ScriptEngineAvailability scriptEngine;
+
     private final Map<String, String> registry = new HashMap<>();
 
     @Test
@@ -63,11 +68,26 @@ class TemplateCatalogueTest {
                 "{\"name\": \"App\", \"extension\": \"model\"}");
         when(extensionService.findByExtensionPoint(TemplateCatalogue.TEMPLATES)).thenReturn(
                 List.of(extension("app/template/template.js"), extension("script-only/template.js")));
-        TemplateCatalogue catalogue = new TemplateCatalogue(extensionService, new TemplateDescriptors(repository, evaluatorProvider));
 
-        List<Map<String, Object>> templates = catalogue.read(TemplateCatalogue.TEMPLATES);
+        List<Map<String, Object>> templates = catalogue().read(TemplateCatalogue.TEMPLATES);
 
         assertEquals(List.of(Map.of("name", "App", "extension", "model", "id", "app/template/template.js")), templates);
+    }
+
+    @Test
+    void aTemplateRequiringTheScriptEngineIsOfferedOnlyWhereItIsDeployed() {
+        when(repository.getResource(anyString())).thenAnswer(invocation -> resource(invocation.getArgument(0)));
+        registry.put(IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/menu/ts.json",
+                "{\"name\": \"typescript\", \"extension\": \"ts\", \"requiresScriptEngine\": true}");
+        registry.put(IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/menu/java.json", "{\"name\": \"Hello\", \"extension\": \"java\"}");
+        when(extensionService.findByExtensionPoint(TemplateCatalogue.MENU_TEMPLATES)).thenReturn(
+                List.of(extension("menu/ts.js"), extension("menu/java.js")));
+
+        when(scriptEngine.isAvailable()).thenReturn(false);
+        assertEquals(List.of("menu/java.js"), ids(catalogue().read(TemplateCatalogue.MENU_TEMPLATES)));
+
+        when(scriptEngine.isAvailable()).thenReturn(true);
+        assertEquals(List.of("menu/ts.js", "menu/java.js"), ids(catalogue().read(TemplateCatalogue.MENU_TEMPLATES)));
     }
 
     @Test
@@ -79,6 +99,16 @@ class TemplateCatalogueTest {
         templates.sort(TemplateCatalogue.DIALOG_ORDER);
 
         assertEquals(List.of("Early", "Late", "Gamma", "Beta", "Alpha", "Zeta"), names(templates));
+    }
+
+    private TemplateCatalogue catalogue() {
+        return new TemplateCatalogue(extensionService, new TemplateDescriptors(repository, evaluatorProvider), scriptEngine);
+    }
+
+    private static List<Object> ids(List<Map<String, Object>> templates) {
+        return templates.stream()
+                        .map(template -> template.get("id"))
+                        .toList();
     }
 
     private static Extension extension(String module) {

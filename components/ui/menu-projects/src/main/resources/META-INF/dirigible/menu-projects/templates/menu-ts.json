@@ -3,5 +3,6 @@
     "label": "TypeScript Service",
     "extension": "ts",
     "data": "import { response } from \"@aerokit/sdk/http\";\n\nresponse.println(\"Hello World!\");",
-    "order": 2
+    "order": 2,
+    "requiresScriptEngine": true
 }
