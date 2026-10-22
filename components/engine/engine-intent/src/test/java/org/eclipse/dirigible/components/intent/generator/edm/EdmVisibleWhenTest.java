@@ -81,6 +81,36 @@ class EdmVisibleWhenTest {
                 "the child has no status of its own - DRAFT is the invoice's");
     }
 
+    /**
+     * A name on any other to-one relation (#8057) reaches the model as that relation's seed id, which
+     * the form's {@code x-show} compares the dropdown's value with.
+     */
+    @Test
+    void aFieldGateResolvesANameOnAnotherToOneRelation() {
+        String yaml = """
+                name: sales
+                seeds:
+                  - name: request-types
+                    entity: RequestType
+                    rows:
+                      - { id: 1, name: OPEN }
+                      - { id: 2, name: CLOSE }
+                entities:
+                  - name: RequestType
+                    kind: setting
+                    fields:
+                      - { name: id, type: integer, primaryKey: true, generated: true }
+                      - { name: name, type: string, length: 50 }
+                  - name: Request
+                    fields:
+                      - { name: id, type: integer, primaryKey: true, generated: true }
+                      - { name: closingNote, type: string, length: 500, visibleWhen: "type == CLOSE" }
+                    relations:
+                      - { name: type, kind: manyToOne, to: RequestType, required: true }
+                """;
+        assertEquals("Type == 2", property(entity(yaml, "Request"), "ClosingNote").get("visibleWhen"));
+    }
+
     @Test
     void theListFormIsAnAndOfItsTerms() {
         String yaml = invoice("    visibleWhen: [\"Status != DRAFT\", \"Status != PAID\"]\n", "");

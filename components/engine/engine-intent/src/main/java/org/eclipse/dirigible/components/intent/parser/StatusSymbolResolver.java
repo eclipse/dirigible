@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,6 +41,12 @@ import org.eclipse.dirigible.components.intent.generator.StepEventSupport;
  * mode that left a voided invoice on the ledger with no reversing entry (dirigible #6645). A name
  * cannot be silently retargeted, and a mistyped name is a generation error rather than a wrong
  * number.
+ *
+ * <p>
+ * The same holds for any other seeded nomenclature a record points at (a request's {@code type}): a
+ * decision {@code if}, a process {@code trigger.when}, a {@code where} condition (#8015), a check's
+ * {@code when} and a field's or a composition child's {@code visibleWhen} (#8057) resolve a name
+ * compared with {@code ==}/{@code !=} against ANY to-one relation, on that relation's target.
  *
  * <p>
  * Scope: the nomenclature must be seeded <b>in this model</b>. A cross-model status entity is
@@ -214,23 +222,26 @@ final class StatusSymbolResolver {
                 // TARGET's nomenclature, not the record's - so both are routed to the hop-aware resolver,
                 // which falls back to the record-local rewrite for their record-own terms. The plain
                 // rewrite would match the `Status == PAID` tail of the path and resolve it against the
-                // record's own nomenclature: a wrong id, silently.
+                // record's own nomenclature: a wrong id, silently. A record-local term may also name any
+                // other to-one relation (`type == CLOSE`, #8057), which resolves against that relation's
+                // target, as a trigger guard's does.
                 String kind = lower(text(check, "kind"));
                 if ("forbidwhen".equals(kind) || "requiredwhen".equals(kind)) {
-                    rewriteForbidWhen(entityName, check, statusRelation, status, subject + " when");
+                    rewriteForbidWhen(entityName, check, subject + " when");
                 } else {
-                    rewriteWhen(check, statusRelation, status, subject + " when");
+                    rewriteRecordWhen(check, "when", entityName, subject + " when");
                 }
             }
             // visibleWhen (#7502). On a field it is about the record's own status ("show the paid date
-            // once PAID"), so it resolves like every other record-scoped guard. On the entity it gates the
+            // once PAID") or another of its to-one relations ("show the closing note for a CLOSE request",
+            // #8057), so it resolves like every other record-scoped guard. On the entity it gates the
             // child's panel on its MASTER's page and is written in the master's terms, so its names resolve
-            // against the composition master's nomenclature - resolved against the child's own, a
+            // against the composition master's nomenclatures - resolved against the child's own, a
             // `Status != DRAFT` would name a status of an entity that usually has none.
             for (Object fieldNode : asList(entity.get("fields"))) {
                 Map<?, ?> field = asMap(fieldNode);
                 if (field != null && field.get("visibleWhen") != null) {
-                    rewriteWhen(field, "visibleWhen", statusRelation, status,
+                    rewriteRecordWhen(field, "visibleWhen", entityName,
                             "entity [" + entityName + "] field [" + text(field, "name") + "] visibleWhen");
                 }
                 // A status stamp (#7874) names the status whose arrival the field records - always one of
@@ -244,8 +255,7 @@ final class StatusSymbolResolver {
             if (entity.get("visibleWhen") != null) {
                 String master = compositionMasterOf(entity);
                 if (master != null) {
-                    rewriteWhen(entity, "visibleWhen", statusRelationName(master), statusOf(master),
-                            "entity [" + entityName + "] visibleWhen");
+                    rewriteRecordWhen(entity, "visibleWhen", master, "entity [" + entityName + "] visibleWhen");
                 }
             }
         }
@@ -313,7 +323,7 @@ final class StatusSymbolResolver {
                 // on any to-one (a send method, a channel), and resolving against the entity's status
                 // would take an id out of the wrong nomenclature.
                 if ("decision".equals(lower(text(step, "kind"))) && args.get("if") instanceof String condition) {
-                    put(args, "if", rewriteRelationComparisons(condition, triggerEntity, null, stepSubject + " if"));
+                    put(args, "if", rewriteRelationComparisons(condition, triggerEntity, null, this::toOneRelation, stepSubject + " if"));
                 }
                 // `setRelationField: <Relation>` + `value:` writes an id of THAT relation's target - the
                 // status in the canonical case, but the same shape serves any nomenclature FK.
@@ -753,10 +763,13 @@ final class StatusSymbolResolver {
      * @param resolvedRelation a relation an earlier pass over the same condition already resolved - its
      *        comparisons are left to that pass, so a name it refused is not reported twice - or
      *        {@code null}
+     * @param relationOf the relation of the entity a term names - entity and term name in, {@code null}
+     *        out for a term that is not a nomenclature reference
      * @param subject what to name in an issue
      * @return the condition with each resolvable name replaced by its seed id
      */
-    private String rewriteRelationComparisons(String condition, String entityName, String resolvedRelation, String subject) {
+    private String rewriteRelationComparisons(String condition, String entityName, String resolvedRelation,
+            BiFunction<String, String, Map<?, ?>> relationOf, String subject) {
         if (condition == null || entityName == null) {
             return condition;
         }
@@ -765,7 +778,7 @@ final class StatusSymbolResolver {
         while (matcher.find()) {
             String replacement = matcher.group();
             Map<?, ?> relation = matcher.group(1)
-                                        .equalsIgnoreCase(resolvedRelation) ? null : toOneRelation(entityName, matcher.group(1));
+                                        .equalsIgnoreCase(resolvedRelation) ? null : relationOf.apply(entityName, matcher.group(1));
             boolean numeric = INTEGER.matcher(matcher.group(3))
                                      .matches();
             boolean nullTest = "null".equals(matcher.group(3));
@@ -910,7 +923,49 @@ final class StatusSymbolResolver {
     private String rewriteTriggerTerm(String term, String triggerEntity, String subject) {
         String statusRelation = statusRelationName(triggerEntity);
         String rewritten = rewriteExpression(term, statusRelation, statusOf(triggerEntity), subject);
-        return rewriteRelationComparisons(rewritten, triggerEntity, statusRelation, subject);
+        return rewriteRelationComparisons(rewritten, triggerEntity, statusRelation, this::toOneRelation, subject);
+    }
+
+    /**
+     * Rewrite a record-scoped condition in place, scalar or list (#6957) - a check's {@code when} and a
+     * field's or a composition child's {@code visibleWhen} (#8057): each term first through the
+     * record's own status, then through every other to-one relation of the record, each against its own
+     * target's nomenclature, as a trigger guard is (#8015). The relation is matched as the parser's
+     * guard validator reads the property ({@code CheckSupport.toOne}: case-insensitively, to-one only).
+     * Fields, literals, {@code null} tests and numeric ids pass through untouched.
+     *
+     * @param owner the node holding the condition
+     * @param key the condition's key in it
+     * @param entityName the record the condition is read off - for a panel's {@code visibleWhen}, the
+     *        composition master
+     * @param subject what to name in an issue
+     */
+    private void rewriteRecordWhen(Map<?, ?> owner, String key, String entityName, String subject) {
+        rewriteTerms(owner, key, term -> rewriteRecordTerm(term, entityName, subject));
+    }
+
+    private String rewriteRecordTerm(String term, String entityName, String subject) {
+        String statusRelation = statusRelationName(entityName);
+        String rewritten = rewriteExpression(term, statusRelation, statusOf(entityName), subject);
+        return rewriteRelationComparisons(rewritten, entityName, statusRelation, this::toOneRelationIgnoringCase, subject);
+    }
+
+    /**
+     * Apply {@code rewrite} to a condition held under {@code key}: a scalar, or each string of a list.
+     */
+    @SuppressWarnings("unchecked")
+    private static void rewriteTerms(Map<?, ?> owner, String key, UnaryOperator<String> rewrite) {
+        Object value = owner.get(key);
+        if (value instanceof List<?> list) {
+            List<Object> mutable = (List<Object>) list;
+            for (int i = 0; i < mutable.size(); i++) {
+                if (mutable.get(i) instanceof String term) {
+                    mutable.set(i, rewrite.apply(term));
+                }
+            }
+        } else if (value instanceof String term) {
+            put(owner, key, rewrite.apply(term));
+        }
     }
 
     /**
@@ -938,27 +993,16 @@ final class StatusSymbolResolver {
      * this parser cannot read, so a name there is refused with the numeric-id fallback - as every
      * cross-model status reference is.
      */
-    @SuppressWarnings("unchecked")
-    private void rewriteForbidWhen(String entityName, Map<?, ?> check, String ownStatusRelation, Target ownStatus, String subject) {
-        Object value = check.get("when");
-        if (value instanceof List<?> list) {
-            List<Object> mutable = (List<Object>) list;
-            for (int i = 0; i < mutable.size(); i++) {
-                if (mutable.get(i) instanceof String term) {
-                    mutable.set(i, rewriteForbidWhenTerm(entityName, term, ownStatusRelation, ownStatus, subject));
-                }
-            }
-        } else if (value instanceof String term) {
-            put(check, "when", rewriteForbidWhenTerm(entityName, term, ownStatusRelation, ownStatus, subject));
-        }
+    private void rewriteForbidWhen(String entityName, Map<?, ?> check, String subject) {
+        rewriteTerms(check, "when", term -> rewriteForbidWhenTerm(entityName, term, subject));
     }
 
-    private String rewriteForbidWhenTerm(String entityName, String term, String ownStatusRelation, Target ownStatus, String subject) {
+    private String rewriteForbidWhenTerm(String entityName, String term, String subject) {
         Matcher matcher = RELATION_COMPARISON.matcher(term);
         if (!matcher.matches()) {
-            // A record-local term (the child's own status/flag): resolve against the entity's own
-            // nomenclature exactly as every other record-scoped guard does.
-            return rewriteExpression(term, ownStatusRelation, ownStatus, subject);
+            // A record-local term (the child's own status, flag or other to-one): resolve exactly as
+            // every other record-scoped guard does.
+            return rewriteRecordTerm(term, entityName, subject);
         }
         String relationName = matcher.group(1);
         String field = matcher.group(2);

@@ -619,7 +619,8 @@ a `required` text field is refused when it is blank after that trim - spaces alo
   value is still served and stored, and a master that regresses to DRAFT keeps its child rows - only
   the panel hides; the child's own write rules (`locksWithMaster`, `forbidWhen`) are unchanged. The
   condition uses the `requiredWhen` grammar - `<Property> ==|!= <literal>`, a list = AND - with
-  statuses by seed name or id. On a field it reads the record's own fields and to-one relations; on
+  statuses, and the seeds of any other to-one nomenclature (`visibleWhen: "type == CLOSE"` on a
+  request's closing note), by seed name or id. On a field it reads the record's own fields and to-one relations; on
   a child it reads the **master** and is written in the master's terms:
   `- name: SalesInvoiceCustomerPayment` / `visibleWhen: "Status != DRAFT"`. A status name has no
   ordering, so "from ISSUED on" is `Status != DRAFT` (plus `Status != <each earlier status>`), not
@@ -706,7 +707,8 @@ a `required` text field is refused when it is blank after that trim - spaces alo
   - `{ kind: requiredWhen, field: driver, when: "Status == IDENTIFIED", status: IDENTIFIED, message: "..." }`
     (#7094): a **conditionally required** value - `field` must be present whenever `when` holds.
     `field` is the entity's own field or a one-hop `Relation.field`; `when` is a guard (see *the event
-    axis*) over the record's own columns. This is how "a fine cannot be marked identified without a
+    axis*) over the record's own columns, comparing a status or any other seeded to-one by seed name
+    or id (`when: "type == CLOSE"`). This is how "a fine cannot be marked identified without a
     driver" is declared - the requiredness that `required: true` cannot express because the value is
     legitimately empty earlier in the life of the record. The `status:` gate is OPTIONAL, and its
     PRESENCE is the routing: without one the rule holds on every user write (each generated
@@ -2916,10 +2918,13 @@ rejected - express "live rows" as a `scope`, not as an id range. A cross-model s
 referenced by its numeric id (its seeds live in the other model).
 
 The same holds for **any other to-one relation** onto a seeded nomenclature (a request type, a send
-method) in a process `trigger.when`, a decision `if` and a `where` condition (`schedules[].where`,
-`items: where:`, a rollup's `where`): the name resolves against THAT relation's target, so
-`trigger: { onCreate: Request, when: "type == CLOSE" }` and `{ field: type, op: eq, value: CLOSE }`
-compare the type's seed id. Only `==`/`!=` (`eq`/`ne`) may compare a name.
+method) in a process `trigger.when`, a decision `if`, a `where` condition (`schedules[].where`,
+`items: where:`, a rollup's `where`), a check's `when` (`requiredWhen`, `forbidWhen`) and a
+`visibleWhen`: the name resolves against THAT relation's target, so
+`trigger: { onCreate: Request, when: "type == CLOSE" }`, `{ field: type, op: eq, value: CLOSE }`,
+`{ kind: requiredWhen, field: closingNote, when: "type == CLOSE" }` and
+`visibleWhen: "type == CLOSE"` compare the type's seed id. Only `==`/`!=` (`eq`/`ne`) may compare a
+name. A child's `visibleWhen` reads its master, so its names resolve on the master's relations.
 
 #### reports[].kind: balance - the accounting balance report
 
