@@ -549,7 +549,7 @@ public final class ArrivalSupport {
         String where = subject + " map [" + name + "] lookup";
         for (Object key : lookup.keySet()) {
             if (!LOOKUP_KEYS.contains(String.valueOf(key))) {
-                issues.add(where + " declares unknown key [" + key + "] - a lookup names lookup, by and from, and optionally onMissing");
+                issues.add(where + " declares unknown key [" + key + "] - a lookup names lookup, by and from");
             }
         }
         if (lookup.containsKey("onMissing")) {

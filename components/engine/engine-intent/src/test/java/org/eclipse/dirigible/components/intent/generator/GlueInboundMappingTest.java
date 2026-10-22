@@ -392,10 +392,15 @@ class GlueInboundMappingTest {
         assertTrue(consumer.contains("is not an object - NOT ingested"), "an element of the wrong shape is still acknowledged");
     }
 
+    /**
+     * The rendered source with {@code \n} line ends. The template's own line ends are the checkout's
+     * (CRLF on a Windows runner), and the blocks asserted here are matched line by line.
+     */
     private static String renderConsumer(String yaml) throws IOException {
         Map<String, Object> entry = GlueIntentGenerator.buildInboundMessagesForTest(IntentParser.parse(yaml))
                                                        .get(0);
-        return GlueTemplateRendering.renderInboundMessage(entry, "sales");
+        return GlueTemplateRendering.renderInboundMessage(entry, "sales")
+                                    .replace("\r\n", "\n");
     }
 
     /** The block a line opens, up to the brace closing it at the same indentation. */
