@@ -56,14 +56,14 @@ log.info("file size: {}", Files.size("/users/admin/workspace/proj/foo.txt"));
 | `io/image`                           | `sdk.io.Image`                                                 |       |
 | `io/streams`                         | `sdk.io.Streams`                                               |       |
 | `io/zip`                             | `sdk.io.Zip`                                                   |       |
-| `job/scheduler`                      | `sdk.job.Scheduler`                                            | `list`, `getJob` (JSON), `enable`, `disable`, `trigger` (with the parameters the job declares) and `log` / `error` / `warn` / `info` to a job's execution log. Job creation is annotation-driven; see "Decorators" below. |
+| `job/scheduler`                      | `sdk.job.Scheduler`                                            | `list`, `getJob` (JSON), `enable`, `disable`, `trigger` (with the parameters the job declares) and `log` / `error` / `warn` / `info` to a job's execution log. Job creation is annotation-driven; see "Decorators" below. A `.job` descriptor with `"engine": "java"` runs the bean method its `"handler": "<fqn>#<method>"` names; a method declaring a `Map<String, String>` receives the declared parameters. |
 | `junit`                              | `sdk.junit.Assert`                                             | Plain `AssertionError`s; use real JUnit 5 in test sources. |
 | `log/logging`                        | `sdk.log.Logging` + `sdk.log.Logger`                           |       |
 | `mail/client`                        | `sdk.mail.Mail`                                                |       |
 | `messaging/producer`                 | `sdk.messaging.Producer`                                       |       |
 | `messaging/consumer`                 | `sdk.messaging.Consumer`                                       |       |
 | `mongodb/client`                     | `sdk.mongodb.Client`                                           | Returns the raw `com.mongodb.client.MongoClient`. |
-| `net/websockets`                     | `sdk.net.Websockets`                                           |       |
+| `net/websockets`                     | `sdk.net.Websockets`                                           | The handler is a Java `sdk.net.WebsocketClientHandler` or the registry path of a handler script. |
 | `net/soap`                           | `sdk.net.Soap`                                                 | Implemented directly against `jakarta.xml.soap`. |
 | `pdf/pdf`                            | `sdk.pdf.Pdf`                                                  |       |
 | `platform/command`                   | `sdk.platform.Command`                                         |       |
@@ -76,7 +76,7 @@ log.info("file size: {}", Files.size("/users/admin/workspace/proj/foo.txt"));
 | `platform/workspace`                 | `sdk.platform.Workspace`                                       | Returns the platform `Workspace` / `File` domain objects directly. |
 | `qldb`                               | `sdk.qldb.Qldb`                                                | `open(ledger, table)` returns the platform `QLDBRepository`. The driver is the `api-qldb-driver` add-on (`<type>pom</type>`); without it: `QldbNotAvailableException`. |
 | `rabbitmq/producer`                  | `sdk.rabbitmq.Producer`                                        |       |
-| `rabbitmq/consumer`                  | `sdk.rabbitmq.Consumer`                                        |       |
+| `rabbitmq/consumer`                  | `sdk.rabbitmq.Consumer`                                        | The handler is a Java `sdk.rabbitmq.MessageHandler` or the registry path of a handler script. |
 | `redis/client`                       | `sdk.redis.Client`                                             | Returns the raw `redis.clients.jedis.Jedis`. |
 | `security/oauth`                     | `sdk.security.OAuthClient`                                     | `getToken()` returns the token endpoint's JSON response. The credentials are form-encoded once, as RFC 6749 specifies. |
 | `security/tenants`                   | `sdk.security.Tenants`                                         | Returns the platform's `CrossTenantRunner.GrantedTenant` / `CrossTenantResult` records. Token-groups tenant resolution only; check `isAvailable()` first. |

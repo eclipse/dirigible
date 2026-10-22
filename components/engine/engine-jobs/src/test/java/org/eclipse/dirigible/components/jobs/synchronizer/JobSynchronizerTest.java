@@ -176,4 +176,58 @@ public class JobSynchronizerTest {
         assertEquals("boom", reparsed.getMessage());
         assertEquals(executedAt, reparsed.getExecutedAt());
     }
+
+    /**
+     * The parameters a job artefact declares are part of its definition: the parser used to drop them,
+     * so no job - on either engine - declared any, and a trigger refused every value (dirigible #8017).
+     *
+     * @throws ParseException the parse exception
+     */
+    @Test
+    public void theDeclaredParametersAreParsed() throws ParseException {
+        String content = "{\"expression\":\"0/1 * * * * ?\",\"group\":\"defined\",\"handler\":\"demo.Reports#daily\",\"engine\":\"java\","
+                + "\"parameters\":[{\"name\":\"region\",\"type\":\"string\",\"defaultValue\":\"EU\"},{\"name\":\"limit\",\"type\":\"number\",\"defaultValue\":\"10\"}]}";
+
+        jobSynchronizer.parse("/test/parameters.job", content.getBytes());
+        entityManager.flush();
+        entityManager.clear();
+
+        Job stored = jobRepository.findByName("parameters")
+                                  .orElseThrow();
+        assertEquals(2, stored.getParameters()
+                              .size());
+        assertEquals("EU", stored.getParameter("region")
+                                 .getDefaultValue());
+        assertEquals("10", stored.getParameter("limit")
+                                 .getDefaultValue());
+    }
+
+    /**
+     * A parameter the artefact no longer declares goes with the declaration, or a trigger would still
+     * accept it and a Java job would still receive it.
+     *
+     * @throws ParseException the parse exception
+     */
+    @Test
+    public void aParameterRemovedFromTheArtefactIsRemovedFromTheJob() throws ParseException {
+        String declaringTwo = "{\"expression\":\"0/1 * * * * ?\",\"group\":\"defined\",\"handler\":\"test/handler.js\","
+                + "\"parameters\":[{\"name\":\"region\",\"type\":\"string\",\"defaultValue\":\"EU\"},"
+                + "{\"name\":\"limit\",\"type\":\"number\",\"defaultValue\":\"10\"}]}";
+        String declaringOne = "{\"expression\":\"0/1 * * * * ?\",\"group\":\"defined\",\"handler\":\"test/handler.js\","
+                + "\"parameters\":[{\"name\":\"region\",\"type\":\"string\",\"defaultValue\":\"US\"}]}";
+        jobSynchronizer.parse("/test/shrinking.job", declaringTwo.getBytes());
+        entityManager.flush();
+        entityManager.clear();
+
+        jobSynchronizer.parse("/test/shrinking.job", declaringOne.getBytes());
+        entityManager.flush();
+        entityManager.clear();
+
+        Job stored = jobRepository.findByName("shrinking")
+                                  .orElseThrow();
+        assertEquals(1, stored.getParameters()
+                              .size());
+        assertEquals("US", stored.getParameter("region")
+                                 .getDefaultValue());
+    }
 }

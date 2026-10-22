@@ -11,12 +11,8 @@ package org.eclipse.dirigible.components.api.rabbitmq;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.CountDownLatch;
 
-import org.eclipse.dirigible.components.base.script.ScriptExecutor;
-import org.eclipse.dirigible.repository.api.RepositoryPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +24,8 @@ import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 
 /**
- * The Class RabbitMQReceiverRunner.
+ * Consumes a queue on behalf of a listener - a handler script's or a Java one - until it is
+ * stopped, then deletes the queue and closes its channel and connection.
  */
 public class RabbitMQReceiverRunner implements Runnable {
 
@@ -36,16 +33,6 @@ public class RabbitMQReceiverRunner implements Runnable {
      * The Constant logger.
      */
     private static final Logger logger = LoggerFactory.getLogger(RabbitMQReceiverRunner.class);
-
-    /**
-     * The Constant DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_MESSAGE.
-     */
-    private static final String DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_MESSAGE = "messaging/wrappers/onMessage.js";
-
-    /**
-     * The Constant DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_ERROR.
-     */
-    private static final String DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_ERROR = "messaging/wrappers/onError.js";
 
     /**
      * The connection.
@@ -63,19 +50,14 @@ public class RabbitMQReceiverRunner implements Runnable {
     private final String queue;
 
     /**
-     * The handler.
+     * The listener the messages are handed to.
      */
-    private final String handler;
+    private final RabbitMQMessageListener listener;
 
     /**
-     * The stopped.
+     * Released by {@link #stop()}.
      */
-    private final AtomicBoolean stopped = new AtomicBoolean(false);
-
-    /**
-     * The executor of the handler's wrapper scripts.
-     */
-    private final ScriptExecutor scriptExecutor;
+    private final CountDownLatch stopped = new CountDownLatch(1);
 
     /**
      * Instantiates a new rabbit MQ receiver runner.
@@ -83,20 +65,18 @@ public class RabbitMQReceiverRunner implements Runnable {
      * @param connection the connection
      * @param channel the channel
      * @param queue the queue
-     * @param handler the handler
-     * @param scriptExecutor the executor of the handler's wrapper scripts
+     * @param listener the listener the messages are handed to
      */
-
-    public RabbitMQReceiverRunner(Connection connection, Channel channel, String queue, String handler, ScriptExecutor scriptExecutor) {
+    public RabbitMQReceiverRunner(Connection connection, Channel channel, String queue, RabbitMQMessageListener listener) {
         this.connection = connection;
         this.channel = channel;
         this.queue = queue;
-        this.handler = handler;
-        this.scriptExecutor = scriptExecutor;
+        this.listener = listener;
     }
 
     /**
-     * Start the consumer.
+     * Start the consumer and keep it until {@link #stop()}. The consumer is registered once - the
+     * broker hands it every message, on the channel's delivery thread.
      */
     @Override
     public void run() {
@@ -105,35 +85,21 @@ public class RabbitMQReceiverRunner implements Runnable {
                 logger.info("Starting a RabbitMQ receiver for: " + this.queue);
             }
             channel.queueDeclare(queue, false, false, false, null);
-            while (!stopped.get()) {
-                Map<Object, Object> context = createMessagingContext();
-                Consumer consumer = new DefaultConsumer(channel) {
-                    @Override
-                    public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
-                            throws IOException {
-                        String message = new String(body, StandardCharsets.UTF_8);
-                        context.put("message", message);
-                        try {
-                            RepositoryPath path = new RepositoryPath(DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_MESSAGE);
-                            scriptExecutor.execute(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
-                        } catch (RuntimeException e) {
-                            if (logger.isErrorEnabled()) {
-                                logger.error(e.getMessage(), e);
-                            }
-                            try {
-                                context.put("error", escapeCodeString(e.getMessage()));
-                                RepositoryPath path = new RepositoryPath(DIRIGIBLE_MESSAGING_WRAPPER_MODULE_ON_ERROR);
-                                scriptExecutor.execute(path.getSegments()[0], path.constructPathFrom(1), null, context, false);
-                            } catch (Exception ex) {
-                                throw new RuntimeException(ex);
-                            }
-                        }
-                    }
-                };
-                channel.basicConsume(queue, true, consumer);
-            }
+            Consumer consumer = new DefaultConsumer(channel) {
+                @Override
+                public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
+                        throws IOException {
+                    deliver(new String(body, StandardCharsets.UTF_8));
+                }
+            };
+            channel.basicConsume(queue, true, consumer);
+            stopped.await();
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
+        } catch (InterruptedException e) {
+            Thread.currentThread()
+                  .interrupt();
+            logger.warn("The RabbitMQ receiver for [{}] was interrupted", queue, e);
         } finally {
             try {
                 channel.queueDelete(queue);
@@ -146,31 +112,27 @@ public class RabbitMQReceiverRunner implements Runnable {
     }
 
     /**
+     * Hands a message to the listener, and the failure of its handling to the listener's error callback
+     * - whose own failure escapes to the channel.
+     *
+     * @param message the body of the message
+     */
+    private void deliver(String message) {
+        try {
+            listener.onMessage(message);
+        } catch (RuntimeException e) {
+            if (logger.isErrorEnabled()) {
+                logger.error(e.getMessage(), e);
+            }
+            listener.onError(e.getMessage());
+        }
+    }
+
+    /**
      * Stop the consumer.
      */
     public void stop() {
-        stopped.set(true);
-    }
-
-    /**
-     * Create a context map and set the handler.
-     *
-     * @return the context map
-     */
-    private Map<Object, Object> createMessagingContext() {
-        Map<Object, Object> context = new HashMap<Object, Object>();
-        context.put("handler", this.handler);
-        return context;
-    }
-
-    /**
-     * Escape code string.
-     *
-     * @param raw the raw
-     * @return the string
-     */
-    private String escapeCodeString(String raw) {
-        return raw.replace("'", "&amp;");
+        stopped.countDown();
     }
 
 }

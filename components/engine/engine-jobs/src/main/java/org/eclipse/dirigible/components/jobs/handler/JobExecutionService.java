@@ -10,8 +10,12 @@
 package org.eclipse.dirigible.components.jobs.handler;
 
 import io.opentelemetry.api.trace.Span;
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
+import org.eclipse.dirigible.components.jobs.domain.Job;
 import org.eclipse.dirigible.components.jobs.domain.JobLog;
+import org.eclipse.dirigible.components.jobs.domain.JobParameter;
+import org.eclipse.dirigible.components.jobs.repository.JobRepository;
 import org.eclipse.dirigible.components.jobs.service.JobLogService;
 import org.eclipse.dirigible.components.jobs.tenant.JobNameCreator;
 import org.quartz.JobDataMap;
@@ -21,7 +25,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class JobExecutionService {
@@ -41,13 +49,15 @@ public class JobExecutionService {
     private final JobNameCreator jobNameCreator;
     private final DataSourcesManager dataSourcesManager;
     private final JobHandlerRunner jobHandlerRunner;
+    private final JobRepository jobRepository;
 
     JobExecutionService(JobLogService jobLogService, JobNameCreator jobNameCreator, DataSourcesManager dataSourcesManager,
-            JobHandlerRunner jobHandlerRunner) {
+            JobHandlerRunner jobHandlerRunner, JobRepository jobRepository) {
         this.jobLogService = jobLogService;
         this.jobNameCreator = jobNameCreator;
         this.dataSourcesManager = dataSourcesManager;
         this.jobHandlerRunner = jobHandlerRunner;
+        this.jobRepository = jobRepository;
     }
 
     /**
@@ -98,7 +108,7 @@ public class JobExecutionService {
             // A client-Java job dispatches to the Java engine's executor, a JS one to the code
             // runner - inside the same JobLog wrapping either way, so both are equally
             // visible/monitored in the Jobs perspective.
-            jobHandlerRunner.run(handler, engine);
+            jobHandlerRunner.run(handler, engine, java ? parameterValues(name) : Map.of());
 
             registeredFinished(name, handler, triggered, startedAt);
         } catch (Exception ex) {
@@ -107,6 +117,27 @@ public class JobExecutionService {
             String msg = "Failed to execute " + (java ? "Java" : "JS") + " job. Job name [" + name + "], handler [" + handler + "]";
             throw new JobExecutionException(msg, ex);
         }
+    }
+
+    /**
+     * The parameters a Java job receives: every one its definition declares, at its value for this run.
+     * That is the rule a script job applies when it reads one ({@code job.getParameter(name)}): a
+     * configuration value of the same name - which is where a manual trigger puts the values it was
+     * given, for its own thread - and otherwise the declared default.
+     *
+     * @param name the job's name
+     * @return the values in declaration order, empty when the job declares none
+     */
+    private Map<String, String> parameterValues(String name) {
+        List<JobParameter> declared = jobRepository.findByName(name)
+                                                   .map(Job::getParameters)
+                                                   .orElseGet(List::of);
+        Map<String, String> values = new LinkedHashMap<>();
+        for (JobParameter parameter : declared) {
+            String configured = Configuration.get(parameter.getName());
+            values.put(parameter.getName(), configured == null || configured.isEmpty() ? parameter.getDefaultValue() : configured);
+        }
+        return Collections.unmodifiableMap(values);
     }
 
     /**

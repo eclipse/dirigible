@@ -9,6 +9,8 @@
  */
 package org.eclipse.dirigible.components.jobs.handler;
 
+import java.util.Map;
+
 import org.eclipse.dirigible.components.base.script.ScriptEngineUnavailableException;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
@@ -43,15 +45,17 @@ public class JobHandlerRunner {
      * @param handler the job's handler - a client-Java FQN (optionally {@code #method}) for the Java
      *        engine, a repository path to a JavaScript module otherwise
      * @param engine the job's engine, or {@code null} for the default JavaScript one
+     * @param parameters the parameters the job declares, at their values for this run - handed to a
+     *        Java job; a script reads them itself, through its job definition and the configuration
      * @throws Exception when the job body throws, so the caller can log the run as failed
      */
-    public void run(String handler, String engine) throws Exception {
+    public void run(String handler, String engine, Map<String, String> parameters) throws Exception {
         if (JavaJobExecutor.ENGINE_JAVA.equals(engine)) {
             JavaJobExecutor executor = javaJobExecutor.getIfAvailable();
             if (executor == null) {
                 throw new IllegalStateException("No JavaJobExecutor is available to run the Java job [" + handler + "]");
             }
-            executor.execute(handler);
+            executor.execute(handler, parameters);
             return;
         }
         scriptExecutor(handler).execute(handler);

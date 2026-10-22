@@ -9,6 +9,7 @@
  */
 package org.eclipse.dirigible.components.jobs.handler;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -17,15 +18,24 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
+import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.components.data.sources.manager.DataSourcesManager;
+import org.eclipse.dirigible.components.jobs.domain.Job;
 import org.eclipse.dirigible.components.jobs.domain.JobLog;
+import org.eclipse.dirigible.components.jobs.domain.JobParameter;
+import org.eclipse.dirigible.components.jobs.repository.JobRepository;
 import org.eclipse.dirigible.components.jobs.service.JobLogService;
 import org.eclipse.dirigible.components.jobs.tenant.JobNameCreator;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.quartz.JobExecutionException;
 
@@ -42,12 +52,22 @@ class JobExecutionServiceTest {
     /** The job's handler - a repository path, so the default JavaScript engine runs it. */
     private static final String HANDLER = "/project/report.mjs";
 
+    /** A client-Java job's handler - a bean method, as a {@code .job} artefact names it. */
+    private static final String JAVA_HANDLER = "demo.Reports#daily";
+
     private final JobLogService jobLogService = mock(JobLogService.class);
 
     private final JobHandlerRunner jobHandlerRunner = mock(JobHandlerRunner.class);
 
-    private final JobExecutionService jobExecutionService =
-            new JobExecutionService(jobLogService, mock(JobNameCreator.class), mock(DataSourcesManager.class), jobHandlerRunner);
+    private final JobRepository jobRepository = mock(JobRepository.class);
+
+    private final JobExecutionService jobExecutionService = new JobExecutionService(jobLogService, mock(JobNameCreator.class),
+            mock(DataSourcesManager.class), jobHandlerRunner, jobRepository);
+
+    @AfterEach
+    void cleanUpConfiguration() {
+        Configuration.removeThreadConfiguration();
+    }
 
     @Test
     void aSuccessfulRunIsLoggedAsTriggeredThenFinished() throws Exception {
@@ -55,7 +75,7 @@ class JobExecutionServiceTest {
 
         jobExecutionService.executeJob(JOB_NAME, HANDLER, null);
 
-        verify(jobHandlerRunner).run(HANDLER, null);
+        verify(jobHandlerRunner).run(HANDLER, null, Map.of());
         verify(jobLogService).jobFinished(eq(JOB_NAME), eq(HANDLER), eq(triggered.getId()), any(Date.class));
         verify(jobLogService, never()).jobFailed(any(), any(), anyLong(), any(), any());
     }
@@ -64,7 +84,7 @@ class JobExecutionServiceTest {
     void aFailedRunIsLoggedAsFailedWithTheCauseAndRethrown() throws Exception {
         JobLog triggered = triggeredLog();
         doThrow(new IllegalStateException("boom")).when(jobHandlerRunner)
-                                                  .run(HANDLER, null);
+                                                  .run(HANDLER, null, Map.of());
 
         assertThrows(JobExecutionException.class, () -> jobExecutionService.executeJob(JOB_NAME, HANDLER, null));
 
@@ -82,7 +102,7 @@ class JobExecutionServiceTest {
 
         jobExecutionService.executeJob(JOB_NAME, HANDLER, null);
 
-        verify(jobHandlerRunner).run(HANDLER, null);
+        verify(jobHandlerRunner).run(HANDLER, null, Map.of());
     }
 
     /**
@@ -95,7 +115,7 @@ class JobExecutionServiceTest {
     void aFailedRunIsRecordedEvenWithoutItsTriggeredEntry() throws Exception {
         when(jobLogService.jobTriggered(JOB_NAME, HANDLER)).thenThrow(new IllegalStateException("the log is unavailable"));
         doThrow(new IllegalStateException("boom")).when(jobHandlerRunner)
-                                                  .run(HANDLER, null);
+                                                  .run(HANDLER, null, Map.of());
 
         assertThrows(JobExecutionException.class, () -> jobExecutionService.executeJob(JOB_NAME, HANDLER, null));
 
@@ -120,7 +140,44 @@ class JobExecutionServiceTest {
 
         jobExecutionService.executeJob(JOB_NAME, HANDLER, null);
 
-        verify(jobHandlerRunner).run(HANDLER, null);
+        verify(jobHandlerRunner).run(HANDLER, null, Map.of());
+    }
+
+    /**
+     * A Java job receives the parameters its definition declares (#8017): the declared default, unless
+     * a value of the same name is configured for the run - which is how a manual trigger hands over the
+     * values it was given, and the rule a script job applies through {@code job.getParameter}.
+     */
+    @Test
+    void aJavaJobReceivesItsDeclaredParametersAtTheirValuesForTheRun() throws Exception {
+        Job job = new Job();
+        job.setName(JOB_NAME);
+        job.setParameters(List.of(new JobParameter("region", "string", "EU", "", null, job),
+                new JobParameter("limit", "number", "10", "", null, job)));
+        when(jobRepository.findByName(JOB_NAME)).thenReturn(Optional.of(job));
+        Configuration.setThreadConfiguration(Map.of("limit", "25"));
+
+        jobExecutionService.executeJob(JOB_NAME, JAVA_HANDLER, JavaJobExecutor.ENGINE_JAVA);
+
+        verify(jobHandlerRunner).run(JAVA_HANDLER, JavaJobExecutor.ENGINE_JAVA, Map.of("region", "EU", "limit", "25"));
+    }
+
+    @Test
+    void aJavaJobWhoseDefinitionIsGoneRunsWithoutParameters() throws Exception {
+        when(jobRepository.findByName(JOB_NAME)).thenReturn(Optional.empty());
+
+        jobExecutionService.executeJob(JOB_NAME, JAVA_HANDLER, JavaJobExecutor.ENGINE_JAVA);
+
+        verify(jobHandlerRunner).run(JAVA_HANDLER, JavaJobExecutor.ENGINE_JAVA, Map.of());
+    }
+
+    /** A script reads its parameters itself, so its run does not look the definition up. */
+    @Test
+    void aScriptJobRunsAsBeforeWithoutALookup() throws Exception {
+        jobExecutionService.executeJob(JOB_NAME, HANDLER, null);
+
+        verify(jobHandlerRunner).run(HANDLER, null, Map.of());
+        verifyNoInteractions(jobRepository);
     }
 
     private JobLog triggeredLog() {

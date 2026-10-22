@@ -85,10 +85,13 @@ public class Job extends Artefact {
     private Boolean enabled = true;
 
     /**
-     * The parameters.
+     * The parameters the job declares. Exposed, or the {@code .job} parser - which maps only exposed
+     * fields - drops them and the job declares none at all. A declaration removed from the artefact is
+     * removed with it.
      */
-    @OneToMany(mappedBy = "job", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "job", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @Transient
+    @Expose
     private List<JobParameter> parameters = new ArrayList<>();
 
     /** The status. */

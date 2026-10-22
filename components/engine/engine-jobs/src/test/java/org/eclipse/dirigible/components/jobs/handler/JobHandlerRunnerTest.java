@@ -17,6 +17,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
+import java.util.Map;
+
 import org.eclipse.dirigible.components.base.script.ScriptEngineUnavailableException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
@@ -36,12 +38,14 @@ class JobHandlerRunnerTest {
     }
 
     @Test
-    void aJavaJobIsRunByTheJavaExecutor() throws Exception {
+    void aJavaJobIsRunByTheJavaExecutorWithItsParameters() throws Exception {
         JavaJobExecutor executor = mock(JavaJobExecutor.class);
 
-        new JobHandlerRunner(provider(executor), provider(null)).run("app.jobs.CleanupJob", JavaJobExecutor.ENGINE_JAVA);
+        new JobHandlerRunner(provider(executor), provider(null)).run("app.jobs.Reports#daily", JavaJobExecutor.ENGINE_JAVA,
+                Map.of("region", "EU"));
 
-        verify(executor).execute("app.jobs.CleanupJob");
+        // the parameters used to stop here: the executor was handed the handler alone (#8017)
+        verify(executor).execute("app.jobs.Reports#daily", Map.of("region", "EU"));
     }
 
     @Test
@@ -50,7 +54,7 @@ class JobHandlerRunnerTest {
 
         // Rather than silently doing nothing - the caller logs the run as failed, so the Jobs
         // perspective shows it instead of reporting a run that never happened.
-        assertThrows(IllegalStateException.class, () -> runner.run("app.jobs.CleanupJob", JavaJobExecutor.ENGINE_JAVA));
+        assertThrows(IllegalStateException.class, () -> runner.run("app.jobs.CleanupJob", JavaJobExecutor.ENGINE_JAVA, Map.of()));
     }
 
     @Test
@@ -59,7 +63,7 @@ class JobHandlerRunnerTest {
         JobScriptExecutor scriptExecutor = mock(JobScriptExecutor.class);
 
         // No engine (a plain .job artefact) means the script executor.
-        new JobHandlerRunner(provider(javaExecutor), provider(scriptExecutor)).run("project/job.mjs", null);
+        new JobHandlerRunner(provider(javaExecutor), provider(scriptExecutor)).run("project/job.mjs", null, Map.of());
 
         verify(scriptExecutor).execute("project/job.mjs");
         verifyNoInteractions(javaExecutor);
@@ -70,7 +74,7 @@ class JobHandlerRunnerTest {
         JobHandlerRunner runner = new JobHandlerRunner(provider(mock(JavaJobExecutor.class)), provider(null));
 
         ScriptEngineUnavailableException refused =
-                assertThrows(ScriptEngineUnavailableException.class, () -> runner.run("project/job.mjs", null));
+                assertThrows(ScriptEngineUnavailableException.class, () -> runner.run("project/job.mjs", null, Map.of()));
 
         assertThat(refused.getMessage()).contains("project/job.mjs")
                                         .contains("JavaScript engine");

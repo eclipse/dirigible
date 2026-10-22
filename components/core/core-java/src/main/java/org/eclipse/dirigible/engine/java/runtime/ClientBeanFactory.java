@@ -14,7 +14,8 @@ import java.util.Optional;
 /**
  * The client bean container as seen by platform code that has to instantiate a client class the
  * container does <em>not</em> own - today a client {@code JavaDelegate}, which Flowable creates
- * itself and which therefore never becomes a bean.
+ * itself and which therefore never becomes a bean, and a client Camel {@code Processor}, which a
+ * {@code dirigible-java} route step builds for every exchange.
  *
  * <p>
  * Extends the read view {@link ClientBeanResolver} rather than widening it, so the three methods
@@ -24,8 +25,9 @@ import java.util.Optional;
  *
  * <p>
  * Implemented by the engine's component container and published through {@link ClientBeansHolder}.
- * It lives in {@code core-java} because {@code engine-bpm-flowable} - the one consumer - depends on
- * this module and deliberately not on {@code engine-java} (that would close the cycle
+ * It lives in {@code core-java} because its consumers - {@code engine-bpm-flowable} and
+ * {@code engine-camel} - depend on this module and deliberately not on {@code engine-java} (for the
+ * first that would close the cycle
  * {@code engine-bpm-flowable -> engine-java -> api-modules-java -> api-bpm -> engine-bpm-flowable}).
  */
 public interface ClientBeanFactory extends ClientBeanResolver {

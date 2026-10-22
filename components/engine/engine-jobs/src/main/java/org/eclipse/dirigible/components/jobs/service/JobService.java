@@ -135,7 +135,8 @@ public class JobService extends BaseArtefactService<Job, Long> {
      * <p>
      * A job body reads a parameter as a configuration value ({@code job.getParameter(name)} in the
      * JavaScript SDK, {@code Configurations.get(name)} in the Java one), so the parameters have to be
-     * visible through {@link Configuration} while the handler runs. Two things bound what that costs
+     * visible through {@link Configuration} while the handler runs - which is also where the execution
+     * service takes the values a Java job method receives from. Two things bound what that costs
      * (dirigible #6729):
      *
      * <ul>
