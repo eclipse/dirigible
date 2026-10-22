@@ -54,7 +54,7 @@ class ServerSideScriptDeprecationTest {
     private static final String REGISTRY = "/registry/public";
 
     private static final String EXPECTED_WARNING = "Project [shop] uses server-side JavaScript or TypeScript (1 TypeScript file, 1 job),"
-            + " which is deprecated and will be removed in 16.0. Migration guide: https://github.com/eclipse-dirigible/dirigible/issues/8048";
+            + " which is deprecated and will be removed in 16.0. Migration guide: https://www.dirigible.io/help/develop/migrate-typescript-to-java";
 
     @TempDir
     Path root;
@@ -154,7 +154,7 @@ class ServerSideScriptDeprecationTest {
         assertThat(savedEntry().getCause()).isEqualTo(
                 "Project [shop] uses server-side JavaScript or TypeScript (1 TypeScript file, 1 extension module, 1 job) and this instance"
                         + " has no JavaScript engine, so it does not run - JavaScript extension modules and artefacts skipped: 2."
-                        + " Migration guide: https://github.com/eclipse-dirigible/dirigible/issues/8048");
+                        + " Migration guide: https://www.dirigible.io/help/develop/migrate-typescript-to-java");
         assertThat(log.list).hasSize(1);
     }
 
@@ -188,7 +188,7 @@ class ServerSideScriptDeprecationTest {
                             .get(1);
         assertThat(gaia.getCause()).isEqualTo("Project [gaia] uses server-side JavaScript or TypeScript (3 extension modules) and this"
                 + " instance has no JavaScript engine, so it does not run - JavaScript extension modules and artefacts skipped: 3."
-                + " Migration guide: https://github.com/eclipse-dirigible/dirigible/issues/8048");
+                + " Migration guide: https://www.dirigible.io/help/develop/migrate-typescript-to-java");
         assertThat(gaia.getCategory()).isEqualTo(ServerSideScriptDeprecation.PROBLEM_CATEGORY);
         assertThat(gaia.getSource()).isEqualTo("ExtensionModuleReader");
         assertThat(log.list).extracting(ILoggingEvent::getFormattedMessage)
@@ -254,7 +254,7 @@ class ServerSideScriptDeprecationTest {
     private static String skippedWarning(String project) {
         return "Project [" + project + "] uses server-side JavaScript and this instance has no JavaScript engine, so its JavaScript"
                 + " extension modules are skipped - the Problems view counts them. Migration guide:"
-                + " https://github.com/eclipse-dirigible/dirigible/issues/8048";
+                + " https://www.dirigible.io/help/develop/migrate-typescript-to-java";
     }
 
     private static Problem entry(String location) {

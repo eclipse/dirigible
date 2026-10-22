@@ -42,7 +42,7 @@ class ServerSideScriptDeprecationIT extends IntegrationTest {
 
     private static final String JAVA_PROJECT = "deprecation-java";
 
-    private static final String GUIDE = "https://github.com/eclipse-dirigible/dirigible/issues/8048";
+    private static final String GUIDE = "https://www.dirigible.io/help/develop/migrate-typescript-to-java";
 
     private static final String EXPECTED_WARNING =
             "Project [" + SCRIPTS_PROJECT + "] uses server-side JavaScript or TypeScript (1 TypeScript file, 1 extension module),"
