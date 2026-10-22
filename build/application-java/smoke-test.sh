@@ -144,6 +144,14 @@ if grep -qE 'ScriptEngineUnavailable|no script engine' "${WORK}/app.log"; then
     grep -E 'ScriptEngineUnavailable|no script engine' "${WORK}/app.log" | head -n 5 >&2
     fail "something needed the JavaScript engine"
 fi
+# A Java-only application gets no deprecation signal (#8049): no warning, no Problems entry, no banner.
+if grep -q 'uses server-side JavaScript or TypeScript' "${WORK}/app.log"; then
+    grep 'uses server-side JavaScript or TypeScript' "${WORK}/app.log" | head -n 5 >&2
+    fail "the Java-only application is flagged as using server-side JavaScript or TypeScript"
+fi
+curl -sf -u "${AUTH}" "${BASE}/services/ide/javascript-deprecation" | grep -qE '"projects" *: *\[\]' \
+    || fail "the JavaScript deprecation notice lists a project"
+echo "   no script engine asked for, no JavaScript deprecation signal"
 
 echo "== 8. The edition's own identity and provided-BOM are the ones in use"
 curl -sf -u "${AUTH}" "${BASE}/services/core/version" | grep -q '"productType" *: *"java"' \

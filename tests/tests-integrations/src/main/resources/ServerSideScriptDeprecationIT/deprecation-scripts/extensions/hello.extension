@@ -1,0 +1,5 @@
+{
+  "module": "deprecation-scripts/extensions/hello.js",
+  "extensionPoint": "deprecation-scripts-it",
+  "description": "A script extension module"
+}

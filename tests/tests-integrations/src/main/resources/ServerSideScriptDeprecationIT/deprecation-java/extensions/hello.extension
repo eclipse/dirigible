@@ -1,0 +1,5 @@
+{
+  "module": "deprecation-java/ui/hello.json",
+  "extensionPoint": "deprecation-java-it",
+  "description": "A JSON extension module"
+}

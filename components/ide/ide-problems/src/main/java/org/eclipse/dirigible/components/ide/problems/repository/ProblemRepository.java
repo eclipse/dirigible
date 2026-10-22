@@ -39,6 +39,14 @@ public interface ProblemRepository extends JpaRepository<Problem, Long> {
             @Param("category") String category);
 
     /**
+     * Fetch the problems of a category.
+     *
+     * @param category the category
+     * @return the problems
+     */
+    List<Problem> findByCategory(String category);
+
+    /**
      * Update problems by location, type amd category.
      *
      * @param cause the cause
