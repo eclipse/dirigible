@@ -48,7 +48,7 @@
                         <tr bk-table-row ng-if="version.productCommitId !== '${git.commit.id}'">
                             <td bk-table-cell><strong>{{'window-about:commitId' | t:'Commit Id'}}</strong></td>
                             <td bk-table-cell>
-                                <a style="color:inherit" href="{{::version.productRepository}}/commit/{{::version.productCommitId}}" target="_blank" rel="noopener noreferrer">{{::version.productCommitId}}</a>
+                                <a style="color:inherit" ng-href="{{::version.productRepository}}/commit/{{::version.productCommitId}}" target="_blank" rel="noopener noreferrer">{{::version.productCommitId}}</a>
                             </td>
                         </tr>
                         <tr bk-table-row>

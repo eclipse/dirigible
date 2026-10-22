@@ -71,12 +71,25 @@ class ExtensionModuleScriptEndpointTest {
     }
 
     @Test
-    void refuses_a_global_that_is_not_an_identifier() {
-        ResponseStatusException refused =
-                assertThrows(ResponseStatusException.class, () -> endpoint().script("/app/view.json", "x;alert(1)//"));
+    void refuses_a_global_no_page_reads() {
+        for (String global : List.of("x;alert(1)//", "window", "viewdata")) {
+            ResponseStatusException refused =
+                    assertThrows(ResponseStatusException.class, () -> endpoint().script("/app/view.json", global));
 
-        assertEquals(HttpStatus.BAD_REQUEST, refused.getStatusCode());
+            assertEquals(HttpStatus.BAD_REQUEST, refused.getStatusCode(), global);
+        }
         verify(reader, never()).readRegisteredJsonModule(anyString());
+    }
+
+    @Test
+    void serves_every_page_global() {
+        when(reader.readRegisteredJsonModule("/app/view.json")).thenReturn(
+                Optional.of(new ExtensionModule("app/view.json", null, Map.of("id", "view"))));
+
+        for (String global : List.of("viewData", "editorData", "perspectiveData")) {
+            assertEquals("const " + global + " = {\"id\":\"view\"};\n", endpoint().script("/app/view.json", global)
+                                                                                  .getBody());
+        }
     }
 
     private ExtensionModuleScriptEndpoint endpoint() {

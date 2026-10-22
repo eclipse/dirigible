@@ -9,7 +9,7 @@
  */
 package org.eclipse.dirigible.components.extensions.modules;
 
-import java.util.regex.Pattern;
+import java.util.List;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -41,7 +41,8 @@ import tools.jackson.databind.json.JsonMapper;
 @RestController
 class ExtensionModuleScriptEndpoint {
 
-    private static final Pattern IDENTIFIER = Pattern.compile("[A-Za-z_$][A-Za-z0-9_$]*");
+    /** The globals the platform's view, editor and perspective pages read their descriptor from. */
+    private static final List<String> PAGE_GLOBALS = List.of("viewData", "editorData", "perspectiveData");
 
     private static final MediaType JAVASCRIPT = MediaType.parseMediaType("text/javascript;charset=UTF-8");
 
@@ -61,10 +62,12 @@ class ExtensionModuleScriptEndpoint {
 
     @GetMapping("/services/platform/extensions/modules/{*module}")
     ResponseEntity<String> script(@PathVariable("module") String module, @RequestParam("global") String global) {
-        if (!IDENTIFIER.matcher(global)
-                       .matches()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The global must be a JavaScript identifier.");
-        }
+        // The script names one of the known page globals - never the request's own text.
+        String pageGlobal = PAGE_GLOBALS.stream()
+                                        .filter(global::equals)
+                                        .findFirst()
+                                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                                                "The global must be one of " + PAGE_GLOBALS + "."));
         ExtensionModule descriptor = reader.readRegisteredJsonModule(module)
                                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                                                    "No JSON extension module is registered at this path."));
@@ -72,6 +75,6 @@ class ExtensionModuleScriptEndpoint {
         return ResponseEntity.ok()
                              .header(HttpHeaders.CACHE_CONTROL, "private, no-cache")
                              .contentType(JAVASCRIPT)
-                             .body("const " + global + " = " + JSON.writeValueAsString(descriptor.content()) + ";\n");
+                             .body("const " + pageGlobal + " = " + JSON.writeValueAsString(descriptor.content()) + ";\n");
     }
 }
