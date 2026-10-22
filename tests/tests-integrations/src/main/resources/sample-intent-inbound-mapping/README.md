@@ -65,6 +65,24 @@ itself (`label: "."`). The arrival stores **one** `PurchaseOrder`, two `Purchase
   found into `LinesSeen` (`custom/CountLinesTask.java`): **2** for the order above, which is the proof
   that the lines were there before the process started.
 
+### A record named by a combination
+
+A usage report names its subscription by the customer and plan it is for, and the sender knows only
+their codes:
+
+```json
+{ "reportId": "U-1", "units": 5, "customerCode": "ACME", "planCode": "PRO" }
+```
+
+Neither code identifies a subscription - every seeded customer holds two - so the lookup takes a
+**composite business key**
+([eclipse-dirigible/dirigible#8033](https://github.com/eclipse-dirigible/dirigible/issues/8033)):
+`by: [customer.code, plan.code], from: [customerCode, planCode]`, paired by position. It is legal
+because `Subscription` declares `unique: [{ fields: [customer, plan] }]`; without it, Generate refuses
+the lookup. Each code is resolved to its `Customer` and `Plan` first, then one query on `Subscription`
+matches both. An unknown customer, an unknown plan, or a pair nobody subscribes to (`ACME` /
+`ENTERPRISE`) rejects the report, logged with both codes.
+
 ## Run it
 
 1. Import this folder as a project into your workspace (zip-import or copy it in; the project name
@@ -137,12 +155,24 @@ itself (`label: "."`). The arrival stores **one** `PurchaseOrder`, two `Purchase
    way no order, line or tag is stored. A moment after an accepted order, its `LinesSeen` shows how many
    lines the `CountLines` process counted.
 
+9. The usage reports arrive on the `sample.usage` queue and the webhook:
+
+   ```bash
+   curl -u admin:admin -H 'Content-Type: application/json' \
+     -d '{"reportId":"U-1","units":5,"customerCode":"ACME","planCode":"PRO"}' \
+     http://localhost:8080/services/java/sample-intent-inbound-mapping/gen/events/assignments/UsageHookWebhook/usage
+   ```
+
+   It answers with the report, its `Subscription` the id of the ACME/PRO subscription (2). Post
+   `"planCode":"ENTERPRISE"` and it answers 400: both codes exist, but ACME does not subscribe to it.
+
 Read the records back at:
 
 ```
 http://localhost:8080/services/java/sample-intent-inbound-mapping/gen/assignments/api/tenantuserassignment/TenantUserAssignmentController
 http://localhost:8080/services/java/sample-intent-inbound-mapping/gen/assignments/api/purchaseorder/PurchaseOrderController
 http://localhost:8080/services/java/sample-intent-inbound-mapping/gen/assignments/api/purchaseorder/PurchaseOrderLineController?PurchaseOrder=<id>
+http://localhost:8080/services/java/sample-intent-inbound-mapping/gen/assignments/api/usagereport/UsageReportController
 ```
 
 or through the generated UI at

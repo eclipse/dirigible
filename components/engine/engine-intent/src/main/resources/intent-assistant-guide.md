@@ -4254,6 +4254,17 @@ inbound:
   someone must see and fix (a sender pointed at the wrong receiver, a register row not created yet):
   `tenant: { lookup: Tenant, by: tenantId, from: tenantId, onMissing: deadLetter }`. A webhook does
   not take the key, because it already answers 400. A drop folder does not take it either.
+- **A composite business key** names a record the sender knows only by a **combination**: `by:` and
+  `from:` become lists of the same length, paired by position -
+  `subscription: { lookup: Subscription, by: [customer.code, plan.code], from: [customerCode, planCode] }`.
+  Each part is a field of the target, or a one-hop `relation.field` whose field is unique (or the
+  primary key) on that relation's target. The target **must declare the matching composite
+  `unique:`** - here `unique: [{ fields: [customer, plan] }]` on `Subscription`, naming the field or
+  the relation of each part, in any order - or Generate refuses the lookup, since any other
+  combination could match several rows. Each hop is resolved first, then one query matches every
+  part; a miss anywhere (a key absent, an unknown customer, a pair nobody subscribes to) rejects the
+  arrival exactly as a single-key miss does, logged with every key. Do not copy the parts onto the
+  arriving record as relations of its own just to resolve the record they identify later.
 
 Everything still saves through the entity's own repository, so validations, translations and the create
 event fire exactly as for any other write. Do not map the primary key - it is generated on insert; give

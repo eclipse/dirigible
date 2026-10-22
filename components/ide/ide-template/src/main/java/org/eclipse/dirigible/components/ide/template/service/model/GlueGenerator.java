@@ -800,6 +800,19 @@ class GlueGenerator {
         for (Map<String, Object> lookup : asMaps(declared)) {
             Map<String, Object> resolved = ModelValues.copy(lookup);
             resolved.put("javaTargetPerspective", sanitize(lookup, "targetPerspective"));
+            // A composite key's hops import their own targets' repositories. Only a composite lookup
+            // carries terms, so a single key binds exactly as before.
+            if (lookup.containsKey("terms")) {
+                List<Object> terms = new ArrayList<>();
+                for (Map<String, Object> term : asMaps(lookup.get("terms"))) {
+                    Map<String, Object> resolvedTerm = ModelValues.copy(term);
+                    if (Boolean.TRUE.equals(term.get("hop"))) {
+                        resolvedTerm.put("javaHopPerspective", sanitize(term, "hopPerspective"));
+                    }
+                    terms.add(resolvedTerm);
+                }
+                resolved.put("terms", terms);
+            }
             lookups.add(resolved);
         }
         return lookups;

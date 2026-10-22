@@ -59,6 +59,12 @@ import ch.qos.logback.classic.Level;
  * and an array of tags becomes one PurchaseOrder plus one child row per element, written in ONE
  * transaction - so the CountLines process its create event starts counts every line - and a single
  * bad element rejects the whole order, leaving no row at all.
+ *
+ * <p>
+ * And a lookup by a composite business key (dirigible #8033): a usage report names its subscription
+ * by the customer and plan codes, neither of which identifies one on its own. A known pair is
+ * ingested with that subscription's id; a pair nobody subscribes to, and a customer that does not
+ * exist, are rejected with both codes in the log.
  */
 @Lazy
 @Component
@@ -84,6 +90,15 @@ class SampleIntentInboundMappingTestProject extends BaseIntentTestProject {
     private static final String ORDER_QUEUE = "sample.orders";
     private static final String ORDER_CONSUMER_LOGGER = "app.gen.events.assignments.OrdersConsumer";
 
+    private static final String USAGE_API = "/services/java/" + PROJECT + "/gen/assignments/api/usagereport/UsageReportController";
+    private static final String USAGE_WEBHOOK = "/services/java/" + PROJECT + "/gen/events/assignments/UsageHookWebhook/usage";
+    private static final String USAGE_QUEUE = "sample.usage";
+    private static final String USAGE_CONSUMER_LOGGER = "app.gen.events.assignments.UsageConsumer";
+
+    /** Seed ids of the subscriptions ACME/PRO and GLOBEX/BASIC - each code alone matches two. */
+    private static final int SUBSCRIPTION_ACME_PRO = 2;
+    private static final int SUBSCRIPTION_GLOBEX_BASIC = 3;
+
     /** Two lines naming both seeded products by sku: Product 1 is sku A, Product 2 is sku B. */
     private static final String TWO_LINES = "[{\"sku\":\"A\",\"qty\":2},{\"sku\":\"B\",\"qty\":1}]";
     private static final String TWO_TAGS = "[\"rush\",\"gift\"]";
@@ -108,10 +123,12 @@ class SampleIntentInboundMappingTestProject extends BaseIntentTestProject {
         // application context, which drops an appender attached any earlier.
         LogsAsserter consumerLogs = new LogsAsserter(CONSUMER_LOGGER, Level.WARN);
         LogsAsserter orderLogs = new LogsAsserter(ORDER_CONSUMER_LOGGER, Level.WARN);
+        LogsAsserter usageLogs = new LogsAsserter(USAGE_CONSUMER_LOGGER, Level.WARN);
 
         verifyWebhook();
         verifyQueue(consumerLogs);
         verifyCollections(orderLogs);
+        verifyCompositeLookup(usageLogs);
         verifyDeadLetter(consumerLogs);
     }
 
@@ -306,6 +323,67 @@ class SampleIntentInboundMappingTestProject extends BaseIntentTestProject {
                                                  .then()
                                                  .statusCode(200)
                                                  .body("$", hasSize(4)));
+    }
+
+    /**
+     * The composite lookup, over the webhook and the broker. The refused reports are published first
+     * and the accepted one last, as in {@link #verifyQueue(LogsAsserter)}, so their absence is a fact
+     * rather than a race.
+     */
+    private void verifyCompositeLookup(LogsAsserter usageLogs) {
+        restAssuredExecutor.execute(() -> given().contentType("application/json")
+                                                 .body(usage("hook-usage", "ACME", "PRO"))
+                                                 .when()
+                                                 .post(USAGE_WEBHOOK)
+                                                 .then()
+                                                 .statusCode(200)
+                                                 .body("ReportId", equalTo("hook-usage"))
+                                                 .body("Subscription", equalTo(SUBSCRIPTION_ACME_PRO)));
+        // Both codes exist, but nobody subscribes ACME to ENTERPRISE.
+        restAssuredExecutor.execute(() -> given().contentType("application/json")
+                                                 .body(usage("hook-usage-none", "ACME", "ENTERPRISE"))
+                                                 .when()
+                                                 .post(USAGE_WEBHOOK)
+                                                 .then()
+                                                 .statusCode(400)
+                                                 .body("error",
+                                                         containsString("no unique Subscription matches the Customer.Code, Plan.Code")));
+        // A customer that does not exist misses at its hop.
+        restAssuredExecutor.execute(() -> given().contentType("application/json")
+                                                 .body(usage("hook-usage-nope", "NOPE", "BASIC"))
+                                                 .when()
+                                                 .post(USAGE_WEBHOOK)
+                                                 .then()
+                                                 .statusCode(400));
+
+        MessagingFacade.sendToQueue(USAGE_QUEUE, usage("queue-usage-none", "GLOBEX", "ENTERPRISE"));
+        MessagingFacade.sendToQueue(USAGE_QUEUE, usage("queue-usage-nope", "NOPE", "PRO"));
+        MessagingFacade.sendToQueue(USAGE_QUEUE, usage("queue-usage", "GLOBEX", "BASIC"));
+
+        restAssuredExecutor.execute(() -> given().when()
+                                                 .get(USAGE_API)
+                                                 .then()
+                                                 .statusCode(200)
+                                                 .body("find { it.ReportId == 'queue-usage' }.Subscription",
+                                                         equalTo(SUBSCRIPTION_GLOBEX_BASIC))
+                                                 .body("find { it.ReportId == 'hook-usage' }.Subscription", equalTo(SUBSCRIPTION_ACME_PRO))
+                                                 .body("ReportId", not(hasItem("queue-usage-none")))
+                                                 .body("ReportId", not(hasItem("queue-usage-nope")))
+                                                 .body("ReportId", not(hasItem("hook-usage-none")))
+                                                 .body("ReportId", not(hasItem("hook-usage-nope"))),
+                120);
+
+        // A miss is logged with every key of the combination, wherever it happened.
+        usageLogs.assertLoggedMessage(
+                "no unique Subscription matches Customer.Code [GLOBEX], Plan.Code [ENTERPRISE] from [customerCode, planCode] - NOT ingested",
+                Level.ERROR);
+        usageLogs.assertLoggedMessage("no unique Subscription matches Customer.Code [NOPE], Plan.Code [PRO] from [customerCode, planCode]"
+                + " - no unique Customer matches Customer.Code - NOT ingested", Level.ERROR);
+    }
+
+    private static String usage(String reportId, String customerCode, String planCode) {
+        return "{\"reportId\":\"" + reportId + "\",\"units\":5,\"customerCode\":\"" + customerCode + "\",\"planCode\":\"" + planCode
+                + "\"}";
     }
 
     private int orderId(String orderNumber) {

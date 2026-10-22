@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -22,6 +23,7 @@ import org.eclipse.dirigible.components.intent.model.FieldIntent;
 import org.eclipse.dirigible.components.intent.model.InboundIntent;
 import org.eclipse.dirigible.components.intent.model.IntentModel;
 import org.eclipse.dirigible.components.intent.model.RelationIntent;
+import org.eclipse.dirigible.components.intent.model.UniqueIntent;
 
 /**
  * Mapping on <b>arrival</b> - the {@code accept:} gate and the {@code map:} projection of an
@@ -47,13 +49,21 @@ import org.eclipse.dirigible.components.intent.model.RelationIntent;
  * entity stores a foreign key, which on its own is what forced a hand-written consumer even for an
  * otherwise fully modelled arrival. The {@code by:} field must be UNIQUE (or the target's primary
  * key): a non-unique lookup silently picking one of several rows is worse than failing, so it is
- * refused when the intent is read rather than at run time.
+ * refused when the intent is read rather than at run time. A record identified only by a
+ * <em>combination</em> is looked up by a <b>composite business key</b>: {@code by:} and
+ * {@code from:} are lists of the same length, paired by position, each part a field of the target
+ * or a one-hop {@code relation.field} whose field identifies one row of the relation's target
+ * ({@code by: [customer.code, plan.code], from: [customerCode, planCode]}). The properties the
+ * parts name must be exactly one declared {@code unique:} of the target, for the same reason. Each
+ * hop is resolved first, as a single-key lookup is, and then one query matches every part.
  * <li><b>A lookup that matches nothing REJECTS the arrival</b> - it never stores a null relation.
  * How depends on its {@code onMissing:}. With {@code drop}, the default, the generated handler logs
  * the value it could not resolve and acknowledges the message. With {@code deadLetter} it throws,
  * so the broker redelivers the message and finally moves it to its dead-letter destination, where
  * it can be replayed once the missing row exists. Only a queue or topic arrival takes the key: a
- * webhook already answers {@code 400}, and a polled folder has nowhere to dead-letter to.
+ * webhook already answers {@code 400}, and a polled folder has nowhere to dead-letter to. A
+ * composite lookup misses as a whole: an absent part, a hop that resolves no single row, or no
+ * single target row.
  * <li><b>A non-matching {@code accept:} is acknowledged and ignored</b>, with a warning. A sender
  * rolling out a new version must not fill this receiver's error queue.
  * <li><b>A collection maps a JSON array onto child rows.</b> A {@code map:} key naming a
@@ -135,9 +145,43 @@ public final class ArrivalSupport {
      * @param targetKeyProperty the target's PascalCase primary-key property - the value stored
      * @param deadLetter {@code true} when a miss fails the message ({@code onMissing: deadLetter}),
      *        {@code false} when it acknowledges it
+     * @param composite {@code true} when the business key is a combination of {@link #terms}; the
+     *        {@code byProperty} and {@code from} components then list every part, for the messages, and
+     *        {@code byValueExpression} is empty - each term carries its own
+     * @param terms the parts of a composite key, in the declared order; empty for a single key
+     * @param keyList for a composite key, the Java list of every part's envelope value - what a
+     *        collection caches its matches by; {@code null} for a single key
+     * @param keysExpression for a composite key, a Java string expression naming every part and its
+     *        envelope value, for the miss message; {@code null} for a single key
      */
     public record Lookup(String property, String local, String from, String fromLiteral, String targetEntity, String targetPerspective,
-            String byProperty, String byValueExpression, String targetKeyProperty, boolean deadLetter) {
+            String byProperty, String byValueExpression, String targetKeyProperty, boolean deadLetter, boolean composite, List<Term> terms,
+            String keyList, String keysExpression) {
+    }
+
+    /**
+     * One part of a composite business key: a field of the target compared with the converted envelope
+     * value, or a one-hop {@code relation.field} resolved to the relation's target row first and
+     * compared through the relation's foreign key.
+     *
+     * @param label how the part reads in a message, e.g. {@code Customer.Code}
+     * @param from the envelope key carrying the part, as authored
+     * @param fromLiteral the envelope key as a Java string literal
+     * @param local the prefix of the locals the generated block declares for this part
+     * @param property the target's PascalCase property the part is compared on - the field itself, or
+     *        the foreign key of the hop's relation
+     * @param valueExpression the value compared: the converted envelope value, or the primary key of
+     *        the row the hop resolved
+     * @param hop {@code true} when the part is a {@code relation.field}, resolved before the target
+     * @param hopEntity the hop relation's target, or {@code null} for a field part
+     * @param hopPerspective the hop target's resolved perspective, or {@code null} for a field part
+     * @param hopByProperty the hop target's PascalCase property the envelope value matches, or
+     *        {@code null} for a field part
+     * @param hopByValueExpression the conversion of the envelope value to that property's type, or
+     *        {@code null} for a field part
+     */
+    public record Term(String label, String from, String fromLiteral, String local, String property, String valueExpression, boolean hop,
+            String hopEntity, String hopPerspective, String hopByProperty, String hopByValueExpression) {
     }
 
     /**
@@ -361,6 +405,36 @@ public final class ArrivalSupport {
             one.put("byValueExpression", lookup.byValueExpression());
             one.put("targetKeyProperty", lookup.targetKeyProperty());
             one.put("deadLetter", lookup.deadLetter());
+            if (lookup.composite()) {
+                // Only a composite lookup carries these keys, so a single key's descriptor stays what it
+                // was byte for byte - and a descriptor without them reads as a single key in #if.
+                one.put("composite", Boolean.TRUE);
+                one.put("keyList", lookup.keyList());
+                one.put("keysExpression", lookup.keysExpression());
+                one.put("terms", renderedTerms(lookup.terms()));
+            }
+            rendered.add(one);
+        }
+        return rendered;
+    }
+
+    private static List<Map<String, Object>> renderedTerms(List<Term> terms) {
+        List<Map<String, Object>> rendered = new ArrayList<>();
+        for (Term term : terms) {
+            Map<String, Object> one = new LinkedHashMap<>();
+            one.put("label", term.label());
+            one.put("from", term.from());
+            one.put("fromLiteral", term.fromLiteral());
+            one.put("local", term.local());
+            one.put("property", term.property());
+            one.put("valueExpression", term.valueExpression());
+            one.put("hop", term.hop());
+            if (term.hop()) {
+                one.put("hopEntity", term.hopEntity());
+                one.put("hopPerspective", term.hopPerspective());
+                one.put("hopByProperty", term.hopByProperty());
+                one.put("hopByValueExpression", term.hopByValueExpression());
+            }
             rendered.add(one);
         }
         return rendered;
@@ -556,15 +630,16 @@ public final class ArrivalSupport {
             validateOnMissing(lookup.get("onMissing"), where, sourceWithoutDeadLetters, issues);
         }
         String target = text(lookup.get("lookup"));
-        String by = text(lookup.get("by"));
-        String from = text(lookup.get("from"));
+        boolean composite = lookup.get("by") instanceof List || lookup.get("from") instanceof List;
+        String by = composite ? null : text(lookup.get("by"));
+        String from = composite ? null : text(lookup.get("from"));
         if (target == null) {
             issues.add(where + " names no entity to look up");
         }
-        if (by == null) {
+        if (!composite && by == null) {
             issues.add(where + " has no by - the target field the business key matches");
         }
-        if (from == null) {
+        if (!composite && from == null) {
             issues.add(where + " has no from - the envelope key carrying the business key");
         }
         if (relation == null) {
@@ -576,7 +651,7 @@ public final class ArrivalSupport {
                     + "], which must be an entity declared in this model (cross-model lookups are not supported yet)");
             return;
         }
-        if (target == null || by == null) {
+        if (target == null || (!composite && by == null)) {
             return;
         }
         if (!target.equals(relation.getTo())) {
@@ -589,7 +664,11 @@ public final class ArrivalSupport {
             issues.add(where + " reads unknown entity [" + target + "]");
             return;
         }
-        validateBy(by, looked, where, issues);
+        if (composite) {
+            validateCompositeBy(lookup.get("by"), lookup.get("from"), looked, byName, where, issues);
+        } else {
+            validateBy(by, looked, where, issues);
+        }
     }
 
     /**
@@ -624,6 +703,109 @@ public final class ArrivalSupport {
             issues.add(where + " matches on [" + by + "], which is not unique on [" + looked.getName()
                     + "] - declare unique: true on it, since a lookup that could match several rows would silently pick one");
         }
+        validateKeyType(by, field, looked, where, issues);
+    }
+
+    /**
+     * A composite {@code by:} pairs each part with the {@code from:} key at its position. A part is a
+     * field of the target, or a one-hop {@code relation.field} held to the single-key rules on the
+     * relation's target. No part has to be unique on its own - the COMBINATION does, so the properties
+     * the parts name must be exactly the fields of one declared {@code unique:} of the target; any
+     * other set could match several rows.
+     */
+    private static void validateCompositeBy(Object by, Object from, EntityIntent looked, Map<String, EntityIntent> byName, String where,
+            List<String> issues) {
+        if (!(by instanceof List<?> parts) || !(from instanceof List<?> keys) || parts.size() != keys.size()) {
+            issues.add(where + " pairs by and from by position - both must be lists of the same length");
+            return;
+        }
+        if (parts.size() < 2) {
+            issues.add(where + " names a composite key of one part - a single business key is written by: <field>, from: <key>");
+            return;
+        }
+        for (Object key : keys) {
+            String text = text(key);
+            if (text == null || ELEMENT.equals(text)) {
+                issues.add(where + " from [" + key + "] must name a key - each part of a composite key is read from a key of its own");
+            }
+        }
+        Set<String> named = new LinkedHashSet<>();
+        boolean resolved = true;
+        for (Object part : parts) {
+            String property = text(part) == null ? null : validateKeyPart(text(part), looked, byName, where, issues);
+            if (property == null) {
+                resolved = false;
+            } else if (!named.add(property)) {
+                issues.add(where + " names [" + property + "] twice - each part of a composite key is a property of its own");
+            }
+        }
+        if (!resolved || named.size() != parts.size()) {
+            return; // the unresolvable part is already reported; a key set without it would mislead
+        }
+        List<String> declared = new ArrayList<>();
+        for (UniqueIntent unique : looked.getUnique()) {
+            if (unique.getFields()
+                      .size() == named.size()
+                    && named.equals(new HashSet<>(unique.getFields()))) {
+                return;
+            }
+            declared.add(String.valueOf(unique.getFields()));
+        }
+        issues.add(where + " matches on " + parts + ", which is not a declared unique key of [" + looked.getName()
+                + "] - declare unique: [{ fields: " + named + " }] on it, since a lookup that could match several rows would silently"
+                + " pick one; its declared keys: " + (declared.isEmpty() ? "none" : String.join(", ", declared)));
+    }
+
+    /**
+     * One part of a composite {@code by:}: a field of the target, or a {@code relation.field} hop.
+     *
+     * @return the target property the part names - the field, or the hop's relation - or {@code null}
+     *         when it names none (the reason is already reported)
+     */
+    private static String validateKeyPart(String part, EntityIntent looked, Map<String, EntityIntent> byName, String where,
+            List<String> issues) {
+        int dot = part.indexOf('.');
+        if (dot < 0) {
+            FieldIntent field = fieldOf(looked, part);
+            if (field == null) {
+                issues.add(where + " matches on [" + part + "], which is not a field of [" + looked.getName()
+                        + "] - a part of a composite key is a field or a relation.field");
+                return null;
+            }
+            validateKeyType(part, field, looked, where, issues);
+            return part;
+        }
+        String relationName = part.substring(0, dot);
+        String fieldName = part.substring(dot + 1);
+        if (fieldName.indexOf('.') >= 0) {
+            issues.add(where + " matches on [" + part
+                    + "], which hops more than one relation - a part reads a field of one relation's target");
+            return null;
+        }
+        RelationIntent relation = toOneRelation(looked, relationName);
+        if (relation == null) {
+            issues.add(where + " matches on [" + part + "], but [" + relationName + "] is not a to-one relation of [" + looked.getName()
+                    + "]");
+            return null;
+        }
+        if (relation.isCrossModel()) {
+            issues.add(where + " matches on [" + part + "], which reads [" + relation.getTo()
+                    + "] - it must be an entity declared in this model (cross-model lookups are not supported yet)");
+            return null;
+        }
+        EntityIntent hop = byName.get(relation.getTo());
+        if (hop == null) {
+            issues.add(where + " matches on [" + part + "], which reads unknown entity [" + relation.getTo() + "]");
+            return null;
+        }
+        validateBy(fieldName, hop, where + " part [" + part + "]", issues);
+        return relationName;
+    }
+
+    /**
+     * A business key's type must be one a JSON value can carry, and the key must not be translated.
+     */
+    private static void validateKeyType(String by, FieldIntent field, EntityIntent looked, String where, List<String> issues) {
         if (!BY_TYPES.contains(normalized(field.getType()))) {
             issues.add(where + " matches on the [" + field.getType() + "] field [" + by
                     + "] - a business key is a string or an integer field");
@@ -665,9 +847,13 @@ public final class ArrivalSupport {
         if (relation == null) {
             throw new IllegalArgumentException("map [" + name + "] lookup fills [" + name + "], which is not a to-one relation");
         }
+        EntityIntent looked = byName.get(relation.getTo());
+        if (looked != null && declared.get("by") instanceof List<?> parts) {
+            return compositeLookup(name, local, parts, declared.get("from"), ON_MISSING_DEAD_LETTER.equals(text(declared.get("onMissing"))),
+                    looked, byName, compositionParents, model);
+        }
         String from = text(declared.get("from"));
         String by = text(declared.get("by"));
-        EntityIntent looked = byName.get(relation.getTo());
         if (from == null || by == null || looked == null) {
             throw new IllegalArgumentException(
                     "map [" + name + "] lookup of [" + relation.getTo() + "] is incomplete - it names lookup, by and from");
@@ -681,7 +867,79 @@ public final class ArrivalSupport {
         return new Lookup(property, local, from, NotificationSupport.quote(from), looked.getName(),
                 IntentEntities.resolvePerspective(looked.getName(), compositionParents, model), IntentNaming.pascalCase(by),
                 conversion(normalized(byField.getType()), local + "Key"), IntentEntities.keyFieldName(looked),
-                ON_MISSING_DEAD_LETTER.equals(text(declared.get("onMissing"))));
+                ON_MISSING_DEAD_LETTER.equals(text(declared.get("onMissing"))), false, List.of(), null, null);
+    }
+
+    /**
+     * A composite lookup: every part's envelope value, then each hop resolved to its row, then one
+     * query on the target with one {@code eq} per part.
+     */
+    private static Lookup compositeLookup(String name, String local, List<?> parts, Object from, boolean deadLetter, EntityIntent looked,
+            Map<String, EntityIntent> byName, Map<String, String> compositionParents, IntentModel model) {
+        if (!(from instanceof List<?> keys) || keys.size() != parts.size()) {
+            throw new IllegalArgumentException("map [" + name + "] lookup of [" + looked.getName()
+                    + "] pairs by and from by position - both must be lists of the same length");
+        }
+        List<Term> terms = new ArrayList<>();
+        for (int index = 0; index < parts.size(); index++) {
+            String part = text(parts.get(index));
+            String key = text(keys.get(index));
+            if (part == null || key == null) {
+                throw new IllegalArgumentException("map [" + name + "] lookup of [" + looked.getName() + "] has an empty part at " + index);
+            }
+            terms.add(term(name, part, key, local, looked, byName, compositionParents, model));
+        }
+        List<String> labels = new ArrayList<>();
+        List<String> froms = new ArrayList<>();
+        List<String> values = new ArrayList<>();
+        StringBuilder keysText = new StringBuilder();
+        for (Term term : terms) {
+            labels.add(term.label());
+            froms.add(term.from());
+            values.add(term.local() + "Key");
+            // The labels are identifiers joined by dots, so they sit in the literal unescaped.
+            keysText.append(keysText.isEmpty() ? "" : ", ")
+                    .append(term.label())
+                    .append(" [\" + ")
+                    .append(term.local())
+                    .append("Key + \"]");
+        }
+        String fromSummary = String.join(", ", froms);
+        String keyList = "java.util.List.of(" + String.join(", ", values) + ")";
+        return new Lookup(IntentNaming.pascalCase(name), local, fromSummary, NotificationSupport.quote(fromSummary), looked.getName(),
+                IntentEntities.resolvePerspective(looked.getName(), compositionParents, model), String.join(", ", labels), "",
+                IntentEntities.keyFieldName(looked), deadLetter, true, List.copyOf(terms), keyList, "\"" + keysText + "\"");
+    }
+
+    private static Term term(String name, String part, String key, String lookupLocal, EntityIntent looked,
+            Map<String, EntityIntent> byName, Map<String, String> compositionParents, IntentModel model) {
+        int dot = part.indexOf('.');
+        if (dot < 0) {
+            FieldIntent field = fieldOf(looked, part);
+            if (field == null) {
+                throw new IllegalArgumentException(
+                        "map [" + name + "] lookup matches on [" + part + "], which is not a field of [" + looked.getName() + "]");
+            }
+            String property = IntentNaming.pascalCase(part);
+            String local = lookupLocal + "By" + property;
+            return new Term(property, key, NotificationSupport.quote(key), local, property,
+                    conversion(normalized(field.getType()), local + "Key"), false, null, null, null, null);
+        }
+        String relationName = part.substring(0, dot);
+        String fieldName = part.substring(dot + 1);
+        RelationIntent relation = toOneRelation(looked, relationName);
+        EntityIntent hop = relation == null ? null : byName.get(relation.getTo());
+        FieldIntent field = hop == null ? null : fieldOf(hop, fieldName);
+        if (field == null) {
+            throw new IllegalArgumentException("map [" + name + "] lookup matches on [" + part
+                    + "], which is not a field of a to-one relation of [" + looked.getName() + "]");
+        }
+        String property = IntentNaming.pascalCase(relationName);
+        String local = lookupLocal + "By" + property;
+        return new Term(property + "." + IntentNaming.pascalCase(fieldName), key, NotificationSupport.quote(key), local, property,
+                local + "Matches.get(0)." + IntentEntities.keyFieldName(hop), true, hop.getName(),
+                IntentEntities.resolvePerspective(hop.getName(), compositionParents, model), IntentNaming.pascalCase(fieldName),
+                conversion(normalized(field.getType()), local + "Key"));
     }
 
     private static Collection collection(String name, Map<?, ?> declared, EntityIntent entity, Map<String, EntityIntent> byName,
