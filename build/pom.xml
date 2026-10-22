@@ -17,6 +17,7 @@
 
     <modules>
         <module>application</module>
+        <module>application-java</module>
 
     </modules>
 

@@ -1,0 +1,65 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.eclipse.dirigible</groupId>
+        <artifactId>dirigible-components-parent</artifactId>
+        <version>15.0.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <name>Components - Group - JavaScript</name>
+    <artifactId>dirigible-components-group-javascript</artifactId>
+    <packaging>pom</packaging>
+
+    <!-- Everything that runs JavaScript or TypeScript: the GraalJS engine (and through it graalium and
+         GraalVM), the bridges that plug it into the engines' script SPIs, the TypeScript toolchain, the
+         TypeScript decorator components, the JavaScript template engine, and the JavaScript SDK with its
+         test runners. The default assembly takes this group; the Java edition (build/application-java)
+         leaves it out, and nothing else in the platform needs it to compile or start (#8006, #8011). -->
+    <dependencies>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-components-engine-javascript</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-components-engine-javascript-bridges</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-components-engine-typescript</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-components-engine-di</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-components-engine-template-javascript</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-components-api-modules-javascript</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-components-api-component</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-components-api-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-components-api-qunit</artifactId>
+        </dependency>
+    </dependencies>
+
+    <properties>
+        <license.header.location>../../../licensing-header.txt</license.header.location>
+        <parent.pom.folder>../../../</parent.pom.folder>
+    </properties>
+
+</project>

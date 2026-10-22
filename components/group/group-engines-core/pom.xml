@@ -16,10 +16,6 @@
     <dependencies>
         <dependency>
             <groupId>org.eclipse.dirigible</groupId>
-            <artifactId>dirigible-components-engine-javascript</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dirigible</groupId>
             <artifactId>dirigible-components-engine-web</artifactId>
         </dependency>
     </dependencies>

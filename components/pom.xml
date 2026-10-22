@@ -304,6 +304,7 @@
         <module>group/group-database</module>
         <module>group/group-engines-core</module>
         <module>group/group-engines</module>
+        <module>group/group-javascript</module>
         <module>group/group-ide</module>
         <module>group/group-resources</module>
         <module>group/group-ui</module>
@@ -485,6 +486,12 @@
             <dependency>
                 <groupId>org.eclipse.dirigible</groupId>
                 <artifactId>dirigible-components-group-ui</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.dirigible</groupId>
+                <artifactId>dirigible-components-group-javascript</artifactId>
                 <version>${project.version}</version>
                 <type>pom</type>
             </dependency>

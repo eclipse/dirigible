@@ -177,6 +177,22 @@ jobs:
           platforms: ${{ matrix.platform }}
           push: false
 
+      - name: Build the Java edition Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: build/application-java
+          platforms: ${{ matrix.platform }}
+          push: false
+
+      # The Java edition (#8011) runs an intent application the default edition generates - its Java
+      # API and its application shell - with no JavaScript engine and no IDE on board.
+      - name: Smoke test of the Java edition
+        if: matrix.platform == 'amd64'
+        run: >-
+          build/application-java/smoke-test.sh
+          build/application/target/dirigible-application-*-executable.jar
+          build/application-java/target/dirigible-application-java-*-executable.jar
+
   # The gate selects every HTTP-level IT plus the smoke-tagged journeys - 173 classes on run
   # 38875134464, 90.6 min of test time with a median of ~30 s a class, almost all of it the Spring
   # context each class boots - and running them in one job took 96-134 min. No class is a long

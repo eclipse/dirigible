@@ -1,0 +1,233 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.eclipse.dirigible</groupId>
+        <artifactId>dirigible-build-parent</artifactId>
+        <version>15.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <name>Build - Application - Java edition</name>
+    <artifactId>dirigible-application-java</artifactId>
+    <packaging>jar</packaging>
+
+    <!-- The Java edition (#8011): the runtime of the default application without the JavaScript and
+         TypeScript stack (GraalJS, graalium, the TypeScript toolchain, the JavaScript SDK) and without
+         the IDE (its perspectives, views, editors and services), the generation templates and the intent
+         Builder. Applications written in client Java - generated or hand-written - run on it unchanged;
+         a JavaScript artefact is reported as failed, naming the missing engine (#8006).
+
+         It takes the default application as its one dependency - its classes, its configuration and
+         everything it assembles - and excludes what it leaves out, so a module added to the default
+         assembly reaches this one as well. The packaging below mirrors build/application/pom.xml and
+         must be kept in step with it. Two things differ: the provided-BOM, generated from this module's
+         own resolved dependencies, and the dirigible.properties that declares the product type. Both sit
+         in this module's classes, which are found before the default application's copies. -->
+    <dependencies>
+        <dependency>
+            <groupId>org.eclipse.dirigible</groupId>
+            <artifactId>dirigible-application</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.eclipse.dirigible</groupId>
+                    <artifactId>dirigible-components-group-javascript</artifactId>
+                </exclusion>
+                <exclusion>
+                    <!-- the JavaScript SDK: resources only, declared by most api-* modules -->
+                    <groupId>org.eclipse.dirigible</groupId>
+                    <artifactId>dirigible-components-api-modules-javascript</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.dirigible</groupId>
+                    <artifactId>dirigible-components-group-ide</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.dirigible</groupId>
+                    <artifactId>dirigible-components-group-templates</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.dirigible</groupId>
+                    <artifactId>dirigible-components-engine-intent</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.dirigible</groupId>
+                    <artifactId>dirigible-components-resources-builder</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.eclipse.dirigible</groupId>
+                <artifactId>dirigible-dependencies</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.cyclonedx</groupId>
+                <artifactId>cyclonedx-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>org.eclipse.dirigible.DirigibleApplication</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>executable</classifier>
+                            <!-- ZIP layout: PropertiesLauncher, so -Dloader.path and the
+                                 Launcher-Agent-Class manifest entry both work (see build/application) -->
+                            <layout>ZIP</layout>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <!-- the input of this edition's provided-BOM: its own resolved runtime
+                             dependencies, exactly what spring-boot:repackage packs into BOOT-INF/lib -->
+                        <id>list-provided-dependencies</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>list</goal>
+                        </goals>
+                        <configuration>
+                            <includeScope>runtime</includeScope>
+                            <sort>true</sort>
+                            <outputFile>${project.build.directory}/provided-dependencies.txt</outputFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-bom-generator</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.eclipse.dirigible</groupId>
+                                    <artifactId>dirigible-components-core-dependencies</artifactId>
+                                    <version>${project.version}</version>
+                                    <outputDirectory>${project.build.directory}/bom-generator</outputDirectory>
+                                    <destFileName>bom-generator.jar</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>unpack-launcher-agent</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.eclipse.dirigible</groupId>
+                                    <artifactId>dirigible-components-core-launcher-agent</artifactId>
+                                    <version>${project.version}</version>
+                                    <outputDirectory>${project.build.directory}/launcher-agent-root</outputDirectory>
+                                    <includes>org/**</includes>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <!-- This edition's provided-BOM, in this module's classes: BOOT-INF/classes
+                             precedes the default application's jar in BOOT-INF/lib, so the resolver
+                             reads this one and not the default edition's. -->
+                        <id>generate-provided-bom</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <java classname="org.eclipse.dirigible.components.dependencies.ProvidedBomGenerator" classpath="${project.build.directory}/bom-generator/bom-generator.jar" fork="true" failonerror="true">
+                                    <arg value="${project.build.directory}/provided-dependencies.txt"/>
+                                    <arg value="${project.build.outputDirectory}/META-INF/dirigible-provided-bom.xml"/>
+                                    <arg value="${project.version}"/>
+                                </java>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <!-- The launcher agent at the executable jar's root, and the manifest entry
+                             naming it, added together after repackage (see build/application) -->
+                        <id>inject-launcher-agent</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <jar destfile="${project.build.directory}/${project.build.finalName}-executable.jar" update="true" keepcompression="true">
+                                    <fileset dir="${project.build.directory}/launcher-agent-root" includes="org/**"/>
+                                    <manifest>
+                                        <attribute name="Launcher-Agent-Class" value="org.eclipse.dirigible.launcher.agent.DirigibleLauncherAgent"/>
+                                    </manifest>
+                                </jar>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <!-- the commit id this edition's dirigible.properties reports -->
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>get-the-git-infos</id>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <dotGitDirectory>../../.git</dotGitDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
+
+    <properties>
+        <license.header.location>../../licensing-header.txt</license.header.location>
+        <parent.pom.folder>../../</parent.pom.folder>
+    </properties>
+
+</project>
