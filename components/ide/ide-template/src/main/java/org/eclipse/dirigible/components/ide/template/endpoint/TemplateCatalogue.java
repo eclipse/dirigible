@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.eclipse.dirigible.components.base.script.ScriptEngineAvailability;
 import org.eclipse.dirigible.components.extensions.domain.Extension;
 import org.eclipse.dirigible.components.extensions.service.ExtensionService;
 import org.eclipse.dirigible.components.ide.template.service.TemplateDescriptors;
@@ -26,6 +27,10 @@ import org.springframework.stereotype.Component;
 /**
  * Reads the templates registered on template extension points - the catalogue the IDE offers in its
  * "New from template" dialogs, its Welcome view and its editors' Regenerate.
+ *
+ * <p>
+ * A template declaring {@value ScriptEngineAvailability#REQUIRES_SCRIPT_ENGINE} - one that creates
+ * a JavaScript or TypeScript file - is offered only where the JavaScript engine is deployed.
  */
 @Component
 class TemplateCatalogue {
@@ -57,21 +62,26 @@ class TemplateCatalogue {
 
     private final TemplateDescriptors templateDescriptors;
 
+    private final ScriptEngineAvailability scriptEngine;
+
     /**
      * Instantiates a new template catalogue.
      *
      * @param extensionService the extension service
      * @param templateDescriptors the template descriptors
+     * @param scriptEngine whether the JavaScript engine is deployed, for the templates that need it
      */
-    TemplateCatalogue(ExtensionService extensionService, TemplateDescriptors templateDescriptors) {
+    TemplateCatalogue(ExtensionService extensionService, TemplateDescriptors templateDescriptors, ScriptEngineAvailability scriptEngine) {
         this.extensionService = extensionService;
         this.templateDescriptors = templateDescriptors;
+        this.scriptEngine = scriptEngine;
     }
 
     /**
      * Reads the templates registered on the extension point that the current user may see, in the order
      * the extension service returns them, each with its {@code id}: the module its extension names. A
-     * template whose descriptor cannot be read is skipped with a warning naming it.
+     * template whose descriptor cannot be read is skipped with a warning naming it, and one that needs
+     * the JavaScript engine is left out where the engine is not deployed.
      *
      * @param extensionPoint the extension point
      * @return the templates
@@ -83,14 +93,20 @@ class TemplateCatalogue {
                 String module = extension.getModule();
                 try {
                     Map<String, Object> template = new LinkedHashMap<>(reading.read(module, null));
-                    template.put(ID, module);
-                    templates.add(template);
+                    if (isOffered(template)) {
+                        template.put(ID, module);
+                        templates.add(template);
+                    }
                 } catch (RuntimeException e) {
                     LOGGER.warn("Template [{}] of extension point [{}] cannot be read and is not listed.", module, extensionPoint, e);
                 }
             }
         }
         return templates;
+    }
+
+    private boolean isOffered(Map<String, Object> template) {
+        return !Boolean.TRUE.equals(template.get(ScriptEngineAvailability.REQUIRES_SCRIPT_ENGINE)) || scriptEngine.isAvailable();
     }
 
     private static int compareForDialogs(Map<String, Object> left, Map<String, Object> right) {

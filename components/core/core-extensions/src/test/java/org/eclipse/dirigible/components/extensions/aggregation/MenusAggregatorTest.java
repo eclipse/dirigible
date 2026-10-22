@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.dirigible.components.base.script.ScriptEngineAvailability;
 import org.eclipse.dirigible.components.extensions.modules.ExtensionModuleReader;
 import org.eclipse.dirigible.repository.api.IRepository;
 import org.eclipse.dirigible.repository.api.IRepositoryStructure;
@@ -40,6 +41,9 @@ class MenusAggregatorTest {
 
     @Mock
     private IRepository repository;
+
+    @Mock
+    private ScriptEngineAvailability scriptEngine;
 
     @Test
     void pulls_the_help_menu_to_the_end_after_the_window_menu() {
@@ -120,8 +124,8 @@ class MenusAggregatorTest {
     }
 
     private List<Map<String, Object>> aggregate() {
-        MenusAggregator menus = new MenusAggregator(reader, repository, new PerspectivesAggregator(reader), new ViewsAggregator(reader),
-                new ShellsAggregator(reader));
+        MenusAggregator menus = new MenusAggregator(reader, repository, new PerspectivesAggregator(reader),
+                new ViewsAggregator(reader, scriptEngine), new ShellsAggregator(reader));
         return menus.aggregate(List.of("menus"), List.of("perspectives"), List.of("views"), List.of("shells"));
     }
 }

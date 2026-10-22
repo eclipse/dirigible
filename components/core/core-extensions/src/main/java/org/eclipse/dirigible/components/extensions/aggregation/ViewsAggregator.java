@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.eclipse.dirigible.components.base.script.ScriptEngineAvailability;
 import org.eclipse.dirigible.components.extensions.modules.ExtensionModule;
 import org.eclipse.dirigible.components.extensions.modules.ExtensionModuleReader;
 import org.slf4j.Logger;
@@ -31,7 +32,9 @@ import org.springframework.stereotype.Component;
  * {@code endpoint} to call (an on-demand action button that POSTs rather than opening a page - see
  * the custom actions store). The first view of an id wins. A view without a region never takes the
  * focus when opened; one in the center or bottom region does unless it says otherwise, one in the
- * left or right region does not unless it says otherwise.
+ * left or right region does not unless it says otherwise. A view declaring
+ * {@value ScriptEngineAvailability#REQUIRES_SCRIPT_ENGINE} is offered only where the JavaScript
+ * engine is deployed - the JavaScript debugger has nothing to attach to elsewhere.
  */
 @Component
 class ViewsAggregator {
@@ -47,13 +50,17 @@ class ViewsAggregator {
 
     private final ExtensionModuleReader reader;
 
+    private final ScriptEngineAvailability scriptEngine;
+
     /**
      * Instantiates a new views aggregator.
      *
      * @param reader the extension module reader
+     * @param scriptEngine whether the JavaScript engine is deployed, for the views that need it
      */
-    ViewsAggregator(ExtensionModuleReader reader) {
+    ViewsAggregator(ExtensionModuleReader reader, ScriptEngineAvailability scriptEngine) {
         this.reader = reader;
+        this.scriptEngine = scriptEngine;
     }
 
     /**
@@ -66,7 +73,7 @@ class ViewsAggregator {
         List<Map<String, Object>> views = new ArrayList<>();
         for (ExtensionModule module : reader.read(extensionPoints, EXPORTS)) {
             Map<String, Object> view = module.content();
-            if (isValid(view)) {
+            if (isValid(view) && isOffered(view)) {
                 Optional<Map<String, Object>> duplicate = views.stream()
                                                                .filter(existing -> Objects.equals(existing.get("id"), view.get("id")))
                                                                .findFirst();
@@ -99,6 +106,10 @@ class ViewsAggregator {
             return false;
         }
         return true;
+    }
+
+    private boolean isOffered(Map<String, Object> view) {
+        return !truthy(view, ScriptEngineAvailability.REQUIRES_SCRIPT_ENGINE) || scriptEngine.isAvailable();
     }
 
     private static void applyFocus(Map<String, Object> view) {

@@ -10,5 +10,6 @@
             "engine": "velocity"
         }
     ],
-    "parameters": []
+    "parameters": [],
+    "requiresScriptEngine": true
 }

@@ -16,6 +16,7 @@ import java.util.Map;
 
 import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.config.DirigibleConfig;
+import org.eclipse.dirigible.components.base.script.ScriptEngineAvailability;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -30,7 +31,8 @@ import jakarta.servlet.http.HttpServletRequest;
 /**
  * What a shell reads to bootstrap: the aggregated extensions (perspectives, views, shells, menus,
  * editors, themes, projections, locales), the current user's name, the application languages and
- * country, and the branding script - answered without running a script.
+ * country, and the branding script, which also tells whether the JavaScript engine is deployed -
+ * answered without running a script.
  *
  * <p>
  * Each is served at its canonical path under {@code /services/platform/} and at the script URL that
@@ -86,6 +88,8 @@ class ShellBootstrapEndpoint {
 
     private final LocalesAggregator locales;
 
+    private final ScriptEngineAvailability scriptEngine;
+
     /**
      * Instantiates a new shell bootstrap endpoint.
      *
@@ -97,9 +101,11 @@ class ShellBootstrapEndpoint {
      * @param themes the themes aggregator
      * @param projections the projections aggregator
      * @param locales the locales aggregator
+     * @param scriptEngine whether the JavaScript engine is deployed, stated by the branding script
      */
     ShellBootstrapEndpoint(PerspectivesAggregator perspectives, ViewsAggregator views, ShellsAggregator shells, MenusAggregator menus,
-            EditorsAggregator editors, ThemesAggregator themes, ProjectionsAggregator projections, LocalesAggregator locales) {
+            EditorsAggregator editors, ThemesAggregator themes, ProjectionsAggregator projections, LocalesAggregator locales,
+            ScriptEngineAvailability scriptEngine) {
         this.perspectives = perspectives;
         this.views = views;
         this.shells = shells;
@@ -108,6 +114,7 @@ class ShellBootstrapEndpoint {
         this.themes = themes;
         this.projections = projections;
         this.locales = locales;
+        this.scriptEngine = scriptEngine;
     }
 
     @GetMapping({CANONICAL_EXTENSIONS + "perspectives", SCRIPT_EXTENSIONS + "perspectives.js",
@@ -233,7 +240,7 @@ class ShellBootstrapEndpoint {
         return ResponseEntity.ok()
                              .header(HttpHeaders.CACHE_CONTROL, CACHE_CONTROL)
                              .contentType(JAVASCRIPT)
-                             .body(BrandingScript.render() + "\n");
+                             .body(BrandingScript.render(scriptEngine.isAvailable()) + "\n");
     }
 
     private static ResponseEntity<Object> json(Object body) {

@@ -1,6 +1,5 @@
 {
     "name": "job",
     "label": "Scheduled Job",
-    "extension": "job",
-    "data": "{\n    \"expression\": \"0/10 * * * * ?\",\n    \"group\": \"defined\",\n    \"handler\": \"myproject/myhandler.js\",\n    \"description\": \"My Job\"\n}"
+    "javaKind": "job"
 }

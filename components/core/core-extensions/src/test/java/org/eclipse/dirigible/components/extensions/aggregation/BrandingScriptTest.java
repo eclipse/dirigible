@@ -17,7 +17,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * The branding values are written as string literals, whatever a tenant administrator put in them.
+ * The branding values are written as string literals, whatever a tenant administrator put in them,
+ * and the script states whether the JavaScript engine is deployed.
  */
 class BrandingScriptTest {
 
@@ -28,7 +29,7 @@ class BrandingScriptTest {
 
     @Test
     void writes_the_defaults_as_string_literals() {
-        String script = BrandingScript.render();
+        String script = BrandingScript.render(false);
 
         assertTrue(script.contains("name: \"Dirigible\","), script);
         assertTrue(script.contains("theme: \"blimpkit-auto\","), script);
@@ -38,8 +39,17 @@ class BrandingScriptTest {
     void keeps_a_hostile_value_inside_its_string() {
         Configuration.set(DirigibleConfig.BRANDING_NAME.getKey(), "x'; alert(1); \"</script>\n");
 
-        String script = BrandingScript.render();
+        String script = BrandingScript.render(false);
 
         assertTrue(script.contains("name: \"x'; alert(1); \\\"\\u003c/script>\\n\","), script);
+    }
+
+    @Test
+    void states_whether_the_javascript_engine_is_deployed() {
+        String withEngine = BrandingScript.render(true);
+        String withoutEngine = BrandingScript.render(false);
+
+        assertTrue(withEngine.endsWith("\ntop.PlatformScriptEngine = true;"), withEngine);
+        assertTrue(withoutEngine.endsWith("\ntop.PlatformScriptEngine = false;"), withoutEngine);
     }
 }

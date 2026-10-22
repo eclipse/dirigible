@@ -1,0 +1,7 @@
+{
+    "name": "listener",
+    "label": "Message Listener (JavaScript)",
+    "extension": "listener",
+    "data": "{\n    \"name\": \"mylistener\",\n    \"kind\": \"Q\",\n    \"handler\": \"myproject/myhandler.js\",\n    \"description\": \"My Listener\"\n}",
+    "requiresScriptEngine": true
+}

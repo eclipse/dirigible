@@ -25,11 +25,11 @@ enum NewFileOption {
     EXTENSION("Extension", "extension.extension"), //
     EXTENSION_POINT("Extension Point", "extensionpoint.extensionpoint"), //
     FORM_DEFINITION("Form Definition", "form.form"), //
-    MESSAGE_LISTENER("Message Listener", "listener.listener"), //
+    MESSAGE_LISTENER("Message Listener (JavaScript)", "listener.listener"), //
     REPORT_MODEL("Report Model", "report-model.report"), //
     ROLES_DEFINITION("Roles Definitions", "roles.roles"), //
-    SCHEDULED_JOB("Scheduled Job", "job.job"), //
-    WEBSOCKET("WebSocket", "websocket.websocket"), //
+    SCHEDULED_JOB("Scheduled Job (JavaScript)", "job.job"), //
+    WEBSOCKET("WebSocket (JavaScript)", "websocket.websocket"), //
     HTML5_PAGE("HTML5 Page", "html.html"); //
 
     private final String optionName;

@@ -1,0 +1,5 @@
+{
+    "module": "menu-jobs/templates/menu-job-javascript.js",
+    "extensionPoint": "platform-templates-menu",
+    "description": "Scheduled Job (JavaScript) Workbench New Menu Extension"
+}
