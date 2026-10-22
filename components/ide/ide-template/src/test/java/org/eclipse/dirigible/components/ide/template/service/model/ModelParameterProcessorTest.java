@@ -1404,6 +1404,37 @@ class ModelParameterProcessorTest {
     }
 
     /**
+     * An audit source's {@code CreatedAt} / {@code CreatedBy}, shown in a register (#8062): the
+     * timestamp renders as a date-time, keyed on its type like any timestamp column, and the user name
+     * as plain text.
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    void aRegisterColumnOverAnAuditTimestampRendersAsADate() {
+        Map<String, Object> createdAt = property("CreatedAt", "TIMESTAMP");
+        createdAt.put("auditType", "CREATED_AT");
+        createdAt.put("widgetType", "DATETIME-LOCAL");
+        Map<String, Object> createdBy = property("CreatedBy", "VARCHAR");
+        createdBy.put("auditType", "CREATED_BY");
+        createdBy.put("widgetType", "TEXTBOX");
+        Map<String, Object> campaign = entity("Campaign", "Campaigns", property("Id", "INTEGER"));
+        campaign.put("relatedEntities", List.of(register("CampaignCost", "Costs", createdAt, createdBy)));
+
+        ModelParameterProcessor.process(model(campaign), javaParameters());
+
+        List<Map<String, Object>> columns = (List<Map<String, Object>>) ((List<Map<String, Object>>) campaign.get("relatedEntities")).get(0)
+                                                                                                                                     .get("columns");
+        assertEquals(Boolean.TRUE, columns.get(0)
+                                          .get("date"));
+        assertNull(columns.get(1)
+                          .get("date"));
+        assertNull(columns.get(1)
+                          .get("number"));
+        assertNull(columns.get(1)
+                          .get("lookup"));
+    }
+
+    /**
      * Builds a related-records register declaration, as the model carries it.
      *
      * @param sourceEntity the referencing entity

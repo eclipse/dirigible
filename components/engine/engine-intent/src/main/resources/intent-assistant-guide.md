@@ -1370,7 +1370,10 @@ cross-model relation, and fails loudly when that model is not there.
 **Rules:** `entity` is required; a cross-model `model:` must be listed in `uses:`; `via:` is
 required only when the source references this entity through more than one relation (an invoice
 naming the same company as both issuer and recipient) - anything else is refused rather than
-guessed; every `show:` name must be a field or relation of the source.
+guessed; every `show:` name must be a field or relation of the source - or, when the source is
+`audit: true`, one of its audit columns `CreatedAt`, `CreatedBy`, `UpdatedAt`, `UpdatedBy` (when and
+by whom each listed record was opened: `show: [id, subject, Status, CreatedAt, CreatedBy]`). An audit
+column of a source without `audit: true` is refused.
 
 ### Many-to-many (n:m) - the intermediate entity
 

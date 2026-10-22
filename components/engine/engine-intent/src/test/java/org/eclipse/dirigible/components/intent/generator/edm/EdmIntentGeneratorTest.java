@@ -3229,6 +3229,47 @@ class EdmIntentGeneratorTest {
                                                         .toList());
     }
 
+    @Test
+    // An audit source's CreatedAt / CreatedBy are ordinary properties of it, so a register naming them
+    // gets their metadata: a timestamp the register renders as a date-time, a user name as text
+    // (#8062).
+    void relatedShowCarriesTheAuditColumnsOfAnAuditSource() {
+        String yaml = """
+                name: support
+                entities:
+                  - name: Customer
+                    fields:
+                      - { name: id, type: integer, primaryKey: true, generated: true }
+                    related:
+                      - entity: SupportTicket
+                        show: [subject, CreatedAt, createdBy]
+                  - name: SupportTicket
+                    audit: true
+                    fields:
+                      - { name: id, type: integer, primaryKey: true, generated: true }
+                      - { name: subject, type: string }
+                    relations:
+                      - { name: customer, kind: manyToOne, to: Customer, required: true }
+                """;
+        Map<String, Object> model = EdmIntentGenerator.buildModelJsonForTest(IntentParser.parse(yaml), "support");
+        Map<String, Object> register =
+                ((List<Map<String, Object>>) entityByName(entities(model), "Customer").get("relatedEntities")).get(0);
+        List<Map<String, Object>> columns = (List<Map<String, Object>>) register.get("properties");
+        assertEquals(List.of("Subject", "CreatedAt", "CreatedBy"), columns.stream()
+                                                                          .map(c -> String.valueOf(c.get("name")))
+                                                                          .toList());
+        assertEquals("TIMESTAMP", columns.get(1)
+                                         .get("dataType"));
+        assertEquals("DATETIME-LOCAL", columns.get(1)
+                                              .get("widgetType"));
+        assertEquals("SUPPORT_TICKET_CREATED_AT", columns.get(1)
+                                                         .get("dataName"));
+        assertEquals("VARCHAR", columns.get(2)
+                                       .get("dataType"));
+        assertEquals("TEXTBOX", columns.get(2)
+                                       .get("widgetType"));
+    }
+
     /**
      * Only the FIRST composition an entity declares gets the implicit NOT NULL FK; a second one is a
      * plain nullable association unless {@code required: true} says otherwise. The report generator
