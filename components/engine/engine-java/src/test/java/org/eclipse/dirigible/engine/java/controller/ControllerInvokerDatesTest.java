@@ -11,10 +11,7 @@ package org.eclipse.dirigible.engine.java.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,8 +23,6 @@ import org.eclipse.dirigible.commons.config.Configuration;
 import org.eclipse.dirigible.commons.config.DirigibleConfig;
 import org.eclipse.dirigible.engine.java.component.TestComponentContainers;
 import org.eclipse.dirigible.engine.java.controller.ControllerInvokerBindingTest.FakeResponse;
-import org.eclipse.dirigible.engine.java.controller.ControllerInvokerBindingTest.InMemoryServletInputStream;
-import org.eclipse.dirigible.engine.java.spi.LoadedClass;
 import org.eclipse.dirigible.sdk.http.Body;
 import org.eclipse.dirigible.sdk.http.Controller;
 import org.eclipse.dirigible.sdk.http.Get;
@@ -38,8 +33,6 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
 
 import tools.jackson.databind.ObjectMapper;
-
-import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * The wire format of a date a controller answers (#8083): ISO-8601 by default, the Jackson
@@ -116,8 +109,7 @@ class ControllerInvokerDatesTest {
     }
 
     private FakeResponse invoke(ControllerInvoker invoker, String methodName, String requestBody) {
-        ControllerEntry entry =
-                consumer.build(new LoadedClass("p", Tickets.class.getName(), Tickets.class, Tickets.class.getClassLoader()));
+        ControllerEntry entry = consumer.build(ControllerInvokerBindingTest.loaded(Tickets.class));
         Route route = entry.routes()
                            .stream()
                            .filter(r -> r.method()
@@ -126,21 +118,8 @@ class ControllerInvokerDatesTest {
                            .findFirst()
                            .orElseThrow();
         FakeResponse response = new FakeResponse();
-        invoker.invoke(new RouteMatch(entry, route, Map.of()), request(requestBody), response);
+        invoker.invoke(new RouteMatch(entry, route, Map.of()), ControllerInvokerBindingTest.mockRequest(requestBody), response);
         return response;
-    }
-
-    @SuppressWarnings("resource")
-    private static HttpServletRequest request(String body) {
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        if (body != null) {
-            try {
-                when(request.getInputStream()).thenReturn(new InMemoryServletInputStream(body));
-            } catch (IOException e) {
-                throw new IllegalStateException("a mock does not throw", e);
-            }
-        }
-        return request;
     }
 
     // --- fixtures --------------------------------------------------------------------------------
