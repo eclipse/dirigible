@@ -56,10 +56,9 @@ import org.springframework.stereotype.Component;
 class ServerSideScriptDeprecation implements PublisherHandler, ScriptModuleSkipListener {
 
     /**
-     * How to move server-side JavaScript and TypeScript to Java - the deprecation's umbrella issue,
-     * until the migration guide (#8050) is published.
+     * How to move server-side JavaScript and TypeScript to Java - the migration guide on dirigible.io.
      */
-    static final String MIGRATION_GUIDE = "https://github.com/eclipse-dirigible/dirigible/issues/8048";
+    static final String MIGRATION_GUIDE = "https://www.dirigible.io/help/develop/migrate-typescript-to-java";
 
     /** The Problems view category of the entries, one per project. */
     static final String PROBLEM_CATEGORY = "JavaScript deprecation";
