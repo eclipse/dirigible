@@ -13,6 +13,7 @@ import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.flowable.engine.HistoryService;
@@ -24,8 +25,16 @@ import org.flowable.engine.impl.cfg.StandaloneInMemProcessEngineConfiguration;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.variable.api.history.HistoricVariableInstance;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.LoggerFactory;
+
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 
 /**
  * The whole resilience conversion against a REAL Flowable engine (in-memory, async executor on):
@@ -64,6 +73,8 @@ class ResilientClassDelegateEngineTest {
                     """;
 
     private static ProcessEngine engine;
+
+    private ListAppender<ILoggingEvent> appender;
 
     /** Always fails; carries the attempt number so the recorded message pins WHICH attempt routed. */
     public static class DoomedDelegate implements JavaDelegate {
@@ -145,6 +156,18 @@ class ResilientClassDelegateEngineTest {
         }
     }
 
+    @BeforeEach
+    void captureLog() {
+        appender = new ListAppender<>();
+        appender.start();
+        resilienceLogger().addAppender(appender);
+    }
+
+    @AfterEach
+    void releaseLog() {
+        resilienceLogger().detachAppender(appender);
+    }
+
     @Test
     void anExhaustedRetryCycleRoutesTheFinalAttemptsMessageThroughTheErrorBoundary() {
         deploy("doomed", DoomedDelegate.class.getName(), "R2/PT1S");
@@ -159,6 +182,21 @@ class ResilientClassDelegateEngineTest {
                               .createDeadLetterJobQuery()
                               .count(),
                 "the converted failure must never dead-letter");
+
+        // The routed final attempt is the one failure Flowable does not log (it is no job failure),
+        // so the conversion logs it - once, at ERROR, with the stack, naming the route the boundary's
+        // flow leads to and the very message the route recorded (#8082).
+        List<ILoggingEvent> lines = finalFailureLines(instance);
+        assertEquals(1, lines.size(), "exactly one line for the routed final attempt, got: " + lines);
+        ILoggingEvent line = lines.get(0);
+        assertEquals(Level.ERROR, line.getLevel());
+        assertEquals(
+                "Process [doomed] step [call] (instance " + instance.getId()
+                        + ") failed its final attempt - routing to its onError step [recordFailure]: refused (attempt 2)",
+                line.getFormattedMessage());
+        assertEquals(IllegalStateException.class.getName(), line.getThrowableProxy()
+                                                                .getClassName(),
+                "the line must carry the failure's stack");
     }
 
     /**
@@ -196,6 +234,19 @@ class ResilientClassDelegateEngineTest {
 
         assertEquals("OK-3", historicVariable(instance, "result"),
                 "the declared cycle must re-run the delegate until it succeeds on its last attempt");
+        assertEquals(List.of(), finalFailureLines(instance), "a step that recovers on a retried attempt routes nothing to log");
+    }
+
+    private static Logger resilienceLogger() {
+        return (Logger) LoggerFactory.getLogger(IntentStepResilience.class);
+    }
+
+    /** The captured final-failure lines of one instance (the engine is shared across the tests). */
+    private List<ILoggingEvent> finalFailureLines(ProcessInstance instance) {
+        return appender.list.stream()
+                            .filter(event -> event.getFormattedMessage()
+                                                  .contains("(instance " + instance.getId() + ") failed its final attempt"))
+                            .toList();
     }
 
     private static void deploy(String processId, String delegateClass, String retryCycle) {

@@ -17,6 +17,7 @@ import org.flowable.bpmn.model.ErrorEventDefinition;
 import org.flowable.bpmn.model.EventDefinition;
 import org.flowable.bpmn.model.FlowElement;
 import org.flowable.bpmn.model.Process;
+import org.flowable.bpmn.model.SequenceFlow;
 import org.flowable.bpmn.model.ServiceTask;
 import org.flowable.engine.delegate.BpmnError;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -86,7 +87,12 @@ final class IntentStepResilience {
             return false;
         }
         FlowElement element = execution.getCurrentFlowElement();
-        if (!(element instanceof ServiceTask serviceTask) || !hasIntentErrorBoundary(execution, serviceTask)) {
+        if (!(element instanceof ServiceTask serviceTask)) {
+            return false;
+        }
+        Process process = ProcessDefinitionUtil.getProcess(execution.getProcessDefinitionId());
+        BoundaryEvent boundary = intentErrorBoundary(execution, process, serviceTask);
+        if (boundary == null) {
             return false;
         }
         Job job = currentJob(execution, serviceTask);
@@ -98,22 +104,43 @@ final class IntentStepResilience {
                                                                 .isBlank() ? failure.getClass()
                                                                                     .getName()
                                                                         : failure.getMessage();
-        LOGGER.debug("Routing the final failed attempt of [{}] to its onError boundary: {}", serviceTask.getId(), message, failure);
+        LOGGER.error(
+                finalFailureLine(process.getId(), serviceTask.getId(), execution.getProcessInstanceId(), routeTarget(boundary), message),
+                failure);
         execution.setVariable(ERROR_MESSAGE_VARIABLE, message);
         ErrorPropagation.propagateError(new BpmnError(ERROR_CODE, message), execution);
         return true;
     }
 
     /**
-     * Whether the task carries an error boundary event catching the intent error code - the generated
-     * marker that opts a task into the conversion. A hand-authored process without it (or with a
-     * boundary for a different code) keeps today's behaviour untouched.
+     * The one ERROR line of a final failed attempt routed to its {@code onError} step (#8082): the
+     * retried attempts before it are Flowable's own logged job failures, while the routed one is not a
+     * job failure at all, so without this line the failure that ends the step is the one the log never
+     * shows.
+     *
+     * @param processKey the process definition key
+     * @param stepId the failed task's element id (the intent step name)
+     * @param processInstanceId the failed instance
+     * @param route the element the error boundary routes to, or null when it cannot be resolved (the
+     *        line then omits it)
+     * @param message the failure message - the same text the error route reads as {@code {error}}
+     * @return the log line
      */
-    private static boolean hasIntentErrorBoundary(DelegateExecution execution, ServiceTask serviceTask) {
-        Process process = ProcessDefinitionUtil.getProcess(execution.getProcessDefinitionId());
+    static String finalFailureLine(String processKey, String stepId, String processInstanceId, String route, String message) {
+        String target = route == null ? "its onError boundary" : "its onError step [" + route + "]";
+        return "Process [" + processKey + "] step [" + stepId + "] (instance " + processInstanceId
+                + ") failed its final attempt - routing to " + target + ": " + message;
+    }
+
+    /**
+     * The task's error boundary event catching the intent error code - the generated marker that opts a
+     * task into the conversion - or null when it carries none. A hand-authored process without it (or
+     * with a boundary for a different code) keeps today's behaviour untouched.
+     */
+    private static BoundaryEvent intentErrorBoundary(DelegateExecution execution, Process process, ServiceTask serviceTask) {
         BpmnModel model = ProcessDefinitionUtil.getBpmnModel(execution.getProcessDefinitionId());
         if (process == null || model == null) {
-            return false;
+            return null;
         }
         for (BoundaryEvent boundary : process.findFlowElementsOfType(BoundaryEvent.class, true)) {
             if (!serviceTask.getId()
@@ -123,11 +150,21 @@ final class IntentStepResilience {
             for (EventDefinition definition : boundary.getEventDefinitions()) {
                 if (definition instanceof ErrorEventDefinition errorDefinition
                         && ERROR_CODE.equals(resolveErrorCode(model, errorDefinition.getErrorCode()))) {
-                    return true;
+                    return boundary;
                 }
             }
         }
-        return false;
+        return null;
+    }
+
+    /**
+     * The element the boundary's outgoing flow leads to - the onError step - or null when unresolved.
+     */
+    private static String routeTarget(BoundaryEvent boundary) {
+        List<SequenceFlow> outgoing = boundary.getOutgoingFlows();
+        return outgoing == null || outgoing.isEmpty() ? null
+                : outgoing.get(0)
+                          .getTargetRef();
     }
 
     /**
