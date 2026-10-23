@@ -1,10 +1,10 @@
-# @aerokit/test (published as the `@aerokit/sdk/test` subpath)
+# @aerokit/test
 
-> **Publishing note:** this package is NOT published standalone - the release workflow bundles
-> `src/` into the `@aerokit/sdk` npm package as its `./test` subpath export (the npm token cannot
-> create new packages in the scope). Consumers depend on `@aerokit/sdk` and import
-> `@aerokit/sdk/test` / `@aerokit/sdk/test/fixtures`; this folder stays the source of truth and the
-> local-development identity (`file:` installs during development resolve `@aerokit/test` directly).
+> **Publishing note:** every release publishes this folder as `@aerokit/test`, versioned with the
+> platform. Consumers depend on `@aerokit/test` and import `@aerokit/test` /
+> `@aerokit/test/fixtures`. A harness written against the earlier `@aerokit/sdk/test` subpath keeps
+> resolving while `@aerokit/sdk` still ships it, but `@aerokit/sdk` is being deprecated: switch the
+> import and the dependency to `@aerokit/test`.
 
 Generic [Playwright](https://playwright.dev) runner that executes an intent module's generated
 `<name>.test` manifest against a running Eclipse Dirigible instance. The manifest (emitted by the
@@ -24,7 +24,7 @@ it never enters the registry or the npm package):
 ```js
 // test/app.spec.js
 import { fileURLToPath } from 'node:url';
-import { runTest } from '@aerokit/sdk/test';
+import { runTest } from '@aerokit/test';
 
 runTest(fileURLToPath(new URL('../<project>/<name>.test', import.meta.url)));
 ```
