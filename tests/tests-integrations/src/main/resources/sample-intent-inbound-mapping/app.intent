@@ -1,5 +1,5 @@
 name: assignments
-description: Mapping on arrival - business keys become relations, a type/version gate ignores what this app does not understand (dirigible #6769), and an array becomes composition child rows (dirigible #7593)
+description: Mapping on arrival - business keys become relations, a type/version gate ignores what this app does not understand (dirigible #6769), an array becomes composition child rows (dirigible #7593), and a repeated identifier is skipped (dirigible #6852)
 
 entities:
   # The two registers the arriving envelope references BY NAME. Each carries a unique business key,
@@ -103,6 +103,10 @@ inbound:
     source: { queue: codbex.user-assignment-requests }
     accept: { type: user.assignment.requested, version: 1 }
     create: TenantUserAssignment
+    # A redelivered message is routine on a queue. A messageId already stored is acknowledged and
+    # skipped with a warning, instead of failing its unique constraint into the dead letters - which
+    # then hold only what needs attention, like the unknown tenant below.
+    dedupe: messageId
     map:
       messageId: messageId
       email:     email
@@ -120,12 +124,22 @@ inbound:
     path: /assignments
     accept: { type: user.assignment.requested, version: 1 }
     create: TenantUserAssignment
-    map:
+    dedupe: messageId          # a repeated post is answered 202 and ignored
+    map: &assignment
       messageId: messageId
       email:     email
       seats:     seatCount
       tenant:    { lookup: Tenant,         by: tenantId, from: tenantId }
       role:      { lookup: AssignmentRole, by: name,     from: role }
+
+  # The same envelope, dropped as a file: a repeated record is skipped, and the file still counts
+  # as processed.
+  - name: assignmentDrop
+    source: { folder: target/inbox-assignments, cron: "0/2 * * * * ?" }
+    accept: { type: user.assignment.requested, version: 1 }
+    create: TenantUserAssignment
+    dedupe: messageId
+    map: *assignment
 
   # An order with its lines and tags. A collection names a one-to-many relation whose target is a
   # composition child: `from:` is the envelope key holding the array, `map:` fills each child from

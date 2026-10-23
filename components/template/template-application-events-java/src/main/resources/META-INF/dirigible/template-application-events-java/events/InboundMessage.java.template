@@ -1,6 +1,6 @@
 package gen.events.${javaGenFolderName};
 
-#if($hasLookups)
+#if($hasLookups || $hasDedupe)
 import org.eclipse.dirigible.components.data.store.java.repository.Criteria;
 #end
 import org.eclipse.dirigible.sdk.component.Component;
@@ -38,6 +38,13 @@ import gen.${javaGenFolderName}.data.${javaPerspective}.${entity}Repository;
  * acknowledges the message.
 #end
 #end
+#if($hasDedupe)
+ *
+ * A message whose ${dedupe.field} is already stored is a redelivery - routine on an at-least-once
+ * transport - so it is acknowledged and skipped with a warning before anything is resolved or saved,
+ * rather than refused by the unique constraint into redelivery and the dead letters. Two deliveries
+ * racing past that read are still refused by the constraint.
+#end
 #if($hasCollections)
  *
  * The declared collections map envelope arrays onto composition child rows. Every element is resolved
@@ -74,6 +81,17 @@ public class ${className}Consumer implements MessageHandler {
             LOG.warn("Inbound ${name}: a message on [{}] does not match accept [{}] - acknowledged and ignored", destination(),
                     ${acceptSummaryLiteral});
             return;
+        }
+#end
+#if($hasDedupe)
+        {
+            Object raw = envelope.get(${dedupe.fromLiteral});
+            Object value = raw == null ? null : ${dedupe.expression};
+            if (value != null && new ${entity}Repository().count(Criteria.create()
+                                                                        .eq("${dedupe.property}", value)) > 0) {
+                LOG.warn("Inbound ${name}: [${dedupe.field}] [{}] is already ingested - acknowledged and ignored", value);
+                return;
+            }
         }
 #end
 #if($hasMap)

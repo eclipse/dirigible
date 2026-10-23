@@ -18,7 +18,13 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.matchesPattern;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 
 import org.eclipse.dirigible.components.api.messaging.MessagingFacade;
@@ -65,6 +71,12 @@ import ch.qos.logback.classic.Level;
  * by the customer and plan codes, neither of which identifies one on its own. A known pair is
  * ingested with that subscription's id; a pair nobody subscribes to, and a customer that does not
  * exist, are rejected with both codes in the log.
+ *
+ * <p>
+ * And a repeated identifier (dirigible #6852): the assignment arrivals declare
+ * {@code dedupe: messageId}, so an envelope whose messageId is already stored is acknowledged with
+ * a warning on the queue (never dead-lettered), answered 202 on the webhook, and skipped in a drop
+ * file that still counts as processed.
  */
 @Lazy
 @Component
@@ -82,6 +94,11 @@ class SampleIntentInboundMappingTestProject extends BaseIntentTestProject {
 
     /** The generated queue consumer's own logger - where an ignored or rejected arrival is reported. */
     private static final String CONSUMER_LOGGER = "app.gen.events.assignments.AssignmentRequestsConsumer";
+
+    /** The drop folder of the assignmentDrop arrival, relative to the instance's working directory. */
+    private static final Path DROP_FOLDER = Paths.get("target/inbox-assignments");
+    private static final String DROP_FILE = "assignments.json";
+    private static final String FILE_IMPORT_LOGGER = "app.gen.events.assignments.AssignmentDropFileImport";
 
     private static final String ORDER_API = "/services/java/" + PROJECT + "/gen/assignments/api/purchaseorder/PurchaseOrderController";
     private static final String LINE_API = "/services/java/" + PROJECT + "/gen/assignments/api/purchaseorder/PurchaseOrderLineController";
@@ -124,9 +141,11 @@ class SampleIntentInboundMappingTestProject extends BaseIntentTestProject {
         LogsAsserter consumerLogs = new LogsAsserter(CONSUMER_LOGGER, Level.WARN);
         LogsAsserter orderLogs = new LogsAsserter(ORDER_CONSUMER_LOGGER, Level.WARN);
         LogsAsserter usageLogs = new LogsAsserter(USAGE_CONSUMER_LOGGER, Level.WARN);
+        LogsAsserter fileLogs = new LogsAsserter(FILE_IMPORT_LOGGER, Level.WARN);
 
         verifyWebhook();
         verifyQueue(consumerLogs);
+        verifyDedupe(consumerLogs, fileLogs);
         verifyCollections(orderLogs);
         verifyCompositeLookup(usageLogs);
         verifyDeadLetter(consumerLogs);
@@ -161,9 +180,14 @@ class SampleIntentInboundMappingTestProject extends BaseIntentTestProject {
         long deadline = System.currentTimeMillis() + DEAD_LETTER_TIMEOUT_MILLIS;
         String expected = "\"messageId\":\"" + messageId + "\"";
         for (long remaining = DEAD_LETTER_TIMEOUT_MILLIS; remaining > 0; remaining = deadline - System.currentTimeMillis()) {
-            if (MessagingFacade.receiveFromQueue(DEAD_LETTER_QUEUE, remaining)
-                               .contains(expected)) {
+            String deadLetter = MessagingFacade.receiveFromQueue(DEAD_LETTER_QUEUE, remaining);
+            if (deadLetter.contains(expected)) {
                 return;
+            }
+            // The repeat of verifyDedupe was published before this message, so a dead-lettered repeat
+            // would be read here first.
+            if (deadLetter.contains("\"messageId\":\"queue-ok\"")) {
+                throw new AssertionError("the repeated [queue-ok] was dead-lettered - dedupe: must acknowledge it");
             }
         }
         throw new AssertionError("[" + messageId + "] never reached [" + DEAD_LETTER_QUEUE + "]");
@@ -236,6 +260,58 @@ class SampleIntentInboundMappingTestProject extends BaseIntentTestProject {
         // silent drop and a working receiver look identical from the outside.
         consumerLogs.assertLoggedMessage("does not match accept", Level.WARN);
         consumerLogs.assertLoggedMessage("no unique AssignmentRole matches", Level.ERROR);
+    }
+
+    /**
+     * A repeated identifier on every arrival shape. The queue repeat of {@code queue-ok} names a role
+     * that does not exist, so its warning shows that the pre-read ran before the lookup, which would
+     * otherwise have dropped it as unresolvable; the message published after it proves it was consumed.
+     */
+    private void verifyDedupe(LogsAsserter consumerLogs, LogsAsserter fileLogs) {
+        MessagingFacade.sendToQueue(QUEUE, envelope("queue-ok", 1, "globex", "Nonexistent", 7));
+        MessagingFacade.sendToQueue(QUEUE, envelope("queue-after-repeat", 1, "acme", "User", 1));
+        restAssuredExecutor.execute(() -> given().when()
+                                                 .get(ASSIGNMENT_API)
+                                                 .then()
+                                                 .statusCode(200)
+                                                 .body("MessageId", hasItem("queue-after-repeat"))
+                                                 .body("findAll { it.MessageId == 'queue-ok' }", hasSize(1)),
+                120);
+        consumerLogs.assertLoggedMessage(
+                "Inbound assignmentRequests: [messageId] [queue-ok] is already ingested - acknowledged and ignored", Level.WARN);
+        // The repeat never reached the save, so nothing threw: the listener's onError never ran.
+        assertFalse(consumerLogs.containsMessage("the listener on [", Level.ERROR), String.valueOf(consumerLogs.getLoggedMessages()));
+
+        restAssuredExecutor.execute(() -> given().contentType("application/json")
+                                                 .body(envelope("hook-ok", 1, "acme", "User", 3))
+                                                 .when()
+                                                 .post(WEBHOOK)
+                                                 .then()
+                                                 .statusCode(202)
+                                                 .body("ignored", containsString("already ingested")));
+
+        // A batch holding a repeat and a new record: the new one is ingested, and the file still moves
+        // to processed/.
+        Path processed = DROP_FOLDER.resolve("processed")
+                                    .resolve(DROP_FILE);
+        try {
+            Files.createDirectories(DROP_FOLDER);
+            Files.deleteIfExists(processed);
+            Files.writeString(DROP_FOLDER.resolve(DROP_FILE),
+                    "[" + envelope("queue-ok", 1, "globex", "Administrator", 7) + "," + envelope("file-new", 1, "acme", "User", 2) + "]");
+        } catch (IOException ex) {
+            throw new IllegalStateException("Failed to drop the assignments file into " + DROP_FOLDER.toAbsolutePath(), ex);
+        }
+        restAssuredExecutor.execute(() -> given().when()
+                                                 .get(ASSIGNMENT_API)
+                                                 .then()
+                                                 .statusCode(200)
+                                                 .body("MessageId", hasItem("file-new"))
+                                                 .body("findAll { it.MessageId == 'queue-ok' }", hasSize(1))
+                                                 .body("findAll { it.MessageId == 'hook-ok' }", hasSize(1)),
+                120);
+        restAssuredExecutor.execute(() -> assertTrue(Files.exists(processed), "a file holding a repeat still counts as processed"), 30);
+        fileLogs.assertLoggedMessage("record [1] of the file: [messageId] [queue-ok] is already ingested - skipped", Level.WARN);
     }
 
     private static String envelope(String messageId, int version, String tenantId, String role, int seats) {

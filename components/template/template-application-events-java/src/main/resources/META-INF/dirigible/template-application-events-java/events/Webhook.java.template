@@ -1,6 +1,6 @@
 package gen.events.${javaGenFolderName};
 
-#if($hasLookups)
+#if($hasLookups || $hasDedupe)
 import org.eclipse.dirigible.components.data.store.java.repository.Criteria;
 #end
 import org.eclipse.dirigible.sdk.http.Body;
@@ -36,6 +36,12 @@ import gen.${javaGenFolderName}.data.${javaPerspective}.${entity}Repository;
  * map - a key the map does not name is not the record's business. A business-key lookup that
  * resolves to no single row is answered 400 rather than stored as a null relation.
 #end
+#if($hasDedupe)
+ *
+ * A payload whose ${dedupe.field} is already stored is a repeat, so it is answered 202 ACCEPTED and
+ * ignored before anything is resolved or saved, as a payload the accept gate does not match is. Two
+ * posts racing past that read are still refused by the unique constraint.
+#end
 #if($hasCollections)
  *
  * The declared collections map payload arrays onto composition child rows. Every element is resolved
@@ -70,6 +76,18 @@ public class ${className}Webhook {
             LOG.warn("Inbound ${name}: a posted payload does not match accept [{}] - accepted and ignored", ${acceptSummaryLiteral});
             Response.setStatus(202);
             return "{\"ignored\": \"the payload does not match the declared accept gate\"}";
+        }
+#end
+#if($hasDedupe)
+        {
+            Object raw = envelope.get(${dedupe.fromLiteral});
+            Object value = raw == null ? null : ${dedupe.expression};
+            if (value != null && new ${entity}Repository().count(Criteria.create()
+                                                                        .eq("${dedupe.property}", value)) > 0) {
+                LOG.warn("Inbound ${name}: [${dedupe.field}] [{}] is already ingested - accepted and ignored", value);
+                Response.setStatus(202);
+                return "{\"ignored\": \"the ${dedupe.field} is already ingested\"}";
+            }
         }
 #end
 #if($hasMap)

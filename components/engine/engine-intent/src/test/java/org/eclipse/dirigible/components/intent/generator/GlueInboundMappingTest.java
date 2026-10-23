@@ -629,6 +629,152 @@ class GlueInboundMappingTest {
         }
     }
 
+    /** {@link #CUSTOMER_ORDERS} on all three arrivals, each identified by its number (#6852). */
+    private static final String DEDUPED_ORDERS = """
+            name: sales
+            entities:
+              - name: Customer
+                fields:
+                  - { name: id,   type: integer, primaryKey: true, generated: true }
+                  - { name: code, type: string, unique: true }
+              - name: Order
+                fields:
+                  - { name: id,     type: integer, primaryKey: true, generated: true }
+                  - { name: number, type: string, unique: true, required: true }
+                relations:
+                  - { name: customer, kind: manyToOne, to: Customer, required: true }
+            inbound:
+              - name: orders
+                source: { queue: "orders.placed" }
+                accept: { type: order.placed, version: 1 }
+                create: Order
+                dedupe: number
+                map: &order
+                  number:   number
+                  customer: { lookup: Customer, by: code, from: customerCode }
+              - name: orderHook
+                path: /orders
+                accept: { type: order.placed, version: 1 }
+                create: Order
+                dedupe: number
+                map: *order
+              - name: orderDrop
+                source: { folder: target/orders, cron: "0/5 * * * * ?" }
+                accept: { type: order.placed, version: 1 }
+                create: Order
+                dedupe: number
+                map: *order
+            """;
+
+    /** The pre-read, as every arrival shape renders it: the map's own conversion, then a count. */
+    private static final String DEDUPE_READ = """
+            Object raw = envelope.get("number");
+                        Object value = raw == null ? null : String.valueOf(raw);
+            """;
+
+    /**
+     * A repeat is recognized before anything else runs: after the gate, which decides whether the
+     * message is this receiver's at all, and before the lookups, so a repeat whose lookup would miss
+     * today is still a repeat rather than a rejection. It returns normally - acknowledged - and never
+     * reaches the save its unique constraint would refuse.
+     */
+    @Test
+    void theDedupePreReadPrecedesTheLookups() throws IOException {
+        String consumer = renderConsumer(DEDUPED_ORDERS);
+
+        assertTrue(consumer.contains(DEDUPE_READ), consumer);
+        String repeat = branch(consumer, "if (value != null && new OrderRepository().count(Criteria.create()");
+        assertTrue(repeat.contains(".eq(\"Number\", value)) > 0) {"), repeat);
+        assertTrue(repeat.contains("LOG.warn(\"Inbound orders: [number] [{}] is already ingested - acknowledged and ignored\", value);\n"
+                + " ".repeat(16) + "return;\n"), repeat);
+        assertTrue(!repeat.contains("throw "), "a repeat is acknowledged, never failed into redelivery: " + repeat);
+        int read = consumer.indexOf(DEDUPE_READ);
+        assertTrue(consumer.indexOf("does not match accept") < read, "the gate comes first");
+        assertTrue(read < consumer.indexOf("Object lookupCustomerKey = envelope.get(\"customerCode\");"),
+                "the pre-read precedes the lookups");
+        assertTrue(read < consumer.indexOf("OrderEntity entity = new OrderEntity();"), "the pre-read precedes the record");
+        assertTrue(consumer.contains("import org.eclipse.dirigible.components.data.store.java.repository.Criteria;"), consumer);
+        assertTrue(consumer.contains("A message whose number is already stored is a redelivery"), "the class javadoc says why");
+    }
+
+    /** A repeated post is answered as a payload the gate does not match: 202, ignored. */
+    @Test
+    void aDedupedWebhookAnswersARepeat202() throws IOException {
+        String webhook = GlueTemplateRendering.renderWebhook(GlueIntentGenerator.buildInboundForTest(IntentParser.parse(DEDUPED_ORDERS))
+                                                                                .get(0),
+                "sales")
+                                              .replace("\r\n", "\n");
+
+        assertTrue(webhook.contains(DEDUPE_READ), webhook);
+        String repeat = branch(webhook, "if (value != null && new OrderRepository().count(Criteria.create()");
+        assertTrue(repeat.contains("LOG.warn(\"Inbound orderHook: [number] [{}] is already ingested - accepted and ignored\", value);"),
+                repeat);
+        assertTrue(repeat.contains("Response.setStatus(202);"), repeat);
+        assertTrue(repeat.contains("return \"{\\\"ignored\\\": \\\"the number is already ingested\\\"}\";"), repeat);
+        assertTrue(webhook.indexOf(DEDUPE_READ) < webhook.indexOf("Object lookupCustomerKey = envelope.get(\"customerCode\");"), webhook);
+    }
+
+    /** A repeated record of a drop file is skipped, before it is projected; the file still counts. */
+    @Test
+    void aDedupedDropFileSkipsARepeatedRecord() throws IOException {
+        String job = GlueTemplateRendering
+                                          .renderInboundFile(
+                                                  GlueIntentGenerator.buildInboundFilesForTest(IntentParser.parse(DEDUPED_ORDERS))
+                                                                     .get(0),
+                                                  "sales")
+                                          .replace("\r\n", "\n");
+
+        String skip = """
+                            if (alreadyIngested(repository, envelope, index + 1)) {
+                                continue;
+                            }
+                            repository.save(project(envelope, index + 1));
+                """;
+        assertTrue(job.contains(skip), job);
+        String check =
+                branch(job, "private boolean alreadyIngested(OrderRepository repository, java.util.Map<?, ?> envelope, int record) {");
+        assertTrue(check.contains("""
+                Object raw = envelope.get("number");
+                        Object value = raw == null ? null : String.valueOf(raw);
+                """), check);
+        assertTrue(check.contains(
+                "LOG.warn(\"Inbound orderDrop: record [{}] of the file: [number] [{}] is already ingested - skipped\", record, value);"),
+                check);
+    }
+
+    /**
+     * An arrival without the key carries no {@code dedupe} in its descriptor - so a {@code .glue}
+     * generated before the key reads exactly as before - and none of the three handlers it renders
+     * mentions it.
+     */
+    @Test
+    void anArrivalWithoutDedupeIsUnchanged() throws IOException {
+        IntentModel model = IntentParser.parse(YAML);
+        Map<String, Object> webhook = GlueIntentGenerator.buildInboundForTest(model)
+                                                         .get(0);
+        Map<String, Object> consumer = GlueIntentGenerator.buildInboundMessagesForTest(model)
+                                                          .get(0);
+        Map<String, Object> job = GlueIntentGenerator.buildInboundFilesForTest(model)
+                                                     .get(0);
+        List<String> keys =
+                List.of("name", "className", "entity", "perspective", "hasEnvelope", "hasAccept", "acceptExpression", "acceptSummary",
+                        "acceptSummaryLiteral", "hasMap", "mapFields", "lookups", "hasDeadLetterLookups", "hasCollections", "collections");
+        assertEquals(keys, List.copyOf(webhook.keySet())
+                               .subList(0, keys.size()));
+        for (Map<String, Object> entry : List.of(webhook, consumer, job)) {
+            assertTrue(!entry.containsKey("dedupe"), String.valueOf(entry.keySet()));
+        }
+
+        List<String> sources = List.of(GlueTemplateRendering.renderWebhook(webhook, "sales"),
+                GlueTemplateRendering.renderInboundMessage(consumer, "sales"), GlueTemplateRendering.renderInboundFile(job, "sales"),
+                GlueTemplateRendering.renderWebhook(GlueIntentGenerator.buildInboundForTest(IntentParser.parse(PLAIN))
+                                                                       .get(0),
+                        "crm"));
+        for (String source : sources) {
+            assertTrue(!source.contains("already ingested") && !source.contains("alreadyIngested") && !source.contains(".count("), source);
+        }
+    }
+
     /**
      * The rendered source with {@code \n} line ends. The template's own line ends are the checkout's
      * (CRLF on a Windows runner), and the blocks asserted here are matched line by line.
