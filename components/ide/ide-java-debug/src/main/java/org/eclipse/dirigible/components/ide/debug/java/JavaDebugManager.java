@@ -16,7 +16,7 @@ import org.eclipse.dirigible.components.ide.lsp.java.process.JdtLsManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
 
 import java.net.Socket;
@@ -39,17 +39,39 @@ import java.util.concurrent.TimeUnit;
  * {@code workspace/executeCommand} call will fail with an "unknown command" error. In that case
  * place {@code com.microsoft.java.debug.plugin-*.jar} into the JDT.LS {@code plugins/} directory
  * (e.g. {@code ~/.dirigible/jdtls/plugins/}) and restart the application.
+ *
+ * <p>
+ * The debugger runs on the Java language server, so it is unavailable while that is switched off
+ * ({@code DIRIGIBLE_JAVA_LSP_ENABLED=false}): {@link #isAvailable()} answers {@code false} and its
+ * endpoints refuse with {@link #UNAVAILABLE_REASON}.
  */
 @Component
 public class JavaDebugManager implements DisposableBean {
 
     private static final Logger logger = LoggerFactory.getLogger(JavaDebugManager.class);
 
+    /** Why the debugger refuses while the Java language server is switched off. */
+    public static final String UNAVAILABLE_REASON =
+            "The Java debugger is unavailable: it runs on the Java language server, which is switched off (DIRIGIBLE_JAVA_LSP_ENABLED=false)";
+
     /** key = "username/workspace" → active bridge */
     private final Map<String, JavaDebugBridge> bridges = new ConcurrentHashMap<>();
 
-    @Autowired
-    private JdtLsManager lspManager;
+    /** Absent while the Java language server is switched off. */
+    private final ObjectProvider<JdtLsManager> lspManager;
+
+    public JavaDebugManager(ObjectProvider<JdtLsManager> lspManager) {
+        this.lspManager = lspManager;
+    }
+
+    /**
+     * Whether a debug session can be started at all.
+     *
+     * @return {@code false} while the Java language server the debugger runs on is switched off
+     */
+    public boolean isAvailable() {
+        return lspManager.getIfAvailable() != null;
+    }
 
     /**
      * Returns (and lazily creates) the {@link JavaDebugBridge} for the given workspace. If no bridge
@@ -121,7 +143,11 @@ public class JavaDebugManager implements DisposableBean {
     // -------------------------------------------------------------------------
 
     private JavaDebugBridge startBridge(String username, String workspace) throws Exception {
-        JdtLsInstance lspInstance = lspManager.getOrStart(username, workspace);
+        JdtLsManager manager = lspManager.getIfAvailable();
+        if (manager == null) {
+            throw new IllegalStateException(UNAVAILABLE_REASON);
+        }
+        JdtLsInstance lspInstance = manager.getOrStart(username, workspace);
 
         // JDT.LS queues workspace commands until the LSP initialize handshake completes. Perform it
         // from the server side when the browser editor hasn't connected yet (no-op otherwise).
