@@ -776,9 +776,10 @@ document.addEventListener('alpine:init', () => {
 
 #end
     // Backend temporal -> the value an HTML date/time input expects (by widget), so an edited
-    // record's dates populate the fields. The Java REST controller serializes java.time via Jackson
-    // as an ARRAY ([y,m,d] or [y,m,d,h,mi,s,ns]) and java.time.Instant as a numeric epoch — NOT an
-    // ISO string — so handle arrays/numbers as well as ISO-ish strings (the original assumption).
+    // record's dates populate the fields. The Java REST controller answers java.time as ISO-8601 -
+    // an Instant with its zone, which the input needs in the viewer's local clock - or, with
+    // DIRIGIBLE_JAVA_CONTROLLER_DATES_AS_TIMESTAMPS, as Jackson ARRAYS ([y,m,d] or [y,m,d,h,mi,s,ns])
+    // and an Instant as a numeric epoch; every shape is handled.
     // Convert a value to the fixed shape its <input> needs — NOT pattern-driven (shell format.js).
     toDateInput(value, widget) {
       return window.HarmoniaFormat.toDateInput(value, widget);
