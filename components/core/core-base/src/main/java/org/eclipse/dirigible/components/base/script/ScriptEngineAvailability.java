@@ -20,13 +20,21 @@ import org.springframework.stereotype.Component;
  * bean exists. The IDE offers what only runs there - the editor's script typings, the JavaScript
  * debugger, the TypeScript and ESM file templates - only where this answers {@code true}: a
  * contribution (a view, a template) declaring {@value #REQUIRES_SCRIPT_ENGINE} is left out
- * elsewhere, and the pages read the same answer from the branding script.
+ * elsewhere, and the pages read the same answer from the branding script. Where such a template has
+ * a JSON or Java alternative, the alternative declares {@value #WITHOUT_SCRIPT_ENGINE} and is
+ * offered in its place.
  */
 @Component
 public class ScriptEngineAvailability {
 
     /** The property with which a contribution declares that it is offered only with the engine. */
     public static final String REQUIRES_SCRIPT_ENGINE = "requiresScriptEngine";
+
+    /**
+     * The property with which a contribution declares that it is offered only without the engine: the
+     * alternative of one that requires it.
+     */
+    public static final String WITHOUT_SCRIPT_ENGINE = "withoutScriptEngine";
 
     private final ObjectProvider<ScriptExecutor> scriptExecutor;
 

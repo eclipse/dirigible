@@ -2,5 +2,6 @@
     "name": "extension",
     "label": "Extension",
     "extension": "extension",
-    "data": "{\n    \"module\": \"/myproject/my-extension.js\",\n    \"extensionPoint\": \"my-extension-point\",\n    \"description\": \"My Extension\"\n}"
+    "data": "{\n    \"module\": \"/myproject/my-extension.js\",\n    \"extensionPoint\": \"my-extension-point\",\n    \"description\": \"My Extension\"\n}",
+    "requiresScriptEngine": true
 }

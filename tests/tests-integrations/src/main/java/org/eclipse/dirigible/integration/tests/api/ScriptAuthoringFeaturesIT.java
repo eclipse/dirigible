@@ -10,8 +10,10 @@
 package org.eclipse.dirigible.integration.tests.api;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -35,10 +37,12 @@ import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
  * <p>
  * Where the engine is deployed - as in every IT - the branding script says so, and the debugger
  * view, the TypeScript and ESM file templates, the TypeScript route step handler, the descriptors
- * with a JavaScript handler and the TypeScript mapping generator are offered as before. The spy on
- * the availability then answers as an instance without the engine does: the bootstrap and the
- * template catalogue offer none of them, and the IDE's pages read {@code false} from the branding
- * script, the one answer they decide the editor typings and the Debug action on.
+ * with a JavaScript handler, the extension and access constraint examples pointing at a JavaScript
+ * file and the TypeScript mapping generator are offered as before. The spy on the availability then
+ * answers as an instance without the engine does: the bootstrap and the template catalogue offer
+ * none of them - New -> Extension and Access Constraints offer a JSON module and a Java controller
+ * example in their place (#8047) - and the IDE's pages read {@code false} from the branding script,
+ * the one answer they decide the editor typings, the Debug action and the script preview on.
  */
 // One Dirigible boot for the whole class: the spy is reset after each method.
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
@@ -71,6 +75,16 @@ class ScriptAuthoringFeaturesIT extends IntegrationTest {
             List.of("menu-listeners/templates/menu-listener.js", "Message Listener", "listener"), //
             List.of("menu-websockets/templates/menu-websocket.js", "WebSocket", "websocket"));
 
+    /**
+     * The New menu items whose example points at a JavaScript file, the alternative offered in their
+     * place without the engine, the label both carry, and what the alternative's example points at.
+     */
+    private static final List<List<String>> SCRIPT_EXAMPLE_MENU_TEMPLATES = List.of( //
+            List.of("menu-extensions/templates/menu-extension.js", "menu-extensions/templates/menu-extension-json.js", "Extension",
+                    "\"/myproject/my-extension.json\""), //
+            List.of("menu-security/templates/menu-access.js", "menu-security/templates/menu-access-java.js", "Access Constraints",
+                    "\"/myproject/myfolder/MyController/**\""));
+
     private static final String TYPESCRIPT_MAPPING_TEMPLATE = "template-mapping-javascript/template/template.js";
 
     private static final String JAVA_MAPPING_TEMPLATE = "template-mapping-java/template/template.js";
@@ -95,6 +109,7 @@ class ScriptAuthoringFeaturesIT extends IntegrationTest {
             assertTrue(ids(VIEWS).contains(DEBUGGER_VIEW), "the JavaScript debugger is offered");
             assertTrue(windowMenuViews().contains(DEBUGGER_VIEW), "the Window menu lists the JavaScript debugger");
             assertTrue(ids(MENU_TEMPLATES).containsAll(SCRIPT_MENU_TEMPLATES), "the New menu offers the script files");
+            assertScriptExampleItems(true);
             assertTrue(ids(TEMPLATES).contains(TYPESCRIPT_MAPPING_TEMPLATE), "the TypeScript mapping generator is offered");
 
             // The editor typings stay answered by the engine.
@@ -127,6 +142,7 @@ class ScriptAuthoringFeaturesIT extends IntegrationTest {
                 assertFalse(menuTemplates.contains(scriptTemplate), scriptTemplate + " must not be offered: " + menuTemplates);
             }
             assertTrue(menuTemplates.contains("menu-projects/templates/menu-java.js"), "the Java service stays: " + menuTemplates);
+            assertScriptExampleItems(false);
 
             List<String> templates = ids(TEMPLATES);
             assertFalse(templates.contains(TYPESCRIPT_MAPPING_TEMPLATE), "the TypeScript mapping generator must not be offered");
@@ -154,6 +170,25 @@ class ScriptAuthoringFeaturesIT extends IntegrationTest {
                        .body(template + ".data", nullValue());
             }
         });
+    }
+
+    /**
+     * Asserts that New -> Extension and Access Constraints offer the example pointing at a JavaScript
+     * file where the engine is deployed, and the alternative under the same label where it is not.
+     */
+    private static void assertScriptExampleItems(boolean scriptEngine) {
+        for (List<String> item : SCRIPT_EXAMPLE_MENU_TEMPLATES) {
+            String offered = "find { it.id == '" + (scriptEngine ? item.get(0) : item.get(1)) + "' }";
+            String withheld = "find { it.id == '" + (scriptEngine ? item.get(1) : item.get(0)) + "' }";
+            given().when()
+                   .get(MENU_TEMPLATES)
+                   .then()
+                   .statusCode(200)
+                   .body(offered + ".label", equalTo(item.get(2)))
+                   .body(offered + ".data",
+                           scriptEngine ? containsString(".js\"") : allOf(containsString(item.get(3)), not(containsString(".js\""))))
+                   .body(withheld, nullValue());
+        }
     }
 
     private static List<String> ids(String path) {

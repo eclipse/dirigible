@@ -140,22 +140,14 @@ previewView.controller('PreviewController', ($scope, $document, ButtonStates) =>
                     url += '/graalvm';
                     break;
                 case 'ts':
-                    url += '/ts';
-                    break;
                 case 'js':
-                    url += '/js';
-                    break;
                 case 'mjs':
-                    url += '/js';
-                    break;
-                case 'ts':
-                    url += '/js';
+                    // Previewing a script runs it, which only the JavaScript engine does.
+                    if (top.PlatformScriptEngine !== true) return;
+                    url += type === 'ts' ? '/ts' : '/js';
                     break;
                 case 'xsjs':
                     url += '/xsjs';
-                    break;
-                case 'py':
-                    url += '/py';
                     break;
                 case 'md':
                     url += '/wiki';

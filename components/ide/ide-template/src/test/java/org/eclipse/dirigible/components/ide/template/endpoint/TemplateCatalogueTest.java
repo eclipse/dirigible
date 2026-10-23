@@ -40,8 +40,8 @@ import org.springframework.beans.factory.ObjectProvider;
 
 /**
  * The catalogue lists each readable template with its module as id, leaves out the ones needing the
- * JavaScript engine where it is not deployed, and orders the lists the way the script it replaces
- * did.
+ * JavaScript engine where it is not deployed and their alternatives where it is, and orders the
+ * lists the way the script it replaces did.
  */
 @ExtendWith(MockitoExtension.class)
 class TemplateCatalogueTest {
@@ -88,6 +88,24 @@ class TemplateCatalogueTest {
 
         when(scriptEngine.isAvailable()).thenReturn(true);
         assertEquals(List.of("menu/ts.js", "menu/java.js"), ids(catalogue().read(TemplateCatalogue.MENU_TEMPLATES)));
+    }
+
+    @Test
+    void theAlternativeOfAScriptTemplateIsOfferedOnlyWhereTheEngineIsNotDeployed() {
+        when(repository.getResource(anyString())).thenAnswer(invocation -> resource(invocation.getArgument(0)));
+        registry.put(IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/menu/extension.json",
+                "{\"name\": \"extension\", \"label\": \"Extension\", \"requiresScriptEngine\": true}");
+        registry.put(IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/menu/extension-json.json",
+                "{\"name\": \"extension\", \"label\": \"Extension\", \"withoutScriptEngine\": true}");
+        registry.put(IRepositoryStructure.PATH_REGISTRY_PUBLIC + "/menu/roles.json", "{\"name\": \"roles\", \"label\": \"Roles\"}");
+        when(extensionService.findByExtensionPoint(TemplateCatalogue.MENU_TEMPLATES)).thenReturn(
+                List.of(extension("menu/extension.js"), extension("menu/extension-json.js"), extension("menu/roles.js")));
+
+        when(scriptEngine.isAvailable()).thenReturn(false);
+        assertEquals(List.of("menu/extension-json.js", "menu/roles.js"), ids(catalogue().read(TemplateCatalogue.MENU_TEMPLATES)));
+
+        when(scriptEngine.isAvailable()).thenReturn(true);
+        assertEquals(List.of("menu/extension.js", "menu/roles.js"), ids(catalogue().read(TemplateCatalogue.MENU_TEMPLATES)));
     }
 
     @Test
