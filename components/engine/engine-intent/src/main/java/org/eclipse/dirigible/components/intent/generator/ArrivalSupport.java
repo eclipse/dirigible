@@ -66,6 +66,12 @@ import org.eclipse.dirigible.components.intent.model.UniqueIntent;
  * single target row.
  * <li><b>A non-matching {@code accept:} is acknowledged and ignored</b>, with a warning. A sender
  * rolling out a new version must not fill this receiver's error queue.
+ * <li><b>A repeated identifier is acknowledged and skipped</b> when the arrival names it with
+ * {@code dedupe:}. On an at-least-once transport a redelivery is routine, and refused by the
+ * field's unique constraint it would throw - redelivered, and finally dead-lettered beside the
+ * arrivals that really need attention. The handler reads the table first, before any lookup, so a
+ * repeat whose lookup would miss today is still recognized as a repeat; the constraint stays the
+ * guard when two deliveries race past that read.
  * <li><b>A collection maps a JSON array onto child rows.</b> A {@code map:} key naming a
  * {@code oneToMany} relation of the created entity takes {@code { from, map, max? }}. Each element
  * of the envelope array {@code from} becomes one row of that relation's target, which must be a
@@ -208,8 +214,20 @@ public final class ArrivalSupport {
     }
 
     /**
+     * The identity of an arrival: the mapped field whose stored value marks a message as a repeat.
+     *
+     * @param field the entity field, as authored - how the warning names it
+     * @param property the entity's PascalCase property the pre-read matches
+     * @param fromLiteral the envelope key the map fills the field from, as a Java string literal
+     * @param expression the conversion of the {@code raw} local to the property's type, the one the map
+     *        applies
+     */
+    public record Dedupe(String field, String property, String fromLiteral, String expression) {
+    }
+
+    /**
      * A resolved arrival mapping: the gate, the mapped scalars, the business-key lookups and the
-     * collections, each in declaration order.
+     * collections, each in declaration order, and the identity a repeat is recognized by.
      *
      * @param acceptExpression the whole gate as one Java boolean expression, or {@code null} when the
      *        entry declares no {@code accept:}
@@ -217,9 +235,11 @@ public final class ArrivalSupport {
      * @param fields the mapped scalars
      * @param lookups the business-key lookups
      * @param collections the arrays mapped onto composition child rows
+     * @param dedupe the identity of an arrival, or {@code null} when the entry declares no
+     *        {@code dedupe:}
      */
     public record Plan(String acceptExpression, String acceptSummary, List<MapField> fields, List<Lookup> lookups,
-            List<Collection> collections) {
+            List<Collection> collections, Dedupe dedupe) {
     }
 
     /**
@@ -244,6 +264,33 @@ public final class ArrivalSupport {
                                                          .entrySet()) {
             validateMapEntry(declared.getKey(), declared.getValue(), entity, byName, subject, sourceWithoutDeadLetters, filledChildren,
                     issues);
+        }
+        validateDedupe(inbound, entity, subject, issues);
+    }
+
+    /**
+     * A {@code dedupe:} names a field of the created entity that the map fills from an envelope key -
+     * the handler reads that value before it builds anything. The field must be UNIQUE, since the
+     * constraint is what still refuses two deliveries racing past the pre-read, and REQUIRED, since an
+     * optional key would dedupe nothing: PostgreSQL counts NULLs as distinct.
+     */
+    private static void validateDedupe(InboundIntent inbound, EntityIntent entity, String subject, List<String> issues) {
+        String dedupe = text(inbound.getDedupe());
+        if (dedupe == null) {
+            return;
+        }
+        String where = subject + " dedupe [" + dedupe + "]";
+        FieldIntent field = fieldOf(entity, dedupe);
+        if (field == null || text(inbound.getMap()
+                                         .get(dedupe)) == null) {
+            issues.add(where + " is not a field the map fills");
+            return;
+        }
+        if (!field.isUnique()) {
+            issues.add(where + " must be unique: true");
+        }
+        if (!field.isRequired()) {
+            issues.add(where + " must be required: true");
         }
     }
 
@@ -304,7 +351,7 @@ public final class ArrivalSupport {
             }
         }
         return new Plan(accept.isEmpty() ? null : acceptExpression(accept), accept.isEmpty() ? null : acceptSummary(accept), fields,
-                lookups, collections);
+                lookups, collections, dedupe(inbound, entity));
     }
 
     /**
@@ -312,9 +359,15 @@ public final class ArrivalSupport {
      * an undefined Velocity variable renders as its own literal name, so a template must never depend
      * on a key being absent.
      *
+     * <p>
+     * The one exception is {@code dedupe}, present only when the arrival declares one, so the
+     * descriptor of an arrival without it stays what it was byte for byte; the glue generator binds its
+     * {@code hasDedupe} flag from that presence.
+     *
      * @param plan the resolved mapping, or {@code null} when the entry declares none
      * @return the {@code hasEnvelope} / {@code hasAccept} / {@code hasMap} /
-     *         {@code hasDeadLetterLookups} / {@code hasCollections} keys and their payloads
+     *         {@code hasDeadLetterLookups} / {@code hasCollections} keys and their payloads, and the
+     *         {@code dedupe} of an arrival declaring one
      */
     public static Map<String, Object> arrivalFields(Plan plan) {
         boolean hasAccept = plan != null && plan.acceptExpression() != null;
@@ -364,6 +417,18 @@ public final class ArrivalSupport {
         fields.put("hasDeadLetterLookups", plan != null && hasDeadLetterLookup(plan));
         fields.put("hasCollections", hasCollections);
         fields.put("collections", collected);
+        if (plan != null && plan.dedupe() != null) {
+            Map<String, Object> dedupe = new LinkedHashMap<>();
+            dedupe.put("field", plan.dedupe()
+                                    .field());
+            dedupe.put("property", plan.dedupe()
+                                       .property());
+            dedupe.put("fromLiteral", plan.dedupe()
+                                          .fromLiteral());
+            dedupe.put("expression", plan.dedupe()
+                                         .expression());
+            fields.put("dedupe", dedupe);
+        }
         return fields;
     }
 
@@ -839,6 +904,21 @@ public final class ArrivalSupport {
             type = keyType(byName.get(relation.getTo()));
         }
         return new MapField(IntentNaming.pascalCase(name), from, NotificationSupport.quote(from), conversion(type, "raw"));
+    }
+
+    private static Dedupe dedupe(InboundIntent inbound, EntityIntent entity) {
+        String name = text(inbound.getDedupe());
+        if (name == null) {
+            return null;
+        }
+        FieldIntent field = fieldOf(entity, name);
+        String from = text(inbound.getMap()
+                                  .get(name));
+        if (field == null || from == null) {
+            throw new IllegalArgumentException("dedupe [" + name + "] is not a field the map fills");
+        }
+        return new Dedupe(name, IntentNaming.pascalCase(name), NotificationSupport.quote(from),
+                conversion(normalized(field.getType()), "raw"));
     }
 
     private static Lookup lookup(String name, String local, Map<?, ?> declared, EntityIntent entity, Map<String, EntityIntent> byName,

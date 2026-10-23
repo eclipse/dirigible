@@ -7,7 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-#if($hasLookups)
+#if($hasLookups || $hasDedupe)
 import org.eclipse.dirigible.components.data.store.java.repository.Criteria;
 #end
 import org.eclipse.dirigible.sdk.component.Component;
@@ -35,6 +35,11 @@ import gen.${javaGenFolderName}.data.${javaPerspective}.${entity}Repository;
  * The declared accept gate (${acceptSummary}) is applied per record. A record that does not match is
  * IGNORED, and the file still counts as processed - a batch is not a failure because it carries
  * something this receiver does not understand.
+#end
+#if($hasDedupe)
+ *
+ * A record whose ${dedupe.field} is already stored - by an earlier file or earlier in this one - is
+ * a repeat, so it is skipped with a warning, and the file still counts as processed.
 #end
 #if($hasMap)
  *
@@ -135,6 +140,11 @@ public class ${className}FileImport implements JobHandler {
                 continue;
             }
 #end
+#if($hasDedupe)
+            if (alreadyIngested(repository, envelope, index + 1)) {
+                continue;
+            }
+#end
 #if($hasCollections)
             persist(repository, envelope, index + 1);
 #elseif($hasMap)
@@ -169,6 +179,20 @@ public class ${className}FileImport implements JobHandler {
         return 1;
 #end
     }
+#if($hasDedupe)
+
+    /** Whether the record repeats one already stored; a repeat is logged and skipped, never saved. */
+    private boolean alreadyIngested(${entity}Repository repository, java.util.Map<?, ?> envelope, int record) {
+        Object raw = envelope.get(${dedupe.fromLiteral});
+        Object value = raw == null ? null : ${dedupe.expression};
+        if (value == null || repository.count(Criteria.create()
+                                                      .eq("${dedupe.property}", value)) == 0) {
+            return false;
+        }
+        LOG.warn("Inbound ${name}: record [{}] of the file: [${dedupe.field}] [{}] is already ingested - skipped", record, value);
+        return true;
+    }
+#end
 #if($hasMap)
 
     /**

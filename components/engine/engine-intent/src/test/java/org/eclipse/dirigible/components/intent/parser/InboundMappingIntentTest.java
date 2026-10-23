@@ -702,6 +702,62 @@ class InboundMappingIntentTest {
                 """);
     }
 
+    /** An order arriving on a queue - the arrival a {@code dedupe:} identifies (#6852). */
+    private static final String DEDUPED_ORDERS = """
+            name: sales
+            entities:
+              - name: Order
+                fields:
+                  - { name: id,        type: integer, primaryKey: true, generated: true }
+                  - { name: orderId,   type: string, unique: true, required: true }
+                  - { name: reference, type: string, required: true }
+                  - { name: note,      type: string, unique: true }
+                  - { name: code,      type: string, unique: true, required: true }
+            inbound:
+              - name: orders
+                source: { queue: "global:shop.orders" }
+                create: Order
+                dedupe: %s
+                map:
+                  orderId:   orderId
+                  reference: reference
+                  note:      note
+            """;
+
+    @Test
+    void aDedupeOnAUniqueRequiredMappedFieldParses() {
+        IntentModel model = IntentParser.parse(DEDUPED_ORDERS.formatted("orderId"));
+
+        assertEquals("orderId", model.getInbound()
+                                     .get(0)
+                                     .getDedupe());
+    }
+
+    @Test
+    void aDedupeOnANonUniqueFieldIsRefused() {
+        assertRefused(DEDUPED_ORDERS.formatted("reference"), "inbound [orders] dedupe [reference] must be unique: true");
+    }
+
+    /** PostgreSQL counts NULLs as distinct, so an optional identifier would dedupe nothing. */
+    @Test
+    void aDedupeOnAnOptionalFieldIsRefused() {
+        assertRefused(DEDUPED_ORDERS.formatted("note"), "inbound [orders] dedupe [note] must be required: true");
+    }
+
+    /** The pre-read runs before the record is built, so it can only read a value the map names. */
+    @Test
+    void aDedupeOnAnUnmappedFieldIsRefused() {
+        assertRefused(DEDUPED_ORDERS.formatted("code"), "inbound [orders] dedupe [code] is not a field the map fills");
+        assertRefused(DEDUPED_ORDERS.formatted("customer"), "inbound [orders] dedupe [customer] is not a field the map fills");
+    }
+
+    private static void assertRefused(String model, String expected) {
+        IntentValidationException failure = assertThrows(IntentValidationException.class, () -> IntentParser.parse(model));
+        assertTrue(failure.getMessage()
+                          .contains(expected),
+                failure.getMessage());
+    }
+
     private static void assertFailsOn(String model, String inbound, String expected) {
         IntentValidationException failure = assertThrows(IntentValidationException.class, () -> IntentParser.parse(model + inbound));
         assertTrue(failure.getMessage()

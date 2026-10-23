@@ -134,6 +134,16 @@ matches both. An unknown customer, an unknown plan, or a pair nobody subscribes 
    could not resolve. If the tenant is created before the redeliveries run out, the message is
    ingested.
 
+   Sending an envelope whose `messageId` is already stored - a redelivery, or a sender retrying after
+   a timeout - stores nothing and fails nothing. The arrival declares `dedupe: messageId`
+   ([eclipse-dirigible/dirigible#6852](https://github.com/eclipse-dirigible/dirigible/issues/6852)),
+   so the consumer reads the table first and logs one warning,
+   `[messageId] [q-1] is already ingested - acknowledged and ignored`. Without it the unique
+   constraint would refuse the save, and the message would be redelivered and dead-lettered next to
+   the unknown tenant above. The webhook answers a repeated post **202**, and the drop folder
+   `target/inbox-assignments` (the `assignmentDrop` arrival) skips a repeated record while the file
+   still moves to `processed/`.
+
    Mark the destination `global:` when the queue is a contract with another deployment (the platform's
    external-contract marker; the name is passed to the broker verbatim).
 

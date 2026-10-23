@@ -833,6 +833,9 @@ class GlueGenerator {
         context.put("hasCollections", !collections.isEmpty());
         context.put("collections", collections);
         context.put("hasLookups", !lookups.isEmpty() || elementLookups);
+        // Only an arrival declaring a dedupe carries one, so a descriptor without it binds as before.
+        copy(context, item, "dedupe");
+        context.put("hasDedupe", item.containsKey("dedupe"));
     }
 
     private static List<Object> resolvedLookups(Object declared) {

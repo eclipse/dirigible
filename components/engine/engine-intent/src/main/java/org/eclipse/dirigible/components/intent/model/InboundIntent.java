@@ -42,6 +42,11 @@ import java.util.Map;
  * hand-written consumer. A non-matching {@code accept} is acknowledged and ignored with a warning
  * (never failed into redelivery), while an unresolvable lookup rejects the arrival rather than
  * storing a null relation.
+ *
+ * <p>
+ * On an at-least-once transport a repeated message is routine, so {@link #dedupe} names the mapped
+ * field that identifies an arrival: a value already stored is acknowledged and skipped with a
+ * warning instead of failing its unique constraint into redelivery and the dead letters.
  */
 public class InboundIntent {
 
@@ -51,6 +56,7 @@ public class InboundIntent {
     private InboundSourceIntent source;
     private Map<String, Object> accept = new LinkedHashMap<>();
     private Map<String, Object> map = new LinkedHashMap<>();
+    private String dedupe;
 
     public String getName() {
         return name;
@@ -98,5 +104,13 @@ public class InboundIntent {
 
     public void setMap(Map<String, Object> map) {
         this.map = map;
+    }
+
+    public String getDedupe() {
+        return dedupe;
+    }
+
+    public void setDedupe(String dedupe) {
+        this.dedupe = dedupe;
     }
 }

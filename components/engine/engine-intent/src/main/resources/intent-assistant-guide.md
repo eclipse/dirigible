@@ -4327,6 +4327,37 @@ event fire exactly as for any other write. Do not map the primary key - it is ge
 the arrival's own identifier a `unique: true` field of its own instead (which is also what makes a
 redelivery refuse itself).
 
+#### dedupe - a repeated identifier is skipped, not failed
+
+On any **at-least-once** source - a queue or topic redelivery, a sender retrying a POST after a
+timeout, the same record dropped twice - a repeat is routine. The `unique: true` identifier alone
+refuses it by throwing, so a queue redelivers the repeat and finally dead-letters it, next to the
+arrivals that really need attention. Name the identifier with `dedupe:` and a repeat becomes a
+decision:
+
+```yaml
+inbound:
+  - name: orders
+    source: { queue: "global:shop.orders" }
+    accept: { type: order.placed, version: 1 }
+    create: Order
+    dedupe: orderId              # a seen identifier is acknowledged and skipped
+    map:
+      orderId: orderId
+      customer: { lookup: Customer, by: code, from: customerCode, onMissing: deadLetter }
+```
+
+- `dedupe:` names **one field of `create:` that the `map:` fills from an envelope key**, declared
+  `unique: true` **and** `required: true` (an optional key would dedupe nothing - PostgreSQL counts
+  NULLs as distinct). Generate refuses anything else, naming the inbound and the field.
+- The handler checks it right after the `accept:` gate and **before the lookups**: a stored value logs
+  one WARN (`[orderId] [A-1042] is already ingested - acknowledged and ignored`) and nothing is saved,
+  no create event fires. A webhook answers a repeat **202**, as it answers a payload the gate does not
+  match; a drop file skips the record and still counts as processed.
+- The unique constraint stays the guard: two deliveries racing past the check are still refused by it.
+- Declare it on every arrival whose source can deliver twice, which is every queue or topic. It takes
+  one field; a repeat is skipped, never used to update the stored row.
+
 #### collections - an array in the envelope becomes child rows
 
 An envelope often carries a **set**: an order with its lines, a request with the several items it
@@ -5044,6 +5075,7 @@ or a seeded name.
 - "append a log / protocol / activity row every time a step completes (or a status is set)" -> **generates** with `event: { onStepCompleted: { process, step }, mode: append }`
 - "let an external system create X" -> **inbound** (`path` for HTTP, `source: { queue | topic }` for a message, `source: { folder, cron }` for dropped files)
 - "the arriving payload is an envelope, not the record" -> **inbound `map:`** (+ `lookup:` to turn a business key into a relation, and `accept:` to ignore the message types this app does not understand)
+- "a redelivered or retried message must not land in the dead letters" -> **inbound `dedupe:`** on the arrival's unique, required identifier
 - "the arriving payload carries an array - an order with its lines, a request with its items - and each element is a child row" -> **an inbound `map:` collection** (`<oneToMany>: { from, max?, map }` onto a composition child; one arrival = one record + its children in one transaction = one process instance)
 - "upload a bank statement / a CSV / an MT940 or camt.053 file and turn its lines into records" -> **imports** (`format`, `encoding`, `csv:` locale rules, `map:`, `duplicateKey:` so a re-upload is refused; matching rules after the import are a `custom/` `<Name>Import.Hook`)
 - "keep a running count of children on the parent" -> **rollups**
