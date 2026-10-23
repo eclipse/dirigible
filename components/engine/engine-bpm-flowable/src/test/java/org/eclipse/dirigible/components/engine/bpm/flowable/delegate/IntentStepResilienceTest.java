@@ -9,6 +9,7 @@
  */
 package org.eclipse.dirigible.components.engine.bpm.flowable.delegate;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -78,5 +79,23 @@ class IntentStepResilienceTest {
 
         assertFalse(IntentStepResilience.convertFinalFailure(execution, new OutOfMemoryError("heap")));
         verifyNoInteractions(execution);
+    }
+
+    /** The routed final attempt's ERROR line carries what an operator needs to find the instance. */
+    @Test
+    void theFinalFailureLineNamesProcessStepInstanceAndRoute() {
+        assertEquals(
+                "Process [ExportArchive] step [pushArchive] (instance 2509) failed its final attempt - routing to its onError step"
+                        + " [recordFailure]: UnknownHostException: archive.example",
+                IntentStepResilience.finalFailureLine("ExportArchive", "pushArchive", "2509", "recordFailure",
+                        "UnknownHostException: archive.example"));
+    }
+
+    @Test
+    void theFinalFailureLineOmitsAnUnresolvedRoute() {
+        assertEquals(
+                "Process [ExportArchive] step [pushArchive] (instance 2509) failed its final attempt - routing to its onError boundary:"
+                        + " refused",
+                IntentStepResilience.finalFailureLine("ExportArchive", "pushArchive", "2509", null, "refused"));
     }
 }

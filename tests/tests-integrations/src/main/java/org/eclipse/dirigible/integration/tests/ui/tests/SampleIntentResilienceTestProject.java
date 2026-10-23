@@ -15,9 +15,12 @@ import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.startsWith;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -27,8 +30,14 @@ import org.eclipse.dirigible.tests.framework.ide.EdmView;
 import org.eclipse.dirigible.tests.framework.ide.IDE;
 import org.eclipse.dirigible.tests.framework.ide.IntentEditorView;
 import org.eclipse.dirigible.tests.framework.restassured.RestAssuredExecutor;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 
 /**
  * The {@code sample-intent-resilience} fixture project (dirigible #6762 and #7056), configured
@@ -63,6 +72,9 @@ class SampleIntentResilienceTestProject extends BaseIntentTestProject {
     private static final int STATUS_PROVISIONED = 2;
     private static final int STATUS_FAILED = 3;
 
+    /** The platform logger of the onError conversion (its class is package-private). */
+    private static final String RESILIENCE_LOGGER = "org.eclipse.dirigible.components.engine.bpm.flowable.delegate.IntentStepResilience";
+
     private final RestAssuredExecutor restAssuredExecutor;
 
     SampleIntentResilienceTestProject(IDE ide, ProjectUtil projectUtil, EdmView edmView, IntentEditorView intentEditorView,
@@ -73,6 +85,18 @@ class SampleIntentResilienceTestProject extends BaseIntentTestProject {
 
     @Override
     public void verify() {
+        ListAppender<ILoggingEvent> finalFailures = new ListAppender<>();
+        finalFailures.start();
+        Logger resilienceLogger = (Logger) LoggerFactory.getLogger(RESILIENCE_LOGGER);
+        resilienceLogger.addAppender(finalFailures);
+        try {
+            verifyOutcomes(finalFailures);
+        } finally {
+            resilienceLogger.detachAppender(finalFailures);
+        }
+    }
+
+    private void verifyOutcomes(ListAppender<ILoggingEvent> finalFailures) {
         // Every tenant up front, so their retry cycles run concurrently.
         AtomicInteger recovering = new AtomicInteger();
         AtomicInteger doomed = new AtomicInteger();
@@ -161,5 +185,49 @@ class SampleIntentResilienceTestProject extends BaseIntentTestProject {
                                                                  + " process: "))
                                                  .body("Status", equalTo(STATUS_FAILED)),
                 180);
+
+        // #8082: each routed final attempt is logged exactly once at ERROR, naming the process, the
+        // step, the instance and the route, with the text the record carries - and the tenant that
+        // recovered on a retry routed nothing, so it logged no such line.
+        assertFinalFailureLogged(finalFailures, processIdOf(doomed.get()), "provisionApp", "no capacity for 'please fail' (attempt 3)");
+        assertFinalFailureLogged(finalFailures, processIdOf(sending.get()), "notifyOwner",
+                "Failed to send the notifyOwner mail of the TenantProvisioning process: ");
+        assertEquals(List.of(), finalFailureLines(finalFailures, processId.get()),
+                "a step that recovered on a retried attempt must not log a final failure");
+    }
+
+    private String processIdOf(int recordId) {
+        AtomicReference<String> processId = new AtomicReference<>();
+        restAssuredExecutor.execute(() -> processId.set(given().when()
+                                                               .get(TENANT_API + "/" + recordId)
+                                                               .then()
+                                                               .statusCode(200)
+                                                               .extract()
+                                                               .path("ProcessId")));
+        return processId.get();
+    }
+
+    private static void assertFinalFailureLogged(ListAppender<ILoggingEvent> finalFailures, String processInstanceId, String step,
+            String messagePrefix) {
+        List<ILoggingEvent> lines = finalFailureLines(finalFailures, processInstanceId);
+        assertEquals(1, lines.size(), "exactly one final-failure line for step [" + step + "], got: " + lines);
+        ILoggingEvent line = lines.get(0);
+        assertEquals(Level.ERROR, line.getLevel());
+        String expectedStart = "Process [TenantProvisioning] step [" + step + "] (instance " + processInstanceId
+                + ") failed its final attempt - routing to its onError step [recordFailure]: " + messagePrefix;
+        assertTrue(line.getFormattedMessage()
+                       .startsWith(expectedStart),
+                "expected a line starting with [" + expectedStart + "], got: " + line.getFormattedMessage());
+        assertNotNull(line.getThrowableProxy(), "the final-failure line must carry the failure's stack");
+    }
+
+    private static List<ILoggingEvent> finalFailureLines(ListAppender<ILoggingEvent> finalFailures, String processInstanceId) {
+        // The appender is filled from the async executor's threads; append holds its monitor.
+        synchronized (finalFailures) {
+            return finalFailures.list.stream()
+                                     .filter(event -> event.getFormattedMessage()
+                                                           .contains("(instance " + processInstanceId + ") failed its final attempt"))
+                                     .toList();
+        }
     }
 }
